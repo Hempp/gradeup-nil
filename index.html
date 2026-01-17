@@ -743,27 +743,42 @@
             <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
         </div>
         <div class="modal-body">
-            <!-- Login Type Selector -->
-            <div class="login-type-selector">
-                <button class="login-type-btn active" onclick="selectLoginType('user')">
-                    <span class="login-type-icon">🏆</span>
-                    <span>Athlete / Sponsor</span>
-                </button>
-                <button class="login-type-btn" onclick="selectLoginType('director')">
-                    <span class="login-type-icon">🎓</span>
-                    <span>Athletic Director</span>
-                </button>
+            <!-- Role Selection -->
+            <div class="role-selector">
+                <p class="role-selector-label">I am a...</p>
+                <div class="role-buttons">
+                    <button class="role-btn" onclick="selectLoginRole('athlete')" data-role="athlete">
+                        <span class="role-icon">🏆</span>
+                        <span class="role-name">Athlete</span>
+                        <span class="role-desc">Access your NIL portal</span>
+                    </button>
+                    <button class="role-btn" onclick="selectLoginRole('brand')" data-role="brand">
+                        <span class="role-icon">🏢</span>
+                        <span class="role-name">Brand / Donor</span>
+                        <span class="role-desc">Discover & sponsor athletes</span>
+                    </button>
+                    <button class="role-btn" onclick="selectLoginRole('director')" data-role="director">
+                        <span class="role-icon">🎓</span>
+                        <span class="role-name">Athletic Director</span>
+                        <span class="role-desc">Manage your institution</span>
+                    </button>
+                </div>
             </div>
 
-            <!-- Regular User Login Form -->
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <!-- Athlete Login Form -->
+            <form id="athleteLoginForm" class="login-form" onsubmit="handleAthleteLogin(event)" style="display: none;">
+                <div class="login-form-header">
+                    <span class="form-icon">🏆</span>
+                    <h4>Athlete Login</h4>
+                    <p>Access your NIL dashboard and manage your profile</p>
+                </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" required placeholder="your@email.com">
+                    <input type="email" id="athleteEmail" required placeholder="athlete@university.edu">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" required placeholder="••••••••">
+                    <input type="password" id="athletePassword" required placeholder="••••••••">
                 </div>
                 <div class="form-row">
                     <label class="checkbox-label">
@@ -771,14 +786,41 @@
                     </label>
                     <a href="#" class="forgot-link">Forgot password?</a>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                <button type="submit" class="btn btn-primary btn-block">Access Athlete Portal</button>
+                <button type="button" class="btn btn-outline btn-block" onclick="showRoleSelector()">Back to role selection</button>
+            </form>
+
+            <!-- Brand/Donor Login Form -->
+            <form id="brandLoginForm" class="login-form" onsubmit="handleBrandLogin(event)" style="display: none;">
+                <div class="login-form-header">
+                    <span class="form-icon">🏢</span>
+                    <h4>Brand / Donor Login</h4>
+                    <p>Discover athletes and manage your partnerships</p>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="brandEmail" required placeholder="contact@company.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="brandPassword" required placeholder="••••••••">
+                </div>
+                <div class="form-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Access Brand Dashboard</button>
+                <button type="button" class="btn btn-outline btn-block" onclick="showRoleSelector()">Back to role selection</button>
             </form>
 
             <!-- Athletic Director Login Form -->
-            <form id="directorLoginForm" onsubmit="handleDirectorLogin(event)" style="display: none;">
-                <div class="director-login-header">
-                    <span class="director-icon">🏛️</span>
-                    <p>Access verification dashboard for your institution</p>
+            <form id="directorLoginForm" class="login-form" onsubmit="handleDirectorLogin(event)" style="display: none;">
+                <div class="login-form-header">
+                    <span class="form-icon">🎓</span>
+                    <h4>Athletic Director Login</h4>
+                    <p>Verify athletes and manage your institution</p>
                 </div>
                 <div class="form-group">
                     <label>Institution Email</label>
@@ -792,15 +834,16 @@
                     <label>Password</label>
                     <input type="password" id="directorPassword" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Access Dashboard</button>
+                <button type="submit" class="btn btn-primary btn-block">Access Director Dashboard</button>
+                <button type="button" class="btn btn-outline btn-block" onclick="showRoleSelector()">Back to role selection</button>
                 <p class="director-help-text">Need access? <a href="#" onclick="openModal('directorSignupModal')">Register your institution</a></p>
             </form>
 
             <div class="social-login" id="socialLoginSection">
                 <p>Or continue with</p>
                 <div class="social-buttons">
-                    <button class="social-btn google">Google</button>
-                    <button class="social-btn apple">Apple</button>
+                    <button type="button" class="social-btn google" onclick="handleSocialLogin('google')">Google</button>
+                    <button type="button" class="social-btn apple" onclick="handleSocialLogin('apple')">Apple</button>
                 </div>
             </div>
             <p class="modal-footer-text">Don't have an account? <a href="#" onclick="switchModal('loginModal', 'signupModal')">Sign up</a></p>

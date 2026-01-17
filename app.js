@@ -1336,27 +1336,45 @@ function selectLoginType(type) {
     }
 }
 
-// Director Login
+// Director Login - Updated for role-based login modal
 function handleDirectorLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('directorEmail').value;
-    const directorId = document.getElementById('directorId').value;
+    const email = document.getElementById('directorEmail')?.value;
+    const directorId = document.getElementById('directorId')?.value;
+    const password = document.getElementById('directorPassword')?.value;
+
+    if (!email) {
+        showToast('Please enter your email', 'error');
+        return;
+    }
 
     // Simulate login validation
-    const director = athleticDirectorsData.find(d =>
-        d.email.toLowerCase() === email.toLowerCase() || d.id === directorId
+    const director = athleticDirectorsData?.find(d =>
+        d.email?.toLowerCase() === email.toLowerCase() || d.id === directorId
     );
 
     if (director || email.includes('@')) {
         currentDirector = director || {
-            id: directorId,
+            id: directorId || 'DIR-' + Date.now(),
             name: 'Athletic Director',
             institution: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'University',
             email: email
         };
 
+        // Close login modal
         closeModal('loginModal');
-        openDirectorDashboard();
+
+        // Reset the login form
+        showRoleSelector();
+        document.getElementById('directorLoginForm')?.reset();
+
+        // Open director dashboard (fullscreen version)
+        const fullDashboard = document.getElementById('directorFullDashboard');
+        if (fullDashboard) {
+            fullDashboard.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
         showToast(`Welcome, ${currentDirector.name}!`, 'success');
     } else {
         showToast('Invalid credentials. Please try again.', 'error');
@@ -2273,5 +2291,138 @@ document.addEventListener('DOMContentLoaded', function() {
         gpaFilter.addEventListener('change', (e) => {
             if (e.target.value) filterAthletesByGPA(e.target.value);
         });
+    }
+});
+
+// ==================== ROLE-BASED LOGIN ====================
+
+// Select login role and show appropriate form
+function selectLoginRole(role) {
+    // Hide role selector
+    const roleSelector = document.querySelector('.role-selector');
+    if (roleSelector) roleSelector.style.display = 'none';
+
+    // Hide all login forms first
+    const forms = document.querySelectorAll('.login-form');
+    forms.forEach(form => form.style.display = 'none');
+
+    // Show the selected role's form
+    const formId = role + 'LoginForm';
+    const selectedForm = document.getElementById(formId);
+    if (selectedForm) {
+        selectedForm.style.display = 'block';
+    }
+
+    // Update role button states
+    const roleButtons = document.querySelectorAll('.role-btn');
+    roleButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.role === role) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// Go back to role selector
+function showRoleSelector() {
+    // Hide all login forms
+    const forms = document.querySelectorAll('.login-form');
+    forms.forEach(form => form.style.display = 'none');
+
+    // Show role selector
+    const roleSelector = document.querySelector('.role-selector');
+    if (roleSelector) roleSelector.style.display = 'block';
+
+    // Remove active state from role buttons
+    const roleButtons = document.querySelectorAll('.role-btn');
+    roleButtons.forEach(btn => btn.classList.remove('active'));
+}
+
+// Handle Athlete Login
+function handleAthleteLogin(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('athleteEmail')?.value;
+    const password = document.getElementById('athletePassword')?.value;
+
+    if (!email || !password) {
+        showToast('Please enter email and password', 'error');
+        return;
+    }
+
+    // Simulate login validation
+    if (email.includes('@')) {
+        // Close login modal
+        closeModal('loginModal');
+
+        // Reset the login form
+        showRoleSelector();
+        document.getElementById('athleteLoginForm')?.reset();
+
+        // Open athlete dashboard
+        openAthleteDashboard();
+
+        // Welcome message
+        const athleteName = email.split('@')[0].split('.').map(s =>
+            s.charAt(0).toUpperCase() + s.slice(1)
+        ).join(' ');
+        showToast(`Welcome back, ${athleteName}!`, 'success');
+    } else {
+        showToast('Invalid email format', 'error');
+    }
+}
+
+// Handle Brand/Donor Login
+function handleBrandLogin(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('brandEmail')?.value;
+    const password = document.getElementById('brandPassword')?.value;
+
+    if (!email || !password) {
+        showToast('Please enter email and password', 'error');
+        return;
+    }
+
+    // Simulate login validation
+    if (email.includes('@')) {
+        // Close login modal
+        closeModal('loginModal');
+
+        // Reset the login form
+        showRoleSelector();
+        document.getElementById('brandLoginForm')?.reset();
+
+        // Open brand dashboard
+        openBrandDashboard();
+
+        // Welcome message
+        const companyName = email.split('@')[1]?.split('.')[0] || 'Partner';
+        showToast(`Welcome back, ${companyName.charAt(0).toUpperCase() + companyName.slice(1)}!`, 'success');
+    } else {
+        showToast('Invalid email format', 'error');
+    }
+}
+
+// Handle Social Login
+function handleSocialLogin(provider) {
+    showToast(`${provider} login coming soon!`, 'info');
+}
+
+// Reset login modal when closed
+document.addEventListener('DOMContentLoaded', function() {
+    // When login modal is closed, reset to role selector
+    const loginModal = document.getElementById('loginModal');
+    if (loginModal) {
+        const closeBtn = loginModal.querySelector('.modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                showRoleSelector();
+                // Reset all forms
+                document.getElementById('athleteLoginForm')?.reset();
+                document.getElementById('brandLoginForm')?.reset();
+                document.getElementById('directorLoginForm')?.reset();
+            });
+        }
     }
 });
