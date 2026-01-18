@@ -5211,14 +5211,15 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--black);
-    z-index: 2000;
+    width: 100vw;
+    height: 100vh;
+    background: #0A0A0A;
+    z-index: 9999;
     overflow: hidden;
 }
 
 .modal-fullscreen.active {
     display: flex;
-    flex-direction: column;
 }
 
 .modal-fullscreen .modal-header {
