@@ -5207,15 +5207,22 @@ body {
 .modal-fullscreen {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0 !important;
+    left: 0 !important;
     right: 0;
     bottom: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
     background: #0A0A0A;
     z-index: 9999;
     overflow: hidden;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
 }
 
 .modal-fullscreen.active {
@@ -5277,13 +5284,60 @@ body {
     flex-shrink: 0;
 }
 
-.dashboard-sidebar nav {
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.role-badge.director {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.15));
+    color: var(--gold);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.role-badge.athlete {
+    background: linear-gradient(135deg, rgba(0, 200, 150, 0.2), rgba(0, 150, 100, 0.15));
+    color: #00C896;
+    border: 1px solid rgba(0, 200, 150, 0.3);
+}
+
+.role-badge.brand {
+    background: linear-gradient(135deg, rgba(100, 150, 255, 0.2), rgba(50, 100, 200, 0.15));
+    color: #6496FF;
+    border: 1px solid rgba(100, 150, 255, 0.3);
+}
+
+.dashboard-sidebar nav,
+.sidebar-nav {
     padding: 1rem;
     flex: 1;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-.dashboard-tab {
+.nav-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -5294,22 +5348,94 @@ body {
     transition: var(--transition);
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
+    text-decoration: none;
 }
 
-.dashboard-tab:hover {
+.nav-item:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--white);
 }
 
-.dashboard-tab.active {
+.nav-item.active {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
     color: var(--gold);
     border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-.dashboard-tab i {
-    width: 20px;
+.nav-icon {
+    font-size: 1.1rem;
+    width: 24px;
     text-align: center;
+}
+
+/* Dashboard content sections (inside .dashboard-main) */
+.dashboard-main .dashboard-tab {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 0;
+    margin: 0;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.dashboard-main .dashboard-tab.active {
+    display: block;
+    opacity: 1;
+    background: transparent;
+    border: none;
+}
+
+/* Badge count for messages/notifications */
+.badge-count {
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    margin-left: auto;
+}
+
+/* Sidebar user section at bottom */
+.sidebar-user {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
+}
+
+.sidebar-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.sidebar-user-avatar {
+    font-size: 1.5rem;
+}
+
+.sidebar-user-details {
+    font-size: 0.85rem;
+    color: var(--light-gray);
+    line-height: 1.4;
+}
+
+.sidebar-user button {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--light-gray);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.sidebar-user button:hover {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: var(--gold);
+    color: var(--gold);
 }
 
 .sidebar-user-info {

@@ -1935,28 +1935,41 @@ function closeFullDashboard(dashboardId) {
     }
 }
 
-// Switch dashboard tabs
+// Switch dashboard tabs with smooth transitions
 function switchDashboardTab(role, tabName) {
+    // Prevent default anchor behavior
+    if (event) event.preventDefault();
+
     // Get the dashboard container
     const dashboardId = role + 'FullDashboard';
     const dashboard = document.getElementById(dashboardId);
     if (!dashboard) return;
 
-    // Deactivate all tabs
-    const tabs = dashboard.querySelectorAll('.dashboard-tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
+    // Deactivate all nav items
+    const navItems = dashboard.querySelectorAll('.nav-item');
+    navItems.forEach(item => item.classList.remove('active'));
 
-    // Deactivate all tab content
-    const contents = dashboard.querySelectorAll('.tab-content');
-    contents.forEach(content => content.classList.remove('active'));
+    // Deactivate all content sections (they use .dashboard-tab class with id like role-tabname)
+    const contentSections = dashboard.querySelectorAll('.dashboard-main .dashboard-tab');
+    contentSections.forEach(section => {
+        section.classList.remove('active');
+        section.style.opacity = '0';
+    });
 
-    // Activate the clicked tab
-    const activeTab = dashboard.querySelector(`[onclick*="${tabName}"]`);
-    if (activeTab) activeTab.classList.add('active');
+    // Activate the clicked nav item
+    const activeNavItem = dashboard.querySelector(`.nav-item[onclick*="${tabName}"]`);
+    if (activeNavItem) {
+        activeNavItem.classList.add('active');
+    }
 
-    // Activate the corresponding content
+    // Activate the corresponding content with fade-in animation
     const activeContent = document.getElementById(`${role}-${tabName}`);
-    if (activeContent) activeContent.classList.add('active');
+    if (activeContent) {
+        setTimeout(() => {
+            activeContent.classList.add('active');
+            activeContent.style.opacity = '1';
+        }, 50);
+    }
 }
 
 // ==================== DIRECTOR DASHBOARD FUNCTIONS ====================
