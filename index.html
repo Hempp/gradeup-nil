@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <!-- Loading Screen -->
@@ -2156,10 +2158,75 @@
                         <p class="header-subtitle">Welcome back, <span id="directorGreeting">Director</span></p>
                     </div>
                     <div class="header-right">
-                        <div class="search-bar">
-                            <input type="text" placeholder="Search athletes, teams..." id="directorSearch">
+                        <div class="search-bar advanced-search">
+                            <input type="text" placeholder="Search athletes, teams, deals..." id="directorSearch" oninput="handleDashboardSearch(this.value)">
                             <span class="search-icon">🔍</span>
+                            <div class="search-dropdown" id="searchDropdown">
+                                <div class="search-filters">
+                                    <span class="search-filter-label">Filter by:</span>
+                                    <button class="search-filter-btn active" data-filter="all">All</button>
+                                    <button class="search-filter-btn" data-filter="athletes">Athletes</button>
+                                    <button class="search-filter-btn" data-filter="teams">Teams</button>
+                                    <button class="search-filter-btn" data-filter="deals">Deals</button>
+                                </div>
+                                <div class="search-results" id="searchResults"></div>
+                            </div>
                         </div>
+
+                        <!-- Notification Center -->
+                        <div class="notification-center">
+                            <button class="notification-btn" onclick="toggleNotifications()">
+                                🔔
+                                <span class="notification-badge">5</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <h4>Notifications</h4>
+                                    <button class="mark-all-read" onclick="markAllRead()">Mark all read</button>
+                                </div>
+                                <div class="notification-list">
+                                    <div class="notification-item unread urgent">
+                                        <span class="notif-icon">⚠️</span>
+                                        <div class="notif-content">
+                                            <span class="notif-text">Verification deadline in 2 hours</span>
+                                            <span class="notif-time">Just now</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">✓</span>
+                                        <div class="notif-content">
+                                            <span class="notif-text">3 athletes pending verification</span>
+                                            <span class="notif-time">5 min ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">💰</span>
+                                        <div class="notif-content">
+                                            <span class="notif-text">Nike deal approved for Maya Chen</span>
+                                            <span class="notif-time">1 hour ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item">
+                                        <span class="notif-icon">📊</span>
+                                        <div class="notif-content">
+                                            <span class="notif-text">Weekly analytics report ready</span>
+                                            <span class="notif-time">3 hours ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item">
+                                        <span class="notif-icon">📈</span>
+                                        <div class="notif-content">
+                                            <span class="notif-text">StatsTaq sync completed</span>
+                                            <span class="notif-time">5 hours ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="notification-footer">
+                                    <a href="#" onclick="viewAllNotifications()">View all notifications</a>
+                                </div>
+                            </div>
+                        </div>
+
                         <button class="btn btn-primary" onclick="openDirectorAction()">+ Add Athlete</button>
                     </div>
                 </header>
@@ -2291,10 +2358,174 @@
                         </div>
                     </div>
 
+                    <!-- Analytics Charts Section -->
+                    <div class="analytics-section">
+                        <div class="dashboard-card chart-card">
+                            <div class="card-header">
+                                <h3>📈 NIL Earnings Trend</h3>
+                                <div class="chart-filters">
+                                    <button class="chart-filter-btn active" data-period="week">Week</button>
+                                    <button class="chart-filter-btn" data-period="month">Month</button>
+                                    <button class="chart-filter-btn" data-period="year">Year</button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="earningsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboard-card chart-card">
+                            <div class="card-header">
+                                <h3>🎯 Athlete Distribution</h3>
+                                <select class="filter-select" id="distributionFilter">
+                                    <option value="sport">By Sport</option>
+                                    <option value="gpa">By GPA Range</option>
+                                    <option value="status">By Status</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="distributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Bar -->
+                    <div class="quick-actions-bar">
+                        <h4>⚡ Quick Actions</h4>
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" onclick="quickVerifyBatch()">
+                                <span class="qa-icon">✓</span>
+                                <span class="qa-text">Batch Verify</span>
+                                <span class="qa-badge">23</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickExportData()">
+                                <span class="qa-icon">📥</span>
+                                <span class="qa-text">Export Data</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickSyncStatsTaq()">
+                                <span class="qa-icon">🔄</span>
+                                <span class="qa-text">Sync StatsTaq</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickGenerateReport()">
+                                <span class="qa-icon">📄</span>
+                                <span class="qa-text">Generate Report</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickMessageTeam()">
+                                <span class="qa-icon">💬</span>
+                                <span class="qa-text">Message Team</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickScheduleEvent()">
+                                <span class="qa-icon">📅</span>
+                                <span class="qa-text">Schedule Event</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Widget -->
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card calendar-widget">
+                            <div class="card-header">
+                                <h3>📅 Upcoming Events</h3>
+                                <button class="btn btn-outline btn-sm" onclick="openFullCalendar()">View All</button>
+                            </div>
+                            <div class="calendar-events">
+                                <div class="calendar-event today">
+                                    <div class="event-date">
+                                        <span class="event-day">18</span>
+                                        <span class="event-month">JAN</span>
+                                    </div>
+                                    <div class="event-details">
+                                        <span class="event-title">Verification Deadline</span>
+                                        <span class="event-desc">Spring semester athletes</span>
+                                        <span class="event-time">Today, 5:00 PM</span>
+                                    </div>
+                                    <span class="event-priority high">!</span>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">20</span>
+                                        <span class="event-month">JAN</span>
+                                    </div>
+                                    <div class="event-details">
+                                        <span class="event-title">Compliance Review</span>
+                                        <span class="event-desc">Monthly NIL compliance audit</span>
+                                        <span class="event-time">10:00 AM - 12:00 PM</span>
+                                    </div>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">25</span>
+                                        <span class="event-month">JAN</span>
+                                    </div>
+                                    <div class="event-details">
+                                        <span class="event-title">Brand Partner Meeting</span>
+                                        <span class="event-desc">Nike sponsorship discussion</span>
+                                        <span class="event-time">2:00 PM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-card goals-widget">
+                            <div class="card-header">
+                                <h3>🎯 Department Goals</h3>
+                                <span class="goals-period">Q1 2025</span>
+                            </div>
+                            <div class="goals-list">
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-name">Athlete Verification Rate</span>
+                                        <span class="goal-progress-text">198 / 247 (80%)</span>
+                                    </div>
+                                    <div class="goal-progress-bar">
+                                        <div class="goal-fill" style="width: 80%"></div>
+                                    </div>
+                                    <span class="goal-target">Target: 95%</span>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-name">NIL Revenue Growth</span>
+                                        <span class="goal-progress-text">$1.2M / $1.5M</span>
+                                    </div>
+                                    <div class="goal-progress-bar">
+                                        <div class="goal-fill gold" style="width: 80%"></div>
+                                    </div>
+                                    <span class="goal-target">Target: $1.5M</span>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-name">StatsTaq Integration</span>
+                                        <span class="goal-progress-text">198 / 220</span>
+                                    </div>
+                                    <div class="goal-progress-bar">
+                                        <div class="goal-fill blue" style="width: 90%"></div>
+                                    </div>
+                                    <span class="goal-target">Target: 220 athletes</span>
+                                </div>
+                                <div class="goal-item completed">
+                                    <div class="goal-info">
+                                        <span class="goal-name">Compliance Training</span>
+                                        <span class="goal-progress-text">✓ Completed</span>
+                                    </div>
+                                    <div class="goal-progress-bar">
+                                        <div class="goal-fill green" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="dashboard-card full-width">
                         <div class="card-header">
                             <h3>Recent Activity</h3>
-                            <button class="btn btn-outline btn-sm">Export</button>
+                            <div class="activity-actions">
+                                <select class="filter-select" id="activityFilter">
+                                    <option value="all">All Activity</option>
+                                    <option value="verification">Verifications</option>
+                                    <option value="deals">Deals</option>
+                                    <option value="compliance">Compliance</option>
+                                </select>
+                                <button class="btn btn-outline btn-sm" onclick="exportActivity()">📥 Export</button>
+                            </div>
                         </div>
                         <div class="activity-timeline">
                             <div class="activity-item">
@@ -2837,6 +3068,64 @@
                         <p class="header-subtitle">Welcome back, <span id="athleteGreeting">Champion</span>! 🏆</p>
                     </div>
                     <div class="header-right">
+                        <!-- Athlete Search -->
+                        <div class="advanced-search athlete-search">
+                            <div class="search-input-wrapper">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Search deals, brands..." id="athleteSearchInput" oninput="handleAthleteSearch(this.value)">
+                            </div>
+                            <div class="search-dropdown" id="athleteSearchDropdown">
+                                <div class="search-results" id="athleteSearchResults"></div>
+                            </div>
+                        </div>
+
+                        <!-- Athlete Notification Center -->
+                        <div class="notification-center">
+                            <button class="notification-btn" onclick="toggleAthleteNotifications()">
+                                🔔
+                                <span class="notification-badge">3</span>
+                            </button>
+                            <div class="notification-dropdown" id="athleteNotificationDropdown">
+                                <div class="notification-header">
+                                    <h4>Notifications</h4>
+                                    <button class="mark-all-read" onclick="markAllAthleteRead()">Mark all read</button>
+                                </div>
+                                <div class="notification-list">
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">💰</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text"><strong>New Offer!</strong> Gatorade wants to partner with you</p>
+                                            <span class="notif-time">10 minutes ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">✅</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text">Nike payment of <strong>$5,000</strong> deposited</p>
+                                            <span class="notif-time">2 hours ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">📈</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text">Your NIL valuation increased by <strong>15%</strong></p>
+                                            <span class="notif-time">1 day ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item">
+                                        <span class="notif-icon">🎯</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text">Compliance check completed successfully</p>
+                                            <span class="notif-time">2 days ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="notification-footer">
+                                    <button class="btn btn-sm btn-outline" onclick="viewAllAthleteNotifications()">View All Notifications</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="quick-stats">
                             <div class="quick-stat-item">
                                 <span class="qs-value" id="athleteQuickEarnings">$18,450</span>
@@ -2885,6 +3174,168 @@
                                 <span class="stat-label">Active Deals</span>
                             </div>
                             <span class="stat-change">2 pending approval</span>
+                        </div>
+                    </div>
+
+                    <!-- Athlete Analytics Section -->
+                    <div class="analytics-section">
+                        <div class="dashboard-card chart-card">
+                            <div class="card-header">
+                                <h3>📈 My Earnings Trend</h3>
+                                <div class="chart-filters">
+                                    <button class="chart-filter-btn active" data-period="week" onclick="filterAthleteChart('week')">Week</button>
+                                    <button class="chart-filter-btn" data-period="month" onclick="filterAthleteChart('month')">Month</button>
+                                    <button class="chart-filter-btn" data-period="year" onclick="filterAthleteChart('year')">Year</button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="athleteEarningsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboard-card chart-card">
+                            <div class="card-header">
+                                <h3>💼 Income Sources</h3>
+                                <button class="btn btn-sm btn-outline" onclick="exportAthleteData()">Export</button>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="athleteIncomeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Athlete Quick Actions Bar -->
+                    <div class="quick-actions-bar athlete-actions">
+                        <h4>⚡ Quick Actions</h4>
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" onclick="quickViewOffers()">
+                                <span class="qa-icon">💼</span>
+                                <span class="qa-text">View Offers</span>
+                                <span class="qa-badge">3</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickUpdateProfile()">
+                                <span class="qa-icon">✏️</span>
+                                <span class="qa-text">Update Profile</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickPostContent()">
+                                <span class="qa-icon">📱</span>
+                                <span class="qa-text">Post Content</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickViewAnalytics()">
+                                <span class="qa-icon">📊</span>
+                                <span class="qa-text">My Analytics</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickMessageBrand()">
+                                <span class="qa-icon">💬</span>
+                                <span class="qa-text">Messages</span>
+                                <span class="qa-badge">2</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="openWithdrawModal()">
+                                <span class="qa-icon">💳</span>
+                                <span class="qa-text">Withdraw</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Athlete Calendar & Goals Row -->
+                    <div class="widgets-row">
+                        <!-- Calendar Widget -->
+                        <div class="dashboard-card calendar-widget">
+                            <div class="card-header">
+                                <h3>📅 My Schedule</h3>
+                                <button class="btn btn-sm btn-outline" onclick="openAthleteCalendar()">Full Calendar</button>
+                            </div>
+                            <div class="calendar-events">
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">20</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Nike Photoshoot</span>
+                                        <span class="event-time">10:00 AM - 2:00 PM</span>
+                                    </div>
+                                    <span class="event-type brand">Brand</span>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">22</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Contract Signing - Gatorade</span>
+                                        <span class="event-time">3:00 PM</span>
+                                    </div>
+                                    <span class="event-type deal">Deal</span>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">25</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Compliance Training</span>
+                                        <span class="event-time">1:00 PM - 2:30 PM</span>
+                                    </div>
+                                    <span class="event-type compliance">Required</span>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">28</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Social Media Post Due</span>
+                                        <span class="event-time">End of Day</span>
+                                    </div>
+                                    <span class="event-type content">Content</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Goals Widget -->
+                        <div class="dashboard-card goals-widget">
+                            <div class="card-header">
+                                <h3>🎯 My Goals</h3>
+                                <span class="goals-period">January 2025</span>
+                            </div>
+                            <div class="goals-list">
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">Monthly Earnings</span>
+                                        <span class="goal-values">$8,450 / $10,000</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 84.5%"></div>
+                                    </div>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">New Brand Deals</span>
+                                        <span class="goal-values">2 / 3</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 66%"></div>
+                                    </div>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">Social Media Posts</span>
+                                        <span class="goal-values">8 / 10</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">Profile Completion</span>
+                                        <span class="goal-values">95%</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 95%"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -3461,6 +3912,64 @@
                         <p class="header-subtitle">Find and partner with top student-athletes</p>
                     </div>
                     <div class="header-right">
+                        <!-- Brand Search -->
+                        <div class="advanced-search brand-search">
+                            <div class="search-input-wrapper">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Search athletes, campaigns..." id="brandSearchInput" oninput="handleBrandSearch(this.value)">
+                            </div>
+                            <div class="search-dropdown" id="brandSearchDropdown">
+                                <div class="search-results" id="brandSearchResults"></div>
+                            </div>
+                        </div>
+
+                        <!-- Brand Notification Center -->
+                        <div class="notification-center">
+                            <button class="notification-btn" onclick="toggleBrandNotifications()">
+                                🔔
+                                <span class="notification-badge">4</span>
+                            </button>
+                            <div class="notification-dropdown" id="brandNotificationDropdown">
+                                <div class="notification-header">
+                                    <h4>Notifications</h4>
+                                    <button class="mark-all-read" onclick="markAllBrandRead()">Mark all read</button>
+                                </div>
+                                <div class="notification-list">
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">✅</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text"><strong>Jordan Williams</strong> accepted your partnership offer</p>
+                                            <span class="notif-time">5 minutes ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">📊</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text">Campaign <strong>"Summer Launch"</strong> reached 500K impressions</p>
+                                            <span class="notif-time">2 hours ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">🎯</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text"><strong>3 new athletes</strong> match your target criteria</p>
+                                            <span class="notif-time">1 day ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item unread">
+                                        <span class="notif-icon">💬</span>
+                                        <div class="notif-content">
+                                            <p class="notif-text">New message from <strong>Emily Davis</strong></p>
+                                            <span class="notif-time">1 day ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="notification-footer">
+                                    <button class="btn btn-sm btn-outline" onclick="viewAllBrandNotifications()">View All Notifications</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <button class="btn btn-outline" onclick="switchDashboardTab('brand', 'discover')">🔍 Find Athletes</button>
                         <button class="btn btn-primary" onclick="createCampaign()">+ New Campaign</button>
                     </div>
@@ -3500,6 +4009,168 @@
                                 <span class="stat-label">Avg. ROI</span>
                             </div>
                             <span class="stat-change positive">Above industry avg</span>
+                        </div>
+                    </div>
+
+                    <!-- Brand Analytics Section -->
+                    <div class="analytics-section">
+                        <div class="dashboard-card chart-card">
+                            <div class="card-header">
+                                <h3>📈 Campaign Performance</h3>
+                                <div class="chart-filters">
+                                    <button class="chart-filter-btn active" data-period="week" onclick="filterBrandChart('week')">Week</button>
+                                    <button class="chart-filter-btn" data-period="month" onclick="filterBrandChart('month')">Month</button>
+                                    <button class="chart-filter-btn" data-period="year" onclick="filterBrandChart('year')">Year</button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="brandPerformanceChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboard-card chart-card">
+                            <div class="card-header">
+                                <h3>🎯 Investment by Sport</h3>
+                                <button class="btn btn-sm btn-outline" onclick="exportBrandData()">Export</button>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="brandInvestmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brand Quick Actions Bar -->
+                    <div class="quick-actions-bar brand-actions">
+                        <h4>⚡ Quick Actions</h4>
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" onclick="quickFindAthletes()">
+                                <span class="qa-icon">🔍</span>
+                                <span class="qa-text">Find Athletes</span>
+                                <span class="qa-badge">15</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickCreateCampaign()">
+                                <span class="qa-icon">🚀</span>
+                                <span class="qa-text">New Campaign</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickViewROI()">
+                                <span class="qa-icon">📊</span>
+                                <span class="qa-text">View ROI</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickSendOffer()">
+                                <span class="qa-icon">📨</span>
+                                <span class="qa-text">Send Offer</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickViewMessages()">
+                                <span class="qa-icon">💬</span>
+                                <span class="qa-text">Messages</span>
+                                <span class="qa-badge">3</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="quickGenerateReport()">
+                                <span class="qa-icon">📄</span>
+                                <span class="qa-text">Reports</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Brand Calendar & Goals Row -->
+                    <div class="widgets-row">
+                        <!-- Calendar Widget -->
+                        <div class="dashboard-card calendar-widget">
+                            <div class="card-header">
+                                <h3>📅 Campaign Schedule</h3>
+                                <button class="btn btn-sm btn-outline" onclick="openBrandCalendar()">Full Calendar</button>
+                            </div>
+                            <div class="calendar-events">
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">19</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Campaign Launch - Spring Collection</span>
+                                        <span class="event-time">All Day</span>
+                                    </div>
+                                    <span class="event-type campaign">Campaign</span>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">21</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Contract Review - Marcus Thompson</span>
+                                        <span class="event-time">2:00 PM</span>
+                                    </div>
+                                    <span class="event-type meeting">Meeting</span>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">24</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Photoshoot - Jordan Williams</span>
+                                        <span class="event-time">10:00 AM - 4:00 PM</span>
+                                    </div>
+                                    <span class="event-type content">Content</span>
+                                </div>
+                                <div class="calendar-event">
+                                    <div class="event-date">
+                                        <span class="event-day">28</span>
+                                        <span class="event-month">Jan</span>
+                                    </div>
+                                    <div class="event-info">
+                                        <span class="event-title">Q1 Budget Review</span>
+                                        <span class="event-time">11:00 AM</span>
+                                    </div>
+                                    <span class="event-type review">Review</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Campaign Goals Widget -->
+                        <div class="dashboard-card goals-widget">
+                            <div class="card-header">
+                                <h3>🎯 Q1 Campaign Goals</h3>
+                                <span class="goals-period">January - March 2025</span>
+                            </div>
+                            <div class="goals-list">
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">Total Reach</span>
+                                        <span class="goal-values">2.4M / 3M</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">New Partnerships</span>
+                                        <span class="goal-values">12 / 15</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">Campaign ROI</span>
+                                        <span class="goal-values">4.2x / 5x</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 84%"></div>
+                                    </div>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <span class="goal-label">Content Pieces</span>
+                                        <span class="goal-values">45 / 50</span>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="goal-bar" style="width: 90%"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

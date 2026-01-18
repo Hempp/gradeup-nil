@@ -2424,3 +2424,1256 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// ==================== ENHANCED DASHBOARD FEATURES ====================
+
+// Initialize Dashboard Charts
+function initDashboardCharts() {
+    initEarningsChart();
+    initDistributionChart();
+}
+
+// Earnings Trend Chart
+function initEarningsChart() {
+    const ctx = document.getElementById('earningsChart');
+    if (!ctx) return;
+
+    const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 280);
+    gradient.addColorStop(0, 'rgba(255, 215, 0, 0.3)');
+    gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'NIL Earnings ($)',
+                data: [45000, 52000, 48000, 61000, 55000, 72000, 85000],
+                borderColor: '#FFD700',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#FFD700',
+                pointBorderColor: '#1a1a1a',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                    titleColor: '#FFD700',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255, 215, 0, 0.3)',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.6)'
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        callback: function(value) {
+                            return '$' + (value / 1000) + 'K';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Distribution Chart (Doughnut)
+function initDistributionChart() {
+    const ctx = document.getElementById('distributionChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Basketball', 'Football', 'Soccer', 'Volleyball', 'Track', 'Other'],
+            datasets: [{
+                data: [42, 85, 28, 18, 35, 39],
+                backgroundColor: [
+                    '#FFD700',
+                    '#4dabf7',
+                    '#52ff52',
+                    '#ff6b6b',
+                    '#cc5de8',
+                    '#ffa94d'
+                ],
+                borderColor: '#1a1a1a',
+                borderWidth: 3,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        padding: 15,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                    titleColor: '#FFD700',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255, 215, 0, 0.3)',
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + ' athletes';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Chart filter buttons
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('chart-filter-btn')) {
+        const parent = e.target.closest('.chart-filters');
+        parent.querySelectorAll('.chart-filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+
+        // Update chart based on period
+        const period = e.target.dataset.period;
+        updateEarningsChart(period);
+    }
+});
+
+function updateEarningsChart(period) {
+    // Simulated data for different periods
+    const data = {
+        week: [45000, 52000, 48000, 61000, 55000, 72000, 85000],
+        month: [180000, 210000, 195000, 240000, 225000, 280000, 320000, 290000, 310000, 350000, 380000, 420000],
+        year: [850000, 920000, 1100000, 980000, 1150000, 1280000, 1350000, 1420000, 1500000, 1650000, 1800000, 2000000]
+    };
+
+    const labels = {
+        week: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        year: ['2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025']
+    };
+
+    // Would update the chart here with new data
+    showToast(`Showing ${period} data`, 'info');
+}
+
+// Notification Center
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    dropdown.classList.toggle('active');
+
+    // Close search dropdown if open
+    const searchDropdown = document.getElementById('searchDropdown');
+    if (searchDropdown) searchDropdown.classList.remove('active');
+}
+
+function markAllRead() {
+    const unreadItems = document.querySelectorAll('.notification-item.unread');
+    unreadItems.forEach(item => {
+        item.classList.remove('unread');
+    });
+
+    const badge = document.querySelector('.notification-badge');
+    if (badge) badge.style.display = 'none';
+
+    showToast('All notifications marked as read', 'success');
+}
+
+function viewAllNotifications() {
+    showToast('Full notification center coming soon', 'info');
+    toggleNotifications();
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.notification-center')) {
+        document.getElementById('notificationDropdown')?.classList.remove('active');
+    }
+    if (!e.target.closest('.advanced-search')) {
+        document.getElementById('searchDropdown')?.classList.remove('active');
+    }
+});
+
+// Advanced Search
+function handleDashboardSearch(query) {
+    const dropdown = document.getElementById('searchDropdown');
+    const resultsContainer = document.getElementById('searchResults');
+
+    if (query.length < 2) {
+        dropdown.classList.remove('active');
+        return;
+    }
+
+    dropdown.classList.add('active');
+
+    // Simulated search results
+    const results = athletesData.filter(a =>
+        a.name.toLowerCase().includes(query.toLowerCase()) ||
+        a.sport.toLowerCase().includes(query.toLowerCase()) ||
+        a.school.toLowerCase().includes(query.toLowerCase())
+    ).slice(0, 5);
+
+    if (results.length > 0) {
+        resultsContainer.innerHTML = results.map(athlete => `
+            <div class="search-result-item" onclick="viewAthleteFromSearch(${athlete.id})">
+                <img src="${athlete.photo}" alt="${athlete.name}" class="search-result-avatar">
+                <div class="search-result-info">
+                    <span class="search-result-name">${athlete.name}</span>
+                    <span class="search-result-meta">${capitalizeFirst(athlete.sport)} • ${athlete.school}</span>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        resultsContainer.innerHTML = '<div class="search-result-item"><span class="search-result-meta">No results found</span></div>';
+    }
+}
+
+function viewAthleteFromSearch(athleteId) {
+    document.getElementById('searchDropdown').classList.remove('active');
+    document.getElementById('directorSearch').value = '';
+    // Would navigate to athlete details
+    showToast('Opening athlete profile...', 'info');
+}
+
+// Quick Actions
+function quickVerifyBatch() {
+    showToast('Opening batch verification...', 'info');
+    switchDashboardTab('director', 'verification');
+}
+
+function quickExportData() {
+    openExportModal();
+}
+
+function quickSyncStatsTaq() {
+    showToast('Syncing with StatsTaq...', 'info');
+    setTimeout(() => {
+        showToast('StatsTaq sync complete!', 'success');
+    }, 2000);
+}
+
+function quickGenerateReport() {
+    showToast('Generating compliance report...', 'info');
+    setTimeout(() => {
+        showToast('Report generated successfully!', 'success');
+    }, 1500);
+}
+
+function quickMessageTeam() {
+    showToast('Opening team messaging...', 'info');
+}
+
+function quickScheduleEvent() {
+    showToast('Opening event scheduler...', 'info');
+}
+
+// Export Modal
+function openExportModal() {
+    const modal = document.createElement('div');
+    modal.className = 'export-modal active';
+    modal.id = 'exportModal';
+    modal.innerHTML = `
+        <div class="export-modal-content">
+            <h3 style="color: var(--white); margin-bottom: 0.5rem;">Export Data</h3>
+            <p style="color: var(--light-gray); font-size: 0.9rem;">Choose your export format</p>
+
+            <div class="export-options">
+                <div class="export-option" onclick="selectExportOption(this, 'csv')">
+                    <span class="export-icon">📊</span>
+                    <span class="export-label">CSV</span>
+                    <span class="export-desc">Spreadsheet format</span>
+                </div>
+                <div class="export-option" onclick="selectExportOption(this, 'pdf')">
+                    <span class="export-icon">📄</span>
+                    <span class="export-label">PDF</span>
+                    <span class="export-desc">Print-ready document</span>
+                </div>
+                <div class="export-option" onclick="selectExportOption(this, 'xlsx')">
+                    <span class="export-icon">📗</span>
+                    <span class="export-label">Excel</span>
+                    <span class="export-desc">Microsoft Excel</span>
+                </div>
+                <div class="export-option" onclick="selectExportOption(this, 'json')">
+                    <span class="export-icon">{ }</span>
+                    <span class="export-label">JSON</span>
+                    <span class="export-desc">Developer format</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="closeExportModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="performExport()">Export</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Close on backdrop click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeExportModal();
+    });
+}
+
+function closeExportModal() {
+    const modal = document.getElementById('exportModal');
+    if (modal) modal.remove();
+}
+
+let selectedExportFormat = 'csv';
+
+function selectExportOption(element, format) {
+    document.querySelectorAll('.export-option').forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedExportFormat = format;
+}
+
+function performExport() {
+    showToast(`Exporting as ${selectedExportFormat.toUpperCase()}...`, 'info');
+    closeExportModal();
+
+    // Generate actual export data
+    const exportData = generateExportData();
+
+    setTimeout(() => {
+        downloadExport(exportData, selectedExportFormat);
+        showToast(`Export complete! File downloaded.`, 'success');
+    }, 800);
+}
+
+function generateExportData() {
+    // Gather dashboard data for export
+    return {
+        title: 'GradeUp NIL Dashboard Report',
+        generatedAt: new Date().toISOString(),
+        summary: {
+            totalAthletes: 156,
+            verifiedAthletes: 142,
+            pendingVerification: 14,
+            totalNILValue: 2450000,
+            avgDealValue: 15705,
+            activeDeals: 89,
+            complianceRate: 98.5
+        },
+        athletes: [
+            { name: 'Marcus Johnson', sport: 'Football', nilValue: 125000, deals: 5, status: 'Verified' },
+            { name: 'Sarah Williams', sport: 'Basketball', nilValue: 95000, deals: 4, status: 'Verified' },
+            { name: 'James Chen', sport: 'Baseball', nilValue: 78000, deals: 3, status: 'Verified' },
+            { name: 'Emma Rodriguez', sport: 'Soccer', nilValue: 65000, deals: 4, status: 'Verified' },
+            { name: 'Tyler Brooks', sport: 'Football', nilValue: 112000, deals: 6, status: 'Pending' },
+            { name: 'Ashley Kim', sport: 'Volleyball', nilValue: 45000, deals: 2, status: 'Verified' },
+            { name: 'David Martinez', sport: 'Basketball', nilValue: 88000, deals: 3, status: 'Verified' },
+            { name: 'Rachel Thompson', sport: 'Softball', nilValue: 52000, deals: 3, status: 'Verified' }
+        ],
+        recentActivity: [
+            { date: '2025-01-18', action: 'Deal Verified', athlete: 'Marcus Johnson', value: 25000 },
+            { date: '2025-01-17', action: 'New Contract', athlete: 'Sarah Williams', value: 15000 },
+            { date: '2025-01-17', action: 'Compliance Check', athlete: 'James Chen', value: 0 },
+            { date: '2025-01-16', action: 'Deal Completed', athlete: 'Emma Rodriguez', value: 8500 }
+        ]
+    };
+}
+
+function downloadExport(data, format) {
+    let content, mimeType, extension;
+
+    switch (format) {
+        case 'csv':
+            content = generateCSV(data);
+            mimeType = 'text/csv';
+            extension = 'csv';
+            break;
+        case 'json':
+            content = JSON.stringify(data, null, 2);
+            mimeType = 'application/json';
+            extension = 'json';
+            break;
+        case 'pdf':
+            // For PDF, we'll generate a text-based report (real PDF would need a library)
+            content = generateTextReport(data);
+            mimeType = 'text/plain';
+            extension = 'txt';
+            showToast('PDF export requires server processing. Downloaded as text report.', 'info');
+            break;
+        case 'xlsx':
+            // For Excel, export as CSV (real XLSX would need a library)
+            content = generateCSV(data);
+            mimeType = 'text/csv';
+            extension = 'csv';
+            showToast('Excel export downloaded as CSV format.', 'info');
+            break;
+        default:
+            content = JSON.stringify(data, null, 2);
+            mimeType = 'application/json';
+            extension = 'json';
+    }
+
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gradeup-nil-report-${new Date().toISOString().split('T')[0]}.${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function generateCSV(data) {
+    let csv = 'GradeUp NIL Dashboard Report\n';
+    csv += `Generated: ${new Date().toLocaleString()}\n\n`;
+
+    // Summary section
+    csv += 'SUMMARY\n';
+    csv += 'Metric,Value\n';
+    csv += `Total Athletes,${data.summary.totalAthletes}\n`;
+    csv += `Verified Athletes,${data.summary.verifiedAthletes}\n`;
+    csv += `Pending Verification,${data.summary.pendingVerification}\n`;
+    csv += `Total NIL Value,$${data.summary.totalNILValue.toLocaleString()}\n`;
+    csv += `Average Deal Value,$${data.summary.avgDealValue.toLocaleString()}\n`;
+    csv += `Active Deals,${data.summary.activeDeals}\n`;
+    csv += `Compliance Rate,${data.summary.complianceRate}%\n\n`;
+
+    // Athletes section
+    csv += 'ATHLETES\n';
+    csv += 'Name,Sport,NIL Value,Deals,Status\n';
+    data.athletes.forEach(athlete => {
+        csv += `${athlete.name},${athlete.sport},$${athlete.nilValue.toLocaleString()},${athlete.deals},${athlete.status}\n`;
+    });
+    csv += '\n';
+
+    // Activity section
+    csv += 'RECENT ACTIVITY\n';
+    csv += 'Date,Action,Athlete,Value\n';
+    data.recentActivity.forEach(activity => {
+        csv += `${activity.date},${activity.action},${activity.athlete},$${activity.value.toLocaleString()}\n`;
+    });
+
+    return csv;
+}
+
+function generateTextReport(data) {
+    let report = '═══════════════════════════════════════════════════════════════\n';
+    report += '                    GRADEUP NIL DASHBOARD REPORT\n';
+    report += '═══════════════════════════════════════════════════════════════\n\n';
+    report += `Generated: ${new Date().toLocaleString()}\n\n`;
+
+    report += '───────────────────────────────────────────────────────────────\n';
+    report += '                           SUMMARY\n';
+    report += '───────────────────────────────────────────────────────────────\n';
+    report += `  Total Athletes:        ${data.summary.totalAthletes}\n`;
+    report += `  Verified Athletes:     ${data.summary.verifiedAthletes}\n`;
+    report += `  Pending Verification:  ${data.summary.pendingVerification}\n`;
+    report += `  Total NIL Value:       $${data.summary.totalNILValue.toLocaleString()}\n`;
+    report += `  Average Deal Value:    $${data.summary.avgDealValue.toLocaleString()}\n`;
+    report += `  Active Deals:          ${data.summary.activeDeals}\n`;
+    report += `  Compliance Rate:       ${data.summary.complianceRate}%\n\n`;
+
+    report += '───────────────────────────────────────────────────────────────\n';
+    report += '                          ATHLETES\n';
+    report += '───────────────────────────────────────────────────────────────\n';
+    data.athletes.forEach(athlete => {
+        report += `  ${athlete.name.padEnd(20)} | ${athlete.sport.padEnd(12)} | $${athlete.nilValue.toLocaleString().padStart(8)} | ${athlete.status}\n`;
+    });
+    report += '\n';
+
+    report += '───────────────────────────────────────────────────────────────\n';
+    report += '                       RECENT ACTIVITY\n';
+    report += '───────────────────────────────────────────────────────────────\n';
+    data.recentActivity.forEach(activity => {
+        report += `  ${activity.date} | ${activity.action.padEnd(18)} | ${activity.athlete}\n`;
+    });
+
+    report += '\n═══════════════════════════════════════════════════════════════\n';
+    report += '                    End of Report\n';
+    report += '═══════════════════════════════════════════════════════════════\n';
+
+    return report;
+}
+
+// Export Activity
+function exportActivity() {
+    openExportModal();
+}
+
+// Calendar Functions
+function openFullCalendar() {
+    showToast('Full calendar view coming soon', 'info');
+}
+
+// Initialize charts when director dashboard opens
+const originalOpenDirectorDashboard = window.openDirectorDashboard;
+window.openDirectorDashboard = function() {
+    if (originalOpenDirectorDashboard) {
+        originalOpenDirectorDashboard();
+    }
+
+    // Initialize charts after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        initDashboardCharts();
+    }, 300);
+};
+
+// ============================================
+// ATHLETE DASHBOARD FEATURES
+// ============================================
+
+// Athlete Dashboard Charts
+function initAthleteCharts() {
+    initAthleteEarningsChart();
+    initAthleteIncomeChart();
+}
+
+function initAthleteEarningsChart() {
+    const ctx = document.getElementById('athleteEarningsChart');
+    if (!ctx) return;
+
+    // Destroy existing chart if any
+    if (ctx.chart) {
+        ctx.chart.destroy();
+    }
+
+    const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 280);
+    gradient.addColorStop(0, 'rgba(74, 144, 226, 0.3)');
+    gradient.addColorStop(1, 'rgba(74, 144, 226, 0)');
+
+    ctx.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Earnings ($)',
+                data: [500, 1200, 800, 2500, 1800, 3200, 5000],
+                borderColor: '#4A90E2',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#4A90E2',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: 'rgba(255, 255, 255, 0.7)' }
+                }
+            }
+        }
+    });
+}
+
+function initAthleteIncomeChart() {
+    const ctx = document.getElementById('athleteIncomeChart');
+    if (!ctx) return;
+
+    // Destroy existing chart if any
+    if (ctx.chart) {
+        ctx.chart.destroy();
+    }
+
+    ctx.chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Brand Deals', 'Fan Donations', 'Events', 'Data Licensing', 'Merchandise'],
+            datasets: [{
+                data: [45, 20, 15, 12, 8],
+                backgroundColor: [
+                    '#4A90E2',
+                    '#50C878',
+                    '#FFD700',
+                    '#FF6B6B',
+                    '#9B59B6'
+                ],
+                borderColor: 'rgba(0, 0, 0, 0.2)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        padding: 15,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.raw + '%';
+                        }
+                    }
+                }
+            },
+            cutout: '65%'
+        }
+    });
+}
+
+function filterAthleteChart(period) {
+    // Update active button
+    document.querySelectorAll('.athlete-actions').forEach(section => {
+        const parent = section.closest('.dashboard-tab');
+        if (parent) {
+            parent.querySelectorAll('.chart-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.period === period) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+    });
+
+    // Update chart data based on period
+    const ctx = document.getElementById('athleteEarningsChart');
+    if (ctx && ctx.chart) {
+        let labels, data;
+        switch(period) {
+            case 'week':
+                labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                data = [500, 1200, 800, 2500, 1800, 3200, 5000];
+                break;
+            case 'month':
+                labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+                data = [3500, 4200, 5800, 4950];
+                break;
+            case 'year':
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                data = [8500, 9200, 7800, 11000, 12500, 15000, 13200, 14800, 16500, 18000, 17500, 18450];
+                break;
+        }
+        ctx.chart.data.labels = labels;
+        ctx.chart.data.datasets[0].data = data;
+        ctx.chart.update();
+    }
+
+    showToast(`Showing ${period} data`, 'info');
+}
+
+// Athlete Notification Functions
+function toggleAthleteNotifications() {
+    const dropdown = document.getElementById('athleteNotificationDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('active');
+    }
+    // Close search dropdown if open
+    const searchDropdown = document.getElementById('athleteSearchDropdown');
+    if (searchDropdown) searchDropdown.classList.remove('active');
+}
+
+function markAllAthleteRead() {
+    const unreadItems = document.querySelectorAll('#athleteNotificationDropdown .notification-item.unread');
+    unreadItems.forEach(item => item.classList.remove('unread'));
+    const badge = document.querySelector('#athleteNotificationDropdown')?.closest('.notification-center')?.querySelector('.notification-badge');
+    if (badge) badge.style.display = 'none';
+    showToast('All notifications marked as read', 'success');
+}
+
+function viewAllAthleteNotifications() {
+    toggleAthleteNotifications();
+    showToast('Notifications center coming soon', 'info');
+}
+
+// Athlete Search Functions
+function handleAthleteSearch(query) {
+    const dropdown = document.getElementById('athleteSearchDropdown');
+    const results = document.getElementById('athleteSearchResults');
+
+    if (!query || query.length < 2) {
+        dropdown.classList.remove('active');
+        return;
+    }
+
+    // Sample search data for athletes
+    const searchData = [
+        { type: 'deal', name: 'Nike Partnership', status: 'Active', value: '$5,000' },
+        { type: 'deal', name: 'Gatorade Campaign', status: 'Pending', value: '$8,000' },
+        { type: 'brand', name: 'Under Armour', status: 'Interested', value: '$15,000' },
+        { type: 'brand', name: 'Red Bull', status: 'New Offer', value: '$12,000' },
+        { type: 'event', name: 'Speaking Event - Feb 15', status: 'Confirmed', value: '$2,500' },
+        { type: 'content', name: 'Instagram Post Due', status: 'Jan 28', value: 'Required' }
+    ];
+
+    const filtered = searchData.filter(item =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (filtered.length > 0) {
+        results.innerHTML = filtered.map(item => `
+            <div class="search-result-item" onclick="viewAthleteItem('${item.type}', '${item.name}')">
+                <span class="result-icon">${item.type === 'deal' ? '🤝' : item.type === 'brand' ? '🏢' : item.type === 'event' ? '📅' : '📱'}</span>
+                <div class="result-info">
+                    <span class="result-name">${item.name}</span>
+                    <span class="result-meta">${item.status} • ${item.value}</span>
+                </div>
+            </div>
+        `).join('');
+        dropdown.classList.add('active');
+    } else {
+        results.innerHTML = '<div class="no-results">No results found</div>';
+        dropdown.classList.add('active');
+    }
+}
+
+function viewAthleteItem(type, name) {
+    document.getElementById('athleteSearchDropdown').classList.remove('active');
+    document.getElementById('athleteSearchInput').value = '';
+    showToast(`Opening ${type}: ${name}`, 'info');
+}
+
+// Athlete Quick Action Functions
+function quickViewOffers() {
+    switchDashboardTab('athlete', 'deals');
+    showToast('Viewing your offers', 'info');
+}
+
+function quickUpdateProfile() {
+    switchDashboardTab('athlete', 'profile');
+    showToast('Update your profile', 'info');
+}
+
+function quickPostContent() {
+    switchDashboardTab('athlete', 'content');
+    showToast('Create new content', 'info');
+}
+
+function quickViewAnalytics() {
+    switchDashboardTab('athlete', 'datavalue');
+    showToast('Viewing your analytics', 'info');
+}
+
+function quickMessageBrand() {
+    switchDashboardTab('athlete', 'messages');
+    showToast('Opening messages', 'info');
+}
+
+// Athlete Calendar & Export Functions
+function openAthleteCalendar() {
+    showToast('Full calendar view coming soon', 'info');
+}
+
+function exportAthleteData() {
+    const data = {
+        title: 'Athlete NIL Report',
+        generatedAt: new Date().toISOString(),
+        summary: {
+            totalEarnings: 18450,
+            nilValuation: 125000,
+            activeDeals: 4,
+            profileViews: 45200
+        },
+        earnings: [
+            { date: '2025-01-15', source: 'Nike Partnership', amount: 5000 },
+            { date: '2025-01-12', source: 'Fan Donations', amount: 1250 },
+            { date: '2025-01-08', source: 'Speaking Event', amount: 2500 },
+            { date: '2025-01-05', source: 'Data Licensing', amount: 800 }
+        ],
+        goals: {
+            monthlyEarnings: { current: 8450, target: 10000 },
+            brandDeals: { current: 2, target: 3 },
+            socialPosts: { current: 8, target: 10 }
+        }
+    };
+
+    // Generate CSV
+    let csv = 'Athlete NIL Report\n';
+    csv += `Generated: ${new Date().toLocaleString()}\n\n`;
+    csv += 'EARNINGS SUMMARY\n';
+    csv += `Total Earnings,$${data.summary.totalEarnings.toLocaleString()}\n`;
+    csv += `NIL Valuation,$${data.summary.nilValuation.toLocaleString()}\n`;
+    csv += `Active Deals,${data.summary.activeDeals}\n`;
+    csv += `Profile Views,${data.summary.profileViews.toLocaleString()}\n\n`;
+    csv += 'RECENT EARNINGS\n';
+    csv += 'Date,Source,Amount\n';
+    data.earnings.forEach(e => {
+        csv += `${e.date},${e.source},$${e.amount.toLocaleString()}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `athlete-nil-report-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('Report exported successfully!', 'success');
+}
+
+// Initialize charts when athlete dashboard opens
+const originalOpenAthleteDashboard = window.openAthleteDashboard;
+window.openAthleteDashboard = function() {
+    if (originalOpenAthleteDashboard) {
+        originalOpenAthleteDashboard();
+    }
+
+    // Initialize charts after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        initAthleteCharts();
+    }, 300);
+};
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    // Close athlete notifications
+    if (!e.target.closest('.notification-center')) {
+        const athleteDropdown = document.getElementById('athleteNotificationDropdown');
+        if (athleteDropdown) athleteDropdown.classList.remove('active');
+        const brandDropdown = document.getElementById('brandNotificationDropdown');
+        if (brandDropdown) brandDropdown.classList.remove('active');
+    }
+    // Close athlete search
+    if (!e.target.closest('.athlete-search')) {
+        const searchDropdown = document.getElementById('athleteSearchDropdown');
+        if (searchDropdown) searchDropdown.classList.remove('active');
+    }
+    // Close brand search
+    if (!e.target.closest('.brand-search')) {
+        const brandSearchDropdown = document.getElementById('brandSearchDropdown');
+        if (brandSearchDropdown) brandSearchDropdown.classList.remove('active');
+    }
+});
+
+// ==========================================
+// BRAND DASHBOARD ENHANCED FEATURES
+// ==========================================
+
+// Brand Dashboard Charts
+function initBrandCharts() {
+    initBrandPerformanceChart();
+    initBrandInvestmentChart();
+}
+
+function initBrandPerformanceChart() {
+    const ctx = document.getElementById('brandPerformanceChart');
+    if (!ctx) return;
+
+    // Destroy existing chart if it exists
+    if (ctx.chart) {
+        ctx.chart.destroy();
+    }
+
+    const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 280);
+    gradient.addColorStop(0, 'rgba(80, 200, 120, 0.3)');
+    gradient.addColorStop(1, 'rgba(80, 200, 120, 0)');
+
+    ctx.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Impressions (K)',
+                data: [45, 62, 78, 95, 112, 145, 180],
+                borderColor: '#50C878',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#50C878',
+                pointBorderColor: '#1a1a2e',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 26, 46, 0.95)',
+                    titleColor: '#fff',
+                    bodyColor: '#50C878',
+                    borderColor: 'rgba(80, 200, 120, 0.3)',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.parsed.y}K impressions`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        font: { size: 11 }
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        font: { size: 11 },
+                        callback: function(value) {
+                            return value + 'K';
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+}
+
+function initBrandInvestmentChart() {
+    const ctx = document.getElementById('brandInvestmentChart');
+    if (!ctx) return;
+
+    // Destroy existing chart if it exists
+    if (ctx.chart) {
+        ctx.chart.destroy();
+    }
+
+    ctx.chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Football', 'Basketball', 'Baseball', 'Soccer', 'Track'],
+            datasets: [{
+                data: [35, 28, 18, 12, 7],
+                backgroundColor: [
+                    'rgba(80, 200, 120, 0.9)',
+                    'rgba(74, 144, 226, 0.9)',
+                    'rgba(212, 175, 55, 0.9)',
+                    'rgba(155, 89, 182, 0.9)',
+                    'rgba(231, 76, 60, 0.9)'
+                ],
+                borderColor: 'rgba(26, 26, 46, 0.8)',
+                borderWidth: 3,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        padding: 15,
+                        font: { size: 12 },
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 26, 46, 0.95)',
+                    titleColor: '#fff',
+                    bodyColor: '#50C878',
+                    borderColor: 'rgba(80, 200, 120, 0.3)',
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.parsed}% of budget`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Brand Chart Filter
+function filterBrandChart(period) {
+    // Update active button
+    const buttons = document.querySelectorAll('#brandDashboard .chart-filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Update chart data based on period
+    const ctx = document.getElementById('brandPerformanceChart');
+    if (!ctx || !ctx.chart) return;
+
+    let labels, data;
+    switch(period) {
+        case 'week':
+            labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            data = [45, 62, 78, 95, 112, 145, 180];
+            break;
+        case 'month':
+            labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            data = [320, 480, 590, 720];
+            break;
+        case 'year':
+            labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            data = [1200, 1580, 2100, 2800, 3400, 4200];
+            break;
+    }
+
+    ctx.chart.data.labels = labels;
+    ctx.chart.data.datasets[0].data = data;
+    ctx.chart.update('active');
+
+    showToast(`Showing ${period}ly campaign data`, 'info');
+}
+
+// Brand Notification Functions
+function toggleBrandNotifications() {
+    const dropdown = document.getElementById('brandNotificationDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('active');
+    }
+}
+
+function markBrandNotificationRead(element) {
+    const item = element.closest('.notification-item');
+    if (item) {
+        item.classList.add('read');
+        // Update badge count
+        const badge = document.querySelector('#brandDashboard .notification-badge');
+        if (badge) {
+            const count = parseInt(badge.textContent) - 1;
+            badge.textContent = Math.max(0, count);
+            if (count <= 0) {
+                badge.style.display = 'none';
+            }
+        }
+    }
+}
+
+function markAllBrandNotificationsRead() {
+    const items = document.querySelectorAll('#brandNotificationDropdown .notification-item');
+    items.forEach(item => item.classList.add('read'));
+
+    const badge = document.querySelector('#brandDashboard .notification-badge');
+    if (badge) {
+        badge.textContent = '0';
+        badge.style.display = 'none';
+    }
+
+    showToast('All notifications marked as read', 'success');
+}
+
+// Brand Search Functions
+function handleBrandSearch(query) {
+    const dropdown = document.getElementById('brandSearchDropdown');
+    const results = document.getElementById('brandSearchResults');
+
+    if (!dropdown || !results) return;
+
+    if (query.length < 2) {
+        dropdown.classList.remove('active');
+        return;
+    }
+
+    dropdown.classList.add('active');
+
+    // Sample search data for brands
+    const searchData = [
+        { type: 'athlete', name: 'Marcus Johnson', info: 'Football • 125K followers', icon: '🏈' },
+        { type: 'athlete', name: 'Sarah Williams', info: 'Basketball • 89K followers', icon: '🏀' },
+        { type: 'athlete', name: 'David Chen', info: 'Baseball • 56K followers', icon: '⚾' },
+        { type: 'campaign', name: 'Spring Launch 2024', info: 'Active • 3 athletes', icon: '📢' },
+        { type: 'campaign', name: 'Summer Promo', info: 'Draft • Planning', icon: '📋' },
+        { type: 'deal', name: 'Social Media Package', info: '$5,000 • Standard', icon: '💼' },
+        { type: 'deal', name: 'Event Appearance', info: '$2,500 • Premium', icon: '🎤' }
+    ];
+
+    const filtered = searchData.filter(item =>
+        item.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.info.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (filtered.length === 0) {
+        results.innerHTML = '<div class="no-results">No results found</div>';
+        return;
+    }
+
+    results.innerHTML = filtered.map(item => `
+        <div class="search-result-item" onclick="selectBrandSearchResult('${item.name}', '${item.type}')">
+            <span class="result-icon">${item.icon}</span>
+            <div class="result-info">
+                <span class="result-name">${item.name}</span>
+                <span class="result-meta">${item.info}</span>
+            </div>
+            <span class="result-type">${item.type}</span>
+        </div>
+    `).join('');
+}
+
+function selectBrandSearchResult(name, type) {
+    document.getElementById('brandSearchInput').value = '';
+    document.getElementById('brandSearchDropdown').classList.remove('active');
+    showToast(`Opening ${type}: ${name}`, 'info');
+}
+
+// Brand Quick Actions
+function quickFindAthletes() {
+    showToast('Opening Athlete Discovery...', 'info');
+    // Could open a modal or navigate to athlete search
+}
+
+function quickCreateCampaign() {
+    showToast('Opening Campaign Creator...', 'info');
+    // Could open campaign creation modal
+}
+
+function quickSendOffer() {
+    showToast('Opening Offer Builder...', 'info');
+    // Could open offer/deal creation modal
+}
+
+function quickViewAnalytics() {
+    showToast('Opening Full Analytics...', 'info');
+    // Could expand analytics view
+}
+
+function quickManageDeals() {
+    showToast('Opening Deal Management...', 'info');
+    // Could open deals management panel
+}
+
+function quickContactSupport() {
+    showToast('Opening Support Chat...', 'info');
+    // Could open support modal or chat
+}
+
+// Brand Data Export
+function exportBrandData() {
+    const data = [
+        ['Campaign Performance Report', '', '', ''],
+        ['Generated:', new Date().toLocaleDateString(), '', ''],
+        ['', '', '', ''],
+        ['Sport', 'Investment %', 'Athletes', 'ROI'],
+        ['Football', '35%', '8', '+45%'],
+        ['Basketball', '28%', '6', '+38%'],
+        ['Baseball', '18%', '4', '+25%'],
+        ['Soccer', '12%', '3', '+32%'],
+        ['Track', '7%', '2', '+28%'],
+        ['', '', '', ''],
+        ['Weekly Impressions', '', '', ''],
+        ['Day', 'Impressions (K)', 'Engagement', 'Clicks'],
+        ['Monday', '45', '3.2%', '1,250'],
+        ['Tuesday', '62', '3.8%', '1,580'],
+        ['Wednesday', '78', '4.1%', '2,100'],
+        ['Thursday', '95', '4.5%', '2,450'],
+        ['Friday', '112', '4.2%', '2,800'],
+        ['Saturday', '145', '5.1%', '3,600'],
+        ['Sunday', '180', '5.8%', '4,200']
+    ];
+
+    const csv = data.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `brand_campaign_report_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+
+    showToast('Campaign report exported successfully!', 'success');
+}
+
+// Initialize charts when brand dashboard opens
+const originalOpenBrandDashboard = window.openBrandDashboard;
+window.openBrandDashboard = function() {
+    if (originalOpenBrandDashboard) {
+        originalOpenBrandDashboard();
+    }
+
+    // Initialize charts after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        initBrandCharts();
+    }, 300);
+};
