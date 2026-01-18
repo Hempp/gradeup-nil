@@ -2590,10 +2590,12 @@
                                 <tr>
                                     <th>Athlete</th>
                                     <th>Sport</th>
+                                    <th>Year</th>
+                                    <th>Major</th>
                                     <th>GPA</th>
                                     <th>NIL Value</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
+                                    <th class="hide-mobile">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="directorAthletesTable">
@@ -2603,10 +2605,12 @@
                                         <span>Jordan Williams</span>
                                     </td>
                                     <td>Basketball</td>
+                                    <td><span class="year-badge">Junior</span></td>
+                                    <td><span class="major-text">Business Admin</span></td>
                                     <td><span class="gpa-badge high">3.87</span></td>
                                     <td>$125,000</td>
                                     <td><span class="status-badge verified">Verified</span></td>
-                                    <td>
+                                    <td class="hide-mobile">
                                         <button class="btn btn-sm btn-outline" onclick="viewAthleteDetails(1)">View</button>
                                         <button class="btn btn-sm btn-outline" onclick="editAthlete(1)">Edit</button>
                                     </td>
@@ -2617,10 +2621,12 @@
                                         <span>Emily Davis</span>
                                     </td>
                                     <td>Soccer</td>
+                                    <td><span class="year-badge">Senior</span></td>
+                                    <td><span class="major-text">Pre-Med Biology</span></td>
                                     <td><span class="gpa-badge high">3.92</span></td>
                                     <td>$85,000</td>
                                     <td><span class="status-badge verified">Verified</span></td>
-                                    <td>
+                                    <td class="hide-mobile">
                                         <button class="btn btn-sm btn-outline" onclick="viewAthleteDetails(2)">View</button>
                                         <button class="btn btn-sm btn-outline" onclick="editAthlete(2)">Edit</button>
                                     </td>
@@ -2631,12 +2637,46 @@
                                         <span>Marcus Thompson</span>
                                     </td>
                                     <td>Football</td>
+                                    <td><span class="year-badge">Sophomore</span></td>
+                                    <td><span class="major-text">Communications</span></td>
                                     <td><span class="gpa-badge medium">3.24</span></td>
                                     <td>$210,000</td>
                                     <td><span class="status-badge pending">Pending</span></td>
-                                    <td>
+                                    <td class="hide-mobile">
                                         <button class="btn btn-sm btn-success" onclick="verifyAthlete(3)">Verify</button>
                                         <button class="btn btn-sm btn-outline" onclick="viewAthleteDetails(3)">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="athlete-cell">
+                                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=50&h=50&fit=crop&crop=face" alt="">
+                                        <span>Chris Martinez</span>
+                                    </td>
+                                    <td>Baseball</td>
+                                    <td><span class="year-badge">Freshman</span></td>
+                                    <td><span class="major-text">Sports Management</span></td>
+                                    <td><span class="gpa-badge high">3.65</span></td>
+                                    <td>$45,000</td>
+                                    <td><span class="status-badge verified">Verified</span></td>
+                                    <td class="hide-mobile">
+                                        <button class="btn btn-sm btn-outline" onclick="viewAthleteDetails(4)">View</button>
+                                        <button class="btn btn-sm btn-outline" onclick="editAthlete(4)">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="athlete-cell">
+                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="">
+                                        <span>Aisha Johnson</span>
+                                    </td>
+                                    <td>Track & Field</td>
+                                    <td><span class="year-badge">Junior</span></td>
+                                    <td><span class="major-text">Kinesiology</span></td>
+                                    <td><span class="gpa-badge high">3.78</span></td>
+                                    <td>$68,000</td>
+                                    <td><span class="status-badge verified">Verified</span></td>
+                                    <td class="hide-mobile">
+                                        <button class="btn btn-sm btn-outline" onclick="viewAthleteDetails(5)">View</button>
+                                        <button class="btn btn-sm btn-outline" onclick="editAthlete(5)">Edit</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -4341,6 +4381,7 @@
                             <div class="adc-body">
                                 <h4>Jordan Williams</h4>
                                 <p>Basketball • Duke University</p>
+                                <p class="adc-academic"><span class="year-badge">Junior</span> <span class="major-text">Business Administration</span></p>
                                 <div class="adc-stats">
                                     <div class="adc-stat">
                                         <span class="value">3.87</span>
@@ -4372,6 +4413,7 @@
                             <div class="adc-body">
                                 <h4>Emily Davis</h4>
                                 <p>Soccer • Stanford University</p>
+                                <p class="adc-academic"><span class="year-badge">Senior</span> <span class="major-text">Pre-Med Biology</span></p>
                                 <div class="adc-stats">
                                     <div class="adc-stat">
                                         <span class="value">3.92</span>
@@ -4402,6 +4444,7 @@
                             <div class="adc-body">
                                 <h4>Marcus Thompson</h4>
                                 <p>Football • Alabama</p>
+                                <p class="adc-academic"><span class="year-badge">Sophomore</span> <span class="major-text">Communications</span></p>
                                 <div class="adc-stats">
                                     <div class="adc-stat">
                                         <span class="value">3.24</span>
