@@ -1397,21 +1397,6 @@ function handleDirectorSignup(e) {
     closeModal('directorSignupModal');
 }
 
-// Open Director Dashboard
-function openDirectorDashboard() {
-    const institutionEl = document.getElementById('directorInstitution');
-    if (institutionEl && currentDirector) {
-        institutionEl.textContent = currentDirector.institution;
-    }
-
-    updateDashboardStats();
-    renderPendingVerifications();
-    renderVerifiedAthletes();
-    renderGradeVerifications();
-
-    openModal('directorDashboardModal');
-}
-
 // Update Dashboard Stats
 function updateDashboardStats() {
     const schoolAthletes = athletesData.filter(a =>
@@ -1431,18 +1416,6 @@ function updateDashboardStats() {
     document.getElementById('pendingCount').textContent = pendingRequests.length || verificationRequests.filter(r => r.status === 'pending').length;
     document.getElementById('pendingBadge').textContent = pendingRequests.length || verificationRequests.filter(r => r.status === 'pending').length;
     document.getElementById('gradesVerifiedCount').textContent = gradesVerified.length || Math.floor(athletesData.length * 0.8);
-}
-
-// Switch Dashboard Tabs
-function switchDashboardTab(tab) {
-    const tabs = document.querySelectorAll('.dashboard-tab');
-    const contents = document.querySelectorAll('.dashboard-tab-content');
-
-    tabs.forEach(t => t.classList.remove('active'));
-    contents.forEach(c => c.classList.remove('active'));
-
-    event.target.classList.add('active');
-    document.getElementById(`${tab}Tab`).classList.add('active');
 }
 
 // Render Pending Verifications
@@ -1920,6 +1893,18 @@ document.addEventListener('DOMContentLoaded', function() {
 function openDirectorDashboard() {
     const modal = document.getElementById('directorFullDashboard');
     if (modal) {
+        // Set institution name if available
+        const institutionEl = document.getElementById('directorInstitution');
+        if (institutionEl && currentDirector) {
+            institutionEl.textContent = currentDirector.institution;
+        }
+
+        // Initialize dashboard data
+        updateDashboardStats();
+        renderPendingVerifications();
+        renderVerifiedAthletes();
+        renderGradeVerifications();
+
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
