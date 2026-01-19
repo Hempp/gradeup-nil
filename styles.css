@@ -193916,3 +193916,7788 @@ kbd.kbd-icon svg,
         min-width: 100px;
     }
 }
+
+/* ==========================================================================
+   BATCH 25: KANBAN, FILE MANAGER, PRICING, TESTIMONIALS, FAQ
+   Premium CSS Components - GradeUp NIL
+   ========================================================================== */
+
+/* ==========================================================================
+   25.1 KANBAN BOARDS & PROJECT MANAGEMENT UI
+   ========================================================================== */
+
+/* Kanban Board Container */
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    background: rgba(15, 15, 15, 0.95);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    min-height: 600px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 197, 24, 0.3) transparent;
+}
+
+.kanban-board::-webkit-scrollbar {
+    height: 8px;
+}
+
+.kanban-board::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.kanban-board::-webkit-scrollbar-thumb {
+    background: rgba(245, 197, 24, 0.3);
+    border-radius: 4px;
+}
+
+.kanban-board::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 197, 24, 0.5);
+}
+
+/* Kanban Column */
+.kanban-column {
+    flex: 0 0 320px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(25, 25, 25, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    max-height: calc(100vh - 200px);
+    overflow: hidden;
+}
+
+.kanban-column--highlight {
+    border-color: rgba(245, 197, 24, 0.3);
+    box-shadow: 0 0 20px rgba(245, 197, 24, 0.1);
+}
+
+.kanban-column--drag-over {
+    background: rgba(245, 197, 24, 0.05);
+    border-color: rgba(245, 197, 24, 0.5);
+    border-style: dashed;
+}
+
+/* Column Header */
+.kanban-column__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(30, 30, 30, 0.9);
+    border-radius: 16px 16px 0 0;
+}
+
+.kanban-column__title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.kanban-column__color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.kanban-column__color-dot--todo {
+    background: #6B7280;
+}
+
+.kanban-column__color-dot--in-progress {
+    background: #3B82F6;
+}
+
+.kanban-column__color-dot--review {
+    background: #F59E0B;
+}
+
+.kanban-column__color-dot--done {
+    background: #10B981;
+}
+
+.kanban-column__color-dot--blocked {
+    background: #EF4444;
+}
+
+.kanban-column__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kanban-column__count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.kanban-column__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.kanban-column__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-column__action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #F5C518;
+}
+
+/* Column Body */
+.kanban-column__body {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.kanban-column__body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.kanban-column__body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.kanban-column__body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Kanban Card */
+.kanban-card {
+    background: rgba(35, 35, 35, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: grab;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-card:hover {
+    border-color: rgba(245, 197, 24, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+}
+
+.kanban-card--dragging {
+    opacity: 0.5;
+    transform: rotate(3deg);
+}
+
+.kanban-card--selected {
+    border-color: #F5C518;
+    box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.2);
+}
+
+/* Card Labels */
+.kanban-card__labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.kanban-card__label {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.kanban-card__label--bug {
+    background: rgba(239, 68, 68, 0.2);
+    color: #F87171;
+}
+
+.kanban-card__label--feature {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60A5FA;
+}
+
+.kanban-card__label--enhancement {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34D399;
+}
+
+.kanban-card__label--urgent {
+    background: rgba(245, 197, 24, 0.2);
+    color: #F5C518;
+}
+
+.kanban-card__label--design {
+    background: rgba(168, 85, 247, 0.2);
+    color: #C084FC;
+}
+
+.kanban-card__label--docs {
+    background: rgba(99, 102, 241, 0.2);
+    color: #A5B4FC;
+}
+
+/* Card Title */
+.kanban-card__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+/* Card Description */
+.kanban-card__description {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Card Cover Image */
+.kanban-card__cover {
+    width: calc(100% + 28px);
+    margin: -14px -14px 12px -14px;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+}
+
+.kanban-card__cover-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Card Checklist Progress */
+.kanban-card__checklist {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.kanban-card__checklist-icon {
+    width: 14px;
+    height: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.kanban-card__checklist-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.kanban-card__checklist-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #F5C518, #FFD54F);
+    border-radius: 2px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-card__checklist-text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Card Footer */
+.kanban-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.kanban-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kanban-card__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.kanban-card__meta-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.kanban-card__meta-item--due {
+    color: rgba(239, 68, 68, 0.8);
+}
+
+.kanban-card__meta-item--due-soon {
+    color: rgba(245, 158, 11, 0.8);
+}
+
+/* Card Assignees */
+.kanban-card__assignees {
+    display: flex;
+    align-items: center;
+}
+
+.kanban-card__assignee {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid rgba(35, 35, 35, 0.9);
+    margin-left: -8px;
+    overflow: hidden;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-card__assignee:first-child {
+    margin-left: 0;
+}
+
+.kanban-card__assignee:hover {
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+.kanban-card__assignee-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kanban-card__assignee-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(245, 197, 24, 0.2);
+    border: 2px solid rgba(35, 35, 35, 0.9);
+    margin-left: -8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: #F5C518;
+}
+
+/* Card Priority Indicator */
+.kanban-card__priority {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 12px 0 0 12px;
+}
+
+.kanban-card__priority--low {
+    background: #6B7280;
+}
+
+.kanban-card__priority--medium {
+    background: #3B82F6;
+}
+
+.kanban-card__priority--high {
+    background: #F59E0B;
+}
+
+.kanban-card__priority--critical {
+    background: #EF4444;
+}
+
+.kanban-card--with-priority {
+    position: relative;
+    padding-left: 18px;
+}
+
+/* Column Footer - Add Card */
+.kanban-column__footer {
+    padding: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.kanban-add-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-add-card:hover {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+    color: #F5C518;
+}
+
+.kanban-add-card__icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Quick Add Card Form */
+.kanban-quick-add {
+    background: rgba(35, 35, 35, 0.9);
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.kanban-quick-add__input {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+    transition: border-color 0.2s ease;
+}
+
+.kanban-quick-add__input:focus {
+    outline: none;
+    border-color: rgba(245, 197, 24, 0.5);
+}
+
+.kanban-quick-add__input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.kanban-quick-add__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kanban-quick-add__submit {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #F5C518 0%, #FFD54F 100%);
+    border: none;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-quick-add__submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.3);
+}
+
+.kanban-quick-add__cancel {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-quick-add__cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Add Column Button */
+.kanban-add-column {
+    flex: 0 0 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 60px;
+    background: rgba(25, 25, 25, 0.5);
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-add-column:hover {
+    background: rgba(245, 197, 24, 0.05);
+    border-color: rgba(245, 197, 24, 0.3);
+    color: #F5C518;
+}
+
+.kanban-add-column__icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Kanban Board Header */
+.kanban-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.kanban-header__left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.kanban-header__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.kanban-header__project {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(245, 197, 24, 0.1);
+    border-radius: 8px;
+}
+
+.kanban-header__project-icon {
+    width: 16px;
+    height: 16px;
+    color: #F5C518;
+}
+
+.kanban-header__project-name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #F5C518;
+}
+
+.kanban-header__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* View Toggle */
+.kanban-view-toggle {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.kanban-view-toggle__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-view-toggle__btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.kanban-view-toggle__btn--active {
+    background: rgba(245, 197, 24, 0.2);
+    color: #F5C518;
+}
+
+.kanban-view-toggle__icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Filter Dropdown */
+.kanban-filter {
+    position: relative;
+}
+
+.kanban-filter__trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-filter__trigger:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.kanban-filter__trigger--active {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+    color: #F5C518;
+}
+
+.kanban-filter__icon {
+    width: 16px;
+    height: 16px;
+}
+
+.kanban-filter__badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: #F5C518;
+    border-radius: 9px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #000000;
+}
+
+/* Filter Dropdown Panel */
+.kanban-filter__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 280px;
+    background: rgba(25, 25, 25, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-filter__dropdown--open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.kanban-filter__dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kanban-filter__dropdown-title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.kanban-filter__clear {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: #F5C518;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.kanban-filter__clear:hover {
+    opacity: 0.8;
+}
+
+.kanban-filter__dropdown-body {
+    padding: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.kanban-filter__group {
+    margin-bottom: 16px;
+}
+
+.kanban-filter__group:last-child {
+    margin-bottom: 0;
+}
+
+.kanban-filter__group-label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.kanban-filter__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.kanban-filter__option:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.kanban-filter__checkbox {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.kanban-filter__option--selected .kanban-filter__checkbox {
+    background: #F5C518;
+    border-color: #F5C518;
+}
+
+.kanban-filter__checkbox-icon {
+    width: 10px;
+    height: 10px;
+    color: #000000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.kanban-filter__option--selected .kanban-filter__checkbox-icon {
+    opacity: 1;
+}
+
+.kanban-filter__option-label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Team Members */
+.kanban-team {
+    display: flex;
+    align-items: center;
+}
+
+.kanban-team__member {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid rgba(20, 20, 20, 0.95);
+    margin-left: -10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-team__member:first-child {
+    margin-left: 0;
+}
+
+.kanban-team__member:hover {
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+.kanban-team__member-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kanban-team__add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    margin-left: -10px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-team__add:hover {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.5);
+    color: #F5C518;
+}
+
+.kanban-team__add-icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* Kanban Swimlanes */
+.kanban-swimlane {
+    margin-bottom: 24px;
+}
+
+.kanban-swimlane__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(25, 25, 25, 0.8);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.kanban-swimlane__header:hover {
+    background: rgba(30, 30, 30, 0.9);
+}
+
+.kanban-swimlane__toggle {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: transform 0.2s ease;
+}
+
+.kanban-swimlane--collapsed .kanban-swimlane__toggle {
+    transform: rotate(-90deg);
+}
+
+.kanban-swimlane__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.kanban-swimlane__count {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.kanban-swimlane__content {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+}
+
+.kanban-swimlane--collapsed .kanban-swimlane__content {
+    display: none;
+}
+
+/* Card Detail Modal */
+.kanban-card-detail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 20px;
+    z-index: 1000;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-card-detail--open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.kanban-card-detail__content {
+    width: 100%;
+    max-width: 800px;
+    background: rgba(25, 25, 25, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-card-detail--open .kanban-card-detail__content {
+    transform: scale(1) translateY(0);
+}
+
+.kanban-card-detail__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kanban-card-detail__title-section {
+    flex: 1;
+}
+
+.kanban-card-detail__labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.kanban-card-detail__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+}
+
+.kanban-card-detail__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.kanban-card-detail__close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.kanban-card-detail__close-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.kanban-card-detail__body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    padding: 24px;
+}
+
+.kanban-card-detail__main {
+    min-width: 0;
+}
+
+.kanban-card-detail__sidebar {
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    padding-left: 24px;
+}
+
+.kanban-card-detail__section {
+    margin-bottom: 24px;
+}
+
+.kanban-card-detail__section:last-child {
+    margin-bottom: 0;
+}
+
+.kanban-card-detail__section-title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.kanban-card-detail__description {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+/* Checklist in Detail */
+.kanban-checklist {
+    background: rgba(20, 20, 20, 0.5);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.kanban-checklist__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.kanban-checklist__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.kanban-checklist__progress-text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.kanban-checklist__progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.kanban-checklist__progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #F5C518, #FFD54F);
+    border-radius: 3px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kanban-checklist__items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.kanban-checklist__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    background: rgba(30, 30, 30, 0.6);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.kanban-checklist__item:hover {
+    background: rgba(40, 40, 40, 0.8);
+}
+
+.kanban-checklist__checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.kanban-checklist__item--checked .kanban-checklist__checkbox {
+    background: #F5C518;
+    border-color: #F5C518;
+}
+
+.kanban-checklist__checkbox-icon {
+    width: 12px;
+    height: 12px;
+    color: #000000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.kanban-checklist__item--checked .kanban-checklist__checkbox-icon {
+    opacity: 1;
+}
+
+.kanban-checklist__item-text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    flex: 1;
+}
+
+.kanban-checklist__item--checked .kanban-checklist__item-text {
+    text-decoration: line-through;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.kanban-checklist__add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.kanban-checklist__add:hover {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+    color: #F5C518;
+}
+
+/* Sidebar Items */
+.kanban-sidebar-item {
+    margin-bottom: 20px;
+}
+
+.kanban-sidebar-item:last-child {
+    margin-bottom: 0;
+}
+
+.kanban-sidebar-item__label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.kanban-sidebar-item__value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(30, 30, 30, 0.6);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.kanban-sidebar-item__value:hover {
+    background: rgba(40, 40, 40, 0.8);
+}
+
+.kanban-sidebar-item__icon {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Activity Feed in Card Detail */
+.kanban-activity {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.kanban-activity__item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.kanban-activity__item:last-child {
+    border-bottom: none;
+}
+
+.kanban-activity__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.kanban-activity__avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kanban-activity__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.kanban-activity__text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+}
+
+.kanban-activity__user {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.kanban-activity__highlight {
+    color: #F5C518;
+}
+
+.kanban-activity__time {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 4px;
+}
+
+/* Comment Input in Card Detail */
+.kanban-comment-input {
+    display: flex;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kanban-comment-input__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.kanban-comment-input__avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kanban-comment-input__field {
+    flex: 1;
+    padding: 10px 14px;
+    background: rgba(30, 30, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: #ffffff;
+    resize: none;
+    transition: border-color 0.2s ease;
+}
+
+.kanban-comment-input__field:focus {
+    outline: none;
+    border-color: rgba(245, 197, 24, 0.5);
+}
+
+.kanban-comment-input__field::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   25.2 FILE MANAGER & EXPLORER COMPONENTS
+   ========================================================================== */
+
+/* File Manager Container */
+.file-manager {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    background: rgba(15, 15, 15, 0.95);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    min-height: 600px;
+}
+
+/* Sidebar */
+.file-manager__sidebar {
+    background: rgba(20, 20, 20, 0.9);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.file-manager__sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.file-manager__sidebar-title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+
+/* Storage Info */
+.file-manager__storage {
+    background: rgba(30, 30, 30, 0.6);
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.file-manager__storage-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.file-manager__storage-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #F5C518, #FFD54F);
+    border-radius: 3px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-manager__storage-fill--warning {
+    background: linear-gradient(90deg, #F59E0B, #FBBF24);
+}
+
+.file-manager__storage-fill--danger {
+    background: linear-gradient(90deg, #EF4444, #F87171);
+}
+
+.file-manager__storage-text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.file-manager__storage-used {
+    color: #F5C518;
+    font-weight: 600;
+}
+
+/* Sidebar Navigation */
+.file-manager__nav {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.file-manager__nav-section {
+    margin-bottom: 24px;
+}
+
+.file-manager__nav-section:last-child {
+    margin-bottom: 0;
+}
+
+.file-manager__nav-title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    padding: 0 12px;
+}
+
+.file-manager__nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-manager__nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.file-manager__nav-item--active {
+    background: rgba(245, 197, 24, 0.1);
+}
+
+.file-manager__nav-icon {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
+}
+
+.file-manager__nav-item--active .file-manager__nav-icon {
+    color: #F5C518;
+}
+
+.file-manager__nav-label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    flex: 1;
+}
+
+.file-manager__nav-item--active .file-manager__nav-label {
+    color: #F5C518;
+    font-weight: 500;
+}
+
+.file-manager__nav-count {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+}
+
+/* Folder Tree */
+.file-tree {
+    padding: 8px 0;
+}
+
+.file-tree__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.file-tree__item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.file-tree__item--selected {
+    background: rgba(245, 197, 24, 0.1);
+}
+
+.file-tree__toggle {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.file-tree__item--expanded .file-tree__toggle {
+    transform: rotate(90deg);
+}
+
+.file-tree__item--no-children .file-tree__toggle {
+    visibility: hidden;
+}
+
+.file-tree__icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.file-tree__icon--folder {
+    color: #F5C518;
+}
+
+.file-tree__icon--file {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.file-tree__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-tree__item--selected .file-tree__name {
+    color: #F5C518;
+}
+
+.file-tree__children {
+    padding-left: 24px;
+}
+
+/* Main Content Area */
+.file-manager__main {
+    display: flex;
+    flex-direction: column;
+    background: rgba(18, 18, 18, 0.95);
+}
+
+/* Toolbar */
+.file-manager__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(20, 20, 20, 0.9);
+}
+
+.file-manager__toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-manager__toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Breadcrumb */
+.file-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.file-breadcrumb__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.file-breadcrumb__item:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.file-breadcrumb__item--current {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.file-breadcrumb__separator {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.file-breadcrumb__icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Toolbar Actions */
+.file-toolbar__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-toolbar__btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.file-toolbar__btn--active {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+    color: #F5C518;
+}
+
+.file-toolbar__btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Search Bar */
+.file-search {
+    position: relative;
+    width: 240px;
+}
+
+.file-search__input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.file-search__input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(245, 197, 24, 0.5);
+}
+
+.file-search__input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.file-search__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* View Toggle */
+.file-view-toggle {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 3px;
+}
+
+.file-view-toggle__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-view-toggle__btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.file-view-toggle__btn--active {
+    background: rgba(245, 197, 24, 0.2);
+    color: #F5C518;
+}
+
+.file-view-toggle__icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* File Content Area */
+.file-manager__content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* Grid View */
+.file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.file-grid__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 12px;
+    background: rgba(30, 30, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-grid__item:hover {
+    background: rgba(40, 40, 40, 0.8);
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+.file-grid__item--selected {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+}
+
+.file-grid__item--dragging {
+    opacity: 0.5;
+}
+
+.file-grid__preview {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.file-grid__icon {
+    width: 48px;
+    height: 48px;
+}
+
+.file-grid__icon--folder {
+    color: #F5C518;
+}
+
+.file-grid__icon--document {
+    color: #3B82F6;
+}
+
+.file-grid__icon--image {
+    color: #10B981;
+}
+
+.file-grid__icon--video {
+    color: #8B5CF6;
+}
+
+.file-grid__icon--audio {
+    color: #EC4899;
+}
+
+.file-grid__icon--archive {
+    color: #F59E0B;
+}
+
+.file-grid__icon--code {
+    color: #06B6D4;
+}
+
+.file-grid__thumbnail {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.file-grid__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 4px;
+}
+
+.file-grid__item--selected .file-grid__name {
+    color: #F5C518;
+}
+
+.file-grid__meta {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.625rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* List View */
+.file-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-list__header {
+    display: grid;
+    grid-template-columns: 1fr 120px 140px 100px 48px;
+    gap: 16px;
+    padding: 12px 16px;
+    background: rgba(25, 25, 25, 0.8);
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.file-list__header-cell {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.file-list__header-cell:hover {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.file-list__header-cell--sorted {
+    color: #F5C518;
+}
+
+.file-list__sort-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.file-list__item {
+    display: grid;
+    grid-template-columns: 1fr 120px 140px 100px 48px;
+    gap: 16px;
+    padding: 12px 16px;
+    background: rgba(30, 30, 30, 0.4);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-list__item:hover {
+    background: rgba(40, 40, 40, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.file-list__item--selected {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+}
+
+.file-list__name-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.file-list__icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.file-list__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-list__item--selected .file-list__name {
+    color: #F5C518;
+}
+
+.file-list__cell {
+    display: flex;
+    align-items: center;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.file-list__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.file-list__item:hover .file-list__actions {
+    opacity: 1;
+}
+
+.file-list__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-list__action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.file-list__action-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Upload Area */
+.file-upload-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    background: rgba(25, 25, 25, 0.6);
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-upload-zone:hover {
+    background: rgba(245, 197, 24, 0.05);
+    border-color: rgba(245, 197, 24, 0.3);
+}
+
+.file-upload-zone--drag-over {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: #F5C518;
+    border-style: solid;
+}
+
+.file-upload-zone__icon {
+    width: 48px;
+    height: 48px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 16px;
+    transition: color 0.2s ease;
+}
+
+.file-upload-zone:hover .file-upload-zone__icon,
+.file-upload-zone--drag-over .file-upload-zone__icon {
+    color: #F5C518;
+}
+
+.file-upload-zone__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.file-upload-zone__subtitle {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 20px;
+}
+
+.file-upload-zone__btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #F5C518 0%, #FFD54F 100%);
+    border: none;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-upload-zone__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 197, 24, 0.3);
+}
+
+/* Upload Progress */
+.file-upload-progress {
+    background: rgba(25, 25, 25, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.file-upload-progress__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.file-upload-progress__item:last-child {
+    border-bottom: none;
+}
+
+.file-upload-progress__icon {
+    width: 32px;
+    height: 32px;
+    color: rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
+}
+
+.file-upload-progress__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-upload-progress__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: #ffffff;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-upload-progress__bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.file-upload-progress__fill {
+    height: 100%;
+    background: linear-gradient(90deg, #F5C518, #FFD54F);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.file-upload-progress__fill--complete {
+    background: linear-gradient(90deg, #10B981, #34D399);
+}
+
+.file-upload-progress__fill--error {
+    background: linear-gradient(90deg, #EF4444, #F87171);
+}
+
+.file-upload-progress__status {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+}
+
+.file-upload-progress__status--complete {
+    color: #10B981;
+}
+
+.file-upload-progress__status--error {
+    color: #EF4444;
+}
+
+/* File Preview Modal */
+.file-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-preview--open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.file-preview__container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.file-preview__image {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.file-preview__video {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+}
+
+.file-preview__close {
+    position: absolute;
+    top: -48px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-preview__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.file-preview__close-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.file-preview__info {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.file-preview__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.file-preview__meta {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.file-preview__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-preview__nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.file-preview__nav--prev {
+    left: -64px;
+}
+
+.file-preview__nav--next {
+    right: -64px;
+}
+
+.file-preview__nav-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Context Menu */
+.file-context-menu {
+    position: fixed;
+    background: rgba(25, 25, 25, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.95);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-context-menu--open {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.file-context-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.file-context-menu__item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.file-context-menu__item--danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.file-context-menu__icon {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.file-context-menu__item--danger .file-context-menu__icon {
+    color: #EF4444;
+}
+
+.file-context-menu__label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.file-context-menu__item--danger .file-context-menu__label {
+    color: #EF4444;
+}
+
+.file-context-menu__shortcut {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-left: auto;
+}
+
+.file-context-menu__divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 8px 0;
+}
+
+/* File Details Panel */
+.file-details {
+    width: 320px;
+    background: rgba(20, 20, 20, 0.95);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.file-details__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.file-details__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.file-details__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-details__close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.file-details__body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.file-details__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    background: rgba(30, 30, 30, 0.6);
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.file-details__preview-icon {
+    width: 64px;
+    height: 64px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.file-details__preview-image {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.file-details__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+    word-break: break-all;
+}
+
+.file-details__type {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 20px;
+}
+
+.file-details__section {
+    margin-bottom: 20px;
+}
+
+.file-details__section-title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.file-details__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.file-details__row:last-child {
+    border-bottom: none;
+}
+
+.file-details__label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.file-details__value {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.file-details__actions {
+    display: flex;
+    gap: 8px;
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.file-details__action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-details__action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.file-details__action-btn--primary {
+    background: linear-gradient(135deg, #F5C518 0%, #FFD54F 100%);
+    border: none;
+    color: #000000;
+    font-weight: 600;
+}
+
+.file-details__action-btn--primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.3);
+}
+
+.file-details__action-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Empty State */
+.file-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.file-empty__icon {
+    width: 64px;
+    height: 64px;
+    color: rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
+}
+
+.file-empty__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.file-empty__text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    max-width: 320px;
+}
+
+/* ========================================================================
+   BATCH 25.3: PRICING TABLES & COMPARISON UI - PREMIUM COMPONENTS
+   ======================================================================== */
+
+/* Pricing Container */
+.pricing-container {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: 48px 24px;
+    background: rgba(15, 15, 15, 0.95);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Pricing Header */
+.pricing-header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.pricing-header__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(245, 197, 24, 0.1);
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #F5C518;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+}
+
+.pricing-header__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.pricing-header__subtitle {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+}
+
+/* Billing Toggle */
+.pricing-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.pricing-toggle__label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.3s ease;
+}
+
+.pricing-toggle__label--active {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.pricing-toggle__switch {
+    position: relative;
+    width: 56px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pricing-toggle__switch:hover {
+    border-color: rgba(245, 197, 24, 0.5);
+}
+
+.pricing-toggle__switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(245, 197, 24, 0.3);
+}
+
+.pricing-toggle__switch--annual::after {
+    transform: translateX(28px);
+}
+
+.pricing-toggle__discount {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #22C55E;
+}
+
+/* Pricing Cards Grid */
+.pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Individual Pricing Card */
+.pricing-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pricing-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Featured/Popular Card */
+.pricing-card--featured {
+    background: linear-gradient(180deg, rgba(245, 197, 24, 0.05) 0%, rgba(20, 20, 20, 0.95) 100%);
+    border-color: rgba(245, 197, 24, 0.3);
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+.pricing-card--featured:hover {
+    transform: scale(1.05) translateY(-8px);
+    border-color: rgba(245, 197, 24, 0.5);
+    box-shadow: 0 24px 48px rgba(245, 197, 24, 0.15);
+}
+
+.pricing-card__popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 20px;
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.3);
+}
+
+/* Card Header */
+.pricing-card__header {
+    text-align: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 24px;
+}
+
+.pricing-card__icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    margin: 0 auto 16px;
+    font-size: 1.5rem;
+}
+
+.pricing-card--featured .pricing-card__icon {
+    background: rgba(245, 197, 24, 0.1);
+}
+
+.pricing-card__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.pricing-card__description {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+}
+
+/* Pricing Amount */
+.pricing-card__price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 20px;
+}
+
+.pricing-card__currency {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.pricing-card__amount {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+}
+
+.pricing-card--featured .pricing-card__amount {
+    color: #F5C518;
+}
+
+.pricing-card__period {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.pricing-card__original-price {
+    text-align: center;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: line-through;
+}
+
+/* Features List */
+.pricing-card__features {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.pricing-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+}
+
+.pricing-card__feature-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 50%;
+    color: #22C55E;
+    font-size: 0.75rem;
+}
+
+.pricing-card__feature--unavailable {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.pricing-card__feature--unavailable .pricing-card__feature-icon {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.pricing-card__feature--highlight {
+    color: #F5C518;
+    font-weight: 600;
+}
+
+.pricing-card__feature--highlight .pricing-card__feature-icon {
+    background: rgba(245, 197, 24, 0.1);
+    color: #F5C518;
+}
+
+/* CTA Button */
+.pricing-card__cta {
+    width: 100%;
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pricing-card__cta:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.pricing-card__cta--primary {
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border-color: transparent;
+    color: #000000;
+}
+
+.pricing-card__cta--primary:hover {
+    background: linear-gradient(135deg, #FFD93D 0%, #F5C518 100%);
+    border-color: transparent;
+    box-shadow: 0 8px 24px rgba(245, 197, 24, 0.3);
+}
+
+/* Card Footer Note */
+.pricing-card__note {
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* ========================================================================
+   COMPARISON TABLE
+   ======================================================================== */
+
+.comparison-table-container {
+    overflow-x: auto;
+    margin-top: 48px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comparison-table {
+    width: 100%;
+    min-width: 800px;
+    border-collapse: collapse;
+    background: rgba(20, 20, 20, 0.8);
+}
+
+/* Table Header */
+.comparison-table__header {
+    background: rgba(15, 15, 15, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comparison-table__header th {
+    padding: 24px 20px;
+    text-align: center;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    vertical-align: bottom;
+}
+
+.comparison-table__header th:first-child {
+    text-align: left;
+    width: 280px;
+}
+
+.comparison-table__plan-name {
+    display: block;
+    font-size: 1.125rem;
+    margin-bottom: 4px;
+}
+
+.comparison-table__plan-price {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.comparison-table__header th--featured {
+    background: rgba(245, 197, 24, 0.05);
+    position: relative;
+}
+
+.comparison-table__header th--featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #F5C518 0%, #D4A818 100%);
+}
+
+/* Category Row */
+.comparison-table__category {
+    background: rgba(245, 197, 24, 0.03);
+}
+
+.comparison-table__category td {
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #F5C518;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Feature Rows */
+.comparison-table__row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease;
+}
+
+.comparison-table__row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.comparison-table__row td {
+    padding: 16px 20px;
+    text-align: center;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    vertical-align: middle;
+}
+
+.comparison-table__row td:first-child {
+    text-align: left;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.comparison-table__row td--featured {
+    background: rgba(245, 197, 24, 0.03);
+}
+
+/* Feature Name with Tooltip */
+.comparison-table__feature-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comparison-table__tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    font-size: 0.625rem;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: help;
+}
+
+.comparison-table__tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background: rgba(30, 30, 30, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 10;
+    margin-bottom: 8px;
+}
+
+.comparison-table__tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Value Cells */
+.comparison-table__check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 50%;
+    color: #22C55E;
+    font-size: 0.875rem;
+}
+
+.comparison-table__cross {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.875rem;
+}
+
+.comparison-table__value {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.comparison-table__value--highlight {
+    color: #F5C518;
+}
+
+.comparison-table__value--unlimited {
+    color: #22C55E;
+}
+
+/* Table Footer */
+.comparison-table__footer {
+    background: rgba(15, 15, 15, 0.95);
+}
+
+.comparison-table__footer td {
+    padding: 24px 20px;
+    text-align: center;
+}
+
+.comparison-table__footer-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.comparison-table__footer-cta:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.comparison-table__footer-cta--primary {
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border-color: transparent;
+    color: #000000;
+}
+
+.comparison-table__footer-cta--primary:hover {
+    background: linear-gradient(135deg, #FFD93D 0%, #F5C518 100%);
+    box-shadow: 0 4px 16px rgba(245, 197, 24, 0.3);
+}
+
+/* ========================================================================
+   PRICING FAQ MINI-SECTION
+   ======================================================================== */
+
+.pricing-faq {
+    max-width: 800px;
+    margin: 48px auto 0;
+    padding-top: 48px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pricing-faq__title {
+    text-align: center;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 32px;
+}
+
+.pricing-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pricing-faq__item {
+    padding: 20px 24px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.pricing-faq__item:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.pricing-faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+}
+
+.pricing-faq__question-text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.pricing-faq__toggle {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.pricing-faq__item--open .pricing-faq__toggle {
+    background: rgba(245, 197, 24, 0.1);
+    color: #F5C518;
+    transform: rotate(45deg);
+}
+
+.pricing-faq__answer {
+    display: none;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.7;
+}
+
+.pricing-faq__item--open .pricing-faq__answer {
+    display: block;
+}
+
+/* ========================================================================
+   ENTERPRISE / CUSTOM PRICING SECTION
+   ======================================================================== */
+
+.pricing-enterprise {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.05) 0%, rgba(20, 20, 20, 0.95) 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(245, 197, 24, 0.2);
+    margin-top: 48px;
+}
+
+.pricing-enterprise__content {
+    flex: 1;
+}
+
+.pricing-enterprise__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.pricing-enterprise__description {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+.pricing-enterprise__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.pricing-enterprise__feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.pricing-enterprise__feature-icon {
+    color: #F5C518;
+}
+
+.pricing-enterprise__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pricing-enterprise__cta {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border: none;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.pricing-enterprise__cta:hover {
+    background: linear-gradient(135deg, #FFD93D 0%, #F5C518 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(245, 197, 24, 0.3);
+}
+
+.pricing-enterprise__link {
+    text-align: center;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.pricing-enterprise__link:hover {
+    color: #F5C518;
+}
+
+/* ========================================================================
+   MONEY BACK GUARANTEE BADGE
+   ======================================================================== */
+
+.pricing-guarantee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(34, 197, 94, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    margin-top: 32px;
+}
+
+.pricing-guarantee__icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 50%;
+    color: #22C55E;
+    font-size: 1.5rem;
+}
+
+.pricing-guarantee__content {
+    text-align: left;
+}
+
+.pricing-guarantee__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #22C55E;
+    margin-bottom: 4px;
+}
+
+.pricing-guarantee__text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ========================================================================
+   TIERED SLIDER PRICING
+   ======================================================================== */
+
+.pricing-slider {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pricing-slider__label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.pricing-slider__label-text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.pricing-slider__value {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #F5C518;
+}
+
+.pricing-slider__input {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    margin-bottom: 24px;
+}
+
+.pricing-slider__input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.pricing-slider__input::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.pricing-slider__tiers {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.pricing-slider__tier {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.pricing-slider__tier--active {
+    color: #F5C518;
+    font-weight: 600;
+}
+
+.pricing-slider__result {
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pricing-slider__price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.pricing-slider__price-currency {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.pricing-slider__price-amount {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #F5C518;
+}
+
+.pricing-slider__price-period {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.pricing-slider__note {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================================================
+   BATCH 25.4: TESTIMONIALS & QUOTE COMPONENTS - PREMIUM COMPONENTS
+   ======================================================================== */
+
+/* Testimonials Container */
+.testimonials-container {
+    padding: 48px 24px;
+    background: rgba(15, 15, 15, 0.95);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Testimonials Header */
+.testimonials-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 48px;
+}
+
+.testimonials-header__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(245, 197, 24, 0.1);
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #F5C518;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+}
+
+.testimonials-header__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.testimonials-header__subtitle {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+}
+
+/* Testimonials Grid */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+/* Individual Testimonial Card */
+.testimonial-card {
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Featured Testimonial */
+.testimonial-card--featured {
+    background: linear-gradient(180deg, rgba(245, 197, 24, 0.05) 0%, rgba(20, 20, 20, 0.95) 100%);
+    border-color: rgba(245, 197, 24, 0.2);
+}
+
+.testimonial-card--featured:hover {
+    border-color: rgba(245, 197, 24, 0.4);
+    box-shadow: 0 20px 40px rgba(245, 197, 24, 0.1);
+}
+
+/* Star Rating */
+.testimonial-card__rating {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.testimonial-card__star {
+    width: 20px;
+    height: 20px;
+    color: #F5C518;
+}
+
+.testimonial-card__star--empty {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Quote Content */
+.testimonial-card__quote {
+    flex: 1;
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.testimonial-card__quote-icon {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    font-size: 3rem;
+    color: rgba(245, 197, 24, 0.15);
+    font-family: Georgia, serif;
+    line-height: 1;
+}
+
+.testimonial-card__text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    padding-left: 0;
+}
+
+.testimonial-card--featured .testimonial-card__text {
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+/* Author Info */
+.testimonial-card__author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.testimonial-card__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.2) 0%, rgba(245, 197, 24, 0.1) 100%);
+    border: 2px solid rgba(245, 197, 24, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #F5C518;
+    overflow: hidden;
+}
+
+.testimonial-card__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.testimonial-card__info {
+    flex: 1;
+}
+
+.testimonial-card__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.testimonial-card__role {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.testimonial-card__company {
+    color: #F5C518;
+}
+
+/* Verified Badge */
+.testimonial-card__verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #22C55E;
+    text-transform: uppercase;
+}
+
+/* ========================================================================
+   TESTIMONIAL CAROUSEL / SLIDER
+   ======================================================================== */
+
+.testimonial-carousel {
+    position: relative;
+    overflow: hidden;
+    padding: 40px 0;
+}
+
+.testimonial-carousel__track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-carousel__slide {
+    flex: 0 0 100%;
+    padding: 0 40px;
+}
+
+.testimonial-carousel__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.testimonial-carousel__btn {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.testimonial-carousel__btn:hover {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+    color: #F5C518;
+}
+
+.testimonial-carousel__btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.testimonial-carousel__dots {
+    display: flex;
+    gap: 8px;
+}
+
+.testimonial-carousel__dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.testimonial-carousel__dot:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.testimonial-carousel__dot--active {
+    background: #F5C518;
+    width: 32px;
+    border-radius: 100px;
+}
+
+/* ========================================================================
+   LARGE QUOTE / HERO TESTIMONIAL
+   ======================================================================== */
+
+.quote-hero {
+    position: relative;
+    padding: 64px 48px;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.03) 0%, rgba(15, 15, 15, 0.95) 100%);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.quote-hero__icon {
+    font-size: 4rem;
+    color: rgba(245, 197, 24, 0.2);
+    font-family: Georgia, serif;
+    line-height: 1;
+    margin-bottom: 24px;
+}
+
+.quote-hero__text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto 32px;
+}
+
+.quote-hero__author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.quote-hero__avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.2) 0%, rgba(245, 197, 24, 0.1) 100%);
+    border: 3px solid rgba(245, 197, 24, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #F5C518;
+    overflow: hidden;
+}
+
+.quote-hero__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.quote-hero__info {
+    text-align: left;
+}
+
+.quote-hero__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.quote-hero__role {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.quote-hero__company-logo {
+    height: 24px;
+    opacity: 0.6;
+    margin-top: 8px;
+    filter: grayscale(1) brightness(2);
+}
+
+/* ========================================================================
+   TESTIMONIAL VIDEO CARD
+   ======================================================================== */
+
+.testimonial-video {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.testimonial-video__thumbnail {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: rgba(15, 15, 15, 0.95);
+    cursor: pointer;
+}
+
+.testimonial-video__thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.testimonial-video__thumbnail:hover img {
+    opacity: 1;
+}
+
+.testimonial-video__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border-radius: 50%;
+    color: #000000;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 32px rgba(245, 197, 24, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-video__thumbnail:hover .testimonial-video__play {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 12px 40px rgba(245, 197, 24, 0.5);
+}
+
+.testimonial-video__duration {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: #ffffff;
+}
+
+.testimonial-video__content {
+    padding: 24px;
+}
+
+.testimonial-video__quote {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.testimonial-video__author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.testimonial-video__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.2) 0%, rgba(245, 197, 24, 0.1) 100%);
+    border: 2px solid rgba(245, 197, 24, 0.3);
+    overflow: hidden;
+}
+
+.testimonial-video__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.testimonial-video__role {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================================================
+   TESTIMONIALS MARQUEE / SCROLLING
+   ======================================================================== */
+
+.testimonials-marquee {
+    overflow: hidden;
+    padding: 24px 0;
+    position: relative;
+}
+
+.testimonials-marquee::before,
+.testimonials-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.testimonials-marquee::before {
+    left: 0;
+    background: linear-gradient(90deg, rgba(15, 15, 15, 1) 0%, transparent 100%);
+}
+
+.testimonials-marquee::after {
+    right: 0;
+    background: linear-gradient(270deg, rgba(15, 15, 15, 1) 0%, transparent 100%);
+}
+
+.testimonials-marquee__track {
+    display: flex;
+    gap: 24px;
+    animation: marquee 30s linear infinite;
+}
+
+.testimonials-marquee:hover .testimonials-marquee__track {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.testimonials-marquee__item {
+    flex-shrink: 0;
+    width: 400px;
+    padding: 24px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ========================================================================
+   COMPANY LOGOS / SOCIAL PROOF
+   ======================================================================== */
+
+.social-proof {
+    text-align: center;
+    padding: 48px 24px;
+}
+
+.social-proof__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 32px;
+}
+
+.social-proof__logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 48px;
+}
+
+.social-proof__logo {
+    height: 32px;
+    opacity: 0.4;
+    filter: grayscale(1) brightness(2);
+    transition: all 0.3s ease;
+}
+
+.social-proof__logo:hover {
+    opacity: 0.8;
+    filter: grayscale(0) brightness(1);
+}
+
+/* Stats Section */
+.social-proof__stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 48px;
+    margin-top: 48px;
+    padding-top: 48px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-proof__stat {
+    text-align: center;
+}
+
+.social-proof__stat-value {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #F5C518;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.social-proof__stat-label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================================================
+   REVIEW SUMMARY / AGGREGATE
+   ======================================================================== */
+
+.review-summary {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 32px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.review-summary__score {
+    text-align: center;
+    padding-right: 32px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.review-summary__number {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 4rem;
+    font-weight: 800;
+    color: #F5C518;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.review-summary__stars {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.review-summary__star {
+    width: 20px;
+    height: 20px;
+    color: #F5C518;
+}
+
+.review-summary__count {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.review-summary__breakdown {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.review-summary__bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.review-summary__bar-label {
+    width: 48px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.review-summary__bar-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.review-summary__bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #F5C518 0%, #D4A818 100%);
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-summary__bar-count {
+    width: 48px;
+    text-align: right;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* ========================================================================
+   INLINE QUOTE / BLOCKQUOTE
+   ======================================================================== */
+
+.blockquote {
+    position: relative;
+    padding: 32px 32px 32px 48px;
+    background: rgba(20, 20, 20, 0.6);
+    border-radius: 16px;
+    border-left: 4px solid #F5C518;
+}
+
+.blockquote::before {
+    content: '"';
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 2.5rem;
+    color: rgba(245, 197, 24, 0.3);
+    font-family: Georgia, serif;
+    line-height: 1;
+}
+
+.blockquote__text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.0625rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.blockquote__cite {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-style: normal;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.blockquote__cite-name {
+    color: #F5C518;
+    font-weight: 600;
+}
+
+/* ========================================================================
+   TWEET / SOCIAL CARD TESTIMONIAL
+   ======================================================================== */
+
+.testimonial-tweet {
+    padding: 24px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.testimonial-tweet__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.testimonial-tweet__author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.testimonial-tweet__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.2) 0%, rgba(245, 197, 24, 0.1) 100%);
+}
+
+.testimonial-tweet__name {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.testimonial-tweet__verified {
+    width: 16px;
+    height: 16px;
+    color: #1D9BF0;
+}
+
+.testimonial-tweet__handle {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.testimonial-tweet__logo {
+    width: 24px;
+    height: 24px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.testimonial-tweet__content {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.testimonial-tweet__content a {
+    color: #F5C518;
+    text-decoration: none;
+}
+
+.testimonial-tweet__content a:hover {
+    text-decoration: underline;
+}
+
+.testimonial-tweet__meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.testimonial-tweet__date {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.testimonial-tweet__stats {
+    display: flex;
+    gap: 16px;
+}
+
+.testimonial-tweet__stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.testimonial-tweet__stat-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* ========================================================================
+   BATCH 25.5: FAQ & ACCORDION SECTIONS - PREMIUM COMPONENTS
+   ======================================================================== */
+
+/* FAQ Container */
+.faq-container {
+    padding: 48px 24px;
+    background: rgba(15, 15, 15, 0.95);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* FAQ Header */
+.faq-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 48px;
+}
+
+.faq-header__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(245, 197, 24, 0.1);
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #F5C518;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+}
+
+.faq-header__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.faq-header__subtitle {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+}
+
+/* FAQ Search */
+.faq-search {
+    max-width: 480px;
+    margin: 0 auto 48px;
+}
+
+.faq-search__input-wrapper {
+    position: relative;
+}
+
+.faq-search__icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+}
+
+.faq-search__input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.faq-search__input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.faq-search__input:focus {
+    outline: none;
+    border-color: rgba(245, 197, 24, 0.5);
+    background: rgba(25, 25, 25, 0.9);
+    box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.1);
+}
+
+/* FAQ Categories */
+.faq-categories {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.faq-category {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.faq-category:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.faq-category--active {
+    background: rgba(245, 197, 24, 0.1);
+    border-color: rgba(245, 197, 24, 0.3);
+    color: #F5C518;
+}
+
+.faq-category__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    font-size: 0.6875rem;
+    margin-left: 8px;
+}
+
+.faq-category--active .faq-category__count {
+    background: rgba(245, 197, 24, 0.2);
+}
+
+/* FAQ List */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Individual FAQ Item / Accordion */
+.faq-item {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.faq-item--open {
+    border-color: rgba(245, 197, 24, 0.3);
+    background: linear-gradient(180deg, rgba(245, 197, 24, 0.03) 0%, rgba(20, 20, 20, 0.95) 100%);
+}
+
+/* FAQ Question / Header */
+.faq-item__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.faq-item__question-text {
+    flex: 1;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+.faq-item--open .faq-item__question-text {
+    color: #F5C518;
+}
+
+.faq-item__icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item:hover .faq-item__icon {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.faq-item--open .faq-item__icon {
+    background: rgba(245, 197, 24, 0.1);
+    color: #F5C518;
+    transform: rotate(45deg);
+}
+
+/* FAQ Answer / Content */
+.faq-item__answer {
+    display: none;
+    padding: 0 24px 24px;
+}
+
+.faq-item--open .faq-item__answer {
+    display: block;
+}
+
+.faq-item__answer-content {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+}
+
+.faq-item__answer-content p {
+    margin-bottom: 16px;
+}
+
+.faq-item__answer-content p:last-child {
+    margin-bottom: 0;
+}
+
+.faq-item__answer-content a {
+    color: #F5C518;
+    text-decoration: none;
+}
+
+.faq-item__answer-content a:hover {
+    text-decoration: underline;
+}
+
+.faq-item__answer-content ul,
+.faq-item__answer-content ol {
+    margin: 16px 0;
+    padding-left: 24px;
+}
+
+.faq-item__answer-content li {
+    margin-bottom: 8px;
+}
+
+.faq-item__answer-content code {
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #F5C518;
+}
+
+/* FAQ Tags */
+.faq-item__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.faq-item__tag {
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* FAQ Feedback */
+.faq-item__feedback {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.faq-item__feedback-label {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.faq-item__feedback-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.faq-item__feedback-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.faq-item__feedback-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.faq-item__feedback-btn--yes:hover {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #22C55E;
+}
+
+.faq-item__feedback-btn--no:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #EF4444;
+}
+
+/* ========================================================================
+   ACCORDION - GENERAL PURPOSE
+   ======================================================================== */
+
+.accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.accordion-item {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.accordion-item:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.accordion-item--open {
+    border-color: rgba(245, 197, 24, 0.25);
+}
+
+.accordion-item__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+}
+
+.accordion-item__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.accordion-item--open .accordion-item__title {
+    color: #F5C518;
+}
+
+.accordion-item__icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-item--open .accordion-item__icon {
+    color: #F5C518;
+    transform: rotate(180deg);
+}
+
+.accordion-item__content {
+    display: none;
+    padding: 0 20px 20px;
+}
+
+.accordion-item--open .accordion-item__content {
+    display: block;
+}
+
+.accordion-item__body {
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+}
+
+/* ========================================================================
+   ACCORDION WITH ICONS
+   ======================================================================== */
+
+.accordion--icons .accordion-item__header {
+    gap: 16px;
+}
+
+.accordion-item__leading-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+.accordion-item--open .accordion-item__leading-icon {
+    background: rgba(245, 197, 24, 0.1);
+    color: #F5C518;
+}
+
+/* ========================================================================
+   ACCORDION WITH NUMBERS
+   ======================================================================== */
+
+.accordion--numbered .accordion-item__header {
+    gap: 16px;
+}
+
+.accordion-item__number {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
+}
+
+.accordion-item--open .accordion-item__number {
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    color: #000000;
+}
+
+/* ========================================================================
+   SIDE-BY-SIDE / SPLIT FAQ
+   ======================================================================== */
+
+.faq-split {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 48px;
+    align-items: start;
+}
+
+.faq-split__sidebar {
+    position: sticky;
+    top: 24px;
+}
+
+.faq-split__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+
+.faq-split__description {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.faq-split__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.faq-split__nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.faq-split__nav-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.faq-split__nav-item--active {
+    background: rgba(245, 197, 24, 0.1);
+    color: #F5C518;
+}
+
+.faq-split__nav-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+}
+
+.faq-split__nav-item--active .faq-split__nav-icon {
+    opacity: 1;
+}
+
+/* ========================================================================
+   FAQ CONTACT CTA
+   ======================================================================== */
+
+.faq-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 32px;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.05) 0%, rgba(20, 20, 20, 0.95) 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(245, 197, 24, 0.2);
+    margin-top: 48px;
+}
+
+.faq-contact__icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245, 197, 24, 0.1);
+    border-radius: 16px;
+    color: #F5C518;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.faq-contact__content {
+    flex: 1;
+}
+
+.faq-contact__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.faq-contact__text {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.faq-contact__btn {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border: none;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.faq-contact__btn:hover {
+    background: linear-gradient(135deg, #FFD93D 0%, #F5C518 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(245, 197, 24, 0.3);
+}
+
+/* ========================================================================
+   COLLAPSIBLE SECTIONS
+   ======================================================================== */
+
+.collapsible-section {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.collapsible-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(15, 15, 15, 0.5);
+    cursor: pointer;
+}
+
+.collapsible-section__title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.collapsible-section__title-icon {
+    width: 24px;
+    height: 24px;
+    color: #F5C518;
+}
+
+.collapsible-section__badge {
+    padding: 4px 10px;
+    background: rgba(245, 197, 24, 0.1);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #F5C518;
+}
+
+.collapsible-section__toggle {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.collapsible-section--open .collapsible-section__toggle {
+    background: rgba(245, 197, 24, 0.1);
+    color: #F5C518;
+    transform: rotate(180deg);
+}
+
+.collapsible-section__content {
+    display: none;
+    padding: 24px;
+}
+
+.collapsible-section--open .collapsible-section__content {
+    display: block;
+}
+
+/* ========================================================================
+   NESTED ACCORDION / TREE
+   ======================================================================== */
+
+.accordion-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.accordion-tree__item {
+    background: rgba(20, 20, 20, 0.6);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+.accordion-tree__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+}
+
+.accordion-tree__toggle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.4);
+    transition: all 0.2s ease;
+}
+
+.accordion-tree__item--open > .accordion-tree__header .accordion-tree__toggle {
+    color: #F5C518;
+    transform: rotate(90deg);
+}
+
+.accordion-tree__title {
+    flex: 1;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.accordion-tree__children {
+    display: none;
+    padding: 0 16px 16px 36px;
+}
+
+.accordion-tree__item--open > .accordion-tree__children {
+    display: block;
+}
+
+.accordion-tree__children .accordion-tree__item {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.04);
+}
+
+/* ========================================================================
+   EXPANDABLE CARD / SHOW MORE
+   ======================================================================== */
+
+.expandable-card {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.expandable-card__preview {
+    padding: 24px;
+}
+
+.expandable-card__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.expandable-card__excerpt {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+}
+
+.expandable-card__full {
+    display: none;
+    padding: 0 24px 24px;
+}
+
+.expandable-card--open .expandable-card__full {
+    display: block;
+}
+
+.expandable-card__full-content {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+}
+
+.expandable-card__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #F5C518;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.expandable-card__toggle:hover {
+    background: rgba(245, 197, 24, 0.05);
+}
+
+.expandable-card__toggle-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.expandable-card--open .expandable-card__toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* ========================================================================
+   STEP ACCORDION / PROCESS STEPS
+   ======================================================================== */
+
+.step-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+}
+
+.step-accordion::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 48px;
+    bottom: 48px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.step-accordion__item {
+    position: relative;
+    padding-left: 64px;
+}
+
+.step-accordion__number {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.step-accordion__item--active .step-accordion__number,
+.step-accordion__item--completed .step-accordion__number {
+    background: linear-gradient(135deg, #F5C518 0%, #D4A818 100%);
+    border-color: #F5C518;
+    color: #000000;
+}
+
+.step-accordion__header {
+    padding: 12px 0 24px;
+    cursor: pointer;
+}
+
+.step-accordion__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.step-accordion__subtitle {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.step-accordion__content {
+    display: none;
+    padding-bottom: 32px;
+}
+
+.step-accordion__item--active .step-accordion__content {
+    display: block;
+}
+
+.step-accordion__body {
+    padding: 20px;
+    background: rgba(20, 20, 20, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+}
+
+/* ========================================================================
+   ANIMATED ACCORDION TRANSITION (CSS ONLY)
+   ======================================================================== */
+
+.accordion-animated .accordion-item__content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-animated .accordion-item--open .accordion-item__content {
+    grid-template-rows: 1fr;
+}
+
+.accordion-animated .accordion-item__body-wrapper {
+    overflow: hidden;
+}
+
+.accordion-animated .accordion-item__body {
+    padding-top: 0;
+    border-top: none;
+}
+
+.accordion-animated .accordion-item--open .accordion-item__body {
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   BATCH 25 - LIGHT MODE VARIANTS
+   ========================================================================== */
+
+/* ==========================================================================
+   25.1 KANBAN BOARDS - LIGHT MODE
+   ========================================================================== */
+
+.light-mode .kanban-board {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+}
+
+.light-mode .kanban-header {
+    background: rgba(0, 0, 0, 0.02);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .kanban-header__title {
+    color: #1a1a2e;
+}
+
+.light-mode .kanban-header__subtitle {
+    color: #6B7280;
+}
+
+.light-mode .kanban-header__actions .btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+}
+
+.light-mode .kanban-header__actions .btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: #B8860B;
+}
+
+.light-mode .kanban-header__actions .btn--primary {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    border: none;
+    color: #000000;
+}
+
+.light-mode .kanban-header__actions .btn--primary:hover {
+    background: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+}
+
+.light-mode .kanban-filters {
+    background: rgba(0, 0, 0, 0.02);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .kanban-filter__label {
+    color: #6B7280;
+}
+
+.light-mode .kanban-filter__select,
+.light-mode .kanban-filter__input {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    color: #1a1a2e;
+}
+
+.light-mode .kanban-filter__select:focus,
+.light-mode .kanban-filter__input:focus {
+    border-color: #B8860B;
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+.light-mode .kanban-columns {
+    background: rgba(0, 0, 0, 0.01);
+}
+
+.light-mode .kanban-column {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .kanban-column--drag-over {
+    background: rgba(184, 134, 11, 0.05);
+    border-color: #B8860B;
+}
+
+.light-mode .kanban-column__header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .kanban-column__title {
+    color: #1a1a2e;
+}
+
+.light-mode .kanban-column__count {
+    background: rgba(0, 0, 0, 0.08);
+    color: #6B7280;
+}
+
+.light-mode .kanban-column__menu-btn {
+    color: #9CA3AF;
+}
+
+.light-mode .kanban-column__menu-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #1a1a2e;
+}
+
+.light-mode .kanban-column--todo .kanban-column__indicator {
+    background: #6B7280;
+}
+
+.light-mode .kanban-column--in-progress .kanban-column__indicator {
+    background: #3B82F6;
+}
+
+.light-mode .kanban-column--review .kanban-column__indicator {
+    background: #F59E0B;
+}
+
+.light-mode .kanban-column--done .kanban-column__indicator {
+    background: #10B981;
+}
+
+.light-mode .kanban-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .kanban-card:hover {
+    border-color: rgba(184, 134, 11, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .kanban-card--dragging {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: #B8860B;
+}
+
+.light-mode .kanban-card__title {
+    color: #1a1a2e;
+}
+
+.light-mode .kanban-card__description {
+    color: #6B7280;
+}
+
+.light-mode .kanban-card__tag {
+    background: rgba(0, 0, 0, 0.06);
+    color: #6B7280;
+}
+
+.light-mode .kanban-card__tag--feature {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563EB;
+}
+
+.light-mode .kanban-card__tag--bug {
+    background: rgba(239, 68, 68, 0.1);
+    color: #DC2626;
+}
+
+.light-mode .kanban-card__tag--urgent {
+    background: rgba(245, 158, 11, 0.1);
+    color: #D97706;
+}
+
+.light-mode .kanban-card__tag--design {
+    background: rgba(168, 85, 247, 0.1);
+    color: #9333EA;
+}
+
+.light-mode .kanban-card__priority--high {
+    color: #DC2626;
+}
+
+.light-mode .kanban-card__priority--medium {
+    color: #F59E0B;
+}
+
+.light-mode .kanban-card__priority--low {
+    color: #10B981;
+}
+
+.light-mode .kanban-card__due-date {
+    color: #9CA3AF;
+}
+
+.light-mode .kanban-card__due-date--overdue {
+    color: #DC2626;
+}
+
+.light-mode .kanban-card__assignee {
+    border: 2px solid #FFFFFF;
+}
+
+.light-mode .kanban-card__progress-bar {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .kanban-card__progress-fill {
+    background: linear-gradient(90deg, #B8860B 0%, #D4A017 100%);
+}
+
+.light-mode .kanban-card__checklist-count {
+    color: #6B7280;
+}
+
+.light-mode .kanban-card__attachment-count,
+.light-mode .kanban-card__comment-count {
+    color: #9CA3AF;
+}
+
+.light-mode .kanban-add-card {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    color: #6B7280;
+}
+
+.light-mode .kanban-add-card:hover {
+    background: rgba(184, 134, 11, 0.05);
+    border-color: #B8860B;
+    color: #B8860B;
+}
+
+.light-mode .kanban-add-column {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px dashed rgba(0, 0, 0, 0.12);
+    color: #9CA3AF;
+}
+
+.light-mode .kanban-add-column:hover {
+    background: rgba(184, 134, 11, 0.05);
+    border-color: #B8860B;
+    color: #B8860B;
+}
+
+.light-mode .kanban-swimlane__header {
+    background: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .kanban-swimlane__title {
+    color: #1a1a2e;
+}
+
+.light-mode .kanban-timeline__item {
+    border-left: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .kanban-timeline__marker {
+    background: #B8860B;
+    border: 3px solid #FFFFFF;
+}
+
+.light-mode .kanban-timeline__content {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .kanban-wip-limit {
+    background: rgba(239, 68, 68, 0.1);
+    color: #DC2626;
+}
+
+/* ==========================================================================
+   25.2 FILE MANAGER - LIGHT MODE
+   ========================================================================== */
+
+.light-mode .file-manager {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .file-manager__toolbar {
+    background: rgba(0, 0, 0, 0.02);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .file-toolbar__btn {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #6B7280;
+}
+
+.light-mode .file-toolbar__btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #1a1a2e;
+}
+
+.light-mode .file-toolbar__btn--active {
+    background: rgba(184, 134, 11, 0.1);
+    border-color: #B8860B;
+    color: #B8860B;
+}
+
+.light-mode .file-toolbar__divider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .file-toolbar__search {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    color: #1a1a2e;
+}
+
+.light-mode .file-toolbar__search:focus {
+    border-color: #B8860B;
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+.light-mode .file-toolbar__search::placeholder {
+    color: #9CA3AF;
+}
+
+.light-mode .file-breadcrumb {
+    background: rgba(0, 0, 0, 0.02);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .file-breadcrumb__item {
+    color: #6B7280;
+}
+
+.light-mode .file-breadcrumb__item:hover {
+    color: #B8860B;
+}
+
+.light-mode .file-breadcrumb__item--current {
+    color: #1a1a2e;
+}
+
+.light-mode .file-breadcrumb__separator {
+    color: #D1D5DB;
+}
+
+.light-mode .file-sidebar {
+    background: rgba(0, 0, 0, 0.02);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .file-sidebar__section-title {
+    color: #9CA3AF;
+}
+
+.light-mode .file-sidebar__item {
+    color: #6B7280;
+}
+
+.light-mode .file-sidebar__item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #1a1a2e;
+}
+
+.light-mode .file-sidebar__item--active {
+    background: rgba(184, 134, 11, 0.1);
+    color: #B8860B;
+}
+
+.light-mode .file-sidebar__item-count {
+    background: rgba(0, 0, 0, 0.06);
+    color: #6B7280;
+}
+
+.light-mode .file-content {
+    background: #FFFFFF;
+}
+
+.light-mode .file-grid__item {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .file-grid__item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+.light-mode .file-grid__item--selected {
+    background: rgba(184, 134, 11, 0.08);
+    border-color: #B8860B;
+}
+
+.light-mode .file-grid__icon {
+    color: #B8860B;
+}
+
+.light-mode .file-grid__name {
+    color: #1a1a2e;
+}
+
+.light-mode .file-grid__meta {
+    color: #9CA3AF;
+}
+
+.light-mode .file-list__header {
+    background: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .file-list__header-cell {
+    color: #6B7280;
+}
+
+.light-mode .file-list__row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.light-mode .file-list__row:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.light-mode .file-list__row--selected {
+    background: rgba(184, 134, 11, 0.08);
+}
+
+.light-mode .file-list__name {
+    color: #1a1a2e;
+}
+
+.light-mode .file-list__size,
+.light-mode .file-list__date,
+.light-mode .file-list__type {
+    color: #6B7280;
+}
+
+.light-mode .file-preview {
+    background: rgba(0, 0, 0, 0.02);
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .file-preview__header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .file-preview__title {
+    color: #1a1a2e;
+}
+
+.light-mode .file-preview__close {
+    color: #9CA3AF;
+}
+
+.light-mode .file-preview__close:hover {
+    color: #1a1a2e;
+}
+
+.light-mode .file-preview__thumbnail {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .file-preview__meta-label {
+    color: #9CA3AF;
+}
+
+.light-mode .file-preview__meta-value {
+    color: #1a1a2e;
+}
+
+.light-mode .file-preview__actions .btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #6B7280;
+}
+
+.light-mode .file-preview__actions .btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+}
+
+.light-mode .file-context-menu {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.light-mode .file-context-menu__item {
+    color: #1a1a2e;
+}
+
+.light-mode .file-context-menu__item:hover {
+    background: rgba(184, 134, 11, 0.08);
+    color: #B8860B;
+}
+
+.light-mode .file-context-menu__item--danger {
+    color: #DC2626;
+}
+
+.light-mode .file-context-menu__item--danger:hover {
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.light-mode .file-context-menu__divider {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .file-upload-zone {
+    background: rgba(0, 0, 0, 0.02);
+    border: 2px dashed rgba(0, 0, 0, 0.15);
+}
+
+.light-mode .file-upload-zone:hover,
+.light-mode .file-upload-zone--drag-over {
+    background: rgba(184, 134, 11, 0.05);
+    border-color: #B8860B;
+}
+
+.light-mode .file-upload-zone__icon {
+    color: #B8860B;
+}
+
+.light-mode .file-upload-zone__text {
+    color: #6B7280;
+}
+
+.light-mode .file-upload-zone__text strong {
+    color: #B8860B;
+}
+
+.light-mode .file-upload-zone__hint {
+    color: #9CA3AF;
+}
+
+.light-mode .file-tree__item {
+    color: #6B7280;
+}
+
+.light-mode .file-tree__item:hover {
+    background: rgba(0, 0, 0, 0.03);
+    color: #1a1a2e;
+}
+
+.light-mode .file-tree__item--selected {
+    background: rgba(184, 134, 11, 0.1);
+    color: #B8860B;
+}
+
+.light-mode .file-tree__toggle {
+    color: #9CA3AF;
+}
+
+.light-mode .file-empty {
+    color: #9CA3AF;
+}
+
+.light-mode .file-empty__icon {
+    color: #D1D5DB;
+}
+
+.light-mode .file-status-bar {
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    color: #6B7280;
+}
+
+/* ==========================================================================
+   25.3 PRICING TABLES - LIGHT MODE
+   ========================================================================== */
+
+.light-mode .pricing {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+}
+
+.light-mode .pricing__header-badge {
+    background: rgba(184, 134, 11, 0.1);
+    color: #B8860B;
+    border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.light-mode .pricing__title {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing__subtitle {
+    color: #6B7280;
+}
+
+.light-mode .pricing-toggle {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .pricing-toggle__label {
+    color: #6B7280;
+}
+
+.light-mode .pricing-toggle__label--active {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-toggle__switch {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.light-mode .pricing-toggle__switch::after {
+    background: #FFFFFF;
+}
+
+.light-mode .pricing-toggle__input:checked + .pricing-toggle__switch {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+}
+
+.light-mode .pricing-toggle__badge {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+}
+
+.light-mode .pricing-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .pricing-card:hover {
+    border-color: rgba(184, 134, 11, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .pricing-card--featured {
+    border-color: #B8860B;
+    box-shadow: 0 8px 32px rgba(184, 134, 11, 0.15);
+}
+
+.light-mode .pricing-card__badge {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    color: #000000;
+}
+
+.light-mode .pricing-card__header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .pricing-card__name {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-card__description {
+    color: #6B7280;
+}
+
+.light-mode .pricing-card__price-value {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-card__price-currency,
+.light-mode .pricing-card__price-period {
+    color: #6B7280;
+}
+
+.light-mode .pricing-card__price-note {
+    color: #9CA3AF;
+}
+
+.light-mode .pricing-card__feature {
+    color: #4B5563;
+}
+
+.light-mode .pricing-card__feature::before {
+    color: #10B981;
+}
+
+.light-mode .pricing-card__feature--unavailable {
+    color: #D1D5DB;
+}
+
+.light-mode .pricing-card__feature--unavailable::before {
+    color: #D1D5DB;
+}
+
+.light-mode .pricing-card__feature--highlighted {
+    color: #B8860B;
+}
+
+.light-mode .pricing-card__cta {
+    background: rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-card__cta:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .pricing-card--featured .pricing-card__cta,
+.light-mode .pricing-card__cta--primary {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    border: none;
+    color: #000000;
+}
+
+.light-mode .pricing-card--featured .pricing-card__cta:hover,
+.light-mode .pricing-card__cta--primary:hover {
+    background: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+}
+
+.light-mode .pricing-comparison {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .pricing-comparison__header-cell {
+    background: rgba(0, 0, 0, 0.02);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-comparison__header-cell--featured {
+    background: rgba(184, 134, 11, 0.08);
+    border-bottom-color: #B8860B;
+}
+
+.light-mode .pricing-comparison__category {
+    background: rgba(0, 0, 0, 0.03);
+    color: #1a1a2e;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .pricing-comparison__row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.light-mode .pricing-comparison__feature {
+    color: #4B5563;
+}
+
+.light-mode .pricing-comparison__tooltip {
+    color: #9CA3AF;
+}
+
+.light-mode .pricing-comparison__tooltip-content {
+    background: #1a1a2e;
+    color: #FFFFFF;
+}
+
+.light-mode .pricing-comparison__value {
+    color: #6B7280;
+}
+
+.light-mode .pricing-comparison__check {
+    color: #10B981;
+}
+
+.light-mode .pricing-comparison__cross {
+    color: #D1D5DB;
+}
+
+.light-mode .pricing-comparison__cell--featured {
+    background: rgba(184, 134, 11, 0.04);
+}
+
+.light-mode .pricing-faq__title {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-faq__question {
+    color: #6B7280;
+}
+
+.light-mode .pricing-faq__answer {
+    color: #4B5563;
+}
+
+.light-mode .pricing-enterprise {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, rgba(184, 134, 11, 0.04) 100%);
+    border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.light-mode .pricing-enterprise__title {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-enterprise__description {
+    color: #6B7280;
+}
+
+.light-mode .pricing-enterprise__feature {
+    color: #4B5563;
+}
+
+.light-mode .pricing-enterprise__cta {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    color: #000000;
+}
+
+.light-mode .pricing-enterprise__cta:hover {
+    background: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+}
+
+.light-mode .pricing-guarantee {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.light-mode .pricing-guarantee__icon {
+    color: #10B981;
+}
+
+.light-mode .pricing-guarantee__text {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-guarantee__subtext {
+    color: #6B7280;
+}
+
+.light-mode .pricing-slider__label {
+    color: #6B7280;
+}
+
+.light-mode .pricing-slider__value {
+    color: #1a1a2e;
+}
+
+.light-mode .pricing-slider__input {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .pricing-slider__input::-webkit-slider-thumb {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+}
+
+.light-mode .pricing-slider__marks {
+    color: #9CA3AF;
+}
+
+/* ==========================================================================
+   25.4 TESTIMONIALS - LIGHT MODE
+   ========================================================================== */
+
+.light-mode .testimonials {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+}
+
+.light-mode .testimonials__badge {
+    background: rgba(184, 134, 11, 0.1);
+    color: #B8860B;
+    border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.light-mode .testimonials__title {
+    color: #1a1a2e;
+}
+
+.light-mode .testimonials__subtitle {
+    color: #6B7280;
+}
+
+.light-mode .testimonial-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .testimonial-card:hover {
+    border-color: rgba(184, 134, 11, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .testimonial-card--featured {
+    border-color: #B8860B;
+    box-shadow: 0 8px 32px rgba(184, 134, 11, 0.15);
+}
+
+.light-mode .testimonial-card__rating-star {
+    color: #D1D5DB;
+}
+
+.light-mode .testimonial-card__rating-star--filled {
+    color: #F59E0B;
+}
+
+.light-mode .testimonial-card__quote {
+    color: #4B5563;
+}
+
+.light-mode .testimonial-card__quote-icon {
+    color: rgba(184, 134, 11, 0.2);
+}
+
+.light-mode .testimonial-card__author-name {
+    color: #1a1a2e;
+}
+
+.light-mode .testimonial-card__author-title {
+    color: #6B7280;
+}
+
+.light-mode .testimonial-card__author-company {
+    color: #9CA3AF;
+}
+
+.light-mode .testimonial-card__verified {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.light-mode .testimonial-card__date {
+    color: #9CA3AF;
+}
+
+.light-mode .testimonial-card__tags {
+    color: #6B7280;
+}
+
+.light-mode .testimonial-card__tag {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6B7280;
+}
+
+.light-mode .testimonial-carousel__nav {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #6B7280;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .testimonial-carousel__nav:hover {
+    background: rgba(184, 134, 11, 0.08);
+    border-color: #B8860B;
+    color: #B8860B;
+}
+
+.light-mode .testimonial-carousel__dot {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.light-mode .testimonial-carousel__dot--active {
+    background: #B8860B;
+}
+
+.light-mode .testimonial-hero {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, rgba(184, 134, 11, 0.04) 100%);
+    border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.light-mode .testimonial-hero__quote {
+    color: #1a1a2e;
+}
+
+.light-mode .testimonial-hero__quote-mark {
+    color: rgba(184, 134, 11, 0.3);
+}
+
+.light-mode .testimonial-hero__author-name {
+    color: #1a1a2e;
+}
+
+.light-mode .testimonial-hero__author-title {
+    color: #6B7280;
+}
+
+.light-mode .testimonial-video {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .testimonial-video:hover {
+    border-color: rgba(184, 134, 11, 0.3);
+}
+
+.light-mode .testimonial-video__play {
+    background: rgba(255, 255, 255, 0.95);
+    color: #B8860B;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.light-mode .testimonial-video__play:hover {
+    background: #FFFFFF;
+    transform: scale(1.1);
+}
+
+.light-mode .testimonial-video__duration {
+    background: rgba(0, 0, 0, 0.7);
+    color: #FFFFFF;
+}
+
+.light-mode .testimonial-video__author {
+    color: #1a1a2e;
+}
+
+.light-mode .testimonial-video__title {
+    color: #6B7280;
+}
+
+.light-mode .testimonial-marquee {
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .testimonial-marquee__item {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .testimonial-marquee__quote {
+    color: #4B5563;
+}
+
+.light-mode .testimonial-marquee__author {
+    color: #1a1a2e;
+}
+
+.light-mode .social-proof__title {
+    color: #9CA3AF;
+}
+
+.light-mode .social-proof__logo {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.light-mode .social-proof__logo:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.light-mode .social-proof__stat-value {
+    color: #1a1a2e;
+}
+
+.light-mode .social-proof__stat-label {
+    color: #6B7280;
+}
+
+.light-mode .review-summary {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .review-summary__score {
+    color: #1a1a2e;
+}
+
+.light-mode .review-summary__count {
+    color: #6B7280;
+}
+
+.light-mode .review-summary__bar-bg {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .review-summary__bar-fill {
+    background: linear-gradient(90deg, #B8860B 0%, #D4A017 100%);
+}
+
+.light-mode .review-summary__bar-label {
+    color: #6B7280;
+}
+
+.light-mode .review-summary__bar-count {
+    color: #9CA3AF;
+}
+
+.light-mode .blockquote {
+    background: rgba(0, 0, 0, 0.02);
+    border-left: 4px solid #B8860B;
+}
+
+.light-mode .blockquote__text {
+    color: #4B5563;
+}
+
+.light-mode .blockquote__cite {
+    color: #6B7280;
+}
+
+.light-mode .tweet-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .tweet-card:hover {
+    border-color: rgba(29, 161, 242, 0.3);
+}
+
+.light-mode .tweet-card__header-icon {
+    color: #1DA1F2;
+}
+
+.light-mode .tweet-card__author-name {
+    color: #1a1a2e;
+}
+
+.light-mode .tweet-card__author-handle {
+    color: #6B7280;
+}
+
+.light-mode .tweet-card__content {
+    color: #1a1a2e;
+}
+
+.light-mode .tweet-card__date {
+    color: #6B7280;
+}
+
+.light-mode .tweet-card__stats {
+    color: #6B7280;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ==========================================================================
+   25.5 FAQ & ACCORDION - LIGHT MODE
+   ========================================================================== */
+
+.light-mode .faq {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+}
+
+.light-mode .faq__badge {
+    background: rgba(184, 134, 11, 0.1);
+    color: #B8860B;
+    border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.light-mode .faq__title {
+    color: #1a1a2e;
+}
+
+.light-mode .faq__subtitle {
+    color: #6B7280;
+}
+
+.light-mode .faq-search {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.light-mode .faq-search:focus-within {
+    border-color: #B8860B;
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+.light-mode .faq-search__icon {
+    color: #9CA3AF;
+}
+
+.light-mode .faq-search__input {
+    color: #1a1a2e;
+}
+
+.light-mode .faq-search__input::placeholder {
+    color: #9CA3AF;
+}
+
+.light-mode .faq-categories__btn {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #6B7280;
+}
+
+.light-mode .faq-categories__btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+}
+
+.light-mode .faq-categories__btn--active {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    border-color: transparent;
+    color: #000000;
+}
+
+.light-mode .faq-categories__count {
+    background: rgba(0, 0, 0, 0.08);
+    color: #6B7280;
+}
+
+.light-mode .faq-categories__btn--active .faq-categories__count {
+    background: rgba(0, 0, 0, 0.2);
+    color: #000000;
+}
+
+.light-mode .faq-list {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .faq-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .faq-item__question {
+    color: #1a1a2e;
+}
+
+.light-mode .faq-item__question:hover {
+    color: #B8860B;
+}
+
+.light-mode .faq-item__icon {
+    color: #9CA3AF;
+}
+
+.light-mode .faq-item--open .faq-item__icon {
+    color: #B8860B;
+}
+
+.light-mode .faq-item__answer {
+    color: #4B5563;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.light-mode .faq-item__answer a {
+    color: #B8860B;
+}
+
+.light-mode .faq-item__answer a:hover {
+    color: #956D09;
+}
+
+.light-mode .faq-item__tags {
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.light-mode .faq-item__tag {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6B7280;
+}
+
+.light-mode .faq-item__feedback-btn {
+    background: rgba(0, 0, 0, 0.04);
+    color: #6B7280;
+}
+
+.light-mode .faq-item__feedback-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+}
+
+.light-mode .faq-item__feedback-btn--yes:hover {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.light-mode .faq-item__feedback-btn--no:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #DC2626;
+}
+
+.light-mode .accordion {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .accordion-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .accordion-item__header {
+    color: #1a1a2e;
+}
+
+.light-mode .accordion-item__header:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.light-mode .accordion-item--open .accordion-item__header {
+    background: rgba(184, 134, 11, 0.05);
+}
+
+.light-mode .accordion-item__icon {
+    color: #9CA3AF;
+}
+
+.light-mode .accordion-item--open .accordion-item__icon {
+    color: #B8860B;
+}
+
+.light-mode .accordion-item__toggle {
+    color: #9CA3AF;
+}
+
+.light-mode .accordion-item--open .accordion-item__toggle {
+    color: #B8860B;
+}
+
+.light-mode .accordion-item__body {
+    color: #4B5563;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.light-mode .accordion-item__number {
+    background: rgba(0, 0, 0, 0.06);
+    color: #6B7280;
+}
+
+.light-mode .accordion-item--open .accordion-item__number {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    color: #000000;
+}
+
+.light-mode .faq-split__sidebar {
+    background: rgba(0, 0, 0, 0.02);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .faq-split__nav-item {
+    color: #6B7280;
+    border-left: 3px solid transparent;
+}
+
+.light-mode .faq-split__nav-item:hover {
+    color: #1a1a2e;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.light-mode .faq-split__nav-item--active {
+    color: #B8860B;
+    background: rgba(184, 134, 11, 0.08);
+    border-left-color: #B8860B;
+}
+
+.light-mode .faq-contact {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, rgba(184, 134, 11, 0.04) 100%);
+    border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.light-mode .faq-contact__title {
+    color: #1a1a2e;
+}
+
+.light-mode .faq-contact__text {
+    color: #6B7280;
+}
+
+.light-mode .faq-contact__btn {
+    background: linear-gradient(135deg, #B8860B 0%, #956D09 100%);
+    color: #000000;
+}
+
+.light-mode .faq-contact__btn:hover {
+    background: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+}
+
+.light-mode .collapsible {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .collapsible__header {
+    color: #1a1a2e;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .collapsible__header:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.light-mode .collapsible__badge {
+    background: rgba(184, 134, 11, 0.1);
+    color: #B8860B;
+}
+
+.light-mode .collapsible__toggle {
+    color: #9CA3AF;
+}
+
+.light-mode .collapsible--open .collapsible__toggle {
+    color: #B8860B;
+}
+
+.light-mode .collapsible__body {
+    color: #4B5563;
+}
+
+.light-mode .accordion-nested__parent {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.light-mode .accordion-nested__parent-header {
+    color: #1a1a2e;
+}
+
+.light-mode .accordion-nested__toggle {
+    color: #9CA3AF;
+}
+
+.light-mode .accordion-nested__parent--open .accordion-nested__toggle {
+    color: #B8860B;
+}
+
+.light-mode .accordion-nested__child {
+    border-left: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .accordion-nested__child-header {
+    color: #6B7280;
+}
+
+.light-mode .accordion-nested__child-header:hover {
+    color: #1a1a2e;
+}
+
+.light-mode .accordion-nested__child--open .accordion-nested__child-header {
+    color: #B8860B;
+}
+
+.light-mode .accordion-nested__child-body {
+    color: #4B5563;
+}
+
+.light-mode .expandable-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .expandable-card__preview {
+    color: #4B5563;
+}
+
+.light-mode .expandable-card__toggle {
+    color: #B8860B;
+}
+
+.light-mode .expandable-card__toggle:hover {
+    color: #956D09;
+}
+
+.light-mode .expandable-card__full {
+    color: #4B5563;
+}
+
+.light-mode .step-accordion__item {
+    border-left: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .step-accordion__item--completed {
+    border-left-color: #10B981;
+}
+
+.light-mode .step-accordion__item--active {
+    border-left-color: #B8860B;
+}
+
+.light-mode .step-accordion__marker {
+    background: rgba(0, 0, 0, 0.1);
+    color: #6B7280;
+    border: 3px solid #FFFFFF;
+}
+
+.light-mode .step-accordion__item--completed .step-accordion__marker {
+    background: #10B981;
+    color: #FFFFFF;
+}
+
+.light-mode .step-accordion__item--active .step-accordion__marker {
+    background: #B8860B;
+    color: #000000;
+}
+
+.light-mode .step-accordion__header {
+    color: #1a1a2e;
+}
+
+.light-mode .step-accordion__item--completed .step-accordion__header {
+    color: #10B981;
+}
+
+.light-mode .step-accordion__item--active .step-accordion__header {
+    color: #B8860B;
+}
+
+.light-mode .step-accordion__description {
+    color: #6B7280;
+}
+
+.light-mode .step-accordion__body {
+    color: #4B5563;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .accordion-animated .accordion-item__body {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-mode .accordion-animated .accordion-item--open .accordion-item__body {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   BATCH 25 - RESPONSIVE STYLES
+   ========================================================================== */
+
+/* ==========================================================================
+   TABLET BREAKPOINT (768px)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Kanban Board - Tablet */
+    .kanban-board {
+        padding: 16px;
+    }
+
+    .kanban-header {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .kanban-header__actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .kanban-filters {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .kanban-filter {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 140px;
+    }
+
+    .kanban-columns {
+        flex-direction: column;
+        gap: 16px;
+        overflow-x: visible;
+    }
+
+    .kanban-column {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .kanban-card {
+        padding: 14px;
+    }
+
+    .kanban-card__meta {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .kanban-swimlane__content {
+        flex-direction: column;
+    }
+
+    .kanban-timeline {
+        padding-left: 20px;
+    }
+
+    /* File Manager - Tablet */
+    .file-manager {
+        flex-direction: column;
+    }
+
+    .file-manager__toolbar {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .file-toolbar__group {
+        flex-wrap: wrap;
+    }
+
+    .file-toolbar__search {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .file-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .file-breadcrumb {
+        padding: 10px 12px;
+        overflow-x: auto;
+    }
+
+    .file-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .file-grid__item {
+        padding: 12px;
+    }
+
+    .file-list__header {
+        display: none;
+    }
+
+    .file-list__row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .file-list__cell {
+        width: 100%;
+    }
+
+    .file-preview {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        z-index: 100;
+    }
+
+    .file-context-menu {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        border-radius: 16px 16px 0 0;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .file-upload-zone {
+        padding: 32px 20px;
+    }
+
+    /* Pricing - Tablet */
+    .pricing {
+        padding: 48px 20px;
+    }
+
+    .pricing__header {
+        margin-bottom: 32px;
+    }
+
+    .pricing__title {
+        font-size: 28px;
+    }
+
+    .pricing-toggle {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .pricing-cards {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .pricing-card {
+        padding: 24px;
+    }
+
+    .pricing-card--featured {
+        transform: none;
+    }
+
+    .pricing-comparison {
+        overflow-x: auto;
+    }
+
+    .pricing-comparison__table {
+        min-width: 600px;
+    }
+
+    .pricing-comparison__header-cell,
+    .pricing-comparison__cell {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+
+    .pricing-faq {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .pricing-enterprise {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .pricing-enterprise__features {
+        justify-content: center;
+    }
+
+    .pricing-slider {
+        padding: 20px;
+    }
+
+    /* Testimonials - Tablet */
+    .testimonials {
+        padding: 48px 20px;
+    }
+
+    .testimonials__title {
+        font-size: 28px;
+    }
+
+    .testimonials__grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .testimonial-card {
+        padding: 20px;
+    }
+
+    .testimonial-carousel {
+        padding: 0 40px;
+    }
+
+    .testimonial-carousel__nav {
+        width: 36px;
+        height: 36px;
+    }
+
+    .testimonial-hero {
+        padding: 32px 24px;
+    }
+
+    .testimonial-hero__quote {
+        font-size: 20px;
+    }
+
+    .testimonial-video__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonial-marquee__track {
+        animation-duration: 40s;
+    }
+
+    .social-proof__logos {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .social-proof__stats {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .review-summary {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .review-summary__score-section {
+        margin-bottom: 20px;
+    }
+
+    .tweet-card {
+        padding: 16px;
+    }
+
+    /* FAQ & Accordion - Tablet */
+    .faq {
+        padding: 48px 20px;
+    }
+
+    .faq__title {
+        font-size: 28px;
+    }
+
+    .faq-search {
+        max-width: 100%;
+    }
+
+    .faq-categories {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .faq-categories__btn {
+        flex: 0 0 auto;
+    }
+
+    .faq-item__question {
+        font-size: 15px;
+        padding: 16px;
+    }
+
+    .faq-item__answer {
+        padding: 16px;
+        font-size: 14px;
+    }
+
+    .accordion-item__header {
+        padding: 16px;
+        font-size: 15px;
+    }
+
+    .accordion-item__body {
+        padding: 16px;
+    }
+
+    .faq-split {
+        flex-direction: column;
+    }
+
+    .faq-split__sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        position: static;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .faq-split__nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 16px;
+    }
+
+    .faq-split__nav-item {
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        padding: 8px 16px;
+    }
+
+    .faq-split__nav-item--active {
+        border-left-color: transparent;
+        border-bottom-color: #F5C518;
+    }
+
+    .faq-contact {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .collapsible {
+        margin-bottom: 12px;
+    }
+
+    .collapsible__header {
+        padding: 14px 16px;
+    }
+
+    .accordion-nested__parent {
+        margin-bottom: 12px;
+    }
+
+    .accordion-nested__child {
+        margin-left: 16px;
+    }
+
+    .step-accordion__item {
+        padding-left: 40px;
+    }
+
+    .step-accordion__marker {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        left: 0;
+    }
+}
+
+/* ==========================================================================
+   MOBILE BREAKPOINT (480px)
+   ========================================================================== */
+
+@media (max-width: 480px) {
+    /* Kanban Board - Mobile */
+    .kanban-board {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .kanban-header {
+        padding: 12px;
+    }
+
+    .kanban-header__title {
+        font-size: 18px;
+    }
+
+    .kanban-header__actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .kanban-filters {
+        padding: 10px 12px;
+    }
+
+    .kanban-filter {
+        flex: 1 1 100%;
+    }
+
+    .kanban-column {
+        border-radius: 10px;
+    }
+
+    .kanban-column__header {
+        padding: 12px;
+    }
+
+    .kanban-column__title {
+        font-size: 14px;
+    }
+
+    .kanban-card {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .kanban-card__title {
+        font-size: 14px;
+    }
+
+    .kanban-card__description {
+        font-size: 12px;
+    }
+
+    .kanban-card__tags {
+        gap: 4px;
+    }
+
+    .kanban-card__tag {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .kanban-card__assignees {
+        margin-left: auto;
+    }
+
+    .kanban-card__assignee {
+        width: 24px;
+        height: 24px;
+    }
+
+    .kanban-add-card {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    /* File Manager - Mobile */
+    .file-manager {
+        border-radius: 12px;
+    }
+
+    .file-manager__toolbar {
+        padding: 10px;
+    }
+
+    .file-toolbar__btn {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .file-toolbar__btn span {
+        display: none;
+    }
+
+    .file-sidebar {
+        max-height: 150px;
+        padding: 12px;
+    }
+
+    .file-sidebar__item {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+
+    .file-breadcrumb {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .file-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .file-grid__item {
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .file-grid__icon {
+        font-size: 32px;
+    }
+
+    .file-grid__name {
+        font-size: 12px;
+    }
+
+    .file-list__row {
+        padding: 10px;
+    }
+
+    .file-list__name {
+        font-size: 14px;
+    }
+
+    .file-list__meta {
+        font-size: 11px;
+    }
+
+    .file-preview {
+        padding: 16px;
+    }
+
+    .file-preview__thumbnail {
+        height: 150px;
+    }
+
+    .file-upload-zone {
+        padding: 24px 16px;
+    }
+
+    .file-upload-zone__icon {
+        font-size: 36px;
+    }
+
+    .file-upload-zone__text {
+        font-size: 14px;
+    }
+
+    .file-tree__item {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .file-status-bar {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    /* Pricing - Mobile */
+    .pricing {
+        padding: 32px 16px;
+    }
+
+    .pricing__header-badge {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+
+    .pricing__title {
+        font-size: 22px;
+    }
+
+    .pricing__subtitle {
+        font-size: 14px;
+    }
+
+    .pricing-toggle {
+        padding: 6px;
+        gap: 8px;
+    }
+
+    .pricing-toggle__label {
+        font-size: 13px;
+    }
+
+    .pricing-toggle__badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .pricing-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .pricing-card__name {
+        font-size: 18px;
+    }
+
+    .pricing-card__price-value {
+        font-size: 36px;
+    }
+
+    .pricing-card__feature {
+        font-size: 13px;
+        padding: 8px 0;
+    }
+
+    .pricing-card__cta {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    .pricing-comparison__header-cell,
+    .pricing-comparison__cell {
+        padding: 10px 6px;
+        font-size: 11px;
+    }
+
+    .pricing-enterprise {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .pricing-enterprise__title {
+        font-size: 18px;
+    }
+
+    .pricing-enterprise__feature {
+        font-size: 13px;
+    }
+
+    .pricing-guarantee {
+        padding: 16px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pricing-slider {
+        padding: 16px;
+    }
+
+    .pricing-slider__value {
+        font-size: 28px;
+    }
+
+    /* Testimonials - Mobile */
+    .testimonials {
+        padding: 32px 16px;
+    }
+
+    .testimonials__badge {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+
+    .testimonials__title {
+        font-size: 22px;
+    }
+
+    .testimonials__subtitle {
+        font-size: 14px;
+    }
+
+    .testimonial-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .testimonial-card__rating {
+        gap: 2px;
+    }
+
+    .testimonial-card__rating-star {
+        font-size: 14px;
+    }
+
+    .testimonial-card__quote {
+        font-size: 14px;
+    }
+
+    .testimonial-card__author {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .testimonial-card__author-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .testimonial-card__author-name {
+        font-size: 14px;
+    }
+
+    .testimonial-card__author-title {
+        font-size: 12px;
+    }
+
+    .testimonial-carousel {
+        padding: 0;
+    }
+
+    .testimonial-carousel__nav {
+        display: none;
+    }
+
+    .testimonial-carousel__dots {
+        margin-top: 20px;
+    }
+
+    .testimonial-hero {
+        padding: 24px 16px;
+        border-radius: 12px;
+    }
+
+    .testimonial-hero__quote {
+        font-size: 16px;
+    }
+
+    .testimonial-hero__quote-mark {
+        font-size: 48px;
+    }
+
+    .testimonial-video {
+        border-radius: 12px;
+    }
+
+    .testimonial-video__play {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+    }
+
+    .testimonial-marquee {
+        padding: 16px 0;
+    }
+
+    .testimonial-marquee__item {
+        padding: 12px;
+        min-width: 250px;
+    }
+
+    .social-proof {
+        padding: 24px 16px;
+    }
+
+    .social-proof__logo {
+        height: 24px;
+    }
+
+    .social-proof__stat-value {
+        font-size: 24px;
+    }
+
+    .social-proof__stat-label {
+        font-size: 12px;
+    }
+
+    .review-summary {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .review-summary__score {
+        font-size: 36px;
+    }
+
+    .review-summary__bar-label {
+        font-size: 12px;
+    }
+
+    .blockquote {
+        padding: 16px 16px 16px 20px;
+    }
+
+    .blockquote__text {
+        font-size: 14px;
+    }
+
+    .tweet-card {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .tweet-card__author-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .tweet-card__content {
+        font-size: 14px;
+    }
+
+    /* FAQ & Accordion - Mobile */
+    .faq {
+        padding: 32px 16px;
+    }
+
+    .faq__badge {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+
+    .faq__title {
+        font-size: 22px;
+    }
+
+    .faq__subtitle {
+        font-size: 14px;
+    }
+
+    .faq-search {
+        padding: 10px 14px;
+    }
+
+    .faq-search__input {
+        font-size: 14px;
+    }
+
+    .faq-categories {
+        gap: 8px;
+    }
+
+    .faq-categories__btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .faq-list {
+        border-radius: 12px;
+    }
+
+    .faq-item__question {
+        font-size: 14px;
+        padding: 14px;
+    }
+
+    .faq-item__answer {
+        padding: 14px;
+        font-size: 13px;
+    }
+
+    .faq-item__tags {
+        padding: 10px 14px;
+        gap: 6px;
+    }
+
+    .faq-item__tag {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    .faq-item__feedback {
+        padding: 10px 14px;
+    }
+
+    .faq-item__feedback-btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .accordion {
+        border-radius: 12px;
+    }
+
+    .accordion-item__header {
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .accordion-item__body {
+        padding: 14px;
+        font-size: 13px;
+    }
+
+    .accordion-item__icon {
+        font-size: 16px;
+    }
+
+    .accordion-item__number {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+
+    .faq-split__sidebar {
+        max-height: 120px;
+    }
+
+    .faq-split__nav {
+        padding: 12px;
+        gap: 6px;
+    }
+
+    .faq-split__nav-item {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .faq-contact {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .faq-contact__title {
+        font-size: 18px;
+    }
+
+    .faq-contact__text {
+        font-size: 13px;
+    }
+
+    .faq-contact__btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+
+    .collapsible {
+        border-radius: 10px;
+    }
+
+    .collapsible__header {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .collapsible__body {
+        padding: 14px;
+        font-size: 13px;
+    }
+
+    .accordion-nested__parent {
+        border-radius: 10px;
+    }
+
+    .accordion-nested__parent-header {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .accordion-nested__child {
+        margin-left: 12px;
+        margin-top: 8px;
+    }
+
+    .accordion-nested__child-header {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .accordion-nested__child-body {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .expandable-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .expandable-card__preview {
+        font-size: 13px;
+    }
+
+    .expandable-card__toggle {
+        font-size: 13px;
+    }
+
+    .step-accordion__item {
+        padding-left: 36px;
+        padding-bottom: 20px;
+    }
+
+    .step-accordion__marker {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+
+    .step-accordion__header {
+        font-size: 14px;
+    }
+
+    .step-accordion__description {
+        font-size: 12px;
+    }
+
+    .step-accordion__body {
+        padding: 12px 0;
+        font-size: 13px;
+    }
+}
