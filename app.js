@@ -40,11 +40,11 @@ const athletesData = [
 ];
 
 const testimonialsData = [
-    { name: "Sarah Mitchell", school: "UCLA Volleyball", avatar: "🏐", content: "GradeUp completely changed my college experience. I've been able to fund my training equipment and connect with brands that value my academic achievements.", raised: "$12,500", sponsors: 6 },
-    { name: "James Carter", school: "Duke Basketball", avatar: "🏀", content: "As a student-athlete with a 3.9 GPA, I finally found a platform that rewards my work in the classroom. The blockchain payments are instant and hassle-free.", raised: "$28,000", sponsors: 12 },
-    { name: "Maria Santos", school: "Stanford Soccer", avatar: "⚽", content: "The brand partnerships I've secured through GradeUp have been incredible. They actually care about my academic performance, not just my sports stats.", raised: "$15,200", sponsors: 8 },
-    { name: "Derek Williams", school: "Alabama Football", avatar: "🏈", content: "I was able to upload my game highlights and academic achievements in one place. Sponsors love seeing the complete picture of who I am.", raised: "$42,000", sponsors: 15 },
-    { name: "Ashley Park", school: "USC Track", avatar: "🏃", content: "The crypto donation feature is amazing. My international supporters can now easily contribute to my training fund without huge fees.", raised: "$8,900", sponsors: 5 },
+    { name: "Sarah Mitchell", school: "UCLA Volleyball", avatar: "volleyball", content: "GradeUp completely changed my college experience. I've been able to fund my training equipment and connect with brands that value my academic achievements.", raised: "$12,500", sponsors: 6 },
+    { name: "James Carter", school: "Duke Basketball", avatar: "basketball", content: "As a student-athlete with a 3.9 GPA, I finally found a platform that rewards my work in the classroom. The blockchain payments are instant and hassle-free.", raised: "$28,000", sponsors: 12 },
+    { name: "Maria Santos", school: "Stanford Soccer", avatar: "soccer", content: "The brand partnerships I've secured through GradeUp have been incredible. They actually care about my academic performance, not just my sports stats.", raised: "$15,200", sponsors: 8 },
+    { name: "Derek Williams", school: "Alabama Football", avatar: "football", content: "I was able to upload my game highlights and academic achievements in one place. Sponsors love seeing the complete picture of who I am.", raised: "$42,000", sponsors: 15 },
+    { name: "Ashley Park", school: "USC Track", avatar: "running", content: "The crypto donation feature is amazing. My international supporters can now easily contribute to my training fund without huge fees.", raised: "$8,900", sponsors: 5 },
 ];
 
 let displayedAthletes = 6;
@@ -223,12 +223,18 @@ function renderAthletes() {
 }
 
 function createAthleteCard(athlete) {
+    const checkIcon = typeof getIcon === 'function' ? getIcon('check', 14) : '✓';
+    const clipboardIcon = typeof getIcon === 'function' ? getIcon('clipboard', 14) : '';
+    const trophyIcon = typeof getIcon === 'function' ? getIcon('trophy', 14) : '';
+    const bookIcon = typeof getIcon === 'function' ? getIcon('book', 14) : '';
+    const videoIcon = typeof getIcon === 'function' ? getIcon('video', 14) : '';
+
     const verificationBadges = `
         <div class="verification-badges">
-            ${athlete.verified ? '<span class="verified-badge-card" title="Verified by Athletic Director">✓ Verified</span>' : '<span class="unverified-badge-card">Pending Verification</span>'}
-            ${athlete.enrollmentVerified ? '<span class="enrollment-badge-card" title="Enrollment confirmed">📋 Enrolled</span>' : ''}
-            ${athlete.sportVerified ? '<span class="sport-badge-card" title="Sport/team verified">🏆 Roster Confirmed</span>' : ''}
-            ${athlete.gradesVerified ? '<span class="grades-badge-card" title="Grades verified by school">📚 Grades Verified</span>' : ''}
+            ${athlete.verified ? `<span class="verified-badge-card" title="Verified by Athletic Director">${checkIcon} Verified</span>` : '<span class="unverified-badge-card">Pending Verification</span>'}
+            ${athlete.enrollmentVerified ? `<span class="enrollment-badge-card" title="Enrollment confirmed">${clipboardIcon} Enrolled</span>` : ''}
+            ${athlete.sportVerified ? `<span class="sport-badge-card" title="Sport/team verified">${trophyIcon} Roster Confirmed</span>` : ''}
+            ${athlete.gradesVerified ? `<span class="grades-badge-card" title="Grades verified by school">${bookIcon} Grades Verified</span>` : ''}
         </div>
     `;
 
@@ -237,17 +243,17 @@ function createAthleteCard(athlete) {
             <div class="athlete-image">
                 <img src="${athlete.photo}" alt="${athlete.name}" class="athlete-photo">
                 <span class="sport-tag">${capitalizeFirst(athlete.sport)}</span>
-                ${athlete.highlights > 0 ? `<span class="highlights-badge">🎬 ${athlete.highlights} Highlights</span>` : ''}
-                ${athlete.verified ? '<span class="verified-overlay">✓</span>' : ''}
+                ${athlete.highlights > 0 ? `<span class="highlights-badge">${videoIcon} ${athlete.highlights} Highlights</span>` : ''}
+                ${athlete.verified ? `<span class="verified-overlay">${checkIcon}</span>` : ''}
             </div>
             <div class="athlete-showcase-content">
                 <div class="athlete-showcase-header">
                     <div>
-                        <h3>${athlete.name} ${athlete.verified ? '<span class="verified-check-inline">✓</span>' : ''}</h3>
+                        <h3>${athlete.name} ${athlete.verified ? `<span class="verified-check-inline">${checkIcon}</span>` : ''}</h3>
                         <p>${athlete.school} • ${athlete.position}</p>
                         <p class="athlete-academic-info"><span class="year-badge">${athlete.year}</span> <span class="major-text">${athlete.major}</span></p>
                     </div>
-                    <span class="gpa-badge ${athlete.gradesVerified ? 'verified' : ''}">${athlete.gpa.toFixed(2)} GPA ${athlete.gradesVerified ? '✓' : ''}</span>
+                    <span class="gpa-badge ${athlete.gradesVerified ? 'verified' : ''}">${athlete.gpa.toFixed(2)} GPA ${athlete.gradesVerified ? checkIcon : ''}</span>
                 </div>
                 ${verificationBadges}
                 <div class="athlete-stats-row">
@@ -544,7 +550,12 @@ function showToast(message, type = 'success') {
     }
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    const icons = { success: '✓', error: '!', info: 'ℹ', warning: '⚠' };
+    const icons = {
+        success: typeof getIcon === 'function' ? getIcon('check', 16) : '✓',
+        error: typeof getIcon === 'function' ? getIcon('alertCircle', 16) : '!',
+        info: typeof getIcon === 'function' ? getIcon('info', 16) : 'ℹ',
+        warning: typeof getIcon === 'function' ? getIcon('alertTriangle', 16) : '⚠'
+    };
     toast.innerHTML = `
         <span>${icons[type] || icons.info}</span>
         <span>${message}</span>
@@ -720,7 +731,7 @@ function addPreviewItem(file) {
 
     const html = `
         <div class="preview-item" id="${id}">
-            <div class="preview-thumbnail">🎬</div>
+            <div class="preview-thumbnail">${typeof getIcon === 'function' ? getIcon('video', 24) : ''}</div>
             <div class="preview-info">
                 <h5>${file.name}</h5>
                 <p>${fileSize} MB</p>
@@ -798,7 +809,7 @@ function submitHighlight() {
         newHighlight.className = 'highlight-card';
         newHighlight.innerHTML = `
             <div class="highlight-thumbnail">
-                <span>🎬</span>
+                <span>${typeof getIcon === 'function' ? getIcon('video', 20) : ''}</span>
                 <div class="play-overlay">▶</div>
                 <span class="highlight-duration">0:00</span>
             </div>
@@ -870,7 +881,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==================== PROFILE PICTURE ====================
-let selectedAvatar = { type: 'emoji', value: '🏀' };
+let selectedAvatar = { type: 'icon', value: 'basketball' };
 
 function initProfilePicture() {
     const avatarUploadZone = document.getElementById('avatarUploadZone');
@@ -1047,19 +1058,20 @@ function openAthleteProfile(athleteId) {
 
     // Generate highlights grid with dynamic content
     if (profileHighlights) {
-        const sportEmojis = {
-            basketball: '🏀',
-            football: '🏈',
-            soccer: '⚽',
-            baseball: '⚾',
-            volleyball: '🏐',
-            tennis: '🎾',
-            swimming: '🏊',
-            track: '🏃',
-            golf: '⛳',
-            softball: '🥎'
+        const sportIcons = {
+            basketball: 'basketball',
+            football: 'football',
+            soccer: 'soccer',
+            baseball: 'baseball',
+            volleyball: 'volleyball',
+            tennis: 'tennis',
+            swimming: 'swimming',
+            track: 'running',
+            golf: 'golf',
+            softball: 'baseball'
         };
-        const sportIcon = sportEmojis[athlete.sport] || '🏆';
+        const sportIconName = sportIcons[athlete.sport] || 'trophy';
+        const sportIcon = typeof getIcon === 'function' ? getIcon(sportIconName, 32) : sportIconName;
 
         const highlightTitles = {
             basketball: ['Game-Winning Three', 'Slam Dunk Highlights', 'Defensive Clinic', 'Buzzer Beater vs Rivals', 'Training Day', 'Season Best Plays'],
@@ -1076,12 +1088,17 @@ function openAthleteProfile(athleteId) {
         let highlightsHTML = '';
         const highlightCount = Math.min(athlete.highlights, 6);
 
+        const trophyIcon = typeof getIcon === 'function' ? getIcon('trophy', 32) : '';
+        const strengthIcon = typeof getIcon === 'function' ? getIcon('zap', 32) : '';
+        const videoIcon = typeof getIcon === 'function' ? getIcon('video', 48) : '';
+
         for (let i = 0; i < highlightCount; i++) {
+            const iconHtml = i === 1 ? trophyIcon : (i === 2 ? strengthIcon : sportIcon);
             highlightsHTML += `
                 <div class="profile-highlight-card">
                     <div class="highlight-video">
-                        <span class="video-icon">${i === 1 ? '🏆' : (i === 2 ? '💪' : sportIcon)}</span>
-                        <div class="play-btn">▶</div>
+                        <span class="video-icon">${iconHtml}</span>
+                        <div class="play-btn">${typeof getIcon === 'function' ? getIcon('play', 20) : '▶'}</div>
                         <span class="video-duration">${durations[i]}</span>
                     </div>
                     <div class="highlight-details">
@@ -1095,7 +1112,7 @@ function openAthleteProfile(athleteId) {
         if (athlete.highlights === 0) {
             highlightsHTML = `
                 <div class="no-highlights-message" style="grid-column: 1/-1; text-align: center; padding: 2rem;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">${videoIcon}</div>
                     <p style="color: var(--text-muted);">No highlights uploaded yet</p>
                     <button class="btn btn-outline-sm" style="margin-top: 1rem;">Upload First Highlight</button>
                 </div>
@@ -1280,7 +1297,7 @@ function populateDataValue(athlete) {
         const qv3 = quickStats[3].querySelector('.quick-value');
         if (qv0) qv0.textContent = '$' + dv.avgDeal.toLocaleString();
         if (qv1) qv1.textContent = dv.completedDeals;
-        if (qv2) qv2.textContent = '⭐ ' + dv.rating + '/5';
+        if (qv2) qv2.innerHTML = (typeof getIcon === 'function' ? getIcon('star', 14) : '') + ' ' + dv.rating + '/5';
         if (qv3) qv3.textContent = dv.responseTime;
     }
 
@@ -1386,12 +1403,15 @@ function updateGradesVisibility(athleteId) {
     // In production, this would check investor status
     const showGrades = true; // Change to isInvestorOf(athleteId) for production
 
+    const chartIcon = typeof getIcon === 'function' ? getIcon('chart', 16) : '';
+    const lockIcon = typeof getIcon === 'function' ? getIcon('lock', 16) : '';
+
     if (showGrades) {
         // Show grades
         if (gradesLocked) gradesLocked.style.display = 'none';
         if (gradesContent) gradesContent.style.display = 'block';
         if (privacyBadge) {
-            privacyBadge.textContent = '📊 Academic Record Verified';
+            privacyBadge.innerHTML = `${chartIcon} Academic Record Verified`;
             privacyBadge.classList.add('unlocked');
         }
     } else {
@@ -1399,7 +1419,7 @@ function updateGradesVisibility(athleteId) {
         if (gradesLocked) gradesLocked.style.display = 'block';
         if (gradesContent) gradesContent.style.display = 'none';
         if (privacyBadge) {
-            privacyBadge.textContent = '🔒 Private - Investors Only';
+            privacyBadge.innerHTML = `${lockIcon} Private - Investors Only`;
             privacyBadge.classList.remove('unlocked');
         }
     }
@@ -1543,9 +1563,10 @@ function renderPendingVerifications() {
     const pending = verificationRequests.filter(r => r.status === 'pending');
 
     if (pending.length === 0) {
+        const checkCircleIcon = typeof getIcon === 'function' ? getIcon('checkCircle', 48) : '';
         container.innerHTML = `
             <div class="empty-state">
-                <span class="empty-icon">✅</span>
+                <span class="empty-icon">${checkCircleIcon}</span>
                 <h4>All caught up!</h4>
                 <p>No pending verification requests</p>
             </div>
@@ -1586,7 +1607,7 @@ function renderVerifiedAthletes() {
     if (verified.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <span class="empty-icon">📋</span>
+                <span class="empty-icon">${typeof getIcon === 'function' ? getIcon('clipboard', 32) : ''}</span>
                 <h4>No verified athletes yet</h4>
                 <p>Approve pending requests to see them here</p>
             </div>
@@ -1598,7 +1619,7 @@ function renderVerifiedAthletes() {
         <div class="verified-athlete-card">
             <div class="verified-athlete-avatar">
                 <img src="${athlete.photo}" alt="${athlete.name}">
-                <span class="verified-check">✓</span>
+                <span class="verified-check">${typeof getIcon === 'function' ? getIcon('check', 12) : '✓'}</span>
             </div>
             <div class="verified-athlete-info">
                 <h4>${athlete.name}</h4>
@@ -1606,7 +1627,7 @@ function renderVerifiedAthletes() {
             </div>
             <div class="verified-athlete-grades">
                 <span class="gpa-badge-sm ${athlete.gradesVerified ? 'verified' : ''}">${athlete.gpa.toFixed(2)} GPA</span>
-                ${athlete.gradesVerified ? '<span class="grades-verified-badge">✓ Grades Verified</span>' : '<button class="btn btn-xs btn-outline" onclick="verifyGrades(' + athlete.id + ')">Verify Grades</button>'}
+                ${athlete.gradesVerified ? '<span class="grades-verified-badge">' + (typeof getIcon === 'function' ? getIcon('check', 12) : '✓') + ' Grades Verified</span>' : '<button class="btn btn-xs btn-outline" onclick="verifyGrades(' + athlete.id + ')">Verify Grades</button>'}
             </div>
             <div class="verified-athlete-date">
                 <span>Verified: ${athlete.verifiedDate || 'Jan 15, 2026'}</span>
@@ -1638,7 +1659,7 @@ function renderGradeVerifications() {
                     <span class="value">${athlete.gpa.toFixed(2)}</span>
                 </div>
                 <div class="grade-actions">
-                    <button class="btn btn-sm btn-success" onclick="confirmGrade(${athlete.id}, ${athlete.gpa})">✓ Confirm</button>
+                    <button class="btn btn-sm btn-success" onclick="confirmGrade(${athlete.id}, ${athlete.gpa})">${typeof getIcon === 'function' ? getIcon('check', 14) : '✓'} Confirm</button>
                     <button class="btn btn-sm btn-outline" onclick="editGrade(${athlete.id})">Edit</button>
                 </div>
             </div>
@@ -1709,7 +1730,8 @@ function quickApprove(athleteId) {
     renderVerifiedAthletes();
     renderGradeVerifications();
 
-    showToast(`${athlete.name} verified: Enrollment ✓ Sport ✓ Grades ✓`, 'success');
+    const checkMark = typeof getIcon === 'function' ? getIcon('check', 14) : '✓';
+    showToast(`${athlete.name} verified: Enrollment ${checkMark} Sport ${checkMark} Grades ${checkMark}`, 'success');
 }
 
 // Approve Verification
@@ -1793,7 +1815,8 @@ function approveVerification() {
     renderVerifiedAthletes();
     renderGradeVerifications();
 
-    showToast(`${currentVerifyingAthlete.name} verified: Enrollment ✓ Sport ✓ Grades ✓`, 'success');
+    const checkMark = typeof getIcon === 'function' ? getIcon('check', 14) : '✓';
+    showToast(`${currentVerifyingAthlete.name} verified: Enrollment ${checkMark} Sport ${checkMark} Grades ${checkMark}`, 'success');
 }
 
 // Request More Info
@@ -2839,17 +2862,17 @@ function openExportModal() {
 
             <div class="export-options">
                 <div class="export-option" onclick="selectExportOption(this, 'csv')">
-                    <span class="export-icon">📊</span>
+                    <span class="export-icon">${typeof getIcon === 'function' ? getIcon('barChart', 24) : ''}</span>
                     <span class="export-label">CSV</span>
                     <span class="export-desc">Spreadsheet format</span>
                 </div>
                 <div class="export-option" onclick="selectExportOption(this, 'pdf')">
-                    <span class="export-icon">📄</span>
+                    <span class="export-icon">${typeof getIcon === 'function' ? getIcon('fileText', 24) : ''}</span>
                     <span class="export-label">PDF</span>
                     <span class="export-desc">Print-ready document</span>
                 </div>
                 <div class="export-option" onclick="selectExportOption(this, 'xlsx')">
-                    <span class="export-icon">📗</span>
+                    <span class="export-icon">${typeof getIcon === 'function' ? getIcon('file', 24) : ''}</span>
                     <span class="export-label">Excel</span>
                     <span class="export-desc">Microsoft Excel</span>
                 </div>
@@ -3297,7 +3320,7 @@ function handleAthleteSearch(query) {
     if (filtered.length > 0) {
         results.innerHTML = filtered.map(item => `
             <div class="search-result-item" onclick="viewAthleteItem('${item.type}', '${item.name}')">
-                <span class="result-icon">${item.type === 'deal' ? '🤝' : item.type === 'brand' ? '🏢' : item.type === 'event' ? '📅' : '📱'}</span>
+                <span class="result-icon">${typeof getIcon === 'function' ? (item.type === 'deal' ? getIcon('dollar', 16) : item.type === 'brand' ? getIcon('building', 16) : item.type === 'event' ? getIcon('calendar', 16) : getIcon('smartphone', 16)) : ''}</span>
                 <div class="result-info">
                     <span class="result-name">${item.name}</span>
                     <span class="result-meta">${item.status} • ${item.value}</span>
@@ -3676,13 +3699,13 @@ function handleBrandSearch(query) {
 
     // Sample search data for brands
     const searchData = [
-        { type: 'athlete', name: 'Marcus Johnson', info: 'Football • 125K followers', icon: '🏈' },
-        { type: 'athlete', name: 'Sarah Williams', info: 'Basketball • 89K followers', icon: '🏀' },
-        { type: 'athlete', name: 'David Chen', info: 'Baseball • 56K followers', icon: '⚾' },
-        { type: 'campaign', name: 'Spring Launch 2024', info: 'Active • 3 athletes', icon: '📢' },
-        { type: 'campaign', name: 'Summer Promo', info: 'Draft • Planning', icon: '📋' },
-        { type: 'deal', name: 'Social Media Package', info: '$5,000 • Standard', icon: '💼' },
-        { type: 'deal', name: 'Event Appearance', info: '$2,500 • Premium', icon: '🎤' }
+        { type: 'athlete', name: 'Marcus Johnson', info: 'Football • 125K followers', iconName: 'users' },
+        { type: 'athlete', name: 'Sarah Williams', info: 'Basketball • 89K followers', iconName: 'users' },
+        { type: 'athlete', name: 'David Chen', info: 'Baseball • 56K followers', iconName: 'users' },
+        { type: 'campaign', name: 'Spring Launch 2024', info: 'Active • 3 athletes', iconName: 'megaphone' },
+        { type: 'campaign', name: 'Summer Promo', info: 'Draft • Planning', iconName: 'clipboard' },
+        { type: 'deal', name: 'Social Media Package', info: '$5,000 • Standard', iconName: 'briefcase' },
+        { type: 'deal', name: 'Event Appearance', info: '$2,500 • Premium', iconName: 'mic' }
     ];
 
     const filtered = searchData.filter(item =>
