@@ -1,5 +1,22 @@
 // GradeUp NIL - Enhanced JavaScript Application
 
+// ==================== NAVIGATION ROUTER ====================
+const handleNavigation = (route) => {
+  const routes = {
+    'athletes': '/app/athletes',
+    'brands': '/app/brands',
+    'features': '/app/features',
+    'pricing': '/app/pricing',
+    'athletic-director': '/dashboard/athletic-director',
+    'athlete-portal': '/dashboard/athlete-portal',
+    'brand-donor': '/dashboard/brand-donor'
+  };
+
+  if (routes[route]) {
+    window.location.href = routes[route];
+  }
+};
+
 // ==================== DATA ====================
 const athletesData = [
     { id: 1, name: "Jordan Williams", school: "Ohio State", sport: "football", position: "WR", year: "Junior", major: "Business Administration", gpa: 3.92, followers: "45K", raised: "$12K", sponsors: 8, photo: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=400&fit=crop&crop=face", highlights: 3, verified: false, enrollmentVerified: false, sportVerified: false, gradesVerified: false,
@@ -100,18 +117,42 @@ function initParticles() {
 // ==================== COUNTERS ====================
 function initCounters() {
     const counters = document.querySelectorAll('.stat-value[data-count]');
-    const options = { threshold: 0.5 };
+    const options = { threshold: 0.3 };
+
+    const isInViewport = (el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                entry.target.classList.add('counted');
                 animateCounter(entry.target);
                 observer.unobserve(entry.target);
             }
         });
     }, options);
 
-    counters.forEach(counter => observer.observe(counter));
+    counters.forEach(counter => {
+        observer.observe(counter);
+
+        // Immediately animate counters already in viewport
+        if (isInViewport(counter) && !counter.classList.contains('counted')) {
+            counter.classList.add('counted');
+            setTimeout(() => animateCounter(counter), 500);
+        }
+    });
+
+    // Fallback: animate all counters after page load
+    setTimeout(() => {
+        counters.forEach(counter => {
+            if (!counter.classList.contains('counted')) {
+                counter.classList.add('counted');
+                animateCounter(counter);
+            }
+        });
+    }, 2500);
 }
 
 function animateCounter(element) {
@@ -305,9 +346,21 @@ function createTestimonialCard(testimonial) {
 }
 
 function moveCarousel(direction) {
+    const track = document.getElementById('testimonialTrack');
+    if (!track) return;
+
+    const cards = track.querySelectorAll('.testimonial-card');
+    let visibleCards = 1;
+    if (window.innerWidth > 1024) visibleCards = 3;
+    else if (window.innerWidth > 768) visibleCards = 2;
+
+    const maxIndex = Math.max(0, cards.length - visibleCards);
+
     currentTestimonial += direction;
-    if (currentTestimonial < 0) currentTestimonial = testimonialsData.length - 1;
-    if (currentTestimonial >= testimonialsData.length) currentTestimonial = 0;
+    // Wrap around
+    if (currentTestimonial < 0) currentTestimonial = maxIndex;
+    if (currentTestimonial > maxIndex) currentTestimonial = 0;
+
     updateCarousel();
 }
 
@@ -321,7 +374,22 @@ function updateCarousel() {
     const dots = document.querySelectorAll('.carousel-dot');
     if (!track) return;
 
-    const cardWidth = window.innerWidth <= 768 ? 100 : 33.333;
+    // Get actual card elements to calculate proper width
+    const cards = track.querySelectorAll('.testimonial-card');
+    if (cards.length === 0) return;
+
+    // Calculate visible cards based on screen size
+    let visibleCards = 1;
+    if (window.innerWidth > 1024) visibleCards = 3;
+    else if (window.innerWidth > 768) visibleCards = 2;
+
+    // Ensure currentTestimonial stays in bounds
+    const maxIndex = Math.max(0, cards.length - visibleCards);
+    if (currentTestimonial > maxIndex) currentTestimonial = maxIndex;
+    if (currentTestimonial < 0) currentTestimonial = 0;
+
+    // Calculate percentage to move (each card is 100/visibleCards % wide)
+    const cardWidth = 100 / visibleCards;
     track.style.transform = `translateX(-${currentTestimonial * cardWidth}%)`;
 
     dots.forEach((dot, i) => {
@@ -470,10 +538,15 @@ function togglePricing() {
 // ==================== TOAST NOTIFICATIONS ====================
 function showToast(message, type = 'success') {
     const container = document.getElementById('toastContainer');
+    if (!container) {
+        console.warn('Toast container not found');
+        return;
+    }
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
+    const icons = { success: '✓', error: '!', info: 'ℹ', warning: '⚠' };
     toast.innerHTML = `
-        <span>${type === 'success' ? '✓' : '!'}</span>
+        <span>${icons[type] || icons.info}</span>
         <span>${message}</span>
     `;
     container.appendChild(toast);
@@ -489,33 +562,76 @@ function showToast(message, type = 'success') {
 function initScrollAnimations() {
     const elements = document.querySelectorAll('[data-aos]');
 
+    const animateElement = (el) => {
+        const delay = parseInt(el.dataset.aosDelay) || 0;
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0) translateX(0)';
+            el.classList.add('aos-animated');
+        }, delay);
+    };
+
+    const isInViewport = (el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    };
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const delay = entry.target.dataset.aosDelay || 0;
-                setTimeout(() => {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }, delay);
+            if (entry.isIntersecting && !entry.target.classList.contains('aos-animated')) {
+                animateElement(entry.target);
             }
         });
     }, { threshold: 0.1 });
 
     elements.forEach(el => {
+        // Set initial state based on animation type
+        const aosType = el.dataset.aos;
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
+        if (aosType === 'fade-right') {
+            el.style.transform = 'translateX(-30px)';
+        } else if (aosType === 'fade-left') {
+            el.style.transform = 'translateX(30px)';
+        } else if (aosType === 'zoom-in') {
+            el.style.transform = 'scale(0.9)';
+        } else {
+            el.style.transform = 'translateY(30px)';
+        }
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
+
+        // Immediately animate elements already in viewport
+        if (isInViewport(el)) {
+            animateElement(el);
+        }
     });
+
+    // Fallback: ensure all elements animate after page load
+    setTimeout(() => {
+        elements.forEach(el => {
+            if (!el.classList.contains('aos-animated')) {
+                animateElement(el);
+            }
+        });
+    }, 3000);
 }
 
 // ==================== SMOOTH SCROLL ====================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        // Skip if href is just '#' or empty - prevents querySelector error
+        if (!href || href === '#' || href.length <= 1) {
+            return; // Let onclick handlers manage these links
+        }
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        try {
+            const target = document.querySelector(href);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        } catch (err) {
+            console.warn('Invalid selector for smooth scroll:', href);
         }
     });
 });
