@@ -27,6 +27,7 @@
   --accent-glow: rgba(0, 240, 255, 0.4);
   --accent-subtle: rgba(0, 240, 255, 0.1);
   --accent-dark: #00C4CC;
+  --accent-link: #008189; /* WCAG AA compliant for links on light backgrounds - 4.67:1 on white */
 
   /* Secondary - Vibrant Lime */
   --lime: #CCFF00;
@@ -39,7 +40,7 @@
   /* Semantic */
   --success: #00FF85;
   --warning: #FFD000;
-  --error: #FF3366;
+  --error: #DA2B57; /* WCAG AA compliant - 4.70:1 with white text */
 
   /* Typography */
   --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;

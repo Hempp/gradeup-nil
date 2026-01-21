@@ -4,7 +4,7 @@
 
 /* Error Messages */
 .error-message {
-  color: #ef4444;
+  color: #D23B3B; /* WCAG AA compliant - 4.74:1 on white, 4.54:1 on gray-50 */
   font-size: 0.875rem;
   margin-top: 0.25rem;
   min-height: 1.25rem;
@@ -20,9 +20,9 @@
 input[aria-invalid="true"],
 textarea[aria-invalid="true"],
 select[aria-invalid="true"] {
-  border-color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.05);
-  outline-color: #ef4444;
+  border-color: #D23B3B; /* WCAG AA compliant */
+  background-color: rgba(210, 59, 59, 0.05);
+  outline-color: #D23B3B;
 }
 
 input[aria-invalid="true"]:focus,
@@ -36,8 +36,8 @@ select[aria-invalid="true"]:focus {
 input[aria-invalid="false"],
 textarea[aria-invalid="false"],
 select[aria-invalid="false"] {
-  border-color: #10b981;
-  background-color: rgba(16, 185, 129, 0.05);
+  border-color: #0B875E; /* WCAG AA compliant - 4.52:1 on white */
+  background-color: rgba(11, 135, 94, 0.05);
 }
 
 /* Focus Indicators - WCAG AA */
