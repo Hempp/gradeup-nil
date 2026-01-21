@@ -1,0 +1,256 @@
+/* ===================================
+   Accessibility & WCAG 2.2 Compliance
+   =================================== */
+
+/* Error Messages */
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  min-height: 1.25rem;
+  display: block;
+  font-weight: 500;
+}
+
+.error-message:empty {
+  display: none;
+}
+
+/* Input Error States */
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.05);
+  outline-color: #ef4444;
+}
+
+input[aria-invalid="true"]:focus,
+textarea[aria-invalid="true"]:focus,
+select[aria-invalid="true"]:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Success States */
+input[aria-invalid="false"],
+textarea[aria-invalid="false"],
+select[aria-invalid="false"] {
+  border-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+/* Focus Indicators - WCAG AA */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Skip Links for Keyboard Navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100000;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen Reader Only Content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --contrast-multiplier: 1.5;
+  }
+
+  * {
+    border-color: currentColor;
+  }
+
+  button,
+  a {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Touch Target Sizing - WCAG AAA */
+button,
+a,
+input[type="checkbox"],
+input[type="radio"],
+.btn,
+.clickable {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Keyboard Navigation Indicators */
+.keyboard-nav *:focus {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.keyboard-nav button:focus,
+.keyboard-nav a:focus {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+}
+
+/* Modal Focus Trap */
+.modal[aria-hidden="true"] {
+  display: none;
+}
+
+.modal[aria-hidden="false"] {
+  display: block;
+}
+
+/* Form Validation States */
+.form-group.has-error label {
+  color: #ef4444;
+}
+
+.form-group.has-success label {
+  color: #10b981;
+}
+
+.form-group.has-warning label {
+  color: #f59e0b;
+}
+
+/* Loading States with ARIA */
+[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: wait;
+}
+
+[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spinner 0.8s linear infinite;
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+/* Tooltip Accessibility */
+[role="tooltip"] {
+  background: #1f2937;
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  max-width: 200px;
+  z-index: 10000;
+}
+
+/* Alert Regions */
+[role="alert"],
+[role="status"] {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+[role="alert"] {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+  color: #dc2626;
+}
+
+[role="status"] {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid #3b82f6;
+  color: #2563eb;
+}
+
+/* Color Contrast Helpers */
+.high-contrast-text {
+  color: #000 !important;
+  text-shadow: 0 0 8px #fff, 0 0 8px #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .high-contrast-text {
+    color: #fff !important;
+    text-shadow: 0 0 8px #000, 0 0 8px #000;
+  }
+}
+
+/* Print Styles for Accessibility */
+@media print {
+  .no-print,
+  nav,
+  footer,
+  .modal,
+  .btn {
+    display: none !important;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+}

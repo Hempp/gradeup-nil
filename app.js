@@ -404,27 +404,160 @@ function updateCarousel() {
 }
 
 // ==================== MODALS ====================
+// Store the element that triggered the modal for focus restoration
+let modalTriggerElement = null;
+let focusTrapHandler = null;
+
 function openModal(modalId) {
-    document.getElementById('modalOverlay').classList.add('active');
-    document.getElementById(modalId).classList.add('active');
+    // Store the currently focused element
+    modalTriggerElement = document.activeElement;
+
+    const modal = document.getElementById(modalId);
+    const overlay = document.getElementById('modalOverlay');
+
+    // Add active classes
+    overlay.classList.add('active');
+    modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Set ARIA attributes for accessibility
+    modal.setAttribute('aria-hidden', 'false');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+
+    // Focus the first focusable element in the modal
+    setTimeout(() => {
+        const focusableElements = getFocusableElements(modal);
+        if (focusableElements.length > 0) {
+            focusableElements[0].focus();
+        }
+    }, 100);
+
+    // Set up focus trap
+    setupFocusTrap(modal);
+
+    // Set up keyboard navigation
+    setupModalKeyboardNav(modal, modalId);
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('active');
-    document.getElementById('modalOverlay').classList.remove('active');
+    const modal = document.getElementById(modalId);
+    const overlay = document.getElementById('modalOverlay');
+
+    // Remove active classes
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
     document.body.style.overflow = 'auto';
+
+    // Update ARIA attributes
+    modal.setAttribute('aria-hidden', 'true');
+
+    // Remove keyboard listener
+    if (focusTrapHandler) {
+        modal.removeEventListener('keydown', focusTrapHandler);
+        focusTrapHandler = null;
+    }
+
+    // Restore focus to the element that opened the modal
+    if (modalTriggerElement) {
+        modalTriggerElement.focus();
+        modalTriggerElement = null;
+    }
 }
 
 function closeAllModals() {
-    document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    });
     document.getElementById('modalOverlay').classList.remove('active');
     document.body.style.overflow = 'auto';
+
+    // Restore focus
+    if (modalTriggerElement) {
+        modalTriggerElement.focus();
+        modalTriggerElement = null;
+    }
 }
 
 function switchModal(fromModal, toModal) {
+    // Don't restore focus when switching modals
+    const tempTrigger = modalTriggerElement;
     closeModal(fromModal);
-    setTimeout(() => openModal(toModal), 300);
+    setTimeout(() => {
+        modalTriggerElement = tempTrigger;
+        openModal(toModal);
+    }, 300);
+}
+
+// Helper function to get all focusable elements within a container
+function getFocusableElements(container) {
+    const focusableSelectors = [
+        'a[href]',
+        'button:not([disabled])',
+        'textarea:not([disabled])',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])'
+    ];
+
+    return Array.from(container.querySelectorAll(focusableSelectors.join(', ')))
+        .filter(el => {
+            return el.offsetParent !== null && // element is visible
+                   window.getComputedStyle(el).visibility !== 'hidden' &&
+                   window.getComputedStyle(el).display !== 'none';
+        });
+}
+
+// Set up keyboard navigation for modal
+function setupModalKeyboardNav(modal, modalId) {
+    focusTrapHandler = function(e) {
+        // Escape key closes modal
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            e.preventDefault();
+            closeModal(modalId);
+            return;
+        }
+
+        // Tab key traps focus within modal
+        if (e.key === 'Tab') {
+            const focusableElements = getFocusableElements(modal);
+            if (focusableElements.length === 0) return;
+
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            // Shift + Tab on first element goes to last
+            if (e.shiftKey && document.activeElement === firstElement) {
+                e.preventDefault();
+                lastElement.focus();
+                return;
+            }
+
+            // Tab on last element goes to first
+            if (!e.shiftKey && document.activeElement === lastElement) {
+                e.preventDefault();
+                firstElement.focus();
+                return;
+            }
+        }
+    };
+
+    modal.addEventListener('keydown', focusTrapHandler);
+}
+
+// Set up focus trap (alternative approach)
+function setupFocusTrap(modal) {
+    const focusableElements = getFocusableElements(modal);
+    if (focusableElements.length === 0) return;
+
+    // Prevent focus from leaving the modal
+    document.addEventListener('focus', function trapFocus(e) {
+        if (!modal.contains(e.target)) {
+            e.stopPropagation();
+            focusableElements[0].focus();
+        }
+    }, true);
 }
 
 function openDonateModal(athleteName) {
@@ -1476,46 +1609,78 @@ function selectLoginType(type) {
 // Director Login - Updated for role-based login modal
 function handleDirectorLogin(e) {
     e.preventDefault();
+
+    // Clear previous errors
+    clearFieldError('directorEmail');
+    clearFieldError('directorId');
+    clearFieldError('directorPassword');
+
     const email = document.getElementById('directorEmail')?.value;
     const directorId = document.getElementById('directorId')?.value;
     const password = document.getElementById('directorPassword')?.value;
 
+    let isValid = true;
+
+    // Validate email
     if (!email) {
-        showToast('Please enter your email', 'error');
-        return;
+        showFieldError('directorEmail', 'Institution email is required');
+        isValid = false;
+    } else if (!validateEmail(email)) {
+        showFieldError('directorEmail', 'Please enter a valid email address');
+        isValid = false;
+    } else if (!validateUniversityEmail(email)) {
+        showFieldError('directorEmail', 'Please use your university email address (.edu)');
+        isValid = false;
     }
+
+    // Validate director ID
+    if (!directorId) {
+        showFieldError('directorId', 'Director ID is required');
+        isValid = false;
+    } else if (!/^AD-[A-Z0-9]{6}$/i.test(directorId)) {
+        showFieldError('directorId', 'Invalid Director ID format (AD-XXXXXX)');
+        isValid = false;
+    }
+
+    // Validate password
+    if (!password) {
+        showFieldError('directorPassword', 'Password is required');
+        isValid = false;
+    } else if (password.length < 8) {
+        showFieldError('directorPassword', 'Password must be at least 8 characters');
+        isValid = false;
+    }
+
+    if (!isValid) return;
 
     // Simulate login validation
     const director = athleticDirectorsData?.find(d =>
         d.email?.toLowerCase() === email.toLowerCase() || d.id === directorId
     );
 
-    if (director || email.includes('@')) {
-        currentDirector = director || {
-            id: directorId || 'DIR-' + Date.now(),
-            name: 'Athletic Director',
-            institution: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'University',
-            email: email
-        };
+    currentDirector = director || {
+        id: directorId || 'DIR-' + Date.now(),
+        name: 'Athletic Director',
+        institution: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'University',
+        email: email
+    };
 
-        // Close login modal
-        closeModal('loginModal');
+    // Close login modal
+    closeModal('loginModal');
 
-        // Reset the login form
-        showRoleSelector();
-        document.getElementById('directorLoginForm')?.reset();
+    // Reset the login form
+    showRoleSelector();
+    clearFormErrors('directorLoginForm');
+    document.getElementById('directorLoginForm')?.reset();
 
-        // Open director dashboard (fullscreen version)
-        const fullDashboard = document.getElementById('directorFullDashboard');
-        if (fullDashboard) {
-            fullDashboard.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        showToast(`Welcome, ${currentDirector.name}!`, 'success');
-    } else {
-        showToast('Invalid credentials. Please try again.', 'error');
+    // Open director dashboard (fullscreen version)
+    const fullDashboard = document.getElementById('directorFullDashboard');
+    if (fullDashboard) {
+        fullDashboard.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
+
+    showToast(`Welcome, ${currentDirector.name}!`, 'success');
 }
 
 // Director Signup
@@ -2476,70 +2641,230 @@ function showRoleSelector() {
     roleButtons.forEach(btn => btn.classList.remove('active'));
 }
 
+// ==================== FORM VALIDATION ====================
+
+// Validate email format
+function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+}
+
+// Validate university email
+function validateUniversityEmail(email) {
+    const universityDomains = ['.edu', '.ac.', 'university', 'college'];
+    return validateEmail(email) && universityDomains.some(domain => email.toLowerCase().includes(domain));
+}
+
+// Validate password strength
+function validatePassword(password) {
+    // Minimum 8 characters, at least one letter and one number
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+    return passwordRegex.test(password);
+}
+
+// Show field error
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorElement = document.getElementById(fieldId + 'Error');
+
+    if (field && errorElement) {
+        // Set error state on field
+        field.setAttribute('aria-invalid', 'true');
+        field.classList.add('error');
+
+        // Show error message
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+
+        // Add error class to form group
+        const formGroup = field.closest('.form-group');
+        if (formGroup) {
+            formGroup.classList.add('has-error');
+        }
+    }
+}
+
+// Clear field error
+function clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    const errorElement = document.getElementById(fieldId + 'Error');
+
+    if (field && errorElement) {
+        // Remove error state
+        field.setAttribute('aria-invalid', 'false');
+        field.classList.remove('error');
+
+        // Hide error message
+        errorElement.textContent = '';
+        errorElement.style.display = 'none';
+
+        // Remove error class from form group
+        const formGroup = field.closest('.form-group');
+        if (formGroup) {
+            formGroup.classList.remove('has-error');
+        }
+    }
+}
+
+// Clear all form errors
+function clearFormErrors(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach(input => {
+        if (input.id) {
+            clearFieldError(input.id);
+        }
+    });
+}
+
+// Validate login form
+function validateLoginForm(emailFieldId, passwordFieldId) {
+    const email = document.getElementById(emailFieldId)?.value;
+    const password = document.getElementById(passwordFieldId)?.value;
+
+    let isValid = true;
+
+    // Clear previous errors
+    clearFieldError(emailFieldId);
+    clearFieldError(passwordFieldId);
+
+    // Validate email
+    if (!email) {
+        showFieldError(emailFieldId, 'Email is required');
+        isValid = false;
+    } else if (!validateEmail(email)) {
+        showFieldError(emailFieldId, 'Please enter a valid email address');
+        isValid = false;
+    }
+
+    // Validate password
+    if (!password) {
+        showFieldError(passwordFieldId, 'Password is required');
+        isValid = false;
+    } else if (password.length < 8) {
+        showFieldError(passwordFieldId, 'Password must be at least 8 characters');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// Real-time validation setup
+function setupRealtimeValidation() {
+    // Get all form inputs
+    const allInputs = document.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
+
+    allInputs.forEach(input => {
+        // Clear error on focus
+        input.addEventListener('focus', function() {
+            if (this.id) {
+                clearFieldError(this.id);
+            }
+        });
+
+        // Validate on blur
+        input.addEventListener('blur', function() {
+            if (!this.value) return; // Don't validate empty fields on blur
+
+            const fieldId = this.id;
+            const fieldType = this.type;
+            const value = this.value;
+
+            // Email validation
+            if (fieldType === 'email') {
+                if (!validateEmail(value)) {
+                    showFieldError(fieldId, 'Please enter a valid email address');
+                } else if (fieldId.includes('director') || fieldId.includes('athlete')) {
+                    // Check for university email for directors and athletes
+                    if (!validateUniversityEmail(value)) {
+                        showFieldError(fieldId, 'Please use a university email address (.edu)');
+                    }
+                }
+            }
+
+            // Password validation
+            if (fieldType === 'password' && value.length > 0) {
+                if (!validatePassword(value)) {
+                    showFieldError(fieldId, 'Password must be at least 8 characters with letters and numbers');
+                }
+            }
+        });
+    });
+}
+
+// Initialize validation on page load
+if (typeof window !== 'undefined') {
+    window.addEventListener('DOMContentLoaded', function() {
+        setupRealtimeValidation();
+    });
+}
+
 // Handle Athlete Login
 function handleAthleteLogin(event) {
     event.preventDefault();
 
+    // Validate form
+    if (!validateLoginForm('athleteEmail', 'athletePassword')) {
+        return; // Validation failed - errors are already displayed
+    }
+
     const email = document.getElementById('athleteEmail')?.value;
     const password = document.getElementById('athletePassword')?.value;
 
-    if (!email || !password) {
-        showToast('Please enter email and password', 'error');
+    // Additional validation for university email
+    if (!validateUniversityEmail(email)) {
+        showFieldError('athleteEmail', 'Please use your university email address (.edu)');
         return;
     }
 
-    // Simulate login validation
-    if (email.includes('@')) {
-        // Close login modal
-        closeModal('loginModal');
+    // Simulate successful login
+    // Close login modal
+    closeModal('loginModal');
 
-        // Reset the login form
-        showRoleSelector();
-        document.getElementById('athleteLoginForm')?.reset();
+    // Reset the login form
+    showRoleSelector();
+    clearFormErrors('athleteLoginForm');
+    document.getElementById('athleteLoginForm')?.reset();
 
-        // Open athlete dashboard
-        openAthleteDashboard();
+    // Open athlete dashboard
+    openAthleteDashboard();
 
-        // Welcome message
-        const athleteName = email.split('@')[0].split('.').map(s =>
-            s.charAt(0).toUpperCase() + s.slice(1)
-        ).join(' ');
-        showToast(`Welcome back, ${athleteName}!`, 'success');
-    } else {
-        showToast('Invalid email format', 'error');
-    }
+    // Welcome message
+    const athleteName = email.split('@')[0].split('.').map(s =>
+        s.charAt(0).toUpperCase() + s.slice(1)
+    ).join(' ');
+    showToast(`Welcome back, ${athleteName}!`, 'success');
 }
 
 // Handle Brand/Donor Login
 function handleBrandLogin(event) {
     event.preventDefault();
 
+    // Validate form
+    if (!validateLoginForm('brandEmail', 'brandPassword')) {
+        return; // Validation failed - errors are already displayed
+    }
+
     const email = document.getElementById('brandEmail')?.value;
     const password = document.getElementById('brandPassword')?.value;
 
-    if (!email || !password) {
-        showToast('Please enter email and password', 'error');
-        return;
-    }
+    // Simulate successful login
+    // Close login modal
+    closeModal('loginModal');
 
-    // Simulate login validation
-    if (email.includes('@')) {
-        // Close login modal
-        closeModal('loginModal');
+    // Reset the login form
+    showRoleSelector();
+    clearFormErrors('brandLoginForm');
+    document.getElementById('brandLoginForm')?.reset();
 
-        // Reset the login form
-        showRoleSelector();
-        document.getElementById('brandLoginForm')?.reset();
+    // Open brand dashboard
+    openBrandDashboard();
 
-        // Open brand dashboard
-        openBrandDashboard();
-
-        // Welcome message
-        const companyName = email.split('@')[1]?.split('.')[0] || 'Partner';
-        showToast(`Welcome back, ${companyName.charAt(0).toUpperCase() + companyName.slice(1)}!`, 'success');
-    } else {
-        showToast('Invalid email format', 'error');
-    }
+    // Welcome message
+    const companyName = email.split('@')[1]?.split('.')[0] || 'Partner';
+    showToast(`Welcome back, ${companyName.charAt(0).toUpperCase() + companyName.slice(1)}!`, 'success');
 }
 
 // Handle Social Login

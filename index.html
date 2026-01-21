@@ -17,10 +17,15 @@
     <link rel="stylesheet" href="src/styles/premium-overrides.css">
     <!-- Dark Social Theme -->
     <link rel="stylesheet" href="src/styles/dark-social-theme.css">
+    <!-- Accessibility & WCAG Compliance -->
+    <link rel="stylesheet" href="src/styles/accessibility.css">
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
+    <!-- Skip to Main Content - Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Loading Screen -->
     <div class="loader" id="loader">
         <div class="loader-content">
@@ -30,7 +35,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
         <div class="logo">GRADEUP NIL</div>
         <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
             <span></span><span></span><span></span>
@@ -71,6 +76,9 @@
             <li><button class="btn btn-primary" onclick="openModal('signupModal'); closeMobileMenu()">Get Started</button></li>
         </ul>
     </div>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
 
     <!-- Hero Section -->
     <section class="hero">
@@ -579,8 +587,11 @@
         </div>
     </section>
 
+    </main>
+    <!-- End Main Content -->
+
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="footer-grid">
             <div class="footer-brand">
                 <div class="logo">GRADEUP NIL</div>
@@ -627,10 +638,10 @@
     </footer>
 
     <!-- Modals -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
+    <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()" aria-hidden="true"></div>
 
     <!-- Donate Modal -->
-    <div class="modal" id="donateModal">
+    <div class="modal" aria-hidden="true" id="donateModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="donateModalTitle">
         <div class="modal-header">
             <h3>Support This Athlete</h3>
             <button class="modal-close" onclick="closeModal('donateModal')">&times;</button>
@@ -748,7 +759,7 @@
     </div>
 
     <!-- Login Modal -->
-    <div class="modal" id="loginModal">
+    <div class="modal" aria-hidden="true" id="loginModal">
         <div class="modal-header">
             <h3>Welcome Back</h3>
             <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
@@ -777,23 +788,25 @@
             </div>
 
             <!-- Athlete Login Form -->
-            <form id="athleteLoginForm" class="login-form" onsubmit="handleAthleteLogin(event)" style="display: none;">
+            <form id="athleteLoginForm" class="login-form" onsubmit="handleAthleteLogin(event)" style="display: none;" aria-labelledby="athleteLoginHeader">
                 <div class="login-form-header">
-                    <span class="form-icon">🏆</span>
-                    <h4>Athlete Login</h4>
+                    <span class="form-icon" aria-hidden="true">🏆</span>
+                    <h4 id="athleteLoginHeader">Athlete Login</h4>
                     <p>Access your NIL dashboard and manage your profile</p>
                 </div>
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="athleteEmail" required placeholder="athlete@university.edu">
+                    <label for="athleteEmail">Email</label>
+                    <input type="email" id="athleteEmail" name="athleteEmail" required placeholder="athlete@university.edu" autocomplete="email" aria-required="true" aria-describedby="athleteEmailError">
+                    <div id="athleteEmailError" class="error-message" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="athletePassword" required placeholder="••••••••">
+                    <label for="athletePassword">Password</label>
+                    <input type="password" id="athletePassword" name="athletePassword" required placeholder="••••••••" autocomplete="current-password" aria-required="true" aria-describedby="athletePasswordError">
+                    <div id="athletePasswordError" class="error-message" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="form-row">
                     <label class="checkbox-label">
-                        <input type="checkbox"> Remember me
+                        <input type="checkbox" id="athleteRemember" name="athleteRemember" aria-label="Remember me on this device"> Remember me
                     </label>
                     <a href="/forgot-password" class="forgot-link" onclick="showToast('Password reset coming soon', 'info'); return false;">Forgot password?</a>
                 </div>
@@ -802,23 +815,25 @@
             </form>
 
             <!-- Brand/Donor Login Form -->
-            <form id="brandLoginForm" class="login-form" onsubmit="handleBrandLogin(event)" style="display: none;">
+            <form id="brandLoginForm" class="login-form" onsubmit="handleBrandLogin(event)" style="display: none;" aria-labelledby="brandLoginHeader">
                 <div class="login-form-header">
-                    <span class="form-icon">🏢</span>
-                    <h4>Brand / Donor Login</h4>
+                    <span class="form-icon" aria-hidden="true">🏢</span>
+                    <h4 id="brandLoginHeader">Brand / Donor Login</h4>
                     <p>Discover athletes and manage your partnerships</p>
                 </div>
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="brandEmail" required placeholder="contact@company.com">
+                    <label for="brandEmail">Email</label>
+                    <input type="email" id="brandEmail" name="brandEmail" required placeholder="contact@company.com" autocomplete="email" aria-required="true" aria-describedby="brandEmailError">
+                    <div id="brandEmailError" class="error-message" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="brandPassword" required placeholder="••••••••">
+                    <label for="brandPassword">Password</label>
+                    <input type="password" id="brandPassword" name="brandPassword" required placeholder="••••••••" autocomplete="current-password" aria-required="true" aria-describedby="brandPasswordError">
+                    <div id="brandPasswordError" class="error-message" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="form-row">
                     <label class="checkbox-label">
-                        <input type="checkbox"> Remember me
+                        <input type="checkbox" id="brandRemember" name="brandRemember" aria-label="Remember me on this device"> Remember me
                     </label>
                     <a href="/forgot-password" class="forgot-link" onclick="showToast('Password reset coming soon', 'info'); return false;">Forgot password?</a>
                 </div>
@@ -827,23 +842,26 @@
             </form>
 
             <!-- Athletic Director Login Form -->
-            <form id="directorLoginForm" class="login-form" onsubmit="handleDirectorLogin(event)" style="display: none;">
+            <form id="directorLoginForm" class="login-form" onsubmit="handleDirectorLogin(event)" style="display: none;" aria-labelledby="directorLoginHeader">
                 <div class="login-form-header">
-                    <span class="form-icon">🎓</span>
-                    <h4>Athletic Director Login</h4>
+                    <span class="form-icon" aria-hidden="true">🎓</span>
+                    <h4 id="directorLoginHeader">Athletic Director Login</h4>
                     <p>Verify athletes and manage your institution</p>
                 </div>
                 <div class="form-group">
-                    <label>Institution Email</label>
-                    <input type="email" id="directorEmail" required placeholder="director@university.edu">
+                    <label for="directorEmail">Institution Email</label>
+                    <input type="email" id="directorEmail" name="directorEmail" required placeholder="director@university.edu" autocomplete="email" aria-required="true" aria-describedby="directorEmailError">
+                    <div id="directorEmailError" class="error-message" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="form-group">
-                    <label>Director ID</label>
-                    <input type="text" id="directorId" required placeholder="AD-XXXXXX">
+                    <label for="directorId">Director ID</label>
+                    <input type="text" id="directorId" name="directorId" required placeholder="AD-XXXXXX" autocomplete="username" aria-required="true" aria-describedby="directorIdError">
+                    <div id="directorIdError" class="error-message" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="directorPassword" required placeholder="••••••••">
+                    <label for="directorPassword">Password</label>
+                    <input type="password" id="directorPassword" name="directorPassword" required placeholder="••••••••" autocomplete="current-password" aria-required="true" aria-describedby="directorPasswordError">
+                    <div id="directorPasswordError" class="error-message" role="alert" aria-live="polite"></div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Access Director Dashboard</button>
                 <button type="button" class="btn btn-outline btn-block" onclick="showRoleSelector()">Back to role selection</button>
@@ -862,7 +880,7 @@
     </div>
 
     <!-- Signup Modal -->
-    <div class="modal" id="signupModal">
+    <div class="modal" aria-hidden="true" id="signupModal">
         <div class="modal-header">
             <h3>Create Your Account</h3>
             <button class="modal-close" onclick="closeModal('signupModal')">&times;</button>
@@ -1045,7 +1063,7 @@
     </div>
 
     <!-- Profile Picture Upload Modal -->
-    <div class="modal" id="profilePictureModal">
+    <div class="modal" aria-hidden="true" id="profilePictureModal">
         <div class="modal-header">
             <h3>📸 Update Profile Picture</h3>
             <button class="modal-close" onclick="closeModal('profilePictureModal')">&times;</button>
@@ -1714,7 +1732,7 @@
     </div>
 
     <!-- Verification Detail Modal -->
-    <div class="modal" id="verificationDetailModal">
+    <div class="modal" aria-hidden="true" id="verificationDetailModal">
         <div class="modal-header">
             <h3>🔍 Verify Athlete</h3>
             <button class="modal-close" onclick="closeModal('verificationDetailModal')">&times;</button>
@@ -1863,7 +1881,7 @@
     </div>
 
     <!-- Athlete Signup Modal -->
-    <div class="modal" id="athleteSignupModal">
+    <div class="modal" aria-hidden="true" id="athleteSignupModal">
         <div class="modal-header">
             <h3>🏆 Athlete Registration</h3>
             <button class="modal-close" onclick="closeModal('athleteSignupModal')">&times;</button>
@@ -1912,7 +1930,7 @@
     </div>
 
     <!-- Brand Signup Modal -->
-    <div class="modal" id="brandSignupModal">
+    <div class="modal" aria-hidden="true" id="brandSignupModal">
         <div class="modal-header">
             <h3>🏢 Brand Registration</h3>
             <button class="modal-close" onclick="closeModal('brandSignupModal')">&times;</button>
@@ -1967,7 +1985,7 @@
     </div>
 
     <!-- Apply Modal (for brand deals) -->
-    <div class="modal" id="applyModal">
+    <div class="modal" aria-hidden="true" id="applyModal">
         <div class="modal-header">
             <h3>📝 Apply for Opportunity</h3>
             <button class="modal-close" onclick="closeModal('applyModal')">&times;</button>
@@ -2012,7 +2030,7 @@
     </div>
 
     <!-- Withdraw Modal -->
-    <div class="modal" id="withdrawModal">
+    <div class="modal" aria-hidden="true" id="withdrawModal">
         <div class="modal-header">
             <h3>💸 Withdraw Funds</h3>
             <button class="modal-close" onclick="closeModal('withdrawModal')">&times;</button>
@@ -2077,7 +2095,7 @@
     </div>
 
     <!-- Message Modal -->
-    <div class="modal" id="messageModal">
+    <div class="modal" aria-hidden="true" id="messageModal">
         <div class="modal-header">
             <h3>📩 Send Message</h3>
             <button class="modal-close" onclick="closeModal('messageModal')">&times;</button>
@@ -2612,7 +2630,7 @@
                             <tbody id="directorAthletesTable">
                                 <tr>
                                     <td class="athlete-cell">
-                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" alt="">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" alt="Jordan Williams profile photo">
                                         <span>Jordan Williams</span>
                                     </td>
                                     <td>Basketball</td>
@@ -2628,7 +2646,7 @@
                                 </tr>
                                 <tr>
                                     <td class="athlete-cell">
-                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="Emily Davis profile photo">
                                         <span>Emily Davis</span>
                                     </td>
                                     <td>Soccer</td>
@@ -2644,7 +2662,7 @@
                                 </tr>
                                 <tr>
                                     <td class="athlete-cell">
-                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="Marcus Thompson profile photo">
                                         <span>Marcus Thompson</span>
                                     </td>
                                     <td>Football</td>
@@ -2660,7 +2678,7 @@
                                 </tr>
                                 <tr>
                                     <td class="athlete-cell">
-                                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=50&h=50&fit=crop&crop=face" alt="">
+                                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=50&h=50&fit=crop&crop=face" alt="Chris Martinez profile photo">
                                         <span>Chris Martinez</span>
                                     </td>
                                     <td>Baseball</td>
@@ -2676,7 +2694,7 @@
                                 </tr>
                                 <tr>
                                     <td class="athlete-cell">
-                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="">
+                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                         <span>Aisha Johnson</span>
                                     </td>
                                     <td>Track & Field</td>
@@ -2708,7 +2726,7 @@
                         <div class="verification-cards">
                             <div class="verification-card">
                                 <div class="v-card-header">
-                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="v-card-info">
                                         <h4>Michael Torres</h4>
                                         <p>Football • Wide Receiver • Junior</p>
@@ -2745,7 +2763,7 @@
                             </div>
                             <div class="verification-card">
                                 <div class="v-card-header">
-                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="v-card-info">
                                         <h4>Sarah Williams</h4>
                                         <p>Volleyball • Outside Hitter • Senior</p>
@@ -4237,7 +4255,7 @@
                             </div>
                             <div class="partnerships-list">
                                 <div class="partnership-item">
-                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="partner-info">
                                         <span class="partner-name">Jordan Williams</span>
                                         <span class="partner-details">Basketball • Duke • 45K followers</span>
@@ -4248,7 +4266,7 @@
                                     </div>
                                 </div>
                                 <div class="partnership-item">
-                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="partner-info">
                                         <span class="partner-name">Emily Davis</span>
                                         <span class="partner-details">Soccer • Stanford • 32K followers</span>
@@ -4259,7 +4277,7 @@
                                     </div>
                                 </div>
                                 <div class="partnership-item">
-                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="partner-info">
                                         <span class="partner-name">Marcus Thompson</span>
                                         <span class="partner-details">Football • Alabama • 89K followers</span>
@@ -4279,7 +4297,7 @@
                             </div>
                             <div class="recommended-athletes">
                                 <div class="recommended-item">
-                                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=50&h=50&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="rec-info">
                                         <span class="rec-name">Tyler Jackson</span>
                                         <span class="rec-details">Basketball • UCLA • 3.92 GPA</span>
@@ -4287,7 +4305,7 @@
                                     <button class="btn btn-sm btn-primary" onclick="contactAthlete(1)">Contact</button>
                                 </div>
                                 <div class="recommended-item">
-                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="rec-info">
                                         <span class="rec-name">Sophia Martinez</span>
                                         <span class="rec-details">Volleyball • Texas • 3.88 GPA</span>
@@ -4295,7 +4313,7 @@
                                     <button class="btn btn-sm btn-primary" onclick="contactAthlete(2)">Contact</button>
                                 </div>
                                 <div class="recommended-item">
-                                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=50&h=50&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="rec-info">
                                         <span class="rec-name">David Chen</span>
                                         <span class="rec-details">Football • Ohio State • 3.75 GPA</span>
@@ -4387,7 +4405,7 @@
                     <div class="athletes-grid">
                         <div class="athlete-discover-card">
                             <div class="adc-header">
-                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" alt="">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" alt="Athlete profile photo">
                                 <div class="adc-badges">
                                     <span class="badge verified">✓ Verified</span>
                                     <span class="badge academic">Dean's List</span>
@@ -4419,7 +4437,7 @@
                         </div>
                         <div class="athlete-discover-card">
                             <div class="adc-header">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Athlete profile photo">
                                 <div class="adc-badges">
                                     <span class="badge verified">✓ Verified</span>
                                     <span class="badge academic">3.9+ GPA</span>
@@ -4451,7 +4469,7 @@
                         </div>
                         <div class="athlete-discover-card">
                             <div class="adc-header">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Athlete profile photo">
                                 <div class="adc-badges">
                                     <span class="badge verified">✓ Verified</span>
                                 </div>
@@ -4490,7 +4508,7 @@
                         <div class="partnership-cards">
                             <div class="partnership-full-card">
                                 <div class="pfc-header">
-                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face" alt="">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face" alt="Athlete profile photo">
                                     <div class="pfc-info">
                                         <h4>Jordan Williams</h4>
                                         <p>Basketball • Duke University</p>
@@ -4584,7 +4602,7 @@
                         <h4>Recent Donations</h4>
                         <div class="donation-list">
                             <div class="donation-item">
-                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" alt="">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                 <div class="don-info">
                                     <span class="don-name">Jordan Williams</span>
                                     <span class="don-date">Jan 15, 2025</span>
@@ -4592,7 +4610,7 @@
                                 <span class="don-amount">$500</span>
                             </div>
                             <div class="donation-item">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="Athlete profile photo">
                                 <div class="don-info">
                                     <span class="don-name">Emily Davis</span>
                                     <span class="don-date">Jan 10, 2025</span>
