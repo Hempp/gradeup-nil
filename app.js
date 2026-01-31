@@ -4063,33 +4063,37 @@ function selectBrandSearchResult(name, type) {
 
 // Brand Quick Actions
 function quickFindAthletes() {
-    showToast('Opening Athlete Discovery...', 'info');
-    // Could open a modal or navigate to athlete search
+    switchDashboardTab('brand', 'discover');
+    showToast('Discover athletes matching your brand', 'info');
 }
 
 function quickCreateCampaign() {
-    showToast('Opening Campaign Creator...', 'info');
-    // Could open campaign creation modal
+    switchDashboardTab('brand', 'campaigns');
+    showToast('Create a new campaign', 'info');
 }
 
 function quickSendOffer() {
-    showToast('Opening Offer Builder...', 'info');
-    // Could open offer/deal creation modal
+    switchDashboardTab('brand', 'partnerships');
+    showToast('Send an offer to athletes', 'info');
 }
 
-function quickViewAnalytics() {
-    showToast('Opening Full Analytics...', 'info');
-    // Could expand analytics view
+function quickViewROI() {
+    switchDashboardTab('brand', 'analytics');
+    showToast('Viewing ROI analytics', 'info');
+}
+
+function quickViewMessages() {
+    switchDashboardTab('brand', 'messages');
+    showToast('Opening messages', 'info');
 }
 
 function quickManageDeals() {
-    showToast('Opening Deal Management...', 'info');
-    // Could open deals management panel
+    switchDashboardTab('brand', 'partnerships');
+    showToast('Manage your active deals', 'info');
 }
 
 function quickContactSupport() {
-    showToast('Opening Support Chat...', 'info');
-    // Could open support modal or chat
+    showToast('Support: support@gradeupnil.com', 'info');
 }
 
 // Brand Data Export
