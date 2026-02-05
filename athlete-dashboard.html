@@ -1263,6 +1263,634 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+
+        /* ─── StatTaq Integration ─── */
+        .stattaq-status {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stattaq-connection {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+        }
+
+        .stattaq-connected {
+            border-left: 3px solid var(--success);
+        }
+
+        .stattaq-disconnected {
+            border-left: 3px solid var(--warning);
+        }
+
+        .stattaq-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .stattaq-info {
+            flex: 1;
+        }
+
+        .stattaq-title {
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .stattaq-subtitle {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .stattaq-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .stattaq-btn.connect {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+        }
+
+        .stattaq-btn.sync {
+            background: var(--gray-800);
+            color: var(--cyan);
+            border: 1px solid var(--gray-700);
+        }
+
+        .stattaq-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .stattaq-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .stattaq-stat {
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stattaq-stat-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .stattaq-stat-label {
+            font-size: 0.6875rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ─── Monetization Controls ─── */
+        .monetization-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .monetization-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+        }
+
+        .monetization-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .monetization-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gray-800);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+        }
+
+        .monetization-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .monetization-text h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .monetization-text p {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .monetization-value {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1rem;
+        }
+
+        .monetization-toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: var(--gray-700);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.2s var(--ease);
+        }
+
+        .monetization-toggle.active {
+            background: var(--success);
+        }
+
+        .monetization-toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s var(--ease);
+        }
+
+        .monetization-toggle.active::after {
+            transform: translateX(22px);
+        }
+
+        .rate-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rate-input span {
+            color: var(--gray-400);
+            font-weight: 500;
+        }
+
+        .rate-input input {
+            width: 80px;
+            padding: 0.5rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 8px;
+            color: var(--white);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .rate-input input:focus {
+            outline: none;
+            border-color: var(--cyan);
+        }
+
+        /* ─── Video Highlights Section ─── */
+        .video-highlights-section {
+            margin-top: 2rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            position: relative;
+            background: var(--gray-900);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: var(--gray-800);
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s var(--ease);
+        }
+
+        .video-card:hover .video-play-btn {
+            background: var(--cyan);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-play-btn svg {
+            width: 24px;
+            height: 24px;
+            margin-left: 4px;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            padding: 0.25rem 0.5rem;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.375rem;
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .video-views {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .video-upload-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 16 / 9;
+            border: 2px dashed var(--gray-700);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .video-upload-card:hover {
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .video-upload-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gray-800);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            margin-bottom: 0.75rem;
+        }
+
+        .video-upload-card:hover .video-upload-icon {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        .video-upload-text {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        /* ─── Create Proposal Section ─── */
+        .create-proposal-section {
+            margin-top: 2rem;
+        }
+
+        .proposal-hint {
+            font-size: 0.75rem;
+            color: var(--cyan);
+            font-weight: 500;
+        }
+
+        .proposal-description {
+            color: var(--gray-400);
+            font-size: 0.9375rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .btn-create-proposal {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--black);
+            background: linear-gradient(135deg, var(--cyan), #00a0ff);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s var(--ease);
+        }
+
+        .btn-create-proposal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .my-proposals {
+            margin-top: 2rem;
+        }
+
+        .proposal-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--cyan);
+            transition: all 0.2s var(--ease);
+        }
+
+        .proposal-card:hover {
+            background: var(--gray-800);
+        }
+
+        .proposal-card.sent {
+            border-left-color: var(--warning);
+        }
+
+        .proposal-card.accepted {
+            border-left-color: var(--success);
+        }
+
+        .proposal-card.declined {
+            border-left-color: var(--error);
+        }
+
+        .proposal-brand-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--gray-800);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .proposal-info {
+            flex: 1;
+        }
+
+        .proposal-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .proposal-brand {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .proposal-amount {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-right: 1rem;
+        }
+
+        .proposal-status {
+            display: inline-flex;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 6px;
+        }
+
+        .proposal-status.draft {
+            background: rgba(100, 100, 100, 0.15);
+            color: var(--gray-400);
+        }
+
+        .proposal-status.sent {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .proposal-status.accepted {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        .proposal-status.declined {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        /* ─── Upload Modal ─── */
+        .upload-dropzone {
+            border: 2px dashed var(--gray-700);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .upload-dropzone:hover,
+        .upload-dropzone.dragover {
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .upload-dropzone-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            background: var(--gray-800);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+        }
+
+        .upload-dropzone:hover .upload-dropzone-icon {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        .upload-dropzone h4 {
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-dropzone p {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 10px;
+            color: var(--white);
+            font-size: 0.9375rem;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--cyan);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--black);
+            background: linear-gradient(135deg, var(--cyan), #00a0ff);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s var(--ease);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-300);
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gray-600);
+            background: var(--gray-700);
+        }
+
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1567,6 +2195,79 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- StatTaq Integration -->
+                    <div class="glass-card animate-in delay-4">
+                        <div class="card-header">
+                            <h3 class="card-title">StatTaq Data</h3>
+                            <button class="card-action" id="syncStatTaq">Sync Now</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="stattaq-status" id="stattaqStatus">
+                                <div class="stattaq-connection" id="stattaqConnection">
+                                    <!-- Connection status will be inserted by JS -->
+                                </div>
+                                <div class="stattaq-stats" id="stattaqStats">
+                                    <!-- Stats will be inserted by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monetization Controls -->
+                    <div class="glass-card animate-in delay-5">
+                        <div class="card-header">
+                            <h3 class="card-title">Monetization Settings</h3>
+                            <button class="card-action" id="editMonetization">Edit</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="monetization-controls" id="monetizationControls">
+                                <!-- Monetization settings will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Highlights Section -->
+            <div class="video-highlights-section animate-in delay-5">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Video Highlights</h3>
+                        <button class="card-action" id="uploadVideoBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display: inline; vertical-align: middle; margin-right: 4px;">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                            </svg>
+                            Upload Video
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="video-grid" id="videoGrid">
+                            <!-- Videos will be inserted by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Deal Proposal Section -->
+            <div class="create-proposal-section animate-in delay-5">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Create Deal Proposal</h3>
+                        <span class="proposal-hint">Pitch yourself to brands</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="proposal-description">Take control of your NIL journey. Create proposals to pitch yourself directly to brands you want to work with.</p>
+                        <button class="btn-create-proposal" id="createProposalBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Create New Proposal
+                        </button>
+                        <div class="my-proposals" id="myProposals">
+                            <!-- Athlete-created proposals will be inserted by JS -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1646,6 +2347,43 @@
             { name: 'Chipotle', logo: 'C', industry: 'Food & Beverage', match: 85 },
             { name: 'Beats by Dre', logo: 'B', industry: 'Audio & Tech', match: 82 },
             { name: 'Muscle Milk', logo: 'MM', industry: 'Sports Nutrition', match: 78 }
+        ];
+
+        // StatTaq Integration Data
+        const stattaqData = {
+            connected: true,
+            lastSync: '2 hours ago',
+            stats: {
+                gamesPlayed: 24,
+                ppg: 18.7,
+                apg: 6.2,
+                rpg: 4.1,
+                fgPercent: 47.3,
+                seasonHighPoints: 32
+            }
+        };
+
+        // Monetization Settings
+        const monetizationSettings = {
+            acceptingDeals: true,
+            minDealValue: 500,
+            preferredDealTypes: ['social_post', 'appearance', 'endorsement'],
+            socialPostRate: 250,
+            appearanceRate: 1500,
+            autoRespond: false
+        };
+
+        // Video Highlights
+        const videoHighlights = [
+            { id: 1, title: 'Season Highlights 2025-26', thumbnail: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=225&fit=crop', duration: '3:45', views: 12400, date: '2 weeks ago' },
+            { id: 2, title: 'Game-Winner vs UNC', thumbnail: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=225&fit=crop', duration: '0:48', views: 45200, date: '1 month ago' },
+            { id: 3, title: 'Training Session Vlog', thumbnail: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=225&fit=crop', duration: '8:22', views: 8900, date: '3 weeks ago' }
+        ];
+
+        // Athlete-Created Proposals
+        const myProposals = [
+            { id: 1, brand: 'Gatorade', logo: 'G', title: 'Campus Ambassador Pitch', amount: 10000, status: 'sent', date: 'Jan 28, 2026' },
+            { id: 2, brand: 'Adidas', logo: 'A', title: 'Social Media Partnership', amount: 7500, status: 'draft', date: 'Feb 1, 2026' }
         ];
 
         // ─── Utility Functions ───
@@ -1955,6 +2693,761 @@
             });
         }
 
+        // ─── Render StatTaq Integration ───
+        function renderStatTaq() {
+            const connectionContainer = document.getElementById('stattaqConnection');
+            const statsContainer = document.getElementById('stattaqStats');
+            connectionContainer.innerHTML = '';
+            statsContainer.innerHTML = '';
+
+            // Connection status
+            const connectionDiv = document.createElement('div');
+            connectionDiv.className = 'stattaq-connection ' + (stattaqData.connected ? 'stattaq-connected' : 'stattaq-disconnected');
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'stattaq-icon';
+            iconDiv.textContent = 'ST';
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'stattaq-info';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'stattaq-title';
+            titleDiv.textContent = stattaqData.connected ? 'StatTaq Connected' : 'Connect StatTaq';
+
+            const subtitleDiv = document.createElement('div');
+            subtitleDiv.className = 'stattaq-subtitle';
+            subtitleDiv.textContent = stattaqData.connected ? 'Last synced: ' + stattaqData.lastSync : 'Import your athletic performance data';
+
+            infoDiv.appendChild(titleDiv);
+            infoDiv.appendChild(subtitleDiv);
+
+            const btn = document.createElement('button');
+            btn.className = 'stattaq-btn ' + (stattaqData.connected ? 'sync' : 'connect');
+            btn.textContent = stattaqData.connected ? 'Sync Now' : 'Connect';
+            btn.addEventListener('click', function() {
+                if (stattaqData.connected) {
+                    syncStatTaqData();
+                } else {
+                    connectStatTaq();
+                }
+            });
+
+            connectionDiv.appendChild(iconDiv);
+            connectionDiv.appendChild(infoDiv);
+            connectionDiv.appendChild(btn);
+            connectionContainer.appendChild(connectionDiv);
+
+            // Stats display (only if connected)
+            if (stattaqData.connected && stattaqData.stats) {
+                const statItems = [
+                    { label: 'Games', value: stattaqData.stats.gamesPlayed },
+                    { label: 'PPG', value: stattaqData.stats.ppg },
+                    { label: 'APG', value: stattaqData.stats.apg },
+                    { label: 'FG%', value: stattaqData.stats.fgPercent + '%' }
+                ];
+
+                statItems.forEach(function(stat) {
+                    const statDiv = document.createElement('div');
+                    statDiv.className = 'stattaq-stat';
+
+                    const valueDiv = document.createElement('div');
+                    valueDiv.className = 'stattaq-stat-value';
+                    valueDiv.textContent = stat.value;
+
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'stattaq-stat-label';
+                    labelDiv.textContent = stat.label;
+
+                    statDiv.appendChild(valueDiv);
+                    statDiv.appendChild(labelDiv);
+                    statsContainer.appendChild(statDiv);
+                });
+            }
+        }
+
+        function syncStatTaqData() {
+            openModal('Syncing StatTaq', createSyncingContent());
+            setTimeout(function() {
+                stattaqData.lastSync = 'Just now';
+                renderStatTaq();
+                openModal('Sync Complete', createSyncCompleteContent());
+            }, 2000);
+        }
+
+        function connectStatTaq() {
+            openModal('Connect StatTaq', createConnectStatTaqContent());
+        }
+
+        function createSyncingContent() {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'text-align: center; padding: 2rem;';
+
+            const spinner = document.createElement('div');
+            spinner.className = 'skeleton';
+            spinner.style.cssText = 'width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1.5rem;';
+
+            const p = document.createElement('p');
+            p.style.cssText = 'color: var(--gray-400);';
+            p.textContent = 'Fetching latest stats from StatTaq...';
+
+            wrapper.appendChild(spinner);
+            wrapper.appendChild(p);
+            return wrapper;
+        }
+
+        function createSyncCompleteContent() {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'text-align: center; padding: 2rem;';
+
+            const emoji = document.createElement('div');
+            emoji.style.cssText = 'font-size: 4rem; margin-bottom: 1rem;';
+            emoji.textContent = '\u2705';
+
+            const h3 = document.createElement('h3');
+            h3.style.cssText = 'color: var(--white); margin-bottom: 0.5rem;';
+            h3.textContent = 'Stats Updated!';
+
+            const p = document.createElement('p');
+            p.style.cssText = 'color: var(--gray-400);';
+            p.textContent = 'Your StatTaq data has been synced successfully.';
+
+            wrapper.appendChild(emoji);
+            wrapper.appendChild(h3);
+            wrapper.appendChild(p);
+            return wrapper;
+        }
+
+        function createConnectStatTaqContent() {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'padding: 1rem;';
+
+            const logo = document.createElement('div');
+            logo.style.cssText = 'width: 80px; height: 80px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 20px; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: white;';
+            logo.textContent = 'ST';
+
+            const h3 = document.createElement('h3');
+            h3.style.cssText = 'color: var(--white); text-align: center; margin-bottom: 0.5rem;';
+            h3.textContent = 'Connect Your StatTaq Account';
+
+            const p = document.createElement('p');
+            p.style.cssText = 'color: var(--gray-400); text-align: center; margin-bottom: 1.5rem;';
+            p.textContent = 'Import your verified athletic performance data to boost your GradeUp Score and show brands your real stats.';
+
+            const btn = document.createElement('button');
+            btn.className = 'btn-submit';
+            btn.style.cssText = 'background: linear-gradient(135deg, #ff6b35, #f7931e);';
+            btn.textContent = 'Connect with StatTaq';
+            btn.addEventListener('click', function() {
+                stattaqData.connected = true;
+                stattaqData.lastSync = 'Just now';
+                renderStatTaq();
+                closeModal();
+            });
+
+            wrapper.appendChild(logo);
+            wrapper.appendChild(h3);
+            wrapper.appendChild(p);
+            wrapper.appendChild(btn);
+            return wrapper;
+        }
+
+        // ─── Render Monetization Controls ───
+        function renderMonetizationControls() {
+            const container = document.getElementById('monetizationControls');
+            container.innerHTML = '';
+
+            // Accepting Deals Toggle
+            const acceptingDiv = createMonetizationItem(
+                '\uD83D\uDCB5',
+                'Accepting Deals',
+                'Allow brands to send you offers',
+                createToggle(monetizationSettings.acceptingDeals, function(active) {
+                    monetizationSettings.acceptingDeals = active;
+                })
+            );
+            container.appendChild(acceptingDiv);
+
+            // Minimum Deal Value
+            const minValueDiv = createMonetizationItem(
+                '\uD83D\uDCB0',
+                'Minimum Deal Value',
+                'Only show deals above this amount',
+                createRateInput(monetizationSettings.minDealValue, function(value) {
+                    monetizationSettings.minDealValue = value;
+                })
+            );
+            container.appendChild(minValueDiv);
+
+            // Social Post Rate
+            const socialRateDiv = createMonetizationItem(
+                '\uD83D\uDCF1',
+                'Social Post Rate',
+                'Your base rate per social post',
+                createRateInput(monetizationSettings.socialPostRate, function(value) {
+                    monetizationSettings.socialPostRate = value;
+                })
+            );
+            container.appendChild(socialRateDiv);
+
+            // Appearance Rate
+            const appearanceRateDiv = createMonetizationItem(
+                '\uD83C\uDFAF',
+                'Appearance Rate',
+                'Your base rate for appearances',
+                createRateInput(monetizationSettings.appearanceRate, function(value) {
+                    monetizationSettings.appearanceRate = value;
+                })
+            );
+            container.appendChild(appearanceRateDiv);
+
+            // Auto-respond Toggle
+            const autoRespondDiv = createMonetizationItem(
+                '\u26A1',
+                'Auto-Respond',
+                'Automatically respond to matching offers',
+                createToggle(monetizationSettings.autoRespond, function(active) {
+                    monetizationSettings.autoRespond = active;
+                })
+            );
+            container.appendChild(autoRespondDiv);
+        }
+
+        function createMonetizationItem(icon, title, description, control) {
+            const item = document.createElement('div');
+            item.className = 'monetization-item';
+
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'monetization-label';
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'monetization-icon';
+            iconDiv.textContent = icon;
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'monetization-text';
+
+            const h4 = document.createElement('h4');
+            h4.textContent = title;
+
+            const p = document.createElement('p');
+            p.textContent = description;
+
+            textDiv.appendChild(h4);
+            textDiv.appendChild(p);
+            labelDiv.appendChild(iconDiv);
+            labelDiv.appendChild(textDiv);
+
+            item.appendChild(labelDiv);
+            item.appendChild(control);
+
+            return item;
+        }
+
+        function createToggle(active, onChange) {
+            const toggle = document.createElement('div');
+            toggle.className = 'monetization-toggle' + (active ? ' active' : '');
+            toggle.addEventListener('click', function() {
+                toggle.classList.toggle('active');
+                onChange(toggle.classList.contains('active'));
+            });
+            return toggle;
+        }
+
+        function createRateInput(value, onChange) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'rate-input';
+
+            const dollarSign = document.createElement('span');
+            dollarSign.textContent = '$';
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = value;
+            input.addEventListener('change', function() {
+                onChange(parseInt(input.value) || 0);
+            });
+
+            wrapper.appendChild(dollarSign);
+            wrapper.appendChild(input);
+            return wrapper;
+        }
+
+        // ─── Render Video Highlights ───
+        function renderVideoHighlights() {
+            const container = document.getElementById('videoGrid');
+            container.innerHTML = '';
+
+            // Add existing videos
+            videoHighlights.forEach(function(video) {
+                container.appendChild(createVideoCard(video));
+            });
+
+            // Add upload card
+            container.appendChild(createUploadCard());
+        }
+
+        function createVideoCard(video) {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'video-thumbnail';
+
+            const img = document.createElement('img');
+            img.src = video.thumbnail;
+            img.alt = video.title;
+            img.loading = 'lazy';
+
+            const playBtn = document.createElement('div');
+            playBtn.className = 'video-play-btn';
+            playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+
+            const duration = document.createElement('div');
+            duration.className = 'video-duration';
+            duration.textContent = video.duration;
+
+            thumbnail.appendChild(img);
+            thumbnail.appendChild(playBtn);
+            thumbnail.appendChild(duration);
+
+            const info = document.createElement('div');
+            info.className = 'video-info';
+
+            const title = document.createElement('div');
+            title.className = 'video-title';
+            title.textContent = video.title;
+
+            const meta = document.createElement('div');
+            meta.className = 'video-meta';
+
+            const views = document.createElement('span');
+            views.className = 'video-views';
+            views.textContent = formatViews(video.views) + ' views';
+
+            const date = document.createElement('span');
+            date.textContent = video.date;
+
+            meta.appendChild(views);
+            meta.appendChild(date);
+
+            info.appendChild(title);
+            info.appendChild(meta);
+
+            card.appendChild(thumbnail);
+            card.appendChild(info);
+
+            card.addEventListener('click', function() {
+                openModal('Video Player', createVideoPlayerContent(video));
+            });
+
+            return card;
+        }
+
+        function createUploadCard() {
+            const card = document.createElement('div');
+            card.className = 'video-upload-card';
+
+            const icon = document.createElement('div');
+            icon.className = 'video-upload-icon';
+            icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>';
+
+            const text = document.createElement('span');
+            text.className = 'video-upload-text';
+            text.textContent = 'Upload new highlight';
+
+            card.appendChild(icon);
+            card.appendChild(text);
+
+            card.addEventListener('click', function() {
+                openModal('Upload Video', createUploadVideoContent());
+            });
+
+            return card;
+        }
+
+        function formatViews(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function createVideoPlayerContent(video) {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'text-align: center;';
+
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = 'aspect-ratio: 16/9; background: var(--gray-800); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;';
+
+            const playIcon = document.createElement('div');
+            playIcon.style.cssText = 'width: 80px; height: 80px; background: var(--cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center;';
+            playIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="var(--black)" width="36" height="36"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+
+            placeholder.appendChild(playIcon);
+
+            const title = document.createElement('h3');
+            title.style.cssText = 'color: var(--white); margin-bottom: 0.5rem;';
+            title.textContent = video.title;
+
+            const meta = document.createElement('p');
+            meta.style.cssText = 'color: var(--gray-500); font-size: 0.875rem;';
+            meta.textContent = formatViews(video.views) + ' views \u2022 ' + video.date;
+
+            wrapper.appendChild(placeholder);
+            wrapper.appendChild(title);
+            wrapper.appendChild(meta);
+
+            return wrapper;
+        }
+
+        function createUploadVideoContent() {
+            const wrapper = document.createElement('div');
+
+            const dropzone = document.createElement('div');
+            dropzone.className = 'upload-dropzone';
+
+            const icon = document.createElement('div');
+            icon.className = 'upload-dropzone-icon';
+            icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>';
+
+            const h4 = document.createElement('h4');
+            h4.textContent = 'Drop your video here';
+
+            const p = document.createElement('p');
+            p.textContent = 'or click to browse (MP4, MOV, max 500MB)';
+
+            dropzone.appendChild(icon);
+            dropzone.appendChild(h4);
+            dropzone.appendChild(p);
+
+            const form = document.createElement('div');
+            form.style.cssText = 'margin-top: 1.5rem;';
+
+            const titleGroup = document.createElement('div');
+            titleGroup.className = 'form-group';
+            const titleLabel = document.createElement('label');
+            titleLabel.className = 'form-label';
+            titleLabel.textContent = 'Video Title';
+            const titleInput = document.createElement('input');
+            titleInput.type = 'text';
+            titleInput.className = 'form-input';
+            titleInput.placeholder = 'e.g., Season Highlights 2025-26';
+            titleGroup.appendChild(titleLabel);
+            titleGroup.appendChild(titleInput);
+
+            const descGroup = document.createElement('div');
+            descGroup.className = 'form-group';
+            const descLabel = document.createElement('label');
+            descLabel.className = 'form-label';
+            descLabel.textContent = 'Description';
+            const descTextarea = document.createElement('textarea');
+            descTextarea.className = 'form-textarea';
+            descTextarea.placeholder = 'Describe your highlights...';
+            descGroup.appendChild(descLabel);
+            descGroup.appendChild(descTextarea);
+
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'btn-submit';
+            submitBtn.textContent = 'Upload Video';
+            submitBtn.addEventListener('click', function() {
+                closeModal();
+                // Simulate upload
+                videoHighlights.unshift({
+                    id: videoHighlights.length + 1,
+                    title: titleInput.value || 'New Highlight',
+                    thumbnail: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=225&fit=crop',
+                    duration: '2:30',
+                    views: 0,
+                    date: 'Just now'
+                });
+                renderVideoHighlights();
+            });
+
+            form.appendChild(titleGroup);
+            form.appendChild(descGroup);
+            form.appendChild(submitBtn);
+
+            wrapper.appendChild(dropzone);
+            wrapper.appendChild(form);
+
+            return wrapper;
+        }
+
+        // ─── Render My Proposals ───
+        function renderMyProposals() {
+            const container = document.getElementById('myProposals');
+            container.innerHTML = '';
+
+            if (myProposals.length === 0) {
+                const emptyMsg = document.createElement('p');
+                emptyMsg.style.cssText = 'color: var(--gray-500); text-align: center; padding: 2rem;';
+                emptyMsg.textContent = 'No proposals yet. Create your first pitch!';
+                container.appendChild(emptyMsg);
+                return;
+            }
+
+            myProposals.forEach(function(proposal) {
+                const card = document.createElement('div');
+                card.className = 'proposal-card ' + proposal.status;
+
+                const logo = document.createElement('div');
+                logo.className = 'proposal-brand-logo';
+                logo.textContent = proposal.logo;
+
+                const info = document.createElement('div');
+                info.className = 'proposal-info';
+
+                const title = document.createElement('div');
+                title.className = 'proposal-title';
+                title.textContent = proposal.title;
+
+                const brand = document.createElement('div');
+                brand.className = 'proposal-brand';
+                brand.textContent = 'To: ' + proposal.brand + ' \u2022 ' + proposal.date;
+
+                info.appendChild(title);
+                info.appendChild(brand);
+
+                const amount = document.createElement('div');
+                amount.className = 'proposal-amount';
+                amount.textContent = formatCurrency(proposal.amount);
+
+                const status = document.createElement('span');
+                status.className = 'proposal-status ' + proposal.status;
+                status.textContent = proposal.status;
+
+                card.appendChild(logo);
+                card.appendChild(info);
+                card.appendChild(amount);
+                card.appendChild(status);
+
+                card.addEventListener('click', function() {
+                    openModal('Proposal Details', createProposalDetailsContent(proposal));
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        function createProposalDetailsContent(proposal) {
+            const wrapper = document.createElement('div');
+
+            const header = document.createElement('div');
+            header.style.cssText = 'display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;';
+
+            const logo = document.createElement('div');
+            logo.style.cssText = 'width: 56px; height: 56px; background: var(--gray-800); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: var(--white);';
+            logo.textContent = proposal.logo;
+
+            const headerInfo = document.createElement('div');
+            const headerTitle = document.createElement('h3');
+            headerTitle.style.cssText = 'color: var(--white); margin-bottom: 0.25rem;';
+            headerTitle.textContent = proposal.title;
+            const headerBrand = document.createElement('p');
+            headerBrand.style.cssText = 'color: var(--gray-500); font-size: 0.875rem;';
+            headerBrand.textContent = 'To: ' + proposal.brand;
+            headerInfo.appendChild(headerTitle);
+            headerInfo.appendChild(headerBrand);
+
+            header.appendChild(logo);
+            header.appendChild(headerInfo);
+
+            const stats = document.createElement('div');
+            stats.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;';
+
+            const amountBox = document.createElement('div');
+            amountBox.style.cssText = 'background: var(--gray-800); padding: 1rem; border-radius: 12px; text-align: center;';
+            const amountLabel = document.createElement('div');
+            amountLabel.style.cssText = 'font-size: 0.75rem; color: var(--gray-500); margin-bottom: 0.25rem;';
+            amountLabel.textContent = 'PROPOSED AMOUNT';
+            const amountValue = document.createElement('div');
+            amountValue.style.cssText = 'font-size: 1.5rem; font-weight: 800; color: var(--success);';
+            amountValue.textContent = formatCurrency(proposal.amount);
+            amountBox.appendChild(amountLabel);
+            amountBox.appendChild(amountValue);
+
+            const statusBox = document.createElement('div');
+            statusBox.style.cssText = 'background: var(--gray-800); padding: 1rem; border-radius: 12px; text-align: center;';
+            const statusLabel = document.createElement('div');
+            statusLabel.style.cssText = 'font-size: 0.75rem; color: var(--gray-500); margin-bottom: 0.25rem;';
+            statusLabel.textContent = 'STATUS';
+            const statusValue = document.createElement('span');
+            statusValue.className = 'proposal-status ' + proposal.status;
+            statusValue.textContent = proposal.status.toUpperCase();
+            statusBox.appendChild(statusLabel);
+            statusBox.appendChild(statusValue);
+
+            stats.appendChild(amountBox);
+            stats.appendChild(statusBox);
+
+            const actions = document.createElement('div');
+            actions.style.cssText = 'display: grid; gap: 0.75rem;';
+
+            if (proposal.status === 'draft') {
+                const sendBtn = document.createElement('button');
+                sendBtn.className = 'btn-submit';
+                sendBtn.textContent = 'Send Proposal';
+                sendBtn.addEventListener('click', function() {
+                    proposal.status = 'sent';
+                    renderMyProposals();
+                    closeModal();
+                });
+                actions.appendChild(sendBtn);
+            }
+
+            const editBtn = document.createElement('button');
+            editBtn.className = 'btn-secondary';
+            editBtn.textContent = proposal.status === 'draft' ? 'Edit Proposal' : 'View Full Details';
+            actions.appendChild(editBtn);
+
+            wrapper.appendChild(header);
+            wrapper.appendChild(stats);
+            wrapper.appendChild(actions);
+
+            return wrapper;
+        }
+
+        // ─── Create Proposal Modal ───
+        function openCreateProposalModal() {
+            openModal('Create Deal Proposal', createProposalFormContent());
+        }
+
+        function createProposalFormContent() {
+            const wrapper = document.createElement('div');
+
+            const intro = document.createElement('p');
+            intro.style.cssText = 'color: var(--gray-400); margin-bottom: 1.5rem;';
+            intro.textContent = 'Pitch yourself directly to a brand. Describe what you offer and your proposed terms.';
+
+            // Brand selection
+            const brandGroup = document.createElement('div');
+            brandGroup.className = 'form-group';
+            const brandLabel = document.createElement('label');
+            brandLabel.className = 'form-label';
+            brandLabel.textContent = 'Select Brand';
+            const brandSelect = document.createElement('select');
+            brandSelect.className = 'form-select';
+            const brands = ['Select a brand...', 'Nike', 'Adidas', 'Gatorade', 'Red Bull', 'Under Armour', 'Beats by Dre', 'Chipotle', 'State Farm'];
+            brands.forEach(function(brand) {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                brandSelect.appendChild(option);
+            });
+            brandGroup.appendChild(brandLabel);
+            brandGroup.appendChild(brandSelect);
+
+            // Proposal title
+            const titleGroup = document.createElement('div');
+            titleGroup.className = 'form-group';
+            const titleLabel = document.createElement('label');
+            titleLabel.className = 'form-label';
+            titleLabel.textContent = 'Proposal Title';
+            const titleInput = document.createElement('input');
+            titleInput.type = 'text';
+            titleInput.className = 'form-input';
+            titleInput.placeholder = 'e.g., Campus Ambassador Partnership';
+            titleGroup.appendChild(titleLabel);
+            titleGroup.appendChild(titleInput);
+
+            // Deal type and amount row
+            const row = document.createElement('div');
+            row.className = 'form-row';
+
+            const typeGroup = document.createElement('div');
+            typeGroup.className = 'form-group';
+            const typeLabel = document.createElement('label');
+            typeLabel.className = 'form-label';
+            typeLabel.textContent = 'Deal Type';
+            const typeSelect = document.createElement('select');
+            typeSelect.className = 'form-select';
+            const types = ['Social Post', 'Appearance', 'Endorsement', 'Autograph Session', 'Camp/Clinic', 'Other'];
+            types.forEach(function(type) {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                typeSelect.appendChild(option);
+            });
+            typeGroup.appendChild(typeLabel);
+            typeGroup.appendChild(typeSelect);
+
+            const amountGroup = document.createElement('div');
+            amountGroup.className = 'form-group';
+            const amountLabel = document.createElement('label');
+            amountLabel.className = 'form-label';
+            amountLabel.textContent = 'Proposed Amount';
+            const amountInput = document.createElement('input');
+            amountInput.type = 'number';
+            amountInput.className = 'form-input';
+            amountInput.placeholder = '$0';
+            amountGroup.appendChild(amountLabel);
+            amountGroup.appendChild(amountInput);
+
+            row.appendChild(typeGroup);
+            row.appendChild(amountGroup);
+
+            // Pitch description
+            const pitchGroup = document.createElement('div');
+            pitchGroup.className = 'form-group';
+            const pitchLabel = document.createElement('label');
+            pitchLabel.className = 'form-label';
+            pitchLabel.textContent = 'Your Pitch';
+            const pitchTextarea = document.createElement('textarea');
+            pitchTextarea.className = 'form-textarea';
+            pitchTextarea.placeholder = 'Describe why you\'d be a great fit for this brand and what you can offer...';
+            pitchGroup.appendChild(pitchLabel);
+            pitchGroup.appendChild(pitchTextarea);
+
+            // Buttons
+            const buttons = document.createElement('div');
+            buttons.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;';
+
+            const draftBtn = document.createElement('button');
+            draftBtn.className = 'btn-secondary';
+            draftBtn.textContent = 'Save as Draft';
+            draftBtn.addEventListener('click', function() {
+                addProposal(brandSelect.value, titleInput.value, parseInt(amountInput.value) || 0, 'draft');
+            });
+
+            const sendBtn = document.createElement('button');
+            sendBtn.className = 'btn-submit';
+            sendBtn.textContent = 'Send Proposal';
+            sendBtn.addEventListener('click', function() {
+                addProposal(brandSelect.value, titleInput.value, parseInt(amountInput.value) || 0, 'sent');
+            });
+
+            buttons.appendChild(draftBtn);
+            buttons.appendChild(sendBtn);
+
+            wrapper.appendChild(intro);
+            wrapper.appendChild(brandGroup);
+            wrapper.appendChild(titleGroup);
+            wrapper.appendChild(row);
+            wrapper.appendChild(pitchGroup);
+            wrapper.appendChild(buttons);
+
+            return wrapper;
+        }
+
+        function addProposal(brand, title, amount, status) {
+            if (!brand || brand === 'Select a brand...') {
+                return;
+            }
+
+            myProposals.unshift({
+                id: myProposals.length + 1,
+                brand: brand,
+                logo: brand.charAt(0),
+                title: title || 'New Proposal',
+                amount: amount || 1000,
+                status: status,
+                date: 'Just now'
+            });
+
+            renderMyProposals();
+            closeModal();
+        }
+
         // ─── Modal Functions ───
         function openModal(title, contentElement) {
             const modal = document.getElementById('dashboardModal');
@@ -2174,6 +3667,133 @@
             renderDeals();
             renderCalendar();
             renderBrandMatches();
+            renderStatTaq();
+            renderMonetizationControls();
+            renderVideoHighlights();
+            renderMyProposals();
+
+            // Event listeners for new features
+            document.getElementById('syncStatTaq').addEventListener('click', syncStatTaqData);
+            document.getElementById('uploadVideoBtn').addEventListener('click', function() {
+                openModal('Upload Video', createUploadVideoContent());
+            });
+            document.getElementById('createProposalBtn').addEventListener('click', openCreateProposalModal);
+            document.getElementById('editMonetization').addEventListener('click', function() {
+                openModal('Monetization Settings', createMonetizationModalContent());
+            });
+        }
+
+        function createMonetizationModalContent() {
+            const wrapper = document.createElement('div');
+
+            const intro = document.createElement('p');
+            intro.style.cssText = 'color: var(--gray-400); margin-bottom: 1.5rem;';
+            intro.textContent = 'Control how brands can reach you and set your rates.';
+
+            // Deal types preferences
+            const typesGroup = document.createElement('div');
+            typesGroup.className = 'form-group';
+            const typesLabel = document.createElement('label');
+            typesLabel.className = 'form-label';
+            typesLabel.textContent = 'Preferred Deal Types';
+            typesGroup.appendChild(typesLabel);
+
+            const dealTypes = [
+                { id: 'social_post', label: 'Social Posts', checked: true },
+                { id: 'appearance', label: 'Appearances', checked: true },
+                { id: 'endorsement', label: 'Endorsements', checked: true },
+                { id: 'autograph', label: 'Autograph Sessions', checked: false },
+                { id: 'camp', label: 'Camps/Clinics', checked: false }
+            ];
+
+            const checkboxGrid = document.createElement('div');
+            checkboxGrid.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;';
+
+            dealTypes.forEach(function(type) {
+                const checkWrapper = document.createElement('label');
+                checkWrapper.style.cssText = 'display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: var(--gray-800); border-radius: 8px; cursor: pointer;';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = type.checked;
+                checkbox.style.cssText = 'width: 18px; height: 18px; accent-color: var(--cyan);';
+
+                const labelText = document.createElement('span');
+                labelText.style.cssText = 'color: var(--white); font-size: 0.875rem;';
+                labelText.textContent = type.label;
+
+                checkWrapper.appendChild(checkbox);
+                checkWrapper.appendChild(labelText);
+                checkboxGrid.appendChild(checkWrapper);
+            });
+
+            typesGroup.appendChild(checkboxGrid);
+
+            // Availability schedule
+            const scheduleGroup = document.createElement('div');
+            scheduleGroup.className = 'form-group';
+            const scheduleLabel = document.createElement('label');
+            scheduleLabel.className = 'form-label';
+            scheduleLabel.textContent = 'Availability';
+            const scheduleSelect = document.createElement('select');
+            scheduleSelect.className = 'form-select';
+            const schedules = ['Open to all deals', 'Weekends only', 'Evenings only', 'Custom schedule', 'Currently unavailable'];
+            schedules.forEach(function(schedule) {
+                const option = document.createElement('option');
+                option.value = schedule;
+                option.textContent = schedule;
+                scheduleSelect.appendChild(option);
+            });
+            scheduleGroup.appendChild(scheduleLabel);
+            scheduleGroup.appendChild(scheduleSelect);
+
+            // Notification preferences
+            const notifGroup = document.createElement('div');
+            notifGroup.className = 'form-group';
+            const notifLabel = document.createElement('label');
+            notifLabel.className = 'form-label';
+            notifLabel.textContent = 'Notification Preferences';
+            notifGroup.appendChild(notifLabel);
+
+            const notifOptions = [
+                { label: 'Email for new opportunities', checked: true },
+                { label: 'Push notifications', checked: true },
+                { label: 'Weekly deal digest', checked: false }
+            ];
+
+            notifOptions.forEach(function(opt) {
+                const optWrapper = document.createElement('label');
+                optWrapper.style.cssText = 'display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-800); border-radius: 8px; cursor: pointer; margin-bottom: 0.5rem;';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = opt.checked;
+                checkbox.style.cssText = 'width: 18px; height: 18px; accent-color: var(--cyan);';
+
+                const labelText = document.createElement('span');
+                labelText.style.cssText = 'color: var(--white); font-size: 0.875rem;';
+                labelText.textContent = opt.label;
+
+                optWrapper.appendChild(checkbox);
+                optWrapper.appendChild(labelText);
+                notifGroup.appendChild(optWrapper);
+            });
+
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'btn-submit';
+            saveBtn.style.cssText = 'margin-top: 1rem;';
+            saveBtn.textContent = 'Save Settings';
+            saveBtn.addEventListener('click', function() {
+                closeModal();
+            });
+
+            wrapper.appendChild(intro);
+            wrapper.appendChild(typesGroup);
+            wrapper.appendChild(scheduleGroup);
+            wrapper.appendChild(notifGroup);
+            wrapper.appendChild(saveBtn);
+
+            return wrapper;
         }
 
         // Run on DOM ready

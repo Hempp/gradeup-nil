@@ -1428,6 +1428,153 @@
             width: 16px;
             height: 16px;
         }
+
+        /* ─── Athlete Proposals Panel ─── */
+        .proposals-panel {
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .proposals-badge {
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, var(--cyan), #00a0ff);
+            border-radius: 20px;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: var(--black);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .proposals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .proposal-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+            border-left: 3px solid var(--cyan);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .proposal-item:hover {
+            background: var(--gray-800);
+            transform: translateX(4px);
+        }
+
+        .proposal-item.viewed {
+            border-left-color: var(--gray-600);
+        }
+
+        .proposal-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .proposal-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .proposal-name {
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .proposal-name .new-badge {
+            padding: 0.125rem 0.375rem;
+            background: var(--cyan);
+            color: var(--black);
+            font-size: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 4px;
+        }
+
+        .proposal-title {
+            font-size: 0.8125rem;
+            color: var(--gray-400);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .proposal-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.375rem;
+            font-size: 0.6875rem;
+        }
+
+        .proposal-amount {
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .proposal-time {
+            color: var(--gray-600);
+        }
+
+        .proposal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .proposal-action-btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 6px;
+            transition: all 0.2s var(--ease);
+        }
+
+        .proposal-action-btn.accept {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .proposal-action-btn.accept:hover {
+            background: #16a34a;
+        }
+
+        .proposal-action-btn.view {
+            background: var(--gray-700);
+            color: var(--white);
+        }
+
+        .proposal-action-btn.view:hover {
+            background: var(--gray-600);
+        }
+
+        .empty-proposals {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+        }
+
+        .empty-proposals svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -1770,6 +1917,28 @@
                             </div>
                             <div class="scholar-athletes-list" id="scholarAthletesList">
                                 <!-- Scholar athletes will be rendered by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Athlete Proposals - Bidirectional Deals -->
+                    <div class="card proposals-panel">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <path d="M14 2v6h6"/>
+                                    <path d="M16 13H8"/>
+                                    <path d="M16 17H8"/>
+                                    <path d="M10 9H8"/>
+                                </svg>
+                                Athlete Proposals
+                            </h2>
+                            <span class="proposals-badge" id="proposalsBadge">3 New</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="proposals-list" id="athleteProposalsList">
+                                <!-- Athlete proposals will be rendered by JavaScript -->
                             </div>
                         </div>
                     </div>
@@ -2466,6 +2635,267 @@
             });
         });
 
+        // Athlete Proposals Data (Bidirectional Deals)
+        const athleteProposalsData = [
+            {
+                id: 1,
+                athleteId: 1,
+                name: "Marcus Johnson",
+                image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face",
+                school: "Duke University",
+                sport: "Basketball",
+                title: "Campus Ambassador Partnership",
+                proposedAmount: 10000,
+                dealType: "Endorsement",
+                description: "I'd love to represent Apex Sports as a campus ambassador. With my social media reach and on-court visibility, I can help drive brand awareness among college athletes.",
+                isNew: true,
+                sentAt: "2 hours ago"
+            },
+            {
+                id: 2,
+                athleteId: 2,
+                name: "Sarah Chen",
+                image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+                school: "Stanford University",
+                sport: "Soccer",
+                title: "Social Media Campaign",
+                proposedAmount: 7500,
+                dealType: "Social Post",
+                description: "Looking to create authentic content around sports nutrition and performance. My audience is highly engaged student-athletes.",
+                isNew: true,
+                sentAt: "5 hours ago"
+            },
+            {
+                id: 3,
+                athleteId: 5,
+                name: "David Kim",
+                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+                school: "University of Michigan",
+                sport: "Swimming",
+                title: "Summer Camp Appearance",
+                proposedAmount: 5000,
+                dealType: "Appearance",
+                description: "Would love to participate in youth camps and clinics this summer representing Apex Sports gear.",
+                isNew: false,
+                sentAt: "2 days ago"
+            }
+        ];
+
+        // Render Athlete Proposals
+        function renderAthleteProposals() {
+            const list = document.getElementById('athleteProposalsList');
+            const badge = document.getElementById('proposalsBadge');
+            list.textContent = '';
+
+            const newCount = athleteProposalsData.filter(p => p.isNew).length;
+            badge.textContent = newCount > 0 ? newCount + ' New' : 'View All';
+
+            if (athleteProposalsData.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-proposals';
+                empty.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><p>No proposals yet</p><p style="font-size: 0.75rem;">Athletes will appear here when they pitch to you</p>';
+                list.appendChild(empty);
+                return;
+            }
+
+            athleteProposalsData.forEach(proposal => {
+                const item = document.createElement('div');
+                item.className = 'proposal-item' + (proposal.isNew ? '' : ' viewed');
+
+                const avatar = document.createElement('img');
+                avatar.src = proposal.image;
+                avatar.alt = escapeHtml(proposal.name);
+                avatar.className = 'proposal-avatar';
+                item.appendChild(avatar);
+
+                const info = document.createElement('div');
+                info.className = 'proposal-info';
+
+                const name = document.createElement('div');
+                name.className = 'proposal-name';
+                name.textContent = proposal.name;
+                if (proposal.isNew) {
+                    const newBadge = document.createElement('span');
+                    newBadge.className = 'new-badge';
+                    newBadge.textContent = 'New';
+                    name.appendChild(newBadge);
+                }
+                info.appendChild(name);
+
+                const title = document.createElement('div');
+                title.className = 'proposal-title';
+                title.textContent = proposal.title;
+                info.appendChild(title);
+
+                const meta = document.createElement('div');
+                meta.className = 'proposal-meta';
+                const amount = document.createElement('span');
+                amount.className = 'proposal-amount';
+                amount.textContent = '$' + proposal.proposedAmount.toLocaleString();
+                meta.appendChild(amount);
+                const time = document.createElement('span');
+                time.className = 'proposal-time';
+                time.textContent = proposal.sentAt;
+                meta.appendChild(time);
+                info.appendChild(meta);
+
+                item.appendChild(info);
+
+                const actions = document.createElement('div');
+                actions.className = 'proposal-actions';
+
+                const viewBtn = document.createElement('button');
+                viewBtn.className = 'proposal-action-btn view';
+                viewBtn.textContent = 'View';
+                viewBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    viewProposalDetails(proposal);
+                });
+                actions.appendChild(viewBtn);
+
+                item.appendChild(actions);
+
+                item.addEventListener('click', function() {
+                    viewProposalDetails(proposal);
+                });
+
+                list.appendChild(item);
+            });
+        }
+
+        function viewProposalDetails(proposal) {
+            // Mark as viewed
+            proposal.isNew = false;
+            renderAthleteProposals();
+
+            // Create modal content
+            const modalHtml = document.createElement('div');
+            modalHtml.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 2rem;';
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'background: var(--gray-900); border: 1px solid var(--gray-800); border-radius: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;';
+
+            const header = document.createElement('div');
+            header.style.cssText = 'display: flex; align-items: center; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--gray-800);';
+
+            const avatarImg = document.createElement('img');
+            avatarImg.src = proposal.image;
+            avatarImg.style.cssText = 'width: 56px; height: 56px; border-radius: 12px; object-fit: cover;';
+            header.appendChild(avatarImg);
+
+            const headerInfo = document.createElement('div');
+            headerInfo.style.cssText = 'flex: 1;';
+            const headerName = document.createElement('div');
+            headerName.style.cssText = 'font-weight: 700; font-size: 1.125rem; color: var(--white);';
+            headerName.textContent = proposal.name;
+            headerInfo.appendChild(headerName);
+            const headerSchool = document.createElement('div');
+            headerSchool.style.cssText = 'font-size: 0.875rem; color: var(--gray-500);';
+            headerSchool.textContent = proposal.sport + ' - ' + proposal.school;
+            headerInfo.appendChild(headerSchool);
+            header.appendChild(headerInfo);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.style.cssText = 'width: 36px; height: 36px; background: var(--gray-800); border: none; border-radius: 8px; color: var(--gray-400); cursor: pointer; display: flex; align-items: center; justify-content: center;';
+            closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+            closeBtn.addEventListener('click', function() {
+                document.body.removeChild(modalHtml);
+            });
+            header.appendChild(closeBtn);
+
+            modal.appendChild(header);
+
+            const body = document.createElement('div');
+            body.style.cssText = 'padding: 1.5rem;';
+
+            const proposalTitle = document.createElement('h3');
+            proposalTitle.style.cssText = 'color: var(--white); font-size: 1.25rem; margin-bottom: 1rem;';
+            proposalTitle.textContent = proposal.title;
+            body.appendChild(proposalTitle);
+
+            const statsRow = document.createElement('div');
+            statsRow.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;';
+
+            const amountBox = document.createElement('div');
+            amountBox.style.cssText = 'background: var(--gray-800); padding: 1rem; border-radius: 12px; text-align: center;';
+            const amountLabel = document.createElement('div');
+            amountLabel.style.cssText = 'font-size: 0.6875rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;';
+            amountLabel.textContent = 'Proposed Amount';
+            amountBox.appendChild(amountLabel);
+            const amountValue = document.createElement('div');
+            amountValue.style.cssText = 'font-size: 1.5rem; font-weight: 800; color: var(--success);';
+            amountValue.textContent = '$' + proposal.proposedAmount.toLocaleString();
+            amountBox.appendChild(amountValue);
+            statsRow.appendChild(amountBox);
+
+            const typeBox = document.createElement('div');
+            typeBox.style.cssText = 'background: var(--gray-800); padding: 1rem; border-radius: 12px; text-align: center;';
+            const typeLabel = document.createElement('div');
+            typeLabel.style.cssText = 'font-size: 0.6875rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;';
+            typeLabel.textContent = 'Deal Type';
+            typeBox.appendChild(typeLabel);
+            const typeValue = document.createElement('div');
+            typeValue.style.cssText = 'font-size: 1rem; font-weight: 600; color: var(--cyan);';
+            typeValue.textContent = proposal.dealType;
+            typeBox.appendChild(typeValue);
+            statsRow.appendChild(typeBox);
+
+            body.appendChild(statsRow);
+
+            const descTitle = document.createElement('div');
+            descTitle.style.cssText = 'font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            descTitle.textContent = "Athlete's Pitch";
+            body.appendChild(descTitle);
+
+            const descText = document.createElement('p');
+            descText.style.cssText = 'color: var(--gray-400); font-size: 0.9375rem; line-height: 1.6; margin-bottom: 1.5rem;';
+            descText.textContent = proposal.description;
+            body.appendChild(descText);
+
+            const actionsRow = document.createElement('div');
+            actionsRow.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;';
+
+            const acceptBtn = document.createElement('button');
+            acceptBtn.style.cssText = 'padding: 1rem; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: var(--success); color: white; border: none; border-radius: 12px; cursor: pointer;';
+            acceptBtn.textContent = 'Accept Proposal';
+            acceptBtn.addEventListener('click', function() {
+                document.body.removeChild(modalHtml);
+                alert('Proposal accepted! A deal has been created.');
+            });
+            actionsRow.appendChild(acceptBtn);
+
+            const counterBtn = document.createElement('button');
+            counterBtn.style.cssText = 'padding: 1rem; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gray-700); color: white; border: none; border-radius: 12px; cursor: pointer;';
+            counterBtn.textContent = 'Counter Offer';
+            actionsRow.appendChild(counterBtn);
+
+            body.appendChild(actionsRow);
+
+            const declineBtn = document.createElement('button');
+            declineBtn.style.cssText = 'width: 100%; margin-top: 0.75rem; padding: 0.75rem; font-size: 0.8125rem; font-weight: 500; background: transparent; color: var(--gray-500); border: none; cursor: pointer;';
+            declineBtn.textContent = 'Decline Proposal';
+            declineBtn.addEventListener('click', function() {
+                const idx = athleteProposalsData.findIndex(p => p.id === proposal.id);
+                if (idx > -1) {
+                    athleteProposalsData.splice(idx, 1);
+                    renderAthleteProposals();
+                }
+                document.body.removeChild(modalHtml);
+            });
+            body.appendChild(declineBtn);
+
+            modal.appendChild(body);
+            modalHtml.appendChild(modal);
+
+            modalHtml.addEventListener('click', function(e) {
+                if (e.target === modalHtml) {
+                    document.body.removeChild(modalHtml);
+                }
+            });
+
+            document.body.appendChild(modalHtml);
+        }
+
         // Initialize Dashboard
         document.addEventListener('DOMContentLoaded', function() {
             renderAthletes(athletesData);
@@ -2473,6 +2903,7 @@
             renderCampaigns();
             renderMessages();
             renderScholarAthletes('all');
+            renderAthleteProposals();
         });
     </script>
 </body>

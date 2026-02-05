@@ -531,6 +531,226 @@ export async function getDealStats() {
   };
 }
 
+// ============================================================================
+// ATHLETE-INITIATED PROPOSALS (Bidirectional Deal System)
+// ============================================================================
+
+export const PROPOSAL_STATUS = {
+  DRAFT: 'draft',
+  SENT: 'sent',
+  VIEWED: 'viewed',
+  ACCEPTED: 'accepted',
+  DECLINED: 'declined',
+  EXPIRED: 'expired',
+};
+
+/**
+ * Create a deal proposal from athlete to brand
+ * @param {object} proposal - Proposal data
+ * @param {string} proposal.brand_id - Target brand ID
+ * @param {string} proposal.title - Proposal title
+ * @param {string} proposal.description - Pitch description
+ * @param {string} proposal.deal_type - Type of deal proposed
+ * @param {number} proposal.proposed_amount - Proposed compensation
+ * @param {object} [proposal.deliverables] - What athlete will deliver
+ * @param {boolean} [proposal.is_draft] - Save as draft instead of sending
+ * @returns {Promise<{proposal: object | null, error: Error | null}>}
+ */
+export async function createProposal(proposal) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { proposal: null, error: new Error('Athlete profile not found') };
+  }
+
+  if (!proposal.brand_id) {
+    return { proposal: null, error: new Error('Brand ID is required') };
+  }
+
+  const status = proposal.is_draft ? PROPOSAL_STATUS.DRAFT : PROPOSAL_STATUS.SENT;
+
+  const { data, error } = await supabase
+    .from('athlete_proposals')
+    .insert({
+      athlete_id: athleteId,
+      brand_id: proposal.brand_id,
+      title: proposal.title,
+      description: proposal.description,
+      deal_type: proposal.deal_type,
+      proposed_amount: proposal.proposed_amount,
+      deliverables: proposal.deliverables || null,
+      status,
+      sent_at: status === PROPOSAL_STATUS.SENT ? new Date().toISOString() : null,
+    })
+    .select(`*, brand:brands(id, company_name, logo_url, industry)`)
+    .single();
+
+  return { proposal: data, error };
+}
+
+/**
+ * Update an existing draft proposal
+ * @param {string} proposalId - Proposal ID
+ * @param {object} updates - Fields to update
+ * @returns {Promise<{proposal: object | null, error: Error | null}>}
+ */
+export async function updateProposal(proposalId, updates) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { proposal: null, error: new Error('Athlete profile not found') };
+  }
+
+  // Remove read-only fields
+  const safeUpdates = { ...updates };
+  delete safeUpdates.id;
+  delete safeUpdates.athlete_id;
+  delete safeUpdates.brand_id;
+  delete safeUpdates.created_at;
+  delete safeUpdates.sent_at;
+
+  const { data, error } = await supabase
+    .from('athlete_proposals')
+    .update(safeUpdates)
+    .eq('id', proposalId)
+    .eq('athlete_id', athleteId)
+    .eq('status', PROPOSAL_STATUS.DRAFT)
+    .select(`*, brand:brands(id, company_name, logo_url, industry)`)
+    .single();
+
+  return { proposal: data, error };
+}
+
+/**
+ * Send a draft proposal to the brand
+ * @param {string} proposalId - Proposal ID
+ * @returns {Promise<{proposal: object | null, error: Error | null}>}
+ */
+export async function sendProposal(proposalId) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { proposal: null, error: new Error('Athlete profile not found') };
+  }
+
+  const { data, error } = await supabase
+    .from('athlete_proposals')
+    .update({
+      status: PROPOSAL_STATUS.SENT,
+      sent_at: new Date().toISOString(),
+    })
+    .eq('id', proposalId)
+    .eq('athlete_id', athleteId)
+    .eq('status', PROPOSAL_STATUS.DRAFT)
+    .select(`*, brand:brands(id, company_name, logo_url, industry)`)
+    .single();
+
+  return { proposal: data, error };
+}
+
+/**
+ * Get all proposals created by the current athlete
+ * @param {object} [filters] - Filter options
+ * @param {string[]} [filters.status] - Filter by status
+ * @returns {Promise<{proposals: object[] | null, error: Error | null}>}
+ */
+export async function getMyProposals(filters = {}) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { proposals: null, error: new Error('Athlete profile not found') };
+  }
+
+  let query = supabase
+    .from('athlete_proposals')
+    .select(`*, brand:brands(id, company_name, logo_url, industry)`)
+    .eq('athlete_id', athleteId)
+    .order('created_at', { ascending: false });
+
+  if (filters.status?.length) {
+    query = query.in('status', filters.status);
+  }
+
+  const { data, error } = await query;
+  return { proposals: data, error };
+}
+
+/**
+ * Get a specific proposal by ID
+ * @param {string} proposalId - Proposal ID
+ * @returns {Promise<{proposal: object | null, error: Error | null}>}
+ */
+export async function getProposalById(proposalId) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { proposal: null, error: new Error('Athlete profile not found') };
+  }
+
+  const { data, error } = await supabase
+    .from('athlete_proposals')
+    .select(`
+      *,
+      brand:brands(id, company_name, logo_url, industry, website_url, contact_name, contact_email)
+    `)
+    .eq('id', proposalId)
+    .eq('athlete_id', athleteId)
+    .single();
+
+  return { proposal: data, error };
+}
+
+/**
+ * Delete a draft proposal
+ * @param {string} proposalId - Proposal ID
+ * @returns {Promise<{error: Error | null}>}
+ */
+export async function deleteProposal(proposalId) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { error: new Error('Athlete profile not found') };
+  }
+
+  const { error } = await supabase
+    .from('athlete_proposals')
+    .delete()
+    .eq('id', proposalId)
+    .eq('athlete_id', athleteId)
+    .eq('status', PROPOSAL_STATUS.DRAFT);
+
+  return { error };
+}
+
+/**
+ * Withdraw a sent proposal (before brand responds)
+ * @param {string} proposalId - Proposal ID
+ * @returns {Promise<{error: Error | null}>}
+ */
+export async function withdrawProposal(proposalId) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { error: new Error('Athlete profile not found') };
+  }
+
+  const { error } = await supabase
+    .from('athlete_proposals')
+    .delete()
+    .eq('id', proposalId)
+    .eq('athlete_id', athleteId)
+    .in('status', [PROPOSAL_STATUS.SENT, PROPOSAL_STATUS.VIEWED]);
+
+  return { error };
+}
+
 export default {
   getOpportunities,
   getOpportunityById,
@@ -550,6 +770,17 @@ export default {
   subscribeToDealMessages,
   subscribeToMyDeals,
   getDealStats,
+
+  // Athlete-Initiated Proposals
+  createProposal,
+  updateProposal,
+  sendProposal,
+  getMyProposals,
+  getProposalById,
+  deleteProposal,
+  withdrawProposal,
+
   DEAL_STATUS,
   DEAL_TYPES,
+  PROPOSAL_STATUS,
 };

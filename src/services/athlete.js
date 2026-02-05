@@ -630,6 +630,258 @@ export async function markAllNotificationsAsRead() {
   return { error };
 }
 
+// ============================================================================
+// VIDEO HIGHLIGHTS
+// ============================================================================
+
+/**
+ * Upload a highlight video
+ * @param {File} file - Video file
+ * @param {object} metadata - Video metadata
+ * @param {string} metadata.title - Video title
+ * @param {string} [metadata.description] - Video description
+ * @param {string} [metadata.category] - Video category (highlights, training, game)
+ * @returns {Promise<{video: object | null, error: Error | null}>}
+ */
+export async function uploadHighlightVideo(file, metadata) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { video: null, error: new Error('Athlete profile not found') };
+  }
+
+  // Validate file type
+  const allowedTypes = ['video/mp4', 'video/quicktime', 'video/webm'];
+  if (!allowedTypes.includes(file.type)) {
+    return { video: null, error: new Error('Invalid file type. Allowed: MP4, MOV, WebM') };
+  }
+
+  // Validate file size (500MB max)
+  const maxSize = 500 * 1024 * 1024;
+  if (file.size > maxSize) {
+    return { video: null, error: new Error('File too large. Maximum size is 500MB') };
+  }
+
+  const ext = file.name.split('.').pop();
+  const filename = `${athleteId}/highlights/${Date.now()}.${ext}`;
+
+  const { publicUrl } = await uploadFile(STORAGE_BUCKETS.VIDEOS || 'videos', filename, file, {
+    contentType: file.type,
+  });
+
+  const { data, error } = await supabase
+    .from('athlete_videos')
+    .insert({
+      athlete_id: athleteId,
+      title: metadata.title,
+      description: metadata.description || null,
+      category: metadata.category || 'highlights',
+      video_url: publicUrl,
+      thumbnail_url: metadata.thumbnail_url || null,
+      duration_seconds: metadata.duration_seconds || null,
+      is_public: true,
+    })
+    .select()
+    .single();
+
+  return { video: data, error };
+}
+
+/**
+ * Get all videos for the current athlete
+ * @param {object} [options] - Filter options
+ * @param {string} [options.category] - Filter by category
+ * @param {boolean} [options.publicOnly] - Only return public videos
+ * @returns {Promise<{videos: object[] | null, error: Error | null}>}
+ */
+export async function getMyVideos(options = {}) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { videos: null, error: new Error('Athlete profile not found') };
+  }
+
+  let query = supabase
+    .from('athlete_videos')
+    .select('*')
+    .eq('athlete_id', athleteId)
+    .order('created_at', { ascending: false });
+
+  if (options.category) {
+    query = query.eq('category', options.category);
+  }
+
+  if (options.publicOnly) {
+    query = query.eq('is_public', true);
+  }
+
+  const { data, error } = await query;
+  return { videos: data, error };
+}
+
+/**
+ * Get videos for a specific athlete (public only)
+ * @param {string} athleteId - Athlete ID
+ * @returns {Promise<{videos: object[] | null, error: Error | null}>}
+ */
+export async function getAthleteVideos(athleteId) {
+  const supabase = await getSupabaseClient();
+
+  const { data, error } = await supabase
+    .from('athlete_videos')
+    .select('*')
+    .eq('athlete_id', athleteId)
+    .eq('is_public', true)
+    .order('created_at', { ascending: false });
+
+  return { videos: data, error };
+}
+
+/**
+ * Update video metadata
+ * @param {string} videoId - Video ID
+ * @param {object} updates - Fields to update
+ * @returns {Promise<{video: object | null, error: Error | null}>}
+ */
+export async function updateVideo(videoId, updates) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { video: null, error: new Error('Athlete profile not found') };
+  }
+
+  const safeUpdates = {
+    title: updates.title,
+    description: updates.description,
+    category: updates.category,
+    thumbnail_url: updates.thumbnail_url,
+    is_public: updates.is_public,
+  };
+
+  // Remove undefined values
+  Object.keys(safeUpdates).forEach(key => {
+    if (safeUpdates[key] === undefined) delete safeUpdates[key];
+  });
+
+  const { data, error } = await supabase
+    .from('athlete_videos')
+    .update(safeUpdates)
+    .eq('id', videoId)
+    .eq('athlete_id', athleteId)
+    .select()
+    .single();
+
+  return { video: data, error };
+}
+
+/**
+ * Delete a video
+ * @param {string} videoId - Video ID
+ * @returns {Promise<{error: Error | null}>}
+ */
+export async function deleteVideo(videoId) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { error: new Error('Athlete profile not found') };
+  }
+
+  const { error } = await supabase
+    .from('athlete_videos')
+    .delete()
+    .eq('id', videoId)
+    .eq('athlete_id', athleteId);
+
+  return { error };
+}
+
+/**
+ * Record a video view
+ * @param {string} videoId - Video ID
+ * @returns {Promise<{error: Error | null}>}
+ */
+export async function recordVideoView(videoId) {
+  const supabase = await getSupabaseClient();
+
+  const { error } = await supabase.rpc('increment_video_views', { video_id: videoId });
+
+  return { error };
+}
+
+// ============================================================================
+// MONETIZATION SETTINGS
+// ============================================================================
+
+/**
+ * Get athlete monetization settings
+ * @returns {Promise<{settings: object | null, error: Error | null}>}
+ */
+export async function getMonetizationSettings() {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { settings: null, error: new Error('Athlete profile not found') };
+  }
+
+  const { data, error } = await supabase
+    .from('athlete_monetization_settings')
+    .select('*')
+    .eq('athlete_id', athleteId)
+    .single();
+
+  // Return default settings if none exist
+  if (error?.code === 'PGRST116') {
+    return {
+      settings: {
+        accepting_deals: true,
+        min_deal_value: 0,
+        preferred_deal_types: ['social_post', 'appearance', 'endorsement'],
+        social_post_rate: null,
+        appearance_rate: null,
+        endorsement_rate: null,
+        auto_respond: false,
+        availability: 'open',
+        notification_email: true,
+        notification_push: true,
+      },
+      error: null,
+    };
+  }
+
+  return { settings: data, error };
+}
+
+/**
+ * Update athlete monetization settings
+ * @param {object} settings - Settings to update
+ * @returns {Promise<{settings: object | null, error: Error | null}>}
+ */
+export async function updateMonetizationSettings(settings) {
+  const supabase = await getSupabaseClient();
+  const athleteId = await getMyAthleteId();
+
+  if (!athleteId) {
+    return { settings: null, error: new Error('Athlete profile not found') };
+  }
+
+  const { data, error } = await supabase
+    .from('athlete_monetization_settings')
+    .upsert({
+      athlete_id: athleteId,
+      ...settings,
+      updated_at: new Date().toISOString(),
+    })
+    .select()
+    .single();
+
+  return { settings: data, error };
+}
+
 export default {
   // Profile management
   createAthleteProfile,
@@ -678,6 +930,18 @@ export default {
   getNotifications,
   markNotificationsAsRead,
   markAllNotificationsAsRead,
+
+  // Video highlights
+  uploadHighlightVideo,
+  getMyVideos,
+  getAthleteVideos,
+  updateVideo,
+  deleteVideo,
+  recordVideoView,
+
+  // Monetization settings
+  getMonetizationSettings,
+  updateMonetizationSettings,
 
   // Constants
   DIVISIONS,

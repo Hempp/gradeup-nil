@@ -173,6 +173,16 @@ export {
   getNotifications,
   markNotificationsAsRead,
   markAllNotificationsAsRead,
+  // Video highlights
+  uploadHighlightVideo,
+  getMyVideos,
+  getAthleteVideos,
+  updateVideo,
+  deleteVideo,
+  recordVideoView,
+  // Monetization settings
+  getMonetizationSettings,
+  updateMonetizationSettings,
   DIVISIONS,
   VERIFICATION_TYPES,
   VERIFICATION_STATUS,
@@ -195,7 +205,16 @@ export {
   subscribeToDealMessages,
   subscribeToMyDeals,
   getDealStats,
+  // Athlete-initiated proposals
+  createProposal,
+  updateProposal,
+  sendProposal,
+  getMyProposals,
+  getProposalById,
+  deleteProposal,
+  withdrawProposal,
   DEAL_STATUS,
+  PROPOSAL_STATUS,
 } from './deals.js';
 
 export {
