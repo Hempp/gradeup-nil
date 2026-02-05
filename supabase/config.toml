@@ -1,0 +1,104 @@
+# GradeUp NIL - Supabase Configuration
+# https://supabase.com/docs/guides/cli/config
+
+[project]
+id = "gradeup-nil"
+name = "GradeUp NIL Platform"
+
+[api]
+# Port to use for the API URL
+port = 54321
+# Schemas to expose in your API
+schemas = ["public", "graphql_public"]
+# Extra schemas to add to the search_path
+extra_search_path = ["public", "extensions"]
+# Maximum number of rows to return from a view, table, or function
+max_rows = 1000
+
+[db]
+# Port to use for the database URL
+port = 54322
+# Password for the `postgres` user
+password = "postgres"
+# Major version of PostgreSQL to use
+major_version = 15
+
+[studio]
+# Port to use for Supabase Studio
+port = 54323
+# External URL of the API server
+api_url = "http://localhost"
+
+# Email auth configuration
+[auth]
+enabled = true
+# Site URL to be used in email templates
+site_url = "http://localhost:3000"
+# Additional redirect URLs allowed for auth
+additional_redirect_urls = ["http://localhost:3000"]
+# JWT expiration time in seconds
+jwt_expiry = 3600
+# Enable email confirmations
+enable_signup = true
+enable_confirmations = true
+
+[auth.email]
+# Enable email provider
+enabled = true
+# Enable double confirm
+double_confirm_changes = true
+# Enable email OTP
+enable_signup = true
+
+[auth.sms]
+# SMS disabled by default
+enabled = false
+
+[auth.external.google]
+# Configure Google OAuth (add credentials in dashboard)
+enabled = false
+
+[auth.external.apple]
+# Configure Apple OAuth (add credentials in dashboard)
+enabled = false
+
+# Storage configuration
+[storage]
+enabled = true
+# Storage file size limit (50MB)
+file_size_limit = "50MiB"
+
+# Realtime configuration
+[realtime]
+enabled = true
+# Enable broadcast for realtime
+ip_version = "ipv6"
+
+# Analytics configuration
+[analytics]
+enabled = true
+# Backend for analytics (postgres or bigquery)
+backend = "postgres"
+
+# Edge Functions configuration
+[functions]
+# Verify JWT by default
+verify_jwt = true
+
+# Local development settings
+[local]
+# Enable anonymous key for local development
+enable_anonymous = true
+
+# Database pooler configuration (for production scaling)
+[db.pooler]
+enabled = true
+# Pool mode: transaction, session, or statement
+pool_mode = "transaction"
+# Default pool size
+default_pool_size = 15
+
+# Security settings
+[security]
+# Enable RLS by default on new tables
+enable_rls = true
