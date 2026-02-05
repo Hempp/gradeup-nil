@@ -399,6 +399,35 @@
         submitBtn.textContent = 'Sign In';
         form.appendChild(submitBtn);
 
+        // Demo access section
+        const demoSection = document.createElement('div');
+        demoSection.className = 'demo-access';
+        demoSection.style.cssText = 'margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-800); text-align: center;';
+
+        const demoLabel = document.createElement('p');
+        demoLabel.style.cssText = 'font-size: 0.75rem; color: var(--gray-500); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;';
+        demoLabel.textContent = 'Quick Demo Access';
+
+        const demoButtons = document.createElement('div');
+        demoButtons.style.cssText = 'display: flex; gap: 0.75rem;';
+
+        const athleteDemo = document.createElement('a');
+        athleteDemo.href = 'athlete-dashboard.html';
+        athleteDemo.className = 'btn btn-outline';
+        athleteDemo.style.cssText = 'flex: 1; font-size: 0.875rem;';
+        athleteDemo.textContent = 'Athlete Demo';
+
+        const brandDemo = document.createElement('a');
+        brandDemo.href = 'brand-dashboard.html';
+        brandDemo.className = 'btn btn-outline';
+        brandDemo.style.cssText = 'flex: 1; font-size: 0.875rem;';
+        brandDemo.textContent = 'Brand Demo';
+
+        demoButtons.appendChild(athleteDemo);
+        demoButtons.appendChild(brandDemo);
+        demoSection.appendChild(demoLabel);
+        demoSection.appendChild(demoButtons);
+
         // Footer
         const footer = document.createElement('div');
         footer.className = 'modal-footer';
@@ -416,6 +445,7 @@
 
         container.appendChild(header);
         container.appendChild(form);
+        container.appendChild(demoSection);
         container.appendChild(footer);
 
         return container;
@@ -946,20 +976,28 @@
     // ─── Form Handlers ───
     function handleLogin(e) {
         e.preventDefault();
-        alert('Login functionality coming soon! This is a demo.');
+        const email = document.getElementById('email').value;
         closeModal();
+        // Demo: redirect based on email domain hint
+        if (email.includes('brand') || email.includes('company') || email.includes('corp')) {
+            window.location.href = 'brand-dashboard.html';
+        } else {
+            window.location.href = 'athlete-dashboard.html';
+        }
     }
 
     function handleAthleteSignup(e) {
         e.preventDefault();
-        alert('Thank you for signing up! Athlete verification will begin shortly. This is a demo.');
         closeModal();
+        // Redirect to athlete dashboard
+        window.location.href = 'athlete-dashboard.html';
     }
 
     function handleBrandSignup(e) {
         e.preventDefault();
-        alert('Thank you for signing up! Our team will contact you shortly. This is a demo.');
         closeModal();
+        // Redirect to brand dashboard
+        window.location.href = 'brand-dashboard.html';
     }
 
     // ─── Initialize ───
