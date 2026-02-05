@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Apex Sports Co. - Gold Scholar Sponsor on GradeUp NIL. View partnership opportunities and connect with verified scholar-athletes.">
+    <meta name="theme-color" content="#000000">
+    <title>Apex Sports Co. | Brand Profile | GradeUp NIL</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Brand Profile Specific Styles -->
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           BRAND PROFILE PAGE - Premium Design System
+           Nike x Apple Inspired
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        /* ─── Page Layout ─── */
+        .brand-profile-page {
+            min-height: 100vh;
+            background: var(--black);
+            padding-top: 80px;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ─── Glass Card ─── */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.95) 100%);
+            border: 1px solid var(--gray-800);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s var(--ease);
+        }
+
+        .glass-card:hover {
+            border-color: var(--gray-700);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .card-action {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--cyan);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .card-action:hover {
+            opacity: 0.8;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* ─── Brand Hero Section ─── */
+        .brand-hero {
+            position: relative;
+            margin-bottom: 2rem;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .brand-hero-banner {
+            height: 280px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-hero-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 30%, rgba(0, 240, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 40% at 80% 70%, rgba(255, 0, 255, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .brand-hero-banner-pattern {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.5;
+        }
+
+        .brand-hero-content {
+            position: relative;
+            padding: 0 2.5rem 2.5rem;
+            margin-top: -100px;
+        }
+
+        .brand-logo-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand-logo {
+            width: 160px;
+            height: 160px;
+            background: var(--gray-900);
+            border: 4px solid var(--gray-800);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--cyan);
+            letter-spacing: -0.02em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .brand-logo-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-badges {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .sponsor-tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .sponsor-tier-badge.gold {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: var(--black);
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+        }
+
+        .sponsor-tier-badge.silver {
+            background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+            color: var(--black);
+        }
+
+        .sponsor-tier-badge.bronze {
+            background: linear-gradient(135deg, #cd7f32, #b5651d);
+            color: var(--white);
+        }
+
+        .sponsor-tier-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .verified-badge-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .verified-badge-brand svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .brand-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .brand-details {
+            flex: 1;
+        }
+
+        .brand-name {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-industry {
+            font-size: 1rem;
+            color: var(--cyan);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .brand-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
+            color: var(--gray-400);
+        }
+
+        .brand-location svg {
+            width: 16px;
+            height: 16px;
+            color: var(--gray-500);
+        }
+
+        .brand-actions {
+            display: flex;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .btn-view-opportunities {
+            padding: 1rem 2rem;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--black);
+            background: linear-gradient(135deg, var(--cyan), #00a0ff);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s var(--ease);
+        }
+
+        .btn-view-opportunities:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-contact-brand {
+            padding: 1rem 2rem;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--white);
+            background: transparent;
+            border: 2px solid var(--gray-700);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s var(--ease);
+        }
+
+        .btn-contact-brand:hover {
+            border-color: var(--white);
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* ─── Main Content Grid ─── */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* ─── Company Overview ─── */
+        .company-overview {
+            line-height: 1.7;
+        }
+
+        .overview-description {
+            font-size: 1rem;
+            color: var(--gray-300);
+            margin-bottom: 1.5rem;
+        }
+
+        .overview-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .meta-value a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .meta-value a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .company-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .value-tag {
+            padding: 0.5rem 1rem;
+            background: var(--gray-800);
+            border-radius: 100px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--gray-300);
+        }
+
+        /* ─── Stats Grid ─── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 16px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s var(--ease);
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyan);
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 0.75rem;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--cyan);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .star-rating svg {
+            width: 20px;
+            height: 20px;
+            color: var(--gold);
+            fill: var(--gold);
+        }
+
+        .star-rating svg.empty {
+            fill: none;
+            stroke: var(--gray-600);
+        }
+
+        /* ─── Active Opportunities ─── */
+        .opportunities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .opportunity-card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+            transition: all 0.3s var(--ease);
+        }
+
+        .opportunity-card:hover {
+            border-color: var(--cyan);
+            transform: translateX(4px);
+        }
+
+        .opportunity-info h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .opportunity-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .opportunity-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.8125rem;
+            color: var(--gray-400);
+        }
+
+        .opportunity-meta-item svg {
+            width: 14px;
+            height: 14px;
+            color: var(--gray-500);
+        }
+
+        .opportunity-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .opportunity-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--gray-800);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-300);
+        }
+
+        .opportunity-tag.required {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .opportunity-compensation {
+            text-align: right;
+        }
+
+        .compensation-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+            margin-bottom: 0.25rem;
+        }
+
+        .compensation-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cyan);
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-apply {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--black);
+            background: var(--cyan);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s var(--ease);
+        }
+
+        .btn-apply:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* ─── Past Partnerships ─── */
+        .partnerships-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .partnership-card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s var(--ease);
+        }
+
+        .partnership-card:hover {
+            border-color: var(--gray-700);
+            transform: translateY(-4px);
+        }
+
+        .partnership-image {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .partnership-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s var(--ease);
+        }
+
+        .partnership-card:hover .partnership-image img {
+            transform: scale(1.05);
+        }
+
+        .partnership-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--success);
+            color: var(--black);
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 4px;
+        }
+
+        .partnership-content {
+            padding: 1rem;
+        }
+
+        .partnership-athlete {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .partnership-details {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            margin-bottom: 0.75rem;
+        }
+
+        .partnership-testimonial {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+            font-style: italic;
+            line-height: 1.5;
+            position: relative;
+            padding-left: 1rem;
+            border-left: 2px solid var(--cyan);
+        }
+
+        /* ─── Athlete Matches ─── */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .match-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            transition: all 0.3s var(--ease);
+            cursor: pointer;
+        }
+
+        .match-card:hover {
+            border-color: var(--cyan);
+            transform: translateX(4px);
+        }
+
+        .match-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .match-info {
+            flex: 1;
+        }
+
+        .match-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .match-school {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-bottom: 0.375rem;
+        }
+
+        .match-reason {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--cyan);
+            font-weight: 500;
+        }
+
+        .match-reason svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .match-score {
+            text-align: center;
+        }
+
+        .match-score-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--lime);
+        }
+
+        .match-score-label {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-600);
+        }
+
+        /* ─── Scholar Sponsor Benefits ─── */
+        .sponsor-benefits {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sponsor-benefits::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .benefits-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .benefits-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .benefits-title {
+            flex: 1;
+        }
+
+        .benefits-title h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.125rem;
+        }
+
+        .benefits-title p {
+            font-size: 0.8125rem;
+            color: var(--gray-400);
+        }
+
+        .benefits-list {
+            padding: 1.5rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .benefit-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .benefit-item:first-child {
+            padding-top: 0;
+        }
+
+        .benefit-check {
+            width: 24px;
+            height: 24px;
+            background: rgba(34, 197, 94, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .benefit-check svg {
+            width: 14px;
+            height: 14px;
+            color: var(--success);
+        }
+
+        .benefit-text h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .benefit-text p {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            line-height: 1.5;
+        }
+
+        /* ─── Quick Stats Sidebar ─── */
+        .quick-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .quick-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .quick-stat-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .quick-stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+
+        .quick-stat-value {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .quick-stat-value.highlight {
+            color: var(--cyan);
+        }
+
+        /* ─── Contact Modal ─── */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .contact-form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .contact-form .form-group label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--gray-300);
+        }
+
+        .contact-form .form-group input,
+        .contact-form .form-group select,
+        .contact-form .form-group textarea {
+            padding: 0.875rem 1rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--white);
+            transition: all 0.2s var(--ease);
+        }
+
+        .contact-form .form-group input::placeholder,
+        .contact-form .form-group textarea::placeholder {
+            color: var(--gray-600);
+        }
+
+        .contact-form .form-group input:focus,
+        .contact-form .form-group select:focus,
+        .contact-form .form-group textarea:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.1);
+        }
+
+        .contact-form .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .contact-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(34, 197, 94, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--success);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                order: -1;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .partnerships-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .brand-info {
+                flex-direction: column;
+            }
+
+            .brand-actions {
+                width: 100%;
+            }
+
+            .brand-actions .btn-view-opportunities,
+            .brand-actions .btn-contact-brand {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .brand-hero-content {
+                padding: 0 1.5rem 1.5rem;
+            }
+
+            .brand-logo-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .brand-logo {
+                width: 120px;
+                height: 120px;
+                font-size: 2.25rem;
+            }
+
+            .brand-name {
+                font-size: 1.75rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .partnerships-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .matches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .opportunity-card {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .opportunity-compensation {
+                text-align: left;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .brand-actions {
+                flex-direction: column;
+            }
+
+            .contact-form .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav scrolled" id="nav">
+        <a href="index.html" class="nav-logo">GRADEUP</a>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#athletes">Athletes</a>
+            <a href="index.html#brands">Brands</a>
+            <a href="index.html#how-it-works">How It Works</a>
+            <a href="athlete-dashboard.html">Athlete Dashboard</a>
+            <a href="brand-dashboard.html">Brand Dashboard</a>
+        </div>
+
+        <div class="nav-actions">
+            <button class="btn btn-ghost" onclick="openModal('login')">Log In</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+        </div>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="index.html#athletes" onclick="closeMobileMenu()">Athletes</a>
+            <a href="index.html#brands" onclick="closeMobileMenu()">Brands</a>
+            <a href="index.html#how-it-works" onclick="closeMobileMenu()">How It Works</a>
+            <a href="athlete-dashboard.html" onclick="closeMobileMenu()">Athlete Dashboard</a>
+            <a href="brand-dashboard.html" onclick="closeMobileMenu()">Brand Dashboard</a>
+            <div class="mobile-menu-buttons">
+                <button class="btn btn-outline btn-block" onclick="openModal('login'); closeMobileMenu()">Log In</button>
+                <button class="btn btn-primary btn-block" onclick="openModal('signup'); closeMobileMenu()">Get Started</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="brand-profile-page">
+        <div class="profile-container">
+            <!-- Brand Hero Section -->
+            <section class="brand-hero glass-card">
+                <div class="brand-hero-banner">
+                    <div class="brand-hero-banner-pattern"></div>
+                </div>
+                <div class="brand-hero-content">
+                    <div class="brand-logo-wrapper">
+                        <div class="brand-logo">
+                            <span class="brand-logo-text">APEX</span>
+                        </div>
+                        <div class="brand-badges">
+                            <span class="sponsor-tier-badge gold">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                                Gold Scholar Sponsor
+                            </span>
+                            <span class="verified-badge-brand">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Verified Brand
+                            </span>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <div class="brand-details">
+                            <h1 class="brand-name">Apex Sports Co.</h1>
+                            <div class="brand-industry">Athletic Apparel & Performance Gear</div>
+                            <div class="brand-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                Portland, Oregon
+                            </div>
+                        </div>
+                        <div class="brand-actions">
+                            <button class="btn-view-opportunities" onclick="scrollToSection('opportunities')">
+                                View Opportunities
+                            </button>
+                            <button class="btn-contact-brand" onclick="openContactModal()">
+                                Contact Brand
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value">147</div>
+                    <div class="stat-label">Athletes Partnered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Active Campaigns</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value">$4,200</div>
+                    <div class="stat-label">Avg Deal Value</div>
+                </div>
+                <div class="stat-card">
+                    <div class="star-rating">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                        <svg viewBox="0 0 24 24" class="empty"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                    </div>
+                    <div class="stat-value">4.8</div>
+                    <div class="stat-label">Athlete Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value">8.2M</div>
+                    <div class="stat-label">Total Reach</div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="profile-grid">
+                <div class="profile-main">
+                    <!-- Company Overview -->
+                    <section class="glass-card">
+                        <div class="card-header">
+                            <h2 class="card-title">About Apex Sports Co.</h2>
+                        </div>
+                        <div class="card-body company-overview">
+                            <p class="overview-description">
+                                Apex Sports Co. is a leading athletic apparel and performance gear company dedicated to empowering the next generation of athletes. Founded in 2015, we believe that athletic excellence and academic achievement go hand in hand. Our mission is to provide cutting-edge performance gear while supporting scholar-athletes who represent the best of both worlds.
+                            </p>
+                            <p class="overview-description">
+                                We partner exclusively with student-athletes who maintain strong academic standing, believing that discipline in the classroom translates to discipline on the field. As a Gold Scholar Sponsor, we are committed to investing in athletes who inspire through both their athletic prowess and their dedication to education.
+                            </p>
+                            <div class="overview-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Industry</span>
+                                    <span class="meta-value">Athletic Apparel & Sportswear</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Founded</span>
+                                    <span class="meta-value">2015</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Website</span>
+                                    <span class="meta-value"><a href="https://apexsports.co" target="_blank" rel="noopener">apexsports.co</a></span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Headquarters</span>
+                                    <span class="meta-value">Portland, OR</span>
+                                </div>
+                            </div>
+                            <div class="company-values">
+                                <span class="value-tag">Performance Innovation</span>
+                                <span class="value-tag">Academic Excellence</span>
+                                <span class="value-tag">Sustainability</span>
+                                <span class="value-tag">Community Impact</span>
+                                <span class="value-tag">Athlete Empowerment</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Active Opportunities -->
+                    <section class="glass-card" id="opportunities">
+                        <div class="card-header">
+                            <h2 class="card-title">Active Opportunities</h2>
+                            <span class="card-action">12 Open Positions</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="opportunities-list">
+                                <!-- Opportunity 1 -->
+                                <div class="opportunity-card">
+                                    <div class="opportunity-info">
+                                        <h4>Spring Collection Ambassador</h4>
+                                        <div class="opportunity-meta">
+                                            <span class="opportunity-meta-item">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                                </svg>
+                                                3 month campaign
+                                            </span>
+                                            <span class="opportunity-meta-item">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                                    <circle cx="12" cy="7" r="4"/>
+                                                </svg>
+                                                5 positions available
+                                            </span>
+                                        </div>
+                                        <div class="opportunity-tags">
+                                            <span class="opportunity-tag">Social Media Posts</span>
+                                            <span class="opportunity-tag">Product Wear</span>
+                                            <span class="opportunity-tag required">3.5+ GPA Required</span>
+                                        </div>
+                                    </div>
+                                    <div class="opportunity-compensation">
+                                        <div class="compensation-label">Compensation</div>
+                                        <div class="compensation-value">$3,000 - $5,000</div>
+                                        <button class="btn-apply" onclick="openContactModal()">Apply Now</button>
+                                    </div>
+                                </div>
+
+                                <!-- Opportunity 2 -->
+                                <div class="opportunity-card">
+                                    <div class="opportunity-info">
+                                        <h4>Game Day Influencer</h4>
+                                        <div class="opportunity-meta">
+                                            <span class="opportunity-meta-item">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                                </svg>
+                                                Season-long partnership
+                                            </span>
+                                            <span class="opportunity-meta-item">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                                    <circle cx="12" cy="7" r="4"/>
+                                                </svg>
+                                                3 positions available
+                                            </span>
+                                        </div>
+                                        <div class="opportunity-tags">
+                                            <span class="opportunity-tag">Instagram Stories</span>
+                                            <span class="opportunity-tag">TikTok Content</span>
+                                            <span class="opportunity-tag">Event Appearances</span>
+                                            <span class="opportunity-tag required">50K+ Followers</span>
+                                        </div>
+                                    </div>
+                                    <div class="opportunity-compensation">
+                                        <div class="compensation-label">Compensation</div>
+                                        <div class="compensation-value">$8,000 - $12,000</div>
+                                        <button class="btn-apply" onclick="openContactModal()">Apply Now</button>
+                                    </div>
+                                </div>
+
+                                <!-- Opportunity 3 -->
+                                <div class="opportunity-card">
+                                    <div class="opportunity-info">
+                                        <h4>Campus Rep Program</h4>
+                                        <div class="opportunity-meta">
+                                            <span class="opportunity-meta-item">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                                </svg>
+                                                Academic year commitment
+                                            </span>
+                                            <span class="opportunity-meta-item">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                                    <circle cx="12" cy="7" r="4"/>
+                                                </svg>
+                                                10 positions available
+                                            </span>
+                                        </div>
+                                        <div class="opportunity-tags">
+                                            <span class="opportunity-tag">Product Distribution</span>
+                                            <span class="opportunity-tag">Brand Activation</span>
+                                            <span class="opportunity-tag">Monthly Content</span>
+                                            <span class="opportunity-tag required">3.0+ GPA Required</span>
+                                        </div>
+                                    </div>
+                                    <div class="opportunity-compensation">
+                                        <div class="compensation-label">Compensation</div>
+                                        <div class="compensation-value">$1,500 + Product</div>
+                                        <button class="btn-apply" onclick="openContactModal()">Apply Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Past Partnerships -->
+                    <section class="glass-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Past Partnerships</h2>
+                            <button class="card-action">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="partnerships-grid">
+                                <div class="partnership-card">
+                                    <div class="partnership-image">
+                                        <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=300&fit=crop&crop=face" alt="Marcus Johnson">
+                                        <span class="partnership-badge">Success Story</span>
+                                    </div>
+                                    <div class="partnership-content">
+                                        <div class="partnership-athlete">Marcus Johnson</div>
+                                        <div class="partnership-details">Duke Basketball - 3.87 GPA</div>
+                                        <p class="partnership-testimonial">"Apex Sports truly values scholar-athletes. They supported both my athletic and academic journey."</p>
+                                    </div>
+                                </div>
+
+                                <div class="partnership-card">
+                                    <div class="partnership-image">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=300&fit=crop&crop=face" alt="Sarah Chen">
+                                        <span class="partnership-badge">Success Story</span>
+                                    </div>
+                                    <div class="partnership-content">
+                                        <div class="partnership-athlete">Sarah Chen</div>
+                                        <div class="partnership-details">Stanford Soccer - 3.92 GPA</div>
+                                        <p class="partnership-testimonial">"The partnership was seamless and professional. Highly recommend working with Apex."</p>
+                                    </div>
+                                </div>
+
+                                <div class="partnership-card">
+                                    <div class="partnership-image">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=300&fit=crop&crop=face" alt="Darius Thompson">
+                                        <span class="partnership-badge">Success Story</span>
+                                    </div>
+                                    <div class="partnership-content">
+                                        <div class="partnership-athlete">Darius Thompson</div>
+                                        <div class="partnership-details">Ohio State Football - 3.65 GPA</div>
+                                        <p class="partnership-testimonial">"Working with Apex helped me build my personal brand while staying focused on my degree."</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Athlete Matches -->
+                    <section class="glass-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recommended Athletes</h2>
+                            <span class="card-action">Based on Industry Match</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="matches-grid">
+                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                    <img class="match-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson">
+                                    <div class="match-info">
+                                        <div class="match-name">James Wilson</div>
+                                        <div class="match-school">Alabama Football - Business Admin</div>
+                                        <div class="match-reason">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                                <polyline points="22 4 12 14.01 9 11.01"/>
+                                            </svg>
+                                            Sports Marketing major
+                                        </div>
+                                    </div>
+                                    <div class="match-score">
+                                        <div class="match-score-value">94%</div>
+                                        <div class="match-score-label">Match</div>
+                                    </div>
+                                </div>
+
+                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                    <img class="match-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Maya Rodriguez">
+                                    <div class="match-info">
+                                        <div class="match-name">Maya Rodriguez</div>
+                                        <div class="match-school">UCLA Volleyball - Biology</div>
+                                        <div class="match-reason">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                                <polyline points="22 4 12 14.01 9 11.01"/>
+                                            </svg>
+                                            Fitness content creator
+                                        </div>
+                                    </div>
+                                    <div class="match-score">
+                                        <div class="match-score-value">91%</div>
+                                        <div class="match-score-label">Match</div>
+                                    </div>
+                                </div>
+
+                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                    <img class="match-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" alt="Emily Park">
+                                    <div class="match-info">
+                                        <div class="match-name">Emily Park</div>
+                                        <div class="match-school">Michigan Tennis - Psychology</div>
+                                        <div class="match-reason">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                                <polyline points="22 4 12 14.01 9 11.01"/>
+                                            </svg>
+                                            High engagement rate
+                                        </div>
+                                    </div>
+                                    <div class="match-score">
+                                        <div class="match-score-value">88%</div>
+                                        <div class="match-score-label">Match</div>
+                                    </div>
+                                </div>
+
+                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                    <img class="match-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Michael Torres">
+                                    <div class="match-info">
+                                        <div class="match-name">Michael Torres</div>
+                                        <div class="match-school">Texas Basketball - Kinesiology</div>
+                                        <div class="match-reason">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                                <polyline points="22 4 12 14.01 9 11.01"/>
+                                            </svg>
+                                            Athletic apparel niche
+                                        </div>
+                                    </div>
+                                    <div class="match-score">
+                                        <div class="match-score-value">85%</div>
+                                        <div class="match-score-label">Match</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="profile-sidebar">
+                    <!-- Scholar Sponsor Benefits -->
+                    <section class="glass-card sponsor-benefits">
+                        <div class="benefits-header">
+                            <div class="benefits-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                            </div>
+                            <div class="benefits-title">
+                                <h3>Gold Scholar Sponsor</h3>
+                                <p>Premium partnership benefits</p>
+                            </div>
+                        </div>
+                        <div class="benefits-list">
+                            <div class="benefit-item">
+                                <div class="benefit-check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="benefit-text">
+                                    <h4>Priority Athlete Access</h4>
+                                    <p>First access to new athlete profiles matching your criteria</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="benefit-text">
+                                    <h4>Dedicated Support</h4>
+                                    <p>Personal account manager for all partnership inquiries</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="benefit-text">
+                                    <h4>Scholar Tier Athletes</h4>
+                                    <p>Exclusive access to athletes with 3.5+ GPA</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="benefit-text">
+                                    <h4>Featured Placement</h4>
+                                    <p>Highlighted listing in athlete search results</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="benefit-text">
+                                    <h4>Analytics Dashboard</h4>
+                                    <p>Advanced ROI tracking and campaign analytics</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Quick Stats -->
+                    <section class="glass-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Partnership Details</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-stats">
+                                <div class="quick-stat-row">
+                                    <span class="quick-stat-label">Member Since</span>
+                                    <span class="quick-stat-value">January 2023</span>
+                                </div>
+                                <div class="quick-stat-row">
+                                    <span class="quick-stat-label">Response Time</span>
+                                    <span class="quick-stat-value highlight">< 24 hours</span>
+                                </div>
+                                <div class="quick-stat-row">
+                                    <span class="quick-stat-label">Deals Completed</span>
+                                    <span class="quick-stat-value">147</span>
+                                </div>
+                                <div class="quick-stat-row">
+                                    <span class="quick-stat-label">Repeat Rate</span>
+                                    <span class="quick-stat-value highlight">68%</span>
+                                </div>
+                                <div class="quick-stat-row">
+                                    <span class="quick-stat-label">Avg. Campaign Length</span>
+                                    <span class="quick-stat-value">4 months</span>
+                                </div>
+                                <div class="quick-stat-row">
+                                    <span class="quick-stat-label">Sports Covered</span>
+                                    <span class="quick-stat-value">All NCAA Sports</span>
+                                </div>
+                                <div class="quick-stat-row">
+                                    <span class="quick-stat-label">Min GPA Requirement</span>
+                                    <span class="quick-stat-value highlight">3.0+</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Contact CTA -->
+                    <section class="glass-card" id="contactCtaCard">
+                        <div class="card-body" style="text-align: center;">
+                            <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem;">Ready to Partner?</h3>
+                            <p style="font-size: 0.875rem; color: var(--gray-400); margin-bottom: 1.5rem;">Express your interest and share your pitch with Apex Sports Co.</p>
+                            <button class="btn-view-opportunities" style="width: 100%;" onclick="openContactModal()">
+                                Contact Brand
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">GRADEUP</a>
+                    <p>The premier NIL platform for scholar-athletes. Where academic excellence meets athletic greatness.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="#" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Platform</h4>
+                    <a href="index.html#athletes">For Athletes</a>
+                    <a href="index.html#brands">For Brands</a>
+                    <a href="athlete-dashboard.html">Athlete Dashboard</a>
+                    <a href="brand-dashboard.html">Brand Dashboard</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Press</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>2025 GradeUp NIL. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModalOverlay">
+        <div class="modal" id="contactModal">
+            <button class="modal-close" onclick="closeContactModal()" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="modal-content" id="contactModalContent">
+                <!-- Content built by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Signup Modals -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="modal-content" id="modalContent">
+                <!-- Modal content inserted by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM Elements ───
+            const nav = document.getElementById('nav');
+            const navToggle = document.getElementById('navToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modalContent');
+            const contactModalOverlay = document.getElementById('contactModalOverlay');
+            const contactModal = document.getElementById('contactModal');
+            const contactModalContent = document.getElementById('contactModalContent');
+
+            // ─── Navigation ───
+            function initNav() {
+                let lastScroll = 0;
+
+                window.addEventListener('scroll', () => {
+                    const currentScroll = window.pageYOffset;
+
+                    // Hide/show on scroll direction
+                    if (currentScroll > lastScroll && currentScroll > 100) {
+                        nav.classList.add('hidden');
+                    } else {
+                        nav.classList.remove('hidden');
+                    }
+
+                    lastScroll = currentScroll;
+                });
+
+                // Mobile menu toggle
+                navToggle.addEventListener('click', () => {
+                    navToggle.classList.toggle('active');
+                    mobileMenu.classList.toggle('active');
+                    document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+                });
+            }
+
+            // ─── Close Mobile Menu ───
+            window.closeMobileMenu = function() {
+                navToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            // ─── Scroll to Section ───
+            window.scrollToSection = function(sectionId) {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            };
+
+            // ─── Helper: Create Form Group ───
+            function createFormGroup(id, labelText, type, placeholder, required) {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+
+                const label = document.createElement('label');
+                label.htmlFor = id;
+                label.textContent = labelText;
+
+                const input = document.createElement('input');
+                input.type = type;
+                input.id = id;
+                input.placeholder = placeholder;
+                if (required) input.required = true;
+
+                group.appendChild(label);
+                group.appendChild(input);
+
+                return group;
+            }
+
+            // ─── Helper: Create Select Group ───
+            function createSelectGroup(id, labelText, options) {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+
+                const label = document.createElement('label');
+                label.htmlFor = id;
+                label.textContent = labelText;
+
+                const select = document.createElement('select');
+                select.id = id;
+                select.required = true;
+
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    select.appendChild(option);
+                });
+
+                group.appendChild(label);
+                group.appendChild(select);
+
+                return group;
+            }
+
+            // ─── Helper: Create Textarea Group ───
+            function createTextareaGroup(id, labelText, placeholder, required) {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+
+                const label = document.createElement('label');
+                label.htmlFor = id;
+                label.textContent = labelText;
+
+                const textarea = document.createElement('textarea');
+                textarea.id = id;
+                textarea.placeholder = placeholder;
+                if (required) textarea.required = true;
+
+                group.appendChild(label);
+                group.appendChild(textarea);
+
+                return group;
+            }
+
+            // ─── Build Contact Form ───
+            function buildContactForm() {
+                const container = document.createElement('div');
+
+                // Header
+                const header = document.createElement('div');
+                header.className = 'modal-header';
+                header.style.cssText = 'text-align: center; margin-bottom: 1.5rem;';
+
+                const h2 = document.createElement('h2');
+                h2.textContent = 'Contact Apex Sports Co.';
+                h2.style.cssText = 'font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;';
+
+                const p = document.createElement('p');
+                p.textContent = 'Express your interest and share your pitch';
+                p.style.color = 'var(--gray-500)';
+
+                header.appendChild(h2);
+                header.appendChild(p);
+
+                // Form
+                const form = document.createElement('form');
+                form.className = 'contact-form';
+                form.addEventListener('submit', handleContactSubmit);
+
+                // Name row
+                const nameRow = document.createElement('div');
+                nameRow.className = 'form-row';
+                nameRow.appendChild(createFormGroup('contactFirstName', 'First Name', 'text', 'Your first name', true));
+                nameRow.appendChild(createFormGroup('contactLastName', 'Last Name', 'text', 'Your last name', true));
+                form.appendChild(nameRow);
+
+                // Email
+                form.appendChild(createFormGroup('contactEmail', 'Email Address', 'email', 'you@university.edu', true));
+
+                // School/Sport row
+                const schoolRow = document.createElement('div');
+                schoolRow.className = 'form-row';
+                schoolRow.appendChild(createFormGroup('contactSchool', 'School', 'text', 'Your university', true));
+                schoolRow.appendChild(createFormGroup('contactSport', 'Sport', 'text', 'Your sport', true));
+                form.appendChild(schoolRow);
+
+                // Opportunity select
+                form.appendChild(createSelectGroup('contactOpportunity', 'Interested Opportunity', [
+                    { value: '', label: 'Select an opportunity' },
+                    { value: 'spring-ambassador', label: 'Spring Collection Ambassador' },
+                    { value: 'game-day', label: 'Game Day Influencer' },
+                    { value: 'campus-rep', label: 'Campus Rep Program' },
+                    { value: 'general', label: 'General Partnership Inquiry' }
+                ]));
+
+                // GPA/Rate row
+                const rateRow = document.createElement('div');
+                rateRow.className = 'form-row';
+                rateRow.appendChild(createFormGroup('contactGPA', 'Current GPA', 'text', 'e.g., 3.75', true));
+                rateRow.appendChild(createFormGroup('contactRate', 'Rate Expectation', 'text', 'e.g., $2,000 - $4,000', false));
+                form.appendChild(rateRow);
+
+                // Availability
+                form.appendChild(createFormGroup('contactAvailability', 'Availability', 'text', 'e.g., Spring 2025 semester', false));
+
+                // Pitch
+                form.appendChild(createTextareaGroup('contactPitch', 'Your Pitch', 'Tell Apex Sports Co. why you\'d be a great fit for this partnership. Include your social media handles, engagement stats, and what makes you unique...', true));
+
+                // Submit button
+                const submitBtn = document.createElement('button');
+                submitBtn.type = 'submit';
+                submitBtn.className = 'btn btn-primary btn-block';
+                submitBtn.textContent = 'Send Application';
+                submitBtn.style.marginTop = '0.5rem';
+                form.appendChild(submitBtn);
+
+                container.appendChild(header);
+                container.appendChild(form);
+
+                return container;
+            }
+
+            // ─── Build Success Message ───
+            function buildSuccessMessage() {
+                const container = document.createElement('div');
+                container.className = 'success-message';
+
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'success-icon';
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '2');
+                const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polyline.setAttribute('points', '20 6 9 17 4 12');
+                svg.appendChild(polyline);
+                iconDiv.appendChild(svg);
+
+                const h2 = document.createElement('h2');
+                h2.textContent = 'Application Sent!';
+                h2.style.cssText = 'font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--white);';
+
+                const p = document.createElement('p');
+                p.style.cssText = 'color: var(--gray-400); margin-bottom: 2rem; line-height: 1.6;';
+                p.textContent = 'Your application has been sent to Apex Sports Co. They typically respond within 24 hours.';
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'btn btn-primary';
+                closeBtn.textContent = 'Close';
+                closeBtn.addEventListener('click', () => {
+                    closeContactModal();
+                    location.reload();
+                });
+
+                container.appendChild(iconDiv);
+                container.appendChild(h2);
+                container.appendChild(p);
+                container.appendChild(closeBtn);
+
+                return container;
+            }
+
+            // ─── Contact Modal ───
+            window.openContactModal = function() {
+                // Clear and build content
+                while (contactModalContent.firstChild) {
+                    contactModalContent.removeChild(contactModalContent.firstChild);
+                }
+                contactModalContent.appendChild(buildContactForm());
+
+                contactModalOverlay.classList.add('active');
+                contactModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Focus first input
+                const firstInput = contactModal.querySelector('input');
+                if (firstInput) {
+                    setTimeout(() => firstInput.focus(), 100);
+                }
+            };
+
+            window.closeContactModal = function() {
+                contactModalOverlay.classList.remove('active');
+                contactModal.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            // Close contact modal on overlay click
+            contactModalOverlay.addEventListener('click', (e) => {
+                if (e.target === contactModalOverlay) {
+                    closeContactModal();
+                }
+            });
+
+            // ─── Contact Form Handler ───
+            function handleContactSubmit(e) {
+                e.preventDefault();
+
+                // Clear and show success
+                while (contactModalContent.firstChild) {
+                    contactModalContent.removeChild(contactModalContent.firstChild);
+                }
+                contactModalContent.appendChild(buildSuccessMessage());
+            }
+
+            // ─── Build Login Modal ───
+            function buildLoginModal() {
+                const container = document.createElement('div');
+
+                const header = document.createElement('div');
+                header.className = 'modal-header';
+                header.style.cssText = 'text-align: center; margin-bottom: 1.5rem;';
+
+                const h2 = document.createElement('h2');
+                h2.textContent = 'Welcome Back';
+                h2.style.cssText = 'font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;';
+
+                const p = document.createElement('p');
+                p.textContent = 'Sign in to your GradeUp account';
+                p.style.color = 'var(--gray-500)';
+
+                header.appendChild(h2);
+                header.appendChild(p);
+
+                const form = document.createElement('form');
+                form.className = 'modal-form';
+                form.addEventListener('submit', handleLogin);
+
+                form.appendChild(createFormGroup('email', 'Email', 'email', 'you@university.edu', true));
+                form.appendChild(createFormGroup('password', 'Password', 'password', 'Password', true));
+
+                const submitBtn = document.createElement('button');
+                submitBtn.type = 'submit';
+                submitBtn.className = 'btn btn-primary btn-block';
+                submitBtn.textContent = 'Sign In';
+                form.appendChild(submitBtn);
+
+                const footer = document.createElement('div');
+                footer.className = 'modal-footer';
+                footer.style.cssText = 'text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-800);';
+
+                const footerP = document.createElement('p');
+                footerP.style.cssText = 'font-size: 0.875rem; color: var(--gray-500);';
+                footerP.textContent = "Don't have an account? ";
+
+                const signupLink = document.createElement('a');
+                signupLink.href = '#';
+                signupLink.textContent = 'Sign up';
+                signupLink.style.color = 'var(--cyan)';
+                signupLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal('signup');
+                });
+
+                footerP.appendChild(signupLink);
+                footer.appendChild(footerP);
+
+                container.appendChild(header);
+                container.appendChild(form);
+                container.appendChild(footer);
+
+                return container;
+            }
+
+            // ─── Build Signup Modal ───
+            function buildSignupModal() {
+                const container = document.createElement('div');
+
+                const header = document.createElement('div');
+                header.className = 'modal-header';
+                header.style.cssText = 'text-align: center; margin-bottom: 1.5rem;';
+
+                const h2 = document.createElement('h2');
+                h2.textContent = 'Join GradeUp';
+                h2.style.cssText = 'font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;';
+
+                const p = document.createElement('p');
+                p.textContent = 'Choose how you want to use GradeUp';
+                p.style.color = 'var(--gray-500)';
+
+                header.appendChild(h2);
+                header.appendChild(p);
+
+                const options = document.createElement('div');
+                options.className = 'signup-options';
+
+                // Athlete option
+                const athleteBtn = createSignupOption(
+                    'athlete',
+                    "I'm an Athlete",
+                    'Create your profile, get verified, and connect with brands',
+                    'athlete-signup'
+                );
+                options.appendChild(athleteBtn);
+
+                // Brand option
+                const brandBtn = createSignupOption(
+                    'brand',
+                    "I'm a Brand",
+                    'Find and partner with verified scholar-athletes',
+                    'brand-signup'
+                );
+                options.appendChild(brandBtn);
+
+                const footer = document.createElement('div');
+                footer.className = 'modal-footer';
+                footer.style.cssText = 'text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-800);';
+
+                const footerP = document.createElement('p');
+                footerP.style.cssText = 'font-size: 0.875rem; color: var(--gray-500);';
+                footerP.textContent = 'Already have an account? ';
+
+                const loginLink = document.createElement('a');
+                loginLink.href = '#';
+                loginLink.textContent = 'Sign in';
+                loginLink.style.color = 'var(--cyan)';
+                loginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal('login');
+                });
+
+                footerP.appendChild(loginLink);
+                footer.appendChild(footerP);
+
+                container.appendChild(header);
+                container.appendChild(options);
+                container.appendChild(footer);
+
+                return container;
+            }
+
+            // ─── Create Signup Option ───
+            function createSignupOption(type, title, description, modalType) {
+                const btn = document.createElement('button');
+                btn.className = 'signup-option';
+                btn.type = 'button';
+
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'option-icon';
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '1.5');
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                if (type === 'athlete') {
+                    path.setAttribute('d', 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z');
+                } else {
+                    path.setAttribute('d', 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4');
+                }
+                svg.appendChild(path);
+                iconDiv.appendChild(svg);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'option-content';
+                const h3 = document.createElement('h3');
+                h3.textContent = title;
+                const pDesc = document.createElement('p');
+                pDesc.textContent = description;
+                contentDiv.appendChild(h3);
+                contentDiv.appendChild(pDesc);
+
+                const arrowSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                arrowSvg.classList.add('option-arrow');
+                arrowSvg.setAttribute('viewBox', '0 0 24 24');
+                arrowSvg.setAttribute('fill', 'none');
+                arrowSvg.setAttribute('stroke', 'currentColor');
+                arrowSvg.setAttribute('stroke-width', '2');
+                const arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                arrowPath.setAttribute('d', 'M9 5l7 7-7 7');
+                arrowSvg.appendChild(arrowPath);
+
+                btn.appendChild(iconDiv);
+                btn.appendChild(contentDiv);
+                btn.appendChild(arrowSvg);
+
+                btn.addEventListener('click', () => openModal(modalType));
+
+                return btn;
+            }
+
+            // ─── Build Athlete Signup Modal ───
+            function buildAthleteSignupModal() {
+                const container = document.createElement('div');
+
+                const header = document.createElement('div');
+                header.className = 'modal-header';
+                header.style.cssText = 'text-align: center; margin-bottom: 1.5rem;';
+
+                const h2 = document.createElement('h2');
+                h2.textContent = 'Athlete Sign Up';
+                h2.style.cssText = 'font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;';
+
+                const p = document.createElement('p');
+                p.textContent = 'Start your NIL journey today';
+                p.style.color = 'var(--gray-500)';
+
+                header.appendChild(h2);
+                header.appendChild(p);
+
+                const form = document.createElement('form');
+                form.className = 'modal-form';
+                form.addEventListener('submit', handleAthleteSignup);
+
+                const nameRow = document.createElement('div');
+                nameRow.className = 'form-row';
+                nameRow.appendChild(createFormGroup('firstName', 'First Name', 'text', 'Marcus', true));
+                nameRow.appendChild(createFormGroup('lastName', 'Last Name', 'text', 'Johnson', true));
+                form.appendChild(nameRow);
+
+                form.appendChild(createFormGroup('athleteEmail', 'School Email', 'email', 'you@university.edu', true));
+                form.appendChild(createFormGroup('athletePassword', 'Password', 'password', 'Password', true));
+
+                const submitBtn = document.createElement('button');
+                submitBtn.type = 'submit';
+                submitBtn.className = 'btn btn-primary btn-block';
+                submitBtn.textContent = 'Create Account';
+                form.appendChild(submitBtn);
+
+                const footer = document.createElement('div');
+                footer.className = 'modal-footer';
+                footer.style.cssText = 'text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-800);';
+
+                const footerP = document.createElement('p');
+                footerP.style.cssText = 'font-size: 0.875rem; color: var(--gray-500);';
+                footerP.textContent = 'Already have an account? ';
+
+                const loginLink = document.createElement('a');
+                loginLink.href = '#';
+                loginLink.textContent = 'Sign in';
+                loginLink.style.color = 'var(--cyan)';
+                loginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal('login');
+                });
+
+                footerP.appendChild(loginLink);
+                footer.appendChild(footerP);
+
+                container.appendChild(header);
+                container.appendChild(form);
+                container.appendChild(footer);
+
+                return container;
+            }
+
+            // ─── Build Brand Signup Modal ───
+            function buildBrandSignupModal() {
+                const container = document.createElement('div');
+
+                const header = document.createElement('div');
+                header.className = 'modal-header';
+                header.style.cssText = 'text-align: center; margin-bottom: 1.5rem;';
+
+                const h2 = document.createElement('h2');
+                h2.textContent = 'Brand Sign Up';
+                h2.style.cssText = 'font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;';
+
+                const p = document.createElement('p');
+                p.textContent = 'Partner with scholar-athletes';
+                p.style.color = 'var(--gray-500)';
+
+                header.appendChild(h2);
+                header.appendChild(p);
+
+                const form = document.createElement('form');
+                form.className = 'modal-form';
+                form.addEventListener('submit', handleBrandSignup);
+
+                form.appendChild(createFormGroup('companyName', 'Company Name', 'text', 'Your Company', true));
+
+                const nameRow = document.createElement('div');
+                nameRow.className = 'form-row';
+                nameRow.appendChild(createFormGroup('brandFirstName', 'First Name', 'text', 'John', true));
+                nameRow.appendChild(createFormGroup('brandLastName', 'Last Name', 'text', 'Doe', true));
+                form.appendChild(nameRow);
+
+                form.appendChild(createFormGroup('brandEmail', 'Work Email', 'email', 'you@company.com', true));
+                form.appendChild(createFormGroup('brandPassword', 'Password', 'password', 'Password', true));
+
+                const submitBtn = document.createElement('button');
+                submitBtn.type = 'submit';
+                submitBtn.className = 'btn btn-primary btn-block';
+                submitBtn.textContent = 'Create Brand Account';
+                form.appendChild(submitBtn);
+
+                const footer = document.createElement('div');
+                footer.className = 'modal-footer';
+                footer.style.cssText = 'text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-800);';
+
+                const footerP = document.createElement('p');
+                footerP.style.cssText = 'font-size: 0.875rem; color: var(--gray-500);';
+                footerP.textContent = 'Already have an account? ';
+
+                const loginLink = document.createElement('a');
+                loginLink.href = '#';
+                loginLink.textContent = 'Sign in';
+                loginLink.style.color = 'var(--cyan)';
+                loginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal('login');
+                });
+
+                footerP.appendChild(loginLink);
+                footer.appendChild(footerP);
+
+                container.appendChild(header);
+                container.appendChild(form);
+                container.appendChild(footer);
+
+                return container;
+            }
+
+            const modalBuilders = {
+                'login': buildLoginModal,
+                'signup': buildSignupModal,
+                'athlete-signup': buildAthleteSignupModal,
+                'brand-signup': buildBrandSignupModal
+            };
+
+            window.openModal = function(type) {
+                const builder = modalBuilders[type];
+                if (builder) {
+                    // Clear existing content
+                    while (modalContent.firstChild) {
+                        modalContent.removeChild(modalContent.firstChild);
+                    }
+
+                    // Build and append new content
+                    const content = builder();
+                    modalContent.appendChild(content);
+
+                    modalOverlay.classList.add('active');
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+
+                    // Focus first input
+                    const firstInput = modal.querySelector('input');
+                    if (firstInput) {
+                        setTimeout(() => firstInput.focus(), 100);
+                    }
+                }
+            };
+
+            window.closeModal = function() {
+                modalOverlay.classList.remove('active');
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            // Close modal on overlay click
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Close modal on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (modalOverlay.classList.contains('active')) {
+                        closeModal();
+                    }
+                    if (contactModalOverlay.classList.contains('active')) {
+                        closeContactModal();
+                    }
+                }
+            });
+
+            // ─── Form Handlers ───
+            function handleLogin(e) {
+                e.preventDefault();
+                closeModal();
+                window.location.href = 'athlete-dashboard.html';
+            }
+
+            function handleAthleteSignup(e) {
+                e.preventDefault();
+                closeModal();
+                window.location.href = 'athlete-dashboard.html';
+            }
+
+            function handleBrandSignup(e) {
+                e.preventDefault();
+                closeModal();
+                window.location.href = 'brand-dashboard.html';
+            }
+
+            // ─── Initialize ───
+            function init() {
+                initNav();
+            }
+
+            // Run on DOM ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</body>
+</html>

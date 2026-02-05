@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GradeUp NIL - Settings. Manage your account, privacy, notifications, and monetization preferences.">
+    <meta name="theme-color" content="#000000">
+    <title>Settings | GradeUp NIL</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Settings Page Styles -->
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           GRADEUP NIL - Settings Page
+           Nike x Apple Inspired Design
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        /* ─── Layout ─── */
+        .settings-page {
+            min-height: 100vh;
+            background: var(--black);
+        }
+
+        .settings-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 72px;
+            min-height: 100vh;
+        }
+
+        /* ─── Header ─── */
+        .settings-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-900);
+            height: 72px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            border-radius: 8px;
+            transition: all 0.2s var(--ease);
+        }
+
+        .nav-link:hover {
+            color: var(--white);
+            background: var(--gray-900);
+        }
+
+        .nav-link.active {
+            color: var(--black);
+            background: var(--cyan);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .header-icon-btn:hover {
+            border-color: var(--gray-700);
+            color: var(--white);
+        }
+
+        .header-icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--magenta);
+            color: var(--white);
+            font-size: 0.625rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .user-avatar-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            padding-right: 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .user-avatar-btn:hover {
+            border-color: var(--gray-700);
+        }
+
+        .user-avatar-btn img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .user-info {
+            text-align: left;
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--cyan);
+        }
+
+        /* ─── Sidebar ─── */
+        .settings-sidebar {
+            width: 280px;
+            min-width: 280px;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--gray-900);
+            background: var(--gray-950);
+            position: sticky;
+            top: 72px;
+            height: calc(100vh - 72px);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .sidebar-link:hover {
+            color: var(--white);
+            background: var(--gray-900);
+        }
+
+        .sidebar-link.active {
+            color: var(--white);
+            background: rgba(0, 240, 255, 0.1);
+            border-left: 3px solid var(--cyan);
+        }
+
+        .sidebar-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-link.athlete-only {
+            display: none;
+        }
+
+        body.user-athlete .sidebar-link.athlete-only {
+            display: flex;
+        }
+
+        /* ─── Main Content ─── */
+        .settings-main {
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 900px;
+        }
+
+        .settings-section {
+            display: none;
+            animation: fadeIn 0.3s var(--ease);
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-desc {
+            font-size: 0.9375rem;
+            color: var(--gray-500);
+        }
+
+        /* ─── Cards ─── */
+        .settings-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.95) 100%);
+            border: 1px solid var(--gray-800);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-card:hover {
+            border-color: var(--gray-700);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title svg {
+            width: 18px;
+            height: 18px;
+            color: var(--cyan);
+        }
+
+        /* ─── Form Elements ─── */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--gray-300);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            font-family: inherit;
+            color: var(--white);
+            transition: all 0.2s var(--ease);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-600);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.1);
+        }
+
+        .form-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px;
+            padding-right: 2.5rem;
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-top: 0.375rem;
+        }
+
+        .form-error {
+            font-size: 0.75rem;
+            color: var(--error);
+            margin-top: 0.375rem;
+            display: none;
+        }
+
+        .form-group.error .form-input {
+            border-color: var(--error);
+        }
+
+        .form-group.error .form-error {
+            display: block;
+        }
+
+        .form-success {
+            font-size: 0.75rem;
+            color: var(--success);
+            margin-top: 0.375rem;
+        }
+
+        /* ─── Avatar Upload ─── */
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar-preview {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 3px solid var(--gray-800);
+        }
+
+        .avatar-preview .verified-badge {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 28px;
+            height: 28px;
+            background: var(--success);
+            border: 3px solid var(--black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-preview .verified-badge svg {
+            width: 14px;
+            height: 14px;
+            color: var(--white);
+        }
+
+        .avatar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .avatar-actions .btn {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.8125rem;
+        }
+
+        /* ─── Toggle Switch ─── */
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-900);
+        }
+
+        .toggle-item:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-info {
+            flex: 1;
+            padding-right: 1rem;
+        }
+
+        .toggle-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .toggle-desc {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: var(--gray-700);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.2s var(--ease);
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.active {
+            background: var(--success);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s var(--ease);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        /* ─── Radio Options ─── */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .radio-option:hover {
+            border-color: var(--gray-700);
+        }
+
+        .radio-option.selected {
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-600);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s var(--ease);
+        }
+
+        .radio-option.selected .radio-circle {
+            border-color: var(--cyan);
+        }
+
+        .radio-circle::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--cyan);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.2s var(--ease);
+        }
+
+        .radio-option.selected .radio-circle::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .radio-content {
+            flex: 1;
+        }
+
+        .radio-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .radio-desc {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        /* ─── Buttons ─── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-primary {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-800);
+            color: var(--white);
+            border: 1px solid var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-700);
+            border-color: var(--gray-600);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: var(--error);
+            color: var(--white);
+            border-color: var(--error);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        /* ─── Status Badges ─── */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .status-badge.verified {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .status-badge.connected {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--cyan);
+        }
+
+        .status-badge.disconnected {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .status-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ─── Payment Methods ─── */
+        .payment-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+        }
+
+        .payment-card:hover {
+            border-color: var(--gray-700);
+        }
+
+        .payment-card.primary {
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 32px;
+            background: var(--gray-800);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .payment-details {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .payment-action-btn {
+            padding: 0.5rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 6px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .payment-action-btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .payment-action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ─── Connected Accounts ─── */
+        .connection-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+        }
+
+        .connection-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .connection-icon.instagram {
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+        }
+
+        .connection-icon.twitter {
+            background: #1da1f2;
+        }
+
+        .connection-icon.tiktok {
+            background: linear-gradient(135deg, #00f2ea, #ff0050);
+        }
+
+        .connection-icon.stattaq {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+        }
+
+        .connection-icon.school {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        .connection-info {
+            flex: 1;
+        }
+
+        .connection-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .connection-status {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .connection-status.connected {
+            color: var(--success);
+        }
+
+        /* ─── Transaction Table ─── */
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transactions-table th {
+            padding: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            text-align: left;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .transactions-table td {
+            padding: 1rem;
+            font-size: 0.9375rem;
+            color: var(--gray-300);
+            border-bottom: 1px solid var(--gray-900);
+        }
+
+        .transactions-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .transaction-amount.positive {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .transaction-amount.negative {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        /* ─── Rate Cards ─── */
+        .rate-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .rate-card {
+            padding: 1.25rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .rate-card-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 240, 255, 0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+        }
+
+        .rate-card-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .rate-card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.75rem;
+        }
+
+        .rate-card-input {
+            position: relative;
+        }
+
+        .rate-card-input span {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .rate-card-input input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 1.75rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .rate-card-input input:focus {
+            outline: none;
+            border-color: var(--cyan);
+        }
+
+        /* ─── Checkbox Group ─── */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--gray-700);
+        }
+
+        .checkbox-item.checked {
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .checkbox-box {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--gray-600);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s var(--ease);
+        }
+
+        .checkbox-item.checked .checkbox-box {
+            background: var(--cyan);
+            border-color: var(--cyan);
+        }
+
+        .checkbox-box svg {
+            width: 12px;
+            height: 12px;
+            color: var(--black);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.2s var(--ease);
+        }
+
+        .checkbox-item.checked .checkbox-box svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .checkbox-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-300);
+        }
+
+        /* ─── Danger Zone ─── */
+        .danger-zone {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .danger-zone .card-title {
+            color: var(--error);
+        }
+
+        /* ─── Quiet Hours ─── */
+        .quiet-hours {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 10px;
+        }
+
+        .quiet-hours-label {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+
+        .quiet-hours select {
+            padding: 0.5rem 2rem 0.5rem 0.75rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: 0.875rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 14px;
+        }
+
+        /* ─── Save Toast ─── */
+        .save-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 1rem 1.5rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s var(--ease);
+            z-index: 1000;
+        }
+
+        .save-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .save-toast.success {
+            border-color: var(--success);
+        }
+
+        .save-toast-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--success);
+        }
+
+        .save-toast-text {
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--white);
+        }
+
+        /* ─── User Type Switch ─── */
+        .user-type-switch {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .user-type-switch span {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+
+        .user-type-buttons {
+            display: flex;
+            background: var(--gray-800);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .user-type-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .user-type-btn.active {
+            color: var(--black);
+            background: var(--cyan);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .settings-container {
+                flex-direction: column;
+            }
+
+            .settings-sidebar {
+                width: 100%;
+                min-width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--gray-900);
+                padding: 1.5rem;
+            }
+
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .sidebar-link {
+                padding: 0.625rem 1rem;
+                font-size: 0.8125rem;
+            }
+
+            .sidebar-link.active {
+                border-left: none;
+                border-bottom: 2px solid var(--cyan);
+            }
+
+            .settings-main {
+                padding: 1.5rem;
+            }
+
+            .rate-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .settings-header {
+                padding: 1rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .avatar-upload {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .transactions-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body class="user-athlete">
+    <!-- Header -->
+    <header class="settings-header">
+        <div class="header-left">
+            <a href="index.html" class="logo">GRADEUP</a>
+            <nav class="header-nav">
+                <a href="athlete-dashboard.html" class="nav-link">Dashboard</a>
+                <a href="opportunities.html" class="nav-link">Opportunities</a>
+                <a href="messages.html" class="nav-link">Messages</a>
+                <a href="settings.html" class="nav-link active">Settings</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <button class="header-icon-btn" aria-label="Notifications">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="notification-badge">3</span>
+            </button>
+            <button class="header-icon-btn" aria-label="Messages">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+            </button>
+            <div class="user-avatar-btn">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Profile">
+                <div class="user-info">
+                    <div class="user-name">Marcus Johnson</div>
+                    <div class="user-role">Gold Scholar</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="settings-container">
+        <!-- Sidebar -->
+        <aside class="settings-sidebar">
+            <h1 class="sidebar-title">Settings</h1>
+            <nav class="sidebar-nav">
+                <button class="sidebar-link active" data-section="profile">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Profile Settings
+                </button>
+                <button class="sidebar-link" data-section="account">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                    Account Settings
+                </button>
+                <button class="sidebar-link" data-section="privacy">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Privacy & Security
+                </button>
+                <button class="sidebar-link" data-section="notifications">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    Notifications
+                </button>
+                <button class="sidebar-link athlete-only" data-section="monetization">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    Monetization
+                </button>
+                <button class="sidebar-link" data-section="billing">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    Billing & Payments
+                </button>
+                <button class="sidebar-link" data-section="connections">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                    Connected Accounts
+                </button>
+                <button class="sidebar-link" data-section="help">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    Help & Support
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="settings-main">
+            <!-- Demo User Type Switch -->
+            <div class="user-type-switch">
+                <span>Demo Mode - View as:</span>
+                <div class="user-type-buttons">
+                    <button class="user-type-btn active" data-type="athlete">Athlete</button>
+                    <button class="user-type-btn" data-type="brand">Brand</button>
+                </div>
+            </div>
+
+            <!-- Profile Settings Section -->
+            <section id="profile" class="settings-section active">
+                <div class="section-header">
+                    <h2 class="section-title">Profile Settings</h2>
+                    <p class="section-desc">Manage your public profile information</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Profile Photo</h3>
+                    <div class="avatar-upload">
+                        <div class="avatar-preview">
+                            <img id="avatarImage" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Profile Photo">
+                            <div class="verified-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="avatar-actions">
+                            <button class="btn btn-secondary" onclick="document.getElementById('avatarInput').click()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                Upload Photo
+                            </button>
+                            <button class="btn btn-secondary">Remove</button>
+                            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    <p class="form-hint">Recommended: Square image, at least 400x400px. Max 5MB.</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Basic Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">First Name</label>
+                            <input type="text" id="firstName" class="form-input" value="Marcus" placeholder="Enter first name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">Last Name</label>
+                            <input type="text" id="lastName" class="form-input" value="Johnson" placeholder="Enter last name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="bio">Bio</label>
+                        <textarea id="bio" class="form-input" placeholder="Tell brands and fans about yourself...">Junior quarterback at Ohio State. 3x Academic All-Big Ten. Passionate about fitness, education, and inspiring the next generation of student-athletes.</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="city">City</label>
+                            <input type="text" id="city" class="form-input" value="Columbus" placeholder="City">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="state">State</label>
+                            <select id="state" class="form-input">
+                                <option value="OH" selected>Ohio</option>
+                                <option value="CA">California</option>
+                                <option value="TX">Texas</option>
+                                <option value="FL">Florida</option>
+                                <option value="NY">New York</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Athlete-Specific Fields -->
+                <div class="settings-card athlete-only-card">
+                    <h3 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                            <line x1="9" y1="9" x2="9.01" y2="9"/>
+                            <line x1="15" y1="9" x2="15.01" y2="9"/>
+                        </svg>
+                        Athletic Information
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="school">School / University</label>
+                            <input type="text" id="school" class="form-input" value="Ohio State University" placeholder="Enter school name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sport">Sport</label>
+                            <select id="sport" class="form-input">
+                                <option value="football" selected>Football</option>
+                                <option value="basketball">Basketball</option>
+                                <option value="soccer">Soccer</option>
+                                <option value="baseball">Baseball</option>
+                                <option value="volleyball">Volleyball</option>
+                                <option value="track">Track & Field</option>
+                                <option value="swimming">Swimming</option>
+                                <option value="tennis">Tennis</option>
+                                <option value="golf">Golf</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="position">Position</label>
+                            <input type="text" id="position" class="form-input" value="Quarterback" placeholder="Enter position">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="year">Year</label>
+                            <select id="year" class="form-input">
+                                <option value="freshman">Freshman</option>
+                                <option value="sophomore">Sophomore</option>
+                                <option value="junior" selected>Junior</option>
+                                <option value="senior">Senior</option>
+                                <option value="graduate">Graduate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="gpa">GPA</label>
+                            <input type="text" id="gpa" class="form-input" value="3.85" placeholder="0.00">
+                            <p class="form-hint">Verified by your school's registrar</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="major">Major</label>
+                            <input type="text" id="major" class="form-input" value="Business Administration" placeholder="Enter major">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brand-Specific Fields -->
+                <div class="settings-card brand-only-card" style="display: none;">
+                    <h3 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        Company Information
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label" for="companyName">Company Name</label>
+                        <input type="text" id="companyName" class="form-input" value="" placeholder="Enter company name">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="industry">Industry</label>
+                            <select id="industry" class="form-input">
+                                <option value="">Select industry</option>
+                                <option value="sports">Sports & Fitness</option>
+                                <option value="apparel">Apparel & Fashion</option>
+                                <option value="food">Food & Beverage</option>
+                                <option value="tech">Technology</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="retail">Retail</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="companySize">Company Size</label>
+                            <select id="companySize" class="form-input">
+                                <option value="">Select size</option>
+                                <option value="1-10">1-10 employees</option>
+                                <option value="11-50">11-50 employees</option>
+                                <option value="51-200">51-200 employees</option>
+                                <option value="201-500">201-500 employees</option>
+                                <option value="500+">500+ employees</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="website">Website</label>
+                        <input type="url" id="website" class="form-input" placeholder="https://yourcompany.com">
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                        Social Media Handles
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label" for="instagram">Instagram</label>
+                        <input type="text" id="instagram" class="form-input" value="@marcusjohnson_qb" placeholder="@username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="twitter">Twitter / X</label>
+                        <input type="text" id="twitter" class="form-input" value="@MarcusJ_QB1" placeholder="@username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tiktok">TikTok</label>
+                        <input type="text" id="tiktok" class="form-input" value="@marcusjohnsonqb" placeholder="@username">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveSettings('profile')">Save Changes</button>
+                    <button class="btn btn-secondary">Cancel</button>
+                </div>
+            </section>
+
+            <!-- Account Settings Section -->
+            <section id="account" class="settings-section">
+                <div class="section-header">
+                    <h2 class="section-title">Account Settings</h2>
+                    <p class="section-desc">Manage your account credentials and security</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Email Address</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <div style="flex: 1;">
+                                <input type="email" id="email" class="form-input" value="marcus.johnson@osu.edu">
+                                <span class="status-badge verified" style="margin-top: 0.5rem;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Verified
+                                </span>
+                            </div>
+                            <button class="btn btn-secondary">Change Email</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Phone Number</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone</label>
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <input type="tel" id="phone" class="form-input" value="+1 (614) 555-0123" style="flex: 1;">
+                            <button class="btn btn-secondary">Verify</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Change Password</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" class="form-input" placeholder="Enter new password">
+                        <p class="form-hint">Must be at least 8 characters with 1 uppercase, 1 number, and 1 special character</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password">
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Update Password</button>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Two-Factor Authentication</h3>
+                    <div class="toggle-item" style="border: none; padding: 0;">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Enable 2FA</div>
+                            <div class="toggle-desc">Add an extra layer of security to your account using authenticator app</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="settings-card danger-zone">
+                    <h3 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Danger Zone
+                    </h3>
+                    <p style="color: var(--gray-400); margin-bottom: 1rem; font-size: 0.9375rem;">Once you delete your account, there is no going back. Please be certain.</p>
+                    <button class="btn btn-danger">Delete Account</button>
+                </div>
+            </section>
+
+            <!-- Privacy & Security Section -->
+            <section id="privacy" class="settings-section">
+                <div class="section-header">
+                    <h2 class="section-title">Privacy & Security</h2>
+                    <p class="section-desc">Control your privacy settings and data</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Profile Visibility</h3>
+                    <div class="radio-group">
+                        <div class="radio-option selected" onclick="selectRadio(this)">
+                            <div class="radio-circle"></div>
+                            <div class="radio-content">
+                                <div class="radio-title">Public</div>
+                                <div class="radio-desc">Anyone can view your profile and contact you</div>
+                            </div>
+                        </div>
+                        <div class="radio-option" onclick="selectRadio(this)">
+                            <div class="radio-circle"></div>
+                            <div class="radio-content">
+                                <div class="radio-title">Brands Only</div>
+                                <div class="radio-desc">Only verified brands can view your full profile</div>
+                            </div>
+                        </div>
+                        <div class="radio-option" onclick="selectRadio(this)">
+                            <div class="radio-circle"></div>
+                            <div class="radio-content">
+                                <div class="radio-title">Private</div>
+                                <div class="radio-desc">Your profile is hidden from search and discovery</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Privacy Controls</h3>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Show Earnings Publicly</div>
+                            <div class="toggle-desc">Display your total NIL earnings on your profile</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Show Deal History</div>
+                            <div class="toggle-desc">Allow others to see your past brand partnerships</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Activity Status</div>
+                            <div class="toggle-desc">Show when you're online to brands and other users</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Data & Privacy</h3>
+                    <p style="color: var(--gray-400); margin-bottom: 1.5rem; font-size: 0.9375rem;">Request a copy of your data or download your information</p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Download Your Data
+                        </button>
+                        <button class="btn btn-secondary">Request Data Export</button>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveSettings('privacy')">Save Changes</button>
+                    <button class="btn btn-secondary">Cancel</button>
+                </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications" class="settings-section">
+                <div class="section-header">
+                    <h2 class="section-title">Notifications</h2>
+                    <p class="section-desc">Choose how you want to be notified</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Email Notifications</h3>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">New Deal Offers</div>
+                            <div class="toggle-desc">Get notified when brands send you deal offers</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Messages</div>
+                            <div class="toggle-desc">Receive email notifications for new messages</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Deal Updates</div>
+                            <div class="toggle-desc">Status changes on your active deals</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Weekly Digest</div>
+                            <div class="toggle-desc">Summary of your activity and new opportunities</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Marketing Emails</div>
+                            <div class="toggle-desc">Tips, product updates, and promotional content</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Push Notifications</h3>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Enable Push Notifications</div>
+                            <div class="toggle-desc">Receive instant notifications on your device</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Deal Alerts</div>
+                            <div class="toggle-desc">Immediate notification for high-value opportunities</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">SMS Notifications</h3>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Enable SMS Notifications</div>
+                            <div class="toggle-desc">Receive text messages for important updates</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Quiet Hours</h3>
+                    <p style="color: var(--gray-400); margin-bottom: 1rem; font-size: 0.875rem;">Pause notifications during specific hours</p>
+                    <div class="quiet-hours">
+                        <span class="quiet-hours-label">From</span>
+                        <select>
+                            <option>10:00 PM</option>
+                            <option>11:00 PM</option>
+                            <option>12:00 AM</option>
+                        </select>
+                        <span class="quiet-hours-label">to</span>
+                        <select>
+                            <option>6:00 AM</option>
+                            <option>7:00 AM</option>
+                            <option selected>8:00 AM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveSettings('notifications')">Save Changes</button>
+                    <button class="btn btn-secondary">Cancel</button>
+                </div>
+            </section>
+
+            <!-- Monetization Section (Athletes Only) -->
+            <section id="monetization" class="settings-section">
+                <div class="section-header">
+                    <h2 class="section-title">Monetization</h2>
+                    <p class="section-desc">Configure your deal preferences and rates</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Minimum Deal Value</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="minDeal">Minimum deal amount you'll consider</label>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; max-width: 200px;">
+                            <span style="color: var(--gray-400); font-weight: 500;">$</span>
+                            <input type="number" id="minDeal" class="form-input" value="500" min="0" step="50">
+                        </div>
+                        <p class="form-hint">Deals below this amount will be automatically filtered</p>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Rate Cards</h3>
+                    <p style="color: var(--gray-400); margin-bottom: 1.5rem; font-size: 0.875rem;">Set your base rates for different types of deals</p>
+                    <div class="rate-cards">
+                        <div class="rate-card">
+                            <div class="rate-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                            </div>
+                            <div class="rate-card-title">Social Post</div>
+                            <div class="rate-card-input">
+                                <span>$</span>
+                                <input type="number" value="750" min="0" step="50">
+                            </div>
+                        </div>
+                        <div class="rate-card">
+                            <div class="rate-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                            <div class="rate-card-title">Appearance</div>
+                            <div class="rate-card-input">
+                                <span>$</span>
+                                <input type="number" value="2500" min="0" step="100">
+                            </div>
+                        </div>
+                        <div class="rate-card">
+                            <div class="rate-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5"/>
+                                    <path d="M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <div class="rate-card-title">Endorsement</div>
+                            <div class="rate-card-input">
+                                <span>$</span>
+                                <input type="number" value="5000" min="0" step="500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Preferred Deal Types</h3>
+                    <p style="color: var(--gray-400); margin-bottom: 1rem; font-size: 0.875rem;">Select the types of deals you're interested in</p>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item checked" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">Social Media Posts</span>
+                        </div>
+                        <div class="checkbox-item checked" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">Brand Ambassadorship</span>
+                        </div>
+                        <div class="checkbox-item checked" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">Appearances</span>
+                        </div>
+                        <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">Product Endorsement</span>
+                        </div>
+                        <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">Autograph Signing</span>
+                        </div>
+                        <div class="checkbox-item checked" onclick="toggleCheckbox(this)">
+                            <div class="checkbox-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">Camps & Clinics</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Auto-Decline Settings</h3>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Auto-decline low offers</div>
+                            <div class="toggle-desc">Automatically decline deals below your minimum value</div>
+                        </div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Auto-decline competing brands</div>
+                            <div class="toggle-desc">Decline offers from competitors of current partners</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Availability Calendar</h3>
+                    <p style="color: var(--gray-400); margin-bottom: 1rem; font-size: 0.875rem;">Sync your calendar to show availability for appearances and events</p>
+                    <button class="btn btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Connect Google Calendar
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveSettings('monetization')">Save Changes</button>
+                    <button class="btn btn-secondary">Cancel</button>
+                </div>
+            </section>
+
+            <!-- Billing & Payments Section -->
+            <section id="billing" class="settings-section">
+                <div class="section-header">
+                    <h2 class="section-title">Billing & Payments</h2>
+                    <p class="section-desc">Manage your payment methods and view transaction history</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Payment Methods</h3>
+                    <div class="payment-card primary">
+                        <div class="payment-icon">VISA</div>
+                        <div class="payment-info">
+                            <div class="payment-name">Visa ending in 4242</div>
+                            <div class="payment-details">Expires 08/2027 - Primary</div>
+                        </div>
+                        <div class="payment-actions">
+                            <button class="payment-action-btn" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="payment-action-btn" title="Remove">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 1rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Payment Method
+                    </button>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Payout Settings</h3>
+                    <div class="connection-item">
+                        <div class="connection-icon" style="background: #00457C;">
+                            <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
+                                <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"/>
+                            </svg>
+                        </div>
+                        <div class="connection-info">
+                            <div class="connection-name">PayPal</div>
+                            <div class="connection-status connected">marcus.j@email.com - Connected</div>
+                        </div>
+                        <button class="btn btn-secondary">Change</button>
+                    </div>
+                    <div class="connection-item" style="margin-top: 0.75rem;">
+                        <div class="connection-icon" style="background: var(--gray-800);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                        </div>
+                        <div class="connection-info">
+                            <div class="connection-name">Bank Account</div>
+                            <div class="connection-status connected">Chase ending in 6789 - Connected</div>
+                        </div>
+                        <button class="btn btn-secondary">Change</button>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Transaction History</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jan 28, 2025</td>
+                                    <td>Nike - Social Media Campaign</td>
+                                    <td class="transaction-amount positive">+$2,500.00</td>
+                                    <td><span class="status-badge verified">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 15, 2025</td>
+                                    <td>Gatorade - Appearance Fee</td>
+                                    <td class="transaction-amount positive">+$1,500.00</td>
+                                    <td><span class="status-badge verified">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 10, 2025</td>
+                                    <td>Platform Fee</td>
+                                    <td class="transaction-amount negative">-$250.00</td>
+                                    <td><span class="status-badge verified">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 5, 2025</td>
+                                    <td>Local Dealership - Endorsement</td>
+                                    <td class="transaction-amount positive">+$3,000.00</td>
+                                    <td><span class="status-badge pending">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 1rem;">View All Transactions</button>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Tax Information</h3>
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9375rem; font-weight: 600; color: var(--white); margin-bottom: 0.25rem;">W-9 Form Status</div>
+                            <span class="status-badge verified">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Submitted & Verified
+                            </span>
+                        </div>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <button class="btn btn-secondary">Update W-9</button>
+                            <button class="btn btn-secondary">Download 1099</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Connected Accounts Section -->
+            <section id="connections" class="settings-section">
+                <div class="section-header">
+                    <h2 class="section-title">Connected Accounts</h2>
+                    <p class="section-desc">Manage your linked accounts and integrations</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">StatTaq Integration</h3>
+                    <div class="connection-item">
+                        <div class="connection-icon stattaq">ST</div>
+                        <div class="connection-info">
+                            <div class="connection-name">StatTaq</div>
+                            <div class="connection-status connected">Connected - Last synced 2 hours ago</div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary">Sync Now</button>
+                            <button class="btn btn-secondary">Disconnect</button>
+                        </div>
+                    </div>
+                    <p class="form-hint" style="margin-top: 1rem;">StatTaq provides your athletic performance data and statistics for your GradeUp Score.</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Social Media</h3>
+                    <div class="connection-item">
+                        <div class="connection-icon instagram">
+                            <svg viewBox="0 0 24 24" fill="white" width="20" height="20">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="white" stroke-width="2"/>
+                                <circle cx="12" cy="12" r="4" fill="none" stroke="white" stroke-width="2"/>
+                                <circle cx="17.5" cy="6.5" r="1.5" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="connection-info">
+                            <div class="connection-name">Instagram</div>
+                            <div class="connection-status connected">@marcusjohnson_qb - 45.2K followers</div>
+                        </div>
+                        <button class="btn btn-secondary">Reconnect</button>
+                    </div>
+                    <div class="connection-item">
+                        <div class="connection-icon twitter">
+                            <svg viewBox="0 0 24 24" fill="white" width="18" height="18">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </div>
+                        <div class="connection-info">
+                            <div class="connection-name">Twitter / X</div>
+                            <div class="connection-status connected">@MarcusJ_QB1 - 28.1K followers</div>
+                        </div>
+                        <button class="btn btn-secondary">Reconnect</button>
+                    </div>
+                    <div class="connection-item">
+                        <div class="connection-icon tiktok">
+                            <svg viewBox="0 0 24 24" fill="white" width="18" height="18">
+                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                            </svg>
+                        </div>
+                        <div class="connection-info">
+                            <div class="connection-name">TikTok</div>
+                            <div class="connection-status" style="color: var(--warning);">Not connected</div>
+                        </div>
+                        <button class="btn btn-primary">Connect</button>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">School Verification</h3>
+                    <div class="connection-item">
+                        <div class="connection-icon school">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                        <div class="connection-info">
+                            <div class="connection-name">Ohio State University</div>
+                            <div class="connection-status connected">Enrollment Verified - Athletics Department</div>
+                        </div>
+                        <span class="status-badge verified">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Verified
+                        </span>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">API Integrations</h3>
+                    <p style="color: var(--gray-400); margin-bottom: 1rem; font-size: 0.9375rem;">Connect third-party services to enhance your profile</p>
+                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            Google Calendar
+                        </button>
+                        <button class="btn btn-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            Gmail
+                        </button>
+                        <button class="btn btn-secondary">Zapier</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help & Support Section -->
+            <section id="help" class="settings-section">
+                <div class="section-header">
+                    <h2 class="section-title">Help & Support</h2>
+                    <p class="section-desc">Get help and contact our support team</p>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Quick Links</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <a href="#" class="connection-item" style="text-decoration: none;">
+                            <div class="connection-icon" style="background: rgba(0, 240, 255, 0.15); color: var(--cyan);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <div class="connection-info">
+                                <div class="connection-name">Help Center</div>
+                                <div class="connection-status">Browse FAQs and guides</div>
+                            </div>
+                        </a>
+                        <a href="#" class="connection-item" style="text-decoration: none;">
+                            <div class="connection-icon" style="background: rgba(0, 240, 255, 0.15); color: var(--cyan);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </div>
+                            <div class="connection-info">
+                                <div class="connection-name">Live Chat</div>
+                                <div class="connection-status">Chat with support team</div>
+                            </div>
+                        </a>
+                        <a href="#" class="connection-item" style="text-decoration: none;">
+                            <div class="connection-icon" style="background: rgba(0, 240, 255, 0.15); color: var(--cyan);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                            <div class="connection-info">
+                                <div class="connection-name">Email Support</div>
+                                <div class="connection-status">support@gradeup.com</div>
+                            </div>
+                        </a>
+                        <a href="#" class="connection-item" style="text-decoration: none;">
+                            <div class="connection-icon" style="background: rgba(0, 240, 255, 0.15); color: var(--cyan);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
+                                </svg>
+                            </div>
+                            <div class="connection-info">
+                                <div class="connection-name">Documentation</div>
+                                <div class="connection-status">API docs and guides</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Contact Support</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="supportSubject">Subject</label>
+                        <select id="supportSubject" class="form-input">
+                            <option value="">Select a topic</option>
+                            <option value="account">Account Issues</option>
+                            <option value="billing">Billing & Payments</option>
+                            <option value="deals">Deal Problems</option>
+                            <option value="verification">Verification Help</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="supportMessage">Message</label>
+                        <textarea id="supportMessage" class="form-input" placeholder="Describe your issue in detail..." rows="5"></textarea>
+                    </div>
+                    <button class="btn btn-primary">Send Message</button>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">Legal</h3>
+                    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">Terms of Service</a>
+                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">Privacy Policy</a>
+                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">NCAA Compliance</a>
+                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">Cookie Policy</a>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="card-title">App Information</h3>
+                    <div style="color: var(--gray-500); font-size: 0.875rem;">
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: var(--gray-300);">Version:</strong> 2.4.1</p>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: var(--gray-300);">Last Updated:</strong> January 28, 2025</p>
+                        <p><strong style="color: var(--gray-300);">Build:</strong> 2025.01.28.001</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Save Toast -->
+    <div class="save-toast" id="saveToast">
+        <svg class="save-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span class="save-toast-text">Settings saved successfully!</span>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Section Navigation
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function() {
+                // Update active link
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show corresponding section
+                const sectionId = this.dataset.section;
+                document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Toggle Switch
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
+
+        // Radio Selection
+        function selectRadio(element) {
+            const group = element.parentElement;
+            group.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        // Checkbox Toggle
+        function toggleCheckbox(element) {
+            element.classList.toggle('checked');
+        }
+
+        // Save Settings
+        function saveSettings(section) {
+            const toast = document.getElementById('saveToast');
+            toast.classList.add('show', 'success');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Avatar Upload Preview
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // User Type Switch (Demo)
+        document.querySelectorAll('.user-type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.user-type-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const userType = this.dataset.type;
+                if (userType === 'athlete') {
+                    document.body.classList.add('user-athlete');
+                    document.body.classList.remove('user-brand');
+                    document.querySelectorAll('.athlete-only-card').forEach(el => el.style.display = 'block');
+                    document.querySelectorAll('.brand-only-card').forEach(el => el.style.display = 'none');
+                } else {
+                    document.body.classList.remove('user-athlete');
+                    document.body.classList.add('user-brand');
+                    document.querySelectorAll('.athlete-only-card').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('.brand-only-card').forEach(el => el.style.display = 'block');
+                }
+            });
+        });
+
+        // Form Validation Example
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('blur', function() {
+                const group = this.closest('.form-group');
+                if (group && this.required && !this.value) {
+                    group.classList.add('error');
+                } else if (group) {
+                    group.classList.remove('error');
+                }
+            });
+        });
+
+        // Mobile sidebar toggle (for future enhancement)
+        // Could add hamburger menu functionality here
+    </script>
+</body>
+</html>

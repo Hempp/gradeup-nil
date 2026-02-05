@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GradeUp NIL - Message Center. Connect and communicate with brands and athletes.">
+    <meta name="theme-color" content="#000000">
+    <title>Messages | GradeUp NIL</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Messages Page Styles -->
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           GRADEUP NIL - Messages / Inbox
+           Nike x Apple Inspired Design
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        /* ─── Layout ─── */
+        .messages-page {
+            min-height: 100vh;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-container {
+            flex: 1;
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 72px);
+            margin-top: 72px;
+        }
+
+        /* ─── Header ─── */
+        .messages-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-900);
+            height: 72px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            border-radius: 8px;
+            transition: all 0.2s var(--ease);
+        }
+
+        .nav-link:hover {
+            color: var(--white);
+            background: var(--gray-900);
+        }
+
+        .nav-link.active {
+            color: var(--black);
+            background: var(--cyan);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .header-icon-btn:hover {
+            border-color: var(--gray-700);
+            color: var(--white);
+        }
+
+        .header-icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--magenta);
+            color: var(--white);
+            font-size: 0.625rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .user-avatar-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            padding-right: 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .user-avatar-btn:hover {
+            border-color: var(--gray-700);
+        }
+
+        .user-avatar-btn img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .user-info {
+            text-align: left;
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--cyan);
+        }
+
+        /* ─── Two Panel Layout ─── */
+        .conversations-panel {
+            width: 380px;
+            min-width: 380px;
+            border-right: 1px solid var(--gray-900);
+            display: flex;
+            flex-direction: column;
+            background: var(--gray-950);
+        }
+
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--black);
+        }
+
+        /* ─── Conversations Panel ─── */
+        .conversations-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-900);
+        }
+
+        .conversations-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .conversations-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .new-message-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            background: var(--cyan);
+            color: var(--black);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .new-message-btn:hover {
+            background: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .new-message-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .search-conversations {
+            position: relative;
+        }
+
+        .search-conversations input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            font-size: 0.875rem;
+            color: var(--white);
+            transition: all 0.2s var(--ease);
+        }
+
+        .search-conversations input::placeholder {
+            color: var(--gray-600);
+        }
+
+        .search-conversations input:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.1);
+        }
+
+        .search-conversations svg {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--gray-500);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--gray-900);
+            background: var(--gray-950);
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+            position: relative;
+        }
+
+        .filter-tab:hover {
+            color: var(--white);
+            background: var(--gray-800);
+        }
+
+        .filter-tab.active {
+            color: var(--white);
+            background: var(--gray-800);
+        }
+
+        .filter-tab .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            margin-left: 0.375rem;
+            background: var(--gray-700);
+            font-size: 0.625rem;
+            font-weight: 700;
+            border-radius: 9px;
+        }
+
+        .filter-tab.active .badge {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        /* Conversations List */
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-900);
+            cursor: pointer;
+            transition: all 0.15s var(--ease);
+            position: relative;
+        }
+
+        .conversation-item:hover {
+            background: var(--gray-900);
+        }
+
+        .conversation-item.active {
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 3px solid var(--cyan);
+        }
+
+        .conversation-item.unread {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .conversation-avatar {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .conversation-avatar img {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            background: var(--success);
+            border: 3px solid var(--gray-950);
+            border-radius: 50%;
+        }
+
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .conversation-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-item.unread .conversation-name {
+            font-weight: 700;
+        }
+
+        .conversation-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            flex-shrink: 0;
+        }
+
+        .conversation-preview {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .preview-text {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .conversation-item.unread .preview-text {
+            color: var(--gray-300);
+        }
+
+        .unread-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--cyan);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .deal-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            margin-top: 0.5rem;
+            background: rgba(34, 197, 94, 0.15);
+            border-radius: 4px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .deal-indicator.pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .deal-indicator.negotiating {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--cyan);
+        }
+
+        .deal-indicator svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ─── Chat Panel ─── */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-900);
+            background: var(--gray-950);
+        }
+
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-avatar {
+            position: relative;
+        }
+
+        .chat-avatar img {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .chat-avatar .online-indicator {
+            bottom: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            border-width: 2px;
+        }
+
+        .chat-user-details h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .chat-user-status {
+            font-size: 0.75rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .chat-user-status.offline {
+            color: var(--gray-500);
+        }
+
+        .view-profile-link {
+            font-size: 0.75rem;
+            color: var(--cyan);
+            margin-left: 1rem;
+            cursor: pointer;
+        }
+
+        .view-profile-link:hover {
+            text-decoration: underline;
+        }
+
+        .chat-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-action-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 8px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .chat-action-btn:hover {
+            border-color: var(--gray-700);
+            color: var(--white);
+        }
+
+        .chat-action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Deal Card in Chat */
+        .deal-card-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(0, 160, 255, 0.05) 100%);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .deal-card-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .deal-card-label {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+            margin-bottom: 0.125rem;
+        }
+
+        .deal-card-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .deal-card-amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cyan);
+        }
+
+        .deal-card-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            background: rgba(245, 158, 11, 0.15);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--warning);
+        }
+
+        .deal-card-status.accepted {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        .deal-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .deal-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .deal-btn.accept {
+            background: var(--success);
+            color: var(--white);
+            border: none;
+        }
+
+        .deal-btn.accept:hover {
+            background: #1ea550;
+        }
+
+        .deal-btn.counter {
+            background: transparent;
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+        }
+
+        .deal-btn.counter:hover {
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .deal-btn.decline {
+            background: transparent;
+            color: var(--gray-400);
+            border: 1px solid var(--gray-700);
+        }
+
+        .deal-btn.decline:hover {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* Messages Area */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .date-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .date-divider::before,
+        .date-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-800);
+        }
+
+        .date-divider span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            flex-shrink: 0;
+        }
+
+        .message-avatar img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .message.sent .message-avatar {
+            display: none;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .message.sent .message-content {
+            align-items: flex-end;
+        }
+
+        .message-bubble {
+            padding: 0.875rem 1rem;
+            background: var(--gray-900);
+            border-radius: 16px;
+            border-top-left-radius: 4px;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            color: var(--gray-200);
+        }
+
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, var(--cyan), #00a0ff);
+            color: var(--black);
+            border-radius: 16px;
+            border-top-right-radius: 4px;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .message-time {
+            font-size: 0.6875rem;
+            color: var(--gray-600);
+        }
+
+        .message-status {
+            display: flex;
+            align-items: center;
+            color: var(--gray-500);
+        }
+
+        .message-status.read {
+            color: var(--cyan);
+        }
+
+        .message-status svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* System Messages */
+        .system-message {
+            align-self: center;
+            padding: 0.5rem 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            color: var(--gray-400);
+            text-align: center;
+        }
+
+        .system-message.deal-update {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.2);
+            color: var(--cyan);
+        }
+
+        /* Attachment */
+        .message-attachment {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: var(--gray-800);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .attachment-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gray-700);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+        }
+
+        .attachment-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .attachment-info {
+            flex: 1;
+        }
+
+        .attachment-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--white);
+        }
+
+        .attachment-size {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .attachment-download {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-700);
+            border-radius: 6px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .attachment-download:hover {
+            color: var(--cyan);
+        }
+
+        .attachment-download svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Image Attachment */
+        .message-image {
+            max-width: 300px;
+            margin-top: 0.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .message-image img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Message Input */
+        .message-input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-900);
+            background: var(--gray-950);
+        }
+
+        .message-input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.75rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 16px;
+            padding: 0.75rem;
+            transition: all 0.2s var(--ease);
+        }
+
+        .message-input-wrapper:focus-within {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.1);
+        }
+
+        .input-actions-left {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .input-action-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .input-action-btn:hover {
+            color: var(--cyan);
+            background: var(--gray-800);
+        }
+
+        .input-action-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .message-textarea {
+            flex: 1;
+            min-height: 36px;
+            max-height: 120px;
+            padding: 0.5rem 0;
+            background: transparent;
+            border: none;
+            font-size: 0.9375rem;
+            color: var(--white);
+            resize: none;
+            line-height: 1.4;
+        }
+
+        .message-textarea::placeholder {
+            color: var(--gray-600);
+        }
+
+        .message-textarea:focus {
+            outline: none;
+        }
+
+        .input-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .char-count {
+            font-size: 0.6875rem;
+            color: var(--gray-600);
+        }
+
+        .char-count.warning {
+            color: var(--warning);
+        }
+
+        .char-count.error {
+            color: var(--error);
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cyan);
+            border: none;
+            border-radius: 10px;
+            color: var(--black);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .send-btn:hover {
+            background: var(--white);
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: var(--gray-700);
+            color: var(--gray-500);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .send-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ─── Empty States ─── */
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--gray-600);
+        }
+
+        .empty-state-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-desc {
+            font-size: 0.9375rem;
+            color: var(--gray-500);
+            max-width: 300px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ─── Modal ─── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s var(--ease);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.3s var(--ease-spring);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-800);
+            border: none;
+            border-radius: 8px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .modal-close:hover {
+            background: var(--gray-700);
+            color: var(--white);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-search {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .modal-search input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            color: var(--white);
+            transition: all 0.2s var(--ease);
+        }
+
+        .modal-search input::placeholder {
+            color: var(--gray-600);
+        }
+
+        .modal-search input:focus {
+            outline: none;
+            border-color: var(--cyan);
+        }
+
+        .modal-search svg {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--gray-500);
+        }
+
+        .recent-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--gray-800);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .contact-item:hover {
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .contact-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .contact-role {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        /* ─── Actions Dropdown ─── */
+        .actions-dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            min-width: 180px;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            padding: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s var(--ease);
+            z-index: 50;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-300);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s var(--ease);
+        }
+
+        .dropdown-item:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .dropdown-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ─── Mobile Responsive ─── */
+        @media (max-width: 1024px) {
+            .conversations-panel {
+                width: 320px;
+                min-width: 320px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .messages-container {
+                flex-direction: column;
+            }
+
+            .conversations-panel {
+                width: 100%;
+                min-width: 100%;
+                height: auto;
+                max-height: 50vh;
+                display: block;
+            }
+
+            .conversations-panel.hidden {
+                display: none;
+            }
+
+            .chat-panel {
+                flex: 1;
+                display: none;
+            }
+
+            .chat-panel.active {
+                display: flex;
+            }
+
+            .mobile-back-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                background: var(--gray-900);
+                border: 1px solid var(--gray-800);
+                border-radius: 8px;
+                color: var(--gray-400);
+                cursor: pointer;
+                margin-right: 0.75rem;
+            }
+
+            .mobile-back-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-back-btn {
+                display: none;
+            }
+        }
+
+        /* ─── Scrollbar ─── */
+        .conversations-list::-webkit-scrollbar,
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .conversations-list::-webkit-scrollbar-track,
+        .messages-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .conversations-list::-webkit-scrollbar-thumb,
+        .messages-area::-webkit-scrollbar-thumb {
+            background: var(--gray-800);
+            border-radius: 3px;
+        }
+
+        .conversations-list::-webkit-scrollbar-thumb:hover,
+        .messages-area::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-700);
+        }
+    </style>
+</head>
+<body>
+    <div class="messages-page">
+        <!-- Header -->
+        <header class="messages-header">
+            <div class="header-left">
+                <a href="index.html" class="logo">GRADEUP</a>
+                <nav class="header-nav">
+                    <a href="athlete-dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="brand-dashboard.html" class="nav-link">Discover</a>
+                    <a href="messages.html" class="nav-link active">Messages</a>
+                    <a href="#" class="nav-link">Deals</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="user-avatar-btn">
+                    <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="User">
+                    <div class="user-info">
+                        <div class="user-name">Marcus Johnson</div>
+                        <div class="user-role">Athlete</div>
+                    </div>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="messages-container">
+            <!-- Left Panel - Conversations List -->
+            <aside class="conversations-panel" id="conversationsPanel">
+                <div class="conversations-header">
+                    <div class="conversations-title-row">
+                        <h2 class="conversations-title">Messages</h2>
+                        <button class="new-message-btn" onclick="openNewMessageModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            New
+                        </button>
+                    </div>
+                    <div class="search-conversations">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="Search conversations..." id="searchConversations">
+                    </div>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All <span class="badge">6</span></button>
+                    <button class="filter-tab" data-filter="unread">Unread <span class="badge">2</span></button>
+                    <button class="filter-tab" data-filter="deals">Deals <span class="badge">3</span></button>
+                    <button class="filter-tab" data-filter="general">General</button>
+                </div>
+
+                <div class="conversations-list" id="conversationsList">
+                    <!-- Conversation 1 - Unread, Deal Related -->
+                    <div class="conversation-item unread active" data-conversation="1" onclick="selectConversation(1)">
+                        <div class="conversation-avatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                            <span class="online-indicator"></span>
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-header">
+                                <span class="conversation-name">Nike Regional</span>
+                                <span class="conversation-time">2m ago</span>
+                            </div>
+                            <div class="conversation-preview">
+                                <span class="preview-text">We're excited to discuss the partnership details...</span>
+                                <span class="unread-dot"></span>
+                            </div>
+                            <div class="deal-indicator negotiating">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                $5,000 Deal - Negotiating
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversation 2 - Deal Active -->
+                    <div class="conversation-item" data-conversation="2" onclick="selectConversation(2)">
+                        <div class="conversation-avatar">
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop" alt="Gatorade">
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-header">
+                                <span class="conversation-name">Gatorade Sports</span>
+                                <span class="conversation-time">1h ago</span>
+                            </div>
+                            <div class="conversation-preview">
+                                <span class="preview-text">The contract has been signed! Looking forward to...</span>
+                            </div>
+                            <div class="deal-indicator">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                $3,500 Deal - Active
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversation 3 - Unread, General -->
+                    <div class="conversation-item unread" data-conversation="3" onclick="selectConversation(3)">
+                        <div class="conversation-avatar">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Coach Wilson">
+                            <span class="online-indicator"></span>
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-header">
+                                <span class="conversation-name">Coach Wilson</span>
+                                <span class="conversation-time">3h ago</span>
+                            </div>
+                            <div class="conversation-preview">
+                                <span class="preview-text">Great game yesterday! I wanted to discuss your...</span>
+                                <span class="unread-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversation 4 - Deal Pending -->
+                    <div class="conversation-item" data-conversation="4" onclick="selectConversation(4)">
+                        <div class="conversation-avatar">
+                            <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&h=100&fit=crop" alt="Under Armour">
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-header">
+                                <span class="conversation-name">Under Armour</span>
+                                <span class="conversation-time">Yesterday</span>
+                            </div>
+                            <div class="conversation-preview">
+                                <span class="preview-text">Thanks for your interest! Our team will review...</span>
+                            </div>
+                            <div class="deal-indicator pending">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                $2,500 Deal - Pending
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversation 5 - General -->
+                    <div class="conversation-item" data-conversation="5" onclick="selectConversation(5)">
+                        <div class="conversation-avatar">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Sarah Chen">
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-header">
+                                <span class="conversation-name">Sarah Chen</span>
+                                <span class="conversation-time">2 days ago</span>
+                            </div>
+                            <div class="conversation-preview">
+                                <span class="preview-text">Hey Marcus! Did you see the new scholarship...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversation 6 - General -->
+                    <div class="conversation-item" data-conversation="6" onclick="selectConversation(6)">
+                        <div class="conversation-avatar">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson">
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-header">
+                                <span class="conversation-name">James Wilson</span>
+                                <span class="conversation-time">1 week ago</span>
+                            </div>
+                            <div class="conversation-preview">
+                                <span class="preview-text">Training session was intense today! You coming to...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Panel - Active Conversation -->
+            <main class="chat-panel active" id="chatPanel">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-user-info">
+                        <button class="mobile-back-btn" onclick="showConversationsList()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="chat-avatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" id="chatAvatar">
+                            <span class="online-indicator"></span>
+                        </div>
+                        <div class="chat-user-details">
+                            <h3 id="chatUserName">Nike Regional</h3>
+                            <div class="chat-user-status">
+                                <span id="chatUserStatus">Online</span>
+                                <span class="view-profile-link" onclick="viewProfile()">View Profile</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" aria-label="Video call">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                        </button>
+                        <button class="chat-action-btn" aria-label="Phone call">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </button>
+                        <div class="actions-dropdown">
+                            <button class="chat-action-btn" aria-label="More options" onclick="toggleDropdown()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <circle cx="12" cy="5" r="1"></circle>
+                                    <circle cx="12" cy="19" r="1"></circle>
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu" id="actionsDropdown">
+                                <div class="dropdown-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Export Chat
+                                </div>
+                                <div class="dropdown-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                                    </svg>
+                                    Archive
+                                </div>
+                                <div class="dropdown-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                                    </svg>
+                                    Block User
+                                </div>
+                                <div class="dropdown-item danger">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                    Report
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deal Card Banner -->
+                <div class="deal-card-banner" id="dealBanner">
+                    <div class="deal-card-info">
+                        <div>
+                            <div class="deal-card-label">Active Deal</div>
+                            <div class="deal-card-title">Social Media Partnership</div>
+                        </div>
+                        <div class="deal-card-amount">$5,000</div>
+                        <div class="deal-card-status">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            Awaiting Response
+                        </div>
+                    </div>
+                    <div class="deal-card-actions">
+                        <button class="deal-btn accept">Accept</button>
+                        <button class="deal-btn counter">Counter</button>
+                        <button class="deal-btn decline">Decline</button>
+                    </div>
+                </div>
+
+                <!-- Messages Area -->
+                <div class="messages-area" id="messagesArea">
+                    <div class="date-divider">
+                        <span>Today</span>
+                    </div>
+
+                    <!-- System Message -->
+                    <div class="system-message deal-update">
+                        Nike Regional sent a deal proposal for $5,000
+                    </div>
+
+                    <!-- Received Message -->
+                    <div class="message received">
+                        <div class="message-avatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Hi Marcus! We've been following your incredible season and we're impressed with both your athletic performance and your commitment to academics.
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:32 AM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Received Message with Attachment -->
+                    <div class="message received">
+                        <div class="message-avatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                We're excited to discuss a potential partnership. Here's our initial proposal for your review:
+                            </div>
+                            <div class="message-attachment">
+                                <div class="attachment-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <div class="attachment-info">
+                                    <div class="attachment-name">Nike_Partnership_Proposal.pdf</div>
+                                    <div class="attachment-size">2.4 MB</div>
+                                </div>
+                                <button class="attachment-download" aria-label="Download">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:34 AM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sent Message -->
+                    <div class="message sent">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Thank you so much for reaching out! I'm really excited about this opportunity. I've reviewed the proposal and I have a few questions.
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">11:15 AM</span>
+                                <span class="message-status read">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: -8px;">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sent Message -->
+                    <div class="message sent">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Would the partnership include any exclusive content creation requirements? And what's the expected timeline for deliverables?
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">11:16 AM</span>
+                                <span class="message-status read">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: -8px;">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Received Message -->
+                    <div class="message received">
+                        <div class="message-avatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Great questions! The partnership would include 3 Instagram posts and 2 stories per month. We're flexible on the timeline and can work around your academic schedule. Your GPA commitment is actually one of the reasons we're so interested!
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">2:45 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Received Message with Image -->
+                    <div class="message received">
+                        <div class="message-avatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Here's an example of the type of content we'd love to see:
+                            </div>
+                            <div class="message-image">
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop" alt="Nike product">
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">2:47 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Most Recent Received Message -->
+                    <div class="message received">
+                        <div class="message-avatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                We're excited to discuss the partnership details further. Let us know what you think about the updated proposal we just sent. We've increased the offer to $5,000 based on your engagement metrics!
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Input Area -->
+                <div class="message-input-area">
+                    <div class="message-input-wrapper">
+                        <div class="input-actions-left">
+                            <button class="input-action-btn" aria-label="Attach file">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                                </svg>
+                            </button>
+                            <button class="input-action-btn" aria-label="Add image">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        <textarea class="message-textarea" placeholder="Type a message..." rows="1" id="messageInput" oninput="updateCharCount()"></textarea>
+                        <div class="input-actions-right">
+                            <span class="char-count" id="charCount">0/1000</span>
+                            <button class="send-btn" id="sendBtn" disabled aria-label="Send message" onclick="sendMessage()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- New Message Modal -->
+    <div class="modal-overlay" id="newMessageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">New Message</h3>
+                <button class="modal-close" onclick="closeNewMessageModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Search for a brand or athlete...">
+                </div>
+
+                <div class="recent-label">Recent Contacts</div>
+                <div class="contact-list">
+                    <div class="contact-item" onclick="startConversation('gatorade')">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop" alt="Gatorade">
+                        <div class="contact-info">
+                            <div class="contact-name">Gatorade Sports</div>
+                            <div class="contact-role">Brand Partner</div>
+                        </div>
+                    </div>
+                    <div class="contact-item" onclick="startConversation('sarah')">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Sarah Chen">
+                        <div class="contact-info">
+                            <div class="contact-name">Sarah Chen</div>
+                            <div class="contact-role">Athlete - Stanford Soccer</div>
+                        </div>
+                    </div>
+                    <div class="contact-item" onclick="startConversation('underarmour')">
+                        <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&h=100&fit=crop" alt="Under Armour">
+                        <div class="contact-info">
+                            <div class="contact-name">Under Armour</div>
+                            <div class="contact-role">Brand Partner</div>
+                        </div>
+                    </div>
+                    <div class="contact-item" onclick="startConversation('james')">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson">
+                        <div class="contact-info">
+                            <div class="contact-name">James Wilson</div>
+                            <div class="contact-role">Athlete - Alabama Football</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════
+        // GRADEUP NIL - Messages Page JavaScript
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        // Mock conversation data
+        const conversations = {
+            1: {
+                id: 1,
+                name: 'Nike Regional',
+                avatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop',
+                online: true,
+                type: 'brand',
+                deal: {
+                    amount: 5000,
+                    status: 'negotiating',
+                    title: 'Social Media Partnership'
+                }
+            },
+            2: {
+                id: 2,
+                name: 'Gatorade Sports',
+                avatar: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop',
+                online: false,
+                type: 'brand',
+                deal: {
+                    amount: 3500,
+                    status: 'active',
+                    title: 'Hydration Campaign'
+                }
+            },
+            3: {
+                id: 3,
+                name: 'Coach Wilson',
+                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+                online: true,
+                type: 'general'
+            },
+            4: {
+                id: 4,
+                name: 'Under Armour',
+                avatar: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&h=100&fit=crop',
+                online: false,
+                type: 'brand',
+                deal: {
+                    amount: 2500,
+                    status: 'pending',
+                    title: 'Apparel Deal'
+                }
+            },
+            5: {
+                id: 5,
+                name: 'Sarah Chen',
+                avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face',
+                online: false,
+                type: 'athlete'
+            },
+            6: {
+                id: 6,
+                name: 'James Wilson',
+                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+                online: false,
+                type: 'athlete'
+            }
+        };
+
+        let activeConversation = 1;
+
+        // Select a conversation
+        function selectConversation(id) {
+            activeConversation = id;
+            const conv = conversations[id];
+
+            // Update active state in list
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+                if (parseInt(item.dataset.conversation) === id) {
+                    item.classList.add('active');
+                    item.classList.remove('unread');
+                }
+            });
+
+            // Update chat header
+            document.getElementById('chatAvatar').src = conv.avatar;
+            document.getElementById('chatUserName').textContent = conv.name;
+            document.getElementById('chatUserStatus').textContent = conv.online ? 'Online' : 'Offline';
+            document.getElementById('chatUserStatus').className = conv.online ? 'chat-user-status' : 'chat-user-status offline';
+
+            // Show/hide deal banner
+            const dealBanner = document.getElementById('dealBanner');
+            if (conv.deal) {
+                dealBanner.style.display = 'flex';
+                dealBanner.querySelector('.deal-card-title').textContent = conv.deal.title;
+                dealBanner.querySelector('.deal-card-amount').textContent = '$' + conv.deal.amount.toLocaleString();
+            } else {
+                dealBanner.style.display = 'none';
+            }
+
+            // Mobile: Show chat panel
+            if (window.innerWidth <= 768) {
+                document.getElementById('conversationsPanel').classList.add('hidden');
+                document.getElementById('chatPanel').classList.add('active');
+            }
+
+            // Scroll messages to bottom
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        // Show conversations list (mobile)
+        function showConversationsList() {
+            document.getElementById('conversationsPanel').classList.remove('hidden');
+            document.getElementById('chatPanel').classList.remove('active');
+        }
+
+        // Update character count
+        function updateCharCount() {
+            const input = document.getElementById('messageInput');
+            const count = document.getElementById('charCount');
+            const sendBtn = document.getElementById('sendBtn');
+            const length = input.value.length;
+
+            count.textContent = length + '/1000';
+
+            if (length > 900) {
+                count.className = 'char-count error';
+            } else if (length > 800) {
+                count.className = 'char-count warning';
+            } else {
+                count.className = 'char-count';
+            }
+
+            sendBtn.disabled = length === 0 || length > 1000;
+
+            // Auto-resize textarea
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Send message using safe DOM methods
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const messagesArea = document.getElementById('messagesArea');
+
+            // Create message element using safe DOM methods
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message sent';
+
+            const contentEl = document.createElement('div');
+            contentEl.className = 'message-content';
+
+            const bubbleEl = document.createElement('div');
+            bubbleEl.className = 'message-bubble';
+            bubbleEl.textContent = message; // Safe: textContent prevents XSS
+
+            const metaEl = document.createElement('div');
+            metaEl.className = 'message-meta';
+
+            const timeEl = document.createElement('span');
+            timeEl.className = 'message-time';
+            timeEl.textContent = 'Just now';
+
+            const statusEl = document.createElement('span');
+            statusEl.className = 'message-status';
+
+            // Create check SVG
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '2');
+            const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+            polyline.setAttribute('points', '20 6 9 17 4 12');
+            svg.appendChild(polyline);
+            statusEl.appendChild(svg);
+
+            metaEl.appendChild(timeEl);
+            metaEl.appendChild(statusEl);
+            contentEl.appendChild(bubbleEl);
+            contentEl.appendChild(metaEl);
+            messageEl.appendChild(contentEl);
+
+            messagesArea.appendChild(messageEl);
+
+            // Clear input
+            input.value = '';
+            updateCharCount();
+
+            // Scroll to bottom
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        // Toggle dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.getElementById('actionsDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('actionsDropdown');
+            const btn = e.target.closest('.actions-dropdown');
+            if (!btn && dropdown.classList.contains('active')) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // New message modal
+        function openNewMessageModal() {
+            document.getElementById('newMessageModal').classList.add('active');
+        }
+
+        function closeNewMessageModal() {
+            document.getElementById('newMessageModal').classList.remove('active');
+        }
+
+        // Start conversation from modal
+        function startConversation(contactId) {
+            closeNewMessageModal();
+            // In a real app, this would navigate to or create a new conversation
+            console.log('Starting conversation with:', contactId);
+        }
+
+        // View profile
+        function viewProfile() {
+            const conv = conversations[activeConversation];
+            if (conv.type === 'brand') {
+                // Navigate to brand profile
+                console.log('Viewing brand profile:', conv.name);
+            } else if (conv.type === 'athlete') {
+                // Navigate to athlete profile
+                console.log('Viewing athlete profile:', conv.name);
+            }
+        }
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(function(t) {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                var filter = this.dataset.filter;
+                filterConversations(filter);
+            });
+        });
+
+        function filterConversations(filter) {
+            var items = document.querySelectorAll('.conversation-item');
+
+            items.forEach(function(item) {
+                var conv = conversations[item.dataset.conversation];
+                var show = true;
+
+                switch(filter) {
+                    case 'unread':
+                        show = item.classList.contains('unread');
+                        break;
+                    case 'deals':
+                        show = conv && conv.deal;
+                        break;
+                    case 'general':
+                        show = conv && !conv.deal;
+                        break;
+                }
+
+                item.style.display = show ? 'flex' : 'none';
+            });
+        }
+
+        // Search conversations
+        document.getElementById('searchConversations').addEventListener('input', function() {
+            var query = this.value.toLowerCase();
+            var items = document.querySelectorAll('.conversation-item');
+
+            items.forEach(function(item) {
+                var name = item.querySelector('.conversation-name').textContent.toLowerCase();
+                item.style.display = name.includes(query) ? 'flex' : 'none';
+            });
+        });
+
+        // Handle Enter key to send message
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!document.getElementById('sendBtn').disabled) {
+                    sendMessage();
+                }
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('newMessageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeNewMessageModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeNewMessageModal();
+            }
+        });
+
+        // Initialize: Scroll messages to bottom on load
+        window.addEventListener('load', function() {
+            var messagesArea = document.getElementById('messagesArea');
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        });
+
+        // Handle window resize for mobile layout
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('conversationsPanel').classList.remove('hidden');
+                document.getElementById('chatPanel').classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
