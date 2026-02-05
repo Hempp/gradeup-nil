@@ -44,6 +44,9 @@ export * as scholar from './scholar.js';
 export * as matching from './matching.js';
 export * as calendar from './calendar.js';
 
+// AI services
+export * as ai from './ai.js';
+
 // Re-export commonly used functions for convenience
 export {
   getSupabaseClient,
@@ -292,6 +295,25 @@ export {
   SEMESTERS,
   DAYS_OF_WEEK,
 } from './calendar.js';
+
+// AI exports
+export {
+  chat,
+  analyzeDeal,
+  recommendBrands,
+  getScheduleAdvice,
+  getScoreTips,
+  getQuickInsights,
+  getCareerGuidance,
+  getNegotiationHelp,
+  addToConversation,
+  saveConversation,
+  loadConversation,
+  clearConversation,
+  getConversationSummary,
+  AI_ACTIONS,
+  CONFIDENCE_LEVELS,
+} from './ai.js';
 
 /**
  * Initialize all services with Supabase configuration
