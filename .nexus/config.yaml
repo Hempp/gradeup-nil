@@ -1,0 +1,29 @@
+# NEXUS-PRIME Project Configuration
+version: "1.0.0"
+project:
+  name: ""  # Set your project name
+  type: ""  # web, mobile, api, ar, etc.
+
+# Installed modules
+modules:
+  - core
+
+# Active agents
+agents:
+  foundation:
+    - ARCHITECT
+    - SENTINEL
+    - VELOCITY
+    - GENESIS
+    - ORACLE
+
+# Hooks configuration
+hooks:
+  enabled: true
+  quality_gates: true
+  security_gates: true
+
+# Team preferences
+preferences:
+  expertise_level: "Guru Master Expert"
+  auto_deploy: false

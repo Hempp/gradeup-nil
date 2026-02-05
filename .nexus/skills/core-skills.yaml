@@ -1,0 +1,89 @@
+# NEXUS-PRIME Core Skills
+# Foundation skills for all deployments
+# Version: 1.0.0
+
+module: nexus-core
+version: "1.0.0"
+
+skills:
+  system_design:
+    name: "System Design"
+    agent: "ARCHITECT"
+    level: "Guru Master Expert"
+    capabilities:
+      - "Microservices architecture"
+      - "Monolith to microservices migration"
+      - "Event-driven architecture"
+      - "Domain-driven design"
+      - "API design (REST, GraphQL, gRPC)"
+    commands:
+      - command: "/design-system"
+        description: "Design complete system architecture"
+      - command: "/design-api"
+        description: "Design API structure"
+      - command: "/design-database"
+        description: "Design database schema"
+
+  security_analysis:
+    name: "Security Analysis"
+    agent: "SENTINEL"
+    level: "Guru Master Expert"
+    capabilities:
+      - "OWASP Top 10 detection"
+      - "Authentication design"
+      - "Authorization patterns"
+      - "Encryption strategies"
+      - "Compliance frameworks"
+    commands:
+      - command: "/secure-audit"
+        description: "Run security audit"
+      - command: "/secure-design"
+        description: "Design security architecture"
+
+  performance_optimization:
+    name: "Performance Optimization"
+    agent: "VELOCITY"
+    level: "Guru Master Expert"
+    capabilities:
+      - "Profiling and analysis"
+      - "Caching strategies"
+      - "Database optimization"
+      - "Frontend performance"
+      - "Infrastructure scaling"
+    commands:
+      - command: "/optimize"
+        description: "Optimize performance"
+      - command: "/profile"
+        description: "Profile application"
+
+  project_creation:
+    name: "Project Creation"
+    agent: "GENESIS"
+    level: "Guru Master Expert"
+    capabilities:
+      - "Project scaffolding"
+      - "Boilerplate generation"
+      - "Configuration setup"
+      - "CI/CD initialization"
+      - "Documentation templates"
+    commands:
+      - command: "/init"
+        description: "Initialize new project"
+      - command: "/scaffold"
+        description: "Scaffold new feature"
+
+  research_analysis:
+    name: "Research & Analysis"
+    agent: "ORACLE"
+    level: "Guru Master Expert"
+    capabilities:
+      - "Technology evaluation"
+      - "Library comparison"
+      - "Best practices research"
+      - "Documentation analysis"
+      - "Trend forecasting"
+    commands:
+      - command: "/research"
+        description: "Research topic"
+      - command: "/compare"
+        description: "Compare technologies"

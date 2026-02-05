@@ -7,7 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Design System -->
+    <!-- GradeUp 2025 Design System - Nike × Google × Apple × ESPN -->
+    <link rel="stylesheet" href="src/styles/gradeup-2025.css">
+    <!-- 2025 Component Overrides -->
+    <link rel="stylesheet" href="src/styles/components-2025.css">
+    <!-- Legacy Design System (fallback) -->
     <link rel="stylesheet" href="src/styles/design-system.css">
     <!-- 10X Premium Design -->
     <link rel="stylesheet" href="src/styles/premium-10x.css">
@@ -37,7 +41,7 @@
     <!-- Navigation -->
     <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
         <div class="logo">GRADEUP NIL</div>
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileMenu">
             <span></span><span></span><span></span>
         </button>
         <ul class="nav-links" id="navLinks">
@@ -61,7 +65,7 @@
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation" aria-hidden="true">
         <ul class="mobile-nav-links">
             <li><a href="#athletes" onclick="closeMobileMenu()">Athletes</a></li>
             <li><a href="#brands" onclick="closeMobileMenu()">Brands</a></li>
@@ -75,38 +79,49 @@
             <li><button class="btn btn-outline" onclick="openModal('loginModal'); closeMobileMenu()">Log In</button></li>
             <li><button class="btn btn-primary" onclick="openModal('signupModal'); closeMobileMenu()">Get Started</button></li>
         </ul>
-    </div>
+    </nav>
 
     <!-- Main Content -->
     <main id="main-content" role="main">
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Hero Section - Nike × ESPN Inspired -->
+    <section class="hero" id="hero">
         <div class="hero-bg"></div>
         <div class="hero-grid"></div>
         <div class="hero-particles" id="particles"></div>
+        <!-- Ambient Glow Effects -->
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
         <div class="hero-content">
-            <div class="hero-badge" data-aos="fade-up">NCAA Compliant Platform</div>
-            <h1 data-aos="fade-up" data-aos-delay="100">WHERE <span>GRADES</span><br>MEET <span>GREATNESS</span></h1>
-            <p data-aos="fade-up" data-aos-delay="200">The first NIL platform that rewards academic excellence. Student athletes showcase their grades, connect with brands, and receive funding from supporters who believe in scholar-athletes.</p>
-            <div class="hero-cta" data-aos="fade-up" data-aos-delay="300">
-                <button class="btn btn-primary btn-lg" onclick="openModal('athleteSignupModal')">
-                    <span>Join as Athlete</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-                <button class="btn btn-outline btn-lg" onclick="openModal('brandSignupModal')">Partner as Brand</button>
+            <div class="hero-badge badge badge-glass animate-fade-in" data-aos="fade-up">
+                <span class="badge-dot"></span>NCAA Compliant Platform
             </div>
-            <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
-                <div class="stat">
-                    <div class="stat-value" data-count="2400000">$0</div>
+            <h1 class="hero-title display-hero animate-slide-up" data-aos="fade-up" data-aos-delay="100">
+                WHERE <span class="text-gradient-primary">GRADES</span><br>
+                MEET <span class="text-gradient-gold">GREATNESS</span>
+            </h1>
+            <p class="hero-subtitle body-lg animate-slide-up stagger-2" data-aos="fade-up" data-aos-delay="200">The first NIL platform that rewards academic excellence. Student athletes showcase their grades, connect with brands, and receive funding from supporters who believe in scholar-athletes.</p>
+            <div class="hero-cta animate-slide-up stagger-3" data-aos="fade-up" data-aos-delay="300">
+                <button class="btn btn-primary btn-xl animate-glow" onclick="openModal('athleteSignupModal')">
+                    <span>Join as Athlete</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <button class="btn btn-secondary btn-xl" onclick="openModal('brandSignupModal')">
+                    <span>Partner as Brand</span>
+                </button>
+            </div>
+            <!-- Stats Grid - ESPN Live Style -->
+            <div class="hero-stats stats-grid animate-slide-up stagger-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-item">
+                    <div class="stat-value stat-counter" data-count="2400000">$0</div>
                     <div class="stat-label">Funded to Athletes</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" data-count="12500">0</div>
+                <div class="stat-item">
+                    <div class="stat-value stat-counter" data-count="12500">0</div>
                     <div class="stat-label">Verified Athletes</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" data-count="3.4" data-decimal="true">0</div>
+                <div class="stat-item">
+                    <div class="stat-value stat-counter" data-count="3.4" data-decimal="true">0</div>
                     <div class="stat-label">Avg. GPA</div>
                 </div>
             </div>
@@ -2188,8 +2203,9 @@
                     </div>
                     <div class="header-right">
                         <div class="search-bar advanced-search">
-                            <input type="text" placeholder="Search athletes, teams, deals..." id="directorSearch" oninput="handleDashboardSearch(this.value)">
-                            <span class="search-icon">🔍</span>
+                            <label for="directorSearch" class="sr-only">Search athletes, teams, deals</label>
+                            <input type="text" placeholder="Search athletes, teams, deals..." id="directorSearch" oninput="handleDashboardSearch(this.value)" aria-label="Search athletes, teams, deals">
+                            <span class="search-icon" aria-hidden="true">🔍</span>
                             <div class="search-dropdown" id="searchDropdown">
                                 <div class="search-filters">
                                     <span class="search-filter-label">Filter by:</span>
@@ -2342,8 +2358,9 @@
 
                         <div class="dashboard-card">
                             <div class="card-header">
-                                <h3>Team Performance</h3>
-                                <select id="teamPerformanceFilter" class="filter-select">
+                                <h3 id="teamPerformanceLabel">Team Performance</h3>
+                                <label for="teamPerformanceFilter" class="sr-only">Filter by sport</label>
+                                <select id="teamPerformanceFilter" class="filter-select" aria-labelledby="teamPerformanceLabel">
                                     <option>All Sports</option>
                                     <option>Basketball</option>
                                     <option>Football</option>
@@ -2404,8 +2421,9 @@
                         </div>
                         <div class="dashboard-card chart-card">
                             <div class="card-header">
-                                <h3>🎯 Athlete Distribution</h3>
-                                <select class="filter-select" id="distributionFilter">
+                                <h3 id="distributionLabel">🎯 Athlete Distribution</h3>
+                                <label for="distributionFilter" class="sr-only">Group athletes by</label>
+                                <select class="filter-select" id="distributionFilter" aria-labelledby="distributionLabel">
                                     <option value="sport">By Sport</option>
                                     <option value="gpa">By GPA Range</option>
                                     <option value="status">By Status</option>
@@ -2547,7 +2565,8 @@
                         <div class="card-header">
                             <h3>Recent Activity</h3>
                             <div class="activity-actions">
-                                <select class="filter-select" id="activityFilter">
+                                <label for="activityFilter" class="sr-only">Filter activity type</label>
+                                <select class="filter-select" id="activityFilter" aria-label="Filter activity type">
                                     <option value="all">All Activity</option>
                                     <option value="verification">Verifications</option>
                                     <option value="deals">Deals</option>
@@ -2593,24 +2612,33 @@
                 <div class="dashboard-tab" id="director-athletes">
                     <div class="tab-header">
                         <div class="filter-bar">
-                            <select class="filter-select">
-                                <option>All Sports</option>
-                                <option>Basketball</option>
-                                <option>Football</option>
-                                <option>Soccer</option>
-                                <option>Volleyball</option>
-                            </select>
-                            <select class="filter-select">
-                                <option>All Status</option>
-                                <option>Verified</option>
-                                <option>Pending</option>
-                                <option>Needs Review</option>
-                            </select>
-                            <select class="filter-select">
-                                <option>Sort by Name</option>
-                                <option>Sort by GPA</option>
-                                <option>Sort by NIL Value</option>
-                            </select>
+                            <div class="filter-group">
+                                <label for="directorSportFilter" class="sr-only">Filter by sport</label>
+                                <select class="filter-select" id="directorSportFilter" aria-label="Filter by sport">
+                                    <option>All Sports</option>
+                                    <option>Basketball</option>
+                                    <option>Football</option>
+                                    <option>Soccer</option>
+                                    <option>Volleyball</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="directorStatusFilter" class="sr-only">Filter by status</label>
+                                <select class="filter-select" id="directorStatusFilter" aria-label="Filter by status">
+                                    <option>All Status</option>
+                                    <option>Verified</option>
+                                    <option>Pending</option>
+                                    <option>Needs Review</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="directorSortOrder" class="sr-only">Sort order</label>
+                                <select class="filter-select" id="directorSortOrder" aria-label="Sort order">
+                                    <option>Sort by Name</option>
+                                    <option>Sort by GPA</option>
+                                    <option>Sort by NIL Value</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="athletes-table">
@@ -3142,8 +3170,9 @@
                         <!-- Athlete Search -->
                         <div class="advanced-search athlete-search">
                             <div class="search-input-wrapper">
-                                <span class="search-icon">🔍</span>
-                                <input type="text" class="search-input" placeholder="Search deals, brands..." id="athleteSearchInput" oninput="handleAthleteSearch(this.value)">
+                                <span class="search-icon" aria-hidden="true">🔍</span>
+                                <label for="athleteSearchInput" class="sr-only">Search deals and brands</label>
+                                <input type="text" class="search-input" placeholder="Search deals, brands..." id="athleteSearchInput" oninput="handleAthleteSearch(this.value)" aria-label="Search deals and brands">
                             </div>
                             <div class="search-dropdown" id="athleteSearchDropdown">
                                 <div class="search-results" id="athleteSearchResults"></div>
@@ -3577,14 +3606,17 @@
                                 <button class="photo-edit-btn" onclick="changeProfilePhoto()">📷</button>
                             </div>
                             <div class="profile-main-edit">
-                                <input type="text" class="profile-name-input" value="Jordan Williams" placeholder="Your Name">
-                                <input type="text" class="profile-tagline-input" value="Point Guard | Duke Basketball | 3.87 GPA" placeholder="Your tagline">
+                                <label for="profileNameInput" class="sr-only">Your name</label>
+                                <input type="text" class="profile-name-input" id="profileNameInput" value="Jordan Williams" placeholder="Your Name" aria-label="Your name">
+                                <label for="profileTaglineInput" class="sr-only">Your tagline</label>
+                                <input type="text" class="profile-tagline-input" id="profileTaglineInput" value="Point Guard | Duke Basketball | 3.87 GPA" placeholder="Your tagline" aria-label="Your tagline">
                             </div>
                         </div>
                         <div class="profile-sections">
                             <div class="profile-section">
-                                <h4>About Me</h4>
-                                <textarea class="profile-bio" rows="4" placeholder="Tell brands and sponsors about yourself...">Passionate student-athlete committed to excellence on and off the court. Dean's List honoree pursuing a degree in Business Administration while leading Duke's basketball team.</textarea>
+                                <label for="profileBio"><h4>About Me</h4></label>
+                                <textarea class="profile-bio" id="profileBio" rows="4" placeholder="Tell brands and sponsors about yourself..." aria-describedby="profileBioHint">Passionate student-athlete committed to excellence on and off the court. Dean's List honoree pursuing a degree in Business Administration while leading Duke's basketball team.</textarea>
+                                <span id="profileBioHint" class="sr-only">Tell brands and sponsors about yourself</span>
                             </div>
                             <div class="profile-section">
                                 <h4>Athletic Information</h4>
@@ -3613,16 +3645,19 @@
                                 <h4>Social Media</h4>
                                 <div class="social-inputs">
                                     <div class="social-input">
-                                        <span class="social-icon">📸</span>
-                                        <input type="text" placeholder="Instagram handle" value="@jordanwilliams23">
+                                        <span class="social-icon" aria-hidden="true">📸</span>
+                                        <label for="instagramHandle" class="sr-only">Instagram handle</label>
+                                        <input type="text" id="instagramHandle" placeholder="Instagram handle" value="@jordanwilliams23" aria-label="Instagram handle">
                                     </div>
                                     <div class="social-input">
-                                        <span class="social-icon">🐦</span>
-                                        <input type="text" placeholder="Twitter handle" value="@jwilliams_hoops">
+                                        <span class="social-icon" aria-hidden="true">🐦</span>
+                                        <label for="twitterHandle" class="sr-only">Twitter handle</label>
+                                        <input type="text" id="twitterHandle" placeholder="Twitter handle" value="@jwilliams_hoops" aria-label="Twitter handle">
                                     </div>
                                     <div class="social-input">
-                                        <span class="social-icon">📺</span>
-                                        <input type="text" placeholder="TikTok handle" value="@jordan.williams">
+                                        <span class="social-icon" aria-hidden="true">📺</span>
+                                        <label for="tiktokHandle" class="sr-only">TikTok handle</label>
+                                        <input type="text" id="tiktokHandle" placeholder="TikTok handle" value="@jordan.williams" aria-label="TikTok handle">
                                     </div>
                                 </div>
                             </div>
@@ -3988,8 +4023,9 @@
                         <!-- Brand Search -->
                         <div class="advanced-search brand-search">
                             <div class="search-input-wrapper">
-                                <span class="search-icon">🔍</span>
-                                <input type="text" class="search-input" placeholder="Search athletes, campaigns..." id="brandSearchInput" oninput="handleBrandSearch(this.value)">
+                                <span class="search-icon" aria-hidden="true">🔍</span>
+                                <label for="brandSearchInput" class="sr-only">Search athletes and campaigns</label>
+                                <input type="text" class="search-input" placeholder="Search athletes, campaigns..." id="brandSearchInput" oninput="handleBrandSearch(this.value)" aria-label="Search athletes and campaigns">
                             </div>
                             <div class="search-dropdown" id="brandSearchDropdown">
                                 <div class="search-results" id="brandSearchResults"></div>

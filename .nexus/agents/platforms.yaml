@@ -1,0 +1,142 @@
+# Platform Teams Module
+# Supabase, GitHub, Vercel, Blender Masters
+# Version: 1.0.0
+
+id: platforms
+name: "Platform Masters Pack"
+version: "1.0.0"
+description: "Expert teams for major development platforms"
+type: "team"
+category: "platforms"
+
+# Dependencies
+dependencies:
+  - nexus-core
+
+# Platform Teams
+platforms:
+  supabase:
+    id: SUPABASE-MASTER
+    name: "Supabase Master Team"
+    deploy_command: "/deploy-supabase"
+    specialists: 8
+
+    agents:
+      - codename: "SUPA-MASTER"
+        role: "Lead Architect"
+      - codename: "AUTH-GUARD"
+        role: "Auth Specialist"
+        expertise: ["OAuth", "MFA", "SSO"]
+      - codename: "DATA-FORGE"
+        role: "Database Architect"
+        expertise: ["PostgreSQL", "Migrations", "Functions"]
+      - codename: "STORE-KEEPER"
+        role: "Storage Expert"
+        expertise: ["Buckets", "CDN", "Transformations"]
+      - codename: "EDGE-RUNNER"
+        role: "Edge Functions"
+        expertise: ["Deno", "TypeScript", "Webhooks"]
+      - codename: "REALTIME-SYNC"
+        role: "Realtime Expert"
+        expertise: ["Subscriptions", "Presence", "Broadcast"]
+      - codename: "ROW-GUARD"
+        role: "RLS Expert"
+        expertise: ["Policies", "Security"]
+      - codename: "VECTOR-SAGE"
+        role: "AI/Vector Expert"
+        expertise: ["pgvector", "RAG", "Embeddings"]
+
+    commands:
+      - "/supabase-init"
+      - "/supabase-migrate"
+      - "/supabase-rls"
+      - "/supabase-vectors"
+
+  github:
+    id: GITHUB-MASTER
+    name: "GitHub Master Team"
+    deploy_command: "/deploy-github"
+    specialists: 8
+
+    agents:
+      - codename: "REPO-MASTER"
+        role: "Lead Architect"
+      - codename: "ACTIONS-GURU"
+        role: "CI/CD Specialist"
+      - codename: "PR-SENTINEL"
+        role: "Review Expert"
+      - codename: "SECURITY-HAWK"
+        role: "Security Specialist"
+      - codename: "ISSUE-TRACKER"
+        role: "Project Manager"
+      - codename: "PACKAGE-KEEPER"
+        role: "Release Expert"
+      - codename: "PAGES-BUILDER"
+        role: "Docs Specialist"
+      - codename: "WEBHOOK-WARDEN"
+        role: "Integration Expert"
+
+    commands:
+      - "/github-init"
+      - "/github-pr"
+      - "/github-actions"
+      - "/github-release"
+
+  vercel:
+    id: VERCEL-MASTER
+    name: "Vercel Deployment Team"
+    deploy_command: "/deploy-vercel"
+    specialists: 6
+
+    agents:
+      - codename: "DEPLOY-MASTER"
+        role: "Lead Architect"
+      - codename: "EDGE-OPS"
+        role: "Edge Specialist"
+      - codename: "DOMAIN-HANDLER"
+        role: "DNS Expert"
+      - codename: "ENV-CONFIG"
+        role: "Config Manager"
+      - codename: "PREVIEW-MASTER"
+        role: "Preview Specialist"
+      - codename: "METRICS-WATCH"
+        role: "Analytics Monitor"
+
+    commands:
+      - "/vercel-env"
+      - "/vercel-domains"
+      - "/vercel-logs"
+      - "/vercel-rollback"
+
+  blender:
+    id: BLENDER-MASTER
+    name: "Blender 3D Team"
+    deploy_command: "/deploy-blender"
+    specialists: 7
+
+    agents:
+      - codename: "MESH-MASTER"
+        role: "Lead Modeler"
+      - codename: "SHADER-WIZARD"
+        role: "Materials Director"
+      - codename: "ANIM-GURU"
+        role: "Animation Director"
+      - codename: "RIG-MASTER"
+        role: "Technical Animator"
+      - codename: "SIM-GURU"
+        role: "VFX Specialist"
+      - codename: "NODE-ARCHITECT"
+        role: "Procedural Master"
+      - codename: "RENDER-MASTER"
+        role: "Visualization Expert"
+
+    commands:
+      - "/blender-model"
+      - "/blender-material"
+      - "/blender-animate"
+      - "/blender-render"
+
+metadata:
+  total_specialists: 29
+  expertise_level: "30-Year Guru Master Expert"
+  created: "2025-02-04"
