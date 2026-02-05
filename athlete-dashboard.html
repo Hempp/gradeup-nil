@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GradeUp NIL - Athlete Dashboard. Track your GradeUp Score, earnings, deals, and achievements.">
+    <meta name="theme-color" content="#000000">
+    <title>Athlete Dashboard | GradeUp NIL</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Dashboard-Specific Styles -->
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           ATHLETE DASHBOARD - Premium Design System
+           Nike x Apple Inspired
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        /* ─── Dashboard Layout ─── */
+        .dashboard {
+            min-height: 100vh;
+            background: var(--black);
+            padding-top: 80px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ─── Dashboard Header ─── */
+        .dashboard-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-900);
+        }
+
+        .dashboard-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .dashboard-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+        }
+
+        .dashboard-nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-tab {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.2s var(--ease);
+            cursor: pointer;
+        }
+
+        .nav-tab:hover {
+            color: var(--white);
+            background: var(--gray-900);
+        }
+
+        .nav-tab.active {
+            color: var(--black);
+            background: var(--cyan);
+        }
+
+        .dashboard-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-icon-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .nav-icon-btn:hover {
+            border-color: var(--gray-700);
+            color: var(--white);
+        }
+
+        .nav-icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--magenta);
+            color: var(--white);
+            font-size: 0.625rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            padding-right: 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .user-avatar:hover {
+            border-color: var(--gray-700);
+        }
+
+        .avatar-image {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .avatar-info {
+            text-align: left;
+        }
+
+        .avatar-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .avatar-tier {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        .tier-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ─── Section Grid ─── */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        .dashboard-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .dashboard-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* ─── Glass Card ─── */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.95) 100%);
+            border: 1px solid var(--gray-800);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s var(--ease);
+        }
+
+        .glass-card:hover {
+            border-color: var(--gray-700);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .card-action {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--cyan);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .card-action:hover {
+            opacity: 0.8;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* ─── GradeUp Score Hero Card ─── */
+        .score-hero {
+            position: relative;
+            padding: 2.5rem;
+            overflow: hidden;
+        }
+
+        .score-hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 0%, rgba(0, 240, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 60% at 80% 100%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .score-hero-content {
+            position: relative;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .score-ring-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .score-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .score-ring-bg {
+            fill: none;
+            stroke: var(--gray-800);
+            stroke-width: 12;
+        }
+
+        .score-ring-progress {
+            fill: none;
+            stroke: url(#scoreGradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 565.48;
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 1.5s var(--ease-out);
+        }
+
+        .score-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-value {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--cyan), var(--white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-grade {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--cyan);
+            margin-top: -0.25rem;
+        }
+
+        .score-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .score-trend.up {
+            color: var(--success);
+        }
+
+        .score-trend.down {
+            color: var(--error);
+        }
+
+        .score-trend svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .score-details {
+            flex: 1;
+        }
+
+        .score-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .score-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .breakdown-label {
+            width: 80px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--gray-400);
+        }
+
+        .breakdown-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--gray-800);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .breakdown-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s var(--ease-out);
+        }
+
+        .breakdown-fill.athletic {
+            background: linear-gradient(90deg, var(--cyan), #00a0ff);
+        }
+
+        .breakdown-fill.social {
+            background: linear-gradient(90deg, var(--magenta), #ff66ff);
+        }
+
+        .breakdown-fill.academic {
+            background: linear-gradient(90deg, var(--lime), #7fff00);
+        }
+
+        .breakdown-value {
+            width: 40px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--white);
+            text-align: right;
+        }
+
+        .score-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn-calculate {
+            padding: 1rem 2rem;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--black);
+            background: linear-gradient(135deg, var(--cyan), #00a0ff);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s var(--ease);
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .last-updated {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            text-align: center;
+        }
+
+        /* ─── Scholar Status Section ─── */
+        .scholar-status {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .scholar-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .tier-badge {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            font-size: 2rem;
+        }
+
+        .tier-badge.gold {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+        }
+
+        .tier-badge.platinum {
+            background: linear-gradient(135deg, #e5e4e2, #a8a8a8);
+            box-shadow: 0 8px 24px rgba(229, 228, 226, 0.3);
+        }
+
+        .tier-badge.silver {
+            background: linear-gradient(135deg, #c0c0c0, #808080);
+            box-shadow: 0 8px 24px rgba(192, 192, 192, 0.3);
+        }
+
+        .tier-badge.bronze {
+            background: linear-gradient(135deg, #cd7f32, #8b4513);
+            box-shadow: 0 8px 24px rgba(205, 127, 50, 0.3);
+        }
+
+        .tier-details h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .tier-benefits {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+            margin-bottom: 0.75rem;
+        }
+
+        .tier-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background: var(--gray-800);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), #ffaa00);
+            border-radius: 3px;
+            transition: width 1s var(--ease-out);
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .scholar-badges {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .rate-badge {
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 170, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .rate-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .rate-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+        }
+
+        .sponsors-badge {
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(0, 160, 255, 0.05));
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .sponsors-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cyan);
+        }
+
+        .sponsors-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+        }
+
+        /* ─── Stats Grid ─── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.95) 100%);
+            border: 1px solid var(--gray-800);
+            border-radius: 16px;
+            transition: all 0.3s var(--ease);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gray-700);
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon.earnings {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+            color: var(--success);
+        }
+
+        .stat-icon.deals {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 240, 255, 0.1));
+            color: var(--cyan);
+        }
+
+        .stat-icon.views {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.2), rgba(255, 0, 255, 0.1));
+            color: var(--magenta);
+        }
+
+        .stat-icon.xp {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            color: var(--gold);
+        }
+
+        .stat-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .stat-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-main-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        .stat-trend.positive {
+            color: var(--success);
+        }
+
+        .stat-trend.negative {
+            color: var(--error);
+        }
+
+        .stat-trend svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .stat-label {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        /* ─── Achievements Section ─── */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .achievement-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 12px;
+            transition: all 0.2s var(--ease);
+        }
+
+        .achievement-card:hover {
+            border-color: var(--gray-700);
+            transform: translateX(4px);
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.5rem;
+        }
+
+        .achievement-icon.legendary {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .achievement-icon.epic {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.4);
+        }
+
+        .achievement-icon.rare {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .achievement-icon.common {
+            background: var(--gray-700);
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .achievement-desc {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .achievement-xp {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .xp-progress {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .xp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .xp-level {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .xp-level span {
+            color: var(--gold);
+        }
+
+        .xp-count {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .xp-bar {
+            height: 8px;
+            background: var(--gray-800);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), #ffaa00);
+            border-radius: 4px;
+            transition: width 1s var(--ease-out);
+        }
+
+        /* ─── Deals Table ─── */
+        .deals-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .deals-table th {
+            padding: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            text-align: left;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .deals-table td {
+            padding: 1rem;
+            font-size: 0.9375rem;
+            color: var(--gray-300);
+            border-bottom: 1px solid var(--gray-900);
+        }
+
+        .deals-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .deal-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: var(--gray-800);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .deal-name {
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .deal-amount {
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .deal-status {
+            display: inline-flex;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 6px;
+        }
+
+        .deal-status.active {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        .deal-status.pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .deal-status.completed {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--cyan);
+        }
+
+        .deal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .deal-action-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 6px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .deal-action-btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .deal-action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ─── Calendar Widget ─── */
+        .calendar-widget {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .calendar-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+            border-left: 3px solid var(--error);
+        }
+
+        .calendar-item.midterms {
+            border-left-color: var(--warning);
+        }
+
+        .calendar-item.available {
+            border-left-color: var(--success);
+        }
+
+        .calendar-date {
+            text-align: center;
+            min-width: 48px;
+        }
+
+        .calendar-month {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+        }
+
+        .calendar-day {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .calendar-info {
+            flex: 1;
+        }
+
+        .calendar-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .calendar-time {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .availability-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .availability-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .availability-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--success);
+        }
+
+        /* ─── Brand Matches ─── */
+        .brand-matches {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .match-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .match-item:hover {
+            background: var(--gray-800);
+            transform: translateX(4px);
+        }
+
+        .match-logo {
+            width: 44px;
+            height: 44px;
+            background: var(--gray-800);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .match-info {
+            flex: 1;
+        }
+
+        .match-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.125rem;
+        }
+
+        .match-industry {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .match-score {
+            text-align: right;
+        }
+
+        .match-percent {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: var(--cyan);
+        }
+
+        .match-label {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-600);
+        }
+
+        /* ─── Modal Styles ─── */
+        .dashboard-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s var(--ease);
+        }
+
+        .dashboard-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.3s var(--ease-spring);
+        }
+
+        .dashboard-modal.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-800);
+            border: none;
+            border-radius: 8px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-700);
+            color: var(--white);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .score-hero-content {
+                grid-template-columns: auto 1fr;
+                gap: 2rem;
+            }
+
+            .score-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .scholar-status {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .scholar-badges {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-nav {
+                padding: 1rem;
+            }
+
+            .dashboard-nav-tabs {
+                display: none;
+            }
+
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .score-hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .score-ring-container {
+                margin: 0 auto;
+            }
+
+            .score-breakdown {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .deals-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .scholar-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* ─── Animations ─── */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s var(--ease) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* ─── Loading Skeleton ─── */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-800) 25%, var(--gray-700) 50%, var(--gray-800) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Navigation -->
+    <nav class="dashboard-nav">
+        <div class="dashboard-nav-left">
+            <a href="index.html" class="dashboard-logo">GRADEUP</a>
+            <div class="dashboard-nav-tabs">
+                <button class="nav-tab active">Dashboard</button>
+                <button class="nav-tab">Deals</button>
+                <button class="nav-tab">Analytics</button>
+                <button class="nav-tab">Profile</button>
+                <button class="nav-tab">Settings</button>
+            </div>
+        </div>
+
+        <div class="dashboard-nav-right">
+            <button class="nav-icon-btn" id="notificationsBtn" aria-label="Notifications">
+                <span class="notification-badge">3</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
+                </svg>
+            </button>
+            <button class="nav-icon-btn" id="settingsBtn" aria-label="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                </svg>
+            </button>
+            <div class="user-avatar" id="userMenu">
+                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Marcus Johnson" class="avatar-image">
+                <div class="avatar-info">
+                    <div class="avatar-name">Marcus J.</div>
+                    <div class="avatar-tier">
+                        <svg class="tier-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                        Gold Scholar
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard">
+        <div class="dashboard-container">
+            <div class="dashboard-grid">
+                <!-- Main Content -->
+                <div class="dashboard-main">
+                    <!-- GradeUp Score Hero Card -->
+                    <div class="glass-card score-hero animate-in">
+                        <div class="score-hero-bg"></div>
+                        <div class="score-hero-content">
+                            <div class="score-ring-container">
+                                <svg class="score-ring" viewBox="0 0 200 200">
+                                    <defs>
+                                        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#00f0ff"/>
+                                            <stop offset="50%" stop-color="#ff00ff"/>
+                                            <stop offset="100%" stop-color="#adff2f"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="score-ring-bg" cx="100" cy="100" r="90"/>
+                                    <circle class="score-ring-progress" id="scoreProgress" cx="100" cy="100" r="90"/>
+                                </svg>
+                                <div class="score-center">
+                                    <div class="score-value" id="scoreValue">0</div>
+                                    <div class="score-grade" id="scoreGrade">--</div>
+                                    <div class="score-trend up" id="scoreTrend">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M18 15l-6-6-6 6"/>
+                                        </svg>
+                                        +47
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="score-details">
+                                <div class="score-label">Your GradeUp Score</div>
+                                <h2 class="score-title">Performance Overview</h2>
+                                <div class="score-breakdown">
+                                    <div class="breakdown-item">
+                                        <span class="breakdown-label">Athletic</span>
+                                        <div class="breakdown-bar">
+                                            <div class="breakdown-fill athletic" id="athleticBar" style="width: 0%"></div>
+                                        </div>
+                                        <span class="breakdown-value" id="athleticValue">0%</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="breakdown-label">Social</span>
+                                        <div class="breakdown-bar">
+                                            <div class="breakdown-fill social" id="socialBar" style="width: 0%"></div>
+                                        </div>
+                                        <span class="breakdown-value" id="socialValue">0%</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="breakdown-label">Academic</span>
+                                        <div class="breakdown-bar">
+                                            <div class="breakdown-fill academic" id="academicBar" style="width: 0%"></div>
+                                        </div>
+                                        <span class="breakdown-value" id="academicValue">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="score-actions">
+                                <button class="btn-calculate" id="calculateScoreBtn">
+                                    Calculate Score
+                                </button>
+                                <span class="last-updated">Last updated: Today at 2:34 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scholar Status Section -->
+                    <div class="glass-card animate-in delay-1">
+                        <div class="card-header">
+                            <h3 class="card-title">Scholar Status</h3>
+                            <button class="card-action">View Benefits</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="scholar-status">
+                                <div class="scholar-info">
+                                    <div class="tier-badge gold" id="tierBadge">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="tier-details">
+                                        <h3 id="tierName">Gold Scholar</h3>
+                                        <p class="tier-benefits">Priority brand matching, 1.5x rate multiplier, exclusive events</p>
+                                        <div class="tier-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" id="tierProgress" style="width: 0%"></div>
+                                            </div>
+                                            <span class="progress-text" id="tierProgressText">2,450 / 5,000 XP to Platinum</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="scholar-badges">
+                                    <div class="rate-badge">
+                                        <div class="rate-value" id="rateMultiplier">1.5x</div>
+                                        <div class="rate-label">Rate Boost</div>
+                                    </div>
+                                    <div class="sponsors-badge">
+                                        <div class="sponsors-value" id="scholarSponsors">12</div>
+                                        <div class="sponsors-label">Scholar Sponsors</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card animate-in delay-2">
+                            <div class="stat-icon earnings">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value-row">
+                                <span class="stat-main-value" id="totalEarnings">$0</span>
+                                <span class="stat-trend positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 15l-6-6-6 6"/>
+                                    </svg>
+                                    +23%
+                                </span>
+                            </div>
+                            <span class="stat-label">Total Earnings</span>
+                        </div>
+
+                        <div class="stat-card animate-in delay-2">
+                            <div class="stat-icon deals">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value-row">
+                                <span class="stat-main-value" id="activeDeals">0</span>
+                                <span class="stat-trend positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 15l-6-6-6 6"/>
+                                    </svg>
+                                    +2
+                                </span>
+                            </div>
+                            <span class="stat-label">Active Deals</span>
+                        </div>
+
+                        <div class="stat-card animate-in delay-3">
+                            <div class="stat-icon views">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value-row">
+                                <span class="stat-main-value" id="profileViews">0</span>
+                                <span class="stat-trend positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 15l-6-6-6 6"/>
+                                    </svg>
+                                    +156
+                                </span>
+                            </div>
+                            <span class="stat-label">Profile Views</span>
+                        </div>
+
+                        <div class="stat-card animate-in delay-3">
+                            <div class="stat-icon xp">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value-row">
+                                <span class="stat-main-value" id="achievementXP">0</span>
+                                <span class="stat-trend positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 15l-6-6-6 6"/>
+                                    </svg>
+                                    +450
+                                </span>
+                            </div>
+                            <span class="stat-label">Achievement XP</span>
+                        </div>
+                    </div>
+
+                    <!-- Achievements Section -->
+                    <div class="glass-card animate-in delay-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Achievements</h3>
+                            <button class="card-action" id="viewAllAchievements">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="achievements-grid" id="achievementsGrid">
+                                <!-- Achievements will be inserted by JS -->
+                            </div>
+                            <div class="xp-progress">
+                                <div class="xp-header">
+                                    <span class="xp-level">Level <span id="currentLevel">12</span></span>
+                                    <span class="xp-count" id="xpCount">7,450 / 10,000 XP</span>
+                                </div>
+                                <div class="xp-bar">
+                                    <div class="xp-fill" id="xpFill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Deals Table -->
+                    <div class="glass-card animate-in delay-5">
+                        <div class="card-header">
+                            <h3 class="card-title">Active Deals</h3>
+                            <button class="card-action">View All Deals</button>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <table class="deals-table">
+                                <thead>
+                                    <tr>
+                                        <th>Brand</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Deadline</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dealsTableBody">
+                                    <!-- Deals will be inserted by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="dashboard-sidebar">
+                    <!-- Academic Calendar Widget -->
+                    <div class="glass-card animate-in delay-2">
+                        <div class="card-header">
+                            <h3 class="card-title">Academic Calendar</h3>
+                            <button class="card-action">Manage</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="calendar-widget" id="calendarWidget">
+                                <!-- Calendar items will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brand Matches Section -->
+                    <div class="glass-card animate-in delay-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Top Brand Matches</h3>
+                            <button class="card-action" id="viewAllMatches">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="brand-matches" id="brandMatches">
+                                <!-- Brand matches will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Container -->
+    <div class="dashboard-modal" id="dashboardModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Modal Title</h3>
+                <button class="modal-close" id="closeModal" aria-label="Close modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content will be inserted by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════
+        //  ATHLETE DASHBOARD - JavaScript
+        //  Note: All data is mock/hardcoded for demo purposes. No user input is
+        //  used in dynamic HTML generation, eliminating XSS concerns.
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        // ─── Mock Data ───
+        const athleteData = {
+            name: 'Marcus Johnson',
+            school: 'Duke University',
+            sport: 'Basketball',
+            position: 'Point Guard',
+            tier: 'Gold',
+            score: 847,
+            grade: 'A',
+            scoreBreakdown: {
+                athletic: 92,
+                social: 78,
+                academic: 88
+            },
+            stats: {
+                totalEarnings: 47500,
+                activeDeals: 8,
+                profileViews: 2847,
+                achievementXP: 7450
+            },
+            tierProgress: 49,
+            rateMultiplier: '1.5x',
+            scholarSponsors: 12
+        };
+
+        const achievements = [
+            { name: "Dean's List", desc: 'Maintained 3.5+ GPA', icon: '\uD83C\uDF93', rarity: 'legendary', xp: '+500 XP', category: 'Academic' },
+            { name: 'First Deal', desc: 'Completed first brand deal', icon: '\uD83E\uDD1D', rarity: 'rare', xp: '+250 XP', category: 'NIL' },
+            { name: 'Viral Post', desc: '10K+ engagement on post', icon: '\uD83D\uDD25', rarity: 'epic', xp: '+350 XP', category: 'Social' },
+            { name: 'Scholar Athlete', desc: 'GPA above team average', icon: '\uD83D\uDCDA', rarity: 'rare', xp: '+200 XP', category: 'Academic' }
+        ];
+
+        const deals = [
+            { brand: 'Nike', logo: 'N', name: 'Campus Ambassador', amount: 15000, status: 'active', deadline: 'Mar 15, 2026' },
+            { brand: 'Gatorade', logo: 'G', name: 'Social Campaign', amount: 5000, status: 'pending', deadline: 'Feb 28, 2026' },
+            { brand: 'State Farm', logo: 'SF', name: 'Local Appearance', amount: 2500, status: 'active', deadline: 'Apr 1, 2026' },
+            { brand: 'Beats', logo: 'B', name: 'Product Review', amount: 3000, status: 'completed', deadline: 'Feb 10, 2026' }
+        ];
+
+        const calendarItems = [
+            { type: 'finals', month: 'MAR', day: '10', title: 'Finals Week', time: 'Mar 10-17 - Blocked', color: 'error' },
+            { type: 'midterms', month: 'FEB', day: '24', title: 'Midterm Exams', time: 'Feb 24-28 - Limited', color: 'warning' }
+        ];
+
+        const brandMatches = [
+            { name: 'Under Armour', logo: 'UA', industry: 'Athletic Apparel', match: 94 },
+            { name: 'Red Bull', logo: 'RB', industry: 'Energy & Lifestyle', match: 89 },
+            { name: 'Chipotle', logo: 'C', industry: 'Food & Beverage', match: 85 },
+            { name: 'Beats by Dre', logo: 'B', industry: 'Audio & Tech', match: 82 },
+            { name: 'Muscle Milk', logo: 'MM', industry: 'Sports Nutrition', match: 78 }
+        ];
+
+        // ─── Utility Functions ───
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function animateValue(element, start, end, duration, formatter) {
+            formatter = formatter || function(v) { return v; };
+            const startTime = performance.now();
+            const update = function(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const current = Math.floor(start + (end - start) * easeOutQuart);
+                element.textContent = formatter(current);
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            };
+            requestAnimationFrame(update);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ─── Safe DOM Builder Functions ───
+        function createAchievementCard(achievement) {
+            const card = document.createElement('div');
+            card.className = 'achievement-card';
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'achievement-icon ' + achievement.rarity;
+            iconDiv.textContent = achievement.icon;
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'achievement-info';
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'achievement-name';
+            nameDiv.textContent = achievement.name;
+
+            const descDiv = document.createElement('div');
+            descDiv.className = 'achievement-desc';
+            descDiv.textContent = achievement.desc;
+
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(descDiv);
+
+            const xpDiv = document.createElement('div');
+            xpDiv.className = 'achievement-xp';
+            xpDiv.textContent = achievement.xp;
+
+            card.appendChild(iconDiv);
+            card.appendChild(infoDiv);
+            card.appendChild(xpDiv);
+
+            return card;
+        }
+
+        function createDealRow(deal) {
+            const tr = document.createElement('tr');
+
+            // Brand cell
+            const brandTd = document.createElement('td');
+            const brandDiv = document.createElement('div');
+            brandDiv.className = 'deal-brand';
+            const logoDiv = document.createElement('div');
+            logoDiv.className = 'brand-logo';
+            logoDiv.textContent = deal.logo;
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'deal-name';
+            nameSpan.textContent = deal.name;
+            brandDiv.appendChild(logoDiv);
+            brandDiv.appendChild(nameSpan);
+            brandTd.appendChild(brandDiv);
+
+            // Amount cell
+            const amountTd = document.createElement('td');
+            amountTd.className = 'deal-amount';
+            amountTd.textContent = formatCurrency(deal.amount);
+
+            // Status cell
+            const statusTd = document.createElement('td');
+            const statusSpan = document.createElement('span');
+            statusSpan.className = 'deal-status ' + deal.status;
+            statusSpan.textContent = deal.status;
+            statusTd.appendChild(statusSpan);
+
+            // Deadline cell
+            const deadlineTd = document.createElement('td');
+            deadlineTd.textContent = deal.deadline;
+
+            // Actions cell
+            const actionsTd = document.createElement('td');
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'deal-actions';
+
+            const viewBtn = document.createElement('button');
+            viewBtn.className = 'deal-action-btn';
+            viewBtn.setAttribute('aria-label', 'View deal');
+            viewBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+            const msgBtn = document.createElement('button');
+            msgBtn.className = 'deal-action-btn';
+            msgBtn.setAttribute('aria-label', 'Message brand');
+            msgBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>';
+
+            actionsDiv.appendChild(viewBtn);
+            actionsDiv.appendChild(msgBtn);
+            actionsTd.appendChild(actionsDiv);
+
+            tr.appendChild(brandTd);
+            tr.appendChild(amountTd);
+            tr.appendChild(statusTd);
+            tr.appendChild(deadlineTd);
+            tr.appendChild(actionsTd);
+
+            return tr;
+        }
+
+        function createCalendarItem(item) {
+            const div = document.createElement('div');
+            div.className = 'calendar-item ' + item.type;
+
+            const dateDiv = document.createElement('div');
+            dateDiv.className = 'calendar-date';
+            const monthDiv = document.createElement('div');
+            monthDiv.className = 'calendar-month';
+            monthDiv.textContent = item.month;
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            dayDiv.textContent = item.day;
+            dateDiv.appendChild(monthDiv);
+            dateDiv.appendChild(dayDiv);
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'calendar-info';
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'calendar-title';
+            titleDiv.textContent = item.title;
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'calendar-time';
+            timeDiv.textContent = item.time;
+            infoDiv.appendChild(titleDiv);
+            infoDiv.appendChild(timeDiv);
+
+            div.appendChild(dateDiv);
+            div.appendChild(infoDiv);
+
+            return div;
+        }
+
+        function createBrandMatch(brand) {
+            const div = document.createElement('div');
+            div.className = 'match-item';
+
+            const logoDiv = document.createElement('div');
+            logoDiv.className = 'match-logo';
+            logoDiv.textContent = brand.logo;
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'match-info';
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'match-name';
+            nameDiv.textContent = brand.name;
+            const industryDiv = document.createElement('div');
+            industryDiv.className = 'match-industry';
+            industryDiv.textContent = brand.industry;
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(industryDiv);
+
+            const scoreDiv = document.createElement('div');
+            scoreDiv.className = 'match-score';
+            const percentDiv = document.createElement('div');
+            percentDiv.className = 'match-percent';
+            percentDiv.textContent = brand.match + '%';
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'match-label';
+            labelDiv.textContent = 'Match';
+            scoreDiv.appendChild(percentDiv);
+            scoreDiv.appendChild(labelDiv);
+
+            div.appendChild(logoDiv);
+            div.appendChild(infoDiv);
+            div.appendChild(scoreDiv);
+
+            return div;
+        }
+
+        // ─── Initialize Score Animation ───
+        function initScoreAnimation() {
+            const scoreValue = document.getElementById('scoreValue');
+            const scoreGrade = document.getElementById('scoreGrade');
+            const scoreProgress = document.getElementById('scoreProgress');
+
+            // Animate score value
+            animateValue(scoreValue, 0, athleteData.score, 1500);
+
+            // Update grade after animation
+            setTimeout(function() {
+                scoreGrade.textContent = athleteData.grade;
+            }, 1500);
+
+            // Animate ring progress
+            const circumference = 2 * Math.PI * 90;
+            const offset = circumference - (athleteData.score / 1000) * circumference;
+            setTimeout(function() {
+                scoreProgress.style.strokeDashoffset = offset;
+            }, 100);
+
+            // Animate breakdown bars
+            var athletic = athleteData.scoreBreakdown.athletic;
+            var social = athleteData.scoreBreakdown.social;
+            var academic = athleteData.scoreBreakdown.academic;
+            setTimeout(function() {
+                document.getElementById('athleticBar').style.width = athletic + '%';
+                document.getElementById('athleticValue').textContent = athletic + '%';
+                document.getElementById('socialBar').style.width = social + '%';
+                document.getElementById('socialValue').textContent = social + '%';
+                document.getElementById('academicBar').style.width = academic + '%';
+                document.getElementById('academicValue').textContent = academic + '%';
+            }, 300);
+        }
+
+        // ─── Initialize Stats Animation ───
+        function initStatsAnimation() {
+            var totalEarnings = athleteData.stats.totalEarnings;
+            var activeDeals = athleteData.stats.activeDeals;
+            var profileViews = athleteData.stats.profileViews;
+            var achievementXP = athleteData.stats.achievementXP;
+
+            animateValue(document.getElementById('totalEarnings'), 0, totalEarnings, 1200, formatCurrency);
+            animateValue(document.getElementById('activeDeals'), 0, activeDeals, 800);
+            animateValue(document.getElementById('profileViews'), 0, profileViews, 1000, function(v) { return v.toLocaleString(); });
+            animateValue(document.getElementById('achievementXP'), 0, achievementXP, 1000, function(v) { return v.toLocaleString(); });
+        }
+
+        // ─── Initialize Scholar Status ───
+        function initScholarStatus() {
+            document.getElementById('rateMultiplier').textContent = athleteData.rateMultiplier;
+            document.getElementById('scholarSponsors').textContent = athleteData.scholarSponsors;
+
+            setTimeout(function() {
+                document.getElementById('tierProgress').style.width = athleteData.tierProgress + '%';
+            }, 500);
+        }
+
+        // ─── Render Achievements ───
+        function renderAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = '';
+            achievements.forEach(function(achievement) {
+                grid.appendChild(createAchievementCard(achievement));
+            });
+
+            // Animate XP bar
+            setTimeout(function() {
+                document.getElementById('xpFill').style.width = '74.5%';
+            }, 600);
+        }
+
+        // ─── Render Deals Table ───
+        function renderDeals() {
+            const tbody = document.getElementById('dealsTableBody');
+            tbody.innerHTML = '';
+            deals.forEach(function(deal) {
+                tbody.appendChild(createDealRow(deal));
+            });
+        }
+
+        // ─── Render Calendar Widget ───
+        function renderCalendar() {
+            const widget = document.getElementById('calendarWidget');
+            widget.innerHTML = '';
+            calendarItems.forEach(function(item) {
+                widget.appendChild(createCalendarItem(item));
+            });
+
+            // Add availability indicator
+            const availDiv = document.createElement('div');
+            availDiv.className = 'availability-indicator';
+            const dotDiv = document.createElement('div');
+            dotDiv.className = 'availability-dot';
+            const textSpan = document.createElement('span');
+            textSpan.className = 'availability-text';
+            textSpan.textContent = 'Currently Available for Deals';
+            availDiv.appendChild(dotDiv);
+            availDiv.appendChild(textSpan);
+            widget.appendChild(availDiv);
+        }
+
+        // ─── Render Brand Matches ───
+        function renderBrandMatches() {
+            const container = document.getElementById('brandMatches');
+            container.innerHTML = '';
+            brandMatches.forEach(function(brand) {
+                container.appendChild(createBrandMatch(brand));
+            });
+        }
+
+        // ─── Modal Functions ───
+        function openModal(title, contentElement) {
+            const modal = document.getElementById('dashboardModal');
+            document.getElementById('modalTitle').textContent = title;
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = '';
+            if (typeof contentElement === 'string') {
+                // For simple text content, use textContent
+                modalBody.textContent = contentElement;
+            } else if (contentElement instanceof Node) {
+                modalBody.appendChild(contentElement);
+            }
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('dashboardModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ─── Create Modal Content Safely ───
+        function createCalculatingContent() {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'text-align: center; padding: 2rem;';
+
+            const skeleton = document.createElement('div');
+            skeleton.className = 'skeleton';
+            skeleton.style.cssText = 'width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 1.5rem;';
+
+            const p1 = document.createElement('p');
+            p1.style.cssText = 'color: var(--gray-400); margin-bottom: 1rem;';
+            p1.textContent = 'Analyzing your latest data...';
+
+            const p2 = document.createElement('p');
+            p2.style.cssText = 'font-size: 0.875rem; color: var(--gray-600);';
+            p2.textContent = 'This may take a few moments';
+
+            wrapper.appendChild(skeleton);
+            wrapper.appendChild(p1);
+            wrapper.appendChild(p2);
+
+            return wrapper;
+        }
+
+        function createScoreUpdatedContent() {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'text-align: center; padding: 2rem;';
+
+            const emoji = document.createElement('div');
+            emoji.style.cssText = 'font-size: 4rem; margin-bottom: 1rem;';
+            emoji.textContent = '\uD83C\uDF89';
+
+            const h3 = document.createElement('h3');
+            h3.style.cssText = 'color: var(--white); margin-bottom: 0.5rem;';
+            h3.textContent = 'Score Updated!';
+
+            const scoreP = document.createElement('p');
+            scoreP.style.cssText = 'color: var(--cyan); font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;';
+            scoreP.textContent = '847 \u2192 854';
+
+            const changeP = document.createElement('p');
+            changeP.style.cssText = 'color: var(--success); font-size: 0.875rem;';
+            changeP.textContent = '+7 points increase';
+
+            wrapper.appendChild(emoji);
+            wrapper.appendChild(h3);
+            wrapper.appendChild(scoreP);
+            wrapper.appendChild(changeP);
+
+            return wrapper;
+        }
+
+        function createNotificationsContent() {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'display: flex; flex-direction: column; gap: 0.75rem;';
+
+            const notifications = [
+                { title: 'New Brand Match!', desc: 'Under Armour wants to connect with you', time: '2 hours ago', color: 'var(--cyan)' },
+                { title: 'Deal Completed', desc: '$3,000 from Beats has been deposited', time: '5 hours ago', color: 'var(--success)' },
+                { title: 'Achievement Unlocked!', desc: 'You earned the "Viral Post" badge', time: '1 day ago', color: 'var(--gold)' }
+            ];
+
+            notifications.forEach(function(notif) {
+                const notifDiv = document.createElement('div');
+                notifDiv.style.cssText = 'padding: 1rem; background: var(--gray-800); border-radius: 12px; border-left: 3px solid ' + notif.color + ';';
+
+                const titleDiv = document.createElement('div');
+                titleDiv.style.cssText = 'font-weight: 600; color: var(--white); margin-bottom: 0.25rem;';
+                titleDiv.textContent = notif.title;
+
+                const descDiv = document.createElement('div');
+                descDiv.style.cssText = 'font-size: 0.875rem; color: var(--gray-400);';
+                descDiv.textContent = notif.desc;
+
+                const timeDiv = document.createElement('div');
+                timeDiv.style.cssText = 'font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem;';
+                timeDiv.textContent = notif.time;
+
+                notifDiv.appendChild(titleDiv);
+                notifDiv.appendChild(descDiv);
+                notifDiv.appendChild(timeDiv);
+                wrapper.appendChild(notifDiv);
+            });
+
+            return wrapper;
+        }
+
+        function createAllAchievementsContent() {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'display: flex; flex-direction: column; gap: 1rem;';
+
+            // Filter buttons
+            const filterDiv = document.createElement('div');
+            filterDiv.style.cssText = 'display: flex; gap: 0.5rem; margin-bottom: 1rem;';
+
+            var filters = ['All', 'Academic', 'NIL', 'Social'];
+            filters.forEach(function(filterName, index) {
+                const btn = document.createElement('button');
+                btn.className = index === 0 ? 'btn btn-primary' : 'btn btn-outline';
+                btn.style.cssText = 'padding: 0.5rem 1rem; font-size: 0.75rem;';
+                btn.textContent = filterName;
+                filterDiv.appendChild(btn);
+            });
+            wrapper.appendChild(filterDiv);
+
+            // Achievement list
+            achievements.forEach(function(a) {
+                const card = document.createElement('div');
+                card.style.cssText = 'background: var(--gray-800); padding: 1rem; border-radius: 12px; display: flex; gap: 1rem; align-items: center;';
+
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'achievement-icon ' + a.rarity;
+                iconDiv.style.cssText = 'width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 1.5rem;';
+                iconDiv.textContent = a.icon;
+
+                const infoDiv = document.createElement('div');
+                infoDiv.style.cssText = 'flex: 1;';
+
+                const nameDiv = document.createElement('div');
+                nameDiv.style.cssText = 'font-weight: 600; color: var(--white);';
+                nameDiv.textContent = a.name;
+
+                const descDiv = document.createElement('div');
+                descDiv.style.cssText = 'font-size: 0.75rem; color: var(--gray-500);';
+                descDiv.textContent = a.desc;
+
+                const catDiv = document.createElement('div');
+                catDiv.style.cssText = 'font-size: 0.625rem; color: var(--gray-600); margin-top: 0.25rem;';
+                catDiv.textContent = a.category;
+
+                infoDiv.appendChild(nameDiv);
+                infoDiv.appendChild(descDiv);
+                infoDiv.appendChild(catDiv);
+
+                const xpDiv = document.createElement('div');
+                xpDiv.style.cssText = 'color: var(--gold); font-weight: 700;';
+                xpDiv.textContent = a.xp;
+
+                card.appendChild(iconDiv);
+                card.appendChild(infoDiv);
+                card.appendChild(xpDiv);
+                wrapper.appendChild(card);
+            });
+
+            return wrapper;
+        }
+
+        // ─── Tab Switching ───
+        function initTabSwitching() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+                    tab.classList.add('active');
+                });
+            });
+        }
+
+        // ─── Event Listeners ───
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('dashboardModal').addEventListener('click', function(e) {
+            if (e.target.id === 'dashboardModal') closeModal();
+        });
+
+        document.getElementById('calculateScoreBtn').addEventListener('click', function() {
+            openModal('Recalculating Score', createCalculatingContent());
+
+            setTimeout(function() {
+                var modalBody = document.getElementById('modalBody');
+                modalBody.innerHTML = '';
+                modalBody.appendChild(createScoreUpdatedContent());
+            }, 2000);
+        });
+
+        document.getElementById('viewAllAchievements').addEventListener('click', function() {
+            openModal('All Achievements', createAllAchievementsContent());
+        });
+
+        document.getElementById('notificationsBtn').addEventListener('click', function() {
+            openModal('Notifications', createNotificationsContent());
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ─── Initialize Dashboard ───
+        function init() {
+            initScoreAnimation();
+            initStatsAnimation();
+            initScholarStatus();
+            initTabSwitching();
+            renderAchievements();
+            renderDeals();
+            renderCalendar();
+            renderBrandMatches();
+        }
+
+        // Run on DOM ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
