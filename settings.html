@@ -1748,14 +1748,14 @@
                     <h3 class="card-title">Quiet Hours</h3>
                     <p style="color: var(--gray-400); margin-bottom: 1rem; font-size: 0.875rem;">Pause notifications during specific hours</p>
                     <div class="quiet-hours">
-                        <span class="quiet-hours-label">From</span>
-                        <select>
+                        <label for="quietHoursFrom" class="quiet-hours-label">From</label>
+                        <select id="quietHoursFrom" aria-label="Quiet hours start time">
                             <option>10:00 PM</option>
                             <option>11:00 PM</option>
                             <option>12:00 AM</option>
                         </select>
-                        <span class="quiet-hours-label">to</span>
-                        <select>
+                        <label for="quietHoursTo" class="quiet-hours-label">to</label>
+                        <select id="quietHoursTo" aria-label="Quiet hours end time">
                             <option>6:00 AM</option>
                             <option>7:00 AM</option>
                             <option selected>8:00 AM</option>
@@ -1800,10 +1800,10 @@
                                     <polyline points="21 15 16 10 5 21"/>
                                 </svg>
                             </div>
-                            <div class="rate-card-title">Social Post</div>
+                            <div class="rate-card-title" id="socialPostLabel">Social Post</div>
                             <div class="rate-card-input">
                                 <span>$</span>
-                                <input type="number" value="750" min="0" step="50">
+                                <input type="number" value="750" min="0" step="50" aria-labelledby="socialPostLabel" id="socialPostRate">
                             </div>
                         </div>
                         <div class="rate-card">
@@ -1815,10 +1815,10 @@
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                                 </svg>
                             </div>
-                            <div class="rate-card-title">Appearance</div>
+                            <div class="rate-card-title" id="appearanceLabel">Appearance</div>
                             <div class="rate-card-input">
                                 <span>$</span>
-                                <input type="number" value="2500" min="0" step="100">
+                                <input type="number" value="2500" min="0" step="100" aria-labelledby="appearanceLabel" id="appearanceRate">
                             </div>
                         </div>
                         <div class="rate-card">
@@ -1829,10 +1829,10 @@
                                     <path d="M2 12l10 5 10-5"/>
                                 </svg>
                             </div>
-                            <div class="rate-card-title">Endorsement</div>
+                            <div class="rate-card-title" id="endorsementLabel">Endorsement</div>
                             <div class="rate-card-input">
                                 <span>$</span>
-                                <input type="number" value="5000" min="0" step="500">
+                                <input type="number" value="5000" min="0" step="500" aria-labelledby="endorsementLabel" id="endorsementRate">
                             </div>
                         </div>
                     </div>

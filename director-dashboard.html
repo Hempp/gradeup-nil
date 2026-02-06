@@ -93,9 +93,11 @@
                     <div class="section-actions">
                         <div class="search-box">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                            <input type="text" placeholder="Search athletes..." id="athleteSearch">
+                            <label for="athleteSearch" class="sr-only">Search athletes</label>
+                            <input type="text" placeholder="Search athletes..." id="athleteSearch" aria-label="Search athletes">
                         </div>
-                        <select class="filter-select" id="sportFilter">
+                        <label for="sportFilter" class="sr-only">Filter by sport</label>
+                        <select class="filter-select" id="sportFilter" aria-label="Filter by sport">
                             <option value="">All Sports</option>
                             <option value="basketball">Basketball</option>
                             <option value="football">Football</option>
@@ -106,7 +108,8 @@
                             <option value="volleyball">Volleyball</option>
                             <option value="track">Track & Field</option>
                         </select>
-                        <select class="filter-select" id="statusFilter">
+                        <label for="statusFilter" class="sr-only">Filter by status</label>
+                        <select class="filter-select" id="statusFilter" aria-label="Filter by status">
                             <option value="">All Status</option>
                             <option value="verified">Verified</option>
                             <option value="pending">Pending</option>
@@ -123,7 +126,7 @@
                     <table class="athletes-table" id="athletesTable">
                         <thead>
                             <tr>
-                                <th><input type="checkbox" id="selectAll"></th>
+                                <th><label class="sr-only" for="selectAll">Select all athletes</label><input type="checkbox" id="selectAll" aria-label="Select all athletes"></th>
                                 <th class="sortable" data-sort="name">Athlete <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></th>
                                 <th class="sortable" data-sort="sport">Sport</th>
                                 <th class="sortable" data-sort="year">Year</th>
@@ -321,7 +324,8 @@
                 <div class="section-header">
                     <h2 class="section-title">Reports & Analytics</h2>
                     <div class="section-actions">
-                        <select class="filter-select">
+                        <label for="timePeriodFilter" class="sr-only">Filter by time period</label>
+                        <select class="filter-select" id="timePeriodFilter" aria-label="Filter by time period">
                             <option>This Semester</option>
                             <option>Last Semester</option>
                             <option>This Year</option>
@@ -602,24 +606,24 @@
                 <div class="settings-content" id="settingsContent">
                     <div class="settings-panel active" id="profilePanel">
                         <div class="form-group">
-                            <label>School Name</label>
-                            <input type="text" value="Duke University" class="form-input">
+                            <label for="schoolName">School Name</label>
+                            <input type="text" id="schoolName" value="Duke University" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label>Athletic Department</label>
-                            <input type="text" value="Duke Blue Devils Athletics" class="form-input">
+                            <label for="athleticDept">Athletic Department</label>
+                            <input type="text" id="athleticDept" value="Duke Blue Devils Athletics" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label>Primary Contact Email</label>
-                            <input type="email" value="athletics@duke.edu" class="form-input">
+                            <label for="contactEmail">Primary Contact Email</label>
+                            <input type="email" id="contactEmail" value="athletics@duke.edu" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="tel" value="(919) 684-2633" class="form-input">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" id="phoneNumber" value="(919) 684-2633" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label>Conference</label>
-                            <select class="form-input">
+                            <label for="conference">Conference</label>
+                            <select id="conference" class="form-input">
                                 <option selected>ACC (Atlantic Coast Conference)</option>
                                 <option>Big Ten</option>
                                 <option>SEC</option>
@@ -639,21 +643,21 @@
                     <div class="settings-panel" id="compliancePanel">
                         <h4>GPA Requirements</h4>
                         <div class="form-group">
-                            <label>Minimum GPA for NIL Eligibility</label>
-                            <input type="number" value="2.5" step="0.1" min="0" max="4.0" class="form-input">
+                            <label for="minGpa">Minimum GPA for NIL Eligibility</label>
+                            <input type="number" id="minGpa" value="2.5" step="0.1" min="0" max="4.0" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label>GPA Warning Threshold</label>
-                            <input type="number" value="2.7" step="0.1" min="0" max="4.0" class="form-input">
+                            <label for="gpaWarning">GPA Warning Threshold</label>
+                            <input type="number" id="gpaWarning" value="2.7" step="0.1" min="0" max="4.0" class="form-input">
                         </div>
                         <h4>Deal Limits</h4>
                         <div class="form-group">
-                            <label>Maximum Concurrent Deals</label>
-                            <input type="number" value="10" class="form-input">
+                            <label for="maxDeals">Maximum Concurrent Deals</label>
+                            <input type="number" id="maxDeals" value="10" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label>Deal Review Threshold ($)</label>
-                            <input type="number" value="5000" class="form-input">
+                            <label for="dealThreshold">Deal Review Threshold ($)</label>
+                            <input type="number" id="dealThreshold" value="5000" class="form-input">
                         </div>
                         <h4>Verification Requirements</h4>
                         <div class="checkbox-group">
@@ -727,9 +731,9 @@
                         </div>
                         <h4>API Access</h4>
                         <div class="form-group">
-                            <label>API Key</label>
+                            <label for="apiKey">API Key</label>
                             <div class="api-key-group">
-                                <input type="password" value="sk_live_xxxxxxxxxxxx" class="form-input" readonly>
+                                <input type="password" id="apiKey" value="sk_live_xxxxxxxxxxxx" class="form-input" readonly>
                                 <button class="btn btn-secondary btn-sm">Show</button>
                                 <button class="btn btn-secondary btn-sm">Regenerate</button>
                             </div>

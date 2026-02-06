@@ -1713,8 +1713,8 @@
                         </button>
                         <div class="filter-menu">
                             <div class="filter-group">
-                                <div class="filter-label">Sport</div>
-                                <select class="filter-select" id="sportFilter">
+                                <label class="filter-label" for="sportFilter">Sport</label>
+                                <select class="filter-select" id="sportFilter" aria-label="Filter by sport">
                                     <option value="">All Sports</option>
                                     <option value="basketball">Basketball</option>
                                     <option value="football">Football</option>
@@ -1726,8 +1726,8 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <div class="filter-label">School</div>
-                                <select class="filter-select" id="schoolFilter">
+                                <label class="filter-label" for="schoolFilter">School</label>
+                                <select class="filter-select" id="schoolFilter" aria-label="Filter by school">
                                     <option value="">All Schools</option>
                                     <option value="duke">Duke University</option>
                                     <option value="stanford">Stanford University</option>
@@ -1738,8 +1738,8 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <div class="filter-label">Minimum GPA</div>
-                                <select class="filter-select" id="gpaFilter">
+                                <label class="filter-label" for="gpaFilter">Minimum GPA</label>
+                                <select class="filter-select" id="gpaFilter" aria-label="Filter by minimum GPA">
                                     <option value="">Any GPA</option>
                                     <option value="3.8">3.8+</option>
                                     <option value="3.5">3.5+</option>
@@ -1748,8 +1748,8 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <div class="filter-label">GradeUp Score</div>
-                                <select class="filter-select" id="gradeupScoreFilter">
+                                <label class="filter-label" for="gradeupScoreFilter">GradeUp Score</label>
+                                <select class="filter-select" id="gradeupScoreFilter" aria-label="Filter by GradeUp score">
                                     <option value="">Any Score</option>
                                     <option value="a+">A+ (95+)</option>
                                     <option value="a">A (90-94)</option>
@@ -1758,8 +1758,8 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <div class="filter-label">Scholar Tier</div>
-                                <select class="filter-select" id="tierFilter">
+                                <label class="filter-label" for="tierFilter">Scholar Tier</label>
+                                <select class="filter-select" id="tierFilter" aria-label="Filter by scholar tier">
                                     <option value="">All Tiers</option>
                                     <option value="platinum">Platinum</option>
                                     <option value="gold">Gold</option>
@@ -1787,8 +1787,8 @@
                         Showing <strong id="resultsCount">847</strong> athletes
                     </div>
                     <div class="sort-select">
-                        <span>Sort by:</span>
-                        <select id="sortSelect">
+                        <label for="sortSelect">Sort by:</label>
+                        <select id="sortSelect" aria-label="Sort athletes by">
                             <option value="match">Match Score</option>
                             <option value="gradeup">GradeUp Score</option>
                             <option value="followers">Followers</option>

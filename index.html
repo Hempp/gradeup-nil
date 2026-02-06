@@ -454,7 +454,55 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Supabase Client (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Configuration -->
+    <script>
+        // GradeUp Configuration
+        // Set your Supabase credentials here or via environment variables
+        window.GRADEUP_CONFIG = {
+            SUPABASE_URL: '', // e.g., 'https://your-project.supabase.co'
+            SUPABASE_ANON_KEY: '', // Your anon/public key
+        };
+    </script>
+
+    <!-- Application Scripts -->
     <script src="app.js"></script>
+
+    <!-- Platform Initialization (ES Module) -->
+    <script type="module">
+        import { initGradeUp, isDemoMode } from './src/init.js';
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', async () => {
+            const result = await initGradeUp();
+
+            if (isDemoMode()) {
+                console.info('[GradeUp] Running in demo mode with mock data');
+            }
+        });
+
+        // Listen for auth changes to update UI
+        window.addEventListener('gradeup:auth', (event) => {
+            const { event: authEvent, user } = event.detail;
+            if (authEvent === 'signed_in') {
+                // Update nav to show user is logged in using safe DOM methods
+                const navActions = document.querySelector('.nav-actions');
+                if (navActions && user) {
+                    navActions.replaceChildren(); // Clear existing content safely
+                    const greeting = document.createElement('span');
+                    greeting.className = 'user-greeting';
+                    greeting.textContent = 'Welcome, ' + user.email;
+                    const dashLink = document.createElement('a');
+                    dashLink.href = 'athlete-dashboard.html';
+                    dashLink.className = 'btn btn-primary';
+                    dashLink.textContent = 'Dashboard';
+                    navActions.appendChild(greeting);
+                    navActions.appendChild(dashLink);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="GradeUp NIL - Connecting student-athletes with brands. Academic excellence meets NIL opportunity.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>GradeUp NIL - Where Academic Excellence Meets NIL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            primary: '#007AFF',
+            secondary: '#5856D6',
+            success: '#34C759',
+            warning: '#FF9500',
+            danger: '#FF3B30',
+            dark: {
+              bg: '#0a0a0f',
+              card: '#12121a',
+              border: '#1e1e2e',
+              hover: '#2a2a3a',
+              elevated: '#18182a'
+            },
+            muted: '#a1a1aa'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0a0f;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2a2a3a; }
+
+    /* Focus States for Accessibility */
+    *:focus-visible {
+      outline: 2px solid #007AFF;
+      outline-offset: 2px;
+    }
+
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid #007AFF;
+      outline-offset: 2px;
+    }
+
+    /* GPA Badge */
+    .gpa-badge {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      color: #000;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    }
+
+    /* StatsTaq Badge */
+    .statstaq-badge {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .statstaq-badge:hover { opacity: 0.85; }
+
+    /* Card Hover Effects */
+    .card-hover {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px rgba(0, 122, 255, 0.15);
+    }
+
+    /* Button Styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-primary:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+    }
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Glass Effect */
+    .glass {
+      background: rgba(18, 18, 26, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(100%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+    .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
+    .animate-slideInRight { animation: slideInRight 0.3s ease-out forwards; }
+    .animate-scaleIn { animation: scaleIn 0.3s ease-out forwards; }
+    .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+
+    /* Skeleton Loading */
+    .skeleton {
+      background: linear-gradient(90deg, #1e1e2e 25%, #2a2a3a 50%, #1e1e2e 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Gradient Border */
+    .gradient-border { position: relative; }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, #007AFF, #5856D6);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+
+    /* Sport-specific stat labels */
+    .stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Toast notifications */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #18182a;
+      border: 1px solid #2a2a3a;
+      padding: 12px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Input focus states */
+    input:focus, select:focus, textarea:focus {
+      border-color: #007AFF !important;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+
+    /* Touch target improvements for mobile */
+    @media (max-width: 768px) {
+      button, a, input, select {
+        min-height: 44px;
+      }
+    }
+
+    /* Prevent text selection on interactive elements */
+    button, .card-hover {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useCallback, useMemo, memo } = React;
+
+    // ============ DATA ============
+    const athletesData = [
+      {
+        id: '1', name: 'Jordan Williams', sport: 'Basketball', position: 'Point Guard',
+        university: 'Duke University', gpa: 3.87, major: 'Business Administration',
+        followers: 125000, nilValue: 450000, year: 'Junior',
+        photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face',
+        bio: 'Two-time ACC Player of the Week. Dean\'s List student with aspirations in sports management.',
+        stats: { ppg: 18.5, apg: 7.2, rpg: 4.1, fgPct: 48.2, games: 28, per: 24.5 },
+        statLabels: { ppg: 'PPG', apg: 'APG', rpg: 'RPG' }
+      },
+      {
+        id: '2', name: 'Maya Thompson', sport: 'Soccer', position: 'Forward',
+        university: 'Stanford University', gpa: 3.92, major: 'Computer Science',
+        followers: 89000, nilValue: 320000, year: 'Senior',
+        photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face',
+        bio: 'All-American selection. Founded a coding bootcamp for young athletes.',
+        stats: { ppg: 12, apg: 8, rpg: 0, fgPct: 0, games: 22, per: 0 },
+        statLabels: { ppg: 'Goals', apg: 'Assists', rpg: 'Saves' }
+      },
+      {
+        id: '3', name: 'Marcus Chen', sport: 'Football', position: 'Quarterback',
+        university: 'USC', gpa: 3.45, major: 'Communications',
+        followers: 215000, nilValue: 780000, year: 'Junior',
+        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+        bio: 'Pac-12 Offensive Player of the Year finalist. Campus ambassador for mental health awareness.',
+        stats: { ppg: 285, apg: 24, rpg: 3, fgPct: 68.5, games: 12, per: 158.3 },
+        statLabels: { ppg: 'Pass YPG', apg: 'TDs', rpg: 'INT' }
+      },
+      {
+        id: '4', name: 'Aaliyah Johnson', sport: 'Basketball', position: 'Shooting Guard',
+        university: 'UConn', gpa: 3.78, major: 'Psychology',
+        followers: 156000, nilValue: 520000, year: 'Sophomore',
+        photo: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=face',
+        bio: 'McDonald\'s All-American. Advocates for women in sports.',
+        stats: { ppg: 21.3, apg: 4.8, rpg: 5.2, fgPct: 45.8, games: 30, per: 25.8 },
+        statLabels: { ppg: 'PPG', apg: 'APG', rpg: 'RPG' }
+      },
+      {
+        id: '5', name: 'Tyler Brooks', sport: 'Baseball', position: 'Pitcher',
+        university: 'Vanderbilt', gpa: 3.65, major: 'Economics',
+        followers: 67000, nilValue: 285000, year: 'Senior',
+        photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
+        bio: 'SEC Pitcher of the Year. Interned at Goldman Sachs.',
+        stats: { ppg: 2.15, apg: 142, rpg: 12, fgPct: 0, games: 18, per: 0 },
+        statLabels: { ppg: 'ERA', apg: 'K\'s', rpg: 'Wins' }
+      },
+      {
+        id: '6', name: 'Sofia Rodriguez', sport: 'Volleyball', position: 'Outside Hitter',
+        university: 'Texas', gpa: 3.91, major: 'Marketing',
+        followers: 98000, nilValue: 340000, year: 'Junior',
+        photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face',
+        bio: 'First-team All-Big 12. Runs a successful lifestyle blog.',
+        stats: { ppg: 4.2, apg: 0.8, rpg: 2.1, fgPct: 0, games: 32, per: 0 },
+        statLabels: { ppg: 'Kills/Set', apg: 'Aces/Set', rpg: 'Digs/Set' }
+      }
+    ];
+
+    const brandsData = [
+      { id: '1', name: 'Nike', logo: '🏃', industry: 'Athletic Apparel', budget: 500000, color: '#FF6B00' },
+      { id: '2', name: 'Gatorade', logo: '⚡', industry: 'Sports Drinks', budget: 350000, color: '#00A651' },
+      { id: '3', name: 'State Farm', logo: '🏠', industry: 'Insurance', budget: 250000, color: '#E31837' },
+      { id: '4', name: 'Beats', logo: '🎧', industry: 'Audio', budget: 400000, color: '#FF0000' },
+    ];
+
+    const initialContractsData = [
+      {
+        id: '1', athleteId: '1', brandId: '1', athleteName: 'Jordan Williams', brandName: 'Nike',
+        title: 'Campus Ambassador Program', description: 'Represent Nike on Duke campus through social media and events',
+        totalValue: 25000, status: 'active', createdAt: '2025-01-15', startDate: '2025-02-01', endDate: '2025-08-01',
+        signatures: { athlete: true, brand: true },
+        tasks: [
+          { id: '1', description: 'Post 3 Instagram stories wearing Nike gear', deadline: '2025-02-15', payment: 5000, status: 'completed', proof: 'instagram.com/jordanw' },
+          { id: '2', description: 'Attend Nike campus event and take photos', deadline: '2025-03-01', payment: 10000, status: 'in_progress' },
+          { id: '3', description: 'Create YouTube video reviewing new Nike shoes', deadline: '2025-04-15', payment: 10000, status: 'pending' }
+        ]
+      },
+      {
+        id: '2', athleteId: '4', brandId: '2', athleteName: 'Aaliyah Johnson', brandName: 'Gatorade',
+        title: 'Hydration Campaign', description: 'Promote Gatorade products during basketball season',
+        totalValue: 15000, status: 'pending_signature', createdAt: '2025-01-20', startDate: '2025-02-15', endDate: '2025-06-15',
+        signatures: { athlete: false, brand: true },
+        tasks: [
+          { id: '1', description: 'Film workout hydration routine for TikTok', deadline: '2025-03-01', payment: 7500, status: 'pending' },
+          { id: '2', description: 'Share game day prep featuring Gatorade on Instagram', deadline: '2025-04-01', payment: 7500, status: 'pending' }
+        ]
+      },
+      {
+        id: '3', athleteId: '1', brandId: '4', athleteName: 'Jordan Williams', brandName: 'Beats',
+        title: 'Game Day Audio', description: 'Feature Beats headphones in pre-game content',
+        totalValue: 18000, status: 'active', createdAt: '2025-01-10', startDate: '2025-01-15', endDate: '2025-05-01',
+        signatures: { athlete: true, brand: true },
+        tasks: [
+          { id: '1', description: 'Post pre-game playlist wearing Beats', deadline: '2025-02-01', payment: 6000, status: 'completed' },
+          { id: '2', description: 'Create unboxing video for new Beats model', deadline: '2025-03-15', payment: 6000, status: 'pending' },
+          { id: '3', description: 'Mention Beats in post-game interview', deadline: '2025-04-01', payment: 6000, status: 'pending' }
+        ]
+      }
+    ];
+
+    // ============ UTILITY FUNCTIONS ============
+    const formatCurrency = (value) => {
+      if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+      if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
+      return `$${value.toLocaleString()}`;
+    };
+
+    const formatNumber = (value) => {
+      if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+      if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+      return value.toString();
+    };
+
+    const getStatusColor = (status) => ({
+      'draft': 'bg-gray-500',
+      'pending_signature': 'bg-yellow-500',
+      'active': 'bg-green-500',
+      'completed': 'bg-blue-500',
+      'disputed': 'bg-red-500'
+    }[status] || 'bg-gray-500');
+
+    const getStatusText = (status) => status.replace(/_/g, ' ');
+
+    // ============ TOAST COMPONENT ============
+    const Toast = memo(({ message, isVisible, type = 'success' }) => {
+      const bgColor = type === 'success' ? 'border-green-500/30' : type === 'error' ? 'border-red-500/30' : 'border-blue-500/30';
+      const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+
+      return (
+        <div className={`toast ${isVisible ? 'show' : ''} ${bgColor}`} role="alert" aria-live="polite">
+          <div className="flex items-center gap-3">
+            <span className={`text-lg ${type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-blue-400'}`}>
+              {icon}
+            </span>
+            <span className="text-white text-sm font-medium">{message}</span>
+          </div>
+        </div>
+      );
+    });
+
+    // ============ COMPONENTS ============
+
+    // Athlete Card Component
+    const AthleteCard = memo(({ athlete, onCreateContract, showContract = true }) => {
+      const [imageLoaded, setImageLoaded] = useState(false);
+      const [imageError, setImageError] = useState(false);
+
+      const handleImageError = () => {
+        setImageError(true);
+        setImageLoaded(true);
+      };
+
+      return (
+        <article className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden card-hover" aria-label={`${athlete.name}, ${athlete.sport} athlete`}>
+          <div className="relative">
+            <div className={`w-full h-52 bg-dark-border ${!imageLoaded ? 'skeleton' : ''}`}>
+              {!imageError ? (
+                <img
+                  src={athlete.photo}
+                  alt={`${athlete.name} profile photo`}
+                  className={`w-full h-52 object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  onLoad={() => setImageLoaded(true)}
+                  onError={handleImageError}
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full h-52 bg-dark-border flex items-center justify-center">
+                  <span className="text-4xl text-muted">👤</span>
+                </div>
+              )}
+            </div>
+            <div className="absolute top-3 left-3">
+              <span className="gpa-badge" aria-label={`GPA: ${athlete.gpa.toFixed(2)}`}>⭐ {athlete.gpa.toFixed(2)} GPA</span>
+            </div>
+            <div className="absolute top-3 right-3 bg-primary text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+              {athlete.sport}
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-dark-card to-transparent pointer-events-none"></div>
+          </div>
+
+          <div className="p-5">
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <h3 className="text-lg font-bold text-white">{athlete.name}</h3>
+                <p className="text-muted text-sm">{athlete.position} • {athlete.year}</p>
+              </div>
+              <span className="text-green-400 font-bold text-sm" aria-label={`NIL Value: ${formatCurrency(athlete.nilValue)}`}>
+                {formatCurrency(athlete.nilValue)}
+              </span>
+            </div>
+            <p className="text-muted text-xs mb-3">{athlete.university}</p>
+
+            {/* StatsTaq Stats */}
+            <div className="bg-dark-bg rounded-xl p-4 mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-muted">Performance Stats</span>
+                <a
+                  href="https://statstaq.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="statstaq-badge"
+                  aria-label="View on StatsTaq"
+                >
+                  via StatsTaq
+                </a>
+              </div>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div>
+                  <p className="text-xl font-bold text-white">{athlete.stats.ppg}</p>
+                  <p className="stat-label text-muted">{athlete.statLabels.ppg}</p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-white">{athlete.stats.apg}</p>
+                  <p className="stat-label text-muted">{athlete.statLabels.apg}</p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-white">{athlete.stats.games}</p>
+                  <p className="stat-label text-muted">Games</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm mb-4">
+              <span className="text-muted flex items-center gap-1">
+                <span aria-hidden="true">👥</span> {formatNumber(athlete.followers)} followers
+              </span>
+            </div>
+
+            {showContract && onCreateContract && (
+              <button
+                onClick={() => onCreateContract(athlete)}
+                className="w-full py-3 btn-primary text-white rounded-xl font-semibold"
+                aria-label={`Create contract with ${athlete.name}`}
+              >
+                Create Contract
+              </button>
+            )}
+          </div>
+        </article>
+      );
+    });
+
+    // Smart Contract Card
+    const SmartContractCard = memo(({ contract, userType, onSign, onMarkComplete }) => {
+      const completedTasks = contract.tasks.filter(t => t.status === 'completed').length;
+      const progress = (completedTasks / contract.tasks.length) * 100;
+      const earnedAmount = contract.tasks.filter(t => t.status === 'completed').reduce((sum, t) => sum + t.payment, 0);
+
+      return (
+        <article className="bg-dark-card border border-dark-border rounded-2xl p-6 animate-fadeIn" aria-label={`Contract: ${contract.title}`}>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-white mb-1">{contract.title}</h3>
+              <p className="text-sm text-muted">
+                {userType === 'athlete' ? `with ${contract.brandName}` : `with ${contract.athleteName}`}
+              </p>
+            </div>
+            <span
+              className={`${getStatusColor(contract.status)} px-3 py-1 rounded-full text-xs font-semibold text-white uppercase`}
+              aria-label={`Status: ${getStatusText(contract.status)}`}
+            >
+              {getStatusText(contract.status)}
+            </span>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-5">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-muted">Progress</span>
+              <span className="text-white font-medium">{completedTasks}/{contract.tasks.length} tasks</span>
+            </div>
+            <div className="h-2 bg-dark-bg rounded-full overflow-hidden" role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100">
+              <div
+                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between text-xs mt-2">
+              <span className="text-green-400">${earnedAmount.toLocaleString()} earned</span>
+              <span className="text-muted">${(contract.totalValue - earnedAmount).toLocaleString()} remaining</span>
+            </div>
+          </div>
+
+          {/* Tasks */}
+          <ul className="space-y-2 mb-5" aria-label="Contract tasks">
+            {contract.tasks.map((task, idx) => (
+              <li
+                key={task.id}
+                className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
+                  task.status === 'completed' ? 'bg-green-500/10 border border-green-500/20' :
+                  task.status === 'in_progress' ? 'bg-yellow-500/10 border border-yellow-500/20' :
+                  'bg-dark-bg border border-transparent'
+                }`}
+                style={{ animationDelay: `${idx * 0.1}s` }}
+              >
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      task.status === 'completed' ? 'bg-green-500' :
+                      task.status === 'in_progress' ? 'bg-yellow-500' : 'bg-dark-border'
+                    }`}
+                    aria-hidden="true"
+                  >
+                    {task.status === 'completed' ? (
+                      <span className="text-white text-sm">✓</span>
+                    ) : task.status === 'in_progress' ? (
+                      <span className="text-white text-xs">⏳</span>
+                    ) : (
+                      <span className="text-muted text-xs">{idx + 1}</span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className={`text-sm block truncate ${task.status === 'completed' ? 'text-green-400' : 'text-white'}`}>
+                      {task.description}
+                    </span>
+                    <span className="text-xs text-muted">Due: {new Date(task.deadline).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 ml-3">
+                  <span className="text-green-400 font-semibold text-sm whitespace-nowrap">${task.payment.toLocaleString()}</span>
+                  {userType === 'athlete' && task.status === 'in_progress' && onMarkComplete && (
+                    <button
+                      onClick={() => onMarkComplete(contract.id, task.id)}
+                      className="px-2 py-1 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition"
+                      aria-label={`Mark task complete: ${task.description}`}
+                    >
+                      Complete
+                    </button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between pt-4 border-t border-dark-border">
+            <div>
+              <span className="text-muted text-sm">Total Value</span>
+              <p className="text-2xl font-bold text-white">${contract.totalValue.toLocaleString()}</p>
+            </div>
+            {contract.status === 'pending_signature' && userType === 'athlete' && (
+              <button
+                onClick={() => onSign && onSign(contract.id)}
+                className="px-6 py-2 btn-primary text-white rounded-xl font-semibold"
+                aria-label={`Sign contract: ${contract.title}`}
+              >
+                Sign Contract
+              </button>
+            )}
+          </div>
+        </article>
+      );
+    });
+
+    // Navbar Component
+    const Navbar = memo(({ onNavigate, onDashboard }) => {
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [scrolled, setScrolled] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      // Close mobile menu on escape key
+      useEffect(() => {
+        const handleEscape = (e) => {
+          if (e.key === 'Escape' && mobileMenuOpen) {
+            setMobileMenuOpen(false);
+          }
+        };
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+      }, [mobileMenuOpen]);
+
+      // Prevent body scroll when menu is open
+      useEffect(() => {
+        if (mobileMenuOpen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+      }, [mobileMenuOpen]);
+
+      return (
+        <>
+          <nav
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass border-b border-dark-border' : ''}`}
+            role="navigation"
+            aria-label="Main navigation"
+          >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+              <button
+                onClick={() => onNavigate('home')}
+                className="text-xl sm:text-2xl font-bold flex items-center gap-2"
+                aria-label="GradeUp NIL Home"
+              >
+                <span className="text-white">GRADEUP</span>
+                <span className="gradient-text">NIL</span>
+              </button>
+
+              {/* Desktop Nav */}
+              <div className="hidden md:flex items-center gap-8">
+                <button onClick={() => onNavigate('athletes')} className="text-muted hover:text-white transition font-medium">Athletes</button>
+                <button onClick={() => onNavigate('features')} className="text-muted hover:text-white transition font-medium">Features</button>
+                <a href="https://statstaq.com" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-white transition font-medium">StatsTaq</a>
+              </div>
+
+              <div className="hidden md:flex items-center gap-3">
+                <button onClick={() => onDashboard('director')} className="px-4 py-2 text-muted hover:text-white transition font-medium">AD Portal</button>
+                <button onClick={() => onDashboard('athlete')} className="px-4 py-2 bg-dark-hover text-white rounded-xl hover:bg-dark-border transition font-medium">Athlete</button>
+                <button onClick={() => onDashboard('brand')} className="px-4 py-2 btn-primary text-white rounded-xl font-medium">Brand</button>
+              </div>
+
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 text-white min-w-[44px] min-h-[44px] flex items-center justify-center"
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={mobileMenuOpen}
+              >
+                <span className="text-2xl" aria-hidden="true">{mobileMenuOpen ? '✕' : '☰'}</span>
+              </button>
+            </div>
+          </nav>
+
+          {/* Mobile Menu */}
+          <div
+            className={`fixed inset-0 z-40 md:hidden ${mobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+            aria-hidden={!mobileMenuOpen}
+          >
+            <div
+              className={`absolute inset-0 bg-black transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-50' : 'opacity-0'}`}
+              onClick={() => setMobileMenuOpen(false)}
+              aria-hidden="true"
+            ></div>
+            <div
+              className={`mobile-menu ${mobileMenuOpen ? 'open' : ''} absolute right-0 top-0 h-full w-72 bg-dark-card border-l border-dark-border p-6`}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation menu"
+            >
+              <div className="flex flex-col gap-4 mt-16">
+                <button onClick={() => { onNavigate('athletes'); setMobileMenuOpen(false); }} className="text-left text-white font-medium py-3">Athletes</button>
+                <button onClick={() => { onNavigate('features'); setMobileMenuOpen(false); }} className="text-left text-white font-medium py-3">Features</button>
+                <hr className="border-dark-border" />
+                <button onClick={() => { onDashboard('director'); setMobileMenuOpen(false); }} className="text-left text-muted font-medium py-3">AD Portal</button>
+                <button onClick={() => { onDashboard('athlete'); setMobileMenuOpen(false); }} className="w-full py-3 bg-dark-hover text-white rounded-xl font-medium">Athlete Login</button>
+                <button onClick={() => { onDashboard('brand'); setMobileMenuOpen(false); }} className="w-full py-3 btn-primary text-white rounded-xl font-medium">Brand Login</button>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    });
+
+    // Create Contract Modal
+    const CreateContractModal = memo(({ athlete, onClose, onSubmit }) => {
+      const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        totalValue: '',
+        tasks: [{ description: '', payment: '', deadline: '' }]
+      });
+      const [errors, setErrors] = useState({});
+
+      const addTask = () => {
+        setFormData(prev => ({
+          ...prev,
+          tasks: [...prev.tasks, { description: '', payment: '', deadline: '' }]
+        }));
+      };
+
+      const updateTask = (index, field, value) => {
+        const newTasks = [...formData.tasks];
+        newTasks[index][field] = value;
+        setFormData(prev => ({ ...prev, tasks: newTasks }));
+      };
+
+      const removeTask = (index) => {
+        if (formData.tasks.length > 1) {
+          setFormData(prev => ({
+            ...prev,
+            tasks: prev.tasks.filter((_, i) => i !== index)
+          }));
+        }
+      };
+
+      const validateForm = () => {
+        const newErrors = {};
+        if (!formData.title.trim()) newErrors.title = 'Title is required';
+        if (!formData.totalValue || parseInt(formData.totalValue) <= 0) newErrors.totalValue = 'Valid total value is required';
+
+        formData.tasks.forEach((task, idx) => {
+          if (!task.description.trim()) newErrors[`task_${idx}_desc`] = 'Task description is required';
+          if (!task.payment || parseInt(task.payment) <= 0) newErrors[`task_${idx}_payment`] = 'Valid payment is required';
+        });
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
+
+      const handleSubmit = () => {
+        if (validateForm()) {
+          onSubmit(formData);
+          onClose();
+        }
+      };
+
+      // Close on escape key
+      useEffect(() => {
+        const handleEscape = (e) => {
+          if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+      }, [onClose]);
+
+      return (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          <div
+            className="bg-dark-card rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scaleIn"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 id="modal-title" className="text-xl font-bold text-white">Create Smart Contract</h2>
+              <button
+                onClick={onClose}
+                className="text-muted hover:text-white text-2xl leading-none p-1"
+                aria-label="Close modal"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Athlete Preview */}
+            <div className="flex items-center gap-4 mb-6 p-4 bg-dark-bg rounded-xl">
+              <img src={athlete.photo} alt={athlete.name} className="w-14 h-14 rounded-full object-cover" />
+              <div>
+                <p className="font-semibold text-white">{athlete.name}</p>
+                <p className="text-sm text-muted">
+                  {athlete.sport} • <span className="gpa-badge text-xs py-0.5 px-2">{athlete.gpa.toFixed(2)} GPA</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="contract-title" className="block text-sm text-muted mb-2">Contract Title *</label>
+                <input
+                  id="contract-title"
+                  type="text"
+                  placeholder="e.g., Campus Ambassador Program"
+                  value={formData.title}
+                  onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  className={`w-full px-4 py-3 bg-dark-bg border ${errors.title ? 'border-red-500' : 'border-dark-border'} rounded-xl text-white placeholder-muted focus:border-primary focus:outline-none transition`}
+                  aria-invalid={!!errors.title}
+                  aria-describedby={errors.title ? 'title-error' : undefined}
+                />
+                {errors.title && <p id="title-error" className="text-red-400 text-xs mt-1">{errors.title}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="contract-description" className="block text-sm text-muted mb-2">Description</label>
+                <textarea
+                  id="contract-description"
+                  rows={3}
+                  placeholder="Describe the partnership goals..."
+                  value={formData.description}
+                  onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-xl text-white placeholder-muted resize-none focus:border-primary focus:outline-none transition"
+                ></textarea>
+              </div>
+
+              <div>
+                <label htmlFor="contract-value" className="block text-sm text-muted mb-2">Total Contract Value ($) *</label>
+                <input
+                  id="contract-value"
+                  type="number"
+                  min="1"
+                  placeholder="25000"
+                  value={formData.totalValue}
+                  onChange={e => setFormData(prev => ({ ...prev, totalValue: e.target.value }))}
+                  className={`w-full px-4 py-3 bg-dark-bg border ${errors.totalValue ? 'border-red-500' : 'border-dark-border'} rounded-xl text-white placeholder-muted focus:border-primary focus:outline-none transition`}
+                  aria-invalid={!!errors.totalValue}
+                  aria-describedby={errors.totalValue ? 'value-error' : undefined}
+                />
+                {errors.totalValue && <p id="value-error" className="text-red-400 text-xs mt-1">{errors.totalValue}</p>}
+              </div>
+
+              {/* Tasks Section */}
+              <div className="bg-dark-bg rounded-xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-medium text-white">Contract Tasks *</p>
+                  <span className="text-xs text-muted">{formData.tasks.length} task(s)</span>
+                </div>
+                <div className="space-y-3">
+                  {formData.tasks.map((task, idx) => (
+                    <div key={idx} className="p-3 bg-dark-card rounded-lg border border-dark-border">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-muted">Task {idx + 1}</span>
+                        {formData.tasks.length > 1 && (
+                          <button
+                            onClick={() => removeTask(idx)}
+                            className="text-red-400 text-xs hover:text-red-300"
+                            aria-label={`Remove task ${idx + 1}`}
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Task description"
+                        value={task.description}
+                        onChange={e => updateTask(idx, 'description', e.target.value)}
+                        className={`w-full px-3 py-2 bg-dark-bg border ${errors[`task_${idx}_desc`] ? 'border-red-500' : 'border-dark-border'} rounded-lg text-white text-sm mb-2 focus:border-primary focus:outline-none`}
+                        aria-label={`Task ${idx + 1} description`}
+                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Payment ($)"
+                          value={task.payment}
+                          onChange={e => updateTask(idx, 'payment', e.target.value)}
+                          className={`flex-1 px-3 py-2 bg-dark-bg border ${errors[`task_${idx}_payment`] ? 'border-red-500' : 'border-dark-border'} rounded-lg text-white text-sm focus:border-primary focus:outline-none`}
+                          aria-label={`Task ${idx + 1} payment`}
+                        />
+                        <input
+                          type="date"
+                          value={task.deadline}
+                          onChange={e => updateTask(idx, 'deadline', e.target.value)}
+                          className="flex-1 px-3 py-2 bg-dark-bg border border-dark-border rounded-lg text-white text-sm focus:border-primary focus:outline-none"
+                          aria-label={`Task ${idx + 1} deadline`}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={addTask}
+                  className="mt-3 text-sm text-primary hover:underline font-medium"
+                  aria-label="Add another task"
+                >
+                  + Add another task
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={onClose}
+                className="flex-1 py-3 bg-dark-hover text-white rounded-xl font-semibold hover:bg-dark-border transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="flex-1 py-3 btn-primary text-white rounded-xl font-semibold"
+              >
+                Send Offer
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    });
+
+    // ============ PAGES ============
+
+    // Landing Page
+    const LandingPage = memo(({ onNavigate, onDashboard }) => (
+      <main className="pt-16 sm:pt-20">
+        {/* Hero Section */}
+        <section className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden" aria-labelledby="hero-title">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" aria-hidden="true"></div>
+          <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-primary/10 rounded-full blur-3xl" aria-hidden="true"></div>
+          <div className="absolute top-1/3 right-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-secondary/10 rounded-full blur-3xl" aria-hidden="true"></div>
+
+          <div className="max-w-7xl mx-auto relative text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-dark-card border border-dark-border rounded-full mb-6 sm:mb-8 animate-fadeIn">
+              <span aria-hidden="true">🏆</span>
+              <span className="text-xs sm:text-sm text-muted">Where Academic Excellence Meets NIL Opportunity</span>
+            </div>
+
+            <h1 id="hero-title" className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white mb-4 sm:mb-6 leading-tight animate-fadeIn" style={{animationDelay: '0.1s'}}>
+              Empowering<br className="sm:hidden" />
+              <span className="gradient-text"> Student-Athletes</span>
+              <br />Through NIL
+            </h1>
+
+            <p className="text-base sm:text-xl text-muted mb-6 sm:mb-8 max-w-2xl mx-auto px-4 animate-fadeIn" style={{animationDelay: '0.2s'}}>
+              Connect high-achieving student-athletes with brands that value both athletic performance and academic excellence. Powered by StatsTaq.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 animate-fadeIn" style={{animationDelay: '0.3s'}}>
+              <button onClick={() => onDashboard('athlete')} className="px-6 sm:px-8 py-3 sm:py-4 btn-primary text-white font-semibold rounded-xl text-sm sm:text-base">
+                I'm an Athlete →
+              </button>
+              <button onClick={() => onDashboard('brand')} className="px-6 sm:px-8 py-3 sm:py-4 bg-dark-card border border-dark-border text-white font-semibold rounded-xl hover:bg-dark-hover transition text-sm sm:text-base">
+                I'm a Brand / Donor →
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Banner */}
+        <section className="py-8 sm:py-12 px-4 sm:px-6 bg-dark-card border-y border-dark-border" aria-label="Platform statistics">
+          <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
+            {[
+              { value: '2,500+', label: 'Athletes' },
+              { value: '$15M+', label: 'NIL Facilitated' },
+              { value: '3.4', label: 'Average GPA' },
+              { value: '500+', label: 'Brand Partners' }
+            ].map((stat, idx) => (
+              <div key={stat.label} className="animate-fadeIn" style={{animationDelay: `${idx * 0.1}s`}}>
+                <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">{stat.value}</p>
+                <p className="text-muted text-sm sm:text-base">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Featured Athletes */}
+        <section id="athletes" className="py-16 sm:py-20 px-4 sm:px-6" aria-labelledby="athletes-title">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 id="athletes-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">Featured Athletes</h2>
+              <p className="text-muted max-w-2xl mx-auto text-sm sm:text-base">
+                Discover top performers with verified GPAs and real-time stats from StatsTaq
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {athletesData.slice(0, 6).map((athlete, idx) => (
+                <div key={athlete.id} className="animate-fadeIn" style={{animationDelay: `${idx * 0.1}s`}}>
+                  <AthleteCard athlete={athlete} showContract={false} />
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-8 sm:mt-12">
+              <button onClick={() => onDashboard('brand')} className="px-6 sm:px-8 py-3 sm:py-4 btn-primary text-white font-semibold rounded-xl">
+                Browse All Athletes
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section id="features" className="py-16 sm:py-20 px-4 sm:px-6 bg-dark-card" aria-labelledby="features-title">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 id="features-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">Why GradeUp NIL?</h2>
+              <p className="text-muted text-sm sm:text-base">A complete platform with academic integrity at its core</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {[
+                { icon: '🎓', title: 'GPA-First Approach', desc: 'Prominently display and verify academic performance for every athlete' },
+                { icon: '📊', title: 'StatsTaq Integration', desc: 'Real-time athletic performance data for accurate insights' },
+                { icon: '📄', title: 'Smart Contracts', desc: 'Task-based contracts with milestone payments and tracking' },
+                { icon: '🛡️', title: 'NCAA Compliant', desc: 'Built-in compliance tools for athletic departments' },
+                { icon: '⚡', title: 'Instant Payments', desc: 'Automatic payments when tasks are verified complete' },
+                { icon: '📈', title: 'NIL Valuation', desc: 'Data-driven valuations based on reach and performance' }
+              ].map((f, idx) => (
+                <article
+                  key={f.title}
+                  className="bg-dark-bg border border-dark-border rounded-2xl p-5 sm:p-6 hover:border-primary/50 transition animate-fadeIn"
+                  style={{animationDelay: `${idx * 0.1}s`}}
+                >
+                  <div className="text-3xl sm:text-4xl mb-3 sm:mb-4" aria-hidden="true">{f.icon}</div>
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{f.title}</h3>
+                  <p className="text-muted text-sm">{f.desc}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-8 sm:py-12 px-4 sm:px-6 border-t border-dark-border">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+            <div className="text-xl sm:text-2xl font-bold">
+              <span className="text-white">GRADEUP</span>
+              <span className="gradient-text"> NIL</span>
+            </div>
+            <nav className="flex items-center gap-6 text-sm" aria-label="Footer navigation">
+              <a href="https://statstaq.com" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-white transition">StatsTaq</a>
+              <span className="text-muted cursor-pointer hover:text-white transition">Privacy</span>
+              <span className="text-muted cursor-pointer hover:text-white transition">Terms</span>
+            </nav>
+            <p className="text-muted text-sm">© 2025 GradeUp NIL</p>
+          </div>
+        </footer>
+      </main>
+    ));
+
+    // Athlete Dashboard
+    const AthleteDashboard = ({ onBack }) => {
+      const [activeTab, setActiveTab] = useState('overview');
+      const [contracts, setContracts] = useState(initialContractsData);
+      const [toast, setToast] = useState({ message: '', visible: false, type: 'success' });
+      const [profileData, setProfileData] = useState({
+        bio: athletesData[0].bio,
+        major: athletesData[0].major,
+        year: athletesData[0].year
+      });
+
+      const athlete = athletesData[0];
+      const myContracts = useMemo(() => contracts.filter(c => c.athleteId === athlete.id), [contracts, athlete.id]);
+      const totalEarnings = useMemo(() => myContracts.reduce((sum, c) =>
+        sum + c.tasks.filter(t => t.status === 'completed').reduce((s, t) => s + t.payment, 0), 0), [myContracts]);
+
+      const showToast = (message, type = 'success') => {
+        setToast({ message, visible: true, type });
+        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+      };
+
+      const handleSignContract = useCallback((contractId) => {
+        setContracts(prev => prev.map(c =>
+          c.id === contractId
+            ? { ...c, status: 'active', signatures: { ...c.signatures, athlete: true } }
+            : c
+        ));
+        showToast('Contract signed successfully!', 'success');
+      }, []);
+
+      const handleMarkComplete = useCallback((contractId, taskId) => {
+        setContracts(prev => prev.map(c =>
+          c.id === contractId
+            ? { ...c, tasks: c.tasks.map(t => t.id === taskId ? { ...t, status: 'completed' } : t) }
+            : c
+        ));
+        showToast('Task marked as complete!', 'success');
+      }, []);
+
+      const handleSaveProfile = () => {
+        showToast('Profile saved successfully!', 'success');
+      };
+
+      return (
+        <div className="min-h-screen bg-dark-bg">
+          <Toast message={toast.message} isVisible={toast.visible} type={toast.type} />
+
+          {/* Header */}
+          <header className="bg-dark-card border-b border-dark-border">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+              <button
+                onClick={onBack}
+                className="flex items-center gap-2 text-muted hover:text-white transition mb-4 text-sm"
+                aria-label="Back to home"
+              >
+                ← Back to Home
+              </button>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                <img src={athlete.photo} alt={athlete.name} className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover" />
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white">{athlete.name}</h1>
+                    <span className="gpa-badge text-xs">{athlete.gpa.toFixed(2)} GPA</span>
+                  </div>
+                  <p className="text-muted text-sm">{athlete.sport} • {athlete.position} • {athlete.university}</p>
+                </div>
+              </div>
+
+              {/* Tabs */}
+              <nav className="flex gap-4 sm:gap-6 mt-6 overflow-x-auto pb-1" role="tablist" aria-label="Dashboard tabs">
+                {['overview', 'contracts', 'profile'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`pb-2 text-sm font-medium capitalize transition whitespace-nowrap ${
+                      activeTab === tab
+                        ? 'text-white border-b-2 border-primary'
+                        : 'text-muted hover:text-white'
+                    }`}
+                    role="tab"
+                    aria-selected={activeTab === tab}
+                    aria-controls={`${tab}-panel`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </header>
+
+          {/* Content */}
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            {activeTab === 'overview' && (
+              <div id="overview-panel" role="tabpanel" className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
+                <div className="lg:col-span-2 space-y-6">
+                  {/* Stats Cards */}
+                  <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                    {[
+                      { label: 'Total Earnings', value: formatCurrency(totalEarnings), color: 'text-green-400', icon: '💰' },
+                      { label: 'Active Contracts', value: myContracts.filter(c => c.status === 'active').length, color: 'text-white', icon: '📄' },
+                      { label: 'NIL Value', value: formatCurrency(athlete.nilValue), color: 'text-primary', icon: '📈' }
+                    ].map(stat => (
+                      <div key={stat.label} className="bg-dark-card border border-dark-border rounded-2xl p-4 sm:p-6 text-center">
+                        <span className="text-2xl mb-2 block" aria-hidden="true">{stat.icon}</span>
+                        <p className={`text-xl sm:text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+                        <p className="text-xs sm:text-sm text-muted">{stat.label}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* StatsTaq Performance */}
+                  <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6" aria-labelledby="statstaq-title">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 id="statstaq-title" className="text-lg font-bold text-white">StatsTaq Performance</h2>
+                      <a href="https://statstaq.com" target="_blank" rel="noopener noreferrer" className="statstaq-badge">
+                        Powered by StatsTaq
+                      </a>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                      {[
+                        { label: athlete.statLabels.ppg, value: athlete.stats.ppg },
+                        { label: athlete.statLabels.apg, value: athlete.stats.apg },
+                        { label: athlete.statLabels.rpg, value: athlete.stats.rpg },
+                        { label: 'FG%', value: `${athlete.stats.fgPct}%` },
+                        { label: 'Games', value: athlete.stats.games },
+                        { label: 'PER', value: athlete.stats.per }
+                      ].map(stat => (
+                        <div key={stat.label} className="bg-dark-bg rounded-xl p-3 sm:p-4 text-center">
+                          <p className="text-xl sm:text-2xl font-bold text-white">{stat.value}</p>
+                          <p className="text-xs text-muted uppercase">{stat.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+
+                {/* Sidebar */}
+                <aside className="space-y-6">
+                  <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6" aria-labelledby="recent-contracts-title">
+                    <h3 id="recent-contracts-title" className="text-lg font-bold text-white mb-4">Recent Contracts</h3>
+                    {myContracts.length > 0 ? myContracts.slice(0, 2).map(contract => (
+                      <div key={contract.id} className="p-4 bg-dark-bg rounded-xl mb-3 last:mb-0">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <p className="font-semibold text-white text-sm">{contract.title}</p>
+                            <p className="text-xs text-muted">{contract.brandName}</p>
+                          </div>
+                          <span className={`${getStatusColor(contract.status)} px-2 py-0.5 rounded-full text-xs text-white`}>
+                            {getStatusText(contract.status)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-green-400 font-bold">${contract.totalValue.toLocaleString()}</span>
+                          <span className="text-xs text-muted">{contract.tasks.filter(t => t.status === 'completed').length}/{contract.tasks.length} tasks</span>
+                        </div>
+                      </div>
+                    )) : (
+                      <p className="text-muted text-sm text-center py-4">No contracts yet</p>
+                    )}
+                  </section>
+
+                  <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6" aria-labelledby="quick-stats-title">
+                    <h3 id="quick-stats-title" className="text-lg font-bold text-white mb-4">Quick Stats</h3>
+                    <dl className="space-y-3">
+                      <div className="flex justify-between">
+                        <dt className="text-muted text-sm">Followers</dt>
+                        <dd className="text-white font-medium">{formatNumber(athlete.followers)}</dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt className="text-muted text-sm">Major</dt>
+                        <dd className="text-white font-medium">{athlete.major}</dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt className="text-muted text-sm">Year</dt>
+                        <dd className="text-white font-medium">{athlete.year}</dd>
+                      </div>
+                    </dl>
+                  </section>
+                </aside>
+              </div>
+            )}
+
+            {activeTab === 'contracts' && (
+              <div id="contracts-panel" role="tabpanel" className="space-y-6 animate-fadeIn">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-white">My Contracts</h2>
+                  <span className="text-muted text-sm">{myContracts.length} total</span>
+                </div>
+                {myContracts.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {myContracts.map(contract => (
+                      <SmartContractCard
+                        key={contract.id}
+                        contract={contract}
+                        userType="athlete"
+                        onSign={handleSignContract}
+                        onMarkComplete={handleMarkComplete}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-dark-card rounded-2xl border border-dark-border">
+                    <p className="text-muted">No contracts yet. Brands will find you!</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'profile' && (
+              <div id="profile-panel" role="tabpanel" className="max-w-2xl animate-fadeIn">
+                <section className="bg-dark-card border border-dark-border rounded-2xl p-6" aria-labelledby="edit-profile-title">
+                  <h2 id="edit-profile-title" className="text-xl font-bold text-white mb-6">Edit Profile</h2>
+                  <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSaveProfile(); }}>
+                    <div>
+                      <label htmlFor="profile-bio" className="block text-sm text-muted mb-2">Bio</label>
+                      <textarea
+                        id="profile-bio"
+                        rows={3}
+                        value={profileData.bio}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                        className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-xl text-white resize-none focus:border-primary focus:outline-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label htmlFor="profile-major" className="block text-sm text-muted mb-2">Major</label>
+                        <input
+                          id="profile-major"
+                          type="text"
+                          value={profileData.major}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, major: e.target.value }))}
+                          className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-xl text-white focus:border-primary focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="profile-year" className="block text-sm text-muted mb-2">Year</label>
+                        <select
+                          id="profile-year"
+                          value={profileData.year}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, year: e.target.value }))}
+                          className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-xl text-white focus:border-primary focus:outline-none"
+                        >
+                          <option value="Freshman">Freshman</option>
+                          <option value="Sophomore">Sophomore</option>
+                          <option value="Junior">Junior</option>
+                          <option value="Senior">Senior</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button type="submit" className="w-full py-3 btn-primary text-white rounded-xl font-semibold mt-4">
+                      Save Changes
+                    </button>
+                  </form>
+                </section>
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    };
+
+    // Brand Dashboard
+    const BrandDashboard = ({ onBack }) => {
+      const [activeTab, setActiveTab] = useState('discover');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedSport, setSelectedSport] = useState('all');
+      const [minGPA, setMinGPA] = useState(0);
+      const [showContractModal, setShowContractModal] = useState(false);
+      const [selectedAthlete, setSelectedAthlete] = useState(null);
+      const [contracts, setContracts] = useState(initialContractsData);
+      const [toast, setToast] = useState({ message: '', visible: false, type: 'success' });
+
+      const brand = brandsData[0];
+      const myContracts = useMemo(() => contracts.filter(c => c.brandId === brand.id), [contracts, brand.id]);
+
+      const showToast = (message, type = 'success') => {
+        setToast({ message, visible: true, type });
+        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+      };
+
+      const filteredAthletes = useMemo(() => {
+        return athletesData.filter(a => {
+          const matchesSearch = a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                a.university.toLowerCase().includes(searchQuery.toLowerCase());
+          const matchesSport = selectedSport === 'all' || a.sport === selectedSport;
+          const matchesGPA = a.gpa >= minGPA;
+          return matchesSearch && matchesSport && matchesGPA;
+        });
+      }, [searchQuery, selectedSport, minGPA]);
+
+      const sports = useMemo(() => ['all', ...new Set(athletesData.map(a => a.sport))], []);
+
+      const handleCreateContract = useCallback((athlete) => {
+        setSelectedAthlete(athlete);
+        setShowContractModal(true);
+      }, []);
+
+      const handleSubmitContract = useCallback((formData) => {
+        const newContract = {
+          id: Date.now().toString(),
+          athleteId: selectedAthlete.id,
+          brandId: brand.id,
+          athleteName: selectedAthlete.name,
+          brandName: brand.name,
+          title: formData.title,
+          description: formData.description,
+          totalValue: parseInt(formData.totalValue),
+          status: 'pending_signature',
+          createdAt: new Date().toISOString().split('T')[0],
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          signatures: { athlete: false, brand: true },
+          tasks: formData.tasks.map((t, i) => ({
+            id: (i + 1).toString(),
+            description: t.description,
+            payment: parseInt(t.payment),
+            deadline: t.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            status: 'pending'
+          }))
+        };
+        setContracts(prev => [...prev, newContract]);
+        showToast(`Contract offer sent to ${selectedAthlete.name}!`, 'success');
+      }, [selectedAthlete, brand]);
+
+      const totalSpent = useMemo(() => myContracts.reduce((sum, c) =>
+        sum + c.tasks.filter(t => t.status === 'completed').reduce((s, t) => s + t.payment, 0), 0), [myContracts]);
+
+      return (
+        <div className="min-h-screen bg-dark-bg">
+          <Toast message={toast.message} isVisible={toast.visible} type={toast.type} />
+
+          {/* Header */}
+          <header className="bg-dark-card border-b border-dark-border">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+              <button onClick={onBack} className="flex items-center gap-2 text-muted hover:text-white transition mb-4 text-sm">
+                ← Back to Home
+              </button>
+              <div className="flex items-center gap-4 sm:gap-6">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center text-2xl sm:text-3xl" aria-hidden="true">
+                  {brand.logo}
+                </div>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-white">{brand.name}</h1>
+                  <p className="text-muted text-sm">{brand.industry} • Brand Dashboard</p>
+                </div>
+              </div>
+
+              <nav className="flex gap-4 sm:gap-6 mt-6 overflow-x-auto pb-1" role="tablist" aria-label="Brand dashboard tabs">
+                {['discover', 'contracts', 'analytics'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`pb-2 text-sm font-medium capitalize transition whitespace-nowrap ${
+                      activeTab === tab
+                        ? 'text-white border-b-2 border-primary'
+                        : 'text-muted hover:text-white'
+                    }`}
+                    role="tab"
+                    aria-selected={activeTab === tab}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </header>
+
+          {/* Content */}
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            {activeTab === 'discover' && (
+              <div className="animate-fadeIn">
+                {/* Filters */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
+                  <div className="flex-1">
+                    <label htmlFor="search-athletes" className="sr-only">Search athletes</label>
+                    <input
+                      id="search-athletes"
+                      type="text"
+                      placeholder="Search athletes or universities..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full px-4 py-3 bg-dark-card border border-dark-border rounded-xl text-white placeholder-muted focus:border-primary focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="filter-sport" className="sr-only">Filter by sport</label>
+                    <select
+                      id="filter-sport"
+                      value={selectedSport}
+                      onChange={(e) => setSelectedSport(e.target.value)}
+                      className="w-full sm:w-auto px-4 py-3 bg-dark-card border border-dark-border rounded-xl text-white focus:outline-none"
+                    >
+                      {sports.map(sport => (
+                        <option key={sport} value={sport}>{sport === 'all' ? 'All Sports' : sport}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="filter-gpa" className="sr-only">Minimum GPA</label>
+                    <select
+                      id="filter-gpa"
+                      value={minGPA}
+                      onChange={(e) => setMinGPA(parseFloat(e.target.value))}
+                      className="w-full sm:w-auto px-4 py-3 bg-dark-card border border-dark-border rounded-xl text-white focus:outline-none"
+                    >
+                      <option value={0}>Any GPA</option>
+                      <option value={3.0}>3.0+ GPA</option>
+                      <option value={3.5}>3.5+ GPA</option>
+                      <option value={3.8}>3.8+ GPA</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Results */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-muted text-sm" aria-live="polite">{filteredAthletes.length} athletes found</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredAthletes.map((athlete, idx) => (
+                    <div key={athlete.id} style={{animationDelay: `${idx * 0.05}s`}} className="animate-fadeIn">
+                      <AthleteCard athlete={athlete} onCreateContract={handleCreateContract} />
+                    </div>
+                  ))}
+                </div>
+
+                {filteredAthletes.length === 0 && (
+                  <div className="text-center py-12 bg-dark-card rounded-2xl border border-dark-border">
+                    <p className="text-muted">No athletes match your filters</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'contracts' && (
+              <div className="space-y-6 animate-fadeIn">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-white">Our Contracts</h2>
+                  <span className="text-muted text-sm">{myContracts.length} total</span>
+                </div>
+                {myContracts.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {myContracts.map(contract => (
+                      <SmartContractCard key={contract.id} contract={contract} userType="brand" />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-dark-card rounded-2xl border border-dark-border">
+                    <p className="text-muted mb-4">No contracts yet</p>
+                    <button
+                      onClick={() => setActiveTab('discover')}
+                      className="px-6 py-2 btn-primary text-white rounded-xl font-medium"
+                    >
+                      Discover Athletes
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'analytics' && (
+              <div className="space-y-6 animate-fadeIn">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                  {[
+                    { label: 'Total Committed', value: formatCurrency(myContracts.reduce((s, c) => s + c.totalValue, 0)), icon: '📊' },
+                    { label: 'Total Spent', value: formatCurrency(totalSpent), icon: '💸' },
+                    { label: 'Active Contracts', value: myContracts.filter(c => c.status === 'active').length, icon: '📄' },
+                    { label: 'Athletes Partnered', value: new Set(myContracts.map(c => c.athleteId)).size, icon: '🤝' }
+                  ].map(stat => (
+                    <div key={stat.label} className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6">
+                      <span className="text-2xl mb-2 block" aria-hidden="true">{stat.icon}</span>
+                      <p className="text-2xl sm:text-3xl font-bold text-white">{stat.value}</p>
+                      <p className="text-muted text-sm">{stat.label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <section className="bg-dark-card border border-dark-border rounded-2xl p-6" aria-labelledby="budget-title">
+                  <h3 id="budget-title" className="text-lg font-bold text-white mb-4">Budget Overview</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span className="text-muted">Budget Used</span>
+                        <span className="text-white">{formatCurrency(myContracts.reduce((s, c) => s + c.totalValue, 0))} / {formatCurrency(brand.budget)}</span>
+                      </div>
+                      <div className="h-3 bg-dark-bg rounded-full overflow-hidden" role="progressbar" aria-valuenow={Math.min((myContracts.reduce((s, c) => s + c.totalValue, 0) / brand.budget) * 100, 100)} aria-valuemin="0" aria-valuemax="100">
+                        <div
+                          className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
+                          style={{ width: `${Math.min((myContracts.reduce((s, c) => s + c.totalValue, 0) / brand.budget) * 100, 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+          </main>
+
+          {/* Contract Modal */}
+          {showContractModal && selectedAthlete && (
+            <CreateContractModal
+              athlete={selectedAthlete}
+              onClose={() => setShowContractModal(false)}
+              onSubmit={handleSubmitContract}
+            />
+          )}
+        </div>
+      );
+    };
+
+    // Director Dashboard
+    const DirectorDashboard = ({ onBack }) => {
+      const [activeTab, setActiveTab] = useState('overview');
+      const [searchQuery, setSearchQuery] = useState('');
+
+      const averageGPA = useMemo(() => athletesData.reduce((sum, a) => sum + a.gpa, 0) / athletesData.length, []);
+      const atRiskCount = useMemo(() => athletesData.filter(a => a.gpa < 2.5).length, []);
+      const totalNILValue = useMemo(() => athletesData.reduce((sum, a) => sum + a.nilValue, 0), []);
+
+      const filteredAthletes = useMemo(() => athletesData.filter(a =>
+        a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        a.sport.toLowerCase().includes(searchQuery.toLowerCase())
+      ), [searchQuery]);
+
+      const gpaDistribution = useMemo(() => [
+        { range: '3.5 - 4.0', count: athletesData.filter(a => a.gpa >= 3.5).length, color: 'bg-green-500' },
+        { range: '3.0 - 3.49', count: athletesData.filter(a => a.gpa >= 3.0 && a.gpa < 3.5).length, color: 'bg-blue-500' },
+        { range: '2.5 - 2.99', count: athletesData.filter(a => a.gpa >= 2.5 && a.gpa < 3.0).length, color: 'bg-yellow-500' },
+        { range: 'Below 2.5', count: athletesData.filter(a => a.gpa < 2.5).length, color: 'bg-red-500' }
+      ], []);
+
+      const topPerformers = useMemo(() => [...athletesData].sort((a, b) => b.gpa - a.gpa).slice(0, 4), []);
+
+      return (
+        <div className="min-h-screen bg-dark-bg">
+          {/* Header */}
+          <header className="bg-dark-card border-b border-dark-border">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+              <button onClick={onBack} className="flex items-center gap-2 text-muted hover:text-white transition mb-4 text-sm">
+                ← Back to Home
+              </button>
+              <div className="flex items-center gap-4 sm:gap-6">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center text-2xl sm:text-3xl" aria-hidden="true">
+                  🎓
+                </div>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-white">Athletic Director Dashboard</h1>
+                  <p className="text-muted text-sm">GradeUp NIL Program Management</p>
+                </div>
+              </div>
+
+              <nav className="flex gap-4 sm:gap-6 mt-6 overflow-x-auto pb-1" role="tablist" aria-label="Director dashboard tabs">
+                {['overview', 'athletes', 'compliance'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`pb-2 text-sm font-medium capitalize transition whitespace-nowrap ${
+                      activeTab === tab
+                        ? 'text-white border-b-2 border-primary'
+                        : 'text-muted hover:text-white'
+                    }`}
+                    role="tab"
+                    aria-selected={activeTab === tab}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </header>
+
+          {/* Content */}
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            {activeTab === 'overview' && (
+              <div className="space-y-6 sm:space-y-8 animate-fadeIn">
+                {/* Stats */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                  {[
+                    { label: 'Total Athletes', value: athletesData.length, icon: '👥', color: 'text-blue-400' },
+                    { label: 'Average GPA', value: averageGPA.toFixed(2), icon: '🎓', color: 'text-green-400' },
+                    { label: 'At-Risk', value: atRiskCount, icon: '⚠️', color: 'text-yellow-400' },
+                    { label: 'Total NIL Value', value: formatCurrency(totalNILValue), icon: '💰', color: 'text-purple-400' }
+                  ].map(stat => (
+                    <div key={stat.label} className="bg-dark-card border border-dark-border rounded-2xl p-4 sm:p-6">
+                      <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                        <span className="text-xl sm:text-2xl" aria-hidden="true">{stat.icon}</span>
+                        <span className="text-xs sm:text-sm text-muted">{stat.label}</span>
+                      </div>
+                      <p className={`text-2xl sm:text-3xl font-bold ${stat.color}`}>{stat.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* GPA Distribution & Top Performers */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6" aria-labelledby="gpa-distribution-title">
+                    <h3 id="gpa-distribution-title" className="text-lg font-bold text-white mb-4">GPA Distribution</h3>
+                    <div className="space-y-3">
+                      {gpaDistribution.map(item => (
+                        <div key={item.range} className="flex items-center gap-3 sm:gap-4">
+                          <span className="text-xs sm:text-sm text-muted w-20 sm:w-24">{item.range}</span>
+                          <div className="flex-1 h-5 sm:h-6 bg-dark-bg rounded-full overflow-hidden" role="progressbar" aria-valuenow={item.count} aria-valuemin="0" aria-valuemax={athletesData.length}>
+                            <div
+                              className={`h-full ${item.color} transition-all duration-500`}
+                              style={{ width: `${(item.count / athletesData.length) * 100}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-white font-bold w-6 sm:w-8 text-right">{item.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6" aria-labelledby="top-performers-title">
+                    <h3 id="top-performers-title" className="text-lg font-bold text-white mb-4">Top Academic Performers</h3>
+                    <ol className="space-y-2 sm:space-y-3">
+                      {topPerformers.map((athlete, i) => (
+                        <li key={athlete.id} className="flex items-center gap-3 p-2 sm:p-3 bg-dark-bg rounded-xl">
+                          <span className="w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-full flex items-center justify-center text-xs text-white font-bold">
+                            {i + 1}
+                          </span>
+                          <img src={athlete.photo} alt="" className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover" aria-hidden="true" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white text-sm font-medium truncate">{athlete.name}</p>
+                            <p className="text-muted text-xs">{athlete.sport}</p>
+                          </div>
+                          <span className="gpa-badge text-xs py-0.5 px-2">{athlete.gpa.toFixed(2)}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'athletes' && (
+              <div className="space-y-6 animate-fadeIn">
+                <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                  <label htmlFor="search-director-athletes" className="sr-only">Search athletes</label>
+                  <input
+                    id="search-director-athletes"
+                    type="text"
+                    placeholder="Search athletes..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="flex-1 px-4 py-3 bg-dark-card border border-dark-border rounded-xl text-white placeholder-muted focus:border-primary focus:outline-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredAthletes.map(athlete => (
+                    <div key={athlete.id} className="relative">
+                      <AthleteCard athlete={athlete} showContract={false} />
+                      {athlete.gpa < 2.5 && (
+                        <div className="absolute top-14 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg" aria-label="At-risk athlete">
+                          ⚠️ At-Risk
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {filteredAthletes.length === 0 && (
+                  <div className="text-center py-12 bg-dark-card rounded-2xl border border-dark-border">
+                    <p className="text-muted">No athletes match your search</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'compliance' && (
+              <div className="space-y-6 animate-fadeIn">
+                <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6" aria-labelledby="compliance-title">
+                  <h3 id="compliance-title" className="text-lg font-bold text-white mb-6">NCAA Compliance Status</h3>
+                  <ul className="space-y-3 sm:space-y-4">
+                    {[
+                      { label: 'Disclosure Requirements', status: 'compliant', desc: 'All NIL activities properly disclosed' },
+                      { label: 'Academic Eligibility', status: atRiskCount > 0 ? 'warning' : 'compliant', desc: `${atRiskCount} athlete(s) below minimum GPA` },
+                      { label: 'Contract Review', status: 'compliant', desc: 'All contracts reviewed within 72 hours' },
+                      { label: 'Tax Documentation', status: 'compliant', desc: 'All athletes have completed W-9 forms' }
+                    ].map(item => (
+                      <li key={item.label} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-dark-bg rounded-xl gap-3">
+                        <div className="flex items-start sm:items-center gap-3">
+                          <span className="text-xl sm:text-2xl flex-shrink-0" aria-hidden="true">{item.status === 'compliant' ? '✅' : '⚠️'}</span>
+                          <div>
+                            <p className="text-white font-medium">{item.label}</p>
+                            <p className="text-sm text-muted">{item.desc}</p>
+                          </div>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase self-start sm:self-auto ${
+                          item.status === 'compliant'
+                            ? 'bg-green-500/20 text-green-400'
+                            : 'bg-yellow-500/20 text-yellow-400'
+                        }`}>
+                          {item.status}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                {atRiskCount > 0 && (
+                  <section className="bg-dark-card border border-yellow-500/30 rounded-2xl p-5 sm:p-6" aria-labelledby="at-risk-title">
+                    <h3 id="at-risk-title" className="text-lg font-bold text-white mb-4">⚠️ Athletes Requiring Attention</h3>
+                    <ul className="space-y-3">
+                      {athletesData.filter(a => a.gpa < 2.5).map(athlete => (
+                        <li key={athlete.id} className="flex items-center justify-between p-4 bg-dark-bg rounded-xl">
+                          <div className="flex items-center gap-3">
+                            <img src={athlete.photo} alt="" className="w-10 h-10 rounded-full object-cover" aria-hidden="true" />
+                            <div>
+                              <p className="text-white font-medium">{athlete.name}</p>
+                              <p className="text-sm text-muted">{athlete.sport} • {athlete.university}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-red-400 font-bold">{athlete.gpa.toFixed(2)} GPA</span>
+                            <p className="text-xs text-muted">Below 2.5 minimum</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    };
+
+    // ============ MAIN APP ============
+    const App = () => {
+      const [currentView, setCurrentView] = useState('home');
+
+      const handleNavigate = useCallback((section) => {
+        if (section === 'home') {
+          setCurrentView('home');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          setCurrentView('home');
+          setTimeout(() => {
+            const element = document.getElementById(section);
+            if (element) element.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }
+      }, []);
+
+      const handleDashboard = useCallback((type) => {
+        setCurrentView(type);
+        window.scrollTo({ top: 0 });
+      }, []);
+
+      const handleBack = useCallback(() => {
+        setCurrentView('home');
+        window.scrollTo({ top: 0 });
+      }, []);
+
+      return (
+        <div className="min-h-screen bg-dark-bg">
+          {currentView === 'home' && <Navbar onNavigate={handleNavigate} onDashboard={handleDashboard} />}
+          {currentView === 'home' && <LandingPage onNavigate={handleNavigate} onDashboard={handleDashboard} />}
+          {currentView === 'athlete' && <AthleteDashboard onBack={handleBack} />}
+          {currentView === 'brand' && <BrandDashboard onBack={handleBack} />}
+          {currentView === 'director' && <DirectorDashboard onBack={handleBack} />}
+        </div>
+      );
+    };
+
+    // Render App
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
