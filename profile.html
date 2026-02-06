@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GradeUp NIL - My Profile. Manage your athlete profile, social links, and public visibility.">
+    <meta name="theme-color" content="#000000">
+    <title>My Profile | GradeUp NIL</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Profile Page Styles -->
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           GRADEUP NIL - My Profile
+           Nike x Apple Inspired Design
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        :root {
+            --black: #000;
+            --white: #fff;
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            --gray-950: #0a0a0a;
+
+            --cyan: #00f0ff;
+            --cyan-glow: rgba(0, 240, 255, 0.4);
+            --magenta: #ff00ff;
+            --lime: #adff2f;
+            --gold: #ffd700;
+
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #f59e0b;
+
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ─── Header ─── */
+        .profile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-900);
+            height: 72px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s var(--ease);
+        }
+
+        .nav-link:hover {
+            color: var(--white);
+            background: var(--gray-900);
+        }
+
+        .nav-link.active {
+            color: var(--black);
+            background: var(--cyan);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gray-800);
+        }
+
+        /* ─── Main Layout ─── */
+        .profile-page {
+            padding-top: 72px;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ─── Page Header ─── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--cyan-glow);
+        }
+
+        .btn-secondary {
+            background: var(--gray-900);
+            color: var(--white);
+            border: 1px solid var(--gray-800);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gray-700);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ─── Profile Layout ─── */
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        /* ─── Sidebar ─── */
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .avatar-section {
+            background: var(--gray-950);
+            border: 1px solid var(--gray-900);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--gray-800);
+        }
+
+        .avatar-edit-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cyan);
+            border: none;
+            border-radius: 50%;
+            color: var(--black);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .avatar-edit-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .avatar-edit-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-role {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 1rem;
+        }
+
+        .profile-badges {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 100px;
+            background: var(--gray-900);
+            color: var(--gray-400);
+        }
+
+        .badge.verified {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--cyan);
+        }
+
+        .badge.scholar {
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--gold);
+        }
+
+        /* Score Preview */
+        .score-preview {
+            background: var(--gray-950);
+            border: 1px solid var(--gray-900);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .score-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .score-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-400);
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--cyan);
+        }
+
+        .score-bar {
+            height: 8px;
+            background: var(--gray-900);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--lime));
+            border-radius: 4px;
+            transition: width 0.5s var(--ease);
+        }
+
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+        }
+
+        .score-item-label {
+            color: var(--gray-500);
+        }
+
+        .score-item-value {
+            font-weight: 600;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            background: var(--gray-950);
+            border: 1px solid var(--gray-900);
+            border-radius: 16px;
+            padding: 1rem;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            color: var(--gray-400);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s var(--ease);
+        }
+
+        .quick-link:hover {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .quick-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ─── Main Content ─── */
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-section {
+            background: var(--gray-950);
+            border: 1px solid var(--gray-900);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .section-edit-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--cyan);
+            background: transparent;
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .section-edit-btn:hover {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+        }
+
+        .form-input {
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            color: var(--white);
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s var(--ease);
+        }
+
+        .form-input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px var(--cyan-glow);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-600);
+        }
+
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            color: var(--white);
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23737373' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        .form-select:focus {
+            border-color: var(--cyan);
+        }
+
+        /* Social Links */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .social-input-group {
+            display: flex;
+            align-items: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.2s var(--ease);
+        }
+
+        .social-input-group:focus-within {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px var(--cyan-glow);
+        }
+
+        .social-prefix {
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            background: var(--gray-800);
+            border-right: 1px solid var(--gray-700);
+        }
+
+        .social-input {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            color: var(--white);
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+
+        /* Video Highlights */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .highlight-card {
+            position: relative;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--gray-900);
+            cursor: pointer;
+        }
+
+        .highlight-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .highlight-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.2s var(--ease);
+        }
+
+        .highlight-card:hover .highlight-overlay {
+            opacity: 1;
+        }
+
+        .highlight-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .highlight-views {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+        }
+
+        .add-highlight-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            border: 2px dashed var(--gray-800);
+            color: var(--gray-500);
+            transition: all 0.2s var(--ease);
+        }
+
+        .add-highlight-card:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .add-highlight-card svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Availability */
+        .availability-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .day-column {
+            text-align: center;
+        }
+
+        .day-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .time-slot {
+            padding: 0.5rem;
+            font-size: 0.625rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .time-slot.available {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .time-slot.busy {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* Save Bar */
+        .save-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--gray-900);
+            transform: translateY(100%);
+            transition: transform 0.3s var(--ease);
+        }
+
+        .save-bar.visible {
+            transform: translateY(0);
+        }
+
+        .save-status {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .avatar-section {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                padding: 1rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .profile-container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .highlights-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .profile-sidebar {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="profile-header">
+        <div class="header-left">
+            <a href="index.html" class="logo">GRADEUP</a>
+            <nav class="header-nav">
+                <a href="athlete-dashboard.html" class="nav-link">Dashboard</a>
+                <a href="deals.html" class="nav-link">Deals</a>
+                <a href="analytics.html" class="nav-link">Analytics</a>
+                <a href="profile.html" class="nav-link active">Profile</a>
+                <a href="settings.html" class="nav-link">Settings</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <a href="athlete-profile.html" class="btn btn-secondary" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View Public Profile
+            </a>
+            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Profile" class="user-avatar">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="profile-page">
+        <div class="profile-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">My Profile</h1>
+                <div class="page-actions">
+                    <button class="btn btn-primary" id="saveBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-layout">
+                <!-- Sidebar -->
+                <aside class="profile-sidebar">
+                    <!-- Avatar Section -->
+                    <div class="avatar-section">
+                        <div class="avatar-wrapper">
+                            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=400&fit=crop&crop=face" alt="Profile Photo" class="avatar-image" id="avatarPreview">
+                            <button class="avatar-edit-btn" id="avatarEditBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                            </button>
+                            <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+                        </div>
+                        <h2 class="profile-name">Marcus Johnson</h2>
+                        <p class="profile-role">Point Guard - Duke Basketball</p>
+                        <div class="profile-badges">
+                            <span class="badge verified">Verified Athlete</span>
+                            <span class="badge scholar">Platinum Scholar</span>
+                        </div>
+                    </div>
+
+                    <!-- Score Preview -->
+                    <div class="score-preview">
+                        <div class="score-header">
+                            <span class="score-title">GradeUp Score</span>
+                            <span class="score-value">892</span>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: 89.2%;"></div>
+                        </div>
+                        <div class="score-breakdown">
+                            <div class="score-item">
+                                <span class="score-item-label">Athletic</span>
+                                <span class="score-item-value">356/400</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-item-label">Social</span>
+                                <span class="score-item-value">268/300</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-item-label">Academic</span>
+                                <span class="score-item-value">268/300</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="quick-links">
+                        <a href="analytics.html" class="quick-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                            View Analytics
+                        </a>
+                        <a href="deals.html" class="quick-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            Manage Deals
+                        </a>
+                        <a href="settings.html" class="quick-link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            Account Settings
+                        </a>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="profile-main">
+                    <!-- Basic Information -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Basic Information</h3>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-input" value="Marcus" id="firstName">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-input" value="Johnson" id="lastName">
+                            </div>
+                            <div class="form-group full-width">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-input" id="bio" placeholder="Tell brands about yourself...">Point guard for Duke Basketball. Dean's List student. Business Administration major with a passion for entrepreneurship and community service.</textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Athletic Information -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Athletic Information</h3>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">School</label>
+                                <select class="form-select" id="school">
+                                    <option value="duke" selected>Duke University</option>
+                                    <option value="unc">UNC Chapel Hill</option>
+                                    <option value="kentucky">University of Kentucky</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Sport</label>
+                                <select class="form-select" id="sport">
+                                    <option value="basketball" selected>Basketball</option>
+                                    <option value="football">Football</option>
+                                    <option value="soccer">Soccer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Position</label>
+                                <input type="text" class="form-input" value="Point Guard" id="position">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Year</label>
+                                <select class="form-select" id="year">
+                                    <option value="freshman">Freshman</option>
+                                    <option value="sophomore">Sophomore</option>
+                                    <option value="junior" selected>Junior</option>
+                                    <option value="senior">Senior</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Major</label>
+                                <input type="text" class="form-input" value="Business Administration" id="major">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">GPA</label>
+                                <input type="text" class="form-input" value="3.87" id="gpa" readonly>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Social Media -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Social Media</h3>
+                        </div>
+                        <div class="social-grid">
+                            <div class="social-input-group">
+                                <span class="social-prefix">instagram.com/</span>
+                                <input type="text" class="social-input" value="marcusj" id="instagram">
+                            </div>
+                            <div class="social-input-group">
+                                <span class="social-prefix">twitter.com/</span>
+                                <input type="text" class="social-input" value="marcusjohnson" id="twitter">
+                            </div>
+                            <div class="social-input-group">
+                                <span class="social-prefix">tiktok.com/@</span>
+                                <input type="text" class="social-input" value="marcusj" id="tiktok">
+                            </div>
+                            <div class="social-input-group">
+                                <span class="social-prefix">youtube.com/</span>
+                                <input type="text" class="social-input" placeholder="channel" id="youtube">
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Video Highlights -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Video Highlights</h3>
+                            <button class="section-edit-btn" id="addVideoBtn">+ Add Video</button>
+                        </div>
+                        <div class="highlights-grid" id="highlightsGrid">
+                            <!-- Videos rendered here -->
+                        </div>
+                    </section>
+
+                    <!-- Deal Preferences -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Deal Preferences</h3>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Minimum Deal Value</label>
+                                <select class="form-select" id="minDeal">
+                                    <option value="0">No minimum</option>
+                                    <option value="100">$100+</option>
+                                    <option value="500" selected>$500+</option>
+                                    <option value="1000">$1,000+</option>
+                                    <option value="5000">$5,000+</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Preferred Deal Types</label>
+                                <select class="form-select" id="dealTypes">
+                                    <option value="all" selected>All Types</option>
+                                    <option value="social">Social Media Only</option>
+                                    <option value="appearance">Appearances Only</option>
+                                    <option value="endorsement">Endorsements Only</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label class="form-label">Industries of Interest</label>
+                                <input type="text" class="form-input" value="Athletic Apparel, Sports Nutrition, Tech, Automotive" id="industries" placeholder="Enter industries separated by commas">
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Save Bar -->
+    <div class="save-bar" id="saveBar">
+        <span class="save-status">You have unsaved changes</span>
+        <button class="btn btn-secondary" id="discardBtn">Discard</button>
+        <button class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Demo video data
+        const videosData = [
+            { id: 1, title: 'Season Highlights 2024', views: '12.4K views', thumbnail: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=225&fit=crop' },
+            { id: 2, title: 'Game Winner vs UNC', views: '8.2K views', thumbnail: 'https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=400&h=225&fit=crop' },
+            { id: 3, title: 'Training Day Vlog', views: '5.1K views', thumbnail: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400&h=225&fit=crop' }
+        ];
+
+        // Track form changes
+        let hasChanges = false;
+
+        function renderHighlights() {
+            const grid = document.getElementById('highlightsGrid');
+            while (grid.firstChild) {
+                grid.removeChild(grid.firstChild);
+            }
+
+            videosData.forEach(function(video) {
+                const card = document.createElement('div');
+                card.className = 'highlight-card';
+
+                const img = document.createElement('img');
+                img.src = video.thumbnail;
+                img.alt = video.title;
+
+                const overlay = document.createElement('div');
+                overlay.className = 'highlight-overlay';
+
+                const title = document.createElement('div');
+                title.className = 'highlight-title';
+                title.textContent = video.title;
+
+                const views = document.createElement('div');
+                views.className = 'highlight-views';
+                views.textContent = video.views;
+
+                overlay.appendChild(title);
+                overlay.appendChild(views);
+                card.appendChild(img);
+                card.appendChild(overlay);
+                grid.appendChild(card);
+            });
+
+            // Add button
+            const addCard = document.createElement('div');
+            addCard.className = 'highlight-card add-highlight-card';
+
+            const addIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            addIcon.setAttribute('viewBox', '0 0 24 24');
+            addIcon.setAttribute('fill', 'none');
+            addIcon.setAttribute('stroke', 'currentColor');
+            addIcon.setAttribute('stroke-width', '2');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M12 5v14M5 12h14');
+            addIcon.appendChild(path);
+
+            const addText = document.createElement('span');
+            addText.textContent = 'Add Video';
+
+            addCard.appendChild(addIcon);
+            addCard.appendChild(addText);
+            grid.appendChild(addCard);
+        }
+
+        // Avatar upload
+        document.getElementById('avatarEditBtn').addEventListener('click', function() {
+            document.getElementById('avatarInput').click();
+        });
+
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('avatarPreview').src = event.target.result;
+                    showSaveBar();
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Track form changes
+        document.querySelectorAll('.form-input, .form-select, .social-input').forEach(function(input) {
+            input.addEventListener('input', function() {
+                showSaveBar();
+            });
+        });
+
+        function showSaveBar() {
+            hasChanges = true;
+            document.getElementById('saveBar').classList.add('visible');
+        }
+
+        function hideSaveBar() {
+            hasChanges = false;
+            document.getElementById('saveBar').classList.remove('visible');
+        }
+
+        // Save button
+        document.getElementById('saveBtn').addEventListener('click', saveProfile);
+        document.getElementById('saveChangesBtn').addEventListener('click', saveProfile);
+
+        function saveProfile() {
+            // Collect form data
+            const profileData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                bio: document.getElementById('bio').value,
+                school: document.getElementById('school').value,
+                sport: document.getElementById('sport').value,
+                position: document.getElementById('position').value,
+                year: document.getElementById('year').value,
+                major: document.getElementById('major').value,
+                instagram: document.getElementById('instagram').value,
+                twitter: document.getElementById('twitter').value,
+                tiktok: document.getElementById('tiktok').value,
+                youtube: document.getElementById('youtube').value,
+                minDeal: document.getElementById('minDeal').value,
+                dealTypes: document.getElementById('dealTypes').value,
+                industries: document.getElementById('industries').value
+            };
+
+            console.log('Saving profile:', profileData);
+
+            // Show success feedback
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saved!';
+            setTimeout(function() {
+                saveBtn.textContent = originalText;
+            }, 2000);
+
+            hideSaveBar();
+        }
+
+        // Discard button
+        document.getElementById('discardBtn').addEventListener('click', function() {
+            if (confirm('Discard all changes?')) {
+                location.reload();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderHighlights();
+        });
+    </script>
+
+    <!-- Services Integration -->
+    <script type="module" src="src/page-init.js"></script>
+</body>
+</html>
