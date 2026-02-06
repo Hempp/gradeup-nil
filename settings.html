@@ -1549,16 +1549,16 @@
                     <h3 class="card-title">Change Password</h3>
                     <div class="form-group">
                         <label class="form-label" for="currentPassword">Current Password</label>
-                        <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password">
+                        <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password" autocomplete="current-password">
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="newPassword">New Password</label>
-                        <input type="password" id="newPassword" class="form-input" placeholder="Enter new password">
+                        <input type="password" id="newPassword" class="form-input" placeholder="Enter new password" autocomplete="new-password">
                         <p class="form-hint">Must be at least 8 characters with 1 uppercase, 1 number, and 1 special character</p>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="confirmPassword">Confirm New Password</label>
-                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password">
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password" autocomplete="new-password">
                     </div>
                     <button class="btn btn-primary" style="margin-top: 1rem;">Update Password</button>
                 </div>
@@ -1570,7 +1570,7 @@
                             <div class="toggle-title">Enable 2FA</div>
                             <div class="toggle-desc">Add an extra layer of security to your account using authenticator app</div>
                         </div>
-                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="false" class="toggle-switch" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                 </div>
 
@@ -1597,22 +1597,22 @@
 
                 <div class="settings-card">
                     <h3 class="card-title">Profile Visibility</h3>
-                    <div class="radio-group">
-                        <div class="radio-option selected" onclick="selectRadio(this)">
+                    <div class="radio-group" role="radiogroup" aria-label="Profile Visibility">
+                        <div class="radio-option selected" role="radio" aria-checked="true" tabindex="0" onclick="selectRadio(this)" onkeydown="handleRadioKeydown(event, this)">
                             <div class="radio-circle"></div>
                             <div class="radio-content">
                                 <div class="radio-title">Public</div>
                                 <div class="radio-desc">Anyone can view your profile and contact you</div>
                             </div>
                         </div>
-                        <div class="radio-option" onclick="selectRadio(this)">
+                        <div class="radio-option" role="radio" aria-checked="false" tabindex="-1" onclick="selectRadio(this)" onkeydown="handleRadioKeydown(event, this)">
                             <div class="radio-circle"></div>
                             <div class="radio-content">
                                 <div class="radio-title">Brands Only</div>
                                 <div class="radio-desc">Only verified brands can view your full profile</div>
                             </div>
                         </div>
-                        <div class="radio-option" onclick="selectRadio(this)">
+                        <div class="radio-option" role="radio" aria-checked="false" tabindex="-1" onclick="selectRadio(this)" onkeydown="handleRadioKeydown(event, this)">
                             <div class="radio-circle"></div>
                             <div class="radio-content">
                                 <div class="radio-title">Private</div>
@@ -1629,21 +1629,21 @@
                             <div class="toggle-title">Show Earnings Publicly</div>
                             <div class="toggle-desc">Display your total NIL earnings on your profile</div>
                         </div>
-                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="false" class="toggle-switch" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Show Deal History</div>
                             <div class="toggle-desc">Allow others to see your past brand partnerships</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Activity Status</div>
                             <div class="toggle-desc">Show when you're online to brands and other users</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                 </div>
 
@@ -1683,35 +1683,35 @@
                             <div class="toggle-title">New Deal Offers</div>
                             <div class="toggle-desc">Get notified when brands send you deal offers</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Messages</div>
                             <div class="toggle-desc">Receive email notifications for new messages</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Deal Updates</div>
                             <div class="toggle-desc">Status changes on your active deals</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Weekly Digest</div>
                             <div class="toggle-desc">Summary of your activity and new opportunities</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Marketing Emails</div>
                             <div class="toggle-desc">Tips, product updates, and promotional content</div>
                         </div>
-                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="false" class="toggle-switch" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                 </div>
 
@@ -1722,14 +1722,14 @@
                             <div class="toggle-title">Enable Push Notifications</div>
                             <div class="toggle-desc">Receive instant notifications on your device</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Deal Alerts</div>
                             <div class="toggle-desc">Immediate notification for high-value opportunities</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                 </div>
 
@@ -1740,7 +1740,7 @@
                             <div class="toggle-title">Enable SMS Notifications</div>
                             <div class="toggle-desc">Receive text messages for important updates</div>
                         </div>
-                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="false" class="toggle-switch" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                 </div>
 
@@ -1900,14 +1900,14 @@
                             <div class="toggle-title">Auto-decline low offers</div>
                             <div class="toggle-desc">Automatically decline deals below your minimum value</div>
                         </div>
-                        <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="false" class="toggle-switch" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                     <div class="toggle-item">
                         <div class="toggle-info">
                             <div class="toggle-title">Auto-decline competing brands</div>
                             <div class="toggle-desc">Decline offers from competitors of current partners</div>
                         </div>
-                        <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                        <button type="button" role="switch" aria-checked="true" class="toggle-switch active" onclick="toggleSwitch(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleSwitch(this)}"></button>
                     </div>
                 </div>
 
@@ -2005,10 +2005,10 @@
                         <table class="transactions-table">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2309,13 +2309,45 @@
         // Toggle Switch
         function toggleSwitch(element) {
             element.classList.toggle('active');
+            var isActive = element.classList.contains('active');
+            element.setAttribute('aria-checked', isActive ? 'true' : 'false');
         }
 
         // Radio Selection
         function selectRadio(element) {
             const group = element.parentElement;
-            group.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+            group.querySelectorAll('.radio-option').forEach(function(opt) {
+                opt.classList.remove('selected');
+                opt.setAttribute('aria-checked', 'false');
+                opt.setAttribute('tabindex', '-1');
+            });
             element.classList.add('selected');
+            element.setAttribute('aria-checked', 'true');
+            element.setAttribute('tabindex', '0');
+            element.focus();
+        }
+
+        function handleRadioKeydown(event, element) {
+            var group = element.parentElement;
+            var options = Array.from(group.querySelectorAll('.radio-option'));
+            var currentIndex = options.indexOf(element);
+            var newIndex = currentIndex;
+
+            if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+                event.preventDefault();
+                newIndex = (currentIndex + 1) % options.length;
+            } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+                event.preventDefault();
+                newIndex = (currentIndex - 1 + options.length) % options.length;
+            } else if (event.key === ' ' || event.key === 'Enter') {
+                event.preventDefault();
+                selectRadio(element);
+                return;
+            }
+
+            if (newIndex !== currentIndex) {
+                selectRadio(options[newIndex]);
+            }
         }
 
         // Checkbox Toggle
