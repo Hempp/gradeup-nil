@@ -513,6 +513,133 @@
             border-color: var(--cyan);
         }
 
+        /* StatTaq Integration */
+        .stattaq-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.05));
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .stattaq-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stattaq-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .stattaq-info {
+            flex: 1;
+        }
+
+        .stattaq-title {
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .stattaq-status {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stattaq-status.connected {
+            color: var(--success);
+        }
+
+        .stattaq-status.disconnected {
+            color: var(--warning);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .stattaq-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stattaq-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--gray-900);
+            border-radius: 12px;
+        }
+
+        .stattaq-stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stattaq-stat-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+        }
+
+        .stattaq-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stattaq-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .stattaq-btn.primary {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+        }
+
+        .stattaq-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .stattaq-btn.secondary {
+            background: var(--gray-800);
+            color: var(--gray-300);
+            border: 1px solid var(--gray-700);
+        }
+
+        .stattaq-btn.secondary:hover {
+            border-color: var(--gray-600);
+            color: var(--white);
+        }
+
         /* Social Links */
         .social-grid {
             display: grid;
@@ -913,6 +1040,27 @@
                         </div>
                     </section>
 
+                    <!-- StatTaq Integration -->
+                    <section class="profile-section stattaq-card">
+                        <div class="stattaq-header">
+                            <div class="stattaq-logo">ST</div>
+                            <div class="stattaq-info">
+                                <div class="stattaq-title">StatTaq Performance Data</div>
+                                <div class="stattaq-status connected" id="stattaqStatus">
+                                    <span class="status-dot"></span>
+                                    <span>Connected - Last synced 2 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stattaq-stats-grid" id="stattaqStatsGrid">
+                            <!-- Stats rendered by JS -->
+                        </div>
+                        <div class="stattaq-actions">
+                            <button class="stattaq-btn primary" id="syncStattaqBtn">Sync Now</button>
+                            <button class="stattaq-btn secondary" id="stattaqSettingsBtn">Settings</button>
+                        </div>
+                    </section>
+
                     <!-- Social Media -->
                     <section class="profile-section">
                         <div class="section-header">
@@ -1001,8 +1149,63 @@
             { id: 3, title: 'Training Day Vlog', views: '5.1K views', thumbnail: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400&h=225&fit=crop' }
         ];
 
+        // StatTaq data
+        const stattaqData = {
+            connected: true,
+            lastSync: '2 hours ago',
+            stats: [
+                { label: 'Games', value: '28' },
+                { label: 'PPG', value: '18.4' },
+                { label: 'APG', value: '6.2' },
+                { label: 'RPG', value: '4.1' },
+                { label: 'FG%', value: '47.3' },
+                { label: '3P%', value: '38.2' },
+                { label: 'FT%', value: '84.7' },
+                { label: 'MIN', value: '32.4' }
+            ]
+        };
+
         // Track form changes
         let hasChanges = false;
+
+        // Render StatTaq stats
+        function renderStattaqStats() {
+            const grid = document.getElementById('stattaqStatsGrid');
+            while (grid.firstChild) {
+                grid.removeChild(grid.firstChild);
+            }
+
+            stattaqData.stats.forEach(function(stat) {
+                const statDiv = document.createElement('div');
+                statDiv.className = 'stattaq-stat';
+
+                const valueDiv = document.createElement('div');
+                valueDiv.className = 'stattaq-stat-value';
+                valueDiv.textContent = stat.value;
+
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'stattaq-stat-label';
+                labelDiv.textContent = stat.label;
+
+                statDiv.appendChild(valueDiv);
+                statDiv.appendChild(labelDiv);
+                grid.appendChild(statDiv);
+            });
+        }
+
+        // Sync StatTaq data
+        function syncStattaq() {
+            const btn = document.getElementById('syncStattaqBtn');
+            btn.textContent = 'Syncing...';
+            btn.disabled = true;
+
+            setTimeout(function() {
+                stattaqData.lastSync = 'Just now';
+                document.getElementById('stattaqStatus').querySelector('span:last-child').textContent = 'Connected - Last synced just now';
+                btn.textContent = 'Sync Now';
+                btn.disabled = false;
+            }, 2000);
+        }
 
         function renderHighlights() {
             const grid = document.getElementById('highlightsGrid');
@@ -1134,9 +1337,18 @@
             }
         });
 
+        // StatTaq sync button
+        document.getElementById('syncStattaqBtn').addEventListener('click', syncStattaq);
+
+        // StatTaq settings button
+        document.getElementById('stattaqSettingsBtn').addEventListener('click', function() {
+            alert('StatTaq settings would open here. Configure your sport, sync frequency, and connected accounts.');
+        });
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             renderHighlights();
+            renderStattaqStats();
         });
     </script>
 
