@@ -2200,7 +2200,7 @@
                     <!-- StatTaq Integration -->
                     <div class="glass-card animate-in delay-4">
                         <div class="card-header">
-                            <h3 class="card-title">StatTaq Data</h3>
+                            <h3 class="card-title"><a href="https://statstaq.com/" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">StatTaq Data <svg style="width: 12px; height: 12px; vertical-align: middle; margin-left: 4px; opacity: 0.6;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg></a></h3>
                             <button class="card-action" id="syncStatTaq">Sync Now</button>
                         </div>
                         <div class="card-body">
@@ -2720,8 +2720,14 @@
             subtitleDiv.className = 'stattaq-subtitle';
             subtitleDiv.textContent = stattaqData.connected ? 'Last synced: ' + stattaqData.lastSync : 'Import your athletic performance data';
 
+            const taglineDiv = document.createElement('div');
+            taglineDiv.className = 'stattaq-tagline';
+            taglineDiv.textContent = 'Own your data. You own the keys. You get the yield.';
+            taglineDiv.style.cssText = 'font-size: 0.65rem; color: var(--gray-500); margin-top: 0.25rem; font-style: italic;';
+
             infoDiv.appendChild(titleDiv);
             infoDiv.appendChild(subtitleDiv);
+            infoDiv.appendChild(taglineDiv);
 
             const btn = document.createElement('button');
             btn.className = 'stattaq-btn ' + (stattaqData.connected ? 'sync' : 'connect');
