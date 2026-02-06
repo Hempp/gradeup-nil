@@ -2103,45 +2103,6 @@
                             <span class="stat-label">Profile Views</span>
                         </div>
 
-                        <div class="stat-card animate-in delay-3">
-                            <div class="stat-icon xp">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                </svg>
-                            </div>
-                            <div class="stat-value-row">
-                                <span class="stat-main-value" id="achievementXP">0</span>
-                                <span class="stat-trend positive">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M18 15l-6-6-6 6"/>
-                                    </svg>
-                                    +450
-                                </span>
-                            </div>
-                            <span class="stat-label">Achievement XP</span>
-                        </div>
-                    </div>
-
-                    <!-- Achievements Section -->
-                    <div class="glass-card animate-in delay-4">
-                        <div class="card-header">
-                            <h3 class="card-title">Recent Achievements</h3>
-                            <button class="card-action" id="viewAllAchievements">View All</button>
-                        </div>
-                        <div class="card-body">
-                            <div class="achievements-grid" id="achievementsGrid">
-                                <!-- Achievements will be inserted by JS -->
-                            </div>
-                            <div class="xp-progress">
-                                <div class="xp-header">
-                                    <span class="xp-level">Level <span id="currentLevel">12</span></span>
-                                    <span class="xp-count" id="xpCount">7,450 / 10,000 XP</span>
-                                </div>
-                                <div class="xp-bar">
-                                    <div class="xp-fill" id="xpFill" style="width: 0%"></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Active Deals Table -->
@@ -2171,32 +2132,6 @@
 
                 <!-- Sidebar -->
                 <div class="dashboard-sidebar">
-                    <!-- Academic Calendar Widget -->
-                    <div class="glass-card animate-in delay-2">
-                        <div class="card-header">
-                            <h3 class="card-title">Academic Calendar</h3>
-                            <button class="card-action">Manage</button>
-                        </div>
-                        <div class="card-body">
-                            <div class="calendar-widget" id="calendarWidget">
-                                <!-- Calendar items will be inserted by JS -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Brand Matches Section -->
-                    <div class="glass-card animate-in delay-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Top Brand Matches</h3>
-                            <button class="card-action" id="viewAllMatches">View All</button>
-                        </div>
-                        <div class="card-body">
-                            <div class="brand-matches" id="brandMatches">
-                                <!-- Brand matches will be inserted by JS -->
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- StatTaq Integration -->
                     <div class="glass-card animate-in delay-4">
                         <div class="card-header">
@@ -2215,62 +2150,9 @@
                         </div>
                     </div>
 
-                    <!-- Monetization Controls -->
-                    <div class="glass-card animate-in delay-5">
-                        <div class="card-header">
-                            <h3 class="card-title">Monetization Settings</h3>
-                            <button class="card-action" id="editMonetization">Edit</button>
-                        </div>
-                        <div class="card-body">
-                            <div class="monetization-controls" id="monetizationControls">
-                                <!-- Monetization settings will be inserted by JS -->
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <!-- Video Highlights Section -->
-            <div class="video-highlights-section animate-in delay-5">
-                <div class="glass-card">
-                    <div class="card-header">
-                        <h3 class="card-title">Video Highlights</h3>
-                        <button class="card-action" id="uploadVideoBtn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display: inline; vertical-align: middle; margin-right: 4px;">
-                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-                            </svg>
-                            Upload Video
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="video-grid" id="videoGrid">
-                            <!-- Videos will be inserted by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Create Deal Proposal Section -->
-            <div class="create-proposal-section animate-in delay-5">
-                <div class="glass-card">
-                    <div class="card-header">
-                        <h3 class="card-title">Create Deal Proposal</h3>
-                        <span class="proposal-hint">Pitch yourself to brands</span>
-                    </div>
-                    <div class="card-body">
-                        <p class="proposal-description">Take control of your NIL journey. Create proposals to pitch yourself directly to brands you want to work with.</p>
-                        <button class="btn-create-proposal" id="createProposalBtn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                <path d="M12 5v14M5 12h14"/>
-                            </svg>
-                            Create New Proposal
-                        </button>
-                        <div class="my-proposals" id="myProposals">
-                            <!-- Athlete-created proposals will be inserted by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 
@@ -2623,12 +2505,10 @@
             var totalEarnings = athleteData.stats.totalEarnings;
             var activeDeals = athleteData.stats.activeDeals;
             var profileViews = athleteData.stats.profileViews;
-            var achievementXP = athleteData.stats.achievementXP;
 
             animateValue(document.getElementById('totalEarnings'), 0, totalEarnings, 1200, formatCurrency);
             animateValue(document.getElementById('activeDeals'), 0, activeDeals, 800);
             animateValue(document.getElementById('profileViews'), 0, profileViews, 1000, function(v) { return v.toLocaleString(); });
-            animateValue(document.getElementById('achievementXP'), 0, achievementXP, 1000, function(v) { return v.toLocaleString(); });
         }
 
         // ─── Initialize Scholar Status ───
@@ -3670,24 +3550,11 @@
             initStatsAnimation();
             initScholarStatus();
             initTabSwitching();
-            renderAchievements();
             renderDeals();
-            renderCalendar();
-            renderBrandMatches();
             renderStatTaq();
-            renderMonetizationControls();
-            renderVideoHighlights();
-            renderMyProposals();
 
-            // Event listeners for new features
+            // Event listener for StatTaq sync
             document.getElementById('syncStatTaq').addEventListener('click', syncStatTaqData);
-            document.getElementById('uploadVideoBtn').addEventListener('click', function() {
-                openModal('Upload Video', createUploadVideoContent());
-            });
-            document.getElementById('createProposalBtn').addEventListener('click', openCreateProposalModal);
-            document.getElementById('editMonetization').addEventListener('click', function() {
-                openModal('Monetization Settings', createMonetizationModalContent());
-            });
         }
 
         function createMonetizationModalContent() {
