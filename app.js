@@ -684,6 +684,7 @@
         const input = document.createElement('input');
         input.type = type;
         input.id = id;
+        input.name = id; // Add name for FormData
         input.placeholder = placeholder;
         if (required) input.required = true;
 
@@ -703,6 +704,7 @@
 
         const select = document.createElement('select');
         select.id = id;
+        select.name = id; // Add name for FormData
         select.required = true;
 
         options.forEach(opt => {
@@ -977,27 +979,147 @@
     function handleLogin(e) {
         e.preventDefault();
         const email = document.getElementById('email').value;
+        const rememberMe = document.querySelector('.form-options input[type="checkbox"]');
+
+        // Save login data to localStorage
+        const loginData = {
+            email: email,
+            lastLogin: new Date().toISOString(),
+            rememberMe: rememberMe ? rememberMe.checked : false
+        };
+        localStorage.setItem('gradeup_user', JSON.stringify(loginData));
+
+        // Add to email list for demo purposes
+        saveEmailToList(email, 'login');
+
+        showAuthToast('Welcome back! Redirecting...');
         closeModal();
+
         // Demo: redirect based on email domain hint
-        if (email.includes('brand') || email.includes('company') || email.includes('corp')) {
-            window.location.href = 'brand-dashboard.html';
-        } else {
-            window.location.href = 'athlete-dashboard.html';
-        }
+        setTimeout(function() {
+            if (email.includes('brand') || email.includes('company') || email.includes('corp')) {
+                window.location.href = 'brand-dashboard.html';
+            } else {
+                window.location.href = 'athlete-dashboard.html';
+            }
+        }, 1000);
     }
 
     function handleAthleteSignup(e) {
         e.preventDefault();
+
+        // Capture form data using correct field IDs
+        var firstName = document.getElementById('firstName')?.value || '';
+        var lastName = document.getElementById('lastName')?.value || '';
+        var email = document.getElementById('athleteEmail')?.value || '';
+        var school = document.getElementById('school')?.value || '';
+        var sport = document.getElementById('sport')?.value || '';
+
+        const athleteData = {
+            name: (firstName + ' ' + lastName).trim(),
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            school: school,
+            sport: sport,
+            type: 'athlete',
+            signupDate: new Date().toISOString()
+        };
+
+        // Save to localStorage
+        localStorage.setItem('gradeup_user', JSON.stringify(athleteData));
+        saveEmailToList(athleteData.email, 'athlete-signup');
+
+        showAuthToast('Account created! Setting up your dashboard...');
         closeModal();
+
         // Redirect to athlete dashboard
-        window.location.href = 'athlete-dashboard.html';
+        setTimeout(function() {
+            window.location.href = 'athlete-dashboard.html';
+        }, 1500);
     }
 
     function handleBrandSignup(e) {
         e.preventDefault();
+
+        // Capture form data using correct field IDs
+        var companyName = document.getElementById('companyName')?.value || '';
+        var firstName = document.getElementById('brandFirstName')?.value || '';
+        var lastName = document.getElementById('brandLastName')?.value || '';
+        var email = document.getElementById('brandEmail')?.value || '';
+        var industry = document.getElementById('industry')?.value || '';
+
+        const brandData = {
+            name: (firstName + ' ' + lastName).trim(),
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            company: companyName,
+            industry: industry,
+            type: 'brand',
+            signupDate: new Date().toISOString()
+        };
+
+        // Save to localStorage
+        localStorage.setItem('gradeup_user', JSON.stringify(brandData));
+        saveEmailToList(brandData.email, 'brand-signup');
+
+        showAuthToast('Account created! Setting up your dashboard...');
         closeModal();
+
         // Redirect to brand dashboard
-        window.location.href = 'brand-dashboard.html';
+        setTimeout(function() {
+            window.location.href = 'brand-dashboard.html';
+        }, 1500);
+    }
+
+    // ─── Save Email to Collected List ───
+    function saveEmailToList(email, source) {
+        if (!email) return;
+
+        var emailList = JSON.parse(localStorage.getItem('gradeup_emails') || '[]');
+        var existingIndex = emailList.findIndex(function(item) {
+            return item.email === email;
+        });
+
+        if (existingIndex === -1) {
+            emailList.push({
+                email: email,
+                source: source,
+                date: new Date().toISOString()
+            });
+        } else {
+            emailList[existingIndex].lastSeen = new Date().toISOString();
+        }
+
+        localStorage.setItem('gradeup_emails', JSON.stringify(emailList));
+    }
+
+    // ─── Auth Toast Notification ───
+    function showAuthToast(message) {
+        var existingToast = document.querySelector('.auth-toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+
+        var toast = document.createElement('div');
+        toast.className = 'auth-toast';
+        toast.textContent = message;
+        toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); padding: 1rem 2rem; background: linear-gradient(135deg, #00f0ff, #00c0cc); color: #000; font-weight: 600; border-radius: 8px; opacity: 0; transition: all 0.3s ease; z-index: 10000;';
+        document.body.appendChild(toast);
+
+        setTimeout(function() {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+        }, 10);
+
+        setTimeout(function() {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(20px)';
+            setTimeout(function() {
+                toast.remove();
+            }, 300);
+        }, 3000);
     }
 
     // ─── Initialize ───

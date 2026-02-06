@@ -15,6 +15,9 @@
     <!-- Base Styles -->
     <link rel="stylesheet" href="styles.css">
 
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Analytics Page Styles -->
     <style>
         /* ═══════════════════════════════════════════════════════════════════════════
@@ -772,8 +775,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bar-chart" id="earningsChart">
-                        <!-- Bars will be rendered here -->
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="earningsChartCanvas"></canvas>
                     </div>
                 </div>
 
@@ -882,30 +885,81 @@
 
         // Render earnings chart using safe DOM methods
         function renderEarningsChart() {
-            const container = document.getElementById('earningsChart');
-            while (container.firstChild) {
-                container.removeChild(container.firstChild);
-            }
+            const ctx = document.getElementById('earningsChartCanvas');
+            if (!ctx) return;
 
-            const maxAmount = Math.max.apply(null, earningsData.map(function(d) { return d.amount; }));
+            const labels = earningsData.map(function(d) { return d.month; });
+            const amounts = earningsData.map(function(d) { return d.amount; });
+            const deals = earningsData.map(function(d) { return d.deals || Math.floor(d.amount / 2000); });
 
-            earningsData.forEach(function(data) {
-                const group = document.createElement('div');
-                group.className = 'bar-group';
-
-                const bar = document.createElement('div');
-                bar.className = 'bar';
-                const height = (data.amount / maxAmount) * 160;
-                bar.style.height = height + 'px';
-                bar.title = '$' + data.amount.toLocaleString();
-
-                const label = document.createElement('div');
-                label.className = 'bar-label';
-                label.textContent = data.month;
-
-                group.appendChild(bar);
-                group.appendChild(label);
-                container.appendChild(group);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Earnings ($)',
+                            data: amounts,
+                            backgroundColor: 'rgba(0, 240, 255, 0.8)',
+                            borderColor: '#00f0ff',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                            barPercentage: 0.6,
+                        },
+                        {
+                            label: 'Deals',
+                            data: deals,
+                            backgroundColor: 'rgba(173, 255, 47, 0.8)',
+                            borderColor: '#adff2f',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                            barPercentage: 0.6,
+                            yAxisID: 'deals',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#171717',
+                            borderColor: '#404040',
+                            borderWidth: 1,
+                            titleColor: '#fff',
+                            bodyColor: '#a3a3a3',
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) {
+                                        return '$' + context.raw.toLocaleString();
+                                    }
+                                    return context.raw + ' deals';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#262626' },
+                            ticks: { color: '#737373' }
+                        },
+                        y: {
+                            grid: { color: '#262626' },
+                            ticks: {
+                                color: '#737373',
+                                callback: function(value) { return '$' + value / 1000 + 'k'; }
+                            }
+                        },
+                        deals: {
+                            position: 'right',
+                            grid: { display: false },
+                            ticks: { color: '#adff2f' },
+                            min: 0,
+                            max: 10
+                        }
+                    }
+                }
             });
         }
 

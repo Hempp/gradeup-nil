@@ -1330,6 +1330,262 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+
+        /* ─── Share Buttons ─── */
+        .hero-share {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .share-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .share-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .share-btn:hover {
+            background: var(--cyan);
+            border-color: var(--cyan);
+            color: var(--black);
+            transform: translateY(-2px);
+        }
+
+        .share-btn:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        /* Share Toast Notification */
+        .share-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            padding: 0.875rem 1.5rem;
+            background: var(--gray-900);
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 0.875rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s var(--ease);
+            z-index: 1000;
+        }
+
+        .share-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .hero-share {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .share-label {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* ─── Score Breakdown Full ─── */
+        .score-breakdown-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            color: var(--cyan);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .score-breakdown-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s var(--ease);
+        }
+
+        .score-breakdown-toggle[aria-expanded="true"] svg {
+            transform: rotate(180deg);
+        }
+
+        .score-breakdown-toggle:hover {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--cyan);
+        }
+
+        .score-breakdown-full {
+            margin-top: 1rem;
+            padding: 1.25rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideDown 0.3s var(--ease);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .breakdown-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .breakdown-section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .breakdown-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.75rem;
+        }
+
+        .breakdown-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .breakdown-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .breakdown-icon.athletic {
+            background: rgba(0, 240, 255, 0.2);
+            color: var(--cyan);
+        }
+
+        .breakdown-icon.social {
+            background: rgba(255, 0, 255, 0.2);
+            color: #ff00ff;
+        }
+
+        .breakdown-icon.academic {
+            background: rgba(173, 255, 47, 0.2);
+            color: #adff2f;
+        }
+
+        .breakdown-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .breakdown-metric {
+            display: grid;
+            grid-template-columns: 90px 1fr 35px;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+        }
+
+        .metric-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), #00f0ff);
+            border-radius: 3px;
+            transition: width 0.5s var(--ease);
+        }
+
+        .metric-fill.social {
+            background: linear-gradient(90deg, #ff00ff, #ff66ff);
+        }
+
+        .metric-fill.academic {
+            background: linear-gradient(90deg, #adff2f, #c8ff66);
+        }
+
+        .metric-value {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--white);
+            text-align: right;
+        }
+
+        .breakdown-formula {
+            margin-top: 1.25rem;
+            padding: 0.875rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 0.7rem;
+            color: var(--gray-400);
+            text-align: center;
+        }
+
+        .breakdown-formula strong {
+            color: var(--gray-300);
+        }
+
+        .formula-result {
+            color: var(--cyan);
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -1447,6 +1703,34 @@
                             Save Profile
                         </button>
                     </div>
+
+                    <!-- Share Buttons -->
+                    <div class="hero-share">
+                        <span class="share-label">Share Profile:</span>
+                        <button class="share-btn" id="copyLinkBtn" aria-label="Copy profile link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                            </svg>
+                        </button>
+                        <button class="share-btn" id="shareTwitterBtn" aria-label="Share on Twitter">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                            </svg>
+                        </button>
+                        <button class="share-btn" id="shareFacebookBtn" aria-label="Share on Facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                            </svg>
+                        </button>
+                        <button class="share-btn" id="shareLinkedInBtn" aria-label="Share on LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="hero-score-card animate-in delay-1">
@@ -1479,6 +1763,127 @@
                         <div class="breakdown-mini-item">
                             <div class="breakdown-mini-value" id="academicScore">95</div>
                             <div class="breakdown-mini-label">Academic</div>
+                        </div>
+                    </div>
+
+                    <button class="score-breakdown-toggle" id="scoreBreakdownToggle" aria-expanded="false">
+                        <span>See Full Breakdown</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+
+                    <!-- Detailed Score Breakdown -->
+                    <div class="score-breakdown-full" id="scoreBreakdownFull" hidden>
+                        <div class="breakdown-section">
+                            <h4 class="breakdown-title">
+                                <span class="breakdown-icon athletic">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2"/>
+                                    </svg>
+                                </span>
+                                Athletic Performance (35% weight)
+                            </h4>
+                            <div class="breakdown-metrics">
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Game Stats</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: 94%"></div>
+                                    </div>
+                                    <span class="metric-value">94</span>
+                                </div>
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Consistency</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: 90%"></div>
+                                    </div>
+                                    <span class="metric-value">90</span>
+                                </div>
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Improvement</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: 88%"></div>
+                                    </div>
+                                    <span class="metric-value">88</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-section">
+                            <h4 class="breakdown-title">
+                                <span class="breakdown-icon social">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                                    </svg>
+                                </span>
+                                Social Reach (30% weight)
+                            </h4>
+                            <div class="breakdown-metrics">
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Followers</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill social" style="width: 92%"></div>
+                                    </div>
+                                    <span class="metric-value">92</span>
+                                </div>
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Engagement</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill social" style="width: 86%"></div>
+                                    </div>
+                                    <span class="metric-value">86</span>
+                                </div>
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Brand Safety</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill social" style="width: 85%"></div>
+                                    </div>
+                                    <span class="metric-value">85</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-section">
+                            <h4 class="breakdown-title">
+                                <span class="breakdown-icon academic">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                                    </svg>
+                                </span>
+                                Academic Excellence (35% weight)
+                            </h4>
+                            <div class="breakdown-metrics">
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">GPA (3.85)</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill academic" style="width: 96%"></div>
+                                    </div>
+                                    <span class="metric-value">96</span>
+                                </div>
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Course Load</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill academic" style="width: 94%"></div>
+                                    </div>
+                                    <span class="metric-value">94</span>
+                                </div>
+                                <div class="breakdown-metric">
+                                    <span class="metric-label">Progress</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill academic" style="width: 92%"></div>
+                                    </div>
+                                    <span class="metric-value">92</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="breakdown-formula">
+                            <strong>Score Calculation:</strong>
+                            (Athletic × 0.35) + (Social × 0.30) + (Academic × 0.35) = <span class="formula-result">892</span>
                         </div>
                     </div>
                 </div>
@@ -2129,6 +2534,107 @@
                     contactModal.classList.remove('active');
                     videoModal.classList.remove('active');
                     document.body.style.overflow = '';
+                }
+            });
+
+            // Share Buttons
+            setupShareButtons();
+
+            // Score Breakdown Toggle
+            setupScoreBreakdown();
+        }
+
+        // ─── Share Buttons Functionality ───
+        function setupShareButtons() {
+            var athleteName = 'Marcus Thompson';
+            var pageUrl = window.location.href;
+            var shareText = 'Check out ' + athleteName + "'s NIL profile on GradeUp! " + pageUrl;
+
+            // Copy Link
+            var copyLinkBtn = document.getElementById('copyLinkBtn');
+            copyLinkBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(pageUrl).then(function() {
+                    showShareToast('Link copied to clipboard!');
+                }).catch(function() {
+                    // Fallback for older browsers
+                    var textArea = document.createElement('textarea');
+                    textArea.value = pageUrl;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showShareToast('Link copied to clipboard!');
+                });
+            });
+
+            // Twitter/X Share
+            var shareTwitterBtn = document.getElementById('shareTwitterBtn');
+            shareTwitterBtn.addEventListener('click', function() {
+                var twitterUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
+                window.open(twitterUrl, '_blank', 'width=550,height=420');
+            });
+
+            // Facebook Share
+            var shareFacebookBtn = document.getElementById('shareFacebookBtn');
+            shareFacebookBtn.addEventListener('click', function() {
+                var facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl);
+                window.open(facebookUrl, '_blank', 'width=550,height=420');
+            });
+
+            // LinkedIn Share
+            var shareLinkedInBtn = document.getElementById('shareLinkedInBtn');
+            shareLinkedInBtn.addEventListener('click', function() {
+                var linkedinUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(pageUrl);
+                window.open(linkedinUrl, '_blank', 'width=550,height=420');
+            });
+        }
+
+        // ─── Show Toast Notification ───
+        function showShareToast(message) {
+            // Remove existing toast if any
+            var existingToast = document.querySelector('.share-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            // Create and show toast
+            var toast = document.createElement('div');
+            toast.className = 'share-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Animate in
+            setTimeout(function() {
+                toast.classList.add('show');
+            }, 10);
+
+            // Remove after 3 seconds
+            setTimeout(function() {
+                toast.classList.remove('show');
+                setTimeout(function() {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // ─── Score Breakdown Toggle ───
+        function setupScoreBreakdown() {
+            var toggle = document.getElementById('scoreBreakdownToggle');
+            var breakdown = document.getElementById('scoreBreakdownFull');
+
+            if (!toggle || !breakdown) return;
+
+            toggle.addEventListener('click', function() {
+                var isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+
+                if (isExpanded) {
+                    breakdown.hidden = true;
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.querySelector('span').textContent = 'See Full Breakdown';
+                } else {
+                    breakdown.hidden = false;
+                    toggle.setAttribute('aria-expanded', 'true');
+                    toggle.querySelector('span').textContent = 'Hide Breakdown';
                 }
             });
         }
