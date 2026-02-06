@@ -1870,78 +1870,6 @@
                         </div>
                     </div>
 
-                    <!-- Recent Messages -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                                </svg>
-                                Recent Messages
-                            </h2>
-                            <a href="#" class="view-all-link">
-                                View All
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                                </svg>
-                            </a>
-                        </div>
-                        <div class="messages-list" id="messagesList">
-                            <!-- Messages will be rendered by JavaScript -->
-                        </div>
-                    </div>
-
-                    <!-- Scholar Sponsors Panel -->
-                    <div class="card scholar-panel">
-                        <div class="card-header">
-                            <h2 class="card-title">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                    <path d="M2 17l10 5 10-5"/>
-                                    <path d="M2 12l10 5 10-5"/>
-                                </svg>
-                                Scholar Exclusives
-                            </h2>
-                            <span class="scholar-badge">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                </svg>
-                                Premium
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <div class="tier-filters">
-                                <button class="tier-btn active" data-tier="all">All</button>
-                                <button class="tier-btn" data-tier="platinum">Platinum</button>
-                                <button class="tier-btn" data-tier="gold">Gold</button>
-                            </div>
-                            <div class="scholar-athletes-list" id="scholarAthletesList">
-                                <!-- Scholar athletes will be rendered by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Athlete Proposals - Bidirectional Deals -->
-                    <div class="card proposals-panel">
-                        <div class="card-header">
-                            <h2 class="card-title">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                    <path d="M14 2v6h6"/>
-                                    <path d="M16 13H8"/>
-                                    <path d="M16 17H8"/>
-                                    <path d="M10 9H8"/>
-                                </svg>
-                                Athlete Proposals
-                            </h2>
-                            <span class="proposals-badge" id="proposalsBadge">3 New</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="proposals-list" id="athleteProposalsList">
-                                <!-- Athlete proposals will be rendered by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
                 </aside>
             </div>
         </main>
@@ -2901,9 +2829,6 @@
             renderAthletes(athletesData);
             renderTopMatches();
             renderCampaigns();
-            renderMessages();
-            renderScholarAthletes('all');
-            renderAthleteProposals();
         });
     </script>
 
