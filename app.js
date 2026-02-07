@@ -978,10 +978,41 @@
     // ─── Form Handlers ───
     function handleLogin(e) {
         e.preventDefault();
-        const email = document.getElementById('email').value;
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const email = emailInput?.value?.trim() || '';
+        const password = passwordInput?.value || '';
         const rememberMe = document.querySelector('.form-options input[type="checkbox"]');
 
-        // Save login data to localStorage
+        // Check rate limiting
+        if (typeof checkRateLimit === 'function') {
+            const rateLimited = checkRateLimit(email);
+            if (rateLimited) {
+                showAuthToast('Too many login attempts. Please wait ' + rateLimited + ' seconds.');
+                return;
+            }
+        }
+
+        // Validate email format
+        if (typeof isValidEmail === 'function' && !isValidEmail(email)) {
+            showAuthToast('Please enter a valid email address.');
+            emailInput?.focus();
+            return;
+        }
+
+        // Validate password (basic check for demo)
+        if (!password || password.length < 1) {
+            showAuthToast('Please enter your password.');
+            passwordInput?.focus();
+            return;
+        }
+
+        // Record login attempt (for demo, always success)
+        if (typeof recordLoginAttempt === 'function') {
+            recordLoginAttempt(email, true);
+        }
+
+        // Save login data to localStorage (no password stored!)
         const loginData = {
             email: email,
             lastLogin: new Date().toISOString(),
@@ -1009,11 +1040,46 @@
         e.preventDefault();
 
         // Capture form data using correct field IDs
-        var firstName = document.getElementById('firstName')?.value || '';
-        var lastName = document.getElementById('lastName')?.value || '';
-        var email = document.getElementById('athleteEmail')?.value || '';
+        var firstName = document.getElementById('firstName')?.value?.trim() || '';
+        var lastName = document.getElementById('lastName')?.value?.trim() || '';
+        var email = document.getElementById('athleteEmail')?.value?.trim() || '';
         var school = document.getElementById('school')?.value || '';
         var sport = document.getElementById('sport')?.value || '';
+        var password = document.getElementById('athletePassword')?.value || '';
+
+        // Validate required fields
+        if (!firstName || !lastName) {
+            showAuthToast('Please enter your full name.');
+            return;
+        }
+
+        // Validate email format
+        if (typeof isValidEmail === 'function' && !isValidEmail(email)) {
+            showAuthToast('Please enter a valid school email address.');
+            document.getElementById('athleteEmail')?.focus();
+            return;
+        }
+
+        // Validate password strength
+        if (typeof validatePassword === 'function') {
+            var passResult = validatePassword(password);
+            if (!passResult.valid) {
+                showAuthToast(passResult.errors[0]);
+                document.getElementById('athletePassword')?.focus();
+                return;
+            }
+        }
+
+        // Validate selections
+        if (!school) {
+            showAuthToast('Please select your school.');
+            return;
+        }
+
+        if (!sport) {
+            showAuthToast('Please select your sport.');
+            return;
+        }
 
         const athleteData = {
             name: (firstName + ' ' + lastName).trim(),
@@ -1026,7 +1092,7 @@
             signupDate: new Date().toISOString()
         };
 
-        // Save to localStorage
+        // Save to localStorage (no password stored!)
         localStorage.setItem('gradeup_user', JSON.stringify(athleteData));
         saveEmailToList(athleteData.email, 'athlete-signup');
 
@@ -1043,11 +1109,47 @@
         e.preventDefault();
 
         // Capture form data using correct field IDs
-        var companyName = document.getElementById('companyName')?.value || '';
-        var firstName = document.getElementById('brandFirstName')?.value || '';
-        var lastName = document.getElementById('brandLastName')?.value || '';
-        var email = document.getElementById('brandEmail')?.value || '';
+        var companyName = document.getElementById('companyName')?.value?.trim() || '';
+        var firstName = document.getElementById('brandFirstName')?.value?.trim() || '';
+        var lastName = document.getElementById('brandLastName')?.value?.trim() || '';
+        var email = document.getElementById('brandEmail')?.value?.trim() || '';
         var industry = document.getElementById('industry')?.value || '';
+        var password = document.getElementById('brandPassword')?.value || '';
+
+        // Validate required fields
+        if (!companyName) {
+            showAuthToast('Please enter your company name.');
+            document.getElementById('companyName')?.focus();
+            return;
+        }
+
+        if (!firstName || !lastName) {
+            showAuthToast('Please enter your full name.');
+            return;
+        }
+
+        // Validate email format
+        if (typeof isValidEmail === 'function' && !isValidEmail(email)) {
+            showAuthToast('Please enter a valid work email address.');
+            document.getElementById('brandEmail')?.focus();
+            return;
+        }
+
+        // Validate password strength
+        if (typeof validatePassword === 'function') {
+            var passResult = validatePassword(password);
+            if (!passResult.valid) {
+                showAuthToast(passResult.errors[0]);
+                document.getElementById('brandPassword')?.focus();
+                return;
+            }
+        }
+
+        // Validate industry selection
+        if (!industry) {
+            showAuthToast('Please select your industry.');
+            return;
+        }
 
         const brandData = {
             name: (firstName + ' ' + lastName).trim(),
@@ -1060,7 +1162,7 @@
             signupDate: new Date().toISOString()
         };
 
-        // Save to localStorage
+        // Save to localStorage (no password stored!)
         localStorage.setItem('gradeup_user', JSON.stringify(brandData));
         saveEmailToList(brandData.email, 'brand-signup');
 

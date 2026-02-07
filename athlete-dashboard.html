@@ -2762,7 +2762,7 @@
                 'Only show deals above this amount',
                 createRateInput(monetizationSettings.minDealValue, function(value) {
                     monetizationSettings.minDealValue = value;
-                })
+                }, 'Minimum deal value in dollars')
             );
             container.appendChild(minValueDiv);
 
@@ -2773,7 +2773,7 @@
                 'Your base rate per social post',
                 createRateInput(monetizationSettings.socialPostRate, function(value) {
                     monetizationSettings.socialPostRate = value;
-                })
+                }, 'Social post rate in dollars')
             );
             container.appendChild(socialRateDiv);
 
@@ -2784,7 +2784,7 @@
                 'Your base rate for appearances',
                 createRateInput(monetizationSettings.appearanceRate, function(value) {
                     monetizationSettings.appearanceRate = value;
-                })
+                }, 'Appearance rate in dollars')
             );
             container.appendChild(appearanceRateDiv);
 
@@ -2841,7 +2841,7 @@
             return toggle;
         }
 
-        function createRateInput(value, onChange) {
+        function createRateInput(value, onChange, label) {
             const wrapper = document.createElement('div');
             wrapper.className = 'rate-input';
 
@@ -2851,6 +2851,7 @@
             const input = document.createElement('input');
             input.type = 'number';
             input.value = value;
+            input.setAttribute('aria-label', label || 'Dollar amount');
             input.addEventListener('change', function() {
                 onChange(parseInt(input.value) || 0);
             });

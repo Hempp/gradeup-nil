@@ -1,1 +1,22 @@
 .vercel
+.env
+.env.local
+*.log
+
+# Node modules (these are local only)
+node_modules/
+
+# React prototype (unused - keeping for reference)
+gradeup-react/node_modules/
+gradeup-react/dist/
+gradeup-react/build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
