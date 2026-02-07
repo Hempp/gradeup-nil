@@ -1901,9 +1901,9 @@
             <a href="index.html" class="dashboard-logo">GRADEUP</a>
             <div class="dashboard-nav-tabs">
                 <a href="athlete-dashboard.html" class="nav-tab active">Dashboard</a>
+                <a href="opportunities.html" class="nav-tab">Opportunities</a>
                 <a href="deals.html" class="nav-tab">Deals</a>
                 <a href="analytics.html" class="nav-tab">Analytics</a>
-                <a href="profile.html" class="nav-tab">Profile</a>
                 <a href="settings.html" class="nav-tab">Settings</a>
             </div>
         </div>
@@ -2126,6 +2126,27 @@
                                     <!-- Deals will be inserted by JS -->
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+
+                    <!-- Pitch to Brands Section -->
+                    <div class="glass-card animate-in delay-6">
+                        <div class="card-header">
+                            <h3 class="card-title">Pitch to Brands</h3>
+                            <button class="card-action btn-create-proposal" id="newProposalBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                                New Proposal
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <p style="color: var(--gray-400); font-size: 0.875rem; margin-bottom: 1rem;">
+                                Proactively pitch yourself to brands you want to work with. Create proposals and track their status.
+                            </p>
+                            <div id="myProposals" class="my-proposals">
+                                <!-- Proposals will be inserted by JS -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3553,9 +3574,13 @@
             initTabSwitching();
             renderDeals();
             renderStatTaq();
+            renderMyProposals();
 
             // Event listener for StatTaq sync
             document.getElementById('syncStatTaq').addEventListener('click', syncStatTaqData);
+
+            // Event listener for New Proposal button
+            document.getElementById('newProposalBtn').addEventListener('click', openCreateProposalModal);
         }
 
         function createMonetizationModalContent() {
