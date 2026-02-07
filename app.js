@@ -18,6 +18,8 @@
             position: 'Point Guard',
             year: 'Junior',
             major: 'Economics',
+            minor: 'Data Science',
+            expectedGraduation: '2026',
             gpa: 3.87,
             image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=500&fit=crop&crop=face',
             followers: '125K',
@@ -32,6 +34,8 @@
             position: 'Midfielder',
             year: 'Senior',
             major: 'Computer Science',
+            minor: 'Business',
+            expectedGraduation: '2025',
             gpa: 3.92,
             image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop&crop=face',
             followers: '89K',
@@ -46,6 +50,8 @@
             position: 'Wide Receiver',
             year: 'Junior',
             major: 'Business Administration',
+            minor: 'Communications',
+            expectedGraduation: '2026',
             gpa: 3.54,
             image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face',
             followers: '340K',
@@ -60,6 +66,8 @@
             position: 'Outside Hitter',
             year: 'Sophomore',
             major: 'Biology',
+            minor: 'Chemistry',
+            expectedGraduation: '2027',
             gpa: 3.78,
             image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop&crop=face',
             followers: '67K',
@@ -74,6 +82,8 @@
             position: 'Quarterback',
             year: 'Senior',
             major: 'Marketing',
+            minor: 'Sports Management',
+            expectedGraduation: '2025',
             gpa: 3.65,
             image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face',
             followers: '520K',
@@ -88,6 +98,8 @@
             position: 'Singles',
             year: 'Junior',
             major: 'Psychology',
+            minor: 'Sociology',
+            expectedGraduation: '2026',
             gpa: 3.95,
             image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop&crop=face',
             followers: '45K',
@@ -898,16 +910,35 @@
 
         const sportP = document.createElement('p');
         sportP.className = 'athlete-modal-sport';
-        sportP.textContent = `${athlete.sport} • ${athlete.position} • ${athlete.year}`;
+        sportP.textContent = `${athlete.sport} • ${athlete.position}`;
+
+        // Education info - Major, Minor, Year
+        const educationDiv = document.createElement('div');
+        educationDiv.className = 'athlete-modal-education';
 
         const majorP = document.createElement('p');
         majorP.className = 'athlete-modal-major';
-        majorP.textContent = athlete.major;
+        let majorText = athlete.major;
+        if (athlete.minor) {
+            majorText += ` • Minor: ${athlete.minor}`;
+        }
+        majorP.textContent = majorText;
+
+        const yearP = document.createElement('p');
+        yearP.className = 'athlete-modal-year';
+        let yearText = athlete.year;
+        if (athlete.expectedGraduation) {
+            yearText += ` • Class of ${athlete.expectedGraduation}`;
+        }
+        yearP.textContent = yearText;
+
+        educationDiv.appendChild(majorP);
+        educationDiv.appendChild(yearP);
 
         info.appendChild(school);
         info.appendChild(nameH2);
         info.appendChild(sportP);
-        info.appendChild(majorP);
+        info.appendChild(educationDiv);
 
         header.appendChild(img);
         header.appendChild(info);
