@@ -283,6 +283,61 @@
     }
 
     // ─── Modal System ───
+    // ─── WCAG 2.2 Accessibility: Modal Focus Trap ───
+    // Tracks the element that triggered the modal for focus restoration
+    let lastFocusedElement = null;
+
+    /**
+     * Get all focusable elements within a container
+     * Used for implementing keyboard focus trap in modals
+     * @param {HTMLElement} container - The container element to search within
+     * @returns {NodeList} - List of focusable elements
+     */
+    function getFocusableElements(container) {
+        return container.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+    }
+
+    /**
+     * Set up keyboard focus trap for modal accessibility (WCAG 2.2)
+     * Ensures Tab/Shift+Tab cycles within modal boundaries
+     * @param {HTMLElement} modal - The modal element to trap focus within
+     */
+    function setupModalFocusTrap(modal) {
+        const focusableElements = getFocusableElements(modal);
+        if (focusableElements.length === 0) return;
+
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        // Remove any existing focus trap handler to avoid duplicates
+        if (modal._focusTrapHandler) {
+            modal.removeEventListener('keydown', modal._focusTrapHandler);
+        }
+
+        // Create and store the handler for potential cleanup
+        modal._focusTrapHandler = function(e) {
+            if (e.key !== 'Tab') return;
+
+            if (e.shiftKey) {
+                // Shift + Tab: if on first element, wrap to last
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                // Tab: if on last element, wrap to first
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        };
+
+        modal.addEventListener('keydown', modal._focusTrapHandler);
+    }
+
     // Modal content builders using safe DOM methods
     function buildLoginModal() {
         const container = document.createElement('div');
@@ -861,6 +916,9 @@
     window.openModal = function(type) {
         const builder = modalBuilders[type];
         if (builder) {
+            // WCAG 2.2: Save the element that triggered the modal for focus restoration
+            lastFocusedElement = document.activeElement;
+
             // Clear existing content
             while (modalContent.firstChild) {
                 modalContent.removeChild(modalContent.firstChild);
@@ -874,10 +932,19 @@
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
 
-            // Focus first input
+            // WCAG 2.2: Set up focus trap for keyboard accessibility
+            setupModalFocusTrap(modal);
+
+            // Focus first input (or first focusable element)
             const firstInput = modal.querySelector('input');
             if (firstInput) {
                 setTimeout(() => firstInput.focus(), 100);
+            } else {
+                // If no input, focus the first focusable element
+                const focusableElements = getFocusableElements(modal);
+                if (focusableElements.length > 0) {
+                    setTimeout(() => focusableElements[0].focus(), 100);
+                }
             }
         }
     };
@@ -886,6 +953,12 @@
         modalOverlay.classList.remove('active');
         modal.classList.remove('active');
         document.body.style.overflow = '';
+
+        // WCAG 2.2: Restore focus to the element that triggered the modal
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
+        }
     };
 
     // Close modal on overlay click
@@ -904,6 +977,9 @@
 
     // ─── Contact Athlete Modal ───
     window.showContactModal = function(athlete) {
+        // WCAG 2.2: Save the element that triggered the modal for focus restoration
+        const contactModalTrigger = document.activeElement;
+
         const backdrop = document.createElement('div');
         backdrop.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1001; display: flex; align-items: center; justify-content: center; padding: 2rem;';
 
@@ -918,10 +994,19 @@
         title.textContent = 'Contact ' + athlete.name;
         header.appendChild(title);
 
+        // WCAG 2.2: Helper to close modal and restore focus
+        function closeContactModal() {
+            document.body.removeChild(backdrop);
+            if (contactModalTrigger) {
+                contactModalTrigger.focus();
+            }
+        }
+
         const closeBtn = document.createElement('button');
         closeBtn.style.cssText = 'width: 36px; height: 36px; background: #262626; border: none; border-radius: 8px; color: #a3a3a3; cursor: pointer; font-size: 1rem;';
         closeBtn.textContent = '✕';
-        closeBtn.addEventListener('click', function() { document.body.removeChild(backdrop); });
+        closeBtn.setAttribute('aria-label', 'Close modal');
+        closeBtn.addEventListener('click', closeContactModal);
         header.appendChild(closeBtn);
         modalEl.appendChild(header);
 
@@ -933,9 +1018,11 @@
         const subjectLabel = document.createElement('label');
         subjectLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: white; margin-bottom: 0.5rem;';
         subjectLabel.textContent = 'Subject';
+        subjectLabel.htmlFor = 'contact-subject';
         subjectGroup.appendChild(subjectLabel);
         const subjectInput = document.createElement('input');
         subjectInput.type = 'text';
+        subjectInput.id = 'contact-subject';
         subjectInput.placeholder = 'Partnership Inquiry';
         subjectInput.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: #262626; border: 1px solid #404040; border-radius: 10px; color: white; font-size: 0.9375rem;';
         subjectGroup.appendChild(subjectInput);
@@ -946,9 +1033,11 @@
         const msgLabel = document.createElement('label');
         msgLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: white; margin-bottom: 0.5rem;';
         msgLabel.textContent = 'Message';
+        msgLabel.htmlFor = 'contact-message';
         msgGroup.appendChild(msgLabel);
         const msgTextarea = document.createElement('textarea');
         msgTextarea.rows = 5;
+        msgTextarea.id = 'contact-message';
         msgTextarea.placeholder = 'Hi ' + athlete.name.split(' ')[0] + ', I would love to discuss a partnership opportunity...';
         msgTextarea.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: #262626; border: 1px solid #404040; border-radius: 10px; color: white; font-size: 0.9375rem; resize: vertical; min-height: 120px;';
         msgGroup.appendChild(msgTextarea);
@@ -959,7 +1048,7 @@
         sendBtn.textContent = 'Send Message';
         sendBtn.addEventListener('click', function() {
             if (subjectInput.value && msgTextarea.value) {
-                document.body.removeChild(backdrop);
+                closeContactModal();
                 showAuthToast('Message sent to ' + athlete.name + '!', 'success');
             } else {
                 showAuthToast('Please fill in all fields', 'error');
@@ -969,14 +1058,33 @@
 
         modalEl.appendChild(body);
         backdrop.appendChild(modalEl);
-        backdrop.addEventListener('click', function(e) { if (e.target === backdrop) document.body.removeChild(backdrop); });
+        backdrop.addEventListener('click', function(e) { if (e.target === backdrop) closeContactModal(); });
+
+        // WCAG 2.2: Close on Escape key
+        function handleEscapeKey(e) {
+            if (e.key === 'Escape') {
+                closeContactModal();
+                document.removeEventListener('keydown', handleEscapeKey);
+            }
+        }
+        document.addEventListener('keydown', handleEscapeKey);
+
         document.body.appendChild(backdrop);
+
+        // WCAG 2.2: Set up focus trap for keyboard accessibility
+        setupModalFocusTrap(modalEl);
+
+        // Focus the first input
+        setTimeout(function() { subjectInput.focus(); }, 100);
     };
 
     // ─── Athlete Modal ───
     window.openAthleteModal = function(id) {
         const athlete = athletesData.find(a => a.id === id);
         if (!athlete) return;
+
+        // WCAG 2.2: Save the element that triggered the modal for focus restoration
+        lastFocusedElement = document.activeElement;
 
         // Clear existing content
         while (modalContent.firstChild) {
@@ -1111,6 +1219,12 @@
         modalOverlay.classList.add('active');
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
+
+        // WCAG 2.2: Set up focus trap for keyboard accessibility
+        setupModalFocusTrap(modal);
+
+        // Focus the first button (Contact Athlete)
+        setTimeout(() => contactBtn.focus(), 100);
     };
 
     // ─── Form Handlers ───
@@ -1360,31 +1474,68 @@
         return;
     }
 
-    // ─── Auth Toast Notification ───
-    function showAuthToast(message) {
-        var existingToast = document.querySelector('.auth-toast');
+    // ─── Toast Notification System ───
+    // Inject toast animation keyframes if not already present
+    (function injectToastStyles() {
+        if (document.getElementById('toast-keyframes')) return;
+        var style = document.createElement('style');
+        style.id = 'toast-keyframes';
+        style.textContent = '@keyframes toastSlideIn { from { transform: translateX(-50%) translateY(100%); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } } @keyframes toastSlideOut { from { transform: translateX(-50%) translateY(0); opacity: 1; } to { transform: translateX(-50%) translateY(100%); opacity: 0; } }';
+        document.head.appendChild(style);
+    })();
+
+    /**
+     * Show a toast notification with type-based styling
+     * @param {string} message - The message to display
+     * @param {string} type - Type: 'success', 'error', 'warning', 'info' (default: 'info')
+     */
+    function showToast(message, type) {
+        if (type === undefined) type = 'info';
+
+        // Remove existing toast
+        var existingToast = document.querySelector('.toast-notification');
         if (existingToast) {
             existingToast.remove();
         }
 
+        // Type-based colors
+        var colors = {
+            success: { bg: 'linear-gradient(135deg, #0B875E, #10B981)', icon: '\u2713' },
+            error: { bg: 'linear-gradient(135deg, #DA2B57, #EF4444)', icon: '\u2715' },
+            warning: { bg: 'linear-gradient(135deg, #D97706, #F59E0B)', icon: '\u26A0' },
+            info: { bg: 'linear-gradient(135deg, #00a8b5, #00f0ff)', icon: '\u2139' }
+        };
+
+        var config = colors[type] || colors.info;
+
         var toast = document.createElement('div');
-        toast.className = 'auth-toast';
-        toast.textContent = message;
-        toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); padding: 1rem 2rem; background: linear-gradient(135deg, #00f0ff, #00c0cc); color: #000; font-weight: 600; border-radius: 8px; opacity: 0; transition: all 0.3s ease; z-index: 10000;';
+        toast.className = 'toast-notification';
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: ' + config.bg + '; color: white; padding: 1rem 1.5rem; border-radius: 8px; font-size: 0.95rem; font-weight: 500; z-index: 10000; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); animation: toastSlideIn 0.3s ease;';
+
+        var iconSpan = document.createElement('span');
+        iconSpan.style.fontSize = '1.1em';
+        iconSpan.textContent = config.icon;
+
+        var messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+
+        toast.appendChild(iconSpan);
+        toast.appendChild(messageSpan);
         document.body.appendChild(toast);
 
         setTimeout(function() {
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(-50%) translateY(0)';
-        }, 10);
-
-        setTimeout(function() {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(-50%) translateY(20px)';
+            toast.style.animation = 'toastSlideOut 0.3s ease forwards';
             setTimeout(function() {
                 toast.remove();
             }, 300);
         }, 3000);
+    }
+
+    // Keep backward compatibility
+    function showAuthToast(message, type) {
+        showToast(message, type || 'info');
     }
 
     // ─── Footer Support Links ───
@@ -1416,6 +1567,19 @@
     }
 
     function showInfoModal(title, content) {
+        // WCAG 2.2: Save the element that triggered the modal for focus restoration
+        var infoModalTrigger = document.activeElement;
+
+        // WCAG 2.2: Helper to close modal and restore focus
+        function closeInfoModal() {
+            document.body.removeChild(backdrop);
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', escHandler);
+            if (infoModalTrigger) {
+                infoModalTrigger.focus();
+            }
+        }
+
         // Create backdrop
         var backdrop = document.createElement('div');
         backdrop.className = 'info-modal-backdrop';
@@ -1439,10 +1603,7 @@
         closeBtn.style.cssText = 'width: 40px; height: 40px; background: #262626; border: none; border-radius: 10px; color: #a3a3a3; cursor: pointer; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s;';
         closeBtn.textContent = '\u00D7';
         closeBtn.setAttribute('aria-label', 'Close');
-        closeBtn.addEventListener('click', function() {
-            document.body.removeChild(backdrop);
-            document.body.style.overflow = '';
-        });
+        closeBtn.addEventListener('click', closeInfoModal);
         closeBtn.addEventListener('mouseenter', function() {
             closeBtn.style.background = '#363636';
             closeBtn.style.color = 'white';
@@ -1467,20 +1628,23 @@
         // Close on backdrop click
         backdrop.addEventListener('click', function(e) {
             if (e.target === backdrop) {
-                document.body.removeChild(backdrop);
-                document.body.style.overflow = '';
+                closeInfoModal();
             }
         });
 
         // Close on escape
         var escHandler = function(e) {
             if (e.key === 'Escape') {
-                document.body.removeChild(backdrop);
-                document.body.style.overflow = '';
-                document.removeEventListener('keydown', escHandler);
+                closeInfoModal();
             }
         };
         document.addEventListener('keydown', escHandler);
+
+        // WCAG 2.2: Set up focus trap for keyboard accessibility
+        setupModalFocusTrap(modalEl);
+
+        // Focus the close button
+        setTimeout(function() { closeBtn.focus(); }, 100);
     }
 
     function getHelpCenterContent() {
