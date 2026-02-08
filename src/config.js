@@ -82,6 +82,10 @@ export function loadConfig() {
   if (typeof import.meta !== 'undefined' && import.meta.env) {
     if (import.meta.env.VITE_SUPABASE_URL) config.supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     if (import.meta.env.VITE_SUPABASE_ANON_KEY) config.supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    if (import.meta.env.VITE_ENABLE_AI !== undefined) config.features.enableAI = import.meta.env.VITE_ENABLE_AI === 'true';
+    if (import.meta.env.VITE_ENABLE_REALTIME !== undefined) config.features.enableRealtime = import.meta.env.VITE_ENABLE_REALTIME === 'true';
+    if (import.meta.env.VITE_ENABLE_ANALYTICS !== undefined) config.features.enableAnalytics = import.meta.env.VITE_ENABLE_ANALYTICS === 'true';
+    if (import.meta.env.VITE_DEMO_MODE !== undefined) config.features.mockDataFallback = import.meta.env.VITE_DEMO_MODE === 'true';
   }
 
   return config;

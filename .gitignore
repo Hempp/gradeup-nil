@@ -6,6 +6,9 @@
 # Node modules (these are local only)
 node_modules/
 
+# Build output
+dist/
+
 # React prototype (unused - keeping for reference)
 gradeup-react/node_modules/
 gradeup-react/dist/

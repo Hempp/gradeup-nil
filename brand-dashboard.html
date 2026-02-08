@@ -2868,10 +2868,12 @@
             subjectGroup.style.cssText = 'margin-bottom: 1.25rem;';
             var subjectLabel = document.createElement('label');
             subjectLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            subjectLabel.htmlFor = 'message-subject';
             subjectLabel.textContent = 'Subject';
             subjectGroup.appendChild(subjectLabel);
             var subjectInput = document.createElement('input');
             subjectInput.type = 'text';
+            subjectInput.id = 'message-subject';
             subjectInput.placeholder = 'Partnership Opportunity';
             subjectInput.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: var(--gray-800); border: 1px solid var(--gray-700); border-radius: 10px; color: var(--white); font-size: 0.9375rem;';
             subjectGroup.appendChild(subjectInput);
@@ -2881,9 +2883,11 @@
             msgGroup.style.cssText = 'margin-bottom: 1.25rem;';
             var msgLabel = document.createElement('label');
             msgLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            msgLabel.htmlFor = 'message-body';
             msgLabel.textContent = 'Message';
             msgGroup.appendChild(msgLabel);
             var msgTextarea = document.createElement('textarea');
+            msgTextarea.id = 'message-body';
             msgTextarea.rows = 5;
             msgTextarea.placeholder = 'Hi ' + athlete.name.split(' ')[0] + ', we would love to discuss a partnership opportunity with you...';
             msgTextarea.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: var(--gray-800); border: 1px solid var(--gray-700); border-radius: 10px; color: var(--white); font-size: 0.9375rem; resize: vertical; min-height: 120px;';
@@ -3077,6 +3081,7 @@
             typeGroup.style.cssText = 'margin-bottom: 1.25rem;';
             const typeLabel = document.createElement('label');
             typeLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            typeLabel.htmlFor = 'oppType';
             typeLabel.textContent = 'Deal Type';
             typeGroup.appendChild(typeLabel);
             const typeSelect = document.createElement('select');
@@ -3108,6 +3113,7 @@
             sportsGroup.style.cssText = 'margin-bottom: 1.25rem;';
             const sportsLabel = document.createElement('label');
             sportsLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            sportsLabel.htmlFor = 'oppSports';
             sportsLabel.textContent = 'Target Sports';
             sportsGroup.appendChild(sportsLabel);
             const sportsSelect = document.createElement('select');
@@ -3141,6 +3147,7 @@
             descGroup.style.cssText = 'margin-bottom: 1.25rem;';
             const descLabel = document.createElement('label');
             descLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            descLabel.htmlFor = 'oppDescription';
             descLabel.textContent = 'Opportunity Description';
             descGroup.appendChild(descLabel);
             const descTextarea = document.createElement('textarea');

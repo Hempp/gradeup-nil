@@ -3042,9 +3042,11 @@
             titleGroup.className = 'form-group';
             const titleLabel = document.createElement('label');
             titleLabel.className = 'form-label';
+            titleLabel.htmlFor = 'video-title';
             titleLabel.textContent = 'Video Title';
             const titleInput = document.createElement('input');
             titleInput.type = 'text';
+            titleInput.id = 'video-title';
             titleInput.className = 'form-input';
             titleInput.placeholder = 'e.g., Season Highlights 2025-26';
             titleGroup.appendChild(titleLabel);
@@ -3054,8 +3056,10 @@
             descGroup.className = 'form-group';
             const descLabel = document.createElement('label');
             descLabel.className = 'form-label';
+            descLabel.htmlFor = 'video-description';
             descLabel.textContent = 'Description';
             const descTextarea = document.createElement('textarea');
+            descTextarea.id = 'video-description';
             descTextarea.className = 'form-textarea';
             descTextarea.placeholder = 'Describe your highlights...';
             descGroup.appendChild(descLabel);
@@ -3239,8 +3243,10 @@
             brandGroup.className = 'form-group';
             const brandLabel = document.createElement('label');
             brandLabel.className = 'form-label';
+            brandLabel.htmlFor = 'proposal-brand';
             brandLabel.textContent = 'Select Brand';
             const brandSelect = document.createElement('select');
+            brandSelect.id = 'proposal-brand';
             brandSelect.className = 'form-select';
             const brands = ['Select a brand...', 'Nike', 'Adidas', 'Gatorade', 'Red Bull', 'Under Armour', 'Beats by Dre', 'Chipotle', 'State Farm'];
             brands.forEach(function(brand) {
@@ -3257,9 +3263,11 @@
             titleGroup.className = 'form-group';
             const titleLabel = document.createElement('label');
             titleLabel.className = 'form-label';
+            titleLabel.htmlFor = 'proposal-title';
             titleLabel.textContent = 'Proposal Title';
             const titleInput = document.createElement('input');
             titleInput.type = 'text';
+            titleInput.id = 'proposal-title';
             titleInput.className = 'form-input';
             titleInput.placeholder = 'e.g., Campus Ambassador Partnership';
             titleGroup.appendChild(titleLabel);
@@ -3273,8 +3281,10 @@
             typeGroup.className = 'form-group';
             const typeLabel = document.createElement('label');
             typeLabel.className = 'form-label';
+            typeLabel.htmlFor = 'proposal-type';
             typeLabel.textContent = 'Deal Type';
             const typeSelect = document.createElement('select');
+            typeSelect.id = 'proposal-type';
             typeSelect.className = 'form-select';
             const types = ['Social Post', 'Appearance', 'Endorsement', 'Autograph Session', 'Camp/Clinic', 'Other'];
             types.forEach(function(type) {
@@ -3290,9 +3300,11 @@
             amountGroup.className = 'form-group';
             const amountLabel = document.createElement('label');
             amountLabel.className = 'form-label';
+            amountLabel.htmlFor = 'proposal-amount';
             amountLabel.textContent = 'Proposed Amount';
             const amountInput = document.createElement('input');
             amountInput.type = 'number';
+            amountInput.id = 'proposal-amount';
             amountInput.className = 'form-input';
             amountInput.placeholder = '$0';
             amountGroup.appendChild(amountLabel);
@@ -3306,8 +3318,10 @@
             pitchGroup.className = 'form-group';
             const pitchLabel = document.createElement('label');
             pitchLabel.className = 'form-label';
+            pitchLabel.htmlFor = 'proposal-pitch';
             pitchLabel.textContent = 'Your Pitch';
             const pitchTextarea = document.createElement('textarea');
+            pitchTextarea.id = 'proposal-pitch';
             pitchTextarea.className = 'form-textarea';
             pitchTextarea.placeholder = 'Describe why you\'d be a great fit for this brand and what you can offer...';
             pitchGroup.appendChild(pitchLabel);
@@ -3912,8 +3926,10 @@
             scheduleGroup.className = 'form-group';
             const scheduleLabel = document.createElement('label');
             scheduleLabel.className = 'form-label';
+            scheduleLabel.htmlFor = 'monetization-availability';
             scheduleLabel.textContent = 'Availability';
             const scheduleSelect = document.createElement('select');
+            scheduleSelect.id = 'monetization-availability';
             scheduleSelect.className = 'form-select';
             const schedules = ['Open to all deals', 'Weekends only', 'Evenings only', 'Custom schedule', 'Currently unavailable'];
             schedules.forEach(function(schedule) {
