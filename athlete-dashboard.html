@@ -2017,7 +2017,7 @@
                     <div class="glass-card animate-in delay-1">
                         <div class="card-header">
                             <h3 class="card-title">Scholar Status</h3>
-                            <button class="card-action">View Benefits</button>
+                            <button class="card-action" id="viewBenefitsBtn">View Benefits</button>
                         </div>
                         <div class="card-body">
                             <div class="scholar-status">
@@ -2115,7 +2115,7 @@
                     <div class="glass-card animate-in delay-5">
                         <div class="card-header">
                             <h3 class="card-title">Active Deals</h3>
-                            <button class="card-action">View All Deals</button>
+                            <button class="card-action" id="viewAllDealsBtn">View All Deals</button>
                         </div>
                         <div class="card-body" style="padding: 0;">
                             <table class="deals-table">
@@ -3623,6 +3623,212 @@
             return wrapper;
         }
 
+        // ─── Scholar Benefits Modal Content ───
+        function createBenefitsContent() {
+            var wrapper = document.createElement('div');
+
+            // Current tier info
+            var tierHeader = document.createElement('div');
+            tierHeader.style.cssText = 'display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%); border-radius: 12px; margin-bottom: 1.5rem;';
+
+            var tierIcon = document.createElement('div');
+            tierIcon.style.cssText = 'width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;';
+            var tierSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            tierSvg.setAttribute('viewBox', '0 0 24 24');
+            tierSvg.setAttribute('fill', 'white');
+            tierSvg.setAttribute('width', '28');
+            tierSvg.setAttribute('height', '28');
+            var tierPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            tierPath.setAttribute('d', 'M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z');
+            tierSvg.appendChild(tierPath);
+            tierIcon.appendChild(tierSvg);
+
+            var tierInfo = document.createElement('div');
+            var tierTitle = document.createElement('h3');
+            tierTitle.style.cssText = 'color: white; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem;';
+            tierTitle.textContent = athleteData.tier + ' Scholar';
+            var tierSubtitle = document.createElement('p');
+            tierSubtitle.style.cssText = 'color: rgba(255,255,255,0.85); font-size: 0.875rem;';
+            tierSubtitle.textContent = 'Your current tier benefits';
+            tierInfo.appendChild(tierTitle);
+            tierInfo.appendChild(tierSubtitle);
+
+            tierHeader.appendChild(tierIcon);
+            tierHeader.appendChild(tierInfo);
+            wrapper.appendChild(tierHeader);
+
+            // Benefits list
+            var benefitsData = [
+                { icon: '1.5x', title: 'Rate Multiplier', desc: 'Earn 50% more on all deals', active: true },
+                { icon: '\u2B50', title: 'Priority Brand Matching', desc: 'First access to new brand opportunities', active: true },
+                { icon: '\uD83C\uDF89', title: 'Exclusive Events', desc: 'VIP invites to NIL summits and networking', active: true },
+                { icon: '\uD83D\uDCBC', title: 'Dedicated Support', desc: 'Personal account manager for deal negotiations', active: true },
+                { icon: '\uD83C\uDFC6', title: 'Scholar Spotlight', desc: 'Featured placement in brand searches', active: true },
+                { icon: '\uD83D\uDCB0', title: 'Lower Platform Fees', desc: 'Reduced transaction fees on earnings', active: true }
+            ];
+
+            var benefitsList = document.createElement('div');
+            benefitsList.style.cssText = 'display: flex; flex-direction: column; gap: 0.75rem;';
+
+            benefitsData.forEach(function(benefit) {
+                var benefitItem = document.createElement('div');
+                benefitItem.style.cssText = 'display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--gray-800); border-radius: 10px; border-left: 3px solid var(--gold);';
+
+                var iconDiv = document.createElement('div');
+                iconDiv.style.cssText = 'width: 40px; height: 40px; background: var(--gray-700); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;';
+                iconDiv.textContent = benefit.icon;
+
+                var textDiv = document.createElement('div');
+                textDiv.style.cssText = 'flex: 1;';
+                var titleEl = document.createElement('h4');
+                titleEl.style.cssText = 'color: var(--white); font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.125rem;';
+                titleEl.textContent = benefit.title;
+                var descEl = document.createElement('p');
+                descEl.style.cssText = 'color: var(--gray-400); font-size: 0.8125rem;';
+                descEl.textContent = benefit.desc;
+                textDiv.appendChild(titleEl);
+                textDiv.appendChild(descEl);
+
+                var checkMark = document.createElement('span');
+                checkMark.style.cssText = 'color: var(--success); font-size: 1.25rem;';
+                checkMark.textContent = '\u2713';
+
+                benefitItem.appendChild(iconDiv);
+                benefitItem.appendChild(textDiv);
+                benefitItem.appendChild(checkMark);
+                benefitsList.appendChild(benefitItem);
+            });
+
+            wrapper.appendChild(benefitsList);
+
+            // Next tier teaser
+            var nextTierDiv = document.createElement('div');
+            nextTierDiv.style.cssText = 'margin-top: 1.5rem; padding: 1rem; background: linear-gradient(135deg, rgba(229, 228, 226, 0.1) 0%, rgba(229, 228, 226, 0.05) 100%); border-radius: 10px; border: 1px dashed var(--gray-600);';
+            var nextTierTitle = document.createElement('p');
+            nextTierTitle.style.cssText = 'color: var(--gray-300); font-size: 0.875rem; margin-bottom: 0.5rem;';
+            nextTierTitle.textContent = 'Next: Platinum Scholar';
+            var nextTierProgress = document.createElement('div');
+            nextTierProgress.style.cssText = 'display: flex; align-items: center; gap: 0.75rem;';
+            var progressBar = document.createElement('div');
+            progressBar.style.cssText = 'flex: 1; height: 6px; background: var(--gray-700); border-radius: 3px; overflow: hidden;';
+            var progressFill = document.createElement('div');
+            progressFill.style.cssText = 'width: ' + athleteData.tierProgress + '%; height: 100%; background: linear-gradient(90deg, var(--gold), #E5E4E2); border-radius: 3px;';
+            progressBar.appendChild(progressFill);
+            var progressText = document.createElement('span');
+            progressText.style.cssText = 'color: var(--gray-400); font-size: 0.75rem; white-space: nowrap;';
+            progressText.textContent = athleteData.tierProgress + '% complete';
+            nextTierProgress.appendChild(progressBar);
+            nextTierProgress.appendChild(progressText);
+            nextTierDiv.appendChild(nextTierTitle);
+            nextTierDiv.appendChild(nextTierProgress);
+            wrapper.appendChild(nextTierDiv);
+
+            return wrapper;
+        }
+
+        // ─── All Deals Modal Content ───
+        function createAllDealsContent() {
+            var wrapper = document.createElement('div');
+
+            // Summary stats
+            var statsRow = document.createElement('div');
+            statsRow.style.cssText = 'display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;';
+
+            var statItems = [
+                { value: deals.filter(function(d) { return d.status === 'active'; }).length, label: 'Active', color: 'var(--success)' },
+                { value: deals.filter(function(d) { return d.status === 'pending'; }).length, label: 'Pending', color: 'var(--warning)' },
+                { value: deals.filter(function(d) { return d.status === 'completed'; }).length, label: 'Completed', color: 'var(--gray-400)' }
+            ];
+
+            statItems.forEach(function(stat) {
+                var statDiv = document.createElement('div');
+                statDiv.style.cssText = 'text-align: center; padding: 1rem; background: var(--gray-800); border-radius: 10px;';
+                var valueEl = document.createElement('div');
+                valueEl.style.cssText = 'font-size: 1.75rem; font-weight: 800; color: ' + stat.color + ';';
+                valueEl.textContent = stat.value;
+                var labelEl = document.createElement('div');
+                labelEl.style.cssText = 'font-size: 0.75rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em;';
+                labelEl.textContent = stat.label;
+                statDiv.appendChild(valueEl);
+                statDiv.appendChild(labelEl);
+                statsRow.appendChild(statDiv);
+            });
+
+            wrapper.appendChild(statsRow);
+
+            // Deals list
+            var dealsList = document.createElement('div');
+            dealsList.style.cssText = 'display: flex; flex-direction: column; gap: 0.75rem;';
+
+            deals.forEach(function(deal) {
+                var dealItem = document.createElement('div');
+                dealItem.style.cssText = 'display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--gray-800); border-radius: 10px; cursor: pointer; transition: background 0.2s;';
+                dealItem.onmouseover = function() { this.style.background = 'var(--gray-700)'; };
+                dealItem.onmouseout = function() { this.style.background = 'var(--gray-800)'; };
+
+                // Brand logo
+                var logoDiv = document.createElement('div');
+                logoDiv.style.cssText = 'width: 44px; height: 44px; background: var(--gray-700); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--white); font-size: 0.875rem;';
+                logoDiv.textContent = deal.logo;
+
+                // Deal info
+                var infoDiv = document.createElement('div');
+                infoDiv.style.cssText = 'flex: 1;';
+                var brandName = document.createElement('h4');
+                brandName.style.cssText = 'color: var(--white); font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.125rem;';
+                brandName.textContent = deal.brand + ' - ' + deal.name;
+                var dealMeta = document.createElement('p');
+                dealMeta.style.cssText = 'color: var(--gray-400); font-size: 0.8125rem;';
+                dealMeta.textContent = 'Due: ' + deal.deadline;
+                infoDiv.appendChild(brandName);
+                infoDiv.appendChild(dealMeta);
+
+                // Amount
+                var amountDiv = document.createElement('div');
+                amountDiv.style.cssText = 'text-align: right;';
+                var amountVal = document.createElement('div');
+                amountVal.style.cssText = 'font-weight: 700; color: var(--cyan); font-size: 1rem;';
+                amountVal.textContent = formatCurrency(deal.amount);
+
+                // Status badge
+                var statusColors = {
+                    active: { bg: 'rgba(16, 185, 129, 0.15)', color: 'var(--success)' },
+                    pending: { bg: 'rgba(245, 158, 11, 0.15)', color: 'var(--warning)' },
+                    completed: { bg: 'rgba(107, 114, 128, 0.15)', color: 'var(--gray-400)' }
+                };
+                var statusStyle = statusColors[deal.status] || statusColors.pending;
+                var statusBadge = document.createElement('span');
+                statusBadge.style.cssText = 'display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; background: ' + statusStyle.bg + '; color: ' + statusStyle.color + '; margin-top: 0.25rem;';
+                statusBadge.textContent = deal.status;
+
+                amountDiv.appendChild(amountVal);
+                amountDiv.appendChild(statusBadge);
+
+                dealItem.appendChild(logoDiv);
+                dealItem.appendChild(infoDiv);
+                dealItem.appendChild(amountDiv);
+                dealsList.appendChild(dealItem);
+            });
+
+            wrapper.appendChild(dealsList);
+
+            // Total earnings
+            var totalDiv = document.createElement('div');
+            totalDiv.style.cssText = 'margin-top: 1.5rem; padding: 1rem; background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(0, 240, 255, 0.05) 100%); border-radius: 10px; display: flex; justify-content: space-between; align-items: center;';
+            var totalLabel = document.createElement('span');
+            totalLabel.style.cssText = 'color: var(--gray-300); font-weight: 500;';
+            totalLabel.textContent = 'Total Deal Value';
+            var totalValue = document.createElement('span');
+            totalValue.style.cssText = 'color: var(--cyan); font-size: 1.5rem; font-weight: 800;';
+            var total = deals.reduce(function(sum, d) { return sum + d.amount; }, 0);
+            totalValue.textContent = formatCurrency(total);
+            totalDiv.appendChild(totalLabel);
+            totalDiv.appendChild(totalValue);
+            wrapper.appendChild(totalDiv);
+
+            return wrapper;
+        }
+
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
@@ -3643,6 +3849,16 @@
 
             // Event listener for New Proposal button
             document.getElementById('newProposalBtn').addEventListener('click', openCreateProposalModal);
+
+            // Event listener for View Benefits button
+            document.getElementById('viewBenefitsBtn').addEventListener('click', function() {
+                openModal('Scholar Benefits', createBenefitsContent());
+            });
+
+            // Event listener for View All Deals button
+            document.getElementById('viewAllDealsBtn').addEventListener('click', function() {
+                openModal('All Deals', createAllDealsContent());
+            });
         }
 
         function createMonetizationModalContent() {

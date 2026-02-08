@@ -399,6 +399,10 @@
         const forgotLink = document.createElement('a');
         forgotLink.href = '#';
         forgotLink.textContent = 'Forgot password?';
+        forgotLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showPasswordResetForm(container, form);
+        });
 
         optionsDiv.appendChild(checkLabel);
         optionsDiv.appendChild(forgotLink);
@@ -461,6 +465,100 @@
         container.appendChild(footer);
 
         return container;
+    }
+
+    // ─── Password Reset Form ───
+    function showPasswordResetForm(container, loginForm) {
+        // Hide the login form
+        loginForm.style.display = 'none';
+
+        // Find and hide demo section and footer if they exist
+        const demoSection = container.querySelector('.demo-access');
+        const footer = container.querySelector('.modal-footer');
+        if (demoSection) demoSection.style.display = 'none';
+        if (footer) footer.style.display = 'none';
+
+        // Update header
+        const header = container.querySelector('.modal-header');
+        if (header) {
+            const h2 = header.querySelector('h2');
+            const p = header.querySelector('p');
+            if (h2) h2.textContent = 'Reset Password';
+            if (p) p.textContent = 'Enter your email to receive a password reset link';
+        }
+
+        // Create reset form
+        const resetForm = document.createElement('form');
+        resetForm.className = 'modal-form';
+        resetForm.id = 'password-reset-form';
+
+        // Email field
+        const emailGroup = createFormGroup('resetEmail', 'Email Address', 'email', 'you@university.edu', true);
+        resetForm.appendChild(emailGroup);
+
+        // Submit button
+        const submitBtn = document.createElement('button');
+        submitBtn.type = 'submit';
+        submitBtn.className = 'btn btn-primary btn-block';
+        submitBtn.textContent = 'Send Reset Link';
+        resetForm.appendChild(submitBtn);
+
+        // Back to login link
+        const backLink = document.createElement('a');
+        backLink.href = '#';
+        backLink.className = 'back-to-login';
+        backLink.style.cssText = 'display: block; text-align: center; margin-top: 1.5rem; color: var(--accent, #00f0ff); text-decoration: none; font-size: 0.875rem;';
+        backLink.textContent = 'Back to Sign In';
+        backLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Restore login form
+            resetForm.remove();
+            backLink.remove();
+            loginForm.style.display = '';
+            if (demoSection) demoSection.style.display = '';
+            if (footer) footer.style.display = '';
+            // Restore header
+            if (header) {
+                const h2 = header.querySelector('h2');
+                const p = header.querySelector('p');
+                if (h2) h2.textContent = 'Welcome Back';
+                if (p) p.textContent = 'Sign in to your GradeUp account';
+            }
+        });
+
+        // Handle form submission
+        resetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('resetEmail');
+            const email = emailInput ? emailInput.value.trim() : '';
+
+            if (!email) {
+                showAuthToast('Please enter your email address.');
+                return;
+            }
+
+            if (typeof isValidEmail === 'function' && !isValidEmail(email)) {
+                showAuthToast('Please enter a valid email address.');
+                return;
+            }
+
+            // Show success message
+            showAuthToast('Password reset link sent to ' + email + '! Check your inbox.');
+
+            // Return to login form after short delay
+            setTimeout(function() {
+                backLink.click();
+            }, 2000);
+        });
+
+        container.appendChild(resetForm);
+        container.appendChild(backLink);
+
+        // Focus the email input
+        setTimeout(function() {
+            var resetEmailInput = document.getElementById('resetEmail');
+            if (resetEmailInput) resetEmailInput.focus();
+        }, 100);
     }
 
     function buildSignupModal() {
@@ -1329,12 +1427,274 @@
         }, 3000);
     }
 
+    // ─── Footer Support Links ───
+    function setupFooterLinks() {
+        var helpCenterLink = document.getElementById('helpCenterLink');
+        var privacyPolicyLink = document.getElementById('privacyPolicyLink');
+        var termsOfServiceLink = document.getElementById('termsOfServiceLink');
+
+        if (helpCenterLink) {
+            helpCenterLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showInfoModal('Help Center', getHelpCenterContent());
+            });
+        }
+
+        if (privacyPolicyLink) {
+            privacyPolicyLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showInfoModal('Privacy Policy', getPrivacyPolicyContent());
+            });
+        }
+
+        if (termsOfServiceLink) {
+            termsOfServiceLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showInfoModal('Terms of Service', getTermsOfServiceContent());
+            });
+        }
+    }
+
+    function showInfoModal(title, content) {
+        // Create backdrop
+        var backdrop = document.createElement('div');
+        backdrop.className = 'info-modal-backdrop';
+        backdrop.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1001; display: flex; align-items: center; justify-content: center; padding: 2rem; overflow-y: auto;';
+
+        // Create modal
+        var modalEl = document.createElement('div');
+        modalEl.className = 'info-modal';
+        modalEl.style.cssText = 'background: #171717; border: 1px solid #262626; border-radius: 20px; width: 100%; max-width: 700px; max-height: 80vh; display: flex; flex-direction: column;';
+
+        // Header
+        var header = document.createElement('div');
+        header.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-bottom: 1px solid #262626; flex-shrink: 0;';
+
+        var titleEl = document.createElement('h2');
+        titleEl.style.cssText = 'font-size: 1.5rem; font-weight: 800; color: white; margin: 0;';
+        titleEl.textContent = title;
+        header.appendChild(titleEl);
+
+        var closeBtn = document.createElement('button');
+        closeBtn.style.cssText = 'width: 40px; height: 40px; background: #262626; border: none; border-radius: 10px; color: #a3a3a3; cursor: pointer; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s;';
+        closeBtn.textContent = '\u00D7';
+        closeBtn.setAttribute('aria-label', 'Close');
+        closeBtn.addEventListener('click', function() {
+            document.body.removeChild(backdrop);
+            document.body.style.overflow = '';
+        });
+        closeBtn.addEventListener('mouseenter', function() {
+            closeBtn.style.background = '#363636';
+            closeBtn.style.color = 'white';
+        });
+        closeBtn.addEventListener('mouseleave', function() {
+            closeBtn.style.background = '#262626';
+            closeBtn.style.color = '#a3a3a3';
+        });
+        header.appendChild(closeBtn);
+        modalEl.appendChild(header);
+
+        // Body
+        var body = document.createElement('div');
+        body.style.cssText = 'padding: 2rem; overflow-y: auto; flex: 1; color: #d4d4d4; line-height: 1.7;';
+        body.appendChild(content);
+        modalEl.appendChild(body);
+
+        backdrop.appendChild(modalEl);
+        document.body.appendChild(backdrop);
+        document.body.style.overflow = 'hidden';
+
+        // Close on backdrop click
+        backdrop.addEventListener('click', function(e) {
+            if (e.target === backdrop) {
+                document.body.removeChild(backdrop);
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close on escape
+        var escHandler = function(e) {
+            if (e.key === 'Escape') {
+                document.body.removeChild(backdrop);
+                document.body.style.overflow = '';
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+
+    function getHelpCenterContent() {
+        var container = document.createElement('div');
+
+        var sections = [
+            {
+                title: 'Getting Started',
+                items: [
+                    'Create your account by clicking "Get Started" and selecting your role (Athlete or Brand)',
+                    'Complete your profile with accurate information',
+                    'For athletes: Submit your academic transcripts for GPA verification',
+                    'Wait for verification approval (typically 24-48 hours)'
+                ]
+            },
+            {
+                title: 'For Athletes',
+                items: [
+                    'Keep your GPA updated each semester to maintain eligibility for deals',
+                    'Respond promptly to brand inquiries to improve your ranking',
+                    'Use professional photos and complete all profile sections',
+                    'Track your earnings and deal history in your dashboard'
+                ]
+            },
+            {
+                title: 'For Brands',
+                items: [
+                    'Browse verified athletes using filters for sport, GPA, and school',
+                    'Send deal proposals directly through the platform',
+                    'Track campaign performance and ROI in real-time',
+                    'All deals are NCAA-compliant when processed through GradeUp'
+                ]
+            },
+            {
+                title: 'Contact Support',
+                items: [
+                    'Email: support@gradeupnil.com',
+                    'Response time: Within 24 hours',
+                    'Phone support available for verified brand partners'
+                ]
+            }
+        ];
+
+        sections.forEach(function(section) {
+            var sectionTitle = document.createElement('h3');
+            sectionTitle.style.cssText = 'color: #00f0ff; font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.75rem 0;';
+            sectionTitle.textContent = section.title;
+            container.appendChild(sectionTitle);
+
+            var list = document.createElement('ul');
+            list.style.cssText = 'margin: 0; padding-left: 1.5rem;';
+            section.items.forEach(function(item) {
+                var li = document.createElement('li');
+                li.style.cssText = 'margin-bottom: 0.5rem;';
+                li.textContent = item;
+                list.appendChild(li);
+            });
+            container.appendChild(list);
+        });
+
+        return container;
+    }
+
+    function getPrivacyPolicyContent() {
+        var container = document.createElement('div');
+
+        var intro = document.createElement('p');
+        intro.style.cssText = 'margin-bottom: 1.5rem;';
+        intro.textContent = 'Last updated: January 2025. Your privacy is important to us. This Privacy Policy explains how GradeUp NIL collects, uses, and protects your information.';
+        container.appendChild(intro);
+
+        var sections = [
+            {
+                title: 'Information We Collect',
+                content: 'We collect information you provide directly, including name, email, school affiliation, sport, GPA, and profile photos. For brands, we collect company information and payment details.'
+            },
+            {
+                title: 'How We Use Your Information',
+                content: 'We use your information to: verify your identity and academic status, connect athletes with brand partners, process payments, improve our services, and communicate important updates.'
+            },
+            {
+                title: 'Information Sharing',
+                content: 'We share athlete profiles with registered brands on our platform. We do not sell your personal information to third parties. Academic records are only shared with your explicit consent.'
+            },
+            {
+                title: 'Data Security',
+                content: 'We implement industry-standard security measures including encryption, secure servers, and regular security audits to protect your personal information.'
+            },
+            {
+                title: 'Your Rights',
+                content: 'You have the right to access, update, or delete your personal information. You can control visibility settings for your profile and opt out of marketing communications at any time.'
+            },
+            {
+                title: 'Contact Us',
+                content: 'For privacy concerns or data requests, email: privacy@gradeupnil.com'
+            }
+        ];
+
+        sections.forEach(function(section) {
+            var sectionTitle = document.createElement('h3');
+            sectionTitle.style.cssText = 'color: #00f0ff; font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.5rem 0;';
+            sectionTitle.textContent = section.title;
+            container.appendChild(sectionTitle);
+
+            var para = document.createElement('p');
+            para.style.cssText = 'margin: 0;';
+            para.textContent = section.content;
+            container.appendChild(para);
+        });
+
+        return container;
+    }
+
+    function getTermsOfServiceContent() {
+        var container = document.createElement('div');
+
+        var intro = document.createElement('p');
+        intro.style.cssText = 'margin-bottom: 1.5rem;';
+        intro.textContent = 'Last updated: January 2025. By using GradeUp NIL, you agree to these Terms of Service. Please read them carefully.';
+        container.appendChild(intro);
+
+        var sections = [
+            {
+                title: 'Eligibility',
+                content: 'Athletes must be currently enrolled student-athletes at an NCAA-member institution. Brands must be legitimate businesses with valid contact information. All users must be 18 years or older.'
+            },
+            {
+                title: 'Account Responsibilities',
+                content: 'You are responsible for maintaining the confidentiality of your account credentials. You agree to provide accurate, current, and complete information. Misrepresentation of GPA or athletic status will result in immediate account termination.'
+            },
+            {
+                title: 'NCAA Compliance',
+                content: 'All deals facilitated through GradeUp must comply with NCAA NIL regulations. Athletes are responsible for reporting earnings to their institutions as required. GradeUp provides tools to help maintain compliance but does not guarantee it.'
+            },
+            {
+                title: 'Platform Fees',
+                content: 'GradeUp charges a platform fee on completed deals. Fee structure is disclosed before any transaction. Athletes receive payments after deals are fulfilled and verified.'
+            },
+            {
+                title: 'Content Guidelines',
+                content: 'Users may not post inappropriate, offensive, or misleading content. Profile photos must be appropriate for professional use. All content must comply with applicable laws and regulations.'
+            },
+            {
+                title: 'Termination',
+                content: 'We reserve the right to suspend or terminate accounts that violate these terms. Users may delete their accounts at any time through account settings.'
+            },
+            {
+                title: 'Contact',
+                content: 'For questions about these terms, email: legal@gradeupnil.com'
+            }
+        ];
+
+        sections.forEach(function(section) {
+            var sectionTitle = document.createElement('h3');
+            sectionTitle.style.cssText = 'color: #00f0ff; font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.5rem 0;';
+            sectionTitle.textContent = section.title;
+            container.appendChild(sectionTitle);
+
+            var para = document.createElement('p');
+            para.style.cssText = 'margin: 0;';
+            para.textContent = section.content;
+            container.appendChild(para);
+        });
+
+        return container;
+    }
+
     // ─── Initialize ───
     function init() {
         document.body.style.overflow = 'hidden';
         hideLoader();
         initNav();
         renderAthletes();
+        setupFooterLinks();
     }
 
     // Run on DOM ready

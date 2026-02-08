@@ -4003,7 +4003,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             renderAthletesTable(athletesData);
-            
+
             // Animate stats on load
             document.querySelectorAll('.stat-card').forEach(function(card, index) {
                 card.style.opacity = '0';
@@ -4013,6 +4013,428 @@
                     card.style.opacity = '1';
                     card.style.transform = 'translateY(0)';
                 }, index * 100);
+            });
+        });
+
+        // ========================================
+        // Generic Toast Notification System
+        // ========================================
+        function showSettingsToast(message, type) {
+            // Remove any existing settings toast
+            var existingToast = document.querySelector('.settings-toast');
+            if (existingToast) existingToast.remove();
+
+            var toast = document.createElement('div');
+            toast.className = 'settings-toast toast-' + type;
+            toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); padding: 1rem 2rem; border-radius: 8px; font-weight: 600; opacity: 0; transition: all 0.3s ease; z-index: 10001; display: flex; align-items: center; gap: 0.75rem;';
+
+            var colors = {
+                success: 'background: var(--success, #0B875E); color: white;',
+                warning: 'background: var(--warning, #F59E0B); color: black;',
+                error: 'background: var(--error, #DA2B57); color: white;',
+                info: 'background: var(--primary, #00F0FF); color: black;'
+            };
+            toast.style.cssText += colors[type] || colors.info;
+
+            // Create icon
+            var icon = document.createElement('span');
+            icon.style.cssText = 'display: flex; align-items: center;';
+            if (type === 'success') {
+                icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+            } else if (type === 'error') {
+                icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+            } else {
+                icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+            }
+            toast.appendChild(icon);
+
+            // Create message text
+            var text = document.createElement('span');
+            text.textContent = message;
+            toast.appendChild(text);
+
+            document.body.appendChild(toast);
+
+            // Animate in
+            setTimeout(function() {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            }, 10);
+
+            // Animate out after 3 seconds
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(20px)';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        // ========================================
+        // Compliance Alert Review Handlers
+        // ========================================
+        function reviewComplianceAlert(alertItem) {
+            var alertTitle = alertItem.querySelector('.alert-title').textContent;
+            var alertAthlete = alertItem.querySelector('.alert-athlete').textContent;
+            var alertSeverity = alertItem.querySelector('.alert-severity').textContent;
+            var alertTime = alertItem.querySelector('.alert-time').textContent;
+
+            // Parse athlete name and sport
+            var parts = alertAthlete.split(' - ');
+            var athleteName = parts[0] || alertAthlete;
+            var athleteSport = parts[1] || '';
+
+            // Create and show the compliance alert review modal
+            showComplianceAlertModal(alertTitle, athleteName, athleteSport, alertSeverity, alertTime, alertItem);
+        }
+
+        function showComplianceAlertModal(title, athleteName, sport, severity, time, alertItem) {
+            // Remove existing modal if present
+            var existingModal = document.getElementById('complianceAlertModal');
+            if (existingModal) existingModal.remove();
+
+            // Create modal overlay
+            var modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay active';
+            modalOverlay.id = 'complianceAlertModal';
+            modalOverlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+
+            // Create modal container
+            var modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = 'background: var(--bg-secondary, #1a1a2e); border-radius: 16px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;';
+
+            // Close button
+            var closeBtn = document.createElement('button');
+            closeBtn.className = 'modal-close';
+            closeBtn.setAttribute('aria-label', 'Close modal');
+            closeBtn.style.cssText = 'position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary, #a0a0a0); cursor: pointer; padding: 0.5rem;';
+            closeBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            closeBtn.addEventListener('click', function() {
+                modalOverlay.remove();
+            });
+            modal.appendChild(closeBtn);
+
+            // Modal content
+            var content = document.createElement('div');
+            content.className = 'modal-content';
+            content.style.cssText = 'padding: 2rem;';
+
+            // Header with severity badge
+            var header = document.createElement('div');
+            header.style.cssText = 'display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;';
+
+            var severityBadge = document.createElement('div');
+            var severityColors = {
+                'HIGH': 'background: var(--error, #DA2B57); color: white;',
+                'MED': 'background: var(--warning, #F59E0B); color: black;',
+                'LOW': 'background: var(--success, #0B875E); color: white;'
+            };
+            severityBadge.style.cssText = 'padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 700; font-size: 0.75rem; ' + (severityColors[severity] || severityColors['LOW']);
+            severityBadge.textContent = severity + ' PRIORITY';
+            header.appendChild(severityBadge);
+            content.appendChild(header);
+
+            // Title
+            var modalTitle = document.createElement('h2');
+            modalTitle.style.cssText = 'color: var(--text-primary, white); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;';
+            modalTitle.textContent = title;
+            content.appendChild(modalTitle);
+
+            // Athlete info
+            var athleteInfo = document.createElement('p');
+            athleteInfo.style.cssText = 'color: var(--text-secondary, #a0a0a0); margin-bottom: 0.25rem;';
+            athleteInfo.textContent = athleteName + (sport ? ' - ' + sport : '');
+            content.appendChild(athleteInfo);
+
+            // Time
+            var timeInfo = document.createElement('p');
+            timeInfo.style.cssText = 'color: var(--text-muted, #666); font-size: 0.875rem; margin-bottom: 1.5rem;';
+            timeInfo.textContent = 'Reported: ' + time;
+            content.appendChild(timeInfo);
+
+            // Alert details section
+            var detailsSection = document.createElement('div');
+            detailsSection.style.cssText = 'background: var(--bg-tertiary, #252540); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;';
+
+            var detailsTitle = document.createElement('h4');
+            detailsTitle.style.cssText = 'color: var(--text-primary, white); margin-bottom: 0.75rem; font-size: 0.875rem;';
+            detailsTitle.textContent = 'Alert Details';
+            detailsSection.appendChild(detailsTitle);
+
+            // Generate contextual details based on alert type
+            var detailsText = document.createElement('p');
+            detailsText.style.cssText = 'color: var(--text-secondary, #a0a0a0); font-size: 0.875rem; line-height: 1.6;';
+            if (title.includes('Brand Deal')) {
+                detailsText.textContent = 'An NIL brand partnership was detected that has not been properly disclosed or registered with the compliance office. This requires immediate review to ensure NCAA compliance.';
+            } else if (title.includes('GPA')) {
+                detailsText.textContent = 'The athlete\'s GPA has dropped below the minimum threshold required for NIL eligibility. Academic support may be needed, and current NIL activities may need to be suspended.';
+            } else if (title.includes('Documentation')) {
+                detailsText.textContent = 'Required documentation for NIL eligibility verification is missing or incomplete. The athlete needs to submit the necessary documents to maintain active status.';
+            } else {
+                detailsText.textContent = 'This compliance alert requires your attention. Please review the details and take appropriate action.';
+            }
+            detailsSection.appendChild(detailsText);
+            content.appendChild(detailsSection);
+
+            // Action buttons
+            var actions = document.createElement('div');
+            actions.style.cssText = 'display: flex; gap: 1rem; flex-wrap: wrap;';
+
+            var resolveBtn = document.createElement('button');
+            resolveBtn.className = 'btn btn-primary';
+            resolveBtn.style.cssText = 'flex: 1; min-width: 120px;';
+            resolveBtn.textContent = 'Mark as Resolved';
+            resolveBtn.addEventListener('click', function() {
+                // Remove the alert item from the list
+                alertItem.style.transition = 'all 0.3s ease';
+                alertItem.style.opacity = '0';
+                alertItem.style.transform = 'translateX(-20px)';
+                setTimeout(function() {
+                    alertItem.remove();
+                    // Update alert count
+                    var alertCount = document.querySelector('.alert-count');
+                    if (alertCount) {
+                        var remaining = document.querySelectorAll('.alert-item').length;
+                        alertCount.textContent = remaining + ' Active';
+                    }
+                }, 300);
+                modalOverlay.remove();
+                showSettingsToast('Compliance alert resolved for ' + athleteName, 'success');
+            });
+            actions.appendChild(resolveBtn);
+
+            var escalateBtn = document.createElement('button');
+            escalateBtn.className = 'btn btn-outline';
+            escalateBtn.style.cssText = 'flex: 1; min-width: 120px;';
+            escalateBtn.textContent = 'Escalate';
+            escalateBtn.addEventListener('click', function() {
+                modalOverlay.remove();
+                showSettingsToast('Alert escalated to senior compliance officer', 'warning');
+            });
+            actions.appendChild(escalateBtn);
+
+            var dismissBtn = document.createElement('button');
+            dismissBtn.className = 'btn btn-secondary';
+            dismissBtn.style.cssText = 'flex: 1; min-width: 120px;';
+            dismissBtn.textContent = 'Dismiss';
+            dismissBtn.addEventListener('click', function() {
+                modalOverlay.remove();
+            });
+            actions.appendChild(dismissBtn);
+
+            content.appendChild(actions);
+            modal.appendChild(content);
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+
+            // Close on overlay click
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    modalOverlay.remove();
+                }
+            });
+
+            // Close on Escape key
+            function handleEscape(e) {
+                if (e.key === 'Escape') {
+                    modalOverlay.remove();
+                    document.removeEventListener('keydown', handleEscape);
+                }
+            }
+            document.addEventListener('keydown', handleEscape);
+        }
+
+        // Add click handlers to Compliance Alert Review buttons
+        document.querySelectorAll('.alert-item .alert-actions .btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var alertItem = btn.closest('.alert-item');
+                reviewComplianceAlert(alertItem);
+            });
+        });
+
+        // ========================================
+        // View All Documents Handler
+        // ========================================
+        function showAllDocumentsModal() {
+            // Remove existing modal if present
+            var existingModal = document.getElementById('allDocumentsModal');
+            if (existingModal) existingModal.remove();
+
+            // Collect all documents from the queue
+            var documents = [];
+            document.querySelectorAll('.doc-item').forEach(function(item) {
+                var docName = item.querySelector('.doc-name');
+                var docAthlete = item.querySelector('.doc-athlete');
+                if (docName && docAthlete) {
+                    documents.push({
+                        name: docName.textContent,
+                        athlete: docAthlete.textContent,
+                        element: item
+                    });
+                }
+            });
+
+            // Create modal overlay
+            var modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay active';
+            modalOverlay.id = 'allDocumentsModal';
+            modalOverlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+
+            // Create modal container
+            var modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = 'background: var(--bg-secondary, #1a1a2e); border-radius: 16px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;';
+
+            // Close button
+            var closeBtn = document.createElement('button');
+            closeBtn.className = 'modal-close';
+            closeBtn.setAttribute('aria-label', 'Close modal');
+            closeBtn.style.cssText = 'position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary, #a0a0a0); cursor: pointer; padding: 0.5rem;';
+            closeBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            closeBtn.addEventListener('click', function() {
+                modalOverlay.remove();
+            });
+            modal.appendChild(closeBtn);
+
+            // Modal content
+            var content = document.createElement('div');
+            content.className = 'modal-content';
+            content.style.cssText = 'padding: 2rem;';
+
+            // Title
+            var modalTitle = document.createElement('h2');
+            modalTitle.style.cssText = 'color: var(--text-primary, white); font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;';
+            modalTitle.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+            var titleText = document.createElement('span');
+            titleText.textContent = 'All Pending Documents (' + documents.length + ')';
+            modalTitle.appendChild(titleText);
+            content.appendChild(modalTitle);
+
+            // Documents list
+            var docList = document.createElement('div');
+            docList.style.cssText = 'display: flex; flex-direction: column; gap: 0.75rem;';
+
+            if (documents.length === 0) {
+                var emptyState = document.createElement('p');
+                emptyState.style.cssText = 'color: var(--text-secondary, #a0a0a0); text-align: center; padding: 2rem;';
+                emptyState.textContent = 'No pending documents to review.';
+                docList.appendChild(emptyState);
+            } else {
+                documents.forEach(function(doc, index) {
+                    var docRow = document.createElement('div');
+                    docRow.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary, #252540); border-radius: 8px; padding: 1rem; gap: 1rem;';
+
+                    var docInfo = document.createElement('div');
+                    docInfo.style.cssText = 'display: flex; align-items: center; gap: 1rem; flex: 1;';
+
+                    var docIcon = document.createElement('div');
+                    docIcon.style.cssText = 'color: var(--primary, #00F0FF);';
+                    docIcon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>';
+                    docInfo.appendChild(docIcon);
+
+                    var docDetails = document.createElement('div');
+                    var docNameSpan = document.createElement('div');
+                    docNameSpan.style.cssText = 'color: var(--text-primary, white); font-weight: 500;';
+                    docNameSpan.textContent = doc.name;
+                    docDetails.appendChild(docNameSpan);
+
+                    var docAthleteSpan = document.createElement('div');
+                    docAthleteSpan.style.cssText = 'color: var(--text-secondary, #a0a0a0); font-size: 0.875rem;';
+                    docAthleteSpan.textContent = doc.athlete;
+                    docDetails.appendChild(docAthleteSpan);
+                    docInfo.appendChild(docDetails);
+                    docRow.appendChild(docInfo);
+
+                    var docActions = document.createElement('div');
+                    docActions.style.cssText = 'display: flex; gap: 0.5rem;';
+
+                    var approveBtn = document.createElement('button');
+                    approveBtn.className = 'btn-icon approve';
+                    approveBtn.setAttribute('aria-label', 'Approve document');
+                    approveBtn.style.cssText = 'width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--success, #0B875E); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;';
+                    approveBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+                    approveBtn.addEventListener('click', function() {
+                        docRow.style.transition = 'all 0.3s ease';
+                        docRow.style.opacity = '0';
+                        docRow.style.transform = 'translateX(20px)';
+                        setTimeout(function() {
+                            docRow.remove();
+                            // Also remove from main list if exists
+                            var approveBtn = doc.element.querySelector('.btn-icon.approve');
+                            if (approveBtn) approveBtn.click();
+                        }, 300);
+                        showSettingsToast(doc.name + ' approved', 'success');
+                    });
+                    docActions.appendChild(approveBtn);
+
+                    var rejectBtn = document.createElement('button');
+                    rejectBtn.className = 'btn-icon reject';
+                    rejectBtn.setAttribute('aria-label', 'Reject document');
+                    rejectBtn.style.cssText = 'width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--error, #DA2B57); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;';
+                    rejectBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+                    rejectBtn.addEventListener('click', function() {
+                        docRow.style.transition = 'all 0.3s ease';
+                        docRow.style.opacity = '0';
+                        docRow.style.transform = 'translateX(-20px)';
+                        setTimeout(function() {
+                            docRow.remove();
+                        }, 300);
+                        showSettingsToast(doc.name + ' rejected', 'error');
+                    });
+                    docActions.appendChild(rejectBtn);
+
+                    docRow.appendChild(docActions);
+                    docList.appendChild(docRow);
+                });
+            }
+
+            content.appendChild(docList);
+            modal.appendChild(content);
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+
+            // Close on overlay click
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    modalOverlay.remove();
+                }
+            });
+
+            // Close on Escape key
+            function handleEscape(e) {
+                if (e.key === 'Escape') {
+                    modalOverlay.remove();
+                    document.removeEventListener('keydown', handleEscape);
+                }
+            }
+            document.addEventListener('keydown', handleEscape);
+        }
+
+        // Add click handler to View All Documents button
+        document.querySelectorAll('.btn.btn-outline.btn-block').forEach(function(btn) {
+            if (btn.textContent.trim() === 'View All Documents') {
+                btn.addEventListener('click', showAllDocumentsModal);
+            }
+        });
+
+        // ========================================
+        // Settings Modal Save Button Handlers
+        // ========================================
+        document.querySelectorAll('.settings-panel .btn.btn-primary').forEach(function(btn) {
+            var buttonText = btn.textContent.trim();
+            btn.addEventListener('click', function() {
+                // Determine which settings panel this is
+                var panel = btn.closest('.settings-panel');
+                var panelId = panel ? panel.id : '';
+
+                var messages = {
+                    'profilePanel': 'School profile settings saved successfully',
+                    'compliancePanel': 'Compliance rules saved successfully',
+                    'notificationsPanel': 'Notification preferences saved successfully'
+                };
+
+                var message = messages[panelId] || 'Settings saved successfully';
+                showSettingsToast(message, 'success');
             });
         });
     </script>

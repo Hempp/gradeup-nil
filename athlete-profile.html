@@ -2540,6 +2540,15 @@
 
             // Score Breakdown Toggle
             setupScoreBreakdown();
+
+            // View All Buttons
+            setupViewAllButtons();
+
+            // Login/Signup Buttons
+            setupAuthButtons();
+
+            // Social Links
+            setupSocialLinks();
         }
 
         // ─── Share Buttons Functionality ───
@@ -2633,6 +2642,180 @@
                     breakdown.hidden = false;
                     toggle.setAttribute('aria-expanded', 'true');
                     toggle.querySelector('span').textContent = 'Hide Breakdown';
+                }
+            });
+        }
+
+        // ─── View All Buttons ───
+        function setupViewAllButtons() {
+            var viewAllButtons = document.querySelectorAll('.section-action');
+
+            viewAllButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    // Find the parent section to determine which "View All" was clicked
+                    var sectionHeader = button.closest('.section-header');
+                    var sectionTitle = sectionHeader ? sectionHeader.querySelector('.section-title') : null;
+                    var titleText = sectionTitle ? sectionTitle.textContent.trim() : 'Content';
+
+                    // Show a notification that this feature requires login
+                    showViewAllModal(titleText);
+                });
+            });
+        }
+
+        function showViewAllModal(sectionName) {
+            // Create modal overlay
+            var overlay = document.createElement('div');
+            overlay.className = 'view-all-modal-overlay';
+            overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease;';
+
+            // Create modal content
+            var modal = document.createElement('div');
+            modal.style.cssText = 'background: var(--gray-900, #1a1a1a); border: 1px solid var(--gray-800, #333); border-radius: 16px; padding: 2rem; max-width: 400px; text-align: center; animation: scaleIn 0.2s ease;';
+
+            var title = document.createElement('h3');
+            title.style.cssText = 'font-size: 1.25rem; font-weight: 700; color: var(--white, #fff); margin-bottom: 0.75rem;';
+            title.textContent = 'View All ' + sectionName;
+            modal.appendChild(title);
+
+            var message = document.createElement('p');
+            message.style.cssText = 'color: var(--gray-400, #999); margin-bottom: 1.5rem; font-size: 0.9375rem;';
+            message.textContent = 'Sign up or log in to view all ' + sectionName.toLowerCase() + ' and unlock full access to athlete profiles.';
+            modal.appendChild(message);
+
+            var buttonContainer = document.createElement('div');
+            buttonContainer.style.cssText = 'display: flex; gap: 0.75rem; justify-content: center;';
+
+            var signupBtn = document.createElement('button');
+            signupBtn.style.cssText = 'padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--black, #000); background: var(--cyan, #00F0FF); border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s;';
+            signupBtn.textContent = 'Sign Up';
+            signupBtn.addEventListener('click', function() {
+                overlay.remove();
+                window.location.href = 'index.html#signup';
+            });
+            buttonContainer.appendChild(signupBtn);
+
+            var loginBtn = document.createElement('button');
+            loginBtn.style.cssText = 'padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--gray-300, #ccc); background: transparent; border: 1px solid var(--gray-700, #555); border-radius: 8px; cursor: pointer; transition: all 0.2s;';
+            loginBtn.textContent = 'Log In';
+            loginBtn.addEventListener('click', function() {
+                overlay.remove();
+                window.location.href = 'index.html#login';
+            });
+            buttonContainer.appendChild(loginBtn);
+
+            modal.appendChild(buttonContainer);
+
+            // Create close button using safe DOM methods
+            var closeBtn = document.createElement('button');
+            closeBtn.style.cssText = 'position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--gray-500, #888); cursor: pointer; padding: 0.5rem;';
+            closeBtn.setAttribute('aria-label', 'Close modal');
+
+            var closeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            closeSvg.setAttribute('width', '20');
+            closeSvg.setAttribute('height', '20');
+            closeSvg.setAttribute('viewBox', '0 0 24 24');
+            closeSvg.setAttribute('fill', 'none');
+            closeSvg.setAttribute('stroke', 'currentColor');
+            closeSvg.setAttribute('stroke-width', '2');
+
+            var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line1.setAttribute('x1', '18');
+            line1.setAttribute('y1', '6');
+            line1.setAttribute('x2', '6');
+            line1.setAttribute('y2', '18');
+            closeSvg.appendChild(line1);
+
+            var line2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line2.setAttribute('x1', '6');
+            line2.setAttribute('y1', '6');
+            line2.setAttribute('x2', '18');
+            line2.setAttribute('y2', '18');
+            closeSvg.appendChild(line2);
+
+            closeBtn.appendChild(closeSvg);
+            closeBtn.addEventListener('click', function() {
+                overlay.remove();
+            });
+
+            var modalWrapper = document.createElement('div');
+            modalWrapper.style.cssText = 'position: relative;';
+            modalWrapper.appendChild(closeBtn);
+            modalWrapper.appendChild(modal);
+
+            overlay.appendChild(modalWrapper);
+
+            // Close on overlay click
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+
+            // Close on Escape key
+            var escHandler = function(e) {
+                if (e.key === 'Escape') {
+                    overlay.remove();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
+
+            document.body.appendChild(overlay);
+        }
+
+        // ─── Auth Buttons (Login/Signup) ───
+        function setupAuthButtons() {
+            var loginBtn = document.querySelector('.btn-login');
+            var signupBtn = document.querySelector('.btn-signup');
+
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    window.location.href = 'index.html#login';
+                });
+            }
+
+            if (signupBtn) {
+                signupBtn.addEventListener('click', function() {
+                    window.location.href = 'index.html#signup';
+                });
+            }
+        }
+
+        // ─── Social Links ───
+        function setupSocialLinks() {
+            var socialLinks = document.querySelectorAll('.hero-social .social-link');
+
+            // Athlete social media data (would come from backend in production)
+            var athleteSocials = {
+                instagram: 'https://instagram.com/marcusjohnson',
+                twitter: 'https://twitter.com/marcusjohnson',
+                tiktok: 'https://tiktok.com/@marcusjohnson'
+            };
+
+            socialLinks.forEach(function(link) {
+                var label = link.getAttribute('aria-label');
+
+                if (label) {
+                    var platform = label.toLowerCase();
+                    var url = athleteSocials[platform];
+
+                    if (url) {
+                        // Update href and add target for external link
+                        link.setAttribute('href', url);
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+
+                    // Add click handler for analytics/tracking (optional)
+                    link.addEventListener('click', function(e) {
+                        // If still placeholder, prevent navigation and show message
+                        if (link.getAttribute('href') === '#') {
+                            e.preventDefault();
+                            showShareToast('Social profile link coming soon!');
+                        }
+                        // Otherwise, let the link navigate normally
+                    });
                 }
             });
         }
