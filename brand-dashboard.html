@@ -2218,10 +2218,18 @@
                 const contactBtn = document.createElement('button');
                 contactBtn.className = 'btn btn-outline btn-sm';
                 contactBtn.textContent = 'Contact';
+                contactBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openContactModal(athlete);
+                });
                 actionsDiv.appendChild(contactBtn);
                 const profileBtn = document.createElement('button');
                 profileBtn.className = 'btn btn-primary btn-sm';
                 profileBtn.textContent = 'View Profile';
+                profileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openAthleteProfileModal(athlete);
+                });
                 actionsDiv.appendChild(profileBtn);
                 contentDiv.appendChild(actionsDiv);
 
@@ -2827,6 +2835,206 @@
                 }
             });
 
+            document.body.appendChild(modalHtml);
+        }
+
+        // ─── Contact Athlete Modal ───
+        function openContactModal(athlete) {
+            var modalHtml = document.createElement('div');
+            modalHtml.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 2rem;';
+
+            var modal = document.createElement('div');
+            modal.style.cssText = 'background: var(--gray-900); border: 1px solid var(--gray-800); border-radius: 20px; width: 100%; max-width: 500px;';
+
+            var header = document.createElement('div');
+            header.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid var(--gray-800);';
+
+            var title = document.createElement('h2');
+            title.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: var(--white); margin: 0;';
+            title.textContent = 'Contact ' + athlete.name;
+            header.appendChild(title);
+
+            var closeBtn = document.createElement('button');
+            closeBtn.style.cssText = 'width: 36px; height: 36px; background: var(--gray-800); border: none; border-radius: 8px; color: var(--gray-400); cursor: pointer;';
+            closeBtn.textContent = '✕';
+            closeBtn.addEventListener('click', function() { document.body.removeChild(modalHtml); });
+            header.appendChild(closeBtn);
+            modal.appendChild(header);
+
+            var body = document.createElement('div');
+            body.style.cssText = 'padding: 1.5rem;';
+
+            var subjectGroup = document.createElement('div');
+            subjectGroup.style.cssText = 'margin-bottom: 1.25rem;';
+            var subjectLabel = document.createElement('label');
+            subjectLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            subjectLabel.textContent = 'Subject';
+            subjectGroup.appendChild(subjectLabel);
+            var subjectInput = document.createElement('input');
+            subjectInput.type = 'text';
+            subjectInput.placeholder = 'Partnership Opportunity';
+            subjectInput.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: var(--gray-800); border: 1px solid var(--gray-700); border-radius: 10px; color: var(--white); font-size: 0.9375rem;';
+            subjectGroup.appendChild(subjectInput);
+            body.appendChild(subjectGroup);
+
+            var msgGroup = document.createElement('div');
+            msgGroup.style.cssText = 'margin-bottom: 1.25rem;';
+            var msgLabel = document.createElement('label');
+            msgLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;';
+            msgLabel.textContent = 'Message';
+            msgGroup.appendChild(msgLabel);
+            var msgTextarea = document.createElement('textarea');
+            msgTextarea.rows = 5;
+            msgTextarea.placeholder = 'Hi ' + athlete.name.split(' ')[0] + ', we would love to discuss a partnership opportunity with you...';
+            msgTextarea.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: var(--gray-800); border: 1px solid var(--gray-700); border-radius: 10px; color: var(--white); font-size: 0.9375rem; resize: vertical; min-height: 120px;';
+            msgGroup.appendChild(msgTextarea);
+            body.appendChild(msgGroup);
+
+            var sendBtn = document.createElement('button');
+            sendBtn.className = 'btn btn-primary';
+            sendBtn.style.cssText = 'width: 100%;';
+            sendBtn.textContent = 'Send Message';
+            sendBtn.addEventListener('click', function() {
+                if (subjectInput.value && msgTextarea.value) {
+                    document.body.removeChild(modalHtml);
+                    if (typeof showToast === 'function') {
+                        showToast('Message sent to ' + athlete.name + '!', 'success');
+                    } else {
+                        alert('Message sent to ' + athlete.name + '!');
+                    }
+                } else {
+                    alert('Please fill in all fields');
+                }
+            });
+            body.appendChild(sendBtn);
+
+            modal.appendChild(body);
+            modalHtml.appendChild(modal);
+            modalHtml.addEventListener('click', function(e) { if (e.target === modalHtml) document.body.removeChild(modalHtml); });
+            document.body.appendChild(modalHtml);
+        }
+
+        // ─── Athlete Profile Modal ───
+        function openAthleteProfileModal(athlete) {
+            var modalHtml = document.createElement('div');
+            modalHtml.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 2rem;';
+
+            var modal = document.createElement('div');
+            modal.style.cssText = 'background: var(--gray-900); border: 1px solid var(--gray-800); border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;';
+
+            var header = document.createElement('div');
+            header.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid var(--gray-800);';
+
+            var title = document.createElement('h2');
+            title.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: var(--white); margin: 0;';
+            title.textContent = 'Athlete Profile';
+            header.appendChild(title);
+
+            var closeBtn = document.createElement('button');
+            closeBtn.style.cssText = 'width: 36px; height: 36px; background: var(--gray-800); border: none; border-radius: 8px; color: var(--gray-400); cursor: pointer;';
+            closeBtn.textContent = '✕';
+            closeBtn.addEventListener('click', function() { document.body.removeChild(modalHtml); });
+            header.appendChild(closeBtn);
+            modal.appendChild(header);
+
+            var body = document.createElement('div');
+            body.style.cssText = 'padding: 1.5rem;';
+
+            // Profile header
+            var profileHeader = document.createElement('div');
+            profileHeader.style.cssText = 'display: flex; gap: 1.5rem; margin-bottom: 1.5rem;';
+
+            var avatar = document.createElement('img');
+            avatar.src = athlete.photo;
+            avatar.alt = athlete.name;
+            avatar.style.cssText = 'width: 100px; height: 100px; border-radius: 16px; object-fit: cover;';
+            profileHeader.appendChild(avatar);
+
+            var info = document.createElement('div');
+            var nameEl = document.createElement('h3');
+            nameEl.style.cssText = 'font-size: 1.5rem; font-weight: 800; color: var(--white); margin: 0 0 0.25rem 0;';
+            nameEl.textContent = athlete.name;
+            info.appendChild(nameEl);
+
+            var sportEl = document.createElement('p');
+            sportEl.style.cssText = 'color: var(--cyan); font-weight: 600; margin: 0 0 0.5rem 0;';
+            sportEl.textContent = athlete.sport + ' • ' + athlete.school;
+            info.appendChild(sportEl);
+
+            var tierEl = document.createElement('span');
+            tierEl.style.cssText = 'display: inline-block; padding: 0.25rem 0.75rem; background: ' + (athlete.scholarTier === 'gold' ? 'linear-gradient(135deg, #ffd700, #ffb700)' : athlete.scholarTier === 'platinum' ? 'linear-gradient(135deg, #e5e4e2, #c0c0c0)' : 'var(--gray-700)') + '; border-radius: 100px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: ' + (athlete.scholarTier === 'silver' ? 'var(--white)' : 'var(--black)') + ';';
+            tierEl.textContent = athlete.scholarTier + ' Scholar';
+            info.appendChild(tierEl);
+
+            profileHeader.appendChild(info);
+            body.appendChild(profileHeader);
+
+            // Stats grid
+            var statsGrid = document.createElement('div');
+            statsGrid.style.cssText = 'display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;';
+
+            var stats = [
+                { label: 'GPA', value: athlete.gpa.toFixed(2) },
+                { label: 'Followers', value: formatNumber(athlete.followers) },
+                { label: 'Match Score', value: athlete.matchScore + '%' },
+                { label: 'Engagement', value: athlete.engagement }
+            ];
+
+            stats.forEach(function(stat) {
+                var statDiv = document.createElement('div');
+                statDiv.style.cssText = 'text-align: center; padding: 1rem; background: var(--gray-800); border-radius: 12px;';
+                var valueEl = document.createElement('div');
+                valueEl.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: var(--cyan);';
+                valueEl.textContent = stat.value;
+                statDiv.appendChild(valueEl);
+                var labelEl = document.createElement('div');
+                labelEl.style.cssText = 'font-size: 0.75rem; color: var(--gray-500); text-transform: uppercase;';
+                labelEl.textContent = stat.label;
+                statDiv.appendChild(labelEl);
+                statsGrid.appendChild(statDiv);
+            });
+
+            body.appendChild(statsGrid);
+
+            // Tags
+            var tagsDiv = document.createElement('div');
+            tagsDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;';
+            athlete.tags.forEach(function(tag) {
+                var tagEl = document.createElement('span');
+                tagEl.style.cssText = 'padding: 0.375rem 0.75rem; background: var(--gray-800); border-radius: 100px; font-size: 0.75rem; color: var(--gray-300);';
+                tagEl.textContent = tag;
+                tagsDiv.appendChild(tagEl);
+            });
+            body.appendChild(tagsDiv);
+
+            // Actions
+            var actions = document.createElement('div');
+            actions.style.cssText = 'display: flex; gap: 0.75rem;';
+
+            var contactBtn = document.createElement('button');
+            contactBtn.className = 'btn btn-primary';
+            contactBtn.style.cssText = 'flex: 1;';
+            contactBtn.textContent = 'Contact Athlete';
+            contactBtn.addEventListener('click', function() {
+                document.body.removeChild(modalHtml);
+                openContactModal(athlete);
+            });
+            actions.appendChild(contactBtn);
+
+            var viewFullBtn = document.createElement('button');
+            viewFullBtn.className = 'btn btn-outline';
+            viewFullBtn.style.cssText = 'flex: 1;';
+            viewFullBtn.textContent = 'View Full Profile';
+            viewFullBtn.addEventListener('click', function() {
+                window.location.href = 'athlete-profile.html';
+            });
+            actions.appendChild(viewFullBtn);
+
+            body.appendChild(actions);
+
+            modal.appendChild(body);
+            modalHtml.appendChild(modal);
+            modalHtml.addEventListener('click', function(e) { if (e.target === modalHtml) document.body.removeChild(modalHtml); });
             document.body.appendChild(modalHtml);
         }
 

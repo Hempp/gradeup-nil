@@ -869,6 +869,77 @@
         }
     });
 
+    // ─── Contact Athlete Modal ───
+    window.showContactModal = function(athlete) {
+        const backdrop = document.createElement('div');
+        backdrop.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1001; display: flex; align-items: center; justify-content: center; padding: 2rem;';
+
+        const modalEl = document.createElement('div');
+        modalEl.style.cssText = 'background: #171717; border: 1px solid #262626; border-radius: 20px; width: 100%; max-width: 500px;';
+
+        const header = document.createElement('div');
+        header.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid #262626;';
+
+        const title = document.createElement('h2');
+        title.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: white; margin: 0;';
+        title.textContent = 'Contact ' + athlete.name;
+        header.appendChild(title);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.style.cssText = 'width: 36px; height: 36px; background: #262626; border: none; border-radius: 8px; color: #a3a3a3; cursor: pointer; font-size: 1rem;';
+        closeBtn.textContent = '✕';
+        closeBtn.addEventListener('click', function() { document.body.removeChild(backdrop); });
+        header.appendChild(closeBtn);
+        modalEl.appendChild(header);
+
+        const body = document.createElement('div');
+        body.style.cssText = 'padding: 1.5rem;';
+
+        const subjectGroup = document.createElement('div');
+        subjectGroup.style.cssText = 'margin-bottom: 1.25rem;';
+        const subjectLabel = document.createElement('label');
+        subjectLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: white; margin-bottom: 0.5rem;';
+        subjectLabel.textContent = 'Subject';
+        subjectGroup.appendChild(subjectLabel);
+        const subjectInput = document.createElement('input');
+        subjectInput.type = 'text';
+        subjectInput.placeholder = 'Partnership Inquiry';
+        subjectInput.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: #262626; border: 1px solid #404040; border-radius: 10px; color: white; font-size: 0.9375rem;';
+        subjectGroup.appendChild(subjectInput);
+        body.appendChild(subjectGroup);
+
+        const msgGroup = document.createElement('div');
+        msgGroup.style.cssText = 'margin-bottom: 1.25rem;';
+        const msgLabel = document.createElement('label');
+        msgLabel.style.cssText = 'display: block; font-size: 0.8125rem; font-weight: 600; color: white; margin-bottom: 0.5rem;';
+        msgLabel.textContent = 'Message';
+        msgGroup.appendChild(msgLabel);
+        const msgTextarea = document.createElement('textarea');
+        msgTextarea.rows = 5;
+        msgTextarea.placeholder = 'Hi ' + athlete.name.split(' ')[0] + ', I would love to discuss a partnership opportunity...';
+        msgTextarea.style.cssText = 'width: 100%; padding: 0.875rem 1rem; background: #262626; border: 1px solid #404040; border-radius: 10px; color: white; font-size: 0.9375rem; resize: vertical; min-height: 120px;';
+        msgGroup.appendChild(msgTextarea);
+        body.appendChild(msgGroup);
+
+        const sendBtn = document.createElement('button');
+        sendBtn.style.cssText = 'width: 100%; padding: 0.875rem 1.5rem; background: #00f0ff; color: black; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; cursor: pointer;';
+        sendBtn.textContent = 'Send Message';
+        sendBtn.addEventListener('click', function() {
+            if (subjectInput.value && msgTextarea.value) {
+                document.body.removeChild(backdrop);
+                showAuthToast('Message sent to ' + athlete.name + '!', 'success');
+            } else {
+                showAuthToast('Please fill in all fields', 'error');
+            }
+        });
+        body.appendChild(sendBtn);
+
+        modalEl.appendChild(body);
+        backdrop.appendChild(modalEl);
+        backdrop.addEventListener('click', function(e) { if (e.target === backdrop) document.body.removeChild(backdrop); });
+        document.body.appendChild(backdrop);
+    };
+
     // ─── Athlete Modal ───
     window.openAthleteModal = function(id) {
         const athlete = athletesData.find(a => a.id === id);
@@ -984,7 +1055,10 @@
         const contactBtn = document.createElement('button');
         contactBtn.className = 'btn btn-primary';
         contactBtn.textContent = 'Contact Athlete';
-        contactBtn.addEventListener('click', () => alert('Contact feature coming soon!'));
+        contactBtn.addEventListener('click', () => {
+            closeModal();
+            showContactModal(athlete);
+        });
 
         const closeBtn = document.createElement('button');
         closeBtn.className = 'btn btn-outline';

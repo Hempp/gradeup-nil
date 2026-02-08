@@ -3567,6 +3567,62 @@
             openModal('Notifications', createNotificationsContent());
         });
 
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            openModal('Account Settings', createSettingsContent());
+        });
+
+        function createSettingsContent() {
+            var wrapper = document.createElement('div');
+
+            var sections = [
+                { title: 'Profile', items: ['Edit Profile', 'Update Photo', 'Change Password'] },
+                { title: 'Notifications', items: ['Email Notifications', 'Push Notifications', 'SMS Alerts'] },
+                { title: 'Privacy', items: ['Profile Visibility', 'Data Sharing', 'Block List'] },
+                { title: 'Account', items: ['Linked Accounts', 'Billing', 'Delete Account'] }
+            ];
+
+            sections.forEach(function(section) {
+                var sectionDiv = document.createElement('div');
+                sectionDiv.style.cssText = 'margin-bottom: 1.5rem;';
+
+                var titleEl = document.createElement('h4');
+                titleEl.style.cssText = 'font-size: 0.875rem; font-weight: 700; color: var(--cyan); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;';
+                titleEl.textContent = section.title;
+                sectionDiv.appendChild(titleEl);
+
+                section.items.forEach(function(item) {
+                    var itemDiv = document.createElement('div');
+                    itemDiv.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1rem; background: var(--gray-800); border-radius: 10px; margin-bottom: 0.5rem; cursor: pointer; transition: background 0.2s;';
+                    itemDiv.onmouseover = function() { this.style.background = 'var(--gray-700)'; };
+                    itemDiv.onmouseout = function() { this.style.background = 'var(--gray-800)'; };
+
+                    var label = document.createElement('span');
+                    label.style.cssText = 'color: var(--white); font-weight: 500;';
+                    label.textContent = item;
+                    itemDiv.appendChild(label);
+
+                    var arrow = document.createElement('span');
+                    arrow.style.cssText = 'color: var(--gray-500);';
+                    arrow.textContent = '→';
+                    itemDiv.appendChild(arrow);
+
+                    itemDiv.addEventListener('click', function() {
+                        if (typeof showToast === 'function') {
+                            showToast(item + ' settings coming soon!', 'info');
+                        } else {
+                            alert(item + ' settings coming soon!');
+                        }
+                    });
+
+                    sectionDiv.appendChild(itemDiv);
+                });
+
+                wrapper.appendChild(sectionDiv);
+            });
+
+            return wrapper;
+        }
+
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
