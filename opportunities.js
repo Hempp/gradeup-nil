@@ -7,6 +7,104 @@
 (function() {
     'use strict';
 
+    // ─── Safe DOM Helpers (XSS Prevention) ───
+    // Creates SVG icon elements safely without innerHTML
+    function createClockIcon() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '12');
+        circle.setAttribute('cy', '12');
+        circle.setAttribute('r', '10');
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M12 6v6l4 2');
+        svg.appendChild(circle);
+        svg.appendChild(path);
+        return svg;
+    }
+
+    function createCheckIcon() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path1.setAttribute('d', 'M22 11.08V12a10 10 0 11-5.93-9.14');
+        var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        poly.setAttribute('points', '22 4 12 14.01 9 11.01');
+        svg.appendChild(path1);
+        svg.appendChild(poly);
+        return svg;
+    }
+
+    function createCircleIcon() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '12');
+        circle.setAttribute('cy', '12');
+        circle.setAttribute('r', '10');
+        svg.appendChild(circle);
+        return svg;
+    }
+
+    function createCheckmarkIcon() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        poly.setAttribute('points', '20 6 9 17 4 12');
+        svg.appendChild(poly);
+        return svg;
+    }
+
+    function createUsersIcon() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path1.setAttribute('d', 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2');
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '9');
+        circle.setAttribute('cy', '7');
+        circle.setAttribute('r', '4');
+        var path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path2.setAttribute('d', 'M23 21v-2a4 4 0 00-3-3.87');
+        var path3 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path3.setAttribute('d', 'M16 3.13a4 4 0 010 7.75');
+        svg.appendChild(path1);
+        svg.appendChild(circle);
+        svg.appendChild(path2);
+        svg.appendChild(path3);
+        return svg;
+    }
+
+    function createEducationIcon() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path1.setAttribute('d', 'M22 10v6M2 10l10-5 10 5-10 5z');
+        var path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path2.setAttribute('d', 'M6 12v5c3 3 9 3 12 0v-5');
+        svg.appendChild(path1);
+        svg.appendChild(path2);
+        return svg;
+    }
+
     // ─── Opportunities Data ───
     // Note: This is demo data. In production, data would come from Supabase backend.
     const opportunitiesData = [
@@ -572,11 +670,13 @@
 
         var deadline = document.createElement('span');
         deadline.className = 'deadline' + (isUrgent ? ' urgent' : '');
-        deadline.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' + daysLeft + ' days left';
+        deadline.appendChild(createClockIcon());
+        deadline.appendChild(document.createTextNode(' ' + daysLeft + ' days left'));
 
         var matchScore = document.createElement('span');
         matchScore.className = 'match-score';
-        matchScore.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' + opp.matchScore + '% Match';
+        matchScore.appendChild(createCheckIcon());
+        matchScore.appendChild(document.createTextNode(' ' + opp.matchScore + '% Match'));
 
         footer.appendChild(deadline);
         footer.appendChild(matchScore);
@@ -605,16 +705,20 @@
         var req = document.createElement('span');
         req.className = 'requirement';
 
-        var iconSvg = '';
+        // Use safe DOM methods instead of innerHTML (XSS prevention)
+        var icon;
         if (type === 'sport') {
-            iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>';
+            icon = createClockIcon();
         } else if (type === 'gpa') {
-            iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>';
+            icon = createEducationIcon();
         } else if (type === 'followers') {
-            iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>';
+            icon = createUsersIcon();
+        } else {
+            icon = createCircleIcon();
         }
 
-        req.innerHTML = iconSvg + text;
+        req.appendChild(icon);
+        req.appendChild(document.createTextNode(' ' + text));
         return req;
     }
 
@@ -709,7 +813,9 @@
         reqs.forEach(function(r) {
             var reqItem = document.createElement('div');
             reqItem.className = 'modal-requirement';
-            reqItem.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>' + r.label;
+            // Safe DOM methods instead of innerHTML (XSS prevention)
+            reqItem.appendChild(createCircleIcon());
+            reqItem.appendChild(document.createTextNode(' ' + r.label));
             reqGrid.appendChild(reqItem);
         });
 
@@ -727,7 +833,9 @@
         var delList = document.createElement('ul');
         opp.deliverables.forEach(function(d) {
             var li = document.createElement('li');
-            li.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' + d;
+            // Safe DOM methods instead of innerHTML (XSS prevention)
+            li.appendChild(createCheckmarkIcon());
+            li.appendChild(document.createTextNode(' ' + d));
             delList.appendChild(li);
         });
 

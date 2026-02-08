@@ -1198,6 +1198,10 @@
 
         // Validate email format
         if (typeof isValidEmail === 'function' && !isValidEmail(email)) {
+            // Record failed attempt for rate limiting
+            if (typeof recordLoginAttempt === 'function' && email) {
+                recordLoginAttempt(email, false);
+            }
             showAuthToast('Please enter a valid email address.');
             emailInput?.focus();
             return;
@@ -1205,12 +1209,20 @@
 
         // Validate password (basic check for demo)
         if (!password || password.length < 1) {
+            // Record failed attempt for rate limiting
+            if (typeof recordLoginAttempt === 'function') {
+                recordLoginAttempt(email, false);
+            }
             showAuthToast('Please enter your password.');
             passwordInput?.focus();
             return;
         }
 
-        // Record login attempt (for demo, always success)
+        // SECURITY: In production, password verification would happen server-side
+        // For demo mode, we simulate success. In production, failed password
+        // attempts should also be recorded: recordLoginAttempt(email, false);
+
+        // Record successful login attempt (clears rate limit counter)
         if (typeof recordLoginAttempt === 'function') {
             recordLoginAttempt(email, true);
         }
@@ -1378,26 +1390,23 @@
         }, 1500);
     }
 
-    // ─── Save Email to Collected List ───
+    // ─── Email Collection (Disabled for Security) ───
+    // SECURITY: Email collection removed to prevent PII exposure
+    // Storing emails in localStorage is insecure (XSS vulnerable, no consent)
+    // Proper implementation requires:
+    // 1. Backend API with database storage
+    // 2. GDPR-compliant consent mechanism
+    // 3. Encryption at rest
+    // 4. Audit logging
     function saveEmailToList(email, source) {
-        if (!email) return;
-
-        var emailList = JSON.parse(localStorage.getItem('gradeup_emails') || '[]');
-        var existingIndex = emailList.findIndex(function(item) {
-            return item.email === email;
-        });
-
-        if (existingIndex === -1) {
-            emailList.push({
-                email: email,
-                source: source,
-                date: new Date().toISOString()
-            });
-        } else {
-            emailList[existingIndex].lastSeen = new Date().toISOString();
+        // Clear any previously stored email data (security cleanup)
+        if (localStorage.getItem('gradeup_emails')) {
+            localStorage.removeItem('gradeup_emails');
+            console.warn('[Security] Cleared insecure email storage from localStorage');
         }
-
-        localStorage.setItem('gradeup_emails', JSON.stringify(emailList));
+        // No-op: email collection disabled until backend implementation
+        // To implement: send to secure backend API with user consent
+        return;
     }
 
     // ─── Auth Toast Notification ───

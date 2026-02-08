@@ -305,41 +305,58 @@
     };
 
     // ─── Demo Mode Flag ───
-    // For demo purposes, allow bypassing auth checks
-    window.DEMO_MODE = true;
+    // SECURITY: Demo mode controlled by environment variable only
+    // In production, VITE_DEMO_MODE should be 'false' or unset
+    // Check multiple sources for demo mode flag
+    window.DEMO_MODE = (function() {
+        // Check Vite env var (build-time)
+        if (typeof import.meta !== 'undefined' && import.meta.env) {
+            return import.meta.env.VITE_DEMO_MODE === 'true';
+        }
+        // Check window config (runtime)
+        if (window.GRADEUP_CONFIG && window.GRADEUP_CONFIG.DEMO_MODE !== undefined) {
+            return window.GRADEUP_CONFIG.DEMO_MODE === true;
+        }
+        // Default to FALSE for security (production safe)
+        return false;
+    })();
 
     /**
      * Check auth with demo mode support
      * In demo mode, returns mock user data instead of redirecting
+     * SECURITY: Uses clearly fake demo data to prevent impersonation
      */
     window.requireAuthOrDemo = function(requiredType) {
         if (window.DEMO_MODE) {
-            // Return demo user data
+            // Return demo user data with CLEARLY FAKE identifiers
             const demoUsers = {
                 athlete: {
-                    name: 'Marcus Johnson',
-                    firstName: 'Marcus',
-                    lastName: 'Johnson',
-                    email: 'marcus@university.edu',
+                    name: 'Demo Athlete',
+                    firstName: 'Demo',
+                    lastName: 'Athlete',
+                    email: 'demo-athlete@example.invalid',
                     type: 'athlete',
-                    school: 'Duke University',
-                    sport: 'Basketball'
+                    school: 'Demo University',
+                    sport: 'Basketball',
+                    isDemo: true
                 },
                 brand: {
-                    name: 'John Smith',
-                    firstName: 'John',
-                    lastName: 'Smith',
-                    email: 'john@brand.com',
+                    name: 'Demo Brand User',
+                    firstName: 'Demo',
+                    lastName: 'Brand',
+                    email: 'demo-brand@example.invalid',
                     type: 'brand',
-                    company: 'Acme Sports Co'
+                    company: 'Demo Brand Co',
+                    isDemo: true
                 },
                 director: {
-                    name: 'Sarah Director',
-                    firstName: 'Sarah',
+                    name: 'Demo Director',
+                    firstName: 'Demo',
                     lastName: 'Director',
-                    email: 'sarah@university.edu',
+                    email: 'demo-director@example.invalid',
                     type: 'director',
-                    school: 'Duke University'
+                    school: 'Demo University',
+                    isDemo: true
                 }
             };
 

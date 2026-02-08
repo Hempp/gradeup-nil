@@ -458,12 +458,14 @@
 
     <!-- Configuration -->
     <script>
-        // GradeUp Configuration - Demo Mode
-        // To connect Supabase, add your credentials here
+        // GradeUp Configuration
+        // SECURITY WARNING: Set DEMO_MODE to false in production!
+        // Demo mode bypasses authentication - never enable in production
         window.GRADEUP_CONFIG = {
             SUPABASE_URL: '',
             SUPABASE_ANON_KEY: '',
-            // Demo mode active - using mock data
+            // SECURITY: Set to false for production deployment
+            DEMO_MODE: true  // Enable demo mode for local development only
         };
     </script>
 
