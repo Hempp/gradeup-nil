@@ -2146,44 +2146,8 @@ async function fetchCampaigns() {
 
 // ============================================================
 // SECTION 9: UTILITY FUNCTIONS
+// Note: formatNumber, formatDate, and isSameDay are now in /src/utils/formatters.js
 // ============================================================
-
-/**
- * Formats a number with K/M suffixes
- * @param {number} num - Number to format
- * @returns {string} Formatted string
- */
-function formatNumber(num) {
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-  }
-  return num.toString();
-}
-
-/**
- * Formats a date
- * @param {Date} date - Date to format
- * @returns {string} Formatted date string
- */
-function formatDate(date) {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return months[date.getMonth()] + ' ' + date.getDate();
-}
-
-/**
- * Checks if two dates are the same day
- * @param {Date} date1 - First date
- * @param {Date} date2 - Second date
- * @returns {boolean} True if same day
- */
-function isSameDay(date1, date2) {
-  return date1.getFullYear() === date2.getFullYear() &&
-         date1.getMonth() === date2.getMonth() &&
-         date1.getDate() === date2.getDate();
-}
 
 /**
  * Adds days to a date

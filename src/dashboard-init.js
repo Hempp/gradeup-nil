@@ -665,27 +665,8 @@ function showErrorState(message) {
 
 // ============================================================================
 // UTILITY FUNCTIONS
+// Note: formatCurrency and formatNumber are now in /src/utils/formatters.js
 // ============================================================================
-
-function formatCurrency(amount) {
-  if (amount >= 1000000) {
-    return '$' + (amount / 1000000).toFixed(1) + 'M';
-  }
-  if (amount >= 1000) {
-    return '$' + (amount / 1000).toFixed(1) + 'K';
-  }
-  return '$' + amount.toLocaleString();
-}
-
-function formatNumber(num) {
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + 'M';
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'K';
-  }
-  return num.toLocaleString();
-}
 
 function animateNumber(el, start, end, duration) {
   var startTime = performance.now();

@@ -130,25 +130,34 @@
     // ─── Navigation ───
     function initNav() {
         let lastScroll = 0;
+        let scrollThrottled = false;
 
+        // PERFORMANCE: Use RAF throttling to prevent scroll jank
+        // Limits updates to ~60fps instead of firing on every scroll event
         window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
+            if (!scrollThrottled) {
+                scrollThrottled = true;
+                requestAnimationFrame(() => {
+                    const currentScroll = window.pageYOffset;
 
-            // Add scrolled class for background
-            if (currentScroll > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
+                    // Add scrolled class for background
+                    if (currentScroll > 50) {
+                        nav.classList.add('scrolled');
+                    } else {
+                        nav.classList.remove('scrolled');
+                    }
+
+                    // Hide/show on scroll direction
+                    if (currentScroll > lastScroll && currentScroll > 100) {
+                        nav.classList.add('hidden');
+                    } else {
+                        nav.classList.remove('hidden');
+                    }
+
+                    lastScroll = currentScroll;
+                    scrollThrottled = false;
+                });
             }
-
-            // Hide/show on scroll direction
-            if (currentScroll > lastScroll && currentScroll > 100) {
-                nav.classList.add('hidden');
-            } else {
-                nav.classList.remove('hidden');
-            }
-
-            lastScroll = currentScroll;
         });
 
         // Mobile menu toggle
@@ -682,6 +691,11 @@
         submitBtn.textContent = 'Create Account';
         form.appendChild(submitBtn);
 
+        // SECURITY: Add CSRF token to form
+        if (typeof addCSRFToForm === 'function') {
+            addCSRFToForm(form);
+        }
+
         // Footer
         const footer = document.createElement('div');
         footer.className = 'modal-footer';
@@ -759,6 +773,11 @@
         submitBtn.className = 'btn btn-primary btn-block';
         submitBtn.textContent = 'Create Brand Account';
         form.appendChild(submitBtn);
+
+        // SECURITY: Add CSRF token to form
+        if (typeof addCSRFToForm === 'function') {
+            addCSRFToForm(form);
+        }
 
         // Footer
         const footer = document.createElement('div');
@@ -1254,6 +1273,14 @@
     function handleAthleteSignup(e) {
         e.preventDefault();
 
+        // SECURITY: Validate CSRF token
+        if (typeof validateFormCSRF === 'function') {
+            if (!validateFormCSRF(e.target)) {
+                showAuthToast('Security validation failed. Please refresh and try again.');
+                return;
+            }
+        }
+
         // Capture form data using correct field IDs
         var firstName = document.getElementById('firstName')?.value?.trim() || '';
         var lastName = document.getElementById('lastName')?.value?.trim() || '';
@@ -1322,6 +1349,14 @@
 
     function handleBrandSignup(e) {
         e.preventDefault();
+
+        // SECURITY: Validate CSRF token
+        if (typeof validateFormCSRF === 'function') {
+            if (!validateFormCSRF(e.target)) {
+                showAuthToast('Security validation failed. Please refresh and try again.');
+                return;
+            }
+        }
 
         // Capture form data using correct field IDs
         var companyName = document.getElementById('companyName')?.value?.trim() || '';

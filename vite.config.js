@@ -20,12 +20,34 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
+        // PERFORMANCE: Manual chunk splitting for better caching
+        manualChunks: {
+          // Core utilities shared across all pages
+          'core': [
+            './src/config.js',
+            './src/utils/security.js',
+            './src/utils/formatters.js',
+            './src/utils/error-handler.js',
+          ],
+          // Dashboard shared code
+          'dashboard-core': [
+            './src/dashboard.js',
+            './src/dashboard-init.js',
+            './src/utils/dom-helpers.js',
+          ],
+          // Services layer
+          'services': [
+            './src/services/supabase.js',
+            './src/services/auth.js',
+            './src/services/helpers.js',
+          ],
+        },
       },
     },
     // Minification settings (esbuild is built into Vite)
     minify: 'esbuild',
-    // Generate source maps for debugging
-    sourcemap: true,
+    // SECURITY: Disable source maps in production
+    sourcemap: process.env.NODE_ENV !== 'production',
     // Output directory
     outDir: 'dist',
   },

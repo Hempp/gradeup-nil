@@ -304,6 +304,70 @@
         return stored && token === stored;
     };
 
+    /**
+     * Get current CSRF token (generates if missing)
+     * @returns {string}
+     */
+    window.getCSRFToken = function() {
+        let token = sessionStorage.getItem('gradeup_csrf');
+        if (!token) {
+            token = generateCSRFToken();
+        }
+        return token;
+    };
+
+    /**
+     * Add CSRF token to a form element
+     * @param {HTMLFormElement} form
+     */
+    window.addCSRFToForm = function(form) {
+        if (!form) return;
+
+        // Remove existing CSRF field if present
+        const existing = form.querySelector('input[name="csrf_token"]');
+        if (existing) existing.remove();
+
+        // Add hidden CSRF field
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrf_token';
+        csrfInput.value = getCSRFToken();
+        form.appendChild(csrfInput);
+    };
+
+    /**
+     * Validate CSRF token from form submission
+     * @param {HTMLFormElement|FormData|Object} formData
+     * @returns {boolean}
+     */
+    window.validateFormCSRF = function(formData) {
+        let token;
+
+        if (formData instanceof FormData) {
+            token = formData.get('csrf_token');
+        } else if (formData instanceof HTMLFormElement) {
+            const input = formData.querySelector('input[name="csrf_token"]');
+            token = input ? input.value : null;
+        } else if (formData && typeof formData === 'object') {
+            token = formData.csrf_token;
+        }
+
+        if (!token) {
+            console.warn('[Security] CSRF token missing from form submission');
+            return false;
+        }
+
+        const isValid = validateCSRFToken(token);
+        if (!isValid) {
+            console.warn('[Security] CSRF token validation failed');
+        }
+
+        // Regenerate token after validation (one-time use)
+        generateCSRFToken();
+
+        return isValid;
+    };
+
     // ─── Demo Mode Flag ───
     // SECURITY: Demo mode controlled by environment variable only
     // In production, VITE_DEMO_MODE should be 'false' or unset
