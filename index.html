@@ -7,10 +7,20 @@
     <meta name="theme-color" content="#000000">
     <title>GradeUp NIL | Your GPA Is Worth Money</title>
 
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    <link rel="preload" href="src/utils/security.js" as="script">
+    <link rel="preload" href="src/utils/formatters.js" as="script">
+
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
@@ -488,6 +498,9 @@
             DEMO_MODE: true  // Enable demo mode for local development only
         };
     </script>
+
+    <!-- Constants (must load first) -->
+    <script src="src/utils/constants.js"></script>
 
     <!-- Security Utilities (must load before app.js) -->
     <script src="src/utils/security.js"></script>
