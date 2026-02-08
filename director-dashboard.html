@@ -832,6 +832,44 @@
             <button class="quick-action-btn" title="Schedule Meeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
         </div>
     </main>
+
+    <!-- Document Preview Modal -->
+    <div class="modal-overlay" id="docPreviewModal">
+        <div class="modal doc-preview-modal">
+            <div class="doc-preview-header">
+                <div class="doc-preview-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <div>
+                        <h3 id="docPreviewTitle">Document Preview</h3>
+                        <span id="docPreviewMeta" class="doc-meta">Submitted by Athlete</span>
+                    </div>
+                </div>
+                <button class="modal-close" id="closeDocPreview" aria-label="Close document preview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="doc-preview-body">
+                <div class="doc-preview-container" id="docPreviewContainer">
+                    <!-- Document content will be inserted here -->
+                </div>
+            </div>
+            <div class="doc-preview-footer">
+                <div class="doc-info">
+                    <span class="doc-info-item"><strong>Status:</strong> <span class="status-badge pending">Pending Review</span></span>
+                    <span class="doc-info-item" id="docSubmitDate"><strong>Submitted:</strong> Jan 15, 2025</span>
+                </div>
+                <div class="doc-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="downloadDocument()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download
+                    </button>
+                    <button class="btn btn-success btn-sm" id="docApproveBtn">Approve</button>
+                    <button class="btn btn-danger btn-sm" id="docRejectBtn">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal settings-modal">
@@ -2029,6 +2067,174 @@
                 opacity: 0;
                 transform: translateX(20px);
             }
+        }
+
+        /* ─── Document Preview Modal ─── */
+        #docPreviewModal {
+            display: none;
+        }
+
+        #docPreviewModal.active {
+            display: flex;
+        }
+
+        .doc-preview-modal {
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .doc-preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+        }
+
+        .doc-preview-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .doc-preview-title svg {
+            width: 32px;
+            height: 32px;
+            color: var(--cyan);
+        }
+
+        .doc-preview-title h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .doc-meta {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .doc-preview-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--gray-950);
+        }
+
+        .doc-preview-container {
+            background: var(--white);
+            border-radius: 8px;
+            min-height: 400px;
+            padding: 2rem;
+            color: var(--gray-900);
+        }
+
+        .doc-preview-container .doc-header {
+            text-align: center;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .doc-preview-container .doc-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-preview-container .doc-type {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-700);
+        }
+
+        .doc-preview-container .doc-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .doc-preview-container .doc-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-preview-container .doc-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .doc-preview-container .doc-field-label {
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+
+        .doc-preview-container .doc-field-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .doc-preview-container .doc-stamp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            border: 2px dashed var(--gray-300);
+            border-radius: 8px;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .doc-preview-container .doc-stamp.verified {
+            border-color: #22c55e;
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .doc-preview-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-800);
+            background: var(--gray-900);
+        }
+
+        .doc-info {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .doc-info-item {
+            font-size: 0.8125rem;
+            color: var(--gray-400);
+        }
+
+        .doc-info-item strong {
+            color: var(--gray-300);
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 0.5rem;
         }
 
         /* ─── Reports Section ─── */
@@ -3479,9 +3685,17 @@
         }
 
         // Preview document modal
+        var currentPreviewAthleteId = null;
+        var currentPreviewType = null;
+
         function previewDocument(athleteId, verificationType) {
             var item = document.querySelector('.verification-item[data-athlete-id="' + athleteId + '"]');
             var athleteName = item.querySelector('.ver-name').textContent;
+            var athleteSport = item.querySelector('.ver-sport').textContent;
+            var submitDate = item.querySelector('.ver-date').textContent.replace('Submitted: ', '');
+
+            currentPreviewAthleteId = athleteId;
+            currentPreviewType = verificationType;
 
             var docNames = {
                 'enrollment': 'Enrollment_Verification.pdf',
@@ -3490,8 +3704,240 @@
                 'identity': 'Student_ID.pdf'
             };
 
-            alert('Preview Document: ' + docNames[verificationType] + '\n\nAthlete: ' + athleteName + '\nType: ' + verificationType.charAt(0).toUpperCase() + verificationType.slice(1) + ' Verification\n\n(Document preview modal would open here)');
+            var docTitles = {
+                'enrollment': 'Enrollment Verification',
+                'sport': 'Sport Roster Confirmation',
+                'gpa': 'Official Academic Transcript',
+                'identity': 'Student Identity Document'
+            };
+
+            // Update modal header
+            document.getElementById('docPreviewTitle').textContent = docNames[verificationType];
+            document.getElementById('docPreviewMeta').textContent = 'Submitted by ' + athleteName + ' - ' + athleteSport;
+            document.getElementById('docSubmitDate').innerHTML = '<strong>Submitted:</strong> ' + submitDate;
+
+            // Generate document content
+            var container = document.getElementById('docPreviewContainer');
+            generateDocumentContent(container, verificationType, athleteName, athleteSport, submitDate);
+
+            // Show modal
+            document.getElementById('docPreviewModal').classList.add('active');
         }
+
+        function generateDocumentContent(container, type, athleteName, athleteSport, submitDate) {
+            // Clear container
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+
+            // Create header
+            var header = document.createElement('div');
+            header.className = 'doc-header';
+            var logo = document.createElement('div');
+            logo.className = 'doc-logo';
+            logo.textContent = 'DUKE UNIVERSITY';
+            header.appendChild(logo);
+            var docType = document.createElement('div');
+            docType.className = 'doc-type';
+            var typeLabels = {
+                'enrollment': 'Certificate of Enrollment',
+                'sport': 'Athletic Roster Verification',
+                'gpa': 'Official Academic Transcript',
+                'identity': 'Student Identification'
+            };
+            docType.textContent = typeLabels[type];
+            header.appendChild(docType);
+            container.appendChild(header);
+
+            // Student info section
+            var studentSection = document.createElement('div');
+            studentSection.className = 'doc-section';
+            var studentTitle = document.createElement('div');
+            studentTitle.className = 'doc-section-title';
+            studentTitle.textContent = 'Student Information';
+            studentSection.appendChild(studentTitle);
+
+            var fields = [
+                { label: 'Full Name', value: athleteName },
+                { label: 'Sport/Position', value: athleteSport },
+                { label: 'Student ID', value: 'DU-2024-' + String(Math.floor(Math.random() * 90000) + 10000) },
+                { label: 'Document Date', value: submitDate }
+            ];
+
+            fields.forEach(function(field) {
+                var fieldDiv = document.createElement('div');
+                fieldDiv.className = 'doc-field';
+                var labelSpan = document.createElement('span');
+                labelSpan.className = 'doc-field-label';
+                labelSpan.textContent = field.label;
+                fieldDiv.appendChild(labelSpan);
+                var valueSpan = document.createElement('span');
+                valueSpan.className = 'doc-field-value';
+                valueSpan.textContent = field.value;
+                fieldDiv.appendChild(valueSpan);
+                studentSection.appendChild(fieldDiv);
+            });
+
+            container.appendChild(studentSection);
+
+            // Type-specific content
+            var detailSection = document.createElement('div');
+            detailSection.className = 'doc-section';
+            var detailTitle = document.createElement('div');
+            detailTitle.className = 'doc-section-title';
+
+            if (type === 'enrollment') {
+                detailTitle.textContent = 'Enrollment Status';
+                detailSection.appendChild(detailTitle);
+                var enrollFields = [
+                    { label: 'Enrollment Status', value: 'Full-Time Student' },
+                    { label: 'Academic Year', value: '2024-2025' },
+                    { label: 'Semester', value: 'Spring 2025' },
+                    { label: 'Credit Hours', value: '15 hours' },
+                    { label: 'Expected Graduation', value: 'May 2026' }
+                ];
+                enrollFields.forEach(function(field) {
+                    var fieldDiv = document.createElement('div');
+                    fieldDiv.className = 'doc-field';
+                    var labelSpan = document.createElement('span');
+                    labelSpan.className = 'doc-field-label';
+                    labelSpan.textContent = field.label;
+                    fieldDiv.appendChild(labelSpan);
+                    var valueSpan = document.createElement('span');
+                    valueSpan.className = 'doc-field-value';
+                    valueSpan.textContent = field.value;
+                    fieldDiv.appendChild(valueSpan);
+                    detailSection.appendChild(fieldDiv);
+                });
+            } else if (type === 'sport') {
+                detailTitle.textContent = 'Athletic Status';
+                detailSection.appendChild(detailTitle);
+                var sportFields = [
+                    { label: 'Varsity Sport', value: athleteSport.split(' - ')[0] },
+                    { label: 'Roster Status', value: 'Active Roster' },
+                    { label: 'Eligibility', value: 'Eligible - NCAA Division I' },
+                    { label: 'Season', value: '2024-2025' },
+                    { label: 'Head Coach', value: 'Coach verified' }
+                ];
+                sportFields.forEach(function(field) {
+                    var fieldDiv = document.createElement('div');
+                    fieldDiv.className = 'doc-field';
+                    var labelSpan = document.createElement('span');
+                    labelSpan.className = 'doc-field-label';
+                    labelSpan.textContent = field.label;
+                    fieldDiv.appendChild(labelSpan);
+                    var valueSpan = document.createElement('span');
+                    valueSpan.className = 'doc-field-value';
+                    valueSpan.textContent = field.value;
+                    fieldDiv.appendChild(valueSpan);
+                    detailSection.appendChild(fieldDiv);
+                });
+            } else if (type === 'gpa') {
+                detailTitle.textContent = 'Academic Record';
+                detailSection.appendChild(detailTitle);
+                var gpaFields = [
+                    { label: 'Cumulative GPA', value: (3.0 + Math.random() * 1.0).toFixed(2) + ' / 4.00' },
+                    { label: 'Major', value: 'Business Administration' },
+                    { label: 'Minor', value: 'Sports Management' },
+                    { label: 'Credits Completed', value: Math.floor(Math.random() * 60 + 30) + ' credits' },
+                    { label: 'Academic Standing', value: 'Good Standing' }
+                ];
+                gpaFields.forEach(function(field) {
+                    var fieldDiv = document.createElement('div');
+                    fieldDiv.className = 'doc-field';
+                    var labelSpan = document.createElement('span');
+                    labelSpan.className = 'doc-field-label';
+                    labelSpan.textContent = field.label;
+                    fieldDiv.appendChild(labelSpan);
+                    var valueSpan = document.createElement('span');
+                    valueSpan.className = 'doc-field-value';
+                    valueSpan.textContent = field.value;
+                    fieldDiv.appendChild(valueSpan);
+                    detailSection.appendChild(fieldDiv);
+                });
+            } else {
+                detailTitle.textContent = 'Identity Verification';
+                detailSection.appendChild(detailTitle);
+                var idFields = [
+                    { label: 'ID Type', value: 'Student ID Card' },
+                    { label: 'Issue Date', value: 'August 2024' },
+                    { label: 'Expiration', value: 'May 2028' },
+                    { label: 'Photo Match', value: 'Pending Review' }
+                ];
+                idFields.forEach(function(field) {
+                    var fieldDiv = document.createElement('div');
+                    fieldDiv.className = 'doc-field';
+                    var labelSpan = document.createElement('span');
+                    labelSpan.className = 'doc-field-label';
+                    labelSpan.textContent = field.label;
+                    fieldDiv.appendChild(labelSpan);
+                    var valueSpan = document.createElement('span');
+                    valueSpan.className = 'doc-field-value';
+                    valueSpan.textContent = field.value;
+                    fieldDiv.appendChild(valueSpan);
+                    detailSection.appendChild(fieldDiv);
+                });
+            }
+
+            container.appendChild(detailSection);
+
+            // Official stamp
+            var stamp = document.createElement('div');
+            stamp.className = 'doc-stamp';
+            var stampIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            stampIcon.setAttribute('viewBox', '0 0 24 24');
+            stampIcon.setAttribute('fill', 'none');
+            stampIcon.setAttribute('stroke', 'currentColor');
+            stampIcon.setAttribute('stroke-width', '2');
+            stampIcon.style.width = '20px';
+            stampIcon.style.height = '20px';
+            var stampPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            stampPath.setAttribute('d', 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z');
+            stampIcon.appendChild(stampPath);
+            stamp.appendChild(stampIcon);
+            var stampText = document.createElement('span');
+            stampText.textContent = 'Official Document - Registrar\'s Office';
+            stamp.appendChild(stampText);
+            container.appendChild(stamp);
+        }
+
+        function closeDocPreview() {
+            document.getElementById('docPreviewModal').classList.remove('active');
+            currentPreviewAthleteId = null;
+            currentPreviewType = null;
+        }
+
+        function downloadDocument() {
+            if (currentPreviewAthleteId && currentPreviewType) {
+                var item = document.querySelector('.verification-item[data-athlete-id="' + currentPreviewAthleteId + '"]');
+                var athleteName = item.querySelector('.ver-name').textContent.replace(/\s+/g, '_');
+                var docNames = {
+                    'enrollment': 'Enrollment_Verification',
+                    'sport': 'Sport_Roster_Confirmation',
+                    'gpa': 'Official_Transcript',
+                    'identity': 'Student_ID'
+                };
+                alert('Downloading: ' + athleteName + '_' + docNames[currentPreviewType] + '.pdf\n\n(In production, this would download the actual document)');
+            }
+        }
+
+        // Document preview modal event listeners
+        document.getElementById('closeDocPreview').addEventListener('click', closeDocPreview);
+        document.getElementById('docPreviewModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDocPreview();
+        });
+        document.getElementById('docApproveBtn').addEventListener('click', function() {
+            if (currentPreviewAthleteId && currentPreviewType) {
+                closeDocPreview();
+                handleVerification(currentPreviewAthleteId, 'approve', currentPreviewType);
+            }
+        });
+        document.getElementById('docRejectBtn').addEventListener('click', function() {
+            if (currentPreviewAthleteId && currentPreviewType) {
+                closeDocPreview();
+                handleVerification(currentPreviewAthleteId, 'reject', currentPreviewType);
+            }
+        });
 
         // Export verification history
         function exportVerificationHistory() {
