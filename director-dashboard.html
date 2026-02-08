@@ -258,9 +258,9 @@
                     <button class="ver-tab" data-type="identity">Identity <span class="badge">0</span></button>
                 </div>
                 <div class="verification-list" id="verificationList">
-                    <div class="verification-item">
+                    <div class="verification-item" data-type="enrollment" data-athlete-id="1">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Athlete">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="David Park">
                             <div class="ver-info">
                                 <span class="ver-name">David Park</span>
                                 <span class="ver-sport">Men's Tennis - Sophomore</span>
@@ -271,16 +271,17 @@
                             <span class="ver-date">Submitted: Jan 15, 2025</span>
                         </div>
                         <div class="ver-doc">
-                            <button class="btn btn-sm btn-outline">Preview Doc</button>
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(1, 'enrollment')">Preview Doc</button>
                         </div>
                         <div class="ver-actions">
-                            <button class="btn btn-sm btn-success">Approve</button>
-                            <button class="btn btn-sm btn-danger">Reject</button>
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(1, 'approve', 'enrollment')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(1, 'request', 'enrollment')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(1, 'reject', 'enrollment')">Reject</button>
                         </div>
                     </div>
-                    <div class="verification-item">
+                    <div class="verification-item" data-type="enrollment" data-athlete-id="2">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Athlete">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Ashley Martinez">
                             <div class="ver-info">
                                 <span class="ver-name">Ashley Martinez</span>
                                 <span class="ver-sport">Women's Volleyball - Junior</span>
@@ -291,16 +292,17 @@
                             <span class="ver-date">Submitted: Jan 14, 2025</span>
                         </div>
                         <div class="ver-doc">
-                            <button class="btn btn-sm btn-outline">Preview Doc</button>
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(2, 'enrollment')">Preview Doc</button>
                         </div>
                         <div class="ver-actions">
-                            <button class="btn btn-sm btn-success">Approve</button>
-                            <button class="btn btn-sm btn-danger">Reject</button>
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(2, 'approve', 'enrollment')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(2, 'request', 'enrollment')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(2, 'reject', 'enrollment')">Reject</button>
                         </div>
                     </div>
-                    <div class="verification-item">
+                    <div class="verification-item" data-type="enrollment" data-athlete-id="3">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Athlete">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Chris Johnson">
                             <div class="ver-info">
                                 <span class="ver-name">Chris Johnson</span>
                                 <span class="ver-sport">Men's Basketball - Freshman</span>
@@ -311,11 +313,250 @@
                             <span class="ver-date">Submitted: Jan 13, 2025</span>
                         </div>
                         <div class="ver-doc">
-                            <button class="btn btn-sm btn-outline">Preview Doc</button>
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(3, 'enrollment')">Preview Doc</button>
                         </div>
                         <div class="ver-actions">
-                            <button class="btn btn-sm btn-success">Approve</button>
-                            <button class="btn btn-sm btn-danger">Reject</button>
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(3, 'approve', 'enrollment')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(3, 'request', 'enrollment')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(3, 'reject', 'enrollment')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="enrollment" data-athlete-id="4">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop" alt="Marcus Thompson">
+                            <div class="ver-info">
+                                <span class="ver-name">Marcus Thompson</span>
+                                <span class="ver-sport">Men's Basketball - Senior</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">Enrollment Verification</span>
+                            <span class="ver-date">Submitted: Jan 12, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(4, 'enrollment')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(4, 'approve', 'enrollment')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(4, 'request', 'enrollment')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(4, 'reject', 'enrollment')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="sport" data-athlete-id="5">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="Sarah Chen">
+                            <div class="ver-info">
+                                <span class="ver-name">Sarah Chen</span>
+                                <span class="ver-sport">Women's Soccer - Junior</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">Sport Verification</span>
+                            <span class="ver-date">Submitted: Jan 15, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(5, 'sport')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(5, 'approve', 'sport')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(5, 'request', 'sport')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(5, 'reject', 'sport')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="sport" data-athlete-id="6">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="Jordan Mitchell">
+                            <div class="ver-info">
+                                <span class="ver-name">Jordan Mitchell</span>
+                                <span class="ver-sport">Football - Senior</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">Sport Verification</span>
+                            <span class="ver-date">Submitted: Jan 14, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(6, 'sport')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(6, 'approve', 'sport')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(6, 'request', 'sport')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(6, 'reject', 'sport')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="sport" data-athlete-id="7">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop" alt="Tyler Brooks">
+                            <div class="ver-info">
+                                <span class="ver-name">Tyler Brooks</span>
+                                <span class="ver-sport">Men's Lacrosse - Sophomore</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">Sport Verification</span>
+                            <span class="ver-date">Submitted: Jan 13, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(7, 'sport')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(7, 'approve', 'sport')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(7, 'request', 'sport')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(7, 'reject', 'sport')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="gpa" data-athlete-id="8">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop" alt="Emily Rodriguez">
+                            <div class="ver-info">
+                                <span class="ver-name">Emily Rodriguez</span>
+                                <span class="ver-sport">Women's Soccer - Senior</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">GPA/Transcript Verification</span>
+                            <span class="ver-date">Submitted: Jan 15, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(8, 'gpa')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(8, 'approve', 'gpa')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(8, 'request', 'gpa')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(8, 'reject', 'gpa')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="gpa" data-athlete-id="9">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="Jason Williams">
+                            <div class="ver-info">
+                                <span class="ver-name">Jason Williams</span>
+                                <span class="ver-sport">Football - Junior</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">GPA/Transcript Verification</span>
+                            <span class="ver-date">Submitted: Jan 14, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(9, 'gpa')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(9, 'approve', 'gpa')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(9, 'request', 'gpa')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(9, 'reject', 'gpa')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="gpa" data-athlete-id="10">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Michael Chen">
+                            <div class="ver-info">
+                                <span class="ver-name">Michael Chen</span>
+                                <span class="ver-sport">Men's Swimming - Freshman</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">GPA/Transcript Verification</span>
+                            <span class="ver-date">Submitted: Jan 13, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(10, 'gpa')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(10, 'approve', 'gpa')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(10, 'request', 'gpa')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(10, 'reject', 'gpa')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="gpa" data-athlete-id="11">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="Lisa Park">
+                            <div class="ver-info">
+                                <span class="ver-name">Lisa Park</span>
+                                <span class="ver-sport">Women's Tennis - Sophomore</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">GPA/Transcript Verification</span>
+                            <span class="ver-date">Submitted: Jan 12, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(11, 'gpa')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(11, 'approve', 'gpa')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(11, 'request', 'gpa')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(11, 'reject', 'gpa')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="verification-item" data-type="gpa" data-athlete-id="12">
+                        <div class="ver-athlete">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Kevin Martinez">
+                            <div class="ver-info">
+                                <span class="ver-name">Kevin Martinez</span>
+                                <span class="ver-sport">Men's Track - Junior</span>
+                            </div>
+                        </div>
+                        <div class="ver-type">
+                            <span class="ver-label">GPA/Transcript Verification</span>
+                            <span class="ver-date">Submitted: Jan 11, 2025</span>
+                        </div>
+                        <div class="ver-doc">
+                            <button class="btn btn-sm btn-outline" onclick="previewDocument(12, 'gpa')">Preview Doc</button>
+                        </div>
+                        <div class="ver-actions">
+                            <button class="btn btn-sm btn-success" onclick="handleVerification(12, 'approve', 'gpa')">Approve</button>
+                            <button class="btn btn-sm btn-secondary" onclick="handleVerification(12, 'request', 'gpa')">Request Docs</button>
+                            <button class="btn btn-sm btn-danger" onclick="handleVerification(12, 'reject', 'gpa')">Reject</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Verification History / Audit Trail -->
+                <div class="verification-history" id="verificationHistory">
+                    <div class="history-header">
+                        <h4>Recent Verification Activity</h4>
+                        <button class="btn btn-sm btn-outline" onclick="exportVerificationHistory()">Export Log</button>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <div class="history-item approved">
+                            <div class="history-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <div class="history-content">
+                                <span class="history-action">Enrollment Approved</span>
+                                <span class="history-athlete">Maria Santos - Women's Basketball</span>
+                            </div>
+                            <span class="history-time">Today, 2:15 PM</span>
+                        </div>
+                        <div class="history-item approved">
+                            <div class="history-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <div class="history-content">
+                                <span class="history-action">GPA Verified</span>
+                                <span class="history-athlete">James Wilson - Football</span>
+                            </div>
+                            <span class="history-time">Today, 11:30 AM</span>
+                        </div>
+                        <div class="history-item requested">
+                            <div class="history-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                            <div class="history-content">
+                                <span class="history-action">Documents Requested</span>
+                                <span class="history-athlete">Alex Turner - Men's Soccer</span>
+                            </div>
+                            <span class="history-time">Yesterday, 4:45 PM</span>
+                        </div>
+                        <div class="history-item rejected">
+                            <div class="history-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+                            <div class="history-content">
+                                <span class="history-action">Sport Verification Rejected</span>
+                                <span class="history-athlete">Ryan Cooper - Track & Field</span>
+                            </div>
+                            <span class="history-time">Yesterday, 2:10 PM</span>
+                        </div>
+                        <div class="history-item approved">
+                            <div class="history-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <div class="history-content">
+                                <span class="history-action">Full Verification Complete</span>
+                                <span class="history-athlete">Nicole Brown - Women's Volleyball</span>
+                            </div>
+                            <span class="history-time">Jan 14, 2025</span>
                         </div>
                     </div>
                 </div>
@@ -1674,6 +1915,122 @@
             display: flex;
             gap: 0.5rem;
         }
+
+        /* ─── Verification History ─── */
+        .verification-history {
+            margin: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(23, 23, 23, 0.6);
+            border: 1px solid var(--gray-800);
+            border-radius: 16px;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .history-header h4 {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--gray-900);
+            border-radius: 10px;
+            border-left: 3px solid var(--gray-700);
+        }
+
+        .history-item.approved {
+            border-left-color: var(--success);
+        }
+
+        .history-item.rejected {
+            border-left-color: var(--error);
+        }
+
+        .history-item.requested {
+            border-left-color: var(--warning);
+        }
+
+        .history-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--gray-800);
+        }
+
+        .history-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .history-item.approved .history-icon {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        .history-item.rejected .history-icon {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .history-item.requested .history-icon {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .history-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-action {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .history-athlete {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .history-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+        }
+
         /* ─── Reports Section ─── */
         .reports-section {
             margin-bottom: 2rem;
@@ -2900,12 +3257,270 @@
             });
         });
 
-        // Verification Tabs
+        // Verification Tabs with Filtering
         document.querySelectorAll('.ver-tab').forEach(function(tab) {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.ver-tab').forEach(function(t) { t.classList.remove('active'); });
                 tab.classList.add('active');
+
+                var type = tab.dataset.type;
+                filterVerificationItems(type);
             });
+        });
+
+        // Filter verification items by type
+        function filterVerificationItems(type) {
+            var items = document.querySelectorAll('.verification-item');
+            items.forEach(function(item) {
+                if (type === 'all' || item.dataset.type === type) {
+                    item.style.display = 'grid';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            updateVerificationCounts();
+        }
+
+        // Update verification badge counts
+        function updateVerificationCounts() {
+            var counts = { enrollment: 0, sport: 0, gpa: 0, identity: 0 };
+            document.querySelectorAll('.verification-item').forEach(function(item) {
+                if (item.style.display !== 'none' || item.style.display === '') {
+                    var type = item.dataset.type;
+                    if (counts[type] !== undefined) {
+                        counts[type]++;
+                    }
+                }
+            });
+
+            document.querySelectorAll('.ver-tab').forEach(function(tab) {
+                var type = tab.dataset.type;
+                var badge = tab.querySelector('.badge');
+                if (badge && counts[type] !== undefined) {
+                    badge.textContent = counts[type];
+                }
+            });
+
+            // Update notification badge
+            var totalPending = Object.values(counts).reduce(function(a, b) { return a + b; }, 0);
+            var notifBadge = document.querySelector('.notification-badge');
+            if (notifBadge) {
+                notifBadge.textContent = totalPending;
+            }
+        }
+
+        // Handle verification actions (Approve, Request Docs, Reject)
+        function handleVerification(athleteId, action, verificationType) {
+            var item = document.querySelector('.verification-item[data-athlete-id="' + athleteId + '"]');
+            var athleteName = item.querySelector('.ver-name').textContent;
+            var athleteSport = item.querySelector('.ver-sport').textContent;
+
+            var actionLabels = {
+                'approve': 'Approved',
+                'request': 'Documents Requested',
+                'reject': 'Rejected'
+            };
+
+            var historyClasses = {
+                'approve': 'approved',
+                'request': 'requested',
+                'reject': 'rejected'
+            };
+
+            var typeLabels = {
+                'enrollment': 'Enrollment',
+                'sport': 'Sport',
+                'gpa': 'GPA/Transcript',
+                'identity': 'Identity'
+            };
+
+            // Confirm action
+            var actionText = action === 'approve' ? 'approve' : (action === 'reject' ? 'reject' : 'request additional documents for');
+            if (!confirm('Are you sure you want to ' + actionText + ' ' + typeLabels[verificationType] + ' verification for ' + athleteName + '?')) {
+                return;
+            }
+
+            // Add to history
+            addToVerificationHistory(
+                typeLabels[verificationType] + ' ' + actionLabels[action],
+                athleteName + ' - ' + athleteSport,
+                historyClasses[action],
+                action
+            );
+
+            // Remove item from list (if approved or rejected)
+            if (action === 'approve' || action === 'reject') {
+                item.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(function() {
+                    item.remove();
+                    updateVerificationCounts();
+                }, 300);
+            }
+
+            // Show toast notification
+            showVerificationToast(athleteName, action, verificationType);
+        }
+
+        // Add entry to verification history (using safe DOM methods)
+        function addToVerificationHistory(actionText, athleteInfo, statusClass, actionType) {
+            var historyList = document.getElementById('historyList');
+            var timeStr = 'Just now';
+
+            var historyItem = document.createElement('div');
+            historyItem.className = 'history-item ' + statusClass;
+
+            // Create icon container
+            var iconDiv = document.createElement('div');
+            iconDiv.className = 'history-icon';
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '2');
+
+            if (actionType === 'approve') {
+                var polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polyline.setAttribute('points', '20 6 9 17 4 12');
+                svg.appendChild(polyline);
+            } else if (actionType === 'request') {
+                var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path1.setAttribute('d', 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z');
+                svg.appendChild(path1);
+                var polyline2 = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polyline2.setAttribute('points', '14 2 14 8 20 8');
+                svg.appendChild(polyline2);
+            } else {
+                var line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line1.setAttribute('x1', '18'); line1.setAttribute('y1', '6');
+                line1.setAttribute('x2', '6'); line1.setAttribute('y2', '18');
+                svg.appendChild(line1);
+                var line2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line2.setAttribute('x1', '6'); line2.setAttribute('y1', '6');
+                line2.setAttribute('x2', '18'); line2.setAttribute('y2', '18');
+                svg.appendChild(line2);
+            }
+            iconDiv.appendChild(svg);
+            historyItem.appendChild(iconDiv);
+
+            // Create content container
+            var contentDiv = document.createElement('div');
+            contentDiv.className = 'history-content';
+            var actionSpan = document.createElement('span');
+            actionSpan.className = 'history-action';
+            actionSpan.textContent = actionText;
+            contentDiv.appendChild(actionSpan);
+            var athleteSpan = document.createElement('span');
+            athleteSpan.className = 'history-athlete';
+            athleteSpan.textContent = athleteInfo;
+            contentDiv.appendChild(athleteSpan);
+            historyItem.appendChild(contentDiv);
+
+            // Create time
+            var timeSpan = document.createElement('span');
+            timeSpan.className = 'history-time';
+            timeSpan.textContent = timeStr;
+            historyItem.appendChild(timeSpan);
+
+            // Insert at top
+            historyList.insertBefore(historyItem, historyList.firstChild);
+
+            // Limit history to 10 items
+            while (historyList.children.length > 10) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        }
+
+        // Show toast notification for verification action
+        function showVerificationToast(athleteName, action, verificationType) {
+            var messages = {
+                'approve': athleteName + '\'s ' + verificationType + ' verification approved',
+                'request': 'Document request sent to ' + athleteName,
+                'reject': athleteName + '\'s ' + verificationType + ' verification rejected'
+            };
+
+            var types = {
+                'approve': 'success',
+                'request': 'warning',
+                'reject': 'error'
+            };
+
+            if (typeof showToast === 'function') {
+                showToast(messages[action], types[action]);
+            } else {
+                // Fallback toast implementation using safe DOM methods
+                var existingToast = document.querySelector('.verification-toast');
+                if (existingToast) existingToast.remove();
+
+                var toast = document.createElement('div');
+                toast.className = 'verification-toast toast-' + types[action];
+                toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); padding: 1rem 2rem; border-radius: 8px; font-weight: 600; opacity: 0; transition: all 0.3s ease; z-index: 10000;';
+
+                var colors = {
+                    success: 'background: var(--success); color: white;',
+                    warning: 'background: var(--warning); color: black;',
+                    error: 'background: var(--error); color: white;'
+                };
+                toast.style.cssText += colors[types[action]];
+                toast.textContent = messages[action];
+
+                document.body.appendChild(toast);
+
+                setTimeout(function() {
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translateX(-50%) translateY(0)';
+                }, 10);
+
+                setTimeout(function() {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(-50%) translateY(20px)';
+                    setTimeout(function() { toast.remove(); }, 300);
+                }, 3000);
+            }
+        }
+
+        // Preview document modal
+        function previewDocument(athleteId, verificationType) {
+            var item = document.querySelector('.verification-item[data-athlete-id="' + athleteId + '"]');
+            var athleteName = item.querySelector('.ver-name').textContent;
+
+            var docNames = {
+                'enrollment': 'Enrollment_Verification.pdf',
+                'sport': 'Sport_Roster_Confirmation.pdf',
+                'gpa': 'Official_Transcript.pdf',
+                'identity': 'Student_ID.pdf'
+            };
+
+            alert('Preview Document: ' + docNames[verificationType] + '\n\nAthlete: ' + athleteName + '\nType: ' + verificationType.charAt(0).toUpperCase() + verificationType.slice(1) + ' Verification\n\n(Document preview modal would open here)');
+        }
+
+        // Export verification history
+        function exportVerificationHistory() {
+            var history = [];
+            document.querySelectorAll('.history-item').forEach(function(item) {
+                history.push({
+                    action: item.querySelector('.history-action').textContent,
+                    athlete: item.querySelector('.history-athlete').textContent,
+                    time: item.querySelector('.history-time').textContent
+                });
+            });
+
+            var csv = 'Action,Athlete,Time\n';
+            history.forEach(function(row) {
+                csv += '"' + row.action + '","' + row.athlete + '","' + row.time + '"\n';
+            });
+
+            var blob = new Blob([csv], { type: 'text/csv' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'verification_history_' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize verification counts on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateVerificationCounts();
         });
 
         // Notification Filters
