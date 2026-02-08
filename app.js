@@ -1732,6 +1732,58 @@
         return container;
     }
 
+    // ─── Event Delegation for data-action Buttons ───
+    // Handles all buttons with data-action attributes instead of inline onclick handlers
+    function setupEventDelegation() {
+        document.addEventListener('click', function(e) {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+
+            const action = target.dataset.action;
+            const param = target.dataset.param;
+            const id = target.dataset.id;
+            const actionType = target.dataset.actionType;
+            const docType = target.dataset.docType;
+
+            // Handle special compound actions
+            if (action === 'openModalAndClose') {
+                if (typeof window.openModal === 'function') {
+                    window.openModal(param);
+                }
+                if (typeof window.closeMobileMenu === 'function') {
+                    window.closeMobileMenu();
+                }
+                return;
+            }
+
+            // Handle actions with multiple parameters
+            if (action === 'handleVerification' && id && actionType && docType) {
+                if (typeof window.handleVerification === 'function') {
+                    window.handleVerification(parseInt(id, 10), actionType, docType);
+                }
+                return;
+            }
+
+            if (action === 'previewDocument' && id && docType) {
+                if (typeof window.previewDocument === 'function') {
+                    window.previewDocument(parseInt(id, 10), docType);
+                }
+                return;
+            }
+
+            // Handle actions with single id parameter
+            if (id && typeof window[action] === 'function') {
+                window[action](parseInt(id, 10));
+                return;
+            }
+
+            // Handle simple actions with optional param
+            if (typeof window[action] === 'function') {
+                window[action](param);
+            }
+        });
+    }
+
     // ─── Initialize ───
     function init() {
         document.body.style.overflow = 'hidden';
@@ -1739,6 +1791,7 @@
         initNav();
         renderAthletes();
         setupFooterLinks();
+        setupEventDelegation();
     }
 
     // Run on DOM ready

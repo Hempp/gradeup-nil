@@ -91,7 +91,7 @@
             background: transparent;
             border: 1px solid var(--gray-700);
             border-radius: 8px;
-            transition: all 0.2s var(--ease);
+            transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
         }
 
         .btn-login:hover {
@@ -107,7 +107,7 @@
             background: var(--cyan);
             border: none;
             border-radius: 8px;
-            transition: all 0.2s var(--ease);
+            transition: background 0.2s var(--ease), transform 0.2s var(--ease);
         }
 
         .btn-signup:hover {
@@ -275,7 +275,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             color: var(--white);
-            transition: all 0.2s var(--ease);
+            transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
         }
 
         .social-link:hover {
@@ -401,7 +401,7 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.25s var(--ease);
+            transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
         }
 
         .btn-contact:hover {
@@ -426,7 +426,7 @@
             border: 2px solid var(--gray-600);
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s var(--ease);
+            transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
         }
 
         .btn-save:hover {
@@ -463,7 +463,7 @@
             border: 1px solid var(--gray-800);
             border-radius: 16px;
             text-align: center;
-            transition: all 0.3s var(--ease);
+            transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
         }
 
         .stat-card:hover {
@@ -564,7 +564,7 @@
             border: 1px solid var(--gray-800);
             border-radius: 20px;
             overflow: hidden;
-            transition: all 0.3s var(--ease);
+            transition: border-color 0.3s var(--ease);
         }
 
         .glass-card:hover {
@@ -638,7 +638,7 @@
             font-size: 0.875rem;
             font-weight: 500;
             color: var(--white);
-            transition: all 0.2s var(--ease);
+            transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
         }
 
         .achievement-tag:hover {
@@ -750,7 +750,7 @@
             border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s var(--ease);
+            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
         }
 
         .video-card:hover {
@@ -784,7 +784,7 @@
             align-items: center;
             justify-content: center;
             color: white;
-            transition: all 0.2s var(--ease);
+            transition: background 0.2s var(--ease), transform 0.2s var(--ease);
         }
 
         .video-card:hover .video-play-btn {
@@ -849,7 +849,7 @@
             border-radius: 12px;
             margin-bottom: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s var(--ease);
+            transition: background 0.2s var(--ease), transform 0.2s var(--ease);
         }
 
         .brand-match-card:hover {
@@ -923,7 +923,7 @@
             background: var(--gray-900);
             border-radius: 12px;
             margin-bottom: 0.75rem;
-            transition: all 0.2s var(--ease);
+            transition: background 0.2s var(--ease);
         }
 
         .deal-card:hover {
@@ -1009,7 +1009,7 @@
             padding: 2rem;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s var(--ease);
+            transition: opacity 0.3s var(--ease), visibility 0.3s var(--ease);
         }
 
         .contact-modal.active {
@@ -1059,7 +1059,7 @@
             border-radius: 8px;
             color: var(--gray-400);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s, color 0.2s;
         }
 
         .modal-close:hover {
@@ -1148,7 +1148,7 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.25s var(--ease);
+            transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
         }
 
         .btn-submit:hover {
@@ -1168,7 +1168,7 @@
             padding: 2rem;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s var(--ease);
+            transition: opacity 0.3s var(--ease), visibility 0.3s var(--ease);
         }
 
         .video-modal.active {
@@ -1361,7 +1361,7 @@
             border-radius: 50%;
             color: var(--gray-400);
             cursor: pointer;
-            transition: all 0.2s var(--ease);
+            transition: background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
         }
 
         .share-btn svg {
@@ -1395,7 +1395,7 @@
             font-size: 0.875rem;
             font-weight: 500;
             opacity: 0;
-            transition: all 0.3s var(--ease);
+            transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
             z-index: 1000;
         }
 
@@ -1435,7 +1435,7 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
             cursor: pointer;
-            transition: all 0.2s var(--ease);
+            transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
         }
 
         .score-breakdown-toggle svg {
@@ -2687,7 +2687,7 @@
             buttonContainer.style.cssText = 'display: flex; gap: 0.75rem; justify-content: center;';
 
             var signupBtn = document.createElement('button');
-            signupBtn.style.cssText = 'padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--black, #000); background: var(--cyan, #00F0FF); border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s;';
+            signupBtn.style.cssText = 'padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--black, #000); background: var(--cyan, #00F0FF); border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s, transform 0.2s;';
             signupBtn.textContent = 'Sign Up';
             signupBtn.addEventListener('click', function() {
                 overlay.remove();
@@ -2696,7 +2696,7 @@
             buttonContainer.appendChild(signupBtn);
 
             var loginBtn = document.createElement('button');
-            loginBtn.style.cssText = 'padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--gray-300, #ccc); background: transparent; border: 1px solid var(--gray-700, #555); border-radius: 8px; cursor: pointer; transition: all 0.2s;';
+            loginBtn.style.cssText = 'padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: var(--gray-300, #ccc); background: transparent; border: 1px solid var(--gray-700, #555); border-radius: 8px; cursor: pointer; transition: border-color 0.2s, color 0.2s;';
             loginBtn.textContent = 'Log In';
             loginBtn.addEventListener('click', function() {
                 overlay.remove();

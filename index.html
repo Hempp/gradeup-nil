@@ -37,8 +37,8 @@
         </div>
 
         <div class="nav-actions">
-            <button class="btn btn-ghost" onclick="openModal('login')">Log In</button>
-            <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            <button class="btn btn-ghost" data-action="openModal" data-param="login">Log In</button>
+            <button class="btn btn-primary" data-action="openModal" data-param="signup">Get Started</button>
         </div>
 
         <button class="nav-toggle" id="navToggle" aria-label="Menu">
@@ -51,18 +51,18 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
-            <a href="#athletes" onclick="closeMobileMenu()">Athletes</a>
-            <a href="#brands" onclick="closeMobileMenu()">Brands</a>
-            <a href="opportunities.html" onclick="closeMobileMenu()">Opportunities</a>
-            <a href="leaderboard.html" onclick="closeMobileMenu()">Leaderboard</a>
-            <a href="about.html" onclick="closeMobileMenu()">How It Works</a>
+            <a href="#athletes" data-action="closeMobileMenu">Athletes</a>
+            <a href="#brands" data-action="closeMobileMenu">Brands</a>
+            <a href="opportunities.html" data-action="closeMobileMenu">Opportunities</a>
+            <a href="leaderboard.html" data-action="closeMobileMenu">Leaderboard</a>
+            <a href="about.html" data-action="closeMobileMenu">How It Works</a>
             <div class="mobile-menu-divider"></div>
-            <a href="athlete-dashboard.html" onclick="closeMobileMenu()">Athlete Dashboard</a>
-            <a href="brand-dashboard.html" onclick="closeMobileMenu()">Brand Dashboard</a>
-            <a href="director-dashboard.html" onclick="closeMobileMenu()">AD Dashboard</a>
+            <a href="athlete-dashboard.html" data-action="closeMobileMenu">Athlete Dashboard</a>
+            <a href="brand-dashboard.html" data-action="closeMobileMenu">Brand Dashboard</a>
+            <a href="director-dashboard.html" data-action="closeMobileMenu">AD Dashboard</a>
             <div class="mobile-menu-buttons">
-                <button class="btn btn-outline btn-block" onclick="openModal('login'); closeMobileMenu()">Log In</button>
-                <button class="btn btn-primary btn-block" onclick="openModal('signup'); closeMobileMenu()">Get Started</button>
+                <button class="btn btn-outline btn-block" data-action="openModalAndClose" data-param="login">Log In</button>
+                <button class="btn btn-primary btn-block" data-action="openModalAndClose" data-param="signup">Get Started</button>
             </div>
         </div>
     </div>
@@ -94,13 +94,13 @@
             </p>
 
             <div class="hero-cta">
-                <button class="btn btn-primary btn-lg" onclick="openModal('athlete-signup')">
+                <button class="btn btn-primary btn-lg" data-action="openModal" data-param="athlete-signup">
                     Join as Athlete
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                 </button>
-                <button class="btn btn-outline btn-lg" onclick="openModal('brand-signup')">
+                <button class="btn btn-outline btn-lg" data-action="openModal" data-param="brand-signup">
                     Partner as Brand
                 </button>
             </div>
@@ -132,7 +132,15 @@
                     <div class="athlete-card-glow"></div>
                     <div class="athlete-card-inner">
                         <div class="athlete-image">
-                            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=500&fit=crop&crop=face" alt="Marcus Johnson">
+                            <img
+                                src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=500&fit=crop&crop=face&fm=webp"
+                                srcset="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&h=250&fit=crop&crop=face&fm=webp 200w,
+                                        https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=500&fit=crop&crop=face&fm=webp 400w,
+                                        https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&h=750&fit=crop&crop=face&fm=webp 600w"
+                                sizes="(max-width: 600px) 200px, 400px"
+                                width="400" height="500"
+                                loading="lazy"
+                                alt="Marcus Johnson">
                             <div class="athlete-verified">✓</div>
                         </div>
                         <div class="athlete-details">
@@ -283,7 +291,7 @@
                         </li>
                     </ul>
 
-                    <button class="btn btn-primary btn-lg" onclick="openModal('brand-signup')">
+                    <button class="btn btn-primary btn-lg" data-action="openModal" data-param="brand-signup">
                         Start Partnering
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -333,7 +341,11 @@
                         <p>"GradeUp helped me secure my first brand deal while maintaining my 3.8 GPA. Finally a platform that values academics!"</p>
                     </div>
                     <div class="testimonial-author">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Sarah Chen">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face&fm=webp"
+                             srcset="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face&fm=webp 50w,
+                                     https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face&fm=webp 100w,
+                                     https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face&fm=webp 200w"
+                             sizes="50px" width="50" height="50" loading="lazy" alt="Sarah Chen">
                         <div>
                             <strong>Sarah Chen</strong>
                             <span>Stanford Soccer • 3.8 GPA</span>
@@ -346,7 +358,11 @@
                         <p>"As a brand, we love that GradeUp pre-verifies athletes. It saves us time and ensures we partner with authentic scholar-athletes."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Mike Roberts">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&fm=webp"
+                             srcset="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face&fm=webp 50w,
+                                     https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&fm=webp 100w,
+                                     https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face&fm=webp 200w"
+                             sizes="50px" width="50" height="50" loading="lazy" alt="Mike Roberts">
                         <div>
                             <strong>Mike Roberts</strong>
                             <span>Marketing Director, Nike Regional</span>
@@ -359,7 +375,11 @@
                         <p>"The verification process was quick and the deals started coming in within a week. Best platform for serious athletes."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face&fm=webp"
+                             srcset="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face&fm=webp 50w,
+                                     https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face&fm=webp 100w,
+                                     https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&fm=webp 200w"
+                             sizes="50px" width="50" height="50" loading="lazy" alt="James Wilson">
                         <div>
                             <strong>James Wilson</strong>
                             <span>Alabama Football • 3.5 GPA</span>
@@ -377,10 +397,10 @@
                 <h2 class="cta-title">Ready to <span>Level Up?</span></h2>
                 <p class="cta-subtitle">Join thousands of scholar-athletes already earning on GradeUp.</p>
                 <div class="cta-buttons">
-                    <button class="btn btn-white btn-lg" onclick="openModal('athlete-signup')">
+                    <button class="btn btn-white btn-lg" data-action="openModal" data-param="athlete-signup">
                         Get Started Free
                     </button>
-                    <button class="btn btn-ghost-white btn-lg" onclick="openModal('brand-signup')">
+                    <button class="btn btn-ghost-white btn-lg" data-action="openModal" data-param="brand-signup">
                         Partner as Brand
                     </button>
                 </div>
@@ -442,7 +462,7 @@
     <!-- Modals -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modal">
-            <button class="modal-close" onclick="closeModal()" aria-label="Close">
+            <button class="modal-close" data-action="closeModal" aria-label="Close">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
