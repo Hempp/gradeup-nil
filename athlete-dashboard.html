@@ -380,8 +380,22 @@
             font-weight: 800;
             color: var(--white);
             margin-bottom: 1.5rem;
-            text-decoration: none;
-            border: none;
+            text-decoration: none !important;
+            border: none !important;
+            border-bottom: none !important;
+            background: none;
+            box-shadow: none;
+            position: relative;
+        }
+
+        .score-title::before,
+        .score-title::after {
+            display: none !important;
+        }
+
+        .score-label {
+            border: none !important;
+            border-bottom: none !important;
         }
 
         .score-breakdown {
@@ -414,8 +428,13 @@
         .breakdown-fill {
             height: 100%;
             border-radius: 4px;
-            transition: width 1s var(--ease-out);
-            min-width: 8px;
+            transition: width 1s var(--ease-out), opacity 0.3s ease;
+            min-width: 0;
+            opacity: 0;
+        }
+
+        .breakdown-fill.visible {
+            opacity: 1;
         }
 
         .breakdown-fill.athletic {
@@ -2526,11 +2545,20 @@
             var social = athleteData.scoreBreakdown.social;
             var academic = athleteData.scoreBreakdown.academic;
             setTimeout(function() {
-                document.getElementById('athleticBar').style.width = athletic + '%';
+                var athleticBar = document.getElementById('athleticBar');
+                var socialBar = document.getElementById('socialBar');
+                var academicBar = document.getElementById('academicBar');
+
+                athleticBar.style.width = athletic + '%';
+                athleticBar.classList.add('visible');
                 document.getElementById('athleticValue').textContent = athletic + '%';
-                document.getElementById('socialBar').style.width = social + '%';
+
+                socialBar.style.width = social + '%';
+                socialBar.classList.add('visible');
                 document.getElementById('socialValue').textContent = social + '%';
-                document.getElementById('academicBar').style.width = academic + '%';
+
+                academicBar.style.width = academic + '%';
+                academicBar.classList.add('visible');
                 document.getElementById('academicValue').textContent = academic + '%';
             }, 300);
         }
