@@ -17,6 +17,9 @@
     <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
+    <!-- Preload LCP hero image -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=500&fit=crop&crop=face&fm=webp" imagesrcset="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&h=250&fit=crop&crop=face&fm=webp 200w, https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=400&h=500&fit=crop&crop=face&fm=webp 400w, https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&h=750&fit=crop&crop=face&fm=webp 600w" imagesizes="(max-width: 600px) 200px, 400px" fetchpriority="high">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -161,8 +164,9 @@
                                         https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&h=750&fit=crop&crop=face&fm=webp 600w"
                                 sizes="(max-width: 600px) 200px, 400px"
                                 width="400" height="500"
-                                loading="lazy"
-                                alt="Marcus Johnson">
+                                fetchpriority="high"
+                                decoding="async"
+                                alt="Marcus Johnson - Duke University Basketball Point Guard">
                             <div class="athlete-verified">✓</div>
                         </div>
                         <div class="athlete-details">
@@ -501,13 +505,13 @@
     <!-- Configuration -->
     <script>
         // GradeUp Configuration
-        // SECURITY WARNING: Set DEMO_MODE to false in production!
-        // Demo mode bypasses authentication - never enable in production
+        // Environment variables are injected at build time by Vite
         window.GRADEUP_CONFIG = {
             SUPABASE_URL: '',
             SUPABASE_ANON_KEY: '',
-            // SECURITY: Set to false for production deployment
-            DEMO_MODE: true  // Enable demo mode for local development only
+            // DEMO_MODE is now controlled by VITE_DEMO_MODE environment variable
+            // Defaults to false (secure) - only enable for local testing
+            DEMO_MODE: false
         };
     </script>
 

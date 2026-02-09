@@ -10,7 +10,11 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Preload LCP profile image -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" fetchpriority="high">
 
     <!-- Base Styles -->
     <link rel="stylesheet" href="styles.css">
@@ -376,6 +380,8 @@
             font-weight: 800;
             color: var(--white);
             margin-bottom: 1.5rem;
+            text-decoration: none;
+            border: none;
         }
 
         .score-breakdown {
@@ -409,6 +415,7 @@
             height: 100%;
             border-radius: 4px;
             transition: width 1s var(--ease-out);
+            min-width: 8px;
         }
 
         .breakdown-fill.athletic {
@@ -1929,7 +1936,7 @@
                 </svg>
             </button>
             <div class="user-avatar" id="userMenu">
-                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Marcus Johnson" class="avatar-image">
+                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Marcus Johnson profile photo" class="avatar-image" width="40" height="40" loading="eager" decoding="async" fetchpriority="high">
                 <div class="avatar-info">
                     <div class="avatar-name">Marcus J.</div>
                     <div class="avatar-tier">

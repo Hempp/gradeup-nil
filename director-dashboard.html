@@ -8,7 +8,11 @@
     <title>Athletic Director Dashboard | GradeUp NIL</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Preload LCP profile image -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" fetchpriority="high">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="src/styles/dashboard-shared.css">
 </head>
@@ -38,7 +42,7 @@
                 <span class="notification-badge">7</span>
             </button>
             <div class="user-profile">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="Profile" class="profile-img">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="Dr. Kevin White profile photo" class="profile-img" width="40" height="40" loading="eager" decoding="async" fetchpriority="high">
                 <div class="profile-info">
                     <span class="profile-name">Dr. Kevin White</span>
                     <span class="profile-role">Athletic Director</span>
@@ -260,7 +264,7 @@
                 <div class="verification-list" id="verificationList">
                     <div class="verification-item" data-type="enrollment" data-athlete-id="1">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="David Park">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="David Park - Men's Tennis athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">David Park</span>
                                 <span class="ver-sport">Men's Tennis - Sophomore</span>
@@ -281,7 +285,7 @@
                     </div>
                     <div class="verification-item" data-type="enrollment" data-athlete-id="2">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Ashley Martinez">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Ashley Martinez - Women's Volleyball athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Ashley Martinez</span>
                                 <span class="ver-sport">Women's Volleyball - Junior</span>
@@ -302,7 +306,7 @@
                     </div>
                     <div class="verification-item" data-type="enrollment" data-athlete-id="3">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Chris Johnson">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Chris Johnson - Men's Basketball athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Chris Johnson</span>
                                 <span class="ver-sport">Men's Basketball - Freshman</span>
@@ -323,7 +327,7 @@
                     </div>
                     <div class="verification-item" data-type="enrollment" data-athlete-id="4">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop" alt="Marcus Thompson">
+                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop" alt="Marcus Thompson - Men's Basketball athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Marcus Thompson</span>
                                 <span class="ver-sport">Men's Basketball - Senior</span>
@@ -344,7 +348,7 @@
                     </div>
                     <div class="verification-item" data-type="sport" data-athlete-id="5">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="Sarah Chen">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="Sarah Chen - Women's Volleyball athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Sarah Chen</span>
                                 <span class="ver-sport">Women's Soccer - Junior</span>
@@ -365,7 +369,7 @@
                     </div>
                     <div class="verification-item" data-type="sport" data-athlete-id="6">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="Jordan Mitchell">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="Jordan Mitchell - Football athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Jordan Mitchell</span>
                                 <span class="ver-sport">Football - Senior</span>
@@ -386,7 +390,7 @@
                     </div>
                     <div class="verification-item" data-type="sport" data-athlete-id="7">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop" alt="Tyler Brooks">
+                            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop" alt="Tyler Brooks - Men's Lacrosse athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Tyler Brooks</span>
                                 <span class="ver-sport">Men's Lacrosse - Sophomore</span>
@@ -407,7 +411,7 @@
                     </div>
                     <div class="verification-item" data-type="gpa" data-athlete-id="8">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop" alt="Emily Rodriguez">
+                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop" alt="Emily Rodriguez - Women's Soccer athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Emily Rodriguez</span>
                                 <span class="ver-sport">Women's Soccer - Senior</span>
@@ -428,7 +432,7 @@
                     </div>
                     <div class="verification-item" data-type="gpa" data-athlete-id="9">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="Jason Williams">
+                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="Jason Williams - Football athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Jason Williams</span>
                                 <span class="ver-sport">Football - Junior</span>
@@ -449,7 +453,7 @@
                     </div>
                     <div class="verification-item" data-type="gpa" data-athlete-id="10">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Michael Chen">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Michael Chen - Men's Swimming athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Michael Chen</span>
                                 <span class="ver-sport">Men's Swimming - Freshman</span>
@@ -470,7 +474,7 @@
                     </div>
                     <div class="verification-item" data-type="gpa" data-athlete-id="11">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="Lisa Park">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="Lisa Park - Women's Tennis athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Lisa Park</span>
                                 <span class="ver-sport">Women's Tennis - Sophomore</span>
@@ -491,7 +495,7 @@
                     </div>
                     <div class="verification-item" data-type="gpa" data-athlete-id="12">
                         <div class="ver-athlete">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Kevin Martinez">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Kevin Martinez - Men's Track athlete" width="48" height="48" loading="lazy" decoding="async">
                             <div class="ver-info">
                                 <span class="ver-name">Kevin Martinez</span>
                                 <span class="ver-sport">Men's Track - Junior</span>
@@ -591,11 +595,11 @@
                     <div class="chart-card">
                         <h4 class="chart-title">Top Earning Athletes</h4>
                         <div class="leaderboard">
-                            <div class="leader-item"><span class="leader-rank gold">1</span><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop" alt=""><div class="leader-info"><span class="leader-name">Marcus Thompson</span><span class="leader-sport">Basketball</span></div><span class="leader-value">$245K</span></div>
-                            <div class="leader-item"><span class="leader-rank silver">2</span><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt=""><div class="leader-info"><span class="leader-name">Jordan Mitchell</span><span class="leader-sport">Football</span></div><span class="leader-value">$198K</span></div>
-                            <div class="leader-item"><span class="leader-rank bronze">3</span><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt=""><div class="leader-info"><span class="leader-name">Emily Rodriguez</span><span class="leader-sport">Soccer</span></div><span class="leader-value">$156K</span></div>
-                            <div class="leader-item"><span class="leader-rank">4</span><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt=""><div class="leader-info"><span class="leader-name">Tyler Brooks</span><span class="leader-sport">Basketball</span></div><span class="leader-value">$134K</span></div>
-                            <div class="leader-item"><span class="leader-rank">5</span><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt=""><div class="leader-info"><span class="leader-name">Sarah Chen</span><span class="leader-sport">Volleyball</span></div><span class="leader-value">$112K</span></div>
+                            <div class="leader-item"><span class="leader-rank gold">1</span><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop" alt="Marcus Thompson - Basketball" width="40" height="40" loading="lazy" decoding="async"><div class="leader-info"><span class="leader-name">Marcus Thompson</span><span class="leader-sport">Basketball</span></div><span class="leader-value">$245K</span></div>
+                            <div class="leader-item"><span class="leader-rank silver">2</span><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Jordan Mitchell - Football" width="40" height="40" loading="lazy" decoding="async"><div class="leader-info"><span class="leader-name">Jordan Mitchell</span><span class="leader-sport">Football</span></div><span class="leader-value">$198K</span></div>
+                            <div class="leader-item"><span class="leader-rank bronze">3</span><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Emily Rodriguez - Soccer" width="40" height="40" loading="lazy" decoding="async"><div class="leader-info"><span class="leader-name">Emily Rodriguez</span><span class="leader-sport">Soccer</span></div><span class="leader-value">$156K</span></div>
+                            <div class="leader-item"><span class="leader-rank">4</span><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Tyler Brooks - Basketball" width="40" height="40" loading="lazy" decoding="async"><div class="leader-info"><span class="leader-name">Tyler Brooks</span><span class="leader-sport">Basketball</span></div><span class="leader-value">$134K</span></div>
+                            <div class="leader-item"><span class="leader-rank">5</span><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="Sarah Chen - Volleyball" width="40" height="40" loading="lazy" decoding="async"><div class="leader-info"><span class="leader-name">Sarah Chen</span><span class="leader-sport">Volleyball</span></div><span class="leader-value">$112K</span></div>
                         </div>
                     </div>
                     <div class="chart-card">
@@ -662,9 +666,9 @@
                         </div>
                         <div class="team-content">
                             <div class="team-leaderboard">
-                                <div class="team-athlete"><span class="rank">1</span><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=60&h=60&fit=crop" alt=""><div class="athlete-info"><span>Marcus Thompson</span><span class="pos">Point Guard - Senior</span></div><span class="gpa">3.8</span><span class="earnings">$245K</span></div>
-                                <div class="team-athlete"><span class="rank">2</span><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop" alt=""><div class="athlete-info"><span>Tyler Brooks</span><span class="pos">Forward - Junior</span></div><span class="gpa">3.5</span><span class="earnings">$134K</span></div>
-                                <div class="team-athlete"><span class="rank">3</span><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt=""><div class="athlete-info"><span>Chris Johnson</span><span class="pos">Center - Freshman</span></div><span class="gpa">3.2</span><span class="earnings">$46K</span></div>
+                                <div class="team-athlete"><span class="rank">1</span><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=60&h=60&fit=crop" alt="Marcus Thompson - Point Guard" width="36" height="36" loading="lazy" decoding="async"><div class="athlete-info"><span>Marcus Thompson</span><span class="pos">Point Guard - Senior</span></div><span class="gpa">3.8</span><span class="earnings">$245K</span></div>
+                                <div class="team-athlete"><span class="rank">2</span><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop" alt="Tyler Brooks - Forward" width="36" height="36" loading="lazy" decoding="async"><div class="athlete-info"><span>Tyler Brooks</span><span class="pos">Forward - Junior</span></div><span class="gpa">3.5</span><span class="earnings">$134K</span></div>
+                                <div class="team-athlete"><span class="rank">3</span><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="Chris Johnson - Center" width="36" height="36" loading="lazy" decoding="async"><div class="athlete-info"><span>Chris Johnson</span><span class="pos">Center - Freshman</span></div><span class="gpa">3.2</span><span class="earnings">$46K</span></div>
                             </div>
                         </div>
                     </div>
@@ -970,19 +974,19 @@
                         <h4>Staff Members</h4>
                         <div class="staff-list">
                             <div class="staff-item">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop" alt="">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop" alt="Dr. Kevin White - Athletic Director" width="40" height="40" loading="lazy" decoding="async">
                                 <div class="staff-info"><span class="staff-name">Dr. Kevin White</span><span class="staff-role">Athletic Director</span></div>
                                 <span class="staff-access admin">Admin</span>
                                 <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
                             </div>
                             <div class="staff-item">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop" alt="">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop" alt="Sarah Johnson - Compliance Officer" width="40" height="40" loading="lazy" decoding="async">
                                 <div class="staff-info"><span class="staff-name">Sarah Johnson</span><span class="staff-role">Compliance Officer</span></div>
                                 <span class="staff-access editor">Editor</span>
                                 <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
                             </div>
                             <div class="staff-item">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="Michael Chen - Assistant Athletic Director" width="40" height="40" loading="lazy" decoding="async">
                                 <div class="staff-info"><span class="staff-name">Michael Chen</span><span class="staff-role">Assistant AD</span></div>
                                 <span class="staff-access editor">Editor</span>
                                 <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
