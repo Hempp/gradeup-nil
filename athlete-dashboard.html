@@ -37,7 +37,7 @@
         .dashboard {
             min-height: 100vh;
             background: var(--black);
-            padding-top: 80px;
+            padding-top: 56px;
         }
 
         .dashboard-container {
@@ -56,7 +56,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem 2rem;
+            padding: 0.5rem 1.5rem;
             background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -66,11 +66,11 @@
         .dashboard-nav-left {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .dashboard-logo {
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 800;
             letter-spacing: 0.1em;
             color: var(--white);
@@ -78,17 +78,17 @@
 
         .dashboard-nav-tabs {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
         }
 
         .nav-tab {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8125rem;
             font-weight: 500;
             color: var(--gray-500);
             background: transparent;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             transition: color 0.2s var(--ease), background 0.2s var(--ease);
             cursor: pointer;
             text-decoration: none;
@@ -107,22 +107,27 @@
         .dashboard-nav-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .nav-icon-btn {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--gray-900);
             border: 1px solid var(--gray-800);
-            border-radius: 10px;
+            border-radius: 8px;
             color: var(--gray-400);
             cursor: pointer;
             transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .nav-icon-btn svg {
+            width: 16px;
+            height: 16px;
         }
 
         .nav-icon-btn:hover {
@@ -154,12 +159,12 @@
         .user-avatar {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem;
-            padding-right: 1rem;
+            gap: 0.5rem;
+            padding: 0.375rem;
+            padding-right: 0.75rem;
             background: var(--gray-900);
             border: 1px solid var(--gray-800);
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: border-color 0.2s var(--ease);
         }
@@ -169,9 +174,9 @@
         }
 
         .avatar-image {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             object-fit: cover;
         }
 
@@ -180,7 +185,7 @@
         }
 
         .avatar-name {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--white);
         }
@@ -188,14 +193,14 @@
         .avatar-tier {
             display: flex;
             align-items: center;
-            gap: 0.375rem;
-            font-size: 0.75rem;
+            gap: 0.25rem;
+            font-size: 0.625rem;
             color: var(--gold);
         }
 
         .tier-icon {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
         }
 
         /* ─── Section Grid ─── */
@@ -265,7 +270,7 @@
         /* ─── GradeUp Score Hero Card ─── */
         .score-hero {
             position: relative;
-            padding: 2.5rem;
+            padding: 1.5rem;
             overflow: hidden;
         }
 
@@ -282,14 +287,14 @@
             position: relative;
             display: grid;
             grid-template-columns: auto 1fr auto;
-            gap: 3rem;
+            gap: 2rem;
             align-items: center;
         }
 
         .score-ring-container {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 160px;
+            height: 160px;
         }
 
         .score-ring {
@@ -324,7 +329,7 @@
         }
 
         .score-value {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             font-weight: 900;
             letter-spacing: -0.02em;
             background: linear-gradient(135deg, var(--cyan), var(--white));
@@ -373,29 +378,26 @@
             letter-spacing: 0.15em;
             color: var(--gray-500);
             margin-bottom: 0.5rem;
+            border: none;
         }
 
         .score-title {
-            font-size: 1.75rem;
-            font-weight: 800;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--white);
-            margin-bottom: 1.5rem;
-            text-decoration: none !important;
-            border: none !important;
-            border-bottom: none !important;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            border: none;
             background: none;
             box-shadow: none;
             position: relative;
+            line-height: 1.2;
         }
 
         .score-title::before,
         .score-title::after {
-            display: none !important;
-        }
-
-        .score-label {
-            border: none !important;
-            border-bottom: none !important;
+            content: none;
+            display: none;
         }
 
         .score-breakdown {
@@ -419,21 +421,22 @@
 
         .breakdown-bar {
             flex: 1;
-            height: 8px;
+            height: 6px;
             background: var(--gray-800);
-            border-radius: 4px;
+            border-radius: 3px;
             overflow: hidden;
         }
 
         .breakdown-fill {
             height: 100%;
-            border-radius: 4px;
+            border-radius: 3px;
             transition: width 1s var(--ease-out), opacity 0.3s ease;
             min-width: 0;
-            opacity: 0;
+            display: none;
         }
 
         .breakdown-fill.visible {
+            display: block;
             opacity: 1;
         }
 
