@@ -56,7 +56,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem 2rem;
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.75rem, 4vw, 2rem);
             background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -83,11 +83,11 @@
         .dashboard-nav-left {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: clamp(0.75rem, 3vw, 1.5rem);
         }
 
         .dashboard-logo {
-            font-size: 1rem;
+            font-size: clamp(0.875rem, 2vw, 1.125rem);
             font-weight: 800;
             letter-spacing: 0.1em;
             color: var(--white);
@@ -130,8 +130,10 @@
 
         .nav-icon-btn {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: clamp(40px, 10vw, 44px);
+            height: clamp(40px, 10vw, 44px);
+            min-width: 44px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -144,8 +146,8 @@
         }
 
         .nav-icon-btn svg {
-            width: 20px;
-            height: 20px;
+            width: clamp(18px, 4vw, 20px);
+            height: clamp(18px, 4vw, 20px);
             display: block;
             flex-shrink: 0;
         }
@@ -177,13 +179,14 @@
         .user-avatar {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+            gap: clamp(0.25rem, 1vw, 0.5rem);
+            padding: 0.25rem clamp(0.5rem, 2vw, 0.75rem) 0.25rem 0.25rem;
             background: var(--gray-900);
             border: 1px solid var(--gray-800);
             border-radius: 10px;
             cursor: pointer;
             transition: border-color 0.2s var(--ease);
+            min-height: 44px;
         }
 
         .user-avatar:hover {
@@ -191,8 +194,8 @@
         }
 
         .avatar-image {
-            width: 32px;
-            height: 32px;
+            width: clamp(28px, 6vw, 36px);
+            height: clamp(28px, 6vw, 36px);
             border-radius: 8px;
             object-fit: cover;
             flex-shrink: 0;
@@ -1286,6 +1289,139 @@
             .scholar-info {
                 flex-direction: column;
                 text-align: center;
+            }
+
+            .avatar-info {
+                display: none;
+            }
+
+            .user-avatar {
+                padding: 0.25rem;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 1.25rem;
+            }
+        }
+
+        /* ─── 480px Small Mobile Breakpoint ─── */
+        @media (max-width: 480px) {
+            .dashboard {
+                padding-top: 56px;
+            }
+
+            .dashboard-nav {
+                padding: 0.5rem 0.75rem;
+                min-height: 56px;
+            }
+
+            .dashboard-nav-left {
+                gap: 0.5rem;
+            }
+
+            .dashboard-nav-right {
+                gap: 0.25rem;
+            }
+
+            .dashboard-logo {
+                font-size: 0.75rem;
+                letter-spacing: 0.05em;
+            }
+
+            .nav-icon-btn {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                min-height: 40px;
+            }
+
+            .nav-icon-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .dashboard-container {
+                padding: 0.75rem;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 1rem;
+            }
+
+            .score-hero {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .score-ring-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            .score-value {
+                font-size: 1.75rem;
+            }
+
+            .score-title {
+                font-size: 1rem;
+            }
+
+            .stat-main-value {
+                font-size: 1.25rem;
+            }
+
+            .breakdown-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .breakdown-bar {
+                width: 100%;
+            }
+
+            .breakdown-label {
+                width: auto;
+                font-size: 0.75rem;
+            }
+
+            .breakdown-value {
+                width: auto;
+            }
+
+            .dashboard-grid {
+                gap: 1rem;
+            }
+
+            .dashboard-main,
+            .dashboard-sidebar {
+                gap: 1rem;
+            }
+
+            .tier-badge {
+                width: 56px;
+                height: 56px;
+                font-size: 1.5rem;
+            }
+
+            .scholar-badges {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .rate-badge,
+            .sponsors-badge {
+                width: 100%;
             }
         }
 
