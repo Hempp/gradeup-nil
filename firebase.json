@@ -50,6 +50,14 @@
       {
         "source": "/settings",
         "destination": "/settings.html"
+      },
+      {
+        "source": "/athlete-profile",
+        "destination": "/athlete-profile.html"
+      },
+      {
+        "source": "/brand-profile",
+        "destination": "/brand-profile.html"
       }
     ],
     "headers": [
@@ -111,6 +119,10 @@
           {
             "key": "Referrer-Policy",
             "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "Strict-Transport-Security",
+            "value": "max-age=31536000; includeSubDomains"
           }
         ]
       }
