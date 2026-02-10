@@ -10,7 +10,11 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "firebase:serve": "npx firebase-tools emulators:start --only hosting",
+    "firebase:deploy": "npm run build && npx firebase-tools deploy --only hosting",
+    "firebase:deploy:preview": "npm run build && npx firebase-tools hosting:channel:deploy preview",
+    "firebase:login": "npx firebase-tools login"
   },
   "devDependencies": {
     "@vitest/ui": "^4.0.18",
