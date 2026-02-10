@@ -1061,7 +1061,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 2rem;
+            padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 4vw, 2rem);
             background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -1071,11 +1071,11 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: clamp(1rem, 3vw, 2rem);
         }
 
         .logo {
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
             font-weight: 800;
             letter-spacing: 0.1em;
             color: var(--white);
@@ -1085,21 +1085,21 @@
         .school-info {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding-left: 2rem;
+            gap: clamp(0.5rem, 1.5vw, 0.75rem);
+            padding-left: clamp(1rem, 3vw, 2rem);
             border-left: 1px solid var(--gray-800);
         }
 
         .school-logo {
-            width: 40px;
-            height: 40px;
+            width: clamp(32px, 8vw, 44px);
+            height: clamp(32px, 8vw, 44px);
             background: linear-gradient(135deg, #001A57, #003087);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
             color: var(--white);
         }
 
@@ -1150,13 +1150,15 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: clamp(0.5rem, 2vw, 1rem);
         }
 
         .header-icon-btn {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: clamp(40px, 10vw, 44px);
+            height: clamp(40px, 10vw, 44px);
+            min-width: 44px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1174,8 +1176,8 @@
         }
 
         .header-icon-btn svg {
-            width: 20px;
-            height: 20px;
+            width: clamp(18px, 4vw, 20px);
+            height: clamp(18px, 4vw, 20px);
         }
 
         .notification-badge {
@@ -1197,14 +1199,15 @@
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: clamp(0.5rem, 1.5vw, 0.75rem);
             padding: 0.5rem;
-            padding-right: 1rem;
+            padding-right: clamp(0.5rem, 2vw, 1rem);
             background: var(--gray-900);
             border: 1px solid var(--gray-800);
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s var(--ease);
+            min-height: 44px;
         }
 
         .user-profile:hover {
@@ -1212,8 +1215,8 @@
         }
 
         .profile-img {
-            width: 36px;
-            height: 36px;
+            width: clamp(28px, 6vw, 36px);
+            height: clamp(28px, 6vw, 36px);
             border-radius: 8px;
             object-fit: cover;
         }
@@ -3202,12 +3205,24 @@
                 display: none;
             }
 
+            .header-nav {
+                display: none;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .user-profile {
+                padding: 0.25rem;
+            }
+
             .dashboard-container {
                 padding: 1rem;
             }
 
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .section-header {
@@ -3242,6 +3257,103 @@
 
             .pie-chart-container {
                 flex-direction: column;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 1.25rem;
+            }
+        }
+
+        /* ─── 480px Small Mobile Breakpoint ─── */
+        @media (max-width: 480px) {
+            .director-header {
+                padding: 0.5rem 0.75rem;
+                min-height: 56px;
+            }
+
+            .header-left {
+                gap: 0.5rem;
+            }
+
+            .header-right {
+                gap: 0.25rem;
+            }
+
+            .logo {
+                font-size: 0.875rem;
+                letter-spacing: 0.05em;
+            }
+
+            .header-icon-btn {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                min-height: 40px;
+            }
+
+            .header-icon-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .dashboard-container {
+                padding: 0.75rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.75rem;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+
+            .quick-actions {
+                bottom: 0.75rem;
+                right: 0.75rem;
+            }
+
+            .quick-action-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .quick-action-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .athletes-table {
+                font-size: 0.75rem;
+            }
+
+            .athletes-table th,
+            .athletes-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .athlete-name-cell {
+                gap: 0.5rem;
+            }
+
+            .athlete-avatar {
+                width: 28px;
+                height: 28px;
             }
         }
 
