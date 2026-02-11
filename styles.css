@@ -41,6 +41,37 @@
     --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
     --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
     --shadow-glow: 0 0 40px var(--cyan-glow);
+
+    /* Z-Index Scale (NEXUS-PRIME standardized) */
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-nav: 1000;
+    --z-modal-backdrop: 9000;
+    --z-modal: 9500;
+    --z-loader: 9999;
+    --z-tooltip: 10000;
+
+    /* Transition Timing */
+    --transition-fast: 0.15s;
+    --transition-base: 0.2s;
+    --transition-slow: 0.3s;
+    --transition-slower: 0.5s;
+
+    /* Border Radius Scale */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 100px;
+
+    /* Touch Target Minimum (WCAG 2.5.5) */
+    --touch-target-min: 44px;
+
+    /* macOS Window Chrome Colors */
+    --windows-red: #ff5f56;
+    --windows-yellow: #ffbd2e;
+    --windows-green: #27c93f;
 }
 
 /* ─── Reset ─── */
@@ -84,7 +115,7 @@ img {
     position: fixed;
     inset: 0;
     background: var(--black);
-    z-index: 9999;
+    z-index: var(--z-loader);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -134,7 +165,7 @@ img {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100;
+    z-index: var(--z-nav);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -2106,4 +2137,222 @@ img {
   .floating-shape {
     display: none !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY ENHANCEMENTS (NEXUS-PRIME PRISM-UX + SENTINEL-QA)
+   WCAG 2.2 AA Compliance
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Skip Link ─── */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--cyan);
+    color: var(--black);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    z-index: var(--z-tooltip);
+    transition: top var(--transition-base) var(--ease);
+}
+
+.skip-link:focus {
+    top: 1rem;
+    outline: 2px solid var(--white);
+    outline-offset: 2px;
+}
+
+/* ─── Universal Focus States (WCAG 2.4.7) ─── */
+:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+/* Buttons focus */
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-outline:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+    box-shadow: var(--shadow-glow);
+}
+
+/* Form inputs focus */
+.form-input:focus-visible,
+.filter-select:focus-visible,
+.search-input:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: -2px;
+    border-color: var(--cyan);
+}
+
+/* Links focus */
+a:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* ─── Touch Targets (WCAG 2.5.5 - 44x44px minimum) ─── */
+button,
+[role="button"],
+.btn,
+.nav-toggle,
+.pagination-btn,
+.filter-btn,
+.tab-btn {
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+}
+
+/* Icon buttons need explicit sizing */
+.icon-btn,
+.nav-icon-btn,
+.header-icon-btn,
+.modal-close {
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─── Form Error/Success States ─── */
+.form-input.error,
+input.error,
+select.error,
+textarea.error {
+    border-color: var(--error);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.form-input.error:focus,
+input.error:focus {
+    outline-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-input.success,
+input.success {
+    border-color: var(--success);
+}
+
+.form-error {
+    color: var(--error);
+    font-size: 0.8125rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-success {
+    color: var(--success);
+    font-size: 0.8125rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Required field indicator */
+.required::after {
+    content: " *";
+    color: var(--error);
+}
+
+/* ─── Button Loading States ─── */
+.btn:disabled,
+.btn[disabled],
+.btn.loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn.loading::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 0.5rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ─── Screen Reader Only ─── */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ─── ARIA Live Regions ─── */
+[aria-live="polite"],
+[aria-live="assertive"],
+[role="status"],
+[role="alert"] {
+    position: relative;
+}
+
+/* ─── High Contrast Mode Support ─── */
+@media (prefers-contrast: high) {
+    :root {
+        --gray-400: #d4d4d4;
+        --gray-500: #a3a3a3;
+    }
+
+    .btn {
+        border: 2px solid currentColor;
+    }
+
+    .form-input,
+    .filter-select {
+        border-width: 2px;
+    }
+}
+
+/* ─── Button Variant Colors (FORGE-X consistency fix) ─── */
+.btn-success {
+    background: var(--success);
+    color: var(--white);
+}
+
+.btn-success:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: var(--error);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+.btn-warning {
+    background: var(--warning);
+    color: var(--black);
+}
+
+.btn-warning:hover {
+    background: #d97706;
 }
