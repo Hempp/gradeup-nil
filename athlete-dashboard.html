@@ -80,103 +80,7 @@
             display: none !important;
         }
 
-        .dashboard-nav-left {
-            display: flex;
-            align-items: center;
-            gap: clamp(0.75rem, 3vw, 1.5rem);
-        }
-
-        .dashboard-logo {
-            font-size: clamp(0.875rem, 2vw, 1.125rem);
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            color: var(--white);
-        }
-
-        .dashboard-nav-tabs {
-            display: flex;
-            gap: 0.25rem;
-        }
-
-        .nav-tab {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.8125rem;
-            font-weight: 500;
-            color: var(--gray-500);
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            transition: color 0.2s var(--ease), background 0.2s var(--ease);
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .nav-tab:hover {
-            color: var(--white);
-            background: var(--gray-900);
-        }
-
-        .nav-tab.active {
-            color: var(--black);
-            background: var(--cyan);
-        }
-
-        .dashboard-nav-right {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-
-        .nav-icon-btn {
-            position: relative;
-            width: clamp(40px, 10vw, 44px);
-            height: clamp(40px, 10vw, 44px);
-            min-width: 44px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gray-900);
-            border: 1px solid var(--gray-800);
-            border-radius: 10px;
-            color: var(--gray-400);
-            cursor: pointer;
-            transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
-        }
-
-        .nav-icon-btn svg {
-            width: clamp(18px, 4vw, 20px);
-            height: clamp(18px, 4vw, 20px);
-            display: block;
-            flex-shrink: 0;
-        }
-
-        .nav-icon-btn:hover {
-            border-color: var(--gray-700);
-            color: var(--white);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 18px;
-            height: 18px;
-            background: var(--magenta);
-            color: var(--white);
-            font-size: 0.625rem;
-            font-weight: 700;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            flex-shrink: 0;
-            pointer-events: none;
-        }
-
-        /* User avatar styles in dashboard-shared.css */
+        /* Nav and icon styles in dashboard-shared.css */
 
         /* ─── Section Grid ─── */
         .dashboard-grid {
@@ -1267,10 +1171,7 @@
                 gap: 0.25rem;
             }
 
-            .dashboard-logo {
-                font-size: 0.75rem;
-                letter-spacing: 0.05em;
-            }
+            /* Logo responsive in dashboard-shared.css */
 
             .nav-icon-btn {
                 width: 40px;
