@@ -3,6 +3,11 @@
 .env.local
 *.log
 
+# Firebase service account (NEVER commit)
+serviceAccount.json
+*-service-account*.json
+.firebase/
+
 # Node modules (these are local only)
 node_modules/
 
