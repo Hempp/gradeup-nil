@@ -71,7 +71,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
       aria-label="Main navigation"
       className={cn(
         'fixed top-0 left-0 h-screen flex flex-col',
-        'bg-[var(--primary-900)] transition-all duration-300 ease-in-out z-20',
+        'bg-black border-r border-white/10 transition-all duration-300 ease-in-out z-20',
         collapsed ? 'w-20' : 'w-64',
         className
       )}
@@ -100,8 +100,8 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
               </text>
               <defs>
                 <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop stopColor="#00D4FF" />
-                  <stop offset="1" stopColor="#7C3AED" />
+                  <stop stopColor="#00f0ff" />
+                  <stop offset="1" stopColor="#adff2f" />
                 </linearGradient>
               </defs>
             </svg>
@@ -141,7 +141,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
                     'flex items-center gap-3 py-2.5 px-3 rounded-lg',
                     'text-sm transition-all duration-200',
                     isActive
-                      ? 'bg-white/10 text-white font-medium'
+                      ? 'bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)] font-medium border-l-2 border-[var(--marketing-cyan)]'
                       : 'text-white/60 hover:text-white hover:bg-white/5',
                     collapsed && 'justify-center px-0'
                   )}
@@ -152,7 +152,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
                     <>
                       <span className="flex-1">{item.label}</span>
                       {item.badge && item.badge > 0 && (
-                        <span className="h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-white text-primary-900 text-xs font-semibold">
+                        <span className="h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-[var(--marketing-cyan)] text-black text-xs font-semibold">
                           {item.badge > 99 ? '99+' : item.badge}
                         </span>
                       )}

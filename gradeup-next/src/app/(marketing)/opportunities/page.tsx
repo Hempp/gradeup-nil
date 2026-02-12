@@ -21,35 +21,50 @@ type CompensationType = 'all' | 'cash' | 'product' | 'hybrid';
 
 function HeroSection() {
   return (
-    <section className="relative pt-32 pb-16 px-4 overflow-hidden">
+    <section className="relative pt-20 lg:pt-24 pb-12 px-4 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[var(--marketing-gray-900)] to-black" />
 
-      {/* Accent orbs */}
-      <div className="hero-orb-cyan w-[400px] h-[400px] -top-40 -left-40" />
-      <div className="hero-orb-magenta w-[300px] h-[300px] -bottom-20 -right-20" />
+      {/* Accent orbs - positioned absolutely and marked as decorative */}
+      <div
+        className="absolute w-[300px] h-[300px] rounded-full opacity-30 blur-[100px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, var(--marketing-cyan) 0%, transparent 70%)',
+          top: '-100px',
+          left: '-100px',
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute w-[250px] h-[250px] rounded-full opacity-25 blur-[80px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, var(--marketing-magenta) 0%, transparent 70%)',
+          bottom: '-50px',
+          right: '-50px',
+        }}
+        aria-hidden="true"
+      />
 
       <div className="relative max-w-4xl mx-auto text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
           Find Your Perfect{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--marketing-cyan)] to-[var(--marketing-lime)]">
             NIL Opportunity
           </span>
         </h1>
-        <p className="text-lg md:text-xl text-[var(--marketing-gray-400)] max-w-2xl mx-auto mb-8">
+        <p className="text-base md:text-lg text-[var(--marketing-gray-400)] max-w-2xl mx-auto mb-6">
           Browse exclusive deals from top brands. Your GPA unlocks better opportunities.
-          Higher grades, higher earning potential.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/signup/athlete">
-            <Button className="btn-marketing-primary px-8 py-3 text-lg">
+            <Button className="btn-marketing-primary px-6 py-2.5">
               Join as Athlete
             </Button>
           </Link>
           <Link href="/signup/brand">
             <Button
               variant="outline"
-              className="border-[var(--marketing-cyan)] text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10 px-8 py-3 text-lg"
+              className="border-[var(--marketing-cyan)] text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10 px-6 py-2.5"
             >
               Post an Opportunity
             </Button>

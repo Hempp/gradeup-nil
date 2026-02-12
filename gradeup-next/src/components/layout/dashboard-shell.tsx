@@ -87,11 +87,11 @@ export function DashboardShell({
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="dashboard-dark min-h-screen">
       {/* Skip Link for Accessibility - WCAG 2.4.1 */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:bg-primary-700 focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:outline-none focus:ring-2 focus:ring-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:bg-[var(--marketing-cyan)] focus:text-black focus:px-4 focus:py-2 focus:rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--marketing-cyan)]"
       >
         Skip to main content
       </a>

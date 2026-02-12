@@ -947,6 +947,214 @@ a:hover {
   color: var(--secondary-700);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   DASHBOARD DARK THEME - Nike-Inspired (Matches Landing Page)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dashboard-dark {
+  /* ─── Override Background Colors ─── */
+  --bg-primary: var(--marketing-gray-950);
+  --bg-secondary: var(--marketing-gray-900);
+  --bg-tertiary: var(--marketing-gray-800);
+  --bg-card: var(--marketing-gray-900);
+  --bg-card-hover: var(--marketing-gray-800);
+  --bg-sidebar: var(--marketing-black);
+
+  /* ─── Override Text Colors ─── */
+  --text-primary: #ffffff;
+  --text-secondary: var(--marketing-gray-300);
+  --text-muted: var(--marketing-gray-500);
+
+  /* ─── Override Border Colors ─── */
+  --border-color: var(--marketing-gray-800);
+  --border-color-hover: var(--marketing-gray-600);
+  --border-color-focus: var(--marketing-cyan);
+
+  /* ─── Override Primary with Cyan ─── */
+  --color-primary: var(--marketing-cyan);
+  --color-primary-hover: var(--marketing-cyan-dark);
+  --color-primary-muted: rgba(0, 240, 255, 0.15);
+  --color-primary-glow: var(--marketing-cyan-glow);
+
+  /* ─── Override Secondary with Gold ─── */
+  --color-secondary: var(--marketing-gold);
+  --color-secondary-hover: #ffed4a;
+  --color-gold: var(--marketing-gold);
+
+  /* ─── Override Status Colors (vibrant) ─── */
+  --color-success: #22c55e;
+  --color-success-muted: rgba(34, 197, 94, 0.15);
+  --color-warning: #f59e0b;
+  --color-warning-muted: rgba(245, 158, 11, 0.15);
+  --color-error: #ef4444;
+  --color-error-muted: rgba(239, 68, 68, 0.15);
+
+  /* ─── Override Shadows ─── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 8px 25px rgba(0, 240, 255, 0.15);
+  --shadow-glow: 0 0 40px var(--marketing-cyan-glow);
+
+  /* Base dark background */
+  background: var(--marketing-gray-950);
+  color: #ffffff;
+}
+
+/* Dashboard Dark - Card Styling */
+.dashboard-dark .card,
+.dashboard-dark [class*="Card"] {
+  background: var(--marketing-gray-900);
+  border: 1px solid var(--marketing-gray-800);
+}
+
+.dashboard-dark .card:hover,
+.dashboard-dark [class*="Card"]:hover {
+  border-color: var(--marketing-gray-700);
+  box-shadow: 0 8px 25px rgba(0, 240, 255, 0.1);
+}
+
+/* Dashboard Dark - Stat Cards with Glow */
+.dashboard-dark .stat-card {
+  background: linear-gradient(135deg, var(--marketing-gray-900) 0%, var(--marketing-gray-800) 100%);
+  border: 1px solid var(--marketing-gray-700);
+}
+
+.dashboard-dark .stat-card:hover {
+  border-color: var(--marketing-cyan);
+  box-shadow: 0 0 30px var(--marketing-cyan-glow);
+}
+
+/* Dashboard Dark - Sidebar Enhancement */
+.dashboard-dark .sidebar,
+.dashboard-dark aside[aria-label="Main navigation"] {
+  background: var(--marketing-black);
+  border-right: 1px solid var(--marketing-gray-800);
+}
+
+.dashboard-dark .sidebar-nav-item.active,
+.dashboard-dark [class*="nav-item"].active {
+  background: linear-gradient(90deg, var(--marketing-cyan) 0%, transparent 100%);
+  color: var(--marketing-black);
+}
+
+/* Dashboard Dark - Buttons */
+.dashboard-dark .btn-primary,
+.dashboard-dark [class*="btn-primary"] {
+  background: var(--marketing-cyan);
+  color: var(--marketing-black);
+  font-weight: 600;
+}
+
+.dashboard-dark .btn-primary:hover {
+  background: var(--marketing-cyan-dark);
+  box-shadow: 0 0 25px var(--marketing-cyan-glow);
+}
+
+/* Dashboard Dark - Badges */
+.dashboard-dark .badge-primary {
+  background: var(--marketing-cyan);
+  color: var(--marketing-black);
+}
+
+.dashboard-dark .badge-success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.dashboard-dark .badge-warning {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.dashboard-dark .badge-error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Dashboard Dark - Inputs */
+.dashboard-dark input,
+.dashboard-dark select,
+.dashboard-dark textarea {
+  background: var(--marketing-gray-800);
+  border-color: var(--marketing-gray-700);
+  color: white;
+}
+
+.dashboard-dark input:focus,
+.dashboard-dark select:focus,
+.dashboard-dark textarea:focus {
+  border-color: var(--marketing-cyan);
+  box-shadow: 0 0 0 3px var(--marketing-cyan-glow);
+}
+
+.dashboard-dark input::placeholder {
+  color: var(--marketing-gray-500);
+}
+
+/* Dashboard Dark - Tables */
+.dashboard-dark table {
+  border-color: var(--marketing-gray-800);
+}
+
+.dashboard-dark th {
+  background: var(--marketing-gray-800);
+  color: var(--marketing-gray-300);
+}
+
+.dashboard-dark tr:hover {
+  background: var(--marketing-gray-800);
+}
+
+/* Dashboard Dark - Charts */
+.dashboard-dark .recharts-cartesian-grid line {
+  stroke: var(--marketing-gray-800);
+}
+
+.dashboard-dark .recharts-text {
+  fill: var(--marketing-gray-400);
+}
+
+/* Dashboard Dark - Scrollbar */
+.dashboard-dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dashboard-dark ::-webkit-scrollbar-track {
+  background: var(--marketing-gray-900);
+}
+
+.dashboard-dark ::-webkit-scrollbar-thumb {
+  background: var(--marketing-gray-700);
+  border-radius: 4px;
+}
+
+.dashboard-dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--marketing-gray-600);
+}
+
+/* Dashboard Dark - Accent Gradient Text */
+.dashboard-dark .gradient-accent {
+  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-lime) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dashboard Dark - Glow Effects */
+.dashboard-dark .glow-cyan {
+  box-shadow: 0 0 30px var(--marketing-cyan-glow);
+}
+
+.dashboard-dark .glow-gold {
+  box-shadow: 0 0 30px var(--marketing-gold-glow);
+}
+
 /* ─── Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
   *,

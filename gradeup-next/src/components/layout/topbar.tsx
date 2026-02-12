@@ -66,7 +66,7 @@ export function Topbar({
     <header
       className={cn(
         'fixed top-0 left-0 right-0 h-16 z-30',
-        'bg-white border-b border-surface-200',
+        'bg-[var(--marketing-gray-900)] border-b border-white/10',
         'flex items-center justify-between px-4 lg:px-6',
         'lg:left-64',
         className
