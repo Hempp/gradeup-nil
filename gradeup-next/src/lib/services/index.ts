@@ -8,5 +8,7 @@ export * as auth from './auth';
 export * as athlete from './athlete';
 export * as brand from './brand';
 export * as deals from './deals';
+export * as director from './director';
+export * as activity from './activity';
 export * as messaging from './messaging';
 export * as payments from './payments';

@@ -71,7 +71,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
       aria-label="Main navigation"
       className={cn(
         'fixed top-0 left-0 h-screen flex flex-col',
-        'bg-primary-900 transition-all duration-300 ease-in-out z-20',
+        'bg-[var(--primary-900)] transition-all duration-300 ease-in-out z-20',
         collapsed ? 'w-20' : 'w-64',
         className
       )}

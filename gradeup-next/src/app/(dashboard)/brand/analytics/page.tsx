@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -16,6 +16,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   DollarSign,
   TrendingUp,
@@ -83,6 +84,113 @@ const mockPlatformData = [
   { platform: 'YouTube', engagements: 15000 },
   { platform: 'LinkedIn', engagements: 5000 },
 ];
+
+// Skeleton Components
+function MetricCardSkeleton() {
+  return (
+    <Card>
+      <CardContent className="pt-6">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+          <Skeleton className="h-12 w-12 rounded-[var(--radius-lg)]" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ChartSkeleton({ title }: { title: string }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="h-[280px] flex items-center justify-center">
+          <div className="w-full space-y-4">
+            <div className="flex justify-between items-end h-40">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="w-12"
+                  style={{ height: `${Math.random() * 60 + 40}%` }}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="h-3 w-8" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function TableSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-6 w-48" />
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex gap-4 border-b border-[var(--border-color)] pb-3">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-24 ml-auto" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex items-center gap-4 py-2">
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-4 w-20 ml-auto" />
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-6 w-12 rounded" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function TopAthletesSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-6 w-48" />
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-4 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]"
+            >
+              <Skeleton className="h-6 w-6" />
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+              <div className="space-y-2 text-right">
+                <Skeleton className="h-4 w-16 ml-auto" />
+                <Skeleton className="h-3 w-20 ml-auto" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 function MetricCard({
   title,
@@ -321,6 +429,50 @@ function TopAthletesCard() {
 }
 
 export default function BrandAnalyticsPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Analytics</h1>
+            <p className="text-[var(--text-muted)]">
+              Track your campaign performance and ROI
+            </p>
+          </div>
+          <Skeleton className="h-10 w-32" />
+        </div>
+
+        {/* Overview Metrics Skeletons */}
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+          {[...Array(5)].map((_, i) => (
+            <MetricCardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Chart Skeletons */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          <ChartSkeleton title="Reach & Engagement Over Time" />
+          <ChartSkeleton title="Engagement by Platform" />
+        </div>
+
+        {/* Top Athletes Skeleton */}
+        <TopAthletesSkeleton />
+
+        {/* Table Skeleton */}
+        <TableSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}

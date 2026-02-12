@@ -396,6 +396,26 @@ function LoadingState() {
   );
 }
 
+function NotFoundState({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+      <div className="w-16 h-16 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center mb-4">
+        <AlertCircle className="h-8 w-8 text-[var(--text-muted)]" />
+      </div>
+      <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-2">
+        Deal Not Found
+      </h2>
+      <p className="text-[var(--text-secondary)] mb-6 max-w-md">
+        This deal doesn&apos;t exist or may have been removed. Please check the URL or go back to your deals.
+      </p>
+      <Button variant="primary" onClick={onBack}>
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Back to Deals
+      </Button>
+    </div>
+  );
+}
+
 export default function DealDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -403,9 +423,21 @@ export default function DealDetailPage() {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   // In a real app, we would fetch the deal based on params.dealId
-  const deal = mockDeal;
+  // For now, simulate a not-found check for invalid IDs
+  const dealId = params.dealId as string;
+  const deal = dealId && dealId !== 'undefined' ? mockDeal : null;
+
+  // Handle not found case
+  if (!deal && !isLoading) {
+    return (
+      <div className="animate-fade-in">
+        <NotFoundState onBack={() => router.push('/athlete/deals')} />
+      </div>
+    );
+  }
 
   const handleAcceptDeal = async () => {
     setIsProcessing(true);
@@ -449,6 +481,12 @@ export default function DealDetailPage() {
     );
   }
 
+  // At this point, deal is guaranteed to exist because:
+  // 1. If deal was null and not loading, we returned NotFoundState above
+  // 2. If loading, we returned LoadingState above
+  // TypeScript needs help understanding this after the closures above
+  const currentDeal = deal!;
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Back Button */}
@@ -466,27 +504,27 @@ export default function DealDetailPage() {
           <div className="flex flex-col md:flex-row md:items-start gap-6">
             {/* Brand Info */}
             <div className="flex items-start gap-4 flex-1">
-              <Avatar fallback={deal.brand.name.charAt(0)} size="xl" />
+              <Avatar fallback={currentDeal.brand.name.charAt(0)} size="xl" />
               <div className="flex-1">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div>
-                    <p className="text-sm text-[var(--text-muted)]">{deal.brand.name}</p>
+                    <p className="text-sm text-[var(--text-muted)]">{currentDeal.brand.name}</p>
                     <h1 className="text-xl font-bold text-[var(--text-primary)] mt-1">
-                      {deal.title}
+                      {currentDeal.title}
                     </h1>
                   </div>
-                  <StatusBadge status={deal.status} />
+                  <StatusBadge status={currentDeal.status} />
                 </div>
                 <div className="flex flex-wrap items-center gap-4 mt-4 text-sm">
                   <span className="flex items-center gap-1.5 text-[var(--color-primary)] font-semibold text-lg">
                     <DollarSign className="h-5 w-5" />
-                    {formatCurrency(deal.amount)}
+                    {formatCurrency(currentDeal.amount)}
                   </span>
                   <span className="text-[var(--text-muted)] flex items-center gap-1.5">
                     <Calendar className="h-4 w-4" />
-                    Expires {formatDate(deal.expiresAt)}
+                    Expires {formatDate(currentDeal.expiresAt)}
                   </span>
-                  <Badge variant="outline">{deal.dealType.replace('_', ' ')}</Badge>
+                  <Badge variant="outline">{currentDeal.dealType.replace('_', ' ')}</Badge>
                 </div>
               </div>
             </div>
@@ -508,9 +546,9 @@ export default function DealDetailPage() {
           >
             <tab.icon className="h-4 w-4" />
             {tab.label}
-            {tab.id === 'messages' && deal.messages.length > 0 && (
+            {tab.id === 'messages' && currentDeal.messages.length > 0 && (
               <span className="h-5 w-5 rounded-full bg-[var(--color-primary)] text-white text-xs flex items-center justify-center">
-                {deal.messages.length}
+                {currentDeal.messages.length}
               </span>
             )}
           </button>
@@ -519,21 +557,21 @@ export default function DealDetailPage() {
 
       {/* Tab Content */}
       <div>
-        {activeTab === 'overview' && <OverviewTab deal={deal} />}
-        {activeTab === 'deliverables' && <DeliverablesTab deal={deal} />}
-        {activeTab === 'messages' && <MessagesTab deal={deal} />}
-        {activeTab === 'contract' && <ContractTab deal={deal} />}
+        {activeTab === 'overview' && <OverviewTab deal={currentDeal} />}
+        {activeTab === 'deliverables' && <DeliverablesTab deal={currentDeal} />}
+        {activeTab === 'messages' && <MessagesTab deal={currentDeal} />}
+        {activeTab === 'contract' && <ContractTab deal={currentDeal} />}
       </div>
 
       {/* Action Bar - Fixed at bottom for pending/negotiating deals */}
-      {(deal.status === 'pending' || deal.status === 'negotiating') && (
+      {(currentDeal.status === 'pending' || currentDeal.status === 'negotiating') && (
         <Card className="sticky bottom-4 shadow-[var(--shadow-lg)]">
           <CardContent className="py-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-center sm:text-left">
                 <p className="text-sm text-[var(--text-muted)]">Ready to proceed?</p>
                 <p className="font-medium text-[var(--text-primary)]">
-                  This offer expires {formatRelativeTime(deal.expiresAt)}
+                  This offer expires {formatRelativeTime(currentDeal.expiresAt)}
                 </p>
               </div>
               <div className="flex items-center gap-3">

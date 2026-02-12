@@ -57,10 +57,11 @@ export default function AthleteSignupPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
 
-  // Focus error message when it appears for accessibility
+  // Focus and scroll to error message when it appears for accessibility
   useEffect(() => {
     if (error && errorRef.current) {
       errorRef.current.focus();
+      errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [error]);
 

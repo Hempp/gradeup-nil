@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Send, FileText, MoreVertical } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import type { DealStatus } from '@/types';
 
@@ -63,6 +64,23 @@ const statusFilters: { label: string; value: DealStatus | 'all' }[] = [
   { label: 'Completed', value: 'completed' },
 ];
 
+function DealRowSkeleton() {
+  return (
+    <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 animate-pulse">
+      <Skeleton className="h-10 w-10 rounded-full" />
+      <div className="flex-1">
+        <Skeleton className="h-4 w-48 mb-2" />
+        <Skeleton className="h-3 w-32" />
+      </div>
+      <div className="text-right">
+        <Skeleton className="h-4 w-20 mb-1" />
+        <Skeleton className="h-3 w-16" />
+      </div>
+      <Skeleton className="h-8 w-20" />
+    </div>
+  );
+}
+
 function DealRow({ deal }: { deal: (typeof mockDeals)[0] }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
@@ -109,6 +127,13 @@ function DealRow({ deal }: { deal: (typeof mockDeals)[0] }) {
 export default function BrandDealsPage() {
   const [filter, setFilter] = useState<DealStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredDeals = mockDeals.filter((deal) => {
     const matchesFilter = filter === 'all' || deal.status === filter;
@@ -168,7 +193,13 @@ export default function BrandDealsPage() {
           <CardTitle>All Deals ({filteredDeals.length})</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {filteredDeals.length > 0 ? (
+          {isLoading ? (
+            <>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <DealRowSkeleton key={i} />
+              ))}
+            </>
+          ) : filteredDeals.length > 0 ? (
             filteredDeals.map((deal) => <DealRow key={deal.id} deal={deal} />)
           ) : (
             <div className="p-12 text-center">

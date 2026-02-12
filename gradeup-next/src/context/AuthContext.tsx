@@ -120,13 +120,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Initialize auth state on mount
   useEffect(() => {
+    let isMounted = true;
     const supabase = createBrowserClient();
 
     // Check initial session
     const initializeAuth = async () => {
+      if (!isMounted) return;
       setIsLoading(true);
       try {
         const { data: { session } } = await supabase.auth.getSession();
+
+        if (!isMounted) return;
 
         if (session?.user) {
           await fetchUserData();
@@ -136,10 +140,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setRoleData(null);
         }
       } catch (err) {
+        if (!isMounted) return;
         console.error('Error initializing auth:', err);
         setError(err instanceof Error ? err : new Error('Failed to initialize auth'));
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -148,9 +155,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!isMounted) return;
+
         if (event === 'SIGNED_IN' && session?.user) {
           await fetchUserData();
         } else if (event === 'SIGNED_OUT') {
+          if (!isMounted) return;
           setUser(null);
           setProfile(null);
           setRoleData(null);
@@ -162,6 +172,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     );
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, [fetchUserData]);

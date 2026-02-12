@@ -11,8 +11,10 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // Skip auth checks in development for easier testing
-  if (process.env.NODE_ENV === 'development') {
+  // SECURITY: Auth bypass for development requires explicit opt-in via env var
+  // This prevents accidental security holes in development/staging
+  if (process.env.SKIP_AUTH_CHECK === 'true') {
+    console.warn('[SECURITY WARNING] Auth checks disabled via SKIP_AUTH_CHECK=true');
     return response;
   }
 

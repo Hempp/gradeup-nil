@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Filter, MoreVertical } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import type { DealStatus } from '@/types';
 
@@ -66,10 +67,40 @@ const statusFilters: { label: string; value: DealStatus | 'all' }[] = [
   { label: 'Completed', value: 'completed' },
 ];
 
+function StatCardSkeleton() {
+  return (
+    <Card>
+      <CardContent className="pt-4 pb-4">
+        <Skeleton className="h-4 w-20 mb-2" />
+        <Skeleton className="h-8 w-24" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function DealRowSkeleton() {
+  return (
+    <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 animate-pulse">
+      <div className="flex -space-x-2">
+        <Skeleton className="h-8 w-8 rounded-full" />
+        <Skeleton className="h-8 w-8 rounded-full" />
+      </div>
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-3 w-40" />
+      </div>
+      <Skeleton className="h-4 w-16" />
+      <Skeleton className="h-3 w-20" />
+      <Skeleton className="h-6 w-16 rounded" />
+      <Skeleton className="h-8 w-8 rounded" />
+    </div>
+  );
+}
+
 function DealRow({ deal }: { deal: (typeof mockDeals)[0] }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
-      <div className="flex -space-x-2">
+      <div className="flex -space-x-2" aria-label={`${deal.athlete.name} and ${deal.brand.name}`}>
         <Avatar fallback={deal.athlete.name.charAt(0)} size="sm" />
         <Avatar fallback={deal.brand.name.charAt(0)} size="sm" className="border-2 border-[var(--bg-card)]" />
       </div>
@@ -88,7 +119,7 @@ function DealRow({ deal }: { deal: (typeof mockDeals)[0] }) {
         <p className="text-sm text-[var(--text-muted)]">{formatDate(deal.createdAt)}</p>
       </div>
       <StatusBadge status={deal.status} size="sm" />
-      <Button variant="ghost" size="sm">
+      <Button variant="ghost" size="sm" aria-label={`More options for ${deal.title}`}>
         <MoreVertical className="h-4 w-4" />
       </Button>
     </div>
@@ -98,6 +129,13 @@ function DealRow({ deal }: { deal: (typeof mockDeals)[0] }) {
 export default function DirectorDealsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<DealStatus | 'all'>('all');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredDeals = mockDeals.filter((deal) => {
     const matchesSearch =
@@ -112,6 +150,46 @@ export default function DirectorDealsPage() {
   const activeValue = mockDeals
     .filter((d) => d.status === 'active')
     .reduce((sum, d) => sum + d.amount, 0);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        {/* Page Header */}
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Deals</h1>
+          <p className="text-[var(--text-muted)]">
+            Monitor all NIL deals in your program
+          </p>
+        </div>
+
+        {/* Stats Skeletons */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Search Skeleton */}
+        <Card>
+          <CardContent className="pt-6">
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+
+        {/* Deals Table Skeleton */}
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-32" />
+          </CardHeader>
+          <CardContent className="p-0">
+            {[...Array(5)].map((_, i) => (
+              <DealRowSkeleton key={i} />
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -169,15 +247,18 @@ export default function DirectorDealsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 icon={<Search className="h-4 w-4" />}
+                aria-label="Search deals"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2" role="group" aria-label="Filter by status">
               {statusFilters.map((status) => (
                 <Button
                   key={status.value}
                   variant={filter === status.value ? 'primary' : 'outline'}
                   size="sm"
                   onClick={() => setFilter(status.value)}
+                  aria-pressed={filter === status.value}
+                  aria-label={`Filter by ${status.label} deals`}
                 >
                   {status.label}
                 </Button>

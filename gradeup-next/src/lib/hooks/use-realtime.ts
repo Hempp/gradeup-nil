@@ -297,6 +297,7 @@ export interface UseRealtimeNotificationsResult {
   markAsRead: (id: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   isConnected: boolean;
+  error: Error | null;
 }
 
 /**
@@ -305,66 +306,88 @@ export interface UseRealtimeNotificationsResult {
 export function useRealtimeNotifications(): UseRealtimeNotificationsResult {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isConnected, setIsConnected] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
     const supabase = createClient();
 
     const setupSubscription = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user || !isMounted) return;
 
-      // Fetch initial notifications
-      const { data: initialNotifications } = await supabase
-        .from('notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(50);
+        // Fetch initial notifications
+        const { data: initialNotifications, error: fetchError } = await supabase
+          .from('notifications')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(50);
 
-      if (initialNotifications) {
-        setNotifications(initialNotifications as Notification[]);
+        if (!isMounted) return;
+
+        if (fetchError) {
+          setError(new Error(fetchError.message));
+          return;
+        }
+
+        if (initialNotifications) {
+          setNotifications(initialNotifications as Notification[]);
+        }
+
+        // Subscribe to new notifications
+        channelRef.current = supabase
+          .channel(`notifications:${user.id}`)
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'notifications',
+              filter: `user_id=eq.${user.id}`,
+            },
+            (payload) => {
+              if (!isMounted) return;
+              const newNotification = payload.new as Notification;
+              setNotifications((prev) => [newNotification, ...prev]);
+            }
+          )
+          .on(
+            'postgres_changes',
+            {
+              event: 'UPDATE',
+              schema: 'public',
+              table: 'notifications',
+              filter: `user_id=eq.${user.id}`,
+            },
+            (payload) => {
+              if (!isMounted) return;
+              const updatedNotification = payload.new as Notification;
+              setNotifications((prev) =>
+                prev.map((n) => (n.id === updatedNotification.id ? updatedNotification : n))
+              );
+            }
+          )
+          .subscribe((status) => {
+            if (!isMounted) return;
+            setIsConnected(status === 'SUBSCRIBED');
+            if (status === 'CHANNEL_ERROR') {
+              setError(new Error('Failed to connect to notifications channel'));
+            }
+          });
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err : new Error('Failed to setup notifications'));
+        }
       }
-
-      // Subscribe to new notifications
-      channelRef.current = supabase
-        .channel(`notifications:${user.id}`)
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'notifications',
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            const newNotification = payload.new as Notification;
-            setNotifications((prev) => [newNotification, ...prev]);
-          }
-        )
-        .on(
-          'postgres_changes',
-          {
-            event: 'UPDATE',
-            schema: 'public',
-            table: 'notifications',
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            const updatedNotification = payload.new as Notification;
-            setNotifications((prev) =>
-              prev.map((n) => (n.id === updatedNotification.id ? updatedNotification : n))
-            );
-          }
-        )
-        .subscribe((status) => {
-          setIsConnected(status === 'SUBSCRIBED');
-        });
     };
 
     setupSubscription();
 
     return () => {
+      isMounted = false;
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
       }
@@ -405,6 +428,7 @@ export function useRealtimeNotifications(): UseRealtimeNotificationsResult {
     markAsRead,
     markAllAsRead,
     isConnected,
+    error,
   };
 }
 
@@ -420,6 +444,8 @@ export interface PresenceUser {
 export interface UsePresenceResult {
   onlineUsers: PresenceUser[];
   isUserOnline: (userId: string) => boolean;
+  isConnected: boolean;
+  error: Error | null;
 }
 
 /**
@@ -427,46 +453,71 @@ export interface UsePresenceResult {
  */
 export function usePresence(roomId: string): UsePresenceResult {
   const [onlineUsers, setOnlineUsers] = useState<PresenceUser[]>([]);
+  const [isConnected, setIsConnected] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
     if (!roomId) return;
 
+    let isMounted = true;
     const supabase = createClient();
 
     const setupPresence = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user || !isMounted) return;
 
-      channelRef.current = supabase
-        .channel(`presence:${roomId}`)
-        .on('presence', { event: 'sync' }, () => {
-          const state = channelRef.current?.presenceState() || {};
-          const users: PresenceUser[] = [];
+        channelRef.current = supabase
+          .channel(`presence:${roomId}`)
+          .on('presence', { event: 'sync' }, () => {
+            if (!isMounted) return;
+            const state = channelRef.current?.presenceState() || {};
+            const users: PresenceUser[] = [];
 
-          Object.values(state).forEach((presences) => {
-            (presences as unknown as PresenceUser[]).forEach((presence) => {
-              if (presence.id && presence.online_at) {
-                users.push(presence);
+            Object.values(state).forEach((presences) => {
+              (presences as unknown as PresenceUser[]).forEach((presence) => {
+                if (presence.id && presence.online_at) {
+                  users.push(presence);
+                }
+              });
+            });
+
+            setOnlineUsers(users);
+          })
+          .subscribe(async (status) => {
+            if (!isMounted) return;
+            setIsConnected(status === 'SUBSCRIBED');
+
+            if (status === 'CHANNEL_ERROR') {
+              setError(new Error('Failed to connect to presence channel'));
+              return;
+            }
+
+            if (status === 'SUBSCRIBED') {
+              try {
+                await channelRef.current?.track({
+                  id: user.id,
+                  online_at: new Date().toISOString(),
+                });
+              } catch (trackErr) {
+                if (isMounted) {
+                  setError(trackErr instanceof Error ? trackErr : new Error('Failed to track presence'));
+                }
               }
-            });
+            }
           });
-
-          setOnlineUsers(users);
-        })
-        .subscribe(async (status) => {
-          if (status === 'SUBSCRIBED') {
-            await channelRef.current?.track({
-              id: user.id,
-              online_at: new Date().toISOString(),
-            });
-          }
-        });
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err : new Error('Failed to setup presence'));
+        }
+      }
     };
 
     setupPresence();
 
     return () => {
+      isMounted = false;
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
       }
@@ -481,5 +532,7 @@ export function usePresence(roomId: string): UsePresenceResult {
   return {
     onlineUsers,
     isUserOnline,
+    isConnected,
+    error,
   };
 }

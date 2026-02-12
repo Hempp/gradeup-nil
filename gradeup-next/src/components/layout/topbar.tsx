@@ -165,7 +165,7 @@ export function Topbar({
               <div className="py-1">
                 <Link
                   href="/athlete/settings"
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 transition-colors"
+                  className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 focus:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)] transition-colors"
                   role="menuitem"
                   onClick={() => setIsDropdownOpen(false)}
                 >
@@ -177,7 +177,7 @@ export function Topbar({
               {/* Logout */}
               <div className="py-1 border-t border-surface-200">
                 <button
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 focus:bg-red-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 transition-colors"
                   role="menuitem"
                   onClick={() => {
                     setIsDropdownOpen(false);

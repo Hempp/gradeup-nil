@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -16,6 +16,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   DollarSign,
   Users,
@@ -76,6 +77,83 @@ const mockRevenueBreakdown = [
   { name: 'Endorsements', value: 182500, color: chartColors.success },
   { name: 'Other', value: 100000, color: chartColors.info },
 ];
+
+// Skeleton Components
+function MetricCardSkeleton() {
+  return (
+    <Card>
+      <CardContent className="pt-6">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-8 w-28" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+          <Skeleton className="h-12 w-12 rounded-[var(--radius-lg)]" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ChartSkeleton({ title, description }: { title: string; description?: string }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        {description && <p className="text-sm text-[var(--text-muted)]">{description}</p>}
+      </CardHeader>
+      <CardContent>
+        <div className="h-[280px] flex items-center justify-center">
+          <div className="w-full space-y-4">
+            <div className="flex justify-between items-end h-48">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="w-12"
+                  style={{ height: `${Math.random() * 60 + 40}%` }}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="h-3 w-8" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function TableSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-6 w-40" />
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex gap-4 border-b border-[var(--border-color)] pb-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-16 ml-auto" />
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex items-center gap-4 py-2">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-4 w-12 ml-auto" />
+              <Skeleton className="h-4 w-12" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 function MetricCard({
   title,
@@ -285,6 +363,49 @@ function SportBreakdownTable() {
 }
 
 export default function DirectorAnalyticsPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">
+              Program Analytics
+            </h1>
+            <p className="text-[var(--text-muted)]">
+              Track your program&apos;s NIL performance
+            </p>
+          </div>
+          <Skeleton className="h-10 w-32" />
+        </div>
+
+        {/* Overview Stats Skeletons */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <MetricCardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Chart Skeletons */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          <ChartSkeleton title="User Growth" description="Athletes and brands over the last 6 months" />
+          <ChartSkeleton title="Revenue Breakdown" description="Revenue by deal type" />
+        </div>
+
+        {/* Table Skeleton */}
+        <TableSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
@@ -297,7 +418,7 @@ export default function DirectorAnalyticsPage() {
             Track your program&apos;s NIL performance
           </p>
         </div>
-        <Button variant="outline">
+        <Button variant="outline" aria-label="Download analytics report">
           <Download className="h-4 w-4 mr-2" />
           Export Report
         </Button>

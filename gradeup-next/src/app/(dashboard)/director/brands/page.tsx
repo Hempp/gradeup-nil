@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, CheckCircle, Building, MoreVertical, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 // Mock brands data
@@ -59,6 +60,40 @@ const mockBrands = [
   },
 ];
 
+function StatCardSkeleton() {
+  return (
+    <Card>
+      <CardContent className="pt-4 pb-4">
+        <Skeleton className="h-4 w-20 mb-2" />
+        <Skeleton className="h-8 w-24" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function BrandRowSkeleton() {
+  return (
+    <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 animate-pulse">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-3 w-24" />
+      </div>
+      <div className="text-center space-y-1">
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-3 w-16" />
+      </div>
+      <div className="text-center space-y-1">
+        <Skeleton className="h-4 w-8" />
+        <Skeleton className="h-3 w-16" />
+      </div>
+      <Skeleton className="h-3 w-24" />
+      <Skeleton className="h-6 w-16 rounded" />
+      <Skeleton className="h-8 w-8 rounded" />
+    </div>
+  );
+}
+
 function BrandRow({ brand, onView }: { brand: (typeof mockBrands)[0]; onView: (id: string) => void }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
@@ -106,6 +141,13 @@ function BrandRow({ brand, onView }: { brand: (typeof mockBrands)[0]; onView: (i
 export default function DirectorBrandsPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleViewBrand = (brandId: string) => {
     router.push(`/director/brands/${brandId}`);
@@ -118,6 +160,46 @@ export default function DirectorBrandsPage() {
 
   const totalSpent = mockBrands.reduce((sum, b) => sum + b.totalSpent, 0);
   const totalDeals = mockBrands.reduce((sum, b) => sum + b.activeDeals, 0);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        {/* Page Header */}
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Brands</h1>
+          <p className="text-[var(--text-muted)]">
+            Brands partnering with your program&apos;s athletes
+          </p>
+        </div>
+
+        {/* Stats Skeletons */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Search Skeleton */}
+        <Card>
+          <CardContent className="pt-6">
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+
+        {/* Brands Table Skeleton */}
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-40" />
+          </CardHeader>
+          <CardContent className="p-0">
+            {[...Array(5)].map((_, i) => (
+              <BrandRowSkeleton key={i} />
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">

@@ -21,10 +21,11 @@ export default function ResetPasswordPage() {
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const errorRef = useRef<HTMLDivElement>(null);
 
-  // Focus error message when it appears for accessibility
+  // Focus and scroll to error message when it appears for accessibility
   useEffect(() => {
     if (error && errorRef.current) {
       errorRef.current.focus();
+      errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [error]);
 
