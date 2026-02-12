@@ -1269,6 +1269,759 @@
             }
         }
 
+        /* ═══════════════════════════════════════════════════════════════════════════
+           LEFT SIDEBAR NAVIGATION
+           Collapsible desktop sidebar
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        .left-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100vh;
+            height: 100dvh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s var(--ease);
+            overflow: hidden;
+        }
+
+        .left-sidebar.collapsed {
+            width: 72px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            min-height: 72px;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            border-radius: 10px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            white-space: nowrap;
+            transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .logo-text {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .sidebar-toggle {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 8px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.3s var(--ease);
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .sidebar-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s var(--ease);
+        }
+
+        .left-sidebar.collapsed .sidebar-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        .left-sidebar.collapsed .sidebar-toggle {
+            position: absolute;
+            right: -16px;
+            top: 20px;
+            z-index: 10;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-nav-secondary {
+            flex: 0;
+            padding-top: 0;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .sidebar-nav-item.active {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--cyan);
+        }
+
+        .sidebar-nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 24px;
+            background: var(--cyan);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .sidebar-nav-item svg {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            flex-shrink: 0;
+        }
+
+        .nav-label {
+            transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .nav-label {
+            opacity: 0;
+            transform: translateX(-10px);
+            position: absolute;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            padding: 0.125rem 0.5rem;
+            background: var(--magenta);
+            border-radius: 10px;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: var(--white);
+            transition: opacity 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .nav-badge {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            margin-left: 0;
+            padding: 0.125rem 0.375rem;
+        }
+
+        /* Tooltip for collapsed state */
+        .left-sidebar.collapsed .sidebar-nav-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.5rem 0.75rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s var(--ease), visibility 0.2s var(--ease);
+            z-index: 1000;
+        }
+
+        .left-sidebar.collapsed .sidebar-nav-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--gray-800);
+            margin: 0.5rem 1rem;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s var(--ease);
+        }
+
+        .sidebar-user:hover {
+            background: var(--gray-900);
+        }
+
+        .sidebar-user-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .sidebar-user-info {
+            opacity: 0;
+            position: absolute;
+        }
+
+        .sidebar-user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+            white-space: nowrap;
+        }
+
+        .sidebar-user-tier {
+            font-size: 0.75rem;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+
+        /* ─── Adjust Main Content for Sidebar ─── */
+        .dashboard-nav {
+            left: 240px;
+            transition: left 0.3s var(--ease);
+        }
+
+        body.sidebar-collapsed .dashboard-nav {
+            left: 72px;
+        }
+
+        .dashboard {
+            margin-left: 240px;
+            transition: margin-left 0.3s var(--ease);
+        }
+
+        body.sidebar-collapsed .dashboard {
+            margin-left: 72px;
+        }
+
+        /* Hide the old nav tabs since we have sidebar now */
+        .dashboard-nav-tabs {
+            display: none;
+        }
+
+        /* Hide logo in top nav since it's in sidebar */
+        .dashboard-logo {
+            display: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           MOBILE OPTIMIZATION STYLES
+           Hamburger Menu, Slide-out Drawer, Touch-Friendly, Table-to-Cards
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        /* ─── Hamburger Button ─── */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            min-height: 48px;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 12px;
+            gap: 5px;
+            transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+        }
+
+        .hamburger-btn:hover,
+        .hamburger-btn:focus {
+            background: var(--gray-800);
+            border-color: var(--gray-700);
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 2px;
+            transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ─── Mobile Drawer Overlay ─── */
+        .mobile-drawer-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 199;
+            opacity: 0;
+            transition: opacity 0.3s var(--ease);
+        }
+
+        .mobile-drawer-overlay.active {
+            opacity: 1;
+        }
+
+        /* ─── Mobile Drawer ─── */
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            max-width: 85vw;
+            height: 100vh;
+            height: 100dvh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 200;
+            transform: translateX(-100%);
+            transition: transform 0.3s var(--ease);
+            flex-direction: column;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        .mobile-drawer.active {
+            transform: translateX(0);
+        }
+
+        .mobile-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--gray-800);
+            min-height: 60px;
+        }
+
+        .mobile-drawer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .mobile-drawer-close {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-drawer-close:hover,
+        .mobile-drawer-close:focus {
+            background: var(--gray-800);
+            color: var(--white);
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .mobile-drawer-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-drawer-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            text-decoration: none;
+            min-height: 56px;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-nav-item:hover,
+        .mobile-nav-item:focus {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .mobile-nav-item.active {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--cyan);
+            border-left: 3px solid var(--cyan);
+        }
+
+        .mobile-nav-item.highlighted {
+            background: rgba(0, 240, 255, 0.05);
+            color: var(--cyan);
+        }
+
+        .mobile-nav-item svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .mobile-drawer-footer {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .mobile-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mobile-user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .mobile-user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-user-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .mobile-user-tier {
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        /* ─── Mobile Deals Table to Cards ─── */
+        @media (max-width: 768px) {
+            .deals-table {
+                display: block;
+            }
+
+            .deals-table thead {
+                display: none;
+            }
+
+            .deals-table tbody {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .deals-table tr {
+                display: flex;
+                flex-direction: column;
+                background: var(--gray-900);
+                border-radius: 12px;
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+
+            .deals-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 0;
+                border: none;
+                border-bottom: 1px solid var(--gray-800);
+            }
+
+            .deals-table td:last-child {
+                border-bottom: none;
+                padding-top: 0.75rem;
+            }
+
+            .deals-table td::before {
+                content: attr(data-label);
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--gray-500);
+            }
+
+            /* Actions column */
+            .deals-table td:last-child::before {
+                display: none;
+            }
+
+            .deals-table td:last-child {
+                justify-content: flex-end;
+                gap: 0.5rem;
+            }
+        }
+
+        /* ─── Mobile Touch Targets (48px minimum) ─── */
+        @media (max-width: 768px) {
+            /* Hide desktop left sidebar on mobile */
+            .left-sidebar {
+                display: none;
+            }
+
+            /* Reset margin/left for mobile */
+            .dashboard-nav {
+                left: 0 !important;
+            }
+
+            .dashboard {
+                margin-left: 0 !important;
+            }
+
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .mobile-drawer-overlay,
+            .mobile-drawer {
+                display: flex;
+            }
+
+            /* Ensure all buttons are touch-friendly */
+            .btn,
+            .card-action,
+            .nav-icon-btn,
+            button {
+                min-height: 48px;
+                min-width: 48px;
+            }
+
+            .card-action {
+                padding: 0.75rem 1rem;
+            }
+
+            /* Dashboard header height optimization */
+            .dashboard-nav {
+                min-height: 56px;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .dashboard {
+                padding-top: 56px;
+            }
+
+            /* Full-width cards */
+            .dashboard-container {
+                padding: 0.75rem;
+            }
+
+            .dashboard-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .dashboard-main,
+            .dashboard-sidebar {
+                width: 100%;
+                margin: 0;
+            }
+
+            /* Stack sidebar below main content */
+            .dashboard-sidebar {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            /* Card adjustments */
+            .glass-card {
+                border-radius: 16px;
+            }
+
+            /* Increased padding between interactive elements */
+            .stats-grid {
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+            }
+        }
+
+        /* ─── Extra Small Phones (< 480px) ─── */
+        @media (max-width: 480px) {
+            .dashboard-nav {
+                min-height: 52px;
+                padding: 0.375rem 0.5rem;
+            }
+
+            .dashboard {
+                padding-top: 52px;
+            }
+
+            .hamburger-btn {
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 10px;
+            }
+
+            .dashboard-logo {
+                font-size: 0.75rem;
+                padding: 0.375rem 0.5rem;
+            }
+
+            .nav-icon-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .dashboard-container {
+                padding: 0.5rem;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 0.875rem;
+            }
+
+            .mobile-drawer {
+                width: 100%;
+                max-width: 100vw;
+            }
+        }
+
+        /* ─── Prevent Body Scroll When Drawer Open ─── */
+        body.drawer-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+
+        /* ─── ScholarMatch Chat Mobile Optimization ─── */
+        @media (max-width: 768px) {
+            #scholarmatch-chat .chat-container,
+            .scholarmatch-chat-container {
+                position: fixed !important;
+                inset: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                border-radius: 0 !important;
+                z-index: 1000 !important;
+            }
+
+            #scholarmatch-chat .chat-toggle,
+            .scholarmatch-chat-toggle {
+                width: 56px !important;
+                height: 56px !important;
+                bottom: 16px !important;
+                right: 16px !important;
+            }
+
+            /* When chat is open, hide the toggle */
+            #scholarmatch-chat.chat-open .chat-toggle {
+                display: none !important;
+            }
+        }
+
         /* ─── Animations ─── */
         @keyframes fadeInUp {
             from {
@@ -1940,14 +2693,12 @@
     <!-- Dashboard Navigation -->
     <nav class="dashboard-nav">
         <div class="dashboard-nav-left">
-            <a href="index.html" class="dashboard-logo">GRADEUP</a>
-            <div class="dashboard-nav-tabs">
-                <a href="athlete-dashboard.html" class="nav-tab active">Dashboard</a>
-                <a href="opportunities.html" class="nav-tab">Opportunities</a>
-                <a href="deals.html" class="nav-tab">Deals</a>
-                <a href="analytics.html" class="nav-tab">Analytics</a>
-                <a href="settings.html" class="nav-tab highlighted">Settings</a>
-            </div>
+            <!-- Hamburger Menu Button (Mobile Only) -->
+            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileDrawer">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
         </div>
 
         <div class="dashboard-nav-right">
@@ -1957,26 +2708,166 @@
                     <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
                 </svg>
             </button>
-            <button class="nav-icon-btn" id="settingsBtn" aria-label="Settings">
+            <div class="user-avatar" id="userMenu">
+                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Marcus Johnson" class="avatar-image" width="36" height="36">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Left Sidebar Navigation (Desktop) -->
+    <aside class="left-sidebar" id="leftSidebar" aria-label="Main navigation">
+        <div class="sidebar-header">
+            <a href="index.html" class="sidebar-logo">
+                <span class="logo-icon">G</span>
+                <span class="logo-text">GRADEUP</span>
+            </a>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar" aria-expanded="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="athlete-dashboard.html" class="sidebar-nav-item active" data-tooltip="Dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="opportunities.html" class="sidebar-nav-item" data-tooltip="Opportunities">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
+                </svg>
+                <span class="nav-label">Opportunities</span>
+            </a>
+            <a href="deals.html" class="sidebar-nav-item" data-tooltip="Deals">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                <span class="nav-label">Deals</span>
+            </a>
+            <a href="analytics.html" class="sidebar-nav-item" data-tooltip="Analytics">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="messages.html" class="sidebar-nav-item" data-tooltip="Messages">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                <span class="nav-label">Messages</span>
+                <span class="nav-badge">3</span>
+            </a>
+            <a href="leaderboard.html" class="sidebar-nav-item" data-tooltip="Leaderboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 21V11M12 21V3M16 21V8"/>
+                </svg>
+                <span class="nav-label">Leaderboard</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-divider"></div>
+
+        <nav class="sidebar-nav sidebar-nav-secondary">
+            <a href="settings.html" class="sidebar-nav-item" data-tooltip="Settings">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"/>
                     <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
                 </svg>
-            </button>
-            <div class="user-avatar" id="userMenu">
-                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Marcus Johnson profile photo" class="avatar-image" width="40" height="40" loading="eager" decoding="async" fetchpriority="high">
-                <div class="avatar-info">
-                    <div class="avatar-name">Marcus J.</div>
-                    <div class="avatar-tier">
-                        <svg class="tier-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                        </svg>
-                        Gold Scholar
-                    </div>
+                <span class="nav-label">Settings</span>
+            </a>
+            <a href="#" class="sidebar-nav-item" id="helpBtn" data-tooltip="Help">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/>
+                </svg>
+                <span class="nav-label">Help</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Marcus Johnson" class="sidebar-user-avatar" loading="lazy">
+                <div class="sidebar-user-info">
+                    <span class="sidebar-user-name">Marcus J.</span>
+                    <span class="sidebar-user-tier">Gold Scholar</span>
                 </div>
             </div>
         </div>
-    </nav>
+    </aside>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer-overlay" id="mobileOverlay" aria-hidden="true"></div>
+    <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation" role="navigation">
+        <div class="mobile-drawer-header">
+            <span class="mobile-drawer-title">Navigation</span>
+            <button class="mobile-drawer-close" id="closeDrawer" aria-label="Close navigation menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-drawer-nav">
+            <a href="athlete-dashboard.html" class="mobile-nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="opportunities.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
+                </svg>
+                Opportunities
+            </a>
+            <a href="deals.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                Deals
+            </a>
+            <a href="analytics.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                Analytics
+            </a>
+            <a href="messages.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                Messages
+            </a>
+            <a href="settings.html" class="mobile-nav-item highlighted">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+        <div class="mobile-drawer-footer">
+            <div class="mobile-user-info">
+                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="Marcus Johnson" class="mobile-user-avatar" loading="lazy">
+                <div class="mobile-user-details">
+                    <span class="mobile-user-name">Marcus Johnson</span>
+                    <span class="mobile-user-tier">Gold Scholar</span>
+                </div>
+            </div>
+        </div>
+    </aside>
 
     <!-- Dashboard Content -->
     <main class="dashboard">
@@ -4035,8 +4926,174 @@
             return wrapper;
         }
 
+        // ─── Mobile Drawer Functions ───
+        function initMobileDrawer() {
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var mobileDrawer = document.getElementById('mobileDrawer');
+            var mobileOverlay = document.getElementById('mobileOverlay');
+            var closeDrawerBtn = document.getElementById('closeDrawer');
+
+            if (!hamburgerBtn || !mobileDrawer || !mobileOverlay) return;
+
+            function openDrawer() {
+                hamburgerBtn.classList.add('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'true');
+                mobileDrawer.classList.add('active');
+                mobileOverlay.classList.add('active');
+                mobileOverlay.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('drawer-open');
+
+                // Focus the close button for accessibility
+                if (closeDrawerBtn) {
+                    closeDrawerBtn.focus();
+                }
+            }
+
+            function closeDrawer() {
+                hamburgerBtn.classList.remove('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
+                mobileDrawer.classList.remove('active');
+                mobileOverlay.classList.remove('active');
+                mobileOverlay.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('drawer-open');
+
+                // Return focus to hamburger button
+                hamburgerBtn.focus();
+            }
+
+            hamburgerBtn.addEventListener('click', function() {
+                var isOpen = mobileDrawer.classList.contains('active');
+                if (isOpen) {
+                    closeDrawer();
+                } else {
+                    openDrawer();
+                }
+            });
+
+            if (closeDrawerBtn) {
+                closeDrawerBtn.addEventListener('click', closeDrawer);
+            }
+
+            mobileOverlay.addEventListener('click', closeDrawer);
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileDrawer.classList.contains('active')) {
+                    closeDrawer();
+                }
+            });
+
+            // Close drawer when clicking a nav item
+            var navItems = mobileDrawer.querySelectorAll('.mobile-nav-item');
+            navItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    // Small delay to allow navigation
+                    setTimeout(closeDrawer, 100);
+                });
+            });
+
+            // Handle swipe to close
+            var touchStartX = 0;
+            var touchEndX = 0;
+
+            mobileDrawer.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            mobileDrawer.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                var swipeDistance = touchStartX - touchEndX;
+
+                // If swiped left more than 50px, close drawer
+                if (swipeDistance > 50) {
+                    closeDrawer();
+                }
+            }, { passive: true });
+        }
+
+        // ─── Add data-label attributes to table cells for mobile cards ───
+        function initTableLabels() {
+            var dealsTable = document.querySelector('.deals-table');
+            if (!dealsTable) return;
+
+            var headers = dealsTable.querySelectorAll('thead th');
+            var headerTexts = [];
+            headers.forEach(function(th) {
+                headerTexts.push(th.textContent.trim());
+            });
+
+            var rows = dealsTable.querySelectorAll('tbody tr');
+            rows.forEach(function(row) {
+                var cells = row.querySelectorAll('td');
+                cells.forEach(function(td, index) {
+                    if (headerTexts[index]) {
+                        td.setAttribute('data-label', headerTexts[index]);
+                    }
+                });
+            });
+        }
+
+        // ─── Add lazy loading to images ───
+        function initLazyLoading() {
+            var images = document.querySelectorAll('img:not([loading])');
+            images.forEach(function(img) {
+                // Don't add lazy loading to LCP images
+                if (img.getAttribute('fetchpriority') !== 'high') {
+                    img.setAttribute('loading', 'lazy');
+                }
+            });
+        }
+
+        // ─── Left Sidebar Toggle ───
+        function initLeftSidebar() {
+            var sidebar = document.getElementById('leftSidebar');
+            var toggleBtn = document.getElementById('sidebarToggle');
+
+            if (!sidebar || !toggleBtn) return;
+
+            // Check localStorage for saved state
+            var savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                sidebar.classList.add('collapsed');
+                document.body.classList.add('sidebar-collapsed');
+                toggleBtn.setAttribute('aria-expanded', 'false');
+            }
+
+            toggleBtn.addEventListener('click', function() {
+                var isCollapsed = sidebar.classList.contains('collapsed');
+
+                if (isCollapsed) {
+                    // Expand
+                    sidebar.classList.remove('collapsed');
+                    document.body.classList.remove('sidebar-collapsed');
+                    toggleBtn.setAttribute('aria-expanded', 'true');
+                    localStorage.setItem('sidebarCollapsed', 'false');
+                } else {
+                    // Collapse
+                    sidebar.classList.add('collapsed');
+                    document.body.classList.add('sidebar-collapsed');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    localStorage.setItem('sidebarCollapsed', 'true');
+                }
+            });
+
+            // Keyboard shortcut: Ctrl/Cmd + B to toggle sidebar
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                    e.preventDefault();
+                    toggleBtn.click();
+                }
+            });
+        }
+
         // Run on DOM ready
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            initMobileDrawer();
+            initLeftSidebar();
+            initTableLabels();
+            initLazyLoading();
+        });
     </script>
 
     <!-- ScholarMatch AI Chat Component -->

@@ -56,7 +56,11 @@ export async function signUpAthlete(data) {
       last_name: lastName,
       phone,
     });
-    if (profileError) console.error('Error creating profile:', profileError);
+    if (profileError) {
+      console.error('Error creating profile:', profileError);
+      // Return error but still provide user since auth succeeded
+      return { user: authData.user, session: authData.session, error: profileError };
+    }
   }
 
   return { user: authData.user, session: authData.session, error: null };
@@ -69,7 +73,7 @@ export async function signUpBrand(data) {
     email: data.email,
     password: data.password,
     options: {
-      data: { role: 'brand', company_name: data.companyName },
+      data: { role: USER_ROLES.BRAND, company_name: data.companyName },
     },
   });
 
@@ -83,7 +87,7 @@ export async function signUpBrand(data) {
   const { error: profileError } = await supabase.from('profiles').insert({
     id: user.id,
     email: data.email,
-    role: 'brand',
+    role: USER_ROLES.BRAND,
     first_name: nameParts[0] || null,
     last_name: nameParts.slice(1).join(' ') || null,
     phone: data.contactPhone || null,

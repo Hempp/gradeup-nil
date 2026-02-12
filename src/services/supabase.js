@@ -19,6 +19,8 @@ export const STORAGE_BUCKETS = {
   DOCUMENTS: 'documents',
   CONTRACTS: 'contracts',
   MEDIA: 'media',
+  VIDEOS: 'videos',
+  ATTACHMENTS: 'attachments',
 };
 
 export const ERROR_CODES = {
@@ -99,6 +101,14 @@ export async function invokeFunction(functionName, body = null, options = {}) {
   return supabase.functions.invoke(functionName, { body, ...options });
 }
 
+/**
+ * Upload a file to Supabase Storage
+ * @param {string} bucket - Storage bucket name
+ * @param {string} path - File path in bucket
+ * @param {File|Blob} file - File to upload
+ * @param {object} options - Upload options
+ * @returns {Promise<{data: {path: string, publicUrl: string}|null, error: Error|null}>}
+ */
 export async function uploadFile(bucket, path, file, options = {}) {
   const supabase = await getSupabaseClient();
   const { contentType, upsert = false } = options;
@@ -107,17 +117,29 @@ export async function uploadFile(bucket, path, file, options = {}) {
     .from(bucket)
     .upload(path, file, { contentType, upsert });
 
-  if (error) throw new Error(`File upload failed: ${error.message}`);
+  if (error) {
+    return { data: null, error: new Error(`File upload failed: ${error.message}`) };
+  }
 
   const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(data.path);
-  return { path: data.path, publicUrl: urlData.publicUrl };
+  return { data: { path: data.path, publicUrl: urlData.publicUrl }, error: null };
 }
 
+/**
+ * Delete file(s) from Supabase Storage
+ * @param {string} bucket - Storage bucket name
+ * @param {string|string[]} paths - File path(s) to delete
+ * @returns {Promise<{success: boolean, error: Error|null}>}
+ */
 export async function deleteFile(bucket, paths) {
   const supabase = await getSupabaseClient();
   const pathArray = Array.isArray(paths) ? paths : [paths];
   const { error } = await supabase.storage.from(bucket).remove(pathArray);
-  if (error) throw new Error(`File deletion failed: ${error.message}`);
+
+  if (error) {
+    return { success: false, error: new Error(`File deletion failed: ${error.message}`) };
+  }
+  return { success: true, error: null };
 }
 
 export async function subscribeToTable(table, callback, options = {}) {

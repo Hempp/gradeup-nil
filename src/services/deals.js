@@ -6,7 +6,7 @@
  */
 
 import { getSupabaseClient, getCurrentUser, subscribeToTable } from './supabase.js';
-import { getMyAthleteId } from './helpers.js';
+import { getMyAthleteId, ensureAthleteId } from './helpers.js';
 
 export const DEAL_STATUS = {
   DRAFT: 'draft',
@@ -111,8 +111,9 @@ export async function applyToOpportunity(opportunityId, application = {}) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deal: null, error: athleteCheck.error };
   }
 
   const { data: opportunity, error: oppError } = await supabase
@@ -172,8 +173,9 @@ export async function getMyDeals(filters = {}) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deals: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deals: null, error: athleteCheck.error };
   }
 
   const { status, deal_types, sort_by = 'created_at', sort_order = 'desc' } = filters;
@@ -210,8 +212,9 @@ export async function getDealById(dealId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deal: null, error: athleteCheck.error };
   }
 
   const { data, error } = await supabase
@@ -228,8 +231,9 @@ export async function acceptDeal(dealId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deal: null, error: athleteCheck.error };
   }
 
   const { data: existing, error: checkError } = await supabase
@@ -263,8 +267,9 @@ export async function rejectDeal(dealId, reason) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { error: athleteCheck.error };
   }
 
   if (reason) {
@@ -290,8 +295,9 @@ export async function counterOfferDeal(dealId, counterOffer) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deal: null, error: athleteCheck.error };
   }
 
   const { data, error } = await supabase
@@ -321,8 +327,9 @@ export async function signContract(dealId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deal: null, error: athleteCheck.error };
   }
 
   const { data, error } = await supabase
@@ -349,8 +356,9 @@ export async function completeDeal(dealId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deal: null, error: athleteCheck.error };
   }
 
   // Verify payment exists and succeeded before completing
@@ -408,8 +416,9 @@ export async function submitDealReview(dealId, review) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { deal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { deal: null, error: athleteCheck.error };
   }
 
   if (review.rating < 1 || review.rating > 5) {
@@ -437,8 +446,9 @@ export async function getDealMessages(dealId, options = {}) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { messages: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { messages: null, error: athleteCheck.error };
   }
 
   const { data: deal } = await supabase
@@ -528,8 +538,9 @@ export function subscribeToDealMessages(dealId, callback) {
 export async function subscribeToMyDeals(callback) {
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    throw new Error('Athlete profile not found');
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    throw athleteCheck.error;
   }
 
   return subscribeToTable('deals', callback, {
@@ -604,8 +615,9 @@ export async function createProposal(proposal) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { proposal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { proposal: null, error: athleteCheck.error };
   }
 
   if (!proposal.brand_id) {
@@ -643,8 +655,9 @@ export async function updateProposal(proposalId, updates) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { proposal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { proposal: null, error: athleteCheck.error };
   }
 
   // Remove read-only fields
@@ -676,8 +689,9 @@ export async function sendProposal(proposalId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { proposal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { proposal: null, error: athleteCheck.error };
   }
 
   const { data, error } = await supabase
@@ -705,8 +719,9 @@ export async function getMyProposals(filters = {}) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { proposals: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { proposals: null, error: athleteCheck.error };
   }
 
   let query = supabase
@@ -732,8 +747,9 @@ export async function getProposalById(proposalId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { proposal: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { proposal: null, error: athleteCheck.error };
   }
 
   const { data, error } = await supabase
@@ -758,8 +774,9 @@ export async function deleteProposal(proposalId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { error: athleteCheck.error };
   }
 
   const { error } = await supabase
@@ -781,8 +798,9 @@ export async function withdrawProposal(proposalId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { error: athleteCheck.error };
   }
 
   const { error } = await supabase

@@ -6,7 +6,18 @@
  */
 
 import { getSupabaseClient, getCurrentUser, invokeFunction, uploadFile, STORAGE_BUCKETS } from './supabase.js';
-import { getMyAthleteId, ACADEMIC_YEARS } from './helpers.js';
+import {
+  getMyAthleteId,
+  ACADEMIC_YEARS,
+  getFileExtension,
+  generateFilename,
+  validateFileType,
+  validateFileSize,
+  validateGPA,
+  ensureAthleteId,
+  VALIDATION,
+  ALLOWED_FILE_TYPES,
+} from './helpers.js';
 
 export { ACADEMIC_YEARS };
 
@@ -133,18 +144,21 @@ export async function uploadAvatar(file) {
     return { avatarUrl: null, error: userError || new Error('Not authenticated') };
   }
 
-  const ext = file.name.split('.').pop();
-  const filename = `${user.id}/avatar-${Date.now()}.${ext}`;
+  const filename = generateFilename(user.id, file.name, 'avatar');
 
-  const { publicUrl } = await uploadFile(STORAGE_BUCKETS.AVATARS, filename, file, {
+  const { data: uploadData, error: uploadError } = await uploadFile(STORAGE_BUCKETS.AVATARS, filename, file, {
     contentType: file.type,
     upsert: true,
   });
 
-  const supabase = await getSupabaseClient();
-  await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id);
+  if (uploadError) {
+    return { avatarUrl: null, error: uploadError };
+  }
 
-  return { avatarUrl: publicUrl, error: null };
+  const supabase = await getSupabaseClient();
+  await supabase.from('profiles').update({ avatar_url: uploadData.publicUrl }).eq('id', user.id);
+
+  return { avatarUrl: uploadData.publicUrl, error: null };
 }
 
 /**
@@ -261,8 +275,9 @@ export async function addAcademicRecord(record) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { record: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { record: null, error: athleteCheck.error };
   }
 
   // Validate required fields
@@ -271,8 +286,9 @@ export async function addAcademicRecord(record) {
   }
 
   // Validate GPA range
-  if (record.gpa < 0 || record.gpa > 4.0) {
-    return { record: null, error: new Error('GPA must be between 0.0 and 4.0') };
+  const gpaValidation = validateGPA(record.gpa);
+  if (!gpaValidation.valid) {
+    return { record: null, error: gpaValidation.error };
   }
 
   const { data, error } = await supabase
@@ -303,8 +319,9 @@ export async function updateAcademicRecord(recordId, updates) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { record: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { record: null, error: athleteCheck.error };
   }
 
   // Remove fields that shouldn't be updated
@@ -336,8 +353,9 @@ export async function getAcademicRecords() {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { records: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { records: null, error: athleteCheck.error };
   }
 
   const { data, error } = await supabase
@@ -359,8 +377,9 @@ export async function deleteAcademicRecord(recordId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { error: athleteCheck.error };
   }
 
   const { error } = await supabase
@@ -479,14 +498,17 @@ export async function uploadVerificationDocument(verificationType, file) {
     return { url: null, error: userError || new Error('Not authenticated') };
   }
 
-  const ext = file.name.split('.').pop();
-  const filename = `${user.id}/${verificationType}/${Date.now()}.${ext}`;
+  const filename = `${user.id}/${verificationType}/${Date.now()}.${getFileExtension(file.name)}`;
 
-  const { publicUrl } = await uploadFile(STORAGE_BUCKETS.DOCUMENTS, filename, file, {
+  const { data: uploadData, error: uploadError } = await uploadFile(STORAGE_BUCKETS.DOCUMENTS, filename, file, {
     contentType: file.type,
   });
 
-  return { url: publicUrl, error: null };
+  if (uploadError) {
+    return { url: null, error: uploadError };
+  }
+
+  return { url: uploadData.publicUrl, error: null };
 }
 
 export async function connectStatTaq() {
@@ -647,28 +669,34 @@ export async function uploadHighlightVideo(file, metadata) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
 
-  if (!athleteId) {
-    return { video: null, error: new Error('Athlete profile not found') };
+  const athleteCheck = ensureAthleteId(athleteId);
+  if (!athleteCheck.valid) {
+    return { video: null, error: athleteCheck.error };
   }
 
   // Validate file type
-  const allowedTypes = ['video/mp4', 'video/quicktime', 'video/webm'];
-  if (!allowedTypes.includes(file.type)) {
-    return { video: null, error: new Error('Invalid file type. Allowed: MP4, MOV, WebM') };
+  const typeValidation = validateFileType(file, ALLOWED_FILE_TYPES.VIDEOS);
+  if (!typeValidation.valid) {
+    return { video: null, error: new Error(typeValidation.error) };
   }
 
-  // Validate file size (500MB max)
-  const maxSize = 500 * 1024 * 1024;
-  if (file.size > maxSize) {
-    return { video: null, error: new Error('File too large. Maximum size is 500MB') };
+  // Validate file size
+  const sizeValidation = validateFileSize(file, VALIDATION.MAX_VIDEO_SIZE_MB);
+  if (!sizeValidation.valid) {
+    return { video: null, error: new Error(sizeValidation.error) };
   }
 
-  const ext = file.name.split('.').pop();
-  const filename = `${athleteId}/highlights/${Date.now()}.${ext}`;
+  const filename = `${athleteId}/highlights/${Date.now()}.${getFileExtension(file.name)}`;
 
-  const { publicUrl } = await uploadFile(STORAGE_BUCKETS.VIDEOS || 'videos', filename, file, {
+  const { data: uploadData, error: uploadError } = await uploadFile(STORAGE_BUCKETS.VIDEOS, filename, file, {
     contentType: file.type,
   });
+
+  if (uploadError) {
+    return { video: null, error: uploadError };
+  }
+
+  const publicUrl = uploadData.publicUrl;
 
   const { data, error } = await supabase
     .from('athlete_videos')
