@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -41,6 +41,14 @@ export default function BrandSignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  // Focus error message when it appears for accessibility
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.focus();
+    }
+  }, [error]);
 
   const [formValues] = useState<BrandSignupFormValues>({
     companyName: '',
@@ -207,8 +215,10 @@ export default function BrandSignupPage() {
             {/* Error Message */}
             {error && (
               <div
+                ref={errorRef}
                 role="alert"
-                className="p-3 rounded-[var(--radius-md)] bg-[var(--error-100)] text-[var(--error-600)] text-sm"
+                tabIndex={-1}
+                className="p-3 rounded-[var(--radius-md)] bg-[var(--error-100)] text-[var(--error-600)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--error-600)] focus:ring-offset-2"
               >
                 {error}
               </div>

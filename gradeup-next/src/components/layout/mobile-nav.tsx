@@ -110,11 +110,16 @@ export function MobileNav({ navItems, variant = 'athlete', className }: MobileNa
         <div
           className="fixed inset-0 bg-black/50 z-50 animate-fade-in"
           onClick={() => setIsOpen(false)}
+          aria-hidden="true"
         />
       )}
 
       {/* Drawer */}
       <aside
+        role="dialog"
+        aria-modal={isOpen}
+        aria-label="Mobile navigation menu"
+        aria-hidden={!isOpen}
         className={cn(
           'fixed top-0 right-0 h-full w-[280px] bg-[var(--bg-sidebar)]',
           'border-l border-[var(--border-color)] z-50',
@@ -135,8 +140,8 @@ export function MobileNav({ navItems, variant = 'athlete', className }: MobileNa
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-4 px-3 overflow-y-auto">
-          <ul className="space-y-1">
+        <nav aria-label="Mobile menu" className="flex-1 py-4 px-3 overflow-y-auto">
+          <ul className="space-y-1" role="list">
             {navItems.map((item) => {
               const Icon = iconMap[item.icon] || LayoutDashboard;
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/');

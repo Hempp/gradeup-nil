@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo, memo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, CheckCircle, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -13,7 +13,8 @@ import { useDirectorAthletes, type DirectorAthlete } from '@/lib/hooks/use-direc
 
 const statusFilters = ['All', 'Verified', 'Pending', 'Issues'];
 
-function AthleteRow({ athlete, onView }: { athlete: DirectorAthlete; onView: (id: string) => void }) {
+// Memoized to prevent re-renders when filter/search state changes
+const AthleteRow = memo(function AthleteRow({ athlete, onView }: { athlete: DirectorAthlete; onView: (id: string) => void }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
       <Avatar fallback={athlete.name.charAt(0)} size="md" />
@@ -62,7 +63,7 @@ function AthleteRow({ athlete, onView }: { athlete: DirectorAthlete; onView: (id
       </Button>
     </div>
   );
-}
+});
 
 function StatsSkeleton() {
   return (
@@ -101,20 +102,25 @@ export default function DirectorAthletesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('All');
 
-  const handleViewAthlete = (athleteId: string) => {
+  // Memoize callback to prevent AthleteRow re-renders
+  const handleViewAthlete = useCallback((athleteId: string) => {
     router.push(`/director/athletes/${athleteId}`);
-  };
+  }, [router]);
 
-  const filteredAthletes = athletes.filter((athlete) => {
-    const matchesSearch = athlete.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      athlete.sport.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter =
-      filter === 'All' ||
-      (filter === 'Verified' && athlete.verified) ||
-      (filter === 'Pending' && athlete.complianceStatus === 'pending') ||
-      (filter === 'Issues' && athlete.complianceStatus === 'issue');
-    return matchesSearch && matchesFilter;
-  });
+  // Memoize filtered results to avoid recalculation on every render
+  const filteredAthletes = useMemo(() => {
+    const searchLower = searchQuery.toLowerCase();
+    return athletes.filter((athlete) => {
+      const matchesSearch = athlete.name.toLowerCase().includes(searchLower) ||
+        athlete.sport.toLowerCase().includes(searchLower);
+      const matchesFilter =
+        filter === 'All' ||
+        (filter === 'Verified' && athlete.verified) ||
+        (filter === 'Pending' && athlete.complianceStatus === 'pending') ||
+        (filter === 'Issues' && athlete.complianceStatus === 'issue');
+      return matchesSearch && matchesFilter;
+    });
+  }, [athletes, searchQuery, filter]);
 
   return (
     <div className="space-y-6 animate-fade-in">

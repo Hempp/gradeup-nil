@@ -88,6 +88,14 @@ export function DashboardShell({
 
   return (
     <div className="min-h-screen bg-surface-50">
+      {/* Skip Link for Accessibility - WCAG 2.4.1 */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:bg-primary-700 focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:outline-none focus:ring-2 focus:ring-white"
+      >
+        Skip to main content
+      </a>
+
       {/* Desktop Sidebar - fixed left, full height, z-20 */}
       <Sidebar
         navItems={navItems}
@@ -116,9 +124,12 @@ export function DashboardShell({
       {/* Main Content Area */}
       {/* ml-64 on desktop (sidebar width), mt-16 always (topbar height), p-6 padding */}
       <main
+        id="main-content"
+        tabIndex={-1}
         className={cn(
           'lg:ml-64 mt-16 p-6',
           'min-h-[calc(100vh-4rem)]',
+          'focus:outline-none',
           className
         )}
       >

@@ -116,7 +116,8 @@ export function Topbar({
               isDropdownOpen && 'bg-neutral-100'
             )}
             aria-expanded={isDropdownOpen}
-            aria-haspopup="true"
+            aria-haspopup="menu"
+            aria-label={`User menu for ${displayUser.name}`}
           >
             {/* Avatar */}
             {displayUser.avatar ? (

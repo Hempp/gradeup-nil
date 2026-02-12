@@ -68,6 +68,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
 
   return (
     <aside
+      aria-label="Main navigation"
       className={cn(
         'fixed top-0 left-0 h-screen flex flex-col',
         'bg-primary-900 transition-all duration-300 ease-in-out z-20',
@@ -126,8 +127,8 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-4 px-3 overflow-y-auto">
-        <ul className="space-y-1">
+      <nav aria-label="Main menu" className="flex-1 py-4 px-3 overflow-y-auto">
+        <ul className="space-y-1" role="list">
           {navItems.map((item) => {
             const Icon = iconMap[item.icon] || LayoutDashboard;
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');

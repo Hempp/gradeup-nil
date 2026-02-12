@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { getSchoolAthletes, getDirectorStats, type DirectorStats } from '@/lib/services/director';
 import type { Athlete } from '@/types';
@@ -158,17 +158,25 @@ function getComplianceStatus(athlete: Athlete): 'clear' | 'pending' | 'issue' {
 
 /**
  * Get athlete earnings and deal count from deals table
+ * Now accepts AbortSignal for cancellation support
  */
 async function getAthleteMetrics(
-  athleteId: string
+  athleteId: string,
+  signal?: AbortSignal
 ): Promise<{ earnings: number; deals: number }> {
+  // Early exit if already aborted
+  if (signal?.aborted) {
+    return { earnings: 0, deals: 0 };
+  }
+
   const supabase = createClient();
 
   try {
     const { data: deals, error } = await supabase
       .from('deals')
       .select('id, compensation_amount, status')
-      .eq('athlete_id', athleteId);
+      .eq('athlete_id', athleteId)
+      .abortSignal(signal as AbortSignal);
 
     if (error || !deals) {
       return { earnings: 0, deals: 0 };
@@ -185,9 +193,13 @@ async function getAthleteMetrics(
 
 /**
  * Transform Athlete from backend to DirectorAthlete
+ * Now accepts AbortSignal for cancellation support
  */
-async function transformAthlete(athlete: Athlete): Promise<DirectorAthlete> {
-  const metrics = await getAthleteMetrics(athlete.id);
+async function transformAthlete(
+  athlete: Athlete,
+  signal?: AbortSignal
+): Promise<DirectorAthlete> {
+  const metrics = await getAthleteMetrics(athlete.id, signal);
 
   // Get name from profile or athlete fields
   const name = athlete.first_name && athlete.last_name
@@ -219,6 +231,7 @@ async function transformAthlete(athlete: Athlete): Promise<DirectorAthlete> {
 
 /**
  * Hook to fetch and enrich director's school athletes
+ * Uses AbortController for proper request cancellation
  */
 export function useDirectorAthletes(): UseDirectorAthletesResult {
   const [athletes, setAthletes] = useState<DirectorAthlete[]>(mockAthletes);
@@ -226,6 +239,7 @@ export function useDirectorAthletes(): UseDirectorAthletesResult {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const calculateStats = useCallback((athleteList: DirectorAthlete[]): AthleteStats => {
     return {
@@ -237,7 +251,10 @@ export function useDirectorAthletes(): UseDirectorAthletesResult {
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
+    // Cancel any previous request
+    abortControllerRef.current?.abort();
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
 
     async function fetchData() {
       setIsLoading(true);
@@ -247,7 +264,7 @@ export function useDirectorAthletes(): UseDirectorAthletesResult {
         // Fetch athletes from backend
         const result = await getSchoolAthletes(1, 100); // Get up to 100 athletes
 
-        if (cancelled) return;
+        if (abortController.signal.aborted) return;
 
         if (result.error || !result.data) {
           console.warn('Using mock athletes:', result.error?.message);
@@ -258,31 +275,41 @@ export function useDirectorAthletes(): UseDirectorAthletesResult {
           setAthletes(mockAthletes);
           setStats(mockStats);
         } else {
-          // Transform all athletes with their metrics
-          const enrichedAthletes = await Promise.all(
-            result.data.athletes.map(transformAthlete)
-          );
+          // Transform athletes sequentially with cancellation checks
+          // This prevents wasted requests when component unmounts
+          const enrichedAthletes: DirectorAthlete[] = [];
 
-          if (!cancelled) {
+          for (const athlete of result.data.athletes) {
+            // Check cancellation before each fetch
+            if (abortController.signal.aborted) return;
+
+            const enriched = await transformAthlete(
+              athlete,
+              abortController.signal
+            );
+            enrichedAthletes.push(enriched);
+          }
+
+          if (!abortController.signal.aborted) {
             setAthletes(enrichedAthletes);
             setStats(calculateStats(enrichedAthletes));
           }
         }
       } catch (err) {
-        if (cancelled) return;
+        if (abortController.signal.aborted) return;
         console.error('Error fetching athletes:', err);
         setError(err instanceof Error ? err : new Error('Failed to fetch athletes'));
         setAthletes(mockAthletes);
         setStats(mockStats);
       } finally {
-        if (!cancelled) setIsLoading(false);
+        if (!abortController.signal.aborted) setIsLoading(false);
       }
     }
 
     fetchData();
 
     return () => {
-      cancelled = true;
+      abortController.abort();
     };
   }, [refetchTrigger, calculateStats]);
 

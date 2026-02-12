@@ -21,6 +21,10 @@ export interface DataTableProps<T> extends HTMLAttributes<HTMLDivElement> {
   emptyState?: ReactNode;
   onRowClick?: (row: T) => void;
   keyExtractor?: (row: T, index: number) => string;
+  /** Accessible caption for the table (screen readers) */
+  caption?: string;
+  /** Description for row click action for screen readers */
+  rowActionDescription?: string;
 }
 
 // ─── Loading Row Component ───
@@ -92,6 +96,8 @@ function DataTableInner<T extends Record<string, unknown>>(
     emptyState,
     onRowClick,
     keyExtractor,
+    caption,
+    rowActionDescription = 'View details',
     className,
     ...props
   }: DataTableProps<T>,
@@ -118,6 +124,8 @@ function DataTableInner<T extends Record<string, unknown>>(
     >
       <div className="overflow-x-auto">
         <table className="w-full">
+          {/* ─── Table Caption (Screen Reader Only) ─── */}
+          {caption && <caption className="sr-only">{caption}</caption>}
           {/* ─── Table Header ─── */}
           <thead className="bg-[var(--surface-50)] sticky top-0 z-10">
             <tr>
@@ -158,7 +166,7 @@ function DataTableInner<T extends Record<string, unknown>>(
                   className={cn(
                     'border-b border-[var(--surface-100)] last:border-b-0',
                     'transition-colors duration-150',
-                    onRowClick && 'cursor-pointer hover:bg-[var(--surface-50)]'
+                    onRowClick && 'cursor-pointer hover:bg-[var(--surface-50)] focus:bg-[var(--surface-50)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)]'
                   )}
                   onClick={() => onRowClick?.(row)}
                   tabIndex={onRowClick ? 0 : undefined}
@@ -169,6 +177,7 @@ function DataTableInner<T extends Record<string, unknown>>(
                     }
                   }}
                   role={onRowClick ? 'button' : undefined}
+                  aria-label={onRowClick ? `${rowActionDescription} for row ${rowIndex + 1}` : undefined}
                 >
                   {columns.map((column) => {
                     const value = getValue(row, column.key);

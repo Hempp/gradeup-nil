@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useCallback,
+  useId,
   type HTMLAttributes,
   type ReactNode,
   type MouseEvent,
@@ -94,6 +95,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
   ) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousActiveElement = useRef<HTMLElement | null>(null);
+    const titleId = useId();
 
     // Store the previously focused element and focus the modal
     useEffect(() => {
@@ -212,7 +214,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           }}
           role="dialog"
           aria-modal="true"
-          aria-labelledby={title ? 'modal-title' : undefined}
+          aria-labelledby={title ? titleId : undefined}
           tabIndex={-1}
           onKeyDown={handleKeyDown}
           className={cn(
@@ -236,7 +238,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-color)]">
               {title && (
                 <h2
-                  id="modal-title"
+                  id={titleId}
                   className="text-lg font-semibold text-[var(--text-primary)]"
                 >
                   {title}

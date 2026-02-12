@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import { Plus, Users, DollarSign, Calendar, MoreVertical, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -9,7 +10,8 @@ import { StatusBadge } from '@/components/ui/status-badge';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { useBrandCampaigns, type EnrichedCampaign } from '@/lib/hooks/use-campaigns-data';
 
-function CampaignCard({ campaign }: { campaign: EnrichedCampaign }) {
+// Memoized to prevent re-renders when parent state changes (e.g., filtering)
+const CampaignCard = memo(function CampaignCard({ campaign }: { campaign: EnrichedCampaign }) {
   const progress = campaign.budget > 0 ? (campaign.spent / campaign.budget) * 100 : 0;
 
   return (
@@ -105,7 +107,7 @@ function CampaignCard({ campaign }: { campaign: EnrichedCampaign }) {
       </CardContent>
     </Card>
   );
-}
+});
 
 function CampaignSkeleton() {
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { getBrandCampaigns, type Campaign } from '@/lib/services/brand';
 import type { DealStatus } from '@/types';
@@ -108,17 +108,25 @@ function mapCampaignStatus(status: Campaign['status']): DealStatus {
 
 /**
  * Fetch campaign spend and athlete counts from deals
+ * Now accepts AbortSignal for cancellation support
  */
 async function getCampaignMetrics(
-  campaignId: string
+  campaignId: string,
+  signal?: AbortSignal
 ): Promise<{ spent: number; athleteCount: number }> {
+  // Early exit if already aborted
+  if (signal?.aborted) {
+    return { spent: 0, athleteCount: 0 };
+  }
+
   const supabase = createClient();
 
   try {
     const { data: deals, error } = await supabase
       .from('deals')
       .select('id, compensation_amount, athlete_id, status')
-      .eq('campaign_id', campaignId);
+      .eq('campaign_id', campaignId)
+      .abortSignal(signal as AbortSignal);
 
     if (error || !deals) {
       return { spent: 0, athleteCount: 0 };
@@ -140,9 +148,13 @@ async function getCampaignMetrics(
 
 /**
  * Transform Campaign from backend to EnrichedCampaign
+ * Now accepts AbortSignal for cancellation support
  */
-async function transformCampaign(campaign: Campaign): Promise<EnrichedCampaign> {
-  const metrics = await getCampaignMetrics(campaign.id);
+async function transformCampaign(
+  campaign: Campaign,
+  signal?: AbortSignal
+): Promise<EnrichedCampaign> {
+  const metrics = await getCampaignMetrics(campaign.id, signal);
 
   return {
     id: campaign.id,
@@ -164,15 +176,20 @@ async function transformCampaign(campaign: Campaign): Promise<EnrichedCampaign> 
 
 /**
  * Hook to fetch and enrich brand campaigns
+ * Uses AbortController for proper request cancellation
  */
 export function useBrandCampaigns(): UseCampaignsResult {
   const [data, setData] = useState<EnrichedCampaign[]>(mockCampaigns);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    // Cancel any previous request
+    abortControllerRef.current?.abort();
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
 
     async function fetchData() {
       setIsLoading(true);
@@ -181,7 +198,7 @@ export function useBrandCampaigns(): UseCampaignsResult {
       try {
         const result = await getBrandCampaigns();
 
-        if (cancelled) return;
+        if (abortController.signal.aborted) return;
 
         if (result.error || !result.data) {
           console.warn('Using mock campaigns:', result.error?.message);
@@ -190,29 +207,39 @@ export function useBrandCampaigns(): UseCampaignsResult {
           // No campaigns yet, show mock data as placeholder
           setData(mockCampaigns);
         } else {
-          // Transform all campaigns with their metrics
-          const enrichedCampaigns = await Promise.all(
-            result.data.map(transformCampaign)
-          );
+          // Transform campaigns sequentially with cancellation checks
+          // This prevents wasted requests when component unmounts
+          const enrichedCampaigns: EnrichedCampaign[] = [];
 
-          if (!cancelled) {
+          for (const campaign of result.data) {
+            // Check cancellation before each fetch
+            if (abortController.signal.aborted) return;
+
+            const enriched = await transformCampaign(
+              campaign,
+              abortController.signal
+            );
+            enrichedCampaigns.push(enriched);
+          }
+
+          if (!abortController.signal.aborted) {
             setData(enrichedCampaigns);
           }
         }
       } catch (err) {
-        if (cancelled) return;
+        if (abortController.signal.aborted) return;
         console.error('Error fetching campaigns:', err);
         setError(err instanceof Error ? err : new Error('Failed to fetch campaigns'));
         setData(mockCampaigns);
       } finally {
-        if (!cancelled) setIsLoading(false);
+        if (!abortController.signal.aborted) setIsLoading(false);
       }
     }
 
     fetchData();
 
     return () => {
-      cancelled = true;
+      abortController.abort();
     };
   }, [refetchTrigger]);
 
