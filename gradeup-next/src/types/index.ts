@@ -166,23 +166,40 @@ export interface Opportunity {
 // ─── Message ───
 export interface Message {
   id: string;
-  deal_id: string;
-  sender_id: string;
-  message: string;
+  conversationId: string;
+  senderId: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+  // Legacy fields for backward compatibility
+  deal_id?: string;
+  sender_id?: string;
+  message?: string;
   attachments?: string[];
   read_at?: string;
-  created_at: string;
+  created_at?: string;
+}
+
+export interface ConversationParticipant {
+  id: string;
+  name: string;
+  avatar?: string;
+  subtitle?: string; // e.g., school name, deal title
 }
 
 export interface Conversation {
   id: string;
-  deal_id: string;
-  athlete_id: string;
-  brand_id: string;
+  participants: ConversationParticipant[];
+  lastMessage: Message | null;
+  unreadCount: number;
+  // Legacy fields for backward compatibility
+  deal_id?: string;
+  athlete_id?: string;
+  brand_id?: string;
   last_message?: string;
   last_message_at?: string;
-  unread_count: number;
-  created_at: string;
+  unread_count?: number;
+  created_at?: string;
 }
 
 // ─── Campaign ───

@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
+import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatCompactNumber, formatDate } from '@/lib/utils';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -783,6 +784,7 @@ function ReviewStep({ data }: { data: CampaignFormData }) {
 
 export default function NewCampaignPage() {
   const router = useRouter();
+  const toast = useToastActions();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -806,20 +808,43 @@ export default function NewCampaignPage() {
     setFormData((prev) => ({ ...prev, ...updates }));
   };
 
-  const canProceed = (): boolean => {
+  const getStepValidationErrors = (): string[] => {
+    const errors: string[] = [];
     switch (currentStep) {
       case 1:
-        return !!formData.name && !!formData.campaignType && formData.budget > 0 && !!formData.startDate && !!formData.endDate;
+        if (!formData.name) errors.push('Campaign name is required');
+        if (!formData.campaignType) errors.push('Campaign type is required');
+        if (formData.budget <= 0) errors.push('Budget must be greater than 0');
+        if (!formData.startDate) errors.push('Start date is required');
+        if (!formData.endDate) errors.push('End date is required');
+        if (formData.startDate && formData.endDate && new Date(formData.startDate) >= new Date(formData.endDate)) {
+          errors.push('End date must be after start date');
+        }
+        break;
       case 2:
-        return formData.selectedAthletes.length > 0;
+        if (formData.selectedAthletes.length === 0) errors.push('Please select at least one athlete');
+        break;
       case 3:
-        return formData.deliverables.length > 0;
-      default:
-        return true;
+        if (formData.deliverables.length === 0) errors.push('Please add at least one deliverable');
+        formData.deliverables.forEach((d, i) => {
+          if (!d.platform) errors.push(`Deliverable ${i + 1}: Platform is required`);
+          if (!d.contentType) errors.push(`Deliverable ${i + 1}: Content type is required`);
+        });
+        break;
     }
+    return errors;
+  };
+
+  const canProceed = (): boolean => {
+    return getStepValidationErrors().length === 0;
   };
 
   const handleNext = () => {
+    const errors = getStepValidationErrors();
+    if (errors.length > 0) {
+      toast.error('Validation Error', errors[0]);
+      return;
+    }
     if (currentStep < STEPS.length) {
       setCurrentStep((prev) => prev + 1);
     }
@@ -833,18 +858,30 @@ export default function NewCampaignPage() {
 
   const handleSaveDraft = async () => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    router.push('/brand/campaigns');
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.info('Draft Saved', 'Your campaign has been saved as a draft. You can continue editing anytime.');
+      router.push('/brand/campaigns');
+    } catch (error) {
+      toast.error('Save Failed', 'Unable to save draft. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleLaunch = async () => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    router.push('/brand/campaigns');
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      toast.success('Campaign Launched', 'Your campaign is now live. Athletes will be notified shortly.');
+      router.push('/brand/campaigns');
+    } catch (error) {
+      toast.error('Launch Failed', 'Unable to launch campaign. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

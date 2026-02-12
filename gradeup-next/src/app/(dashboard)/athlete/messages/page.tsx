@@ -1,253 +1,326 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, Send, Paperclip, MoreVertical } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Avatar } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { formatRelativeTime } from '@/lib/utils';
+import { MessageThread } from '@/components/shared/message-thread';
+import { ConversationList } from '@/components/shared/conversation-list';
+import { cn } from '@/lib/utils';
+import type { Conversation, Message, ConversationParticipant } from '@/types';
 
-// Mock conversations
-const mockConversations = [
+// Mock conversations for athlete - conversations with brands
+const mockConversations: Conversation[] = [
   {
     id: '1',
-    brand: { name: 'Nike', logo: null },
-    dealTitle: 'Instagram Post Campaign',
-    lastMessage: 'Great work on the first post! Looking forward to seeing the next one.',
-    lastMessageAt: '2024-02-11T10:30:00Z',
+    participants: [
+      { id: 'brand-1', name: 'Nike', avatar: undefined, subtitle: 'Instagram Post Campaign' }
+    ],
+    lastMessage: {
+      id: 'msg-5',
+      conversationId: '1',
+      senderId: 'brand-1',
+      content: 'Great work on the first post! Looking forward to seeing the next one.',
+      timestamp: '2024-02-11T10:30:00Z',
+      read: false,
+    },
     unreadCount: 2,
   },
   {
     id: '2',
-    brand: { name: 'Gatorade', logo: null },
-    dealTitle: 'Social Media Endorsement',
-    lastMessage: 'We can discuss the contract terms. When are you available?',
-    lastMessageAt: '2024-02-10T16:45:00Z',
+    participants: [
+      { id: 'brand-2', name: 'Gatorade', avatar: undefined, subtitle: 'Social Media Endorsement' }
+    ],
+    lastMessage: {
+      id: 'msg-8',
+      conversationId: '2',
+      senderId: 'brand-2',
+      content: 'We can discuss the contract terms. When are you available?',
+      timestamp: '2024-02-10T16:45:00Z',
+      read: true,
+    },
     unreadCount: 0,
   },
   {
     id: '3',
-    brand: { name: 'Foot Locker', logo: null },
-    dealTitle: 'Store Opening Appearance',
-    lastMessage: 'The event is scheduled for next Saturday at 2 PM.',
-    lastMessageAt: '2024-02-09T11:20:00Z',
+    participants: [
+      { id: 'brand-3', name: 'Foot Locker', avatar: undefined, subtitle: 'Store Opening Appearance' }
+    ],
+    lastMessage: {
+      id: 'msg-12',
+      conversationId: '3',
+      senderId: 'brand-3',
+      content: 'The event is scheduled for next Saturday at 2 PM.',
+      timestamp: '2024-02-09T11:20:00Z',
+      read: false,
+    },
     unreadCount: 1,
   },
   {
     id: '4',
-    brand: { name: 'Duke Athletics', logo: null },
-    dealTitle: 'Youth Basketball Camp',
-    lastMessage: 'Thank you for participating! The kids loved it.',
-    lastMessageAt: '2024-01-18T17:00:00Z',
+    participants: [
+      { id: 'brand-4', name: 'Duke Athletics', avatar: undefined, subtitle: 'Youth Basketball Camp' }
+    ],
+    lastMessage: {
+      id: 'msg-15',
+      conversationId: '4',
+      senderId: 'brand-4',
+      content: 'Thank you for participating! The kids loved it.',
+      timestamp: '2024-01-18T17:00:00Z',
+      read: true,
+    },
     unreadCount: 0,
   },
 ];
 
-// Mock messages for selected conversation
-const mockMessages = [
-  {
-    id: '1',
-    senderId: 'brand',
-    message: 'Hi Marcus! We loved your application for our Instagram campaign.',
-    createdAt: '2024-02-10T09:00:00Z',
-  },
-  {
-    id: '2',
-    senderId: 'athlete',
-    message: 'Thank you! I\'m excited about the opportunity to work with Nike.',
-    createdAt: '2024-02-10T09:15:00Z',
-  },
-  {
-    id: '3',
-    senderId: 'brand',
-    message: 'We\'d like to discuss the campaign details. The first post should feature our new running shoes.',
-    createdAt: '2024-02-10T09:30:00Z',
-  },
-  {
-    id: '4',
-    senderId: 'athlete',
-    message: 'Sounds great! I can create content that showcases the shoes during my training sessions.',
-    createdAt: '2024-02-10T10:00:00Z',
-  },
-  {
-    id: '5',
-    senderId: 'brand',
-    message: 'Great work on the first post! Looking forward to seeing the next one.',
-    createdAt: '2024-02-11T10:30:00Z',
-  },
-];
+// Mock messages for each conversation
+const mockMessagesByConversation: Record<string, Message[]> = {
+  '1': [
+    {
+      id: '1',
+      conversationId: '1',
+      senderId: 'brand-1',
+      content: 'Hi Marcus! We loved your application for our Instagram campaign.',
+      timestamp: '2024-02-10T09:00:00Z',
+      read: true,
+    },
+    {
+      id: '2',
+      conversationId: '1',
+      senderId: 'athlete',
+      content: "Thank you! I'm excited about the opportunity to work with Nike.",
+      timestamp: '2024-02-10T09:15:00Z',
+      read: true,
+    },
+    {
+      id: '3',
+      conversationId: '1',
+      senderId: 'brand-1',
+      content: "We'd like to discuss the campaign details. The first post should feature our new running shoes.",
+      timestamp: '2024-02-10T09:30:00Z',
+      read: true,
+    },
+    {
+      id: '4',
+      conversationId: '1',
+      senderId: 'athlete',
+      content: 'Sounds great! I can create content that showcases the shoes during my training sessions.',
+      timestamp: '2024-02-10T10:00:00Z',
+      read: true,
+    },
+    {
+      id: '5',
+      conversationId: '1',
+      senderId: 'brand-1',
+      content: 'Great work on the first post! Looking forward to seeing the next one.',
+      timestamp: '2024-02-11T10:30:00Z',
+      read: false,
+    },
+  ],
+  '2': [
+    {
+      id: '6',
+      conversationId: '2',
+      senderId: 'brand-2',
+      content: "Hello! We've been following your athletic career and are impressed with your performance.",
+      timestamp: '2024-02-08T14:00:00Z',
+      read: true,
+    },
+    {
+      id: '7',
+      conversationId: '2',
+      senderId: 'athlete',
+      content: 'Thank you for reaching out! I use Gatorade products regularly.',
+      timestamp: '2024-02-08T14:30:00Z',
+      read: true,
+    },
+    {
+      id: '8',
+      conversationId: '2',
+      senderId: 'brand-2',
+      content: 'We can discuss the contract terms. When are you available?',
+      timestamp: '2024-02-10T16:45:00Z',
+      read: true,
+    },
+  ],
+  '3': [
+    {
+      id: '9',
+      conversationId: '3',
+      senderId: 'brand-3',
+      content: "We're opening a new store and would love to have you at the grand opening!",
+      timestamp: '2024-02-07T10:00:00Z',
+      read: true,
+    },
+    {
+      id: '10',
+      conversationId: '3',
+      senderId: 'athlete',
+      content: "That sounds exciting! What would be involved?",
+      timestamp: '2024-02-07T11:00:00Z',
+      read: true,
+    },
+    {
+      id: '11',
+      conversationId: '3',
+      senderId: 'brand-3',
+      content: "Just a 2-hour appearance, meeting fans, and signing some autographs.",
+      timestamp: '2024-02-08T09:00:00Z',
+      read: true,
+    },
+    {
+      id: '12',
+      conversationId: '3',
+      senderId: 'brand-3',
+      content: 'The event is scheduled for next Saturday at 2 PM.',
+      timestamp: '2024-02-09T11:20:00Z',
+      read: false,
+    },
+  ],
+  '4': [
+    {
+      id: '13',
+      conversationId: '4',
+      senderId: 'brand-4',
+      content: 'The youth basketball camp was a huge success!',
+      timestamp: '2024-01-18T15:00:00Z',
+      read: true,
+    },
+    {
+      id: '14',
+      conversationId: '4',
+      senderId: 'athlete',
+      content: 'I had a great time! The kids were so enthusiastic.',
+      timestamp: '2024-01-18T16:00:00Z',
+      read: true,
+    },
+    {
+      id: '15',
+      conversationId: '4',
+      senderId: 'brand-4',
+      content: 'Thank you for participating! The kids loved it.',
+      timestamp: '2024-01-18T17:00:00Z',
+      read: true,
+    },
+  ],
+};
 
-function ConversationList({
-  conversations,
-  selectedId,
-  onSelect,
-}: {
-  conversations: typeof mockConversations;
-  selectedId: string | null;
-  onSelect: (id: string) => void;
-}) {
-  return (
-    <div className="w-full lg:w-80 border-r border-[var(--border-color)] flex flex-col">
-      {/* Search */}
-      <div className="p-4 border-b border-[var(--border-color)]">
-        <Input
-          placeholder="Search conversations..."
-          icon={<Search className="h-4 w-4" />}
-        />
-      </div>
-
-      {/* Conversations */}
-      <div className="flex-1 overflow-y-auto">
-        {conversations.map((conv) => (
-          <button
-            key={conv.id}
-            onClick={() => onSelect(conv.id)}
-            className={`w-full p-4 text-left border-b border-[var(--border-color)] hover:bg-[var(--bg-tertiary)] transition-colors ${
-              selectedId === conv.id ? 'bg-[var(--bg-tertiary)]' : ''
-            }`}
-          >
-            <div className="flex items-start gap-3">
-              <Avatar fallback={conv.brand.name.charAt(0)} size="md" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="font-medium text-[var(--text-primary)] truncate">
-                    {conv.brand.name}
-                  </span>
-                  <span className="text-xs text-[var(--text-muted)] flex-shrink-0">
-                    {formatRelativeTime(conv.lastMessageAt)}
-                  </span>
-                </div>
-                <p className="text-xs text-[var(--text-muted)] mb-1 truncate">
-                  {conv.dealTitle}
-                </p>
-                <p className="text-sm text-[var(--text-secondary)] truncate">
-                  {conv.lastMessage}
-                </p>
-              </div>
-              {conv.unreadCount > 0 && (
-                <Badge variant="primary" size="sm">
-                  {conv.unreadCount}
-                </Badge>
-              )}
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MessageThread({
-  conversation,
-  messages,
-}: {
-  conversation: (typeof mockConversations)[0] | null;
-  messages: typeof mockMessages;
-}) {
-  const [newMessage, setNewMessage] = useState('');
-
-  if (!conversation) {
-    return (
-      <div className="flex-1 flex items-center justify-center text-[var(--text-muted)]">
-        Select a conversation to view messages
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex-1 flex flex-col">
-      {/* Header */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-[var(--border-color)]">
-        <div className="flex items-center gap-3">
-          <Avatar fallback={conversation.brand.name.charAt(0)} size="md" />
-          <div>
-            <p className="font-medium text-[var(--text-primary)]">
-              {conversation.brand.name}
-            </p>
-            <p className="text-xs text-[var(--text-muted)]">
-              {conversation.dealTitle}
-            </p>
-          </div>
-        </div>
-        <Button variant="ghost" size="sm">
-          <MoreVertical className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex ${msg.senderId === 'athlete' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[70%] rounded-[var(--radius-lg)] px-4 py-2 ${
-                msg.senderId === 'athlete'
-                  ? 'bg-[var(--color-primary)] text-[var(--text-inverse)]'
-                  : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
-              }`}
-            >
-              <p className="text-sm">{msg.message}</p>
-              <p
-                className={`text-xs mt-1 ${
-                  msg.senderId === 'athlete'
-                    ? 'text-[var(--text-inverse)]/60'
-                    : 'text-[var(--text-muted)]'
-                }`}
-              >
-                {formatRelativeTime(msg.createdAt)}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Input */}
-      <div className="p-4 border-t border-[var(--border-color)]">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm">
-            <Paperclip className="h-4 w-4" />
-          </Button>
-          <Input
-            placeholder="Type a message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            className="flex-1"
-          />
-          <Button variant="primary" size="sm">
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
+// Current user ID for the athlete
+const CURRENT_USER_ID = 'athlete';
 
 export default function AthleteMessagesPage() {
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(
     mockConversations[0]?.id || null
   );
+  const [searchQuery, setSearchQuery] = useState('');
+  const [conversations, setConversations] = useState(mockConversations);
+  const [messagesByConversation, setMessagesByConversation] = useState(mockMessagesByConversation);
+  // Mobile: track if we're viewing the thread (vs the list)
+  const [mobileShowThread, setMobileShowThread] = useState(false);
 
-  const currentConversation = mockConversations.find(
-    (c) => c.id === selectedConversation
-  );
+  // Filter conversations based on search
+  const filteredConversations = useMemo(() => {
+    if (!searchQuery.trim()) return conversations;
+    const query = searchQuery.toLowerCase();
+    return conversations.filter((conv) => {
+      const participant = conv.participants[0];
+      return (
+        participant?.name.toLowerCase().includes(query) ||
+        participant?.subtitle?.toLowerCase().includes(query) ||
+        conv.lastMessage?.content.toLowerCase().includes(query)
+      );
+    });
+  }, [conversations, searchQuery]);
+
+  // Get current conversation and its participant
+  const currentConversation = conversations.find((c) => c.id === selectedConversationId);
+  const currentParticipant: ConversationParticipant | undefined = currentConversation?.participants[0];
+  const currentMessages = selectedConversationId
+    ? messagesByConversation[selectedConversationId] || []
+    : [];
+
+  // Handle selecting a conversation
+  const handleSelectConversation = (id: string) => {
+    setSelectedConversationId(id);
+    setMobileShowThread(true);
+  };
+
+  // Handle going back to list on mobile
+  const handleBack = () => {
+    setMobileShowThread(false);
+  };
+
+  // Handle sending a message
+  const handleSendMessage = (content: string) => {
+    if (!selectedConversationId) return;
+
+    const newMessage: Message = {
+      id: `msg-${Date.now()}`,
+      conversationId: selectedConversationId,
+      senderId: CURRENT_USER_ID,
+      content,
+      timestamp: new Date().toISOString(),
+      read: true,
+    };
+
+    // Add to messages
+    setMessagesByConversation((prev) => ({
+      ...prev,
+      [selectedConversationId]: [...(prev[selectedConversationId] || []), newMessage],
+    }));
+
+    // Update conversation's last message
+    setConversations((prev) =>
+      prev.map((conv) =>
+        conv.id === selectedConversationId
+          ? { ...conv, lastMessage: newMessage }
+          : conv
+      )
+    );
+  };
 
   return (
     <div className="animate-fade-in -m-6 lg:-m-8">
-      <Card className="rounded-none lg:rounded-[var(--radius-lg)] h-[calc(100vh-4rem)] lg:h-[calc(100vh-8rem)]">
+      <Card className="rounded-none lg:rounded-[var(--radius-lg)] h-[calc(100vh-4rem)] lg:h-[calc(100vh-8rem)] overflow-hidden">
         <CardContent className="p-0 h-full flex">
-          <ConversationList
-            conversations={mockConversations}
-            selectedId={selectedConversation}
-            onSelect={setSelectedConversation}
-          />
-          <MessageThread
-            conversation={currentConversation || null}
-            messages={mockMessages}
-          />
+          {/* Conversation List - 35% on desktop, full width on mobile when not viewing thread */}
+          <div
+            className={cn(
+              'border-r border-[var(--border-color)]',
+              // Desktop: always visible at 35%
+              'lg:w-[35%] lg:flex lg:flex-col',
+              // Mobile: full width when not viewing thread, hidden when viewing thread
+              mobileShowThread ? 'hidden' : 'w-full flex flex-col'
+            )}
+          >
+            <ConversationList
+              conversations={filteredConversations}
+              selectedId={selectedConversationId}
+              onSelect={handleSelectConversation}
+              searchPlaceholder="Search brands..."
+              searchQuery={searchQuery}
+              onSearch={setSearchQuery}
+              emptyMessage="No conversations with brands yet"
+            />
+          </div>
+
+          {/* Message Thread - 65% on desktop, full width on mobile when viewing thread */}
+          <div
+            className={cn(
+              // Desktop: always visible at 65%
+              'lg:w-[65%] lg:flex lg:flex-col',
+              // Mobile: full width when viewing thread, hidden when viewing list
+              mobileShowThread ? 'w-full flex flex-col' : 'hidden'
+            )}
+          >
+            <MessageThread
+              messages={currentMessages}
+              currentUserId={CURRENT_USER_ID}
+              onSendMessage={handleSendMessage}
+              participant={currentParticipant}
+              onBack={handleBack}
+              showBackButton={mobileShowThread}
+              emptyStateMessage="Select a conversation to view messages"
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

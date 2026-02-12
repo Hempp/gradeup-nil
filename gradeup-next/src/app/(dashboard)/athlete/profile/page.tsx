@@ -19,6 +19,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
+import { useToastActions } from '@/components/ui/toast';
+import { useFormValidation, validators } from '@/lib/utils/validation';
 
 // Mock athlete data
 const mockAthlete = {
@@ -140,8 +142,77 @@ function VerificationStatus() {
   );
 }
 
+interface ProfileFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  bio: string;
+}
+
 function PersonalInfoForm() {
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const toast = useToastActions();
+
+  const {
+    values,
+    errors: fieldErrors,
+    touched,
+    handleChange,
+    handleBlur,
+    validate,
+    setValues,
+  } = useFormValidation<ProfileFormValues>(
+    {
+      firstName: mockAthlete.firstName,
+      lastName: mockAthlete.lastName,
+      email: mockAthlete.email,
+      phone: mockAthlete.phone,
+      bio: mockAthlete.bio,
+    },
+    {
+      firstName: [validators.required, validators.minLength(2)],
+      lastName: [validators.required, validators.minLength(2)],
+      email: [validators.required, validators.email],
+      phone: [validators.phone],
+    }
+  );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    handleChange(e.target.name as keyof ProfileFormValues, e.target.value);
+  };
+
+  const handleFieldBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    handleBlur(e.target.name as keyof ProfileFormValues);
+  };
+
+  const handleSave = async () => {
+    if (!validate()) {
+      toast.error('Validation Error', 'Please correct the errors before saving.');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      // TODO: Replace with actual API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success('Profile Updated', 'Your profile has been saved successfully.');
+      setIsEditing(false);
+    } catch (error) {
+      toast.error('Save Failed', 'Unable to save profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      handleSave();
+    } else {
+      setIsEditing(true);
+    }
+  };
 
   return (
     <Card>
@@ -151,12 +222,13 @@ function PersonalInfoForm() {
           <Button
             variant={isEditing ? 'primary' : 'outline'}
             size="sm"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={handleEditToggle}
+            disabled={isSaving}
           >
             {isEditing ? (
               <>
                 <Save className="h-4 w-4" />
-                Save
+                {isSaving ? 'Saving...' : 'Save'}
               </>
             ) : (
               'Edit'
@@ -171,16 +243,33 @@ function PersonalInfoForm() {
               First Name
             </label>
             <Input
-              defaultValue={mockAthlete.firstName}
+              name="firstName"
+              value={values.firstName}
+              onChange={handleInputChange}
+              onBlur={handleFieldBlur}
               disabled={!isEditing}
+              error={!!(touched.firstName && fieldErrors.firstName)}
               icon={<User className="h-4 w-4" />}
             />
+            {touched.firstName && fieldErrors.firstName && (
+              <p className="text-xs text-[var(--color-error)] mt-1">{fieldErrors.firstName}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm text-[var(--text-muted)] mb-1.5">
               Last Name
             </label>
-            <Input defaultValue={mockAthlete.lastName} disabled={!isEditing} />
+            <Input
+              name="lastName"
+              value={values.lastName}
+              onChange={handleInputChange}
+              onBlur={handleFieldBlur}
+              disabled={!isEditing}
+              error={!!(touched.lastName && fieldErrors.lastName)}
+            />
+            {touched.lastName && fieldErrors.lastName && (
+              <p className="text-xs text-[var(--color-error)] mt-1">{fieldErrors.lastName}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm text-[var(--text-muted)] mb-1.5">
@@ -188,10 +277,17 @@ function PersonalInfoForm() {
             </label>
             <Input
               type="email"
-              defaultValue={mockAthlete.email}
+              name="email"
+              value={values.email}
+              onChange={handleInputChange}
+              onBlur={handleFieldBlur}
               disabled={!isEditing}
+              error={!!(touched.email && fieldErrors.email)}
               icon={<Mail className="h-4 w-4" />}
             />
+            {touched.email && fieldErrors.email && (
+              <p className="text-xs text-[var(--color-error)] mt-1">{fieldErrors.email}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm text-[var(--text-muted)] mb-1.5">
@@ -199,17 +295,26 @@ function PersonalInfoForm() {
             </label>
             <Input
               type="tel"
-              defaultValue={mockAthlete.phone}
+              name="phone"
+              value={values.phone}
+              onChange={handleInputChange}
+              onBlur={handleFieldBlur}
               disabled={!isEditing}
+              error={!!(touched.phone && fieldErrors.phone)}
               icon={<Phone className="h-4 w-4" />}
             />
+            {touched.phone && fieldErrors.phone && (
+              <p className="text-xs text-[var(--color-error)] mt-1">{fieldErrors.phone}</p>
+            )}
           </div>
           <div className="md:col-span-2">
             <label className="block text-sm text-[var(--text-muted)] mb-1.5">
               Bio
             </label>
             <textarea
-              defaultValue={mockAthlete.bio}
+              name="bio"
+              value={values.bio}
+              onChange={handleInputChange}
               disabled={!isEditing}
               rows={3}
               className="w-full rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

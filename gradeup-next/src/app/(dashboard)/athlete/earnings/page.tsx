@@ -2,6 +2,14 @@
 
 import { useState } from 'react';
 import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from 'recharts';
+import {
   DollarSign,
   TrendingUp,
   Clock,
@@ -13,6 +21,16 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import {
+  ChartWrapper,
+  TimePeriodSelector,
+  type TimePeriod,
+  chartColors,
+  tooltipStyle,
+  axisStyle,
+  formatCurrencyValue,
+  formatAxisValue,
+} from '@/components/ui/chart';
 
 // Mock earnings data
 const mockEarningsStats = {
@@ -57,14 +75,23 @@ const mockPayouts = [
   },
 ];
 
-const mockMonthlyEarnings = [
-  { month: 'Sep', amount: 4500 },
-  { month: 'Oct', amount: 6200 },
-  { month: 'Nov', amount: 8100 },
-  { month: 'Dec', amount: 9800 },
-  { month: 'Jan', amount: 11200 },
-  { month: 'Feb', amount: 8750 },
+// Extended earnings data for different time periods
+const mockEarningsDataAll = [
+  { month: 'Mar 24', amount: 2200 },
+  { month: 'Apr 24', amount: 3100 },
+  { month: 'May 24', amount: 2800 },
+  { month: 'Jun 24', amount: 3500 },
+  { month: 'Jul 24', amount: 4200 },
+  { month: 'Aug 24', amount: 3900 },
+  { month: 'Sep 24', amount: 4500 },
+  { month: 'Oct 24', amount: 6200 },
+  { month: 'Nov 24', amount: 8100 },
+  { month: 'Dec 24', amount: 9800 },
+  { month: 'Jan 25', amount: 11200 },
+  { month: 'Feb 25', amount: 8750 },
 ];
+
+const mockMonthlyEarnings = mockEarningsDataAll.slice(-6);
 
 function StatCard({
   title,
@@ -106,38 +133,69 @@ function StatCard({
 }
 
 function EarningsChart() {
-  const maxAmount = Math.max(...mockMonthlyEarnings.map((e) => e.amount));
+  const [period, setPeriod] = useState<TimePeriod>('6M');
+
+  // Filter data based on selected period
+  const getFilteredData = () => {
+    switch (period) {
+      case '3M':
+        return mockEarningsDataAll.slice(-3);
+      case '6M':
+        return mockEarningsDataAll.slice(-6);
+      case '1Y':
+        return mockEarningsDataAll;
+      case 'All':
+        return mockEarningsDataAll;
+      default:
+        return mockEarningsDataAll.slice(-6);
+    }
+  };
+
+  const chartData = getFilteredData();
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Monthly Earnings</CardTitle>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              <Calendar className="h-4 w-4 mr-1" />
-              Last 6 Months
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="h-64 flex items-end gap-4">
-          {mockMonthlyEarnings.map((item) => (
-            <div key={item.month} className="flex-1 flex flex-col items-center gap-2">
-              <div
-                className="w-full bg-gradient-to-t from-[var(--color-primary)] to-[var(--color-primary)]/50 rounded-t-[var(--radius-sm)] transition-all duration-500 hover:opacity-80"
-                style={{ height: `${(item.amount / maxAmount) * 200}px` }}
-              />
-              <span className="text-xs text-[var(--text-muted)]">{item.month}</span>
-              <span className="text-xs font-medium text-[var(--text-primary)]">
-                {formatCurrency(item.amount)}
-              </span>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+    <ChartWrapper
+      title="Earnings Trend"
+      description="Track your earnings growth over time"
+      height={300}
+      headerAction={
+        <TimePeriodSelector value={period} onChange={setPeriod} />
+      }
+    >
+      <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <defs>
+          <linearGradient id="earningsGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.3} />
+            <stop offset="95%" stopColor={chartColors.primary} stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--surface-200)" vertical={false} />
+        <XAxis
+          dataKey="month"
+          tick={axisStyle.tick}
+          axisLine={axisStyle.axisLine}
+          tickLine={axisStyle.tickLine}
+        />
+        <YAxis
+          tick={axisStyle.tick}
+          axisLine={false}
+          tickLine={axisStyle.tickLine}
+          tickFormatter={formatAxisValue}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle.contentStyle}
+          labelStyle={tooltipStyle.labelStyle}
+          formatter={(value) => [formatCurrencyValue(value as number), 'Earnings']}
+        />
+        <Area
+          type="monotone"
+          dataKey="amount"
+          stroke={chartColors.primary}
+          strokeWidth={2}
+          fill="url(#earningsGradient)"
+        />
+      </AreaChart>
+    </ChartWrapper>
   );
 }
 

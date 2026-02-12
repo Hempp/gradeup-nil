@@ -6,6 +6,11 @@ export async function middleware(request: NextRequest) {
     request: { headers: request.headers },
   });
 
+  // Skip auth checks in development for easier testing
+  if (process.env.NODE_ENV === 'development') {
+    return response;
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

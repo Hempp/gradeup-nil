@@ -25,8 +25,15 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts';
+import {
+  ChartWrapper,
+  chartColors,
+  tooltipStyle,
+  axisStyle,
+  formatCurrencyValue,
+  formatAxisValue,
+} from '@/components/ui/chart';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { StatCard } from '@/components/ui/stat-card';
 import { Badge } from '@/components/ui/badge';
@@ -292,62 +299,47 @@ function UpcomingDeadlines() {
 
 function EarningsChart() {
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Earnings Overview</CardTitle>
-            <p className="text-sm text-[var(--text-muted)] mt-1">
-              Your earnings over the last 6 months
-            </p>
-          </div>
-          <Badge variant="success">
-            +{mockStats.earningsTrend}% this month
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[300px] mt-4">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={mockEarningsData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="var(--border-color)"
-                vertical={false}
-              />
-              <XAxis
-                dataKey="month"
-                tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
-                axisLine={{ stroke: 'var(--border-color)' }}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                }}
-                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
-                formatter={(value) => [formatCurrency(value as number), 'Earnings']}
-              />
-              <Bar
-                dataKey="earnings"
-                fill="var(--color-primary)"
-                radius={[4, 4, 0, 0]}
-                maxBarSize={50}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <ChartWrapper
+      title="Earnings Overview"
+      description="Your earnings over the last 6 months"
+      height={300}
+      headerAction={
+        <Badge variant="success">
+          +{mockStats.earningsTrend}% this month
+        </Badge>
+      }
+    >
+      <BarChart data={mockEarningsData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke="var(--surface-200)"
+          vertical={false}
+        />
+        <XAxis
+          dataKey="month"
+          tick={axisStyle.tick}
+          axisLine={axisStyle.axisLine}
+          tickLine={axisStyle.tickLine}
+        />
+        <YAxis
+          tick={axisStyle.tick}
+          axisLine={false}
+          tickLine={axisStyle.tickLine}
+          tickFormatter={formatAxisValue}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle.contentStyle}
+          labelStyle={tooltipStyle.labelStyle}
+          formatter={(value) => [formatCurrencyValue(value as number), 'Earnings']}
+        />
+        <Bar
+          dataKey="earnings"
+          fill={chartColors.primary}
+          radius={[4, 4, 0, 0]}
+          maxBarSize={50}
+        />
+      </BarChart>
+    </ChartWrapper>
   );
 }
 

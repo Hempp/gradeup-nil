@@ -27,6 +27,7 @@ import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
 import { FilterBar, type Filter as FilterType } from '@/components/ui/filter-bar';
 import { Modal } from '@/components/ui/modal';
 import { StatCard } from '@/components/ui/stat-card';
+import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatDate, formatDateTime, formatRelativeTime } from '@/lib/utils';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -587,19 +588,38 @@ function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useToastActions();
 
   const handleApprove = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    setShowApproveModal(false);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success(
+        'Deal Approved',
+        `The deal between ${deal.athleteName} and ${deal.brandName} has been approved.`
+      );
+      setShowApproveModal(false);
+    } catch (error) {
+      toast.error('Approval Failed', 'Unable to approve deal. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleReject = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    setShowRejectModal(false);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success(
+        'Deal Rejected',
+        `The deal between ${deal.athleteName} and ${deal.brandName} has been rejected.`
+      );
+      setShowRejectModal(false);
+    } catch (error) {
+      toast.error('Rejection Failed', 'Unable to reject deal. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (deal.status !== 'pending' && deal.status !== 'investigating') {

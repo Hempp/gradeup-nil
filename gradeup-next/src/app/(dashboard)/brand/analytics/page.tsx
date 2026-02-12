@@ -1,5 +1,17 @@
 'use client';
 
+import { useState } from 'react';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +26,14 @@ import {
   Download,
 } from 'lucide-react';
 import { formatCurrency, formatCompactNumber } from '@/lib/utils';
+import {
+  ChartWrapper,
+  ChartLegend,
+  chartColors,
+  tooltipStyle,
+  axisStyle,
+  formatNumber,
+} from '@/components/ui/chart';
 
 // Mock analytics data
 const mockOverview = {
@@ -43,6 +63,25 @@ const mockMonthlySpend = [
   { month: 'Dec', amount: 28000 },
   { month: 'Jan', amount: 21500 },
   { month: 'Feb', amount: 20000 },
+];
+
+// Reach/impressions over time data
+const mockReachData = [
+  { month: 'Sep', reach: 320000, engagements: 24000 },
+  { month: 'Oct', reach: 450000, engagements: 36000 },
+  { month: 'Nov', reach: 520000, engagements: 42000 },
+  { month: 'Dec', reach: 680000, engagements: 52000 },
+  { month: 'Jan', reach: 590000, engagements: 45000 },
+  { month: 'Feb', reach: 620000, engagements: 48000 },
+];
+
+// Engagement by platform
+const mockPlatformData = [
+  { platform: 'Instagram', engagements: 85000 },
+  { platform: 'TikTok', engagements: 52000 },
+  { platform: 'Twitter', engagements: 28000 },
+  { platform: 'YouTube', engagements: 15000 },
+  { platform: 'LinkedIn', engagements: 5000 },
 ];
 
 function MetricCard({
@@ -87,31 +126,103 @@ function MetricCard({
   );
 }
 
-function SpendChart() {
-  const maxAmount = Math.max(...mockMonthlySpend.map((e) => e.amount));
-
+function ReachChart() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Monthly Spend</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="h-64 flex items-end gap-4">
-          {mockMonthlySpend.map((item) => (
-            <div key={item.month} className="flex-1 flex flex-col items-center gap-2">
-              <div
-                className="w-full bg-gradient-to-t from-[var(--color-secondary)] to-[var(--color-magenta)] rounded-t-[var(--radius-sm)] transition-all duration-500 hover:opacity-80"
-                style={{ height: `${(item.amount / maxAmount) * 200}px` }}
-              />
-              <span className="text-xs text-[var(--text-muted)]">{item.month}</span>
-              <span className="text-xs font-medium text-[var(--text-primary)]">
-                {formatCurrency(item.amount)}
-              </span>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+    <ChartWrapper
+      title="Reach & Engagement Over Time"
+      height={280}
+      headerAction={
+        <ChartLegend
+          items={[
+            { name: 'Reach', color: chartColors.primary },
+            { name: 'Engagements', color: chartColors.secondary },
+          ]}
+        />
+      }
+    >
+      <LineChart data={mockReachData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--surface-200)" vertical={false} />
+        <XAxis
+          dataKey="month"
+          tick={axisStyle.tick}
+          axisLine={axisStyle.axisLine}
+          tickLine={axisStyle.tickLine}
+        />
+        <YAxis
+          tick={axisStyle.tick}
+          axisLine={false}
+          tickLine={axisStyle.tickLine}
+          tickFormatter={formatNumber}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle.contentStyle}
+          labelStyle={tooltipStyle.labelStyle}
+          formatter={(value, name) => [
+            formatCompactNumber(value as number),
+            name === 'reach' ? 'Reach' : 'Engagements',
+          ]}
+        />
+        <Line
+          type="monotone"
+          dataKey="reach"
+          stroke={chartColors.primary}
+          strokeWidth={2}
+          dot={{ fill: chartColors.primary, strokeWidth: 2, r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+        <Line
+          type="monotone"
+          dataKey="engagements"
+          stroke={chartColors.secondary}
+          strokeWidth={2}
+          dot={{ fill: chartColors.secondary, strokeWidth: 2, r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+      </LineChart>
+    </ChartWrapper>
+  );
+}
+
+function PlatformEngagementChart() {
+  return (
+    <ChartWrapper
+      title="Engagement by Platform"
+      height={280}
+    >
+      <BarChart
+        data={mockPlatformData}
+        layout="vertical"
+        margin={{ top: 10, right: 10, left: 60, bottom: 0 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--surface-200)" horizontal={false} />
+        <XAxis
+          type="number"
+          tick={axisStyle.tick}
+          axisLine={axisStyle.axisLine}
+          tickLine={axisStyle.tickLine}
+          tickFormatter={formatNumber}
+        />
+        <YAxis
+          type="category"
+          dataKey="platform"
+          tick={axisStyle.tick}
+          axisLine={false}
+          tickLine={axisStyle.tickLine}
+          width={55}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle.contentStyle}
+          labelStyle={tooltipStyle.labelStyle}
+          formatter={(value) => [formatCompactNumber(value as number), 'Engagements']}
+        />
+        <Bar
+          dataKey="engagements"
+          fill={chartColors.secondary}
+          radius={[0, 4, 4, 0]}
+          maxBarSize={32}
+        />
+      </BarChart>
+    </ChartWrapper>
   );
 }
 
@@ -264,11 +375,14 @@ export default function BrandAnalyticsPage() {
         />
       </div>
 
-      {/* Charts */}
+      {/* Charts Row 1 */}
       <div className="grid lg:grid-cols-2 gap-6">
-        <SpendChart />
-        <TopAthletesCard />
+        <ReachChart />
+        <PlatformEngagementChart />
       </div>
+
+      {/* Top Athletes Card */}
+      <TopAthletesCard />
 
       {/* Campaign Table */}
       <CampaignPerformanceTable />

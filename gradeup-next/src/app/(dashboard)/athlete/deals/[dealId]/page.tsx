@@ -23,6 +23,7 @@ import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatDate, formatRelativeTime } from '@/lib/utils';
 import type { DealStatus } from '@/types';
 
@@ -398,24 +399,45 @@ function LoadingState() {
 export default function DealDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const toast = useToastActions();
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // In a real app, we would fetch the deal based on params.dealId
   const deal = mockDeal;
 
-  const handleAcceptDeal = () => {
-    // TODO: Implement accept deal logic
-    console.log('Accept deal:', params.dealId);
+  const handleAcceptDeal = async () => {
+    setIsProcessing(true);
+    try {
+      // TODO: Replace with actual API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success('Deal Accepted', 'You have successfully accepted this deal. The brand will be notified.');
+      router.push('/athlete/deals');
+    } catch (error) {
+      toast.error('Failed to Accept Deal', 'Something went wrong. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  const handleDeclineDeal = () => {
-    // TODO: Implement decline deal logic
-    console.log('Decline deal:', params.dealId);
+  const handleDeclineDeal = async () => {
+    setIsProcessing(true);
+    try {
+      // TODO: Replace with actual API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success('Deal Declined', 'You have declined this deal. The brand will be notified.');
+      router.push('/athlete/deals');
+    } catch (error) {
+      toast.error('Failed to Decline Deal', 'Something went wrong. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleCounterOffer = () => {
     // TODO: Implement counter offer logic
+    toast.info('Counter Offer', 'Opening counter offer form...');
     console.log('Counter offer:', params.dealId);
   };
 
@@ -515,14 +537,14 @@ export default function DealDetailPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <Button variant="danger" onClick={handleDeclineDeal}>
-                  Decline
+                <Button variant="danger" onClick={handleDeclineDeal} disabled={isProcessing}>
+                  {isProcessing ? 'Processing...' : 'Decline'}
                 </Button>
-                <Button variant="outline" onClick={handleCounterOffer}>
+                <Button variant="outline" onClick={handleCounterOffer} disabled={isProcessing}>
                   Counter Offer
                 </Button>
-                <Button variant="primary" onClick={handleAcceptDeal}>
-                  Accept Deal
+                <Button variant="primary" onClick={handleAcceptDeal} disabled={isProcessing}>
+                  {isProcessing ? 'Processing...' : 'Accept Deal'}
                 </Button>
               </div>
             </div>

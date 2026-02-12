@@ -2,6 +2,15 @@
 
 import { Suspense, useState } from 'react';
 import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
+import {
   Users,
   Building,
   DollarSign,
@@ -18,6 +27,13 @@ import {
   Eye,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import {
+  ChartWrapper,
+  ChartLegend,
+  chartColors,
+  tooltipStyle,
+  axisStyle,
+} from '@/components/ui/chart';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
@@ -236,67 +252,52 @@ function ActivityFeedCard() {
 }
 
 function GrowthChartCard() {
-  const maxAthletes = Math.max(...mockGrowthData.map((d) => d.athletes));
-  const maxBrands = Math.max(...mockGrowthData.map((d) => d.brands));
-
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Platform Growth</CardTitle>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[var(--color-primary)]" />
-              <span className="text-xs text-[var(--text-muted)]">Athletes</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[var(--color-secondary)]" />
-              <span className="text-xs text-[var(--text-muted)]">Brands</span>
-            </div>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[200px] flex items-end justify-between gap-4 pt-4">
-          {mockGrowthData.map((data, index) => (
-            <div key={data.month} className="flex-1 flex flex-col items-center gap-2">
-              {/* Bars container */}
-              <div className="w-full flex items-end justify-center gap-1 h-[160px]">
-                {/* Athletes bar */}
-                <div
-                  className="w-5 bg-[var(--color-primary)] rounded-t-sm transition-all duration-300 hover:opacity-80"
-                  style={{ height: `${(data.athletes / maxAthletes) * 140}px` }}
-                  title={`Athletes: ${data.athletes}`}
-                />
-                {/* Brands bar (scaled differently for visibility) */}
-                <div
-                  className="w-5 bg-[var(--color-secondary)] rounded-t-sm transition-all duration-300 hover:opacity-80"
-                  style={{ height: `${(data.brands / maxBrands) * 140}px` }}
-                  title={`Brands: ${data.brands}`}
-                />
-              </div>
-              {/* Month label */}
-              <span className="text-xs text-[var(--text-muted)]">{data.month}</span>
-            </div>
-          ))}
-        </div>
-        {/* Growth summary */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--border-color)]">
-          <div className="flex items-center gap-2">
-            <ArrowUpRight className="h-4 w-4 text-[var(--color-success)]" />
-            <span className="text-sm text-[var(--text-secondary)]">
-              <span className="font-semibold text-[var(--color-success)]">+37%</span> athlete growth (6mo)
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <ArrowUpRight className="h-4 w-4 text-[var(--color-success)]" />
-            <span className="text-sm text-[var(--text-secondary)]">
-              <span className="font-semibold text-[var(--color-success)]">+61%</span> brand growth (6mo)
-            </span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <ChartWrapper
+      title="Platform Growth"
+      height={250}
+      headerAction={
+        <ChartLegend
+          items={[
+            { name: 'Athletes', color: chartColors.primary },
+            { name: 'Brands', color: chartColors.secondary },
+          ]}
+        />
+      }
+    >
+      <BarChart data={mockGrowthData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--surface-200)" vertical={false} />
+        <XAxis
+          dataKey="month"
+          tick={axisStyle.tick}
+          axisLine={axisStyle.axisLine}
+          tickLine={axisStyle.tickLine}
+        />
+        <YAxis
+          tick={axisStyle.tick}
+          axisLine={false}
+          tickLine={axisStyle.tickLine}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle.contentStyle}
+          labelStyle={tooltipStyle.labelStyle}
+        />
+        <Bar
+          dataKey="athletes"
+          name="Athletes"
+          fill={chartColors.primary}
+          radius={[4, 4, 0, 0]}
+          maxBarSize={24}
+        />
+        <Bar
+          dataKey="brands"
+          name="Brands"
+          fill={chartColors.secondary}
+          radius={[4, 4, 0, 0]}
+          maxBarSize={24}
+        />
+      </BarChart>
+    </ChartWrapper>
   );
 }
 

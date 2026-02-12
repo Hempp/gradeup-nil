@@ -1,5 +1,18 @@
 'use client';
 
+import { useState } from 'react';
+import {
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +24,15 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { formatCurrency, formatCompactNumber } from '@/lib/utils';
+import {
+  ChartWrapper,
+  ChartLegend,
+  chartColors,
+  tooltipStyle,
+  axisStyle,
+  formatCurrencyValue,
+  formatAxisValue,
+} from '@/components/ui/chart';
 
 // Mock analytics data
 const mockStats = {
@@ -35,6 +57,24 @@ const mockSportBreakdown = [
   { sport: 'Soccer', athletes: 32, revenue: 125000, deals: 28 },
   { sport: 'Volleyball', athletes: 24, revenue: 85000, deals: 18 },
   { sport: 'Other', athletes: 61, revenue: 85500, deals: 22 },
+];
+
+// User growth data (athletes + brands over time)
+const mockUserGrowthData = [
+  { month: 'Sep', athletes: 180, brands: 28 },
+  { month: 'Oct', athletes: 195, brands: 32 },
+  { month: 'Nov', athletes: 210, brands: 36 },
+  { month: 'Dec', athletes: 225, brands: 40 },
+  { month: 'Jan', athletes: 238, brands: 42 },
+  { month: 'Feb', athletes: 247, brands: 45 },
+];
+
+// Revenue breakdown for donut chart
+const mockRevenueBreakdown = [
+  { name: 'Social Media', value: 385000, color: chartColors.primary },
+  { name: 'Appearances', value: 225000, color: chartColors.secondary },
+  { name: 'Endorsements', value: 182500, color: chartColors.success },
+  { name: 'Other', value: 100000, color: chartColors.info },
 ];
 
 function MetricCard({
@@ -71,31 +111,107 @@ function MetricCard({
   );
 }
 
-function RevenueChart() {
-  const maxAmount = Math.max(...mockMonthlyRevenue.map((e) => e.amount));
+function UserGrowthChart() {
+  return (
+    <ChartWrapper
+      title="User Growth"
+      description="Athletes and brands over the last 6 months"
+      height={280}
+      headerAction={
+        <ChartLegend
+          items={[
+            { name: 'Athletes', color: chartColors.primary },
+            { name: 'Brands', color: chartColors.secondary },
+          ]}
+        />
+      }
+    >
+      <LineChart data={mockUserGrowthData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--surface-200)" vertical={false} />
+        <XAxis
+          dataKey="month"
+          tick={axisStyle.tick}
+          axisLine={axisStyle.axisLine}
+          tickLine={axisStyle.tickLine}
+        />
+        <YAxis
+          tick={axisStyle.tick}
+          axisLine={false}
+          tickLine={axisStyle.tickLine}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle.contentStyle}
+          labelStyle={tooltipStyle.labelStyle}
+        />
+        <Line
+          type="monotone"
+          dataKey="athletes"
+          name="Athletes"
+          stroke={chartColors.primary}
+          strokeWidth={2}
+          dot={{ fill: chartColors.primary, strokeWidth: 2, r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+        <Line
+          type="monotone"
+          dataKey="brands"
+          name="Brands"
+          stroke={chartColors.secondary}
+          strokeWidth={2}
+          dot={{ fill: chartColors.secondary, strokeWidth: 2, r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+      </LineChart>
+    </ChartWrapper>
+  );
+}
+
+function RevenueBreakdownChart() {
+  const total = mockRevenueBreakdown.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Monthly Revenue</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="h-64 flex items-end gap-4">
-          {mockMonthlyRevenue.map((item) => (
-            <div key={item.month} className="flex-1 flex flex-col items-center gap-2">
-              <div
-                className="w-full bg-gradient-to-t from-[var(--color-accent)] to-[var(--color-secondary)] rounded-t-[var(--radius-sm)] transition-all duration-500 hover:opacity-80"
-                style={{ height: `${(item.amount / maxAmount) * 200}px` }}
-              />
-              <span className="text-xs text-[var(--text-muted)]">{item.month}</span>
-              <span className="text-xs font-medium text-[var(--text-primary)]">
-                {formatCurrency(item.amount)}
-              </span>
-            </div>
+    <ChartWrapper
+      title="Revenue Breakdown"
+      description="Revenue by deal type"
+      height={280}
+    >
+      <PieChart>
+        <Pie
+          data={mockRevenueBreakdown}
+          cx="50%"
+          cy="50%"
+          innerRadius={60}
+          outerRadius={90}
+          paddingAngle={2}
+          dataKey="value"
+          nameKey="name"
+        >
+          {mockRevenueBreakdown.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
-        </div>
-      </CardContent>
-    </Card>
+        </Pie>
+        <Tooltip
+          contentStyle={tooltipStyle.contentStyle}
+          labelStyle={tooltipStyle.labelStyle}
+          formatter={(value, name) => [formatCurrency(value as number), name]}
+        />
+        <Legend
+          verticalAlign="middle"
+          align="right"
+          layout="vertical"
+          wrapperStyle={{ paddingLeft: '20px' }}
+          formatter={(value, entry) => {
+            const item = mockRevenueBreakdown.find((d) => d.name === value);
+            const percent = item ? ((item.value / total) * 100).toFixed(1) : 0;
+            return (
+              <span style={{ color: 'var(--neutral-900)', fontSize: '12px' }}>
+                {value} ({percent}%)
+              </span>
+            );
+          }}
+        />
+      </PieChart>
+    </ChartWrapper>
   );
 }
 
@@ -216,7 +332,10 @@ export default function DirectorAnalyticsPage() {
       </div>
 
       {/* Charts */}
-      <RevenueChart />
+      <div className="grid lg:grid-cols-2 gap-6">
+        <UserGrowthChart />
+        <RevenueBreakdownChart />
+      </div>
 
       {/* Sport Breakdown */}
       <SportBreakdownTable />
