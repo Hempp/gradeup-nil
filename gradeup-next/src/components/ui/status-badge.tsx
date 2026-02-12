@@ -53,6 +53,11 @@ const statusConfig: Record<DealStatus, { label: string; className: string; dotCo
     className: 'bg-[var(--error-100)] text-[var(--error-600)]',
     dotColor: 'bg-[var(--error-600)]',
   },
+  paused: {
+    label: 'Paused',
+    className: 'bg-[var(--warning-100)] text-[var(--warning-600)]',
+    dotColor: 'bg-[var(--warning-600)]',
+  },
 };
 
 const StatusBadge = forwardRef<HTMLSpanElement, StatusBadgeProps>(

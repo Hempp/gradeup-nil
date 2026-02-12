@@ -22,6 +22,10 @@ export interface Toast {
   description?: string;
   variant: ToastVariant;
   duration?: number;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 interface ToastContextValue {
@@ -177,6 +181,21 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
               {toast.description}
             </p>
           )}
+          {toast.action && (
+            <button
+              type="button"
+              onClick={() => {
+                toast.action?.onClick();
+                handleClose();
+              }}
+              className={cn(
+                'mt-2 text-sm font-medium underline underline-offset-2 hover:no-underline',
+                config.iconColor
+              )}
+            >
+              {toast.action.label}
+            </button>
+          )}
         </div>
 
         {/* Close button */}
@@ -258,4 +277,49 @@ export function useToastActions() {
       addToast({ title, description, variant: 'info' }),
     custom: addToast,
   };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLOBAL TOAST (for use outside React components)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+let globalAddToast: ((toast: Omit<Toast, 'id'>) => void) | null = null;
+
+export function setGlobalToastHandler(handler: (toast: Omit<Toast, 'id'>) => void) {
+  globalAddToast = handler;
+}
+
+export const toast = {
+  success: (title: string, description?: string) => {
+    globalAddToast?.({ title, description, variant: 'success' });
+  },
+  error: (title: string, description?: string) => {
+    globalAddToast?.({ title, description, variant: 'error' });
+  },
+  warning: (title: string, description?: string) => {
+    globalAddToast?.({ title, description, variant: 'warning' });
+  },
+  info: (title: string, description?: string) => {
+    globalAddToast?.({ title, description, variant: 'info' });
+  },
+  custom: (options: Omit<Toast, 'id'>) => {
+    globalAddToast?.(options);
+  },
+};
+
+/**
+ * Component to connect global toast handler to provider
+ * Place inside ToastProvider
+ */
+export function ToastGlobalHandler() {
+  const { addToast } = useToast();
+
+  useEffect(() => {
+    setGlobalToastHandler(addToast);
+    return () => {
+      globalAddToast = null;
+    };
+  }, [addToast]);
+
+  return null;
 }

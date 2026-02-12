@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   DollarSign,
   FileText,
@@ -12,11 +12,10 @@ import {
   User,
   Calendar,
   Clock,
-  CheckCircle2,
-  AlertCircle,
   Megaphone,
   Handshake,
   Upload,
+  Loader2,
 } from 'lucide-react';
 import {
   BarChart,
@@ -38,101 +37,18 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { StatCard } from '@/components/ui/stat-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Avatar } from '@/components/ui/avatar';
 import { formatCurrency, formatCompactNumber, formatRelativeTime, formatDate } from '@/lib/utils';
+import { useRequireAuth } from '@/context';
+import { useAthleteStats, useAthleteDeals, useActivity, useAthleteEarnings } from '@/lib/hooks/use-data';
+import type { Activity } from '@/lib/services/activity';
+import type { Deal } from '@/lib/services/deals';
 
-// Mock data - will be replaced with real data from Supabase
-const mockStats = {
-  totalEarnings: 45250,
-  earningsTrend: 12.5,
-  activeDeals: 4,
-  newDeals: 2,
-  profileViews: 1847,
-  viewsTrend: 18,
-  nilValuation: 125000,
-};
-
-const mockActivityFeed = [
-  {
-    id: '1',
-    type: 'deal_accepted' as const,
-    description: 'Nike accepted your counter offer for Instagram Campaign',
-    timestamp: '2024-02-11T09:30:00Z',
-  },
-  {
-    id: '2',
-    type: 'message' as const,
-    description: 'New message from Gatorade about partnership terms',
-    timestamp: '2024-02-11T08:15:00Z',
-  },
-  {
-    id: '3',
-    type: 'profile_view' as const,
-    description: 'Your profile was viewed by Foot Locker',
-    timestamp: '2024-02-10T16:45:00Z',
-  },
-  {
-    id: '4',
-    type: 'deliverable' as const,
-    description: 'Submitted Instagram post for Nike campaign - Awaiting approval',
-    timestamp: '2024-02-10T14:20:00Z',
-  },
-  {
-    id: '5',
-    type: 'payment' as const,
-    description: 'Received payment of $2,500 from Sports Memorabilia Inc',
-    timestamp: '2024-02-09T11:00:00Z',
-  },
-  {
-    id: '6',
-    type: 'new_offer' as const,
-    description: 'New deal offer from Under Armour - $3,500 social media campaign',
-    timestamp: '2024-02-09T09:30:00Z',
-  },
-];
-
-const mockDeadlines = [
-  {
-    id: '1',
-    title: 'Nike Instagram Post #2',
-    dealId: 'deal-1',
-    deadline: '2024-02-14T23:59:00Z',
-    status: 'upcoming' as const,
-  },
-  {
-    id: '2',
-    title: 'Foot Locker Store Appearance',
-    dealId: 'deal-2',
-    deadline: '2024-02-16T10:00:00Z',
-    status: 'upcoming' as const,
-  },
-  {
-    id: '3',
-    title: 'Gatorade Contract Response',
-    dealId: 'deal-3',
-    deadline: '2024-02-18T17:00:00Z',
-    status: 'pending' as const,
-  },
-  {
-    id: '4',
-    title: 'Nike Instagram Post #3',
-    dealId: 'deal-1',
-    deadline: '2024-02-21T23:59:00Z',
-    status: 'upcoming' as const,
-  },
-];
-
-const mockEarningsData = [
-  { month: 'Sep', earnings: 8500 },
-  { month: 'Oct', earnings: 12000 },
-  { month: 'Nov', earnings: 9500 },
-  { month: 'Dec', earnings: 15000 },
-  { month: 'Jan', earnings: 18500 },
-  { month: 'Feb', earnings: 45250 },
-];
-
-const activityIcons = {
+// Activity type to icon mapping
+const activityIcons: Record<string, typeof Handshake> = {
+  deal_created: FileText,
   deal_accepted: Handshake,
+  deal_completed: Handshake,
+  deal_rejected: FileText,
   message: MessageSquare,
   profile_view: Eye,
   deliverable: Upload,
@@ -140,8 +56,11 @@ const activityIcons = {
   new_offer: Megaphone,
 };
 
-const activityColors = {
+const activityColors: Record<string, string> = {
+  deal_created: 'text-[var(--color-primary)]',
   deal_accepted: 'text-[var(--color-success)]',
+  deal_completed: 'text-[var(--color-success)]',
+  deal_rejected: 'text-[var(--color-error)]',
   message: 'text-[var(--color-primary)]',
   profile_view: 'text-[var(--text-muted)]',
   deliverable: 'text-[var(--color-warning)]',
@@ -195,7 +114,24 @@ function QuickActionsDropdown() {
   );
 }
 
-function ActivityFeed() {
+function ActivityFeed({ activities, loading }: { activities: Activity[] | null; loading: boolean }) {
+  if (loading) {
+    return (
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const displayActivities = activities && activities.length > 0 ? activities : [];
+
   return (
     <Card className="h-full">
       <CardHeader>
@@ -210,39 +146,51 @@ function ActivityFeed() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {mockActivityFeed.map((activity) => {
-            const Icon = activityIcons[activity.type];
-            const colorClass = activityColors[activity.type];
-            return (
-              <div
-                key={activity.id}
-                className="flex items-start gap-3 pb-4 border-b border-[var(--border-color)] last:border-0 last:pb-0"
-              >
-                <div className={`mt-0.5 ${colorClass}`}>
-                  <Icon className="h-5 w-5" />
+        {displayActivities.length === 0 ? (
+          <p className="text-sm text-[var(--text-muted)] text-center py-4">
+            No recent activity yet
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {displayActivities.map((activity) => {
+              const Icon = activityIcons[activity.type] || FileText;
+              const colorClass = activityColors[activity.type] || 'text-[var(--text-muted)]';
+              return (
+                <div
+                  key={activity.id}
+                  className="flex items-start gap-3 pb-4 border-b border-[var(--border-color)] last:border-0 last:pb-0"
+                >
+                  <div className={`mt-0.5 ${colorClass}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-[var(--text-primary)] leading-snug">
+                      {activity.description}
+                    </p>
+                    <p className="text-xs text-[var(--text-muted)] mt-1">
+                      {formatRelativeTime(activity.created_at)}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[var(--text-primary)] leading-snug">
-                    {activity.description}
-                  </p>
-                  <p className="text-xs text-[var(--text-muted)] mt-1">
-                    {formatRelativeTime(activity.timestamp)}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 }
 
-function UpcomingDeadlines() {
-  const sortedDeadlines = [...mockDeadlines].sort(
-    (a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
-  );
+function UpcomingDeadlines({ deals, loading }: { deals: Deal[] | null; loading: boolean }) {
+  // Filter active deals with end dates and sort by date
+  const upcomingDeals = useMemo(() => {
+    if (!deals) return [];
+    return deals
+      .filter((deal) => deal.status === 'active' || deal.status === 'accepted')
+      .filter((deal) => deal.end_date)
+      .sort((a, b) => new Date(a.end_date!).getTime() - new Date(b.end_date!).getTime())
+      .slice(0, 4);
+  }, [deals]);
 
   const getDeadlineStatus = (deadline: string) => {
     const now = new Date();
@@ -254,6 +202,24 @@ function UpcomingDeadlines() {
     return { color: 'text-[var(--text-muted)]', label: '' };
   };
 
+  if (loading) {
+    return (
+      <Card className="h-full">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Upcoming Deadlines</CardTitle>
+            <Calendar className="h-5 w-5 text-[var(--text-muted)]" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="h-full">
       <CardHeader>
@@ -263,89 +229,160 @@ function UpcomingDeadlines() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {sortedDeadlines.map((item) => {
-            const status = getDeadlineStatus(item.deadline);
-            return (
-              <a
-                key={item.id}
-                href={`/athlete/deals/${item.dealId}`}
-                className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-card-hover)] transition-colors group"
-              >
-                <div className="flex-shrink-0">
-                  <Clock className={`h-5 w-5 ${status.color}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
-                    {item.title}
-                  </p>
-                  <p className="text-xs text-[var(--text-muted)]">
-                    {formatDate(item.deadline)}
-                  </p>
-                </div>
-                {status.label && (
-                  <Badge variant={status.label === 'Urgent' ? 'error' : 'warning'} size="sm">
-                    {status.label}
-                  </Badge>
-                )}
-              </a>
-            );
-          })}
-        </div>
+        {upcomingDeals.length === 0 ? (
+          <p className="text-sm text-[var(--text-muted)] text-center py-4">
+            No upcoming deadlines
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {upcomingDeals.map((deal) => {
+              const status = getDeadlineStatus(deal.end_date!);
+              return (
+                <a
+                  key={deal.id}
+                  href={`/athlete/deals/${deal.id}`}
+                  className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-card-hover)] transition-colors group"
+                >
+                  <div className="flex-shrink-0">
+                    <Clock className={`h-5 w-5 ${status.color}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
+                      {deal.title}
+                    </p>
+                    <p className="text-xs text-[var(--text-muted)]">
+                      {formatDate(deal.end_date!)}
+                    </p>
+                  </div>
+                  {status.label && (
+                    <Badge variant={status.label === 'Urgent' ? 'error' : 'warning'} size="sm">
+                      {status.label}
+                    </Badge>
+                  )}
+                </a>
+              );
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 }
 
-function EarningsChart() {
+interface EarningsChartProps {
+  earningsData: { month: string; earnings: number }[];
+  loading: boolean;
+  trend?: number;
+}
+
+function EarningsChart({ earningsData, loading, trend }: EarningsChartProps) {
+  if (loading) {
+    return (
+      <ChartWrapper
+        title="Earnings Overview"
+        description="Your earnings over the last 6 months"
+        height={300}
+      >
+        <div className="flex items-center justify-center h-[300px]">
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--text-muted)]" />
+        </div>
+      </ChartWrapper>
+    );
+  }
+
+  const displayData = earningsData.length > 0 ? earningsData : [];
+
   return (
     <ChartWrapper
       title="Earnings Overview"
       description="Your earnings over the last 6 months"
       height={300}
       headerAction={
-        <Badge variant="success">
-          +{mockStats.earningsTrend}% this month
-        </Badge>
+        trend !== undefined && trend > 0 ? (
+          <Badge variant="success">+{trend.toFixed(1)}% this month</Badge>
+        ) : undefined
       }
     >
-      <BarChart data={mockEarningsData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-        <CartesianGrid
-          strokeDasharray="3 3"
-          stroke="var(--surface-200)"
-          vertical={false}
-        />
-        <XAxis
-          dataKey="month"
-          tick={axisStyle.tick}
-          axisLine={axisStyle.axisLine}
-          tickLine={axisStyle.tickLine}
-        />
-        <YAxis
-          tick={axisStyle.tick}
-          axisLine={false}
-          tickLine={axisStyle.tickLine}
-          tickFormatter={formatAxisValue}
-        />
-        <Tooltip
-          contentStyle={tooltipStyle.contentStyle}
-          labelStyle={tooltipStyle.labelStyle}
-          formatter={(value) => [formatCurrencyValue(value as number), 'Earnings']}
-        />
-        <Bar
-          dataKey="earnings"
-          fill={chartColors.primary}
-          radius={[4, 4, 0, 0]}
-          maxBarSize={50}
-        />
-      </BarChart>
+      {displayData.length === 0 ? (
+        <div className="flex items-center justify-center h-[300px]">
+          <p className="text-sm text-[var(--text-muted)]">No earnings data yet</p>
+        </div>
+      ) : (
+        <BarChart data={displayData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="var(--surface-200)"
+            vertical={false}
+          />
+          <XAxis
+            dataKey="month"
+            tick={axisStyle.tick}
+            axisLine={axisStyle.axisLine}
+            tickLine={axisStyle.tickLine}
+          />
+          <YAxis
+            tick={axisStyle.tick}
+            axisLine={false}
+            tickLine={axisStyle.tickLine}
+            tickFormatter={formatAxisValue}
+          />
+          <Tooltip
+            contentStyle={tooltipStyle.contentStyle}
+            labelStyle={tooltipStyle.labelStyle}
+            formatter={(value) => [formatCurrencyValue(value as number), 'Earnings']}
+          />
+          <Bar
+            dataKey="earnings"
+            fill={chartColors.primary}
+            radius={[4, 4, 0, 0]}
+            maxBarSize={50}
+          />
+        </BarChart>
+      )}
     </ChartWrapper>
   );
 }
 
 export default function AthleteDashboardPage() {
-  // In a real app, this would come from auth context
-  const athleteName = 'Marcus';
+  // Require auth and get athlete data
+  const { profile, roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['athlete'] });
+  const athleteData = roleData as { id: string; nil_valuation: number | null } | null;
+
+  // Fetch dashboard data
+  const { data: stats, loading: statsLoading } = useAthleteStats(athleteData?.id);
+  const { data: deals, loading: dealsLoading } = useAthleteDeals(athleteData?.id);
+  const { data: activities, loading: activitiesLoading } = useActivity(6);
+  const { data: earningsData, loading: earningsLoading } = useAthleteEarnings(athleteData?.id);
+
+  // Transform earnings data for chart
+  const chartData = useMemo(() => {
+    if (!earningsData?.monthly_breakdown) return [];
+    return earningsData.monthly_breakdown.map((item) => ({
+      month: item.month,
+      earnings: item.amount,
+    }));
+  }, [earningsData]);
+
+  // Calculate trend
+  const earningsTrend = useMemo(() => {
+    if (chartData.length < 2) return 0;
+    const current = chartData[chartData.length - 1]?.earnings || 0;
+    const previous = chartData[chartData.length - 2]?.earnings || 0;
+    if (previous === 0) return 0;
+    return ((current - previous) / previous) * 100;
+  }, [chartData]);
+
+  // Show loading state while auth is checking
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+      </div>
+    );
+  }
+
+  const athleteName = profile?.first_name || 'Athlete';
+  const nilValuation = athleteData?.nil_valuation || 0;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -366,31 +403,31 @@ export default function AthleteDashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Earnings"
-          value={formatCurrency(mockStats.totalEarnings)}
+          value={statsLoading ? '...' : formatCurrency(stats?.total_earnings || 0)}
           icon={<DollarSign className="h-5 w-5" />}
-          trend={mockStats.earningsTrend}
+          trend={earningsTrend > 0 ? earningsTrend : undefined}
           trendDirection="up"
         />
         <StatCard
           title="Active Deals"
-          value={mockStats.activeDeals.toString()}
+          value={statsLoading ? '...' : (stats?.active_deals || 0).toString()}
           icon={<FileText className="h-5 w-5" />}
           subtitle={
-            <span className="text-xs text-[var(--color-success)] font-medium">
-              +{mockStats.newDeals} new
-            </span>
+            stats?.pending_earnings && stats.pending_earnings > 0 ? (
+              <span className="text-xs text-[var(--color-success)] font-medium">
+                {formatCurrency(stats.pending_earnings)} pending
+              </span>
+            ) : undefined
           }
         />
         <StatCard
           title="Profile Views"
-          value={formatCompactNumber(mockStats.profileViews)}
+          value={statsLoading ? '...' : formatCompactNumber(stats?.profile_views || 0)}
           icon={<Eye className="h-5 w-5" />}
-          trend={mockStats.viewsTrend}
-          trendDirection="up"
         />
         <StatCard
           title="NIL Valuation"
-          value={formatCurrency(mockStats.nilValuation)}
+          value={formatCurrency(nilValuation)}
           icon={<TrendingUp className="h-5 w-5" />}
           subtitle={
             <span className="text-xs text-[var(--text-muted)]">
@@ -403,15 +440,19 @@ export default function AthleteDashboardPage() {
       {/* Two-column section: Activity Feed + Deadlines */}
       <div className="grid lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3">
-          <ActivityFeed />
+          <ActivityFeed activities={activities} loading={activitiesLoading} />
         </div>
         <div className="lg:col-span-2">
-          <UpcomingDeadlines />
+          <UpcomingDeadlines deals={deals} loading={dealsLoading} />
         </div>
       </div>
 
       {/* Full-width Earnings Chart */}
-      <EarningsChart />
+      <EarningsChart
+        earningsData={chartData}
+        loading={earningsLoading}
+        trend={earningsTrend > 0 ? earningsTrend : undefined}
+      />
     </div>
   );
 }

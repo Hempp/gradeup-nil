@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Search, Heart, Instagram, MapPin, Users, TrendingUp, DollarSign, SlidersHorizontal, X } from 'lucide-react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { Search, Heart, MapPin, Users, TrendingUp, DollarSign, SlidersHorizontal, X, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,12 @@ import { Avatar } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/ui/empty-state';
 import { formatCompactNumber, formatCurrency, formatPercentage } from '@/lib/utils';
+import { useRequireAuth } from '@/context';
+import { searchAthletes, type AthleteFilters, type Athlete as ServiceAthlete } from '@/lib/services/athlete';
+import { addToShortlist, removeFromShortlist } from '@/lib/services/brand';
+import { useBrandShortlist } from '@/lib/hooks/use-data';
+import { useToastActions } from '@/components/ui/toast';
+import type { Athlete as AthleteType } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MOCK DATA
@@ -216,6 +222,12 @@ const TikTokIcon = () => (
   </svg>
 );
 
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg className={className || "h-3 w-3"} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </svg>
+);
+
 // ═══════════════════════════════════════════════════════════════════════════
 // COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -330,7 +342,7 @@ function AthleteDiscoveryCard({ athlete, onToggleSave }: { athlete: Athlete; onT
             {/* Instagram */}
             <div className="text-center p-2 rounded-[var(--radius-sm)] bg-[var(--bg-tertiary)] group/stat hover:bg-[var(--bg-secondary)] transition-colors">
               <div className="flex items-center justify-center gap-1 mb-0.5">
-                <Instagram className="h-3 w-3 text-[#E4405F]" />
+                <InstagramIcon className="h-3 w-3 text-[#E4405F]" />
               </div>
               <p className="font-semibold text-sm text-[var(--text-primary)]">
                 {formatCompactNumber(athlete.instagramFollowers)}
@@ -650,7 +662,7 @@ function FilterPanel({
 export default function BrandDiscoverPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [athletes, setAthletes] = useState<Athlete[]>(mockAthletes);
+  const [athletes, setAthletes] = useState<ServiceAthlete[]>([]);
   const [filters, setFilters] = useState<Filters>({
     sports: [],
     followerMin: 0,
@@ -658,39 +670,111 @@ export default function BrandDiscoverPage() {
     engagementMin: 0,
     school: '',
   });
+  const [shortlistedIds, setShortlistedIds] = useState<Set<string>>(new Set());
 
-  // Filtered athletes
+  // Auth and brand data
+  const { roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['brand'] });
+  const brandData = roleData as { id: string } | null;
+  const { data: shortlist, refetch: refetchShortlist } = useBrandShortlist(brandData?.id);
+  const toast = useToastActions();
+
+  // Update shortlistedIds when shortlist changes
+  useEffect(() => {
+    if (shortlist) {
+      setShortlistedIds(new Set(shortlist.map(a => a.id)));
+    }
+  }, [shortlist]);
+
+  // Fetch athletes from Supabase
+  const fetchAthletes = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const apiFilters: AthleteFilters = {
+        search: searchQuery || undefined,
+        min_gpa: filters.engagementMin > 0 ? filters.engagementMin : undefined,
+        page_size: 50,
+      };
+      const result = await searchAthletes(apiFilters);
+      if (result.data) {
+        setAthletes(result.data.athletes);
+      }
+    } catch (err) {
+      console.error('Error fetching athletes:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [searchQuery, filters.engagementMin]);
+
+  // Fetch athletes on mount and when search changes
+  useEffect(() => {
+    if (!authLoading) {
+      fetchAthletes();
+    }
+  }, [fetchAthletes, authLoading]);
+
+  // Convert Supabase athlete to local Athlete format for display
+  const displayAthletes = useMemo(() => {
+    return athletes.map((athlete): Athlete => ({
+      id: athlete.id,
+      name: athlete.profile
+        ? `${athlete.profile.first_name || ''} ${athlete.profile.last_name || ''}`.trim()
+        : 'Unknown Athlete',
+      school: athlete.school?.name || 'Unknown School',
+      sport: athlete.sport?.name || 'Unknown Sport',
+      position: athlete.position || '',
+      gpa: athlete.gpa || 0,
+      instagramFollowers: 0, // Would come from social integration
+      tiktokFollowers: 0,
+      engagementRate: 0,
+      nilValue: athlete.nil_valuation || 0,
+      verified: true,
+      saved: shortlistedIds.has(athlete.id),
+      coverImage: null,
+    }));
+  }, [athletes, shortlistedIds]);
+
+  // Filter athletes based on local filters
   const filteredAthletes = useMemo(() => {
-    return athletes.filter((athlete) => {
-      // Search filter
-      const matchesSearch = searchQuery === '' ||
-        athlete.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        athlete.school.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        athlete.sport.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        athlete.position.toLowerCase().includes(searchQuery.toLowerCase());
-
+    return displayAthletes.filter((athlete) => {
       // Sport filter
       const matchesSport = filters.sports.length === 0 || filters.sports.includes(athlete.sport);
-
-      // Follower filter
-      const totalFollowers = athlete.instagramFollowers + athlete.tiktokFollowers;
-      const matchesFollowers = totalFollowers >= filters.followerMin && totalFollowers <= filters.followerMax;
-
-      // Engagement filter
-      const matchesEngagement = athlete.engagementRate >= filters.engagementMin;
 
       // School filter
       const matchesSchool = filters.school === '' || athlete.school === filters.school;
 
-      return matchesSearch && matchesSport && matchesFollowers && matchesEngagement && matchesSchool;
+      return matchesSport && matchesSchool;
     });
-  }, [athletes, searchQuery, filters]);
+  }, [displayAthletes, filters]);
 
   // Toggle save/shortlist
-  const handleToggleSave = (athleteId: string) => {
-    setAthletes(prev => prev.map(athlete =>
-      athlete.id === athleteId ? { ...athlete, saved: !athlete.saved } : athlete
-    ));
+  const handleToggleSave = async (athleteId: string) => {
+    const isSaved = shortlistedIds.has(athleteId);
+    try {
+      if (isSaved) {
+        const result = await removeFromShortlist(athleteId);
+        if (result.error) {
+          toast.error('Error', result.error.message);
+          return;
+        }
+        setShortlistedIds(prev => {
+          const next = new Set(prev);
+          next.delete(athleteId);
+          return next;
+        });
+        toast.success('Removed', 'Athlete removed from shortlist');
+      } else {
+        const result = await addToShortlist(athleteId);
+        if (result.error) {
+          toast.error('Error', result.error.message);
+          return;
+        }
+        setShortlistedIds(prev => new Set([...prev, athleteId]));
+        toast.success('Added', 'Athlete added to shortlist');
+      }
+      refetchShortlist();
+    } catch {
+      toast.error('Error', 'Failed to update shortlist');
+    }
   };
 
   // Clear all filters
@@ -706,7 +790,16 @@ export default function BrandDiscoverPage() {
   };
 
   // Count saved athletes
-  const savedCount = athletes.filter(a => a.saved).length;
+  const savedCount = shortlistedIds.size;
+
+  // Show loading state while auth is checking
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">

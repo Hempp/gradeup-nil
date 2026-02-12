@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import { createBrowserClient } from '@/lib/supabase';
+import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import {
   signIn as authSignIn,
   signOut as authSignOut,

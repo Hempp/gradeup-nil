@@ -5,13 +5,11 @@ import { useRouter } from 'next/navigation';
 import {
   LayoutGrid,
   List,
-  Search,
-  Calendar,
-  DollarSign,
   Clock,
   ArrowRight,
+  Loader2,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
@@ -20,84 +18,10 @@ import { FilterBar, type Filter } from '@/components/ui/filter-bar';
 import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatCurrency, formatDate, formatRelativeTime } from '@/lib/utils';
-import type { DealStatus, DealType } from '@/types';
-
-// Mock deals data
-const mockDeals = [
-  {
-    id: '1',
-    title: 'Instagram Post Campaign',
-    description: 'Create 3 Instagram posts featuring Nike products over 2 weeks',
-    brand: { name: 'Nike', logo: null },
-    amount: 5000,
-    status: 'active' as DealStatus,
-    dealType: 'social_post' as DealType,
-    deliverables: '3 Instagram posts, 2 stories',
-    createdAt: '2024-02-10T10:00:00Z',
-    expiresAt: '2024-02-24T10:00:00Z',
-  },
-  {
-    id: '2',
-    title: 'Store Opening Appearance',
-    description: 'Attend grand opening of new Foot Locker location',
-    brand: { name: 'Foot Locker', logo: null },
-    amount: 2500,
-    status: 'pending' as DealStatus,
-    dealType: 'appearance' as DealType,
-    deliverables: '2-hour appearance, photos with fans',
-    createdAt: '2024-02-09T14:30:00Z',
-    expiresAt: '2024-02-16T14:30:00Z',
-  },
-  {
-    id: '3',
-    title: 'Social Media Endorsement',
-    description: 'Long-term partnership for social media content',
-    brand: { name: 'Gatorade', logo: null },
-    amount: 7500,
-    status: 'negotiating' as DealStatus,
-    dealType: 'endorsement' as DealType,
-    deliverables: 'Monthly content, brand ambassador',
-    createdAt: '2024-02-08T09:00:00Z',
-    expiresAt: '2024-03-08T09:00:00Z',
-  },
-  {
-    id: '4',
-    title: 'Autograph Signing Event',
-    description: 'Sign merchandise at local sports memorabilia show',
-    brand: { name: 'Sports Memorabilia Inc', logo: null },
-    amount: 1500,
-    status: 'completed' as DealStatus,
-    dealType: 'autograph' as DealType,
-    deliverables: '100 signatures',
-    createdAt: '2024-01-20T11:00:00Z',
-    expiresAt: '2024-01-20T15:00:00Z',
-  },
-  {
-    id: '5',
-    title: 'Youth Basketball Camp',
-    description: 'Coach at summer basketball camp for kids',
-    brand: { name: 'Duke Athletics', logo: null },
-    amount: 3000,
-    status: 'completed' as DealStatus,
-    dealType: 'camp' as DealType,
-    deliverables: '3-day camp, coaching sessions',
-    createdAt: '2024-01-15T09:00:00Z',
-    expiresAt: '2024-01-18T17:00:00Z',
-  },
-  {
-    id: '6',
-    title: 'TikTok Brand Partnership',
-    description: 'Create viral TikTok content featuring Under Armour gear',
-    brand: { name: 'Under Armour', logo: null },
-    amount: 3500,
-    status: 'pending' as DealStatus,
-    dealType: 'social_post' as DealType,
-    deliverables: '5 TikTok videos',
-    createdAt: '2024-02-11T08:00:00Z',
-    expiresAt: '2024-02-25T23:59:00Z',
-  },
-];
+import { formatCurrency, formatDate } from '@/lib/utils';
+import { useRequireAuth } from '@/context';
+import { useAthleteDeals } from '@/lib/hooks/use-data';
+import type { Deal, DealStatus, DealType } from '@/lib/services/deals';
 
 type ViewMode = 'table' | 'kanban';
 
@@ -125,11 +49,12 @@ const dealTypeOptions = [
 ];
 
 interface KanbanCardProps {
-  deal: typeof mockDeals[0];
+  deal: Deal;
   onClick: () => void;
 }
 
 function KanbanCard({ deal, onClick }: KanbanCardProps) {
+  const brandName = deal.brand?.company_name || 'Unknown Brand';
   return (
     <div
       onClick={onClick}
@@ -137,8 +62,8 @@ function KanbanCard({ deal, onClick }: KanbanCardProps) {
     >
       {/* Brand */}
       <div className="flex items-center gap-2 mb-3">
-        <Avatar fallback={deal.brand.name.charAt(0)} size="sm" />
-        <span className="text-xs text-[var(--text-muted)]">{deal.brand.name}</span>
+        <Avatar src={deal.brand?.logo_url || undefined} fallback={brandName.charAt(0)} size="sm" />
+        <span className="text-xs text-[var(--text-muted)]">{brandName}</span>
       </div>
 
       {/* Title */}
@@ -149,12 +74,14 @@ function KanbanCard({ deal, onClick }: KanbanCardProps) {
       {/* Amount & Deadline */}
       <div className="flex items-center justify-between text-xs">
         <span className="font-semibold text-[var(--color-primary)]">
-          {formatCurrency(deal.amount)}
+          {formatCurrency(deal.compensation_amount)}
         </span>
-        <span className="text-[var(--text-muted)] flex items-center gap-1">
-          <Clock className="h-3 w-3" />
-          {formatDate(deal.expiresAt)}
-        </span>
+        {deal.end_date && (
+          <span className="text-[var(--text-muted)] flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {formatDate(deal.end_date)}
+          </span>
+        )}
       </div>
 
       {/* Status Badge */}
@@ -168,7 +95,7 @@ function KanbanCard({ deal, onClick }: KanbanCardProps) {
 interface KanbanColumnProps {
   label: string;
   color: string;
-  deals: typeof mockDeals;
+  deals: Deal[];
   onDealClick: (dealId: string) => void;
 }
 
@@ -231,31 +158,40 @@ export default function AthleteDealsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [dealTypeFilter, setDealTypeFilter] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Require auth and get athlete data
+  const { roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['athlete'] });
+  const athleteData = roleData as { id: string } | null;
+
+  // Fetch deals from Supabase
+  const { data: deals, loading: dealsLoading } = useAthleteDeals(athleteData?.id);
+  const isLoading = authLoading || dealsLoading;
+  const allDeals = deals || [];
 
   // Filter deals based on search and filters
   const filteredDeals = useMemo(() => {
-    return mockDeals.filter((deal) => {
+    return allDeals.filter((deal) => {
+      const brandName = deal.brand?.company_name || '';
       const matchesSearch =
         searchQuery === '' ||
         deal.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        deal.brand.name.toLowerCase().includes(searchQuery.toLowerCase());
+        brandName.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesStatus = statusFilter === '' || deal.status === statusFilter;
-      const matchesDealType = dealTypeFilter === '' || deal.dealType === dealTypeFilter;
+      const matchesDealType = dealTypeFilter === '' || deal.deal_type === dealTypeFilter;
 
       return matchesSearch && matchesStatus && matchesDealType;
     });
-  }, [searchQuery, statusFilter, dealTypeFilter]);
+  }, [allDeals, searchQuery, statusFilter, dealTypeFilter]);
 
   // Deal counts for badges
   const dealCounts = useMemo(() => ({
-    total: mockDeals.length,
-    pending: mockDeals.filter((d) => d.status === 'pending').length,
-    negotiating: mockDeals.filter((d) => d.status === 'negotiating').length,
-    active: mockDeals.filter((d) => d.status === 'active').length,
-    completed: mockDeals.filter((d) => d.status === 'completed').length,
-  }), []);
+    total: allDeals.length,
+    pending: allDeals.filter((d) => d.status === 'pending').length,
+    negotiating: allDeals.filter((d) => d.status === 'negotiating').length,
+    active: allDeals.filter((d) => d.status === 'active' || d.status === 'accepted').length,
+    completed: allDeals.filter((d) => d.status === 'completed').length,
+  }), [allDeals]);
 
   const handleDealClick = (dealId: string) => {
     router.push(`/athlete/deals/${dealId}`);
@@ -280,22 +216,25 @@ export default function AthleteDealsPage() {
   ];
 
   // Table columns
-  const tableColumns: DataTableColumn<typeof mockDeals[0]>[] = [
+  const tableColumns: DataTableColumn<Deal>[] = [
     {
       key: 'brand',
       header: 'Brand',
-      render: (_, row) => (
-        <div className="flex items-center gap-3">
-          <Avatar fallback={row.brand.name.charAt(0)} size="md" />
-          <div>
-            <p className="font-medium text-[var(--text-primary)]">{row.title}</p>
-            <p className="text-sm text-[var(--text-muted)]">{row.brand.name}</p>
+      render: (_, row) => {
+        const brandName = row.brand?.company_name || 'Unknown Brand';
+        return (
+          <div className="flex items-center gap-3">
+            <Avatar src={row.brand?.logo_url || undefined} fallback={brandName.charAt(0)} size="md" />
+            <div>
+              <p className="font-medium text-[var(--text-primary)]">{row.title}</p>
+              <p className="text-sm text-[var(--text-muted)]">{brandName}</p>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
-      key: 'dealType',
+      key: 'deal_type',
       header: 'Type',
       render: (value) => (
         <Badge variant="outline">
@@ -304,7 +243,7 @@ export default function AthleteDealsPage() {
       ),
     },
     {
-      key: 'amount',
+      key: 'compensation_amount',
       header: 'Amount',
       render: (value) => (
         <span className="font-semibold text-[var(--color-primary)]">
@@ -313,11 +252,11 @@ export default function AthleteDealsPage() {
       ),
     },
     {
-      key: 'expiresAt',
+      key: 'end_date',
       header: 'Deadline',
       render: (value) => (
         <span className="text-[var(--text-secondary)]">
-          {formatDate(value as string)}
+          {value ? formatDate(value as string) : '-'}
         </span>
       ),
     },
@@ -344,6 +283,15 @@ export default function AthleteDealsPage() {
       ),
     },
   ];
+
+  // Show loading state while auth is checking
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -441,9 +389,9 @@ export default function AthleteDealsPage() {
         </Card>
       ) : viewMode === 'table' ? (
         <DataTable
-          columns={tableColumns}
-          data={filteredDeals}
-          onRowClick={(row) => handleDealClick(row.id)}
+          columns={tableColumns as unknown as DataTableColumn<Record<string, unknown>>[]}
+          data={filteredDeals as unknown as Record<string, unknown>[]}
+          onRowClick={(row) => handleDealClick((row as unknown as Deal).id)}
         />
       ) : (
         <div className="flex gap-4 overflow-x-auto pb-4">
