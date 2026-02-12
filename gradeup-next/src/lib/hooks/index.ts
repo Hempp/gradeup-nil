@@ -14,3 +14,6 @@ export * from './use-realtime';
 
 // Search and filter hooks
 export * from './use-search';
+
+// Error handling hooks
+export * from './use-error-handler';
