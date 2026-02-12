@@ -30,9 +30,9 @@ function Navbar() {
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { href: '#athletes', label: 'Athletes' },
-    { href: '#brands', label: 'Brands' },
-    { href: '#how-it-works', label: 'How It Works' },
+    { href: '/#athletes', label: 'Athletes' },
+    { href: '/#brands', label: 'Brands' },
+    { href: '/#how-it-works', label: 'How It Works' },
     { href: '/opportunities', label: 'Opportunities' },
   ];
 
@@ -60,23 +60,13 @@ function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              link.href.startsWith('#') ? (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors"
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors"
-                >
-                  {link.label}
-                </Link>
-              )
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors"
+              >
+                {link.label}
+              </Link>
             ))}
           </div>
 
@@ -124,25 +114,14 @@ function Navbar() {
         >
           <div className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
-              link.href.startsWith('#') ? (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="block py-2 text-white/70 font-medium hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block py-2 text-white/70 font-medium hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              )
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block py-2 text-white/70 font-medium hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
             ))}
             <div className="pt-4 border-t border-[var(--marketing-gray-800)] space-y-2">
               <Link href="/login" className="block">
@@ -191,9 +170,9 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm transition-colors">
+                <Link href="/#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm transition-colors">
                   How It Works
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/opportunities" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm transition-colors">
@@ -213,14 +192,14 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#athletes" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
+                <Link href="/#athletes" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
                   Browse Athletes
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#brands" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
+                <Link href="/#brands" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
                   Why GradeUp
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -230,9 +209,9 @@ function Footer() {
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
               <li>
-                <a href="#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">
+                <Link href="/#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">
                   About
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/privacy" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">

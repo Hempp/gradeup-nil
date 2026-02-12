@@ -137,12 +137,12 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="animate-fade-in shadow-lg">
+    <Card className="animate-fade-in bg-[var(--marketing-gray-900)]/80 backdrop-blur-xl border border-white/10 shadow-2xl">
       <CardHeader className="text-center pb-2">
-        <CardTitle className="text-2xl font-bold text-[var(--primary-900)]">
+        <CardTitle className="text-2xl font-bold text-white">
           Welcome Back
         </CardTitle>
-        <CardDescription className="text-[var(--neutral-600)]">
+        <CardDescription className="text-white/60">
           Sign in to your GradeUp account
         </CardDescription>
       </CardHeader>
@@ -155,7 +155,7 @@ export default function LoginPage() {
               ref={errorRef}
               role="alert"
               tabIndex={-1}
-              className="p-3 rounded-[var(--radius-md)] bg-[var(--error-100)] text-[var(--error-600)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--error-600)] focus:ring-offset-2"
+              className="p-3 rounded-lg bg-red-500/20 text-red-400 text-sm border border-red-500/30 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black"
             >
               {error}
             </div>
@@ -165,7 +165,7 @@ export default function LoginPage() {
           <div className="space-y-1.5">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-[var(--neutral-900)]"
+              className="block text-sm font-medium text-white/80"
             >
               Email Address
             </label>
@@ -180,6 +180,7 @@ export default function LoginPage() {
               onBlur={handleFieldBlur}
               disabled={isLoading}
               error={!!(touched.email && fieldErrors.email)}
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)]/20"
               icon={
                 <svg
                   width="16"
@@ -190,6 +191,7 @@ export default function LoginPage() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  className="text-white/40"
                 >
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
@@ -197,7 +199,7 @@ export default function LoginPage() {
               }
             />
             {touched.email && fieldErrors.email && (
-              <p className="text-xs text-[var(--error-600)]">{fieldErrors.email}</p>
+              <p className="text-xs text-red-400">{fieldErrors.email}</p>
             )}
           </div>
 
@@ -205,7 +207,7 @@ export default function LoginPage() {
           <div className="space-y-1.5">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-[var(--neutral-900)]"
+              className="block text-sm font-medium text-white/80"
             >
               Password
             </label>
@@ -220,6 +222,7 @@ export default function LoginPage() {
               onBlur={handleFieldBlur}
               disabled={isLoading}
               error={!!(touched.password && fieldErrors.password)}
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)]/20"
               icon={
                 <svg
                   width="16"
@@ -230,6 +233,7 @@ export default function LoginPage() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  className="text-white/40"
                 >
                   <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -237,7 +241,7 @@ export default function LoginPage() {
               }
             />
             {touched.password && fieldErrors.password && (
-              <p className="text-xs text-[var(--error-600)]">{fieldErrors.password}</p>
+              <p className="text-xs text-red-400">{fieldErrors.password}</p>
             )}
           </div>
 
@@ -250,15 +254,15 @@ export default function LoginPage() {
                 checked={rememberMe}
                 onChange={handleInputChange}
                 disabled={isLoading}
-                className="w-4 h-4 rounded border-[var(--surface-200)] text-[var(--primary-500)] focus:ring-[var(--primary-500)] focus:ring-offset-0"
+                className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)] focus:ring-offset-0 focus:ring-offset-black"
               />
-              <span className="text-sm text-[var(--neutral-600)]">
+              <span className="text-sm text-white/60">
                 Remember me
               </span>
             </label>
             <Link
               href="/forgot-password"
-              className="text-sm font-medium text-[var(--primary-500)] hover:text-[var(--primary-700)] transition-colors"
+              className="text-sm font-medium text-[var(--marketing-cyan)] hover:text-[var(--marketing-lime)] transition-colors"
             >
               Forgot password?
             </Link>
@@ -271,7 +275,7 @@ export default function LoginPage() {
             size="lg"
             isLoading={isLoading}
             disabled={isLoading}
-            className="w-full"
+            className="w-full bg-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/90 text-black font-semibold"
           >
             Sign In
           </Button>
@@ -279,10 +283,10 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[var(--surface-200)]" />
+              <div className="w-full border-t border-white/10" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-[var(--surface-white)] text-[var(--neutral-400)]">
+              <span className="px-4 bg-[var(--marketing-gray-900)] text-white/40">
                 Or continue with
               </span>
             </div>
@@ -296,7 +300,7 @@ export default function LoginPage() {
               size="lg"
               onClick={() => handleSocialLogin('google')}
               disabled={isLoading}
-              className="w-full"
+              className="w-full bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
             >
               <svg
                 width="18"
@@ -329,7 +333,7 @@ export default function LoginPage() {
               size="lg"
               onClick={() => handleSocialLogin('apple')}
               disabled={isLoading}
-              className="w-full"
+              className="w-full bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
             >
               <svg
                 width="18"
@@ -345,15 +349,48 @@ export default function LoginPage() {
           </div>
 
           {/* Sign Up Link */}
-          <p className="text-center text-sm text-[var(--neutral-600)] mt-6">
+          <p className="text-center text-sm text-white/60 mt-6">
             Don&apos;t have an account?{' '}
             <Link
               href="/signup"
-              className="font-semibold text-[var(--primary-500)] hover:text-[var(--primary-700)] transition-colors"
+              className="font-semibold text-[var(--marketing-cyan)] hover:text-[var(--marketing-lime)] transition-colors"
             >
               Sign up
             </Link>
           </p>
+
+          {/* Demo Mode Section */}
+          <div className="mt-8 pt-6 border-t border-white/10">
+            <p className="text-center text-xs text-white/40 mb-4 uppercase tracking-wider font-medium">
+              Demo Mode - Quick Access
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => router.push('/athlete/dashboard')}
+                disabled={isLoading}
+                className="px-3 py-2 text-xs font-medium rounded-lg bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)] border border-[var(--marketing-cyan)]/20 hover:bg-[var(--marketing-cyan)]/20 hover:border-[var(--marketing-cyan)]/40 transition-all disabled:opacity-50"
+              >
+                Athlete
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/brand/dashboard')}
+                disabled={isLoading}
+                className="px-3 py-2 text-xs font-medium rounded-lg bg-[var(--marketing-lime)]/10 text-[var(--marketing-lime)] border border-[var(--marketing-lime)]/20 hover:bg-[var(--marketing-lime)]/20 hover:border-[var(--marketing-lime)]/40 transition-all disabled:opacity-50"
+              >
+                Brand
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/director/dashboard')}
+                disabled={isLoading}
+                className="px-3 py-2 text-xs font-medium rounded-lg bg-[var(--marketing-magenta)]/10 text-[var(--marketing-magenta)] border border-[var(--marketing-magenta)]/20 hover:bg-[var(--marketing-magenta)]/20 hover:border-[var(--marketing-magenta)]/40 transition-all disabled:opacity-50"
+              >
+                Director
+              </button>
+            </div>
+          </div>
         </form>
       </CardContent>
     </Card>
