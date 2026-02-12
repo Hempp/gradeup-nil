@@ -212,9 +212,7 @@ interface OpportunityCardProps {
 
 function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
   const deadlineDate = new Date(opportunity.deadline);
-  const isExpiringSoon = useMemo(() => {
-    return deadlineDate.getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000; // 7 days
-  }, [deadlineDate]);
+  const isExpiringSoon = deadlineDate.getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000; // 7 days
 
   const compensationBadgeColor = {
     cash: 'bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)] border-[var(--marketing-lime)]/30',
@@ -457,14 +455,13 @@ export default function OpportunitiesPage() {
                 Create Your Profile
               </Button>
             </Link>
-            <Link href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-              <Button
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 px-8 py-3 text-lg"
-              >
-                Browse More Deals
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="border-white/30 text-white hover:bg-white/10 px-8 py-3 text-lg"
+            >
+              Browse More Deals
+            </Button>
           </div>
         </div>
       </section>

@@ -78,7 +78,7 @@ export function Topbar({
         {onMenuClick && (
           <button
             onClick={onMenuClick}
-            className="lg:hidden h-10 w-10 flex items-center justify-center rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
+            className="lg:hidden h-10 w-10 flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Toggle menu"
           >
             <Menu className="h-6 w-6" />
@@ -95,12 +95,12 @@ export function Topbar({
       <div className="flex items-center gap-2">
         {/* Notification bell */}
         <button
-          className="relative h-10 w-10 flex items-center justify-center rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
+          className="relative h-10 w-10 flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           aria-label={`Notifications${notificationCount > 0 ? ` (${notificationCount} unread)` : ''}`}
         >
           <Bell className="h-5 w-5" />
           {notificationCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 h-4 min-w-4 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-semibold">
+            <span className="absolute top-1.5 right-1.5 h-4 min-w-4 px-1 flex items-center justify-center rounded-full bg-[var(--marketing-cyan)] text-black text-[10px] font-semibold">
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>
           )}
@@ -112,8 +112,8 @@ export function Topbar({
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className={cn(
               'flex items-center gap-2 py-1.5 px-2 rounded-lg',
-              'hover:bg-neutral-100 transition-colors',
-              isDropdownOpen && 'bg-neutral-100'
+              'hover:bg-white/10 transition-colors',
+              isDropdownOpen && 'bg-white/10'
             )}
             aria-expanded={isDropdownOpen}
             aria-haspopup="menu"
@@ -124,10 +124,10 @@ export function Topbar({
               <img
                 src={displayUser.avatar}
                 alt={displayUser.name}
-                className="h-8 w-8 rounded-full object-cover"
+                className="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--marketing-cyan)]/30"
               />
             ) : (
-              <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 text-sm font-medium">
+              <div className="h-8 w-8 rounded-full bg-[var(--marketing-cyan)]/20 flex items-center justify-center text-[var(--marketing-cyan)] text-sm font-medium">
                 {displayUser.name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -135,7 +135,7 @@ export function Topbar({
             {/* Chevron */}
             <ChevronDown
               className={cn(
-                'h-4 w-4 text-neutral-500 transition-transform duration-200',
+                'h-4 w-4 text-white/60 transition-transform duration-200',
                 isDropdownOpen && 'rotate-180'
               )}
             />
@@ -146,17 +146,17 @@ export function Topbar({
             <div
               className={cn(
                 'absolute right-0 top-full mt-2 w-56',
-                'bg-white rounded-lg shadow-lg border border-surface-200',
+                'bg-[var(--marketing-gray-900)] rounded-lg shadow-lg border border-white/10',
                 'py-2 animate-in fade-in-0 zoom-in-95 duration-200'
               )}
               role="menu"
             >
               {/* User info */}
-              <div className="px-4 py-3 border-b border-surface-200">
-                <p className="text-sm font-medium text-neutral-900 truncate">
+              <div className="px-4 py-3 border-b border-white/10">
+                <p className="text-sm font-medium text-white truncate">
                   {displayUser.name}
                 </p>
-                <p className="text-xs text-neutral-500 truncate">
+                <p className="text-xs text-white/60 truncate">
                   {displayUser.role}
                 </p>
               </div>
@@ -165,7 +165,7 @@ export function Topbar({
               <div className="py-1">
                 <Link
                   href="/athlete/settings"
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 focus:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)] transition-colors"
+                  className="flex items-center gap-3 px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--marketing-cyan)] transition-colors"
                   role="menuitem"
                   onClick={() => setIsDropdownOpen(false)}
                 >
@@ -175,9 +175,9 @@ export function Topbar({
               </div>
 
               {/* Logout */}
-              <div className="py-1 border-t border-surface-200">
+              <div className="py-1 border-t border-white/10">
                 <button
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 focus:bg-red-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 transition-colors"
                   role="menuitem"
                   onClick={() => {
                     setIsDropdownOpen(false);
