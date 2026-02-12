@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
 import { AuthProvider } from "@/context";
+import { WebVitalsReporter } from "@/components/analytics/web-vitals-reporter";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -86,6 +87,11 @@ export default function RootLayout({
             {children}
           </ToastProvider>
         </AuthProvider>
+        <WebVitalsReporter
+          trackWebVitals
+          trackLongTasks
+          enableDevLogs={process.env.NODE_ENV === 'development'}
+        />
       </body>
     </html>
   );

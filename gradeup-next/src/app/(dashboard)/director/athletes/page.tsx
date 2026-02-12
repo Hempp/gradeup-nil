@@ -2,76 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Filter, CheckCircle, XCircle, Clock, MoreVertical, Eye } from 'lucide-react';
+import { Search, CheckCircle, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { formatCurrency } from '@/lib/utils';
-
-// Mock athletes data
-const mockAthletes = [
-  {
-    id: '1',
-    name: 'Marcus Johnson',
-    sport: 'Basketball',
-    gpa: 3.87,
-    year: 'Junior',
-    earnings: 45250,
-    deals: 8,
-    verified: true,
-    complianceStatus: 'clear',
-  },
-  {
-    id: '2',
-    name: 'Sarah Williams',
-    sport: 'Soccer',
-    gpa: 3.92,
-    year: 'Senior',
-    earnings: 38900,
-    deals: 6,
-    verified: true,
-    complianceStatus: 'clear',
-  },
-  {
-    id: '3',
-    name: 'Jordan Davis',
-    sport: 'Football',
-    gpa: 3.65,
-    year: 'Junior',
-    earnings: 52100,
-    deals: 7,
-    verified: true,
-    complianceStatus: 'pending',
-  },
-  {
-    id: '4',
-    name: 'Emma Chen',
-    sport: 'Gymnastics',
-    gpa: 3.95,
-    year: 'Sophomore',
-    earnings: 28500,
-    deals: 4,
-    verified: false,
-    complianceStatus: 'issue',
-  },
-  {
-    id: '5',
-    name: 'Tyler Brooks',
-    sport: 'Basketball',
-    gpa: 3.72,
-    year: 'Senior',
-    earnings: 31200,
-    deals: 5,
-    verified: true,
-    complianceStatus: 'clear',
-  },
-];
+import { useDirectorAthletes, type DirectorAthlete } from '@/lib/hooks/use-director-athletes';
 
 const statusFilters = ['All', 'Verified', 'Pending', 'Issues'];
 
-function AthleteRow({ athlete, onView }: { athlete: (typeof mockAthletes)[0]; onView: (id: string) => void }) {
+function AthleteRow({ athlete, onView }: { athlete: DirectorAthlete; onView: (id: string) => void }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
       <Avatar fallback={athlete.name.charAt(0)} size="md" />
@@ -122,8 +64,40 @@ function AthleteRow({ athlete, onView }: { athlete: (typeof mockAthletes)[0]; on
   );
 }
 
+function StatsSkeleton() {
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {[1, 2, 3, 4].map((i) => (
+        <Card key={i} className="animate-pulse">
+          <CardContent className="pt-4 pb-4">
+            <div className="h-4 w-24 bg-[var(--bg-tertiary)] rounded mb-2" />
+            <div className="h-8 w-16 bg-[var(--bg-tertiary)] rounded" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function AthleteRowSkeleton() {
+  return (
+    <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 animate-pulse">
+      <div className="h-10 w-10 rounded-full bg-[var(--bg-tertiary)]" />
+      <div className="flex-1">
+        <div className="h-4 w-32 bg-[var(--bg-tertiary)] rounded mb-2" />
+        <div className="h-3 w-24 bg-[var(--bg-tertiary)] rounded" />
+      </div>
+      <div className="h-6 w-12 bg-[var(--bg-tertiary)] rounded" />
+      <div className="h-6 w-12 bg-[var(--bg-tertiary)] rounded" />
+      <div className="h-6 w-16 bg-[var(--bg-tertiary)] rounded" />
+      <div className="h-6 w-16 bg-[var(--bg-tertiary)] rounded" />
+    </div>
+  );
+}
+
 export default function DirectorAthletesPage() {
   const router = useRouter();
+  const { athletes, stats, isLoading } = useDirectorAthletes();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('All');
 
@@ -131,7 +105,7 @@ export default function DirectorAthletesPage() {
     router.push(`/director/athletes/${athleteId}`);
   };
 
-  const filteredAthletes = mockAthletes.filter((athlete) => {
+  const filteredAthletes = athletes.filter((athlete) => {
     const matchesSearch = athlete.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       athlete.sport.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter =
@@ -153,32 +127,36 @@ export default function DirectorAthletesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-4 pb-4">
-            <p className="text-sm text-[var(--text-muted)]">Total Athletes</p>
-            <p className="text-2xl font-bold text-[var(--text-primary)]">247</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-4">
-            <p className="text-sm text-[var(--text-muted)]">Verified</p>
-            <p className="text-2xl font-bold text-[var(--color-success)]">198</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-4">
-            <p className="text-sm text-[var(--text-muted)]">Pending</p>
-            <p className="text-2xl font-bold text-[var(--color-warning)]">42</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-4">
-            <p className="text-sm text-[var(--text-muted)]">Issues</p>
-            <p className="text-2xl font-bold text-[var(--color-error)]">7</p>
-          </CardContent>
-        </Card>
-      </div>
+      {isLoading ? (
+        <StatsSkeleton />
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <p className="text-sm text-[var(--text-muted)]">Total Athletes</p>
+              <p className="text-2xl font-bold text-[var(--text-primary)]">{stats.total}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <p className="text-sm text-[var(--text-muted)]">Verified</p>
+              <p className="text-2xl font-bold text-[var(--color-success)]">{stats.verified}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <p className="text-sm text-[var(--text-muted)]">Pending</p>
+              <p className="text-2xl font-bold text-[var(--color-warning)]">{stats.pending}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <p className="text-sm text-[var(--text-muted)]">Issues</p>
+              <p className="text-2xl font-bold text-[var(--color-error)]">{stats.issues}</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Search and Filters */}
       <Card>
@@ -211,10 +189,18 @@ export default function DirectorAthletesPage() {
       {/* Athletes Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Athlete Roster ({filteredAthletes.length})</CardTitle>
+          <CardTitle>
+            {isLoading ? 'Athlete Roster' : `Athlete Roster (${filteredAthletes.length})`}
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {filteredAthletes.length > 0 ? (
+          {isLoading ? (
+            <>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <AthleteRowSkeleton key={i} />
+              ))}
+            </>
+          ) : filteredAthletes.length > 0 ? (
             filteredAthletes.map((athlete) => (
               <AthleteRow key={athlete.id} athlete={athlete} onView={handleViewAthlete} />
             ))

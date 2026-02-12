@@ -15,7 +15,6 @@ import {
   Clock,
   CheckCircle,
   Download,
-  Calendar,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,67 +30,12 @@ import {
   formatCurrencyValue,
   formatAxisValue,
 } from '@/components/ui/chart';
-
-// Mock earnings data
-const mockEarningsStats = {
-  totalEarnings: 45250,
-  pendingPayouts: 12500,
-  thisMonth: 8750,
-  lastMonth: 11200,
-};
-
-const mockPayouts = [
-  {
-    id: '1',
-    dealTitle: 'Instagram Post Campaign',
-    brandName: 'Nike',
-    amount: 5000,
-    status: 'completed' as const,
-    paidAt: '2024-02-01T10:00:00Z',
-  },
-  {
-    id: '2',
-    dealTitle: 'Youth Basketball Camp',
-    brandName: 'Duke Athletics',
-    amount: 3000,
-    status: 'completed' as const,
-    paidAt: '2024-01-20T14:30:00Z',
-  },
-  {
-    id: '3',
-    dealTitle: 'Store Opening Appearance',
-    brandName: 'Foot Locker',
-    amount: 2500,
-    status: 'pending' as const,
-    paidAt: null,
-  },
-  {
-    id: '4',
-    dealTitle: 'Social Media Endorsement',
-    brandName: 'Gatorade',
-    amount: 7500,
-    status: 'pending' as const,
-    paidAt: null,
-  },
-];
-
-// Extended earnings data for different time periods
-const mockEarningsDataAll = [
-  { month: 'Mar 24', amount: 2200 },
-  { month: 'Apr 24', amount: 3100 },
-  { month: 'May 24', amount: 2800 },
-  { month: 'Jun 24', amount: 3500 },
-  { month: 'Jul 24', amount: 4200 },
-  { month: 'Aug 24', amount: 3900 },
-  { month: 'Sep 24', amount: 4500 },
-  { month: 'Oct 24', amount: 6200 },
-  { month: 'Nov 24', amount: 8100 },
-  { month: 'Dec 24', amount: 9800 },
-  { month: 'Jan 25', amount: 11200 },
-  { month: 'Feb 25', amount: 8750 },
-];
-
-const mockMonthlyEarnings = mockEarningsDataAll.slice(-6);
+import {
+  useEarningsStats,
+  usePayoutHistory,
+  useMonthlyEarnings,
+  type Payout,
+} from '@/lib/hooks/use-earnings-data';
 
 function StatCard({
   title,
@@ -134,24 +78,38 @@ function StatCard({
 
 function EarningsChart() {
   const [period, setPeriod] = useState<TimePeriod>('6M');
+  const { data: monthlyData, isLoading } = useMonthlyEarnings();
 
   // Filter data based on selected period
   const getFilteredData = () => {
     switch (period) {
       case '3M':
-        return mockEarningsDataAll.slice(-3);
+        return monthlyData.slice(-3);
       case '6M':
-        return mockEarningsDataAll.slice(-6);
+        return monthlyData.slice(-6);
       case '1Y':
-        return mockEarningsDataAll;
+        return monthlyData;
       case 'All':
-        return mockEarningsDataAll;
+        return monthlyData;
       default:
-        return mockEarningsDataAll.slice(-6);
+        return monthlyData.slice(-6);
     }
   };
 
   const chartData = getFilteredData();
+
+  if (isLoading) {
+    return (
+      <Card className="animate-pulse">
+        <CardHeader>
+          <div className="h-6 w-48 bg-[var(--bg-tertiary)] rounded" />
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px] bg-[var(--bg-tertiary)] rounded" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <ChartWrapper
@@ -200,6 +158,25 @@ function EarningsChart() {
 }
 
 function PayoutHistory() {
+  const { data: payouts, isLoading } = usePayoutHistory();
+
+  if (isLoading) {
+    return (
+      <Card className="animate-pulse">
+        <CardHeader>
+          <div className="h-6 w-48 bg-[var(--bg-tertiary)] rounded" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-20 bg-[var(--bg-tertiary)] rounded" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -213,7 +190,7 @@ function PayoutHistory() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {mockPayouts.map((payout) => (
+          {payouts.map((payout: Payout) => (
             <div
               key={payout.id}
               className="flex items-center gap-4 p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]"
@@ -259,6 +236,22 @@ function PayoutHistory() {
 }
 
 export default function AthleteEarningsPage() {
+  const { data: stats, isLoading: statsLoading } = useEarningsStats();
+
+  // Calculate trend percentage
+  const getTrendInfo = () => {
+    if (stats.lastMonth === 0) return { trend: 'up' as const, label: 'New earnings!' };
+    const percentChange = Math.round(
+      ((stats.thisMonth - stats.lastMonth) / stats.lastMonth) * 100
+    );
+    return {
+      trend: percentChange >= 0 ? 'up' as const : 'down' as const,
+      label: `${Math.abs(percentChange)}% from last month`,
+    };
+  };
+
+  const trendInfo = getTrendInfo();
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
@@ -277,28 +270,43 @@ export default function AthleteEarningsPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          title="Total Earnings"
-          value={formatCurrency(mockEarningsStats.totalEarnings)}
-          icon={DollarSign}
-        />
-        <StatCard
-          title="Pending Payouts"
-          value={formatCurrency(mockEarningsStats.pendingPayouts)}
-          icon={Clock}
-        />
-        <StatCard
-          title="This Month"
-          value={formatCurrency(mockEarningsStats.thisMonth)}
-          icon={TrendingUp}
-          trend="down"
-          trendLabel="22% from last month"
-        />
-        <StatCard
-          title="Last Month"
-          value={formatCurrency(mockEarningsStats.lastMonth)}
-          icon={CheckCircle}
-        />
+        {statsLoading ? (
+          <>
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="pt-6">
+                  <div className="h-4 w-24 bg-[var(--bg-tertiary)] rounded mb-2" />
+                  <div className="h-8 w-32 bg-[var(--bg-tertiary)] rounded" />
+                </CardContent>
+              </Card>
+            ))}
+          </>
+        ) : (
+          <>
+            <StatCard
+              title="Total Earnings"
+              value={formatCurrency(stats.totalEarnings)}
+              icon={DollarSign}
+            />
+            <StatCard
+              title="Pending Payouts"
+              value={formatCurrency(stats.pendingPayouts)}
+              icon={Clock}
+            />
+            <StatCard
+              title="This Month"
+              value={formatCurrency(stats.thisMonth)}
+              icon={TrendingUp}
+              trend={trendInfo.trend}
+              trendLabel={trendInfo.label}
+            />
+            <StatCard
+              title="Last Month"
+              value={formatCurrency(stats.lastMonth)}
+              icon={CheckCircle}
+            />
+          </>
+        )}
       </div>
 
       {/* Chart */}

@@ -123,6 +123,10 @@ export default function AthleteSignupPage() {
       toast.error('Validation Error', 'Please fill in all required fields correctly.');
       return false;
     }
+    if (!validatePasswordMatch()) {
+      toast.error('Password Mismatch', 'Passwords do not match.');
+      return false;
+    }
     if (!agreeToTerms) {
       setError('You must agree to the Terms of Service and Privacy Policy');
       toast.error('Terms Required', 'You must agree to the Terms of Service and Privacy Policy.');

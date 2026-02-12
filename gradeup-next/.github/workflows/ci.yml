@@ -32,7 +32,6 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint -- --max-warnings=100
-        continue-on-error: true
 
       - name: Run TypeScript type check
         run: npm run type-check

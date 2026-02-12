@@ -9,6 +9,25 @@ import { Input } from '@/components/ui/input';
 import { useToastActions } from '@/components/ui/toast';
 import { useFormValidation, validators } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import { signIn, type UserRole } from '@/lib/services/auth';
+
+/**
+ * Get the appropriate dashboard path based on user role
+ */
+function getDashboardPath(role: UserRole): string {
+  switch (role) {
+    case 'athlete':
+      return '/athlete/dashboard';
+    case 'brand':
+      return '/brand/dashboard';
+    case 'athletic_director':
+      return '/director/dashboard';
+    case 'admin':
+      return '/admin/dashboard';
+    default:
+      return '/athlete/dashboard';
+  }
+}
 
 interface LoginFormValues {
   email: string;
@@ -64,21 +83,19 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const supabase = getSupabaseClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      });
+      const { data, error: authError } = await signIn(values.email, values.password);
 
-      if (authError) {
-        setError(authError.message);
-        toast.error('Login Failed', authError.message);
+      if (authError || !data) {
+        const message = authError?.message || 'Failed to sign in';
+        setError(message);
+        toast.error('Login Failed', message);
         return;
       }
 
       toast.success('Welcome Back', 'You have successfully signed in.');
-      // Redirect based on user role (to be determined from profile)
-      router.push('/athlete/dashboard');
+      // Redirect based on user role
+      const dashboardPath = getDashboardPath(data.user.role);
+      router.push(dashboardPath);
     } catch {
       setError('An unexpected error occurred. Please try again.');
       toast.error('Login Error', 'An unexpected error occurred. Please try again.');

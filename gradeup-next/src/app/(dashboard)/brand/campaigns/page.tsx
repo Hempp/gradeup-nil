@@ -1,69 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { Plus, Target, Users, DollarSign, Calendar, MoreVertical, Eye } from 'lucide-react';
+import { Plus, Users, DollarSign, Calendar, MoreVertical, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import type { DealStatus } from '@/types';
+import { useBrandCampaigns, type EnrichedCampaign } from '@/lib/hooks/use-campaigns-data';
 
-// Mock campaigns data
-const mockCampaigns = [
-  {
-    id: '1',
-    name: 'Spring Collection Launch',
-    description: 'Promote our new spring athletic wear collection',
-    budget: 50000,
-    spent: 32500,
-    startDate: '2024-02-01',
-    endDate: '2024-04-30',
-    athletes: 5,
-    targetSports: ['Basketball', 'Soccer'],
-    status: 'active' as DealStatus,
-  },
-  {
-    id: '2',
-    name: 'Summer Sports Partnership',
-    description: 'Long-term partnerships with summer sport athletes',
-    budget: 75000,
-    spent: 15000,
-    startDate: '2024-03-01',
-    endDate: '2024-08-31',
-    athletes: 8,
-    targetSports: ['Swimming', 'Track & Field', 'Tennis'],
-    status: 'active' as DealStatus,
-  },
-  {
-    id: '3',
-    name: 'Back to School Campaign',
-    description: 'Student athlete promotion for back to school season',
-    budget: 30000,
-    spent: 0,
-    startDate: '2024-08-01',
-    endDate: '2024-09-15',
-    athletes: 0,
-    targetSports: ['Football', 'Basketball', 'Volleyball'],
-    status: 'draft' as DealStatus,
-  },
-  {
-    id: '4',
-    name: 'Holiday Season Push',
-    description: 'Holiday gift guide featuring athlete endorsements',
-    budget: 100000,
-    spent: 100000,
-    startDate: '2023-11-15',
-    endDate: '2023-12-31',
-    athletes: 12,
-    targetSports: ['All Sports'],
-    status: 'completed' as DealStatus,
-  },
-];
-
-function CampaignCard({ campaign }: { campaign: (typeof mockCampaigns)[0] }) {
-  const progress = (campaign.spent / campaign.budget) * 100;
+function CampaignCard({ campaign }: { campaign: EnrichedCampaign }) {
+  const progress = campaign.budget > 0 ? (campaign.spent / campaign.budget) * 100 : 0;
 
   return (
     <Card hover className="group">
@@ -116,7 +63,7 @@ function CampaignCard({ campaign }: { campaign: (typeof mockCampaigns)[0] }) {
             <div>
               <p className="text-xs text-[var(--text-muted)]">End Date</p>
               <p className="text-sm font-medium text-[var(--text-primary)]">
-                {formatDate(campaign.endDate)}
+                {campaign.endDate ? formatDate(campaign.endDate) : 'Ongoing'}
               </p>
             </div>
           </div>
@@ -160,10 +107,60 @@ function CampaignCard({ campaign }: { campaign: (typeof mockCampaigns)[0] }) {
   );
 }
 
+function CampaignSkeleton() {
+  return (
+    <Card className="animate-pulse">
+      <CardContent className="pt-6">
+        <div className="h-6 w-48 bg-[var(--bg-tertiary)] rounded mb-2" />
+        <div className="h-4 w-64 bg-[var(--bg-tertiary)] rounded mb-4" />
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-12 bg-[var(--bg-tertiary)] rounded" />
+          ))}
+        </div>
+        <div className="h-2 w-full bg-[var(--bg-tertiary)] rounded mb-4" />
+        <div className="flex gap-2 mb-4">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-6 w-20 bg-[var(--bg-tertiary)] rounded-full" />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function BrandCampaignsPage() {
-  const activeCampaigns = mockCampaigns.filter((c) => c.status === 'active');
-  const draftCampaigns = mockCampaigns.filter((c) => c.status === 'draft');
-  const completedCampaigns = mockCampaigns.filter((c) => c.status === 'completed');
+  const { data: campaigns, isLoading } = useBrandCampaigns();
+
+  const activeCampaigns = campaigns.filter((c) => c.status === 'active');
+  const draftCampaigns = campaigns.filter((c) => c.status === 'draft' || c.status === 'pending');
+  const completedCampaigns = campaigns.filter((c) => c.status === 'completed');
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Campaigns</h1>
+            <p className="text-[var(--text-muted)]">
+              Manage your NIL marketing campaigns
+            </p>
+          </div>
+          <Link href="/brand/campaigns/new">
+            <Button variant="primary">
+              <Plus className="h-4 w-4 mr-2" />
+              New Campaign
+            </Button>
+          </Link>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <CampaignSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
