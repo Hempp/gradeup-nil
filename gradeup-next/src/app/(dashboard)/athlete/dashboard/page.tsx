@@ -393,7 +393,7 @@ export default function AthleteDashboardPage() {
             Welcome back, {athleteName}
           </h1>
           <p className="text-[var(--text-muted)]">
-            Here's what's happening with your NIL deals
+            Here&apos;s what&apos;s happening with your NIL deals
           </p>
         </div>
         <QuickActionsDropdown />

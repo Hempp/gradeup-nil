@@ -115,7 +115,7 @@ function ProfileHeader({ profile, athlete, onAvatarUpload }: ProfileHeaderProps)
               </span>
               {gpa >= 3.5 && (
                 <Badge className="mt-1 bg-[var(--gpa-gold)] text-[var(--text-inverse)]">
-                  Dean's List
+                  Dean&apos;s List
                 </Badge>
               )}
             </div>

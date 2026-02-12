@@ -167,14 +167,14 @@ export function SkeletonChart() {
       </div>
       {/* Chart area */}
       <div className="h-64 flex items-end gap-3 pt-4">
-        {[...Array(8)].map((_, i) => (
+        {[65, 45, 80, 35, 55, 70, 40, 60].map((height, i) => (
           <div
             key={i}
             className="flex-1 rounded-t-[var(--radius-sm)]"
           >
             <Skeleton
               className="w-full rounded-t-[var(--radius-sm)]"
-              style={{ height: `${20 + Math.random() * 70}%` }}
+              style={{ height: `${height}%` }}
             />
           </div>
         ))}

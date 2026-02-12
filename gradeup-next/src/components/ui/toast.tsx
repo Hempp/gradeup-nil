@@ -124,6 +124,11 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
   const duration = toast.duration ?? 5000;
   const config = variantConfig[toast.variant];
 
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => onRemove(toast.id), 300);
+  }, [onRemove, toast.id]);
+
   useEffect(() => {
     const startTime = Date.now();
     const timer = setInterval(() => {
@@ -138,12 +143,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
     }, 50);
 
     return () => clearInterval(timer);
-  }, [duration]);
-
-  const handleClose = useCallback(() => {
-    setIsExiting(true);
-    setTimeout(() => onRemove(toast.id), 300);
-  }, [onRemove, toast.id]);
+  }, [duration, handleClose]);
 
   return (
     <div

@@ -18,7 +18,7 @@ import {
   MessageSquare,
   Instagram,
   Video,
-  Image,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -173,7 +173,7 @@ function getPlatformIcon(platform: string) {
     case 'youtube':
       return <Video className="h-4 w-4 text-[#FF0000]" />;
     default:
-      return <Image className="h-4 w-4" />;
+      return <ImageIcon className="h-4 w-4" />;
   }
 }
 
@@ -605,7 +605,7 @@ function AnalyticsTab({ campaign }: { campaign: CampaignData }) {
         <StatCard
           title="Content Pieces"
           value={campaign.stats.contentPieces}
-          icon={<Image className="h-5 w-5" />}
+          icon={<ImageIcon className="h-5 w-5" />}
         />
       </div>
 
