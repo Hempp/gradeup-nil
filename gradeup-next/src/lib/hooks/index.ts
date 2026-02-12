@@ -8,3 +8,9 @@ export * from './use-data';
 
 // Action hooks with toast notifications
 export * from './use-action';
+
+// Real-time hooks (messaging, notifications, presence)
+export * from './use-realtime';
+
+// Search and filter hooks
+export * from './use-search';

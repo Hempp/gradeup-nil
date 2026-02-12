@@ -371,3 +371,259 @@ export function when(
     return null;
   };
 }
+
+/* ===============================================================================
+   ADDITIONAL VALIDATORS
+   =============================================================================== */
+
+/**
+ * Social media handle validators
+ */
+export const socialValidators = {
+  /**
+   * Instagram handle validation
+   */
+  instagram: (value: string): string | null => {
+    if (!value) return null;
+    const handle = value.startsWith('@') ? value.slice(1) : value;
+    if (!/^[a-zA-Z0-9._]+$/.test(handle)) {
+      return 'Invalid characters in Instagram handle';
+    }
+    if (handle.length > 30) {
+      return 'Instagram handle too long (max 30 characters)';
+    }
+    return null;
+  },
+
+  /**
+   * Twitter/X handle validation
+   */
+  twitter: (value: string): string | null => {
+    if (!value) return null;
+    const handle = value.startsWith('@') ? value.slice(1) : value;
+    if (!/^[a-zA-Z0-9_]+$/.test(handle)) {
+      return 'Invalid characters in Twitter handle';
+    }
+    if (handle.length > 15) {
+      return 'Twitter handle too long (max 15 characters)';
+    }
+    return null;
+  },
+
+  /**
+   * TikTok handle validation
+   */
+  tiktok: (value: string): string | null => {
+    if (!value) return null;
+    const handle = value.startsWith('@') ? value.slice(1) : value;
+    if (!/^[a-zA-Z0-9._]+$/.test(handle)) {
+      return 'Invalid characters in TikTok handle';
+    }
+    if (handle.length > 24) {
+      return 'TikTok handle too long (max 24 characters)';
+    }
+    return null;
+  },
+};
+
+/**
+ * Date validators
+ */
+export const dateValidators = {
+  /**
+   * Validate that a date is in the future
+   */
+  futureDate: (value: string): string | null => {
+    if (!value) return null;
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+    if (date <= new Date()) {
+      return 'Date must be in the future';
+    }
+    return null;
+  },
+
+  /**
+   * Validate that a date is in the past
+   */
+  pastDate: (value: string): string | null => {
+    if (!value) return null;
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+    if (date >= new Date()) {
+      return 'Date must be in the past';
+    }
+    return null;
+  },
+
+  /**
+   * Create a date range validator
+   */
+  dateAfter: (afterDate: string, fieldName = 'start date'): ValidatorFn => (value: string): string | null => {
+    if (!value || !afterDate) return null;
+    const date = new Date(value);
+    const after = new Date(afterDate);
+    if (date <= after) {
+      return `Must be after ${fieldName}`;
+    }
+    return null;
+  },
+
+  /**
+   * Validate graduation year (current year to +6 years)
+   */
+  graduationYear: (value: string): string | null => {
+    if (!value) return null;
+    const year = parseInt(value, 10);
+    const currentYear = new Date().getFullYear();
+    if (isNaN(year) || year < currentYear || year > currentYear + 6) {
+      return `Graduation year must be between ${currentYear} and ${currentYear + 6}`;
+    }
+    return null;
+  },
+};
+
+/* ===============================================================================
+   PASSWORD STRENGTH
+   =============================================================================== */
+
+export interface PasswordStrength {
+  score: number; // 0-4
+  label: 'weak' | 'fair' | 'good' | 'strong';
+  feedback: string[];
+}
+
+/**
+ * Calculate password strength with detailed feedback
+ */
+export function getPasswordStrength(password: string): PasswordStrength {
+  const feedback: string[] = [];
+  let score = 0;
+
+  if (!password) {
+    return { score: 0, label: 'weak', feedback: ['Enter a password'] };
+  }
+
+  // Length checks
+  if (password.length >= 8) {
+    score++;
+  } else {
+    feedback.push('Use at least 8 characters');
+  }
+
+  if (password.length >= 12) {
+    score++;
+  }
+
+  // Character variety checks
+  if (/[A-Z]/.test(password) && /[a-z]/.test(password)) {
+    score++;
+  } else {
+    feedback.push('Include uppercase and lowercase letters');
+  }
+
+  if (/[0-9]/.test(password)) {
+    score++;
+  } else {
+    feedback.push('Include at least one number');
+  }
+
+  if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    score++;
+  } else {
+    feedback.push('Include a special character');
+  }
+
+  // Cap at 4
+  score = Math.min(4, score);
+
+  const labels: Record<number, 'weak' | 'fair' | 'good' | 'strong'> = {
+    0: 'weak',
+    1: 'weak',
+    2: 'fair',
+    3: 'good',
+    4: 'strong',
+  };
+
+  return {
+    score,
+    label: labels[score],
+    feedback,
+  };
+}
+
+/* ===============================================================================
+   FORMATTING UTILITIES
+   =============================================================================== */
+
+/**
+ * Format phone number for display (US format)
+ */
+export function formatPhoneNumber(value: string): string {
+  const digits = value.replace(/\D/g, '');
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+  if (digits.length === 11 && digits[0] === '1') {
+    return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
+  }
+  return value;
+}
+
+/**
+ * Strip phone number formatting
+ */
+export function stripPhoneNumber(value: string): string {
+  return value.replace(/\D/g, '');
+}
+
+/**
+ * Format GPA for display (validation context)
+ */
+export function formatGPAValue(value: number | string): string {
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) return '0.00';
+  return num.toFixed(2);
+}
+
+/**
+ * Format currency input (strips non-numeric except decimal)
+ */
+export function formatCurrencyInput(value: string): string {
+  // Remove non-numeric except decimal
+  const cleaned = value.replace(/[^\d.]/g, '');
+
+  // Ensure only one decimal point
+  const parts = cleaned.split('.');
+  if (parts.length > 2) {
+    return parts[0] + '.' + parts.slice(1).join('');
+  }
+
+  // Limit decimal places to 2
+  if (parts[1] && parts[1].length > 2) {
+    return parts[0] + '.' + parts[1].slice(0, 2);
+  }
+
+  return cleaned;
+}
+
+/**
+ * Format social handle (removes @ if present)
+ */
+export function formatSocialHandle(value: string): string {
+  return value.startsWith('@') ? value.slice(1) : value;
+}
+
+/**
+ * Sanitize text input (remove dangerous characters)
+ */
+export function sanitizeText(value: string): string {
+  return value
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .trim();
+}
