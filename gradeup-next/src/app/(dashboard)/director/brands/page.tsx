@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, CheckCircle, Building, MoreVertical } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, CheckCircle, Building, MoreVertical, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,7 +59,7 @@ const mockBrands = [
   },
 ];
 
-function BrandRow({ brand }: { brand: (typeof mockBrands)[0] }) {
+function BrandRow({ brand, onView }: { brand: (typeof mockBrands)[0]; onView: (id: string) => void }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
       <Avatar fallback={brand.name.charAt(0)} size="lg" />
@@ -95,15 +96,20 @@ function BrandRow({ brand }: { brand: (typeof mockBrands)[0] }) {
           <Badge variant="warning" size="sm">Pending</Badge>
         )}
       </div>
-      <Button variant="ghost" size="sm">
-        <MoreVertical className="h-4 w-4" />
+      <Button variant="ghost" size="sm" onClick={() => onView(brand.id)}>
+        <Eye className="h-4 w-4" />
       </Button>
     </div>
   );
 }
 
 export default function DirectorBrandsPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const handleViewBrand = (brandId: string) => {
+    router.push(`/director/brands/${brandId}`);
+  };
 
   const filteredBrands = mockBrands.filter((brand) =>
     brand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -179,7 +185,7 @@ export default function DirectorBrandsPage() {
         <CardContent className="p-0">
           {filteredBrands.length > 0 ? (
             filteredBrands.map((brand) => (
-              <BrandRow key={brand.id} brand={brand} />
+              <BrandRow key={brand.id} brand={brand} onView={handleViewBrand} />
             ))
           ) : (
             <div className="p-12 text-center">

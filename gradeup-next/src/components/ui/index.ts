@@ -5,3 +5,4 @@ export { StatusBadge, type StatusBadgeProps } from './status-badge';
 export { Avatar, type AvatarProps } from './avatar';
 export { Input, type InputProps } from './input';
 export { Skeleton, SkeletonCard, SkeletonStats, SkeletonTable } from './skeleton';
+export { DataTable, LoadingRow, EmptyState, type DataTableColumn, type DataTableProps } from './data-table';

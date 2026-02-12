@@ -108,7 +108,7 @@ export function MobileNav({ navItems, variant = 'athlete', className }: MobileNa
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-50 animate-fade-in"
+          className="fixed inset-0 bg-black/50 z-50 animate-fade-in"
           onClick={() => setIsOpen(false)}
         />
       )}

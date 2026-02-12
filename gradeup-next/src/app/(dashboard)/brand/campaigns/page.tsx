@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Target, Users, DollarSign, Calendar, MoreVertical } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, Target, Users, DollarSign, Calendar, MoreVertical, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -138,13 +139,22 @@ function CampaignCard({ campaign }: { campaign: (typeof mockCampaigns)[0] }) {
         </div>
 
         {/* Target Sports */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mb-4">
           {campaign.targetSports.map((sport) => (
             <Badge key={sport} variant="outline" size="sm">
               {sport}
             </Badge>
           ))}
         </div>
+
+        {/* View Details Link */}
+        <Link
+          href={`/brand/campaigns/${campaign.id}`}
+          className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors"
+        >
+          <Eye className="h-4 w-4" />
+          View Details
+        </Link>
       </CardContent>
     </Card>
   );
@@ -165,10 +175,12 @@ export default function BrandCampaignsPage() {
             Manage your NIL marketing campaigns
           </p>
         </div>
-        <Button variant="primary">
-          <Plus className="h-4 w-4 mr-2" />
-          New Campaign
-        </Button>
+        <Link href="/brand/campaigns/new">
+          <Button variant="primary">
+            <Plus className="h-4 w-4 mr-2" />
+            New Campaign
+          </Button>
+        </Link>
       </div>
 
       {/* Active Campaigns */}

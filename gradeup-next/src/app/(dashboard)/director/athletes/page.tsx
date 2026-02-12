@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, CheckCircle, XCircle, Clock, MoreVertical } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, Filter, CheckCircle, XCircle, Clock, MoreVertical, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -70,7 +71,7 @@ const mockAthletes = [
 
 const statusFilters = ['All', 'Verified', 'Pending', 'Issues'];
 
-function AthleteRow({ athlete }: { athlete: (typeof mockAthletes)[0] }) {
+function AthleteRow({ athlete, onView }: { athlete: (typeof mockAthletes)[0]; onView: (id: string) => void }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
       <Avatar fallback={athlete.name.charAt(0)} size="md" />
@@ -114,16 +115,21 @@ function AthleteRow({ athlete }: { athlete: (typeof mockAthletes)[0] }) {
           <Badge variant="error" size="sm">Issue</Badge>
         )}
       </div>
-      <Button variant="ghost" size="sm">
-        <MoreVertical className="h-4 w-4" />
+      <Button variant="ghost" size="sm" onClick={() => onView(athlete.id)}>
+        <Eye className="h-4 w-4" />
       </Button>
     </div>
   );
 }
 
 export default function DirectorAthletesPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('All');
+
+  const handleViewAthlete = (athleteId: string) => {
+    router.push(`/director/athletes/${athleteId}`);
+  };
 
   const filteredAthletes = mockAthletes.filter((athlete) => {
     const matchesSearch = athlete.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -210,7 +216,7 @@ export default function DirectorAthletesPage() {
         <CardContent className="p-0">
           {filteredAthletes.length > 0 ? (
             filteredAthletes.map((athlete) => (
-              <AthleteRow key={athlete.id} athlete={athlete} />
+              <AthleteRow key={athlete.id} athlete={athlete} onView={handleViewAthlete} />
             ))
           ) : (
             <div className="p-12 text-center">

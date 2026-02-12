@@ -1,160 +1,201 @@
-import { Suspense } from 'react';
+'use client';
+
+import { useState } from 'react';
 import {
   DollarSign,
   FileText,
   Eye,
   TrendingUp,
-  ArrowUpRight,
-  ArrowDownRight,
+  ChevronDown,
+  Plus,
+  MessageSquare,
+  User,
+  Calendar,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Megaphone,
+  Handshake,
+  Upload,
 } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { StatCard } from '@/components/ui/stat-card';
 import { Badge } from '@/components/ui/badge';
-import { StatusBadge } from '@/components/ui/status-badge';
+import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
-import { SkeletonStats, SkeletonCard } from '@/components/ui/skeleton';
-import { formatCurrency, formatCompactNumber, formatRelativeTime } from '@/lib/utils';
+import { formatCurrency, formatCompactNumber, formatRelativeTime, formatDate } from '@/lib/utils';
 
 // Mock data - will be replaced with real data from Supabase
 const mockStats = {
   totalEarnings: 45250,
-  pendingEarnings: 12500,
+  earningsTrend: 12.5,
   activeDeals: 4,
+  newDeals: 2,
   profileViews: 1847,
+  viewsTrend: 18,
   nilValuation: 125000,
-  gradeUpScore: 92,
 };
 
-const mockRecentDeals = [
+const mockActivityFeed = [
   {
     id: '1',
-    title: 'Instagram Post Campaign',
-    brand: { name: 'Nike', logo: null },
-    amount: 5000,
-    status: 'active' as const,
-    createdAt: '2024-02-10T10:00:00Z',
+    type: 'deal_accepted' as const,
+    description: 'Nike accepted your counter offer for Instagram Campaign',
+    timestamp: '2024-02-11T09:30:00Z',
   },
   {
     id: '2',
-    title: 'Appearance at Store Opening',
-    brand: { name: 'Foot Locker', logo: null },
-    amount: 2500,
-    status: 'pending' as const,
-    createdAt: '2024-02-09T14:30:00Z',
+    type: 'message' as const,
+    description: 'New message from Gatorade about partnership terms',
+    timestamp: '2024-02-11T08:15:00Z',
   },
   {
     id: '3',
-    title: 'Social Media Endorsement',
-    brand: { name: 'Gatorade', logo: null },
-    amount: 7500,
-    status: 'negotiating' as const,
-    createdAt: '2024-02-08T09:00:00Z',
+    type: 'profile_view' as const,
+    description: 'Your profile was viewed by Foot Locker',
+    timestamp: '2024-02-10T16:45:00Z',
+  },
+  {
+    id: '4',
+    type: 'deliverable' as const,
+    description: 'Submitted Instagram post for Nike campaign - Awaiting approval',
+    timestamp: '2024-02-10T14:20:00Z',
+  },
+  {
+    id: '5',
+    type: 'payment' as const,
+    description: 'Received payment of $2,500 from Sports Memorabilia Inc',
+    timestamp: '2024-02-09T11:00:00Z',
+  },
+  {
+    id: '6',
+    type: 'new_offer' as const,
+    description: 'New deal offer from Under Armour - $3,500 social media campaign',
+    timestamp: '2024-02-09T09:30:00Z',
   },
 ];
 
-function StatsCard({
-  title,
-  value,
-  icon: Icon,
-  trend,
-  trendValue,
-}: {
-  title: string;
-  value: string;
-  icon: React.ComponentType<{ className?: string }>;
-  trend?: 'up' | 'down';
-  trendValue?: string;
-}) {
+const mockDeadlines = [
+  {
+    id: '1',
+    title: 'Nike Instagram Post #2',
+    dealId: 'deal-1',
+    deadline: '2024-02-14T23:59:00Z',
+    status: 'upcoming' as const,
+  },
+  {
+    id: '2',
+    title: 'Foot Locker Store Appearance',
+    dealId: 'deal-2',
+    deadline: '2024-02-16T10:00:00Z',
+    status: 'upcoming' as const,
+  },
+  {
+    id: '3',
+    title: 'Gatorade Contract Response',
+    dealId: 'deal-3',
+    deadline: '2024-02-18T17:00:00Z',
+    status: 'pending' as const,
+  },
+  {
+    id: '4',
+    title: 'Nike Instagram Post #3',
+    dealId: 'deal-1',
+    deadline: '2024-02-21T23:59:00Z',
+    status: 'upcoming' as const,
+  },
+];
+
+const mockEarningsData = [
+  { month: 'Sep', earnings: 8500 },
+  { month: 'Oct', earnings: 12000 },
+  { month: 'Nov', earnings: 9500 },
+  { month: 'Dec', earnings: 15000 },
+  { month: 'Jan', earnings: 18500 },
+  { month: 'Feb', earnings: 45250 },
+];
+
+const activityIcons = {
+  deal_accepted: Handshake,
+  message: MessageSquare,
+  profile_view: Eye,
+  deliverable: Upload,
+  payment: DollarSign,
+  new_offer: Megaphone,
+};
+
+const activityColors = {
+  deal_accepted: 'text-[var(--color-success)]',
+  message: 'text-[var(--color-primary)]',
+  profile_view: 'text-[var(--text-muted)]',
+  deliverable: 'text-[var(--color-warning)]',
+  payment: 'text-[var(--color-success)]',
+  new_offer: 'text-[var(--color-primary)]',
+};
+
+function QuickActionsDropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const actions = [
+    { label: 'Update Profile', href: '/athlete/profile', icon: User },
+    { label: 'View All Deals', href: '/athlete/deals', icon: FileText },
+    { label: 'Check Messages', href: '/athlete/messages', icon: MessageSquare },
+    { label: 'See Earnings', href: '/athlete/earnings', icon: DollarSign },
+  ];
+
   return (
-    <Card hover>
-      <CardContent className="pt-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-[var(--text-muted)] mb-1">{title}</p>
-            <p className="text-2xl font-bold text-[var(--text-primary)]">{value}</p>
-            {trend && trendValue && (
-              <div className="flex items-center gap-1 mt-2">
-                {trend === 'up' ? (
-                  <ArrowUpRight className="h-4 w-4 text-[var(--color-success)]" />
-                ) : (
-                  <ArrowDownRight className="h-4 w-4 text-[var(--color-error)]" />
-                )}
-                <span
-                  className={`text-sm ${
-                    trend === 'up' ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
-                  }`}
-                >
-                  {trendValue}
-                </span>
-              </div>
-            )}
+    <div className="relative">
+      <Button
+        variant="primary"
+        onClick={() => setIsOpen(!isOpen)}
+        className="gap-2"
+      >
+        <Plus className="h-4 w-4" />
+        Quick Actions
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </Button>
+      {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-10"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute right-0 mt-2 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-20 py-2">
+            {actions.map((action) => (
+              <a
+                key={action.label}
+                href={action.href}
+                className="flex items-center gap-3 px-4 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                <action.icon className="h-4 w-4 text-[var(--text-muted)]" />
+                {action.label}
+              </a>
+            ))}
           </div>
-          <div className="h-12 w-12 rounded-[var(--radius-lg)] bg-[var(--color-primary-muted)] flex items-center justify-center">
-            <Icon className="h-6 w-6 text-[var(--color-primary)]" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </>
+      )}
+    </div>
   );
 }
 
-function GradeUpScoreCard({ score }: { score: number }) {
-  const circumference = 2 * Math.PI * 45;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
-
+function ActivityFeed() {
   return (
-    <Card variant="glow">
-      <CardContent className="pt-6">
-        <div className="flex items-center gap-6">
-          <div className="relative">
-            <svg className="w-28 h-28 -rotate-90">
-              <circle
-                cx="56"
-                cy="56"
-                r="45"
-                stroke="var(--border-color)"
-                strokeWidth="8"
-                fill="none"
-              />
-              <circle
-                cx="56"
-                cy="56"
-                r="45"
-                stroke="var(--color-primary)"
-                strokeWidth="8"
-                fill="none"
-                strokeLinecap="round"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                className="transition-all duration-1000 ease-out"
-              />
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-3xl font-bold text-[var(--color-primary)]">{score}</span>
-            </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">
-              GradeUp Score
-            </h3>
-            <p className="text-sm text-[var(--text-muted)] mb-3">
-              Your overall NIL performance rating
-            </p>
-            <Badge variant="success">Top 5%</Badge>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function RecentDealsCard() {
-  return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Recent Deals</CardTitle>
+          <CardTitle>Recent Activity</CardTitle>
           <a
-            href="/athlete/deals"
+            href="/athlete/activity"
             className="text-sm text-[var(--color-primary)] hover:underline"
           >
             View all
@@ -163,61 +204,147 @@ function RecentDealsCard() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {mockRecentDeals.map((deal) => (
-            <div
-              key={deal.id}
-              className="flex items-center gap-4 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-card-hover)] transition-colors"
-            >
-              <Avatar fallback={deal.brand.name.charAt(0)} size="md" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[var(--text-primary)] truncate">
-                  {deal.title}
-                </p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  {deal.brand.name} • {formatRelativeTime(deal.createdAt)}
-                </p>
+          {mockActivityFeed.map((activity) => {
+            const Icon = activityIcons[activity.type];
+            const colorClass = activityColors[activity.type];
+            return (
+              <div
+                key={activity.id}
+                className="flex items-start gap-3 pb-4 border-b border-[var(--border-color)] last:border-0 last:pb-0"
+              >
+                <div className={`mt-0.5 ${colorClass}`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[var(--text-primary)] leading-snug">
+                    {activity.description}
+                  </p>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">
+                    {formatRelativeTime(activity.timestamp)}
+                  </p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-[var(--text-primary)]">
-                  {formatCurrency(deal.amount)}
-                </p>
-                <StatusBadge status={deal.status} size="sm" />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function QuickActionsCard() {
-  const actions = [
-    { label: 'Update Profile', href: '/athlete/profile', icon: '👤' },
-    { label: 'View Offers', href: '/athlete/deals', icon: '📄' },
-    { label: 'Check Messages', href: '/athlete/messages', icon: '💬' },
-    { label: 'See Earnings', href: '/athlete/earnings', icon: '💰' },
-  ];
+function UpcomingDeadlines() {
+  const sortedDeadlines = [...mockDeadlines].sort(
+    (a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+  );
 
+  const getDeadlineStatus = (deadline: string) => {
+    const now = new Date();
+    const deadlineDate = new Date(deadline);
+    const daysUntil = Math.ceil((deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysUntil <= 2) return { color: 'text-[var(--color-error)]', label: 'Urgent' };
+    if (daysUntil <= 5) return { color: 'text-[var(--color-warning)]', label: 'Soon' };
+    return { color: 'text-[var(--text-muted)]', label: '' };
+  };
+
+  return (
+    <Card className="h-full">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Upcoming Deadlines</CardTitle>
+          <Calendar className="h-5 w-5 text-[var(--text-muted)]" />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {sortedDeadlines.map((item) => {
+            const status = getDeadlineStatus(item.deadline);
+            return (
+              <a
+                key={item.id}
+                href={`/athlete/deals/${item.dealId}`}
+                className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-card-hover)] transition-colors group"
+              >
+                <div className="flex-shrink-0">
+                  <Clock className={`h-5 w-5 ${status.color}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--color-primary)] transition-colors">
+                    {item.title}
+                  </p>
+                  <p className="text-xs text-[var(--text-muted)]">
+                    {formatDate(item.deadline)}
+                  </p>
+                </div>
+                {status.label && (
+                  <Badge variant={status.label === 'Urgent' ? 'error' : 'warning'} size="sm">
+                    {status.label}
+                  </Badge>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function EarningsChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Quick Actions</CardTitle>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Earnings Overview</CardTitle>
+            <p className="text-sm text-[var(--text-muted)] mt-1">
+              Your earnings over the last 6 months
+            </p>
+          </div>
+          <Badge variant="success">
+            +{mockStats.earningsTrend}% this month
+          </Badge>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-3">
-          {actions.map((action) => (
-            <a
-              key={action.label}
-              href={action.href}
-              className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-card-hover)] transition-colors"
-            >
-              <span className="text-2xl">{action.icon}</span>
-              <span className="text-sm font-medium text-[var(--text-primary)]">
-                {action.label}
-              </span>
-            </a>
-          ))}
+        <div className="h-[300px] mt-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={mockEarningsData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--border-color)"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="month"
+                tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                axisLine={{ stroke: 'var(--border-color)' }}
+                tickLine={false}
+              />
+              <YAxis
+                tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 'var(--radius-md)',
+                  color: 'var(--text-primary)',
+                }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                formatter={(value) => [formatCurrency(value as number), 'Earnings']}
+              />
+              <Bar
+                dataKey="earnings"
+                fill="var(--color-primary)"
+                radius={[4, 4, 0, 0]}
+                maxBarSize={50}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </CardContent>
     </Card>
@@ -225,72 +352,74 @@ function QuickActionsCard() {
 }
 
 export default function AthleteDashboardPage() {
+  // In a real app, this would come from auth context
+  const athleteName = 'Marcus';
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-            Welcome back, Marcus! 👋
+            Welcome back, {athleteName}
           </h1>
           <p className="text-[var(--text-muted)]">
             Here's what's happening with your NIL deals
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Badge variant="success">Verified Athlete</Badge>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--gpa-gold)]/10 border border-[var(--gpa-gold)]">
-            <span className="text-sm font-semibold text-[var(--gpa-gold)]">
-              GPA: 3.87
+        <QuickActionsDropdown />
+      </div>
+
+      {/* Stats Grid - 4 cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Total Earnings"
+          value={formatCurrency(mockStats.totalEarnings)}
+          icon={<DollarSign className="h-5 w-5" />}
+          trend={mockStats.earningsTrend}
+          trendDirection="up"
+        />
+        <StatCard
+          title="Active Deals"
+          value={mockStats.activeDeals.toString()}
+          icon={<FileText className="h-5 w-5" />}
+          subtitle={
+            <span className="text-xs text-[var(--color-success)] font-medium">
+              +{mockStats.newDeals} new
             </span>
-          </div>
+          }
+        />
+        <StatCard
+          title="Profile Views"
+          value={formatCompactNumber(mockStats.profileViews)}
+          icon={<Eye className="h-5 w-5" />}
+          trend={mockStats.viewsTrend}
+          trendDirection="up"
+        />
+        <StatCard
+          title="NIL Valuation"
+          value={formatCurrency(mockStats.nilValuation)}
+          icon={<TrendingUp className="h-5 w-5" />}
+          subtitle={
+            <span className="text-xs text-[var(--text-muted)]">
+              Updated weekly
+            </span>
+          }
+        />
+      </div>
+
+      {/* Two-column section: Activity Feed + Deadlines */}
+      <div className="grid lg:grid-cols-5 gap-6">
+        <div className="lg:col-span-3">
+          <ActivityFeed />
+        </div>
+        <div className="lg:col-span-2">
+          <UpcomingDeadlines />
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <Suspense fallback={<SkeletonStats />}>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard
-            title="Total Earnings"
-            value={formatCurrency(mockStats.totalEarnings)}
-            icon={DollarSign}
-            trend="up"
-            trendValue="+12.5%"
-          />
-          <StatsCard
-            title="Active Deals"
-            value={mockStats.activeDeals.toString()}
-            icon={FileText}
-            trend="up"
-            trendValue="+2"
-          />
-          <StatsCard
-            title="Profile Views"
-            value={formatCompactNumber(mockStats.profileViews)}
-            icon={Eye}
-            trend="up"
-            trendValue="+18%"
-          />
-          <StatsCard
-            title="NIL Valuation"
-            value={formatCurrency(mockStats.nilValuation)}
-            icon={TrendingUp}
-            trend="up"
-            trendValue="+8.3%"
-          />
-        </div>
-      </Suspense>
-
-      {/* GradeUp Score + Recent Deals */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <GradeUpScoreCard score={mockStats.gradeUpScore} />
-        <QuickActionsCard />
-      </div>
-
-      {/* Recent Deals */}
-      <Suspense fallback={<SkeletonCard />}>
-        <RecentDealsCard />
-      </Suspense>
+      {/* Full-width Earnings Chart */}
+      <EarningsChart />
     </div>
   );
 }
