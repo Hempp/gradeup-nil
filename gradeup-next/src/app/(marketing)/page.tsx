@@ -143,7 +143,7 @@ function HeroSection() {
                   className="w-full sm:w-auto btn-marketing-primary gap-2 shadow-lg"
                   aria-label="Join GradeUp as a student athlete - free signup"
                 >
-                  Join as Athlete - It's Free
+                  Join as Athlete - It&apos;s Free
                   <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </Button>
               </Link>
@@ -244,7 +244,7 @@ function HeroSection() {
                     {/* Tags */}
                     <div className="flex gap-2 mt-4">
                       <span className="px-2.5 py-1 rounded-full bg-white/10 text-white/80 text-xs font-medium">
-                        Dean's List
+                        Dean&apos;s List
                       </span>
                       <span className="px-2.5 py-1 rounded-full bg-white/10 text-white/80 text-xs font-medium">
                         All-Conference
@@ -556,7 +556,7 @@ function ForBrandsSection() {
               For Brands
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Partner with <span className="text-[var(--marketing-gold)]">Tomorrow's Leaders</span>
+              Partner with <span className="text-[var(--marketing-gold)]">Tomorrow&apos;s Leaders</span>
             </h2>
             <p className="text-[var(--marketing-gray-400)] text-lg mb-8">
               Access a curated network of verified student-athletes who excel academically.
@@ -640,7 +640,7 @@ function TestimonialsSection() {
             Testimonials
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            What They're <span className="text-[var(--marketing-cyan)]">Saying</span>
+            What They&apos;re <span className="text-[var(--marketing-cyan)]">Saying</span>
           </h2>
         </div>
 
@@ -658,7 +658,7 @@ function TestimonialsSection() {
                 ))}
               </div>
 
-              <p className="text-[var(--marketing-gray-300)] mb-6 leading-relaxed">"{testimonial.quote}"</p>
+              <p className="text-[var(--marketing-gray-300)] mb-6 leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
 
               <div className="flex items-center gap-3">
                 <Image

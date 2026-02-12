@@ -102,7 +102,7 @@ export default function DirectorSettingsPage() {
       <div>
         <h1 className="text-2xl font-bold text-[var(--text-primary)]">Settings</h1>
         <p className="text-[var(--text-muted)]">
-          Configure your program's NIL settings
+          Configure your program&apos;s NIL settings
         </p>
       </div>
 

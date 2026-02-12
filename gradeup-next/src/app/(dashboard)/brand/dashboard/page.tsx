@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {
   DollarSign,
   Users,
@@ -164,12 +165,12 @@ function ActiveCampaignsCard({ campaigns, loading }: ActiveCampaignsCardProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Active Campaigns</CardTitle>
-          <a
+          <Link
             href="/brand/campaigns"
             className="text-sm text-[var(--color-primary)] hover:underline"
           >
             View all
-          </a>
+          </Link>
         </div>
       </CardHeader>
       <CardContent>
@@ -249,7 +250,7 @@ export default function BrandDashboardPage() {
             Welcome back, {companyName}!
           </h1>
           <p className="text-[var(--text-muted)]">
-            Here's an overview of your NIL partnerships
+            Here&apos;s an overview of your NIL partnerships
           </p>
         </div>
         {isVerified && <Badge variant="success">Verified Brand</Badge>}

@@ -294,7 +294,7 @@ export default function DirectorAnalyticsPage() {
             Program Analytics
           </h1>
           <p className="text-[var(--text-muted)]">
-            Track your program's NIL performance
+            Track your program&apos;s NIL performance
           </p>
         </div>
         <Button variant="outline">

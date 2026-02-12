@@ -4,6 +4,7 @@ import {
   forwardRef,
   useState,
   useCallback,
+  useId,
   type InputHTMLAttributes,
   type TextareaHTMLAttributes,
   type ReactNode,
@@ -75,7 +76,8 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
     },
     ref
   ) {
-    const inputId = id || `field-${props.name || Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id || `field-${props.name || generatedId}`;
     const hasError = !!error;
 
     return (
@@ -182,7 +184,8 @@ export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>
     },
     ref
   ) {
-    const inputId = id || `field-${props.name || Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id || `field-${props.name || generatedId}`;
     const hasError = !!error;
     const charCount = typeof value === 'string' ? value.length : 0;
 

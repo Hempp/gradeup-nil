@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {
   Users,
   DollarSign,
@@ -216,12 +217,12 @@ export default function DirectorDashboardPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>School Athletes</CardTitle>
-            <a
+            <Link
               href="/director/athletes"
               className="text-sm text-[var(--color-primary)] hover:underline"
             >
               View all
-            </a>
+            </Link>
           </div>
         </CardHeader>
         <CardContent>

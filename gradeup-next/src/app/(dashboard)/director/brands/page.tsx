@@ -125,7 +125,7 @@ export default function DirectorBrandsPage() {
       <div>
         <h1 className="text-2xl font-bold text-[var(--text-primary)]">Brands</h1>
         <p className="text-[var(--text-muted)]">
-          Brands partnering with your program's athletes
+          Brands partnering with your program&apos;s athletes
         </p>
       </div>
 

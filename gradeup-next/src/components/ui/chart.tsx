@@ -153,11 +153,11 @@ export const ChartWrapper = forwardRef<HTMLDivElement, ChartWrapperProps>(
             ) : (
               // Loading skeleton
               <div className="w-full h-full flex items-end gap-2 p-4">
-                {Array.from({ length: 6 }).map((_, i) => (
+                {[45, 70, 35, 80, 55, 65].map((height, i) => (
                   <div
                     key={i}
                     className="flex-1 bg-[var(--surface-100)] rounded-t animate-pulse"
-                    style={{ height: `${30 + Math.random() * 60}%` }}
+                    style={{ height: `${height}%` }}
                   />
                 ))}
               </div>
