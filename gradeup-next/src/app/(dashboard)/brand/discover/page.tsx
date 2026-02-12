@@ -800,11 +800,10 @@ export default function BrandDiscoverPage() {
       ) : (
         <Card>
           <EmptyState
-            icon={<Users className="h-16 w-16" />}
+            icon={Users}
             title="No athletes found"
             description="Try adjusting your filters or search criteria to find more athletes."
-            actionLabel="Clear Filters"
-            onAction={handleClearFilters}
+            action={{ label: 'Clear Filters', onClick: handleClearFilters }}
           />
         </Card>
       )}

@@ -94,6 +94,29 @@
   --gpa-silver: #C0C0C0;
   --gpa-bronze: #CD7F32;
 
+  /* ─── Overlay & Glass Colors ─── */
+  --overlay-glass-5: rgba(255, 255, 255, 0.05);
+  --overlay-glass-10: rgba(255, 255, 255, 0.1);
+  --overlay-glass-20: rgba(255, 255, 255, 0.2);
+  --overlay-glass-95: rgba(255, 255, 255, 0.95);
+
+  /* ─── Inverse Text (on dark backgrounds) ─── */
+  --text-inverse: var(--surface-white);
+  --text-inverse-secondary: rgba(255, 255, 255, 0.85);
+  --text-inverse-muted: rgba(255, 255, 255, 0.65);
+  --text-inverse-subtle: rgba(255, 255, 255, 0.5);
+
+  /* ─── Inverse Borders ─── */
+  --border-inverse-10: rgba(255, 255, 255, 0.1);
+  --border-inverse-20: rgba(255, 255, 255, 0.2);
+  --border-inverse-30: rgba(255, 255, 255, 0.3);
+
+  /* ─── Section Spacing ─── */
+  --section-padding-sm: 3rem;
+  --section-padding-md: 5rem;
+  --section-padding-lg: 7rem;
+  --section-padding-hero: 8rem;
+
   /* ─── Spacing ─── */
   --sidebar-width: 280px;
   --sidebar-collapsed: 80px;
@@ -253,6 +276,85 @@ h3.card-title {
   color: var(--primary-900);
 }
 
+/* ─── Hero Typography (Marketing Pages) ─── */
+.text-hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 640px) {
+  .text-hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-hero-title {
+    font-size: 3.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .text-hero-title {
+    font-size: 4.5rem;
+  }
+}
+
+.text-hero-subtitle {
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-inverse-secondary);
+}
+
+@media (min-width: 640px) {
+  .text-hero-subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+/* ─── Section Spacing Utilities ─── */
+.section-spacing-sm {
+  padding-top: var(--section-padding-sm);
+  padding-bottom: var(--section-padding-sm);
+}
+
+.section-spacing-md {
+  padding-top: var(--section-padding-md);
+  padding-bottom: var(--section-padding-md);
+}
+
+.section-spacing-lg {
+  padding-top: var(--section-padding-lg);
+  padding-bottom: var(--section-padding-lg);
+}
+
+.section-spacing-hero {
+  padding-top: var(--section-padding-hero);
+  padding-bottom: var(--section-padding-hero);
+}
+
+@media (min-width: 1024px) {
+  .section-spacing-sm {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .section-spacing-md {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+  .section-spacing-lg {
+    padding-top: 9rem;
+    padding-bottom: 9rem;
+  }
+  .section-spacing-hero {
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+  }
+}
+
 /* ─── Focus Styles (Accessibility) ─── */
 :focus-visible {
   outline: 2px solid var(--primary-500);
@@ -342,6 +444,15 @@ h3.card-title {
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
@@ -366,6 +477,10 @@ h3.card-title {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
 
 /* ─── Glass Morphism ─── */

@@ -425,13 +425,15 @@ export default function AthleteDealsPage() {
                 ? 'Try adjusting your filters to see more deals.'
                 : 'You do not have any deals yet. When brands send you offers, they will appear here.'
             }
-            actionLabel={searchQuery || statusFilter || dealTypeFilter ? 'Clear filters' : undefined}
-            onAction={
+            action={
               searchQuery || statusFilter || dealTypeFilter
-                ? () => {
-                    setSearchQuery('');
-                    setStatusFilter('');
-                    setDealTypeFilter('');
+                ? {
+                    label: 'Clear filters',
+                    onClick: () => {
+                      setSearchQuery('');
+                      setStatusFilter('');
+                      setDealTypeFilter('');
+                    },
                   }
                 : undefined
             }
