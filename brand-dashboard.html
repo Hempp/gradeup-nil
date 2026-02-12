@@ -127,8 +127,8 @@
         .dashboard-main {
             flex: 1;
             padding: 2rem;
-            padding-top: 80px; /* Account for fixed dashboard-nav height */
-            max-width: 1600px;
+            padding-top: 72px; /* Account for fixed dashboard-nav height */
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
         }
@@ -1217,7 +1217,7 @@
         }
 
         /* ─── Responsive ─── */
-        @media (max-width: 1280px) {
+        @media (max-width: 1200px) {
             .content-grid {
                 grid-template-columns: 1fr;
             }
@@ -1517,23 +1517,711 @@
             margin-bottom: 1rem;
             opacity: 0.5;
         }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           LEFT SIDEBAR NAVIGATION (Matching Athlete Dashboard)
+           ═══════════════════════════════════════════════════════════════════════════ */
+
+        .left-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100vh;
+            height: 100dvh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s var(--ease);
+            overflow: hidden;
+        }
+
+        .left-sidebar.collapsed { width: 72px; }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            min-height: 72px;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            border-radius: 10px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            white-space: nowrap;
+            transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .logo-text {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .sidebar-toggle {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 8px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.3s var(--ease);
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .sidebar-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s var(--ease);
+        }
+
+        .left-sidebar.collapsed .sidebar-toggle svg { transform: rotate(180deg); }
+
+        .left-sidebar.collapsed .sidebar-toggle {
+            position: absolute;
+            right: -16px;
+            top: 20px;
+            z-index: 10;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-nav-secondary { flex: 0; padding-top: 0; }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .sidebar-nav-item.active {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--cyan);
+        }
+
+        .sidebar-nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 24px;
+            background: var(--cyan);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .sidebar-nav-item svg {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            flex-shrink: 0;
+        }
+
+        .nav-label {
+            transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .nav-label {
+            opacity: 0;
+            transform: translateX(-10px);
+            position: absolute;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            padding: 0.125rem 0.5rem;
+            background: var(--magenta);
+            border-radius: 10px;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: var(--white);
+            transition: opacity 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .nav-badge {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            margin-left: 0;
+            padding: 0.125rem 0.375rem;
+        }
+
+        .left-sidebar.collapsed .sidebar-nav-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.5rem 0.75rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s var(--ease), visibility 0.2s var(--ease);
+            z-index: 1000;
+        }
+
+        .left-sidebar.collapsed .sidebar-nav-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--gray-800);
+            margin: 0.5rem 1rem;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s var(--ease);
+        }
+
+        .sidebar-user:hover { background: var(--gray-900); }
+
+        .sidebar-user-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.2s var(--ease);
+        }
+
+        .left-sidebar.collapsed .sidebar-user-info {
+            opacity: 0;
+            position: absolute;
+        }
+
+        .sidebar-user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--white);
+            white-space: nowrap;
+        }
+
+        .sidebar-user-tier {
+            font-size: 0.75rem;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+
+        /* ─── Adjust Layout for Sidebar ─── */
+        .dashboard-nav {
+            left: 240px;
+            transition: left 0.3s var(--ease);
+        }
+
+        body.sidebar-collapsed .dashboard-nav { left: 72px; }
+
+        .dashboard {
+            margin-left: 240px;
+            transition: margin-left 0.3s var(--ease);
+        }
+
+        body.sidebar-collapsed .dashboard { margin-left: 72px; }
+
+        .dashboard-nav-tabs { display: none; }
+        .dashboard-logo { display: none; }
+
+        /* ─── Page Title in Nav ─── */
+        .page-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        /* ─── Hamburger Button ─── */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            min-height: 48px;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 12px;
+            gap: 5px;
+            transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+        }
+
+        .hamburger-btn:hover,
+        .hamburger-btn:focus {
+            background: var(--gray-800);
+            border-color: var(--gray-700);
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 2px;
+            transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger-btn.active .hamburger-line:nth-child(2) { opacity: 0; }
+        .hamburger-btn.active .hamburger-line:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* ─── Mobile Drawer ─── */
+        .mobile-drawer-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 199;
+            opacity: 0;
+            transition: opacity 0.3s var(--ease);
+        }
+
+        .mobile-drawer-overlay.active { opacity: 1; }
+
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            max-width: 85vw;
+            height: 100vh;
+            height: 100dvh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 200;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.3s var(--ease);
+        }
+
+        .mobile-drawer.active { transform: translateX(0); }
+
+        .mobile-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--gray-800);
+            min-height: 64px;
+        }
+
+        .mobile-drawer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .mobile-drawer-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-drawer-close:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .mobile-drawer-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-drawer-nav {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            overflow-y: auto;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 10px;
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s var(--ease), color 0.2s var(--ease);
+            min-height: 48px;
+        }
+
+        .mobile-nav-item:hover,
+        .mobile-nav-item:focus {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .mobile-nav-item.active {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--cyan);
+            border-left: 3px solid var(--cyan);
+        }
+
+        .mobile-nav-item svg {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+        }
+
+        .mobile-drawer-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .mobile-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mobile-user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .mobile-user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-user-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .mobile-user-tier {
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        /* ─── Mobile Responsive ─── */
+        @media (max-width: 768px) {
+            .left-sidebar { display: none; }
+            .page-title-wrapper { display: none; }
+            .dashboard-nav { left: 0 !important; }
+            .dashboard { margin-left: 0 !important; }
+            .hamburger-btn { display: flex; }
+            .mobile-drawer-overlay,
+            .mobile-drawer { display: flex; }
+        }
     </style>
 </head>
 <body>
     <!-- Skip Link for Keyboard Navigation (WCAG 2.4.1) -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
+    <!-- Left Sidebar Navigation (Desktop) -->
+    <aside class="left-sidebar" id="leftSidebar" aria-label="Main navigation">
+        <div class="sidebar-header">
+            <a href="index.html" class="sidebar-logo">
+                <span class="logo-icon">G</span>
+                <span class="logo-text">GRADEUP</span>
+            </a>
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar" aria-expanded="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="brand-dashboard.html" class="sidebar-nav-item active" data-tooltip="Dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="athletes.html" class="sidebar-nav-item" data-tooltip="Find Athletes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <span class="nav-label">Find Athletes</span>
+            </a>
+            <a href="campaigns.html" class="sidebar-nav-item" data-tooltip="Campaigns">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <path d="M22 4L12 14.01l-3-3"/>
+                </svg>
+                <span class="nav-label">Campaigns</span>
+                <span class="nav-badge">12</span>
+            </a>
+            <a href="deals.html" class="sidebar-nav-item" data-tooltip="Deals">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                <span class="nav-label">Deals</span>
+            </a>
+            <a href="analytics.html" class="sidebar-nav-item" data-tooltip="Analytics">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="messages.html" class="sidebar-nav-item" data-tooltip="Messages">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                <span class="nav-label">Messages</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-divider"></div>
+
+        <nav class="sidebar-nav sidebar-nav-secondary">
+            <a href="brand-profile.html" class="sidebar-nav-item" data-tooltip="Brand Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="nav-label">Brand Profile</span>
+            </a>
+            <a href="settings.html" class="sidebar-nav-item" data-tooltip="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                </svg>
+                <span class="nav-label">Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar">A</div>
+                <div class="sidebar-user-info">
+                    <span class="sidebar-user-name">Apex Sports</span>
+                    <span class="sidebar-user-tier">Gold Sponsor</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer-overlay" id="mobileOverlay" aria-hidden="true"></div>
+    <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation" role="navigation">
+        <div class="mobile-drawer-header">
+            <span class="mobile-drawer-title">Navigation</span>
+            <button class="mobile-drawer-close" id="closeDrawer" aria-label="Close navigation menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-drawer-nav">
+            <a href="brand-dashboard.html" class="mobile-nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="athletes.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                Find Athletes
+            </a>
+            <a href="campaigns.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <path d="M22 4L12 14.01l-3-3"/>
+                </svg>
+                Campaigns
+            </a>
+            <a href="deals.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                Deals
+            </a>
+            <a href="analytics.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                Analytics
+            </a>
+            <a href="messages.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                Messages
+            </a>
+            <a href="settings.html" class="mobile-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+        <div class="mobile-drawer-footer">
+            <div class="mobile-user-info">
+                <div class="mobile-user-avatar">A</div>
+                <div class="mobile-user-details">
+                    <span class="mobile-user-name">Apex Sports</span>
+                    <span class="mobile-user-tier">Gold Sponsor</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
     <div class="dashboard">
-        <!-- Dashboard Navigation (Unified Header Style) -->
+        <!-- Dashboard Navigation (Simplified Header) -->
         <nav class="dashboard-nav">
             <div class="dashboard-nav-left">
-                <a href="index.html" class="dashboard-logo">GRADEUP</a>
-                <div class="dashboard-nav-tabs">
-                    <a href="brand-dashboard.html" class="nav-tab active">Dashboard</a>
-                    <a href="deals.html" class="nav-tab">Deals</a>
-                    <a href="analytics.html" class="nav-tab">Analytics</a>
-                    <a href="brand-profile.html" class="nav-tab">Profile</a>
-                    <a href="settings.html" class="nav-tab highlighted">Settings</a>
+                <!-- Hamburger Menu Button (Mobile Only) -->
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileDrawer">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                <!-- Page Title (Desktop) -->
+                <div class="page-title-wrapper">
+                    <h1 class="page-title">Brand Dashboard</h1>
+                    <span class="page-subtitle">Welcome back, Apex Sports</span>
                 </div>
             </div>
 
@@ -1549,18 +2237,6 @@
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
                     </svg>
                 </button>
-                <div class="user-avatar" id="userMenu">
-                    <div class="company-avatar">A</div>
-                    <div class="avatar-info">
-                        <div class="avatar-name">Apex Sports</div>
-                        <div class="avatar-tier">
-                            <svg class="tier-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                            </svg>
-                            Gold Sponsor
-                        </div>
-                    </div>
-                </div>
             </div>
         </nav>
 
@@ -3155,11 +3831,103 @@
             return group;
         }
 
+        // ═══════════════════════════════════════════════════════════════════════════
+        // LEFT SIDEBAR FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════════════════
+        function initLeftSidebar() {
+            const sidebar = document.getElementById('leftSidebar');
+            const toggle = document.getElementById('sidebarToggle');
+            if (!sidebar || !toggle) return;
+
+            // Restore saved state
+            const savedState = localStorage.getItem('gradeup-sidebar-collapsed');
+            if (savedState === 'true') {
+                sidebar.classList.add('collapsed');
+                document.body.classList.add('sidebar-collapsed');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function() {
+                const isCollapsed = sidebar.classList.toggle('collapsed');
+                document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+                localStorage.setItem('gradeup-sidebar-collapsed', isCollapsed);
+                toggle.setAttribute('aria-expanded', !isCollapsed);
+            });
+
+            // Keyboard shortcut (Ctrl/Cmd + B)
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                    e.preventDefault();
+                    toggle.click();
+                }
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // MOBILE DRAWER FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════════════════
+        function initMobileDrawer() {
+            const hamburger = document.getElementById('hamburgerBtn');
+            const drawer = document.getElementById('mobileDrawer');
+            const overlay = document.getElementById('mobileOverlay');
+            const closeBtn = document.getElementById('closeDrawer');
+            if (!hamburger || !drawer || !overlay) return;
+
+            function openDrawer() {
+                drawer.classList.add('active');
+                overlay.classList.add('active');
+                hamburger.classList.add('active');
+                hamburger.setAttribute('aria-expanded', 'true');
+                overlay.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDrawer() {
+                drawer.classList.remove('active');
+                overlay.classList.remove('active');
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            hamburger.addEventListener('click', openDrawer);
+            overlay.addEventListener('click', closeDrawer);
+            if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+
+            // Escape key closes drawer
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && drawer.classList.contains('active')) {
+                    closeDrawer();
+                }
+            });
+
+            // Swipe to close
+            let touchStartX = 0;
+            drawer.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+
+            drawer.addEventListener('touchend', function(e) {
+                const touchEndX = e.changedTouches[0].clientX;
+                if (touchStartX - touchEndX > 50) closeDrawer();
+            }, { passive: true });
+
+            // Close on nav item click
+            drawer.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.addEventListener('click', closeDrawer);
+            });
+        }
+
         // Initialize Dashboard
         document.addEventListener('DOMContentLoaded', function() {
             renderAthletes(athletesData);
             renderTopMatches();
             renderCampaigns();
+
+            // Initialize sidebar and mobile drawer
+            initLeftSidebar();
+            initMobileDrawer();
 
             // Create Opportunity button
             document.getElementById('createOpportunityBtn').addEventListener('click', openCreateOpportunityModal);

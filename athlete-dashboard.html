@@ -82,6 +82,40 @@
 
         /* Nav and icon styles in dashboard-shared.css */
 
+        .dashboard-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dashboard-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* ─── Page Title ─── */
+        .page-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+
+        .page-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
         /* ─── Section Grid ─── */
         .dashboard-grid {
             display: grid;
@@ -1100,10 +1134,6 @@
                 padding: 0.75rem 1rem;
             }
 
-            .dashboard-nav-tabs {
-                display: none;
-            }
-
             .dashboard-container {
                 padding: 1rem;
             }
@@ -1863,6 +1893,11 @@
                 display: none;
             }
 
+            /* Hide page title on mobile, show hamburger instead */
+            .page-title-wrapper {
+                display: none;
+            }
+
             /* Reset margin/left for mobile */
             .dashboard-nav {
                 left: 0 !important;
@@ -1960,11 +1995,6 @@
                 min-width: 44px;
                 min-height: 44px;
                 padding: 10px;
-            }
-
-            .dashboard-logo {
-                font-size: 0.75rem;
-                padding: 0.375rem 0.5rem;
             }
 
             .nav-icon-btn {
@@ -2699,6 +2729,11 @@
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
             </button>
+            <!-- Page Title (Desktop) -->
+            <div class="page-title-wrapper">
+                <h1 class="page-title">Athlete Dashboard</h1>
+                <span class="page-subtitle">Welcome back, Marcus</span>
+            </div>
         </div>
 
         <div class="dashboard-nav-right">
