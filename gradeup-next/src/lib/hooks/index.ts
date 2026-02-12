@@ -17,3 +17,6 @@ export * from './use-search';
 
 // Error handling hooks
 export * from './use-error-handler';
+
+// Landing page data hooks (with mock fallbacks)
+export * from './use-landing-data';

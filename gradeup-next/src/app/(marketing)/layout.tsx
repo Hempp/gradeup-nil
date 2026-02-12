@@ -22,6 +22,7 @@ function Navbar() {
     { href: '#athletes', label: 'Athletes' },
     { href: '#brands', label: 'Brands' },
     { href: '#how-it-works', label: 'How It Works' },
+    { href: '/opportunities', label: 'Opportunities' },
   ];
 
   return (
@@ -29,23 +30,18 @@ function Navbar() {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-surface-200'
+          ? 'glass-marketing shadow-lg'
           : 'bg-transparent'
       )}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-gradient-to-br from-primary-700 to-primary-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">G</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="h-8 w-8 bg-gradient-to-br from-[var(--marketing-cyan)] to-[var(--marketing-lime)] rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
+              <span className="text-black font-bold text-lg">G</span>
             </div>
-            <span
-              className={cn(
-                'font-bold text-xl tracking-tight transition-colors',
-                scrolled ? 'text-primary-900' : 'text-white'
-              )}
-            >
+            <span className="font-bold text-xl tracking-tight text-white">
               GradeUp
             </span>
           </Link>
@@ -53,16 +49,23 @@ function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary-500',
-                  scrolled ? 'text-neutral-600' : 'text-white/80 hover:text-white'
-                )}
-              >
-                {link.label}
-              </a>
+              link.href.startsWith('#') ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] transition-colors"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] transition-colors"
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
 
@@ -71,17 +74,15 @@ function Navbar() {
             <Link href="/login">
               <Button
                 variant="ghost"
-                className={cn(
-                  scrolled
-                    ? 'text-neutral-600 hover:text-primary-700'
-                    : 'text-white hover:bg-white/10'
-                )}
+                className="text-white hover:bg-white/10 hover:text-[var(--marketing-cyan)]"
               >
                 Log In
               </Button>
             </Link>
             <Link href="/signup">
-              <Button variant="primary">Get Started</Button>
+              <Button className="btn-marketing-primary px-6">
+                Get Started
+              </Button>
             </Link>
           </div>
 
@@ -92,9 +93,9 @@ function Navbar() {
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
-              <X className={cn('h-6 w-6', scrolled ? 'text-primary-900' : 'text-white')} />
+              <X className="h-6 w-6 text-white" />
             ) : (
-              <Menu className={cn('h-6 w-6', scrolled ? 'text-primary-900' : 'text-white')} />
+              <Menu className="h-6 w-6 text-white" />
             )}
           </button>
         </div>
@@ -102,26 +103,37 @@ function Navbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-surface-200 shadow-lg">
+        <div className="lg:hidden bg-[var(--marketing-gray-900)] border-t border-[var(--marketing-gray-800)]">
           <div className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="block py-2 text-neutral-600 font-medium hover:text-primary-500"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </a>
+              link.href.startsWith('#') ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="block py-2 text-white/70 font-medium hover:text-[var(--marketing-cyan)]"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="block py-2 text-white/70 font-medium hover:text-[var(--marketing-cyan)]"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
-            <div className="pt-4 border-t border-surface-200 space-y-2">
-              <Link href="/login" className="block">
-                <Button variant="outline" className="w-full">
+            <div className="pt-4 border-t border-[var(--marketing-gray-800)] space-y-2">
+              <Link href="/auth/login" className="block">
+                <Button variant="outline" className="w-full border-white/30 text-white hover:bg-white/10">
                   Log In
                 </Button>
               </Link>
-              <Link href="/signup" className="block">
-                <Button variant="primary" className="w-full">
+              <Link href="/auth/signup" className="block">
+                <Button className="w-full btn-marketing-primary">
                   Get Started
                 </Button>
               </Link>
@@ -135,57 +147,95 @@ function Navbar() {
 
 function Footer() {
   return (
-    <footer className="bg-primary-900 text-white py-16">
+    <footer className="bg-[var(--marketing-gray-950)] border-t border-[var(--marketing-gray-800)] text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 bg-gradient-to-br from-secondary-500 to-secondary-700 rounded-lg flex items-center justify-center">
-                <span className="text-primary-900 font-bold text-lg">G</span>
+              <div className="h-8 w-8 bg-gradient-to-br from-[var(--marketing-cyan)] to-[var(--marketing-lime)] rounded-lg flex items-center justify-center">
+                <span className="text-black font-bold text-lg">G</span>
               </div>
               <span className="font-bold text-xl">GradeUp</span>
             </div>
-            <p className="text-white/60 text-sm">
+            <p className="text-[var(--marketing-gray-400)] text-sm">
               The NIL platform where your GPA unlocks better deals.
             </p>
           </div>
 
-          {/* Links */}
+          {/* For Athletes */}
           <div>
-            <h4 className="font-semibold mb-4">For Athletes</h4>
-            <ul className="space-y-2 text-sm text-white/60">
-              <li><a href="/signup/athlete" className="hover:text-white transition-colors">Join as Athlete</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">How It Works</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Success Stories</a></li>
+            <h4 className="font-semibold mb-4 text-[var(--marketing-cyan)]">For Athletes</h4>
+            <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
+              <li>
+                <Link href="/signup/athlete" className="hover:text-white transition-colors">
+                  Join as Athlete
+                </Link>
+              </li>
+              <li>
+                <a href="#how-it-works" className="hover:text-white transition-colors">
+                  How It Works
+                </a>
+              </li>
+              <li>
+                <Link href="/opportunities" className="hover:text-white transition-colors">
+                  Browse Opportunities
+                </Link>
+              </li>
             </ul>
           </div>
 
+          {/* For Brands */}
           <div>
-            <h4 className="font-semibold mb-4">For Brands</h4>
-            <ul className="space-y-2 text-sm text-white/60">
-              <li><a href="/signup/brand" className="hover:text-white transition-colors">Partner With Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Browse Athletes</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Case Studies</a></li>
+            <h4 className="font-semibold mb-4 text-[var(--marketing-gold)]">For Brands</h4>
+            <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
+              <li>
+                <Link href="/signup/brand" className="hover:text-white transition-colors">
+                  Partner With Us
+                </Link>
+              </li>
+              <li>
+                <a href="#athletes" className="hover:text-white transition-colors">
+                  Browse Athletes
+                </a>
+              </li>
+              <li>
+                <a href="#brands" className="hover:text-white transition-colors">
+                  Why GradeUp
+                </a>
+              </li>
             </ul>
           </div>
 
+          {/* Company */}
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
-            <ul className="space-y-2 text-sm text-white/60">
-              <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+            <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
+              <li>
+                <a href="#how-it-works" className="hover:text-white transition-colors">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Terms of Service
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-white/40">
+        <div className="mt-12 pt-8 border-t border-[var(--marketing-gray-800)] flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-[var(--marketing-gray-500)]">
             © {new Date().getFullYear()} GradeUp NIL. All rights reserved.
           </p>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/40 px-3 py-1 rounded-full border border-white/20">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[var(--marketing-lime)] px-3 py-1 rounded-full border border-[var(--marketing-lime)]/30 bg-[var(--marketing-lime)]/10">
               NCAA Compliant
             </span>
           </div>
@@ -197,10 +247,10 @@ function Footer() {
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="marketing-dark min-h-screen">
       <Navbar />
       <main>{children}</main>
       <Footer />
-    </>
+    </div>
   );
 }

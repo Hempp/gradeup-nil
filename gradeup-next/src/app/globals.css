@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap');
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GRADEUP NIL - Design System v2.0
@@ -145,6 +146,264 @@
   --radius-xl: 0.75rem;    /* 12px - Cards, modals */
   --radius-2xl: 1rem;      /* 16px */
   --radius-full: 9999px;   /* Badges, avatars */
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     MARKETING PAGES - Dark Theme (Nike-inspired)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* ─── Marketing Dark Theme Colors ─── */
+  --marketing-black: #000000;
+  --marketing-gray-950: #0a0a0a;
+  --marketing-gray-900: #171717;
+  --marketing-gray-800: #262626;
+  --marketing-gray-700: #404040;
+  --marketing-gray-600: #525252;
+  --marketing-gray-500: #737373;
+  --marketing-gray-400: #a3a3a3;
+  --marketing-gray-300: #d4d4d4;
+
+  /* ─── Marketing Accent Colors ─── */
+  --marketing-cyan: #00f0ff;
+  --marketing-cyan-dark: #00c4cc;
+  --marketing-cyan-glow: rgba(0, 240, 255, 0.4);
+  --marketing-lime: #adff2f;
+  --marketing-lime-glow: rgba(173, 255, 47, 0.3);
+  --marketing-gold: #ffd700;
+  --marketing-gold-glow: rgba(255, 215, 0, 0.3);
+  --marketing-magenta: #ff00ff;
+  --marketing-magenta-glow: rgba(255, 0, 255, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MARKETING PAGE ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes marketing-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-30px) scale(1.05);
+  }
+}
+
+@keyframes marketing-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes marketing-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--marketing-cyan-glow);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--marketing-cyan-glow), 0 0 60px var(--marketing-cyan-glow);
+  }
+}
+
+@keyframes marketing-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes marketing-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Marketing Animation Classes ─── */
+.animate-marketing-float {
+  animation: marketing-float 8s ease-in-out infinite;
+}
+
+.animate-marketing-pulse {
+  animation: marketing-pulse 2s ease-in-out infinite;
+}
+
+.animate-marketing-glow {
+  animation: marketing-glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-marketing-gradient {
+  animation: marketing-gradient-shift 8s ease infinite;
+  background-size: 200% 200%;
+}
+
+.animate-marketing-fade-up {
+  animation: marketing-fade-up 0.6s ease-out forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MARKETING PAGE COMPONENT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Marketing Page Wrapper */
+.marketing-dark {
+  background: var(--marketing-black);
+  color: white;
+}
+
+/* Hero Orbs (floating gradient spheres) */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: marketing-float 8s ease-in-out infinite;
+}
+
+.hero-orb-cyan {
+  background: radial-gradient(circle, var(--marketing-cyan) 0%, transparent 70%);
+  opacity: 0.4;
+}
+
+.hero-orb-magenta {
+  background: radial-gradient(circle, var(--marketing-magenta) 0%, transparent 70%);
+  opacity: 0.3;
+  animation-delay: -4s;
+}
+
+/* Hero Grid Pattern */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Marketing Gradient Text */
+.gradient-text-cyan {
+  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-lime) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-marketing {
+  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-gold) 50%, var(--marketing-lime) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Marketing Buttons */
+.btn-marketing-primary {
+  background: var(--marketing-cyan);
+  color: var(--marketing-black);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+.btn-marketing-primary:hover {
+  background: var(--marketing-cyan-dark);
+  box-shadow: 0 0 30px var(--marketing-cyan-glow);
+  transform: translateY(-2px);
+}
+
+.btn-marketing-outline {
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+.btn-marketing-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Marketing Cards */
+.card-marketing {
+  background: var(--marketing-gray-900);
+  border: 1px solid var(--marketing-gray-800);
+  border-radius: var(--radius-xl);
+  transition: all 0.3s ease;
+}
+
+.card-marketing:hover {
+  border-color: var(--marketing-gray-700);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* GPA Badge (Marketing) */
+.gpa-badge-marketing {
+  background: linear-gradient(135deg, var(--marketing-lime) 0%, var(--marketing-cyan) 100%);
+  color: var(--marketing-black);
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+}
+
+/* Verified Badge (Marketing) */
+.verified-badge-marketing {
+  background: var(--marketing-cyan);
+  color: var(--marketing-black);
+  border-radius: var(--radius-full);
+  padding: 0.125rem;
+}
+
+/* Section Backgrounds */
+.bg-marketing-gradient {
+  background: linear-gradient(180deg, var(--marketing-black) 0%, var(--marketing-gray-950) 100%);
+}
+
+.bg-marketing-gradient-radial {
+  background: radial-gradient(ellipse at center, var(--marketing-gray-900) 0%, var(--marketing-black) 70%);
+}
+
+/* CTA Section Gradient */
+.bg-marketing-cta {
+  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-magenta) 100%);
+}
+
+/* Marketing Glass Effect */
+.glass-marketing {
+  background: rgba(23, 23, 23, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--marketing-gray-800);
+}
+
+/* Marketing Scrollbar */
+.marketing-dark::-webkit-scrollbar {
+  width: 8px;
+}
+
+.marketing-dark::-webkit-scrollbar-track {
+  background: var(--marketing-gray-900);
+}
+
+.marketing-dark::-webkit-scrollbar-thumb {
+  background: var(--marketing-gray-700);
+  border-radius: var(--radius-full);
+}
+
+.marketing-dark::-webkit-scrollbar-thumb:hover {
+  background: var(--marketing-gray-600);
 }
 
 /* ─── Tailwind Theme Integration ─── */
