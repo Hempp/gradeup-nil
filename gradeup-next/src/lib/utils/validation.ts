@@ -627,3 +627,211 @@ export function sanitizeText(value: string): string {
     .replace(/<[^>]*>/g, '')
     .trim();
 }
+
+/* ===============================================================================
+   PAYMENT VALIDATORS
+   =============================================================================== */
+
+export const paymentValidators = {
+  /**
+   * Validates US bank routing number (9 digits with ABA checksum)
+   */
+  routingNumber: (value: string): string | null => {
+    if (!value) return null;
+    const digits = value.replace(/\D/g, '');
+    if (digits.length !== 9) {
+      return 'Routing number must be 9 digits';
+    }
+    // ABA checksum validation
+    const weights = [3, 7, 1, 3, 7, 1, 3, 7, 1];
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(digits[i]) * weights[i];
+    }
+    if (sum % 10 !== 0) {
+      return 'Invalid routing number';
+    }
+    return null;
+  },
+
+  /**
+   * Validates bank account number (4-17 digits)
+   */
+  accountNumber: (value: string): string | null => {
+    if (!value) return null;
+    const digits = value.replace(/\D/g, '');
+    if (digits.length < 4 || digits.length > 17) {
+      return 'Account number must be 4-17 digits';
+    }
+    return null;
+  },
+
+  /**
+   * Validates PayPal email or phone
+   */
+  paypalAccount: (value: string): string | null => {
+    if (!value) return null;
+    // Check if it's an email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Check if it's a phone number
+    const phoneRegex = /^\+?[0-9]{10,15}$/;
+    const cleaned = value.replace(/[\s\-\(\)\.]/g, '');
+
+    if (!emailRegex.test(value) && !phoneRegex.test(cleaned)) {
+      return 'Enter a valid email or phone number';
+    }
+    return null;
+  },
+
+  /**
+   * Validates Venmo username
+   */
+  venmoUsername: (value: string): string | null => {
+    if (!value) return null;
+    const username = value.startsWith('@') ? value.slice(1) : value;
+    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+      return 'Invalid Venmo username';
+    }
+    if (username.length < 5 || username.length > 30) {
+      return 'Venmo username must be 5-30 characters';
+    }
+    return null;
+  },
+
+  /**
+   * Validates US zip code
+   */
+  zipCode: (value: string): string | null => {
+    if (!value) return null;
+    if (!/^\d{5}(-\d{4})?$/.test(value)) {
+      return 'Enter a valid ZIP code (12345 or 12345-6789)';
+    }
+    return null;
+  },
+
+  /**
+   * Validates US state abbreviation
+   */
+  stateCode: (value: string): string | null => {
+    if (!value) return null;
+    const states = [
+      'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+      'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+      'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+      'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+      'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'DC',
+    ];
+    if (!states.includes(value.toUpperCase())) {
+      return 'Enter a valid state abbreviation';
+    }
+    return null;
+  },
+};
+
+/* ===============================================================================
+   VIDEO URL VALIDATORS
+   =============================================================================== */
+
+export const videoValidators = {
+  /**
+   * Validates YouTube URL
+   */
+  youtubeUrl: (value: string): string | null => {
+    if (!value) return null;
+    try {
+      const url = new URL(value);
+      const isYoutube =
+        url.hostname.includes('youtube.com') ||
+        url.hostname.includes('youtu.be');
+      if (!isYoutube) {
+        return 'Please enter a valid YouTube URL';
+      }
+      return null;
+    } catch {
+      return 'Please enter a valid URL';
+    }
+  },
+
+  /**
+   * Validates TikTok URL
+   */
+  tiktokUrl: (value: string): string | null => {
+    if (!value) return null;
+    try {
+      const url = new URL(value);
+      if (!url.hostname.includes('tiktok.com')) {
+        return 'Please enter a valid TikTok URL';
+      }
+      return null;
+    } catch {
+      return 'Please enter a valid URL';
+    }
+  },
+
+  /**
+   * Validates either YouTube or TikTok URL
+   */
+  highlightUrl: (value: string): string | null => {
+    if (!value) return null;
+    try {
+      const url = new URL(value);
+      const isYoutube =
+        url.hostname.includes('youtube.com') ||
+        url.hostname.includes('youtu.be');
+      const isTiktok = url.hostname.includes('tiktok.com');
+
+      if (!isYoutube && !isTiktok) {
+        return 'Please enter a YouTube or TikTok URL';
+      }
+      return null;
+    } catch {
+      return 'Please enter a valid URL';
+    }
+  },
+};
+
+/**
+ * Detect video platform from URL
+ */
+export function detectVideoPlatform(url: string): 'youtube' | 'tiktok' | null {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.includes('youtube.com') || parsed.hostname.includes('youtu.be')) {
+      return 'youtube';
+    }
+    if (parsed.hostname.includes('tiktok.com')) {
+      return 'tiktok';
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Extract YouTube video ID from URL
+ */
+export function extractYouTubeVideoId(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    // youtube.com/watch?v=VIDEO_ID
+    if (parsed.hostname.includes('youtube.com')) {
+      return parsed.searchParams.get('v');
+    }
+    // youtu.be/VIDEO_ID
+    if (parsed.hostname.includes('youtu.be')) {
+      return parsed.pathname.slice(1);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Mask sensitive account number for display
+ */
+export function maskAccountNumber(accountNumber: string): string {
+  if (!accountNumber || accountNumber.length < 4) return '****';
+  return '****' + accountNumber.slice(-4);
+}

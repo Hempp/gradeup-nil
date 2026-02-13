@@ -16,16 +16,16 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     const variants = {
       default: `
         bg-[var(--bg-card)] border border-[var(--border-color)]
-        ${hover ? 'hover:bg-[var(--bg-card-hover)] hover:border-[var(--border-color-hover)]' : ''}
+        ${hover ? 'hover:bg-[var(--bg-card-hover)] hover:border-[var(--border-color-hover)] hover:-translate-y-1 hover:shadow-lg' : ''}
       `,
       glass: `
         glass-card
-        ${hover ? 'hover:shadow-[var(--shadow-card-hover)]' : ''}
+        ${hover ? 'hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1' : ''}
       `,
       glow: `
         bg-[var(--bg-card)] border border-[var(--color-primary)]
         shadow-[0_0_20px_var(--color-primary-glow)]
-        ${hover ? 'hover:shadow-[0_0_30px_var(--color-primary-glow)]' : ''}
+        ${hover ? 'hover:shadow-[0_0_30px_var(--color-primary-glow)] hover:-translate-y-1' : ''}
       `,
     };
 

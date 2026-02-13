@@ -172,6 +172,9 @@ export function useLandingStats(): UseLandingDataResult<LandingStats> {
         brands: brandResult.count || mockLandingStats.brands,
         avgGpa,
         totalDeals: dealResult.count || mockLandingStats.totalDeals,
+        totalPaidOut: mockLandingStats.totalPaidOut,
+        avgDealValue: mockLandingStats.avgDealValue,
+        conversionRate: mockLandingStats.conversionRate,
       };
 
       if (isMountedRef.current) {

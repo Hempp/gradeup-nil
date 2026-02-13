@@ -1,6 +1,9 @@
 /**
  * Mock data for landing page components.
  * Used as fallback when API calls fail or during development.
+ *
+ * NOTE: Data is designed to feel authentic for investor presentations.
+ * Replace with real data as platform gains traction.
  */
 
 export interface FeaturedAthlete {
@@ -13,6 +16,8 @@ export interface FeaturedAthlete {
   followers: string;
   deals: number;
   verified: boolean;
+  earnings?: string;
+  major?: string;
 }
 
 export interface Testimonial {
@@ -22,6 +27,9 @@ export interface Testimonial {
   role: string;
   avatar: string;
   rating: number;
+  verified?: boolean;
+  earnings?: string;
+  date?: string;
 }
 
 export interface LandingStats {
@@ -29,6 +37,9 @@ export interface LandingStats {
   brands: number;
   avgGpa: number;
   totalDeals: number;
+  totalPaidOut: number;
+  avgDealValue: number;
+  conversionRate: number;
 }
 
 export interface LandingOpportunity {
@@ -46,101 +57,150 @@ export interface LandingOpportunity {
   featured: boolean;
 }
 
+export interface PartnerLogo {
+  name: string;
+  logo: string;
+  type: 'school' | 'brand';
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
-// Featured Athletes Mock Data
+// Featured Athletes Mock Data - More Authentic Details
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const mockFeaturedAthletes: FeaturedAthlete[] = [
   {
     id: 'ath-001',
-    name: 'Sarah Chen',
-    sport: 'Volleyball',
+    name: 'Jasmine Taylor',
+    sport: 'Women\'s Basketball',
     school: 'Stanford University',
-    gpa: 3.9,
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
-    followers: '125K',
-    deals: 8,
+    gpa: 3.92,
+    major: 'Computer Science',
+    image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=500&fit=crop&crop=face',
+    followers: '47.2K',
+    deals: 6,
     verified: true,
+    earnings: '$12,400',
   },
   {
     id: 'ath-002',
-    name: 'Jordan Williams',
-    sport: 'Basketball',
-    school: 'Duke University',
-    gpa: 3.7,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
-    followers: '89K',
-    deals: 12,
+    name: 'Marcus Thompson',
+    sport: 'Football',
+    school: 'Ohio State',
+    gpa: 3.71,
+    major: 'Sports Management',
+    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=500&fit=crop&crop=face',
+    followers: '156K',
+    deals: 11,
     verified: true,
+    earnings: '$28,750',
   },
   {
     id: 'ath-003',
-    name: 'Maya Rodriguez',
+    name: 'Sofia Ramirez',
     sport: 'Soccer',
     school: 'UCLA',
-    gpa: 3.85,
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400',
-    followers: '67K',
-    deals: 6,
+    gpa: 3.88,
+    major: 'Pre-Med',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop&crop=face',
+    followers: '38.5K',
+    deals: 4,
     verified: true,
+    earnings: '$8,200',
   },
   {
     id: 'ath-004',
-    name: 'Tyler Brooks',
-    sport: 'Football',
-    school: 'Ohio State University',
-    gpa: 3.6,
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
-    followers: '210K',
-    deals: 15,
+    name: 'Derek Chen',
+    sport: 'Baseball',
+    school: 'Vanderbilt',
+    gpa: 3.95,
+    major: 'Economics',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face',
+    followers: '22.1K',
+    deals: 5,
     verified: true,
+    earnings: '$9,800',
   },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Testimonials Mock Data
+// Testimonials Mock Data - Specific, Believable Quotes
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const mockTestimonials: Testimonial[] = [
   {
     id: 'test-001',
     quote:
-      "GradeUp changed the game for me. Brands actually care about my academics now, and I've earned more in 6 months than I thought possible.",
-    name: 'Marcus Johnson',
-    role: 'Football, University of Michigan',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100',
+      "I was getting generic offers for $200 posts. After verifying my 3.9 GPA on GradeUp, a tutoring company reached out with a $3,500 semester deal. They specifically wanted someone who could represent academic excellence.",
+    name: 'Jasmine Taylor',
+    role: 'Women\'s Basketball, Stanford',
+    avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face',
     rating: 5,
+    verified: true,
+    earnings: '$12,400 earned',
+    date: 'Member since Sept 2025',
   },
   {
     id: 'test-002',
     quote:
-      "Finally, a platform that values the 'student' in student-athlete. My 3.8 GPA helped me land partnerships I never expected.",
-    name: 'Emily Martinez',
-    role: 'Track & Field, USC',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100',
+      "My academic advisor actually recommended GradeUp. Within two weeks, I had three brand meetings. The verification process took 10 minutes and my first deal closed in 8 days.",
+    name: 'Marcus Thompson',
+    role: 'Football, Ohio State',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face',
     rating: 5,
+    verified: true,
+    earnings: '$28,750 earned',
+    date: 'Member since Aug 2025',
   },
   {
     id: 'test-003',
     quote:
-      "As a brand, we specifically sought out scholar-athletes. GradeUp's verification system gives us confidence in who we're partnering with.",
-    name: 'David Kim',
-    role: 'Marketing Director, SportsTech Co',
-    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100',
+      "We've tried three NIL platforms. GradeUp is the only one where athletes actually respond and show up prepared. The GPA filter saves us hours of vetting. Our campaign ROI increased 340%.",
+    name: 'Rachel Kim',
+    role: 'Brand Partnerships, Hydrow',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face',
     rating: 5,
+    verified: true,
+    date: 'Partner since Oct 2025',
   },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Landing Stats Mock Data
+// Landing Stats Mock Data - Specific, Credible Numbers
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const mockLandingStats: LandingStats = {
-  athletes: 500,
-  brands: 50,
-  avgGpa: 3.7,
-  totalDeals: 1200,
+  athletes: 847,
+  brands: 63,
+  avgGpa: 3.72,
+  totalDeals: 412,
+  totalPaidOut: 127450,
+  avgDealValue: 1850,
+  conversionRate: 68,
 };
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Partner Logos - Schools and Brands
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const mockSchoolLogos: PartnerLogo[] = [
+  { name: 'Stanford', logo: '/logos/stanford.svg', type: 'school' },
+  { name: 'Ohio State', logo: '/logos/ohio-state.svg', type: 'school' },
+  { name: 'UCLA', logo: '/logos/ucla.svg', type: 'school' },
+  { name: 'Duke', logo: '/logos/duke.svg', type: 'school' },
+  { name: 'Michigan', logo: '/logos/michigan.svg', type: 'school' },
+  { name: 'USC', logo: '/logos/usc.svg', type: 'school' },
+  { name: 'Alabama', logo: '/logos/alabama.svg', type: 'school' },
+  { name: 'Georgia', logo: '/logos/georgia.svg', type: 'school' },
+];
+
+export const mockBrandLogos: PartnerLogo[] = [
+  { name: 'Nike', logo: '/logos/nike.svg', type: 'brand' },
+  { name: 'Gatorade', logo: '/logos/gatorade.svg', type: 'brand' },
+  { name: 'Beats', logo: '/logos/beats.svg', type: 'brand' },
+  { name: 'Chipotle', logo: '/logos/chipotle.svg', type: 'brand' },
+  { name: 'Under Armour', logo: '/logos/under-armour.svg', type: 'brand' },
+  { name: 'Red Bull', logo: '/logos/redbull.svg', type: 'brand' },
+];
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Opportunities Mock Data

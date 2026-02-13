@@ -26,6 +26,18 @@ export interface Profile {
   updated_at: string;
 }
 
+// ─── Highlight Videos ───
+export type VideoPlatform = 'youtube' | 'tiktok';
+
+export interface HighlightUrl {
+  id: string;
+  platform: VideoPlatform;
+  url: string;
+  title?: string;
+  thumbnail_url?: string;
+  added_at: string;
+}
+
 // ─── Athlete ───
 export interface Athlete {
   id: string;
@@ -58,6 +70,7 @@ export interface Athlete {
   sport_verified: boolean;
   grades_verified: boolean;
   identity_verified: boolean;
+  highlight_urls?: HighlightUrl[];
   created_at: string;
   updated_at: string;
   // Joined relations

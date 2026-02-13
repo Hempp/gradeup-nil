@@ -253,6 +253,301 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   INNOVATIVE MICRO-ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Scroll-Triggered Reveal Animation ─── */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes reveal-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes reveal-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Reveal animation classes */
+.animate-reveal-up {
+  animation: reveal-up 0.6s var(--ease-spring) forwards;
+}
+
+.animate-reveal-scale {
+  animation: reveal-scale 0.5s var(--ease-spring) forwards;
+}
+
+.animate-reveal-left {
+  animation: reveal-left 0.5s var(--ease-spring) forwards;
+}
+
+.animate-reveal-right {
+  animation: reveal-right 0.5s var(--ease-spring) forwards;
+}
+
+/* ─── Stagger Animation Delays ─── */
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.15s; opacity: 0; }
+.stagger-3 { animation-delay: 0.2s; opacity: 0; }
+.stagger-4 { animation-delay: 0.25s; opacity: 0; }
+.stagger-5 { animation-delay: 0.3s; opacity: 0; }
+.stagger-6 { animation-delay: 0.35s; opacity: 0; }
+
+/* ─── Card Lift Hover Effect ─── */
+@keyframes card-lift {
+  from {
+    transform: translateY(0);
+    box-shadow: var(--shadow-card);
+  }
+  to {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.hover-lift {
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Dashboard dark mode card lift */
+.dashboard-dark .hover-lift:hover {
+  box-shadow: 0 16px 32px rgba(0, 240, 255, 0.1);
+}
+
+/* ─── Glow Hover Effect ─── */
+.hover-glow {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+  border-color: var(--marketing-cyan);
+}
+
+/* ─── Button Micro-Interactions ─── */
+@keyframes button-press {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes button-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(0, 240, 255, 0.2);
+  }
+}
+
+.btn-interactive {
+  transition: all 0.2s var(--ease-spring);
+}
+
+.btn-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-interactive:active {
+  animation: button-press 0.15s ease;
+}
+
+/* Primary button glow on hover */
+.btn-glow:hover {
+  animation: button-glow-pulse 1.5s ease-in-out infinite;
+}
+
+/* ─── Count-Up Animation for Stats ─── */
+@keyframes count-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-count {
+  animation: count-reveal 0.5s var(--ease-spring) forwards;
+}
+
+/* ─── List Item Stagger ─── */
+@keyframes list-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-list-item {
+  animation: list-item-in 0.4s ease-out forwards;
+}
+
+/* Auto-stagger for list children */
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+
+/* ─── Badge Animations ─── */
+@keyframes badge-pop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes verified-shine {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-badge-pop {
+  animation: badge-pop 0.4s var(--ease-spring) forwards;
+}
+
+.badge-verified {
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-verified::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: verified-shine 3s ease-in-out infinite;
+}
+
+/* ─── Alert Pulse Animations ─── */
+@keyframes alert-pulse-high {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+}
+
+@keyframes alert-pulse-medium {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+}
+
+.alert-high {
+  animation: alert-pulse-high 2s ease-in-out infinite;
+}
+
+.alert-medium {
+  animation: alert-pulse-medium 2.5s ease-in-out infinite;
+}
+
+/* ─── Chart Animation ─── */
+@keyframes chart-draw {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+.animate-chart {
+  animation: chart-draw 0.8s var(--ease-spring) forwards;
+}
+
+/* ─── Skeleton Loading Enhancement ─── */
+@keyframes skeleton-wave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-wave {
+  background: linear-gradient(
+    90deg,
+    var(--surface-200) 0%,
+    var(--surface-100) 50%,
+    var(--surface-200) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.5s ease-in-out infinite;
+}
+
+/* ─── Focus Ring Animation ─── */
+@keyframes focus-ring-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px var(--marketing-cyan);
+  }
+  50% {
+    box-shadow: 0 0 0 4px var(--marketing-cyan-glow);
+  }
+}
+
+.focus-ring-animated:focus-visible {
+  animation: focus-ring-pulse 1s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    MARKETING PAGE COMPONENT STYLES
    ═══════════════════════════════════════════════════════════════════════════ */
 

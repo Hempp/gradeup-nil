@@ -12,3 +12,6 @@ export * as director from './director';
 export * as activity from './activity';
 export * as messaging from './messaging';
 export * as payments from './payments';
+export * as notifications from './notifications';
+export * as verification from './verification';
+export * as opportunities from './opportunities';

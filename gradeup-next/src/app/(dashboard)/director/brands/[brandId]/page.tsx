@@ -358,6 +358,7 @@ export default function BrandDetailPage() {
   // Modal states
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showSuspendModal, setShowSuspendModal] = useState(false);
+  const [showReinstateModal, setShowReinstateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -395,6 +396,13 @@ export default function BrandDetailPage() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
     setShowSuspendModal(false);
+  };
+
+  const handleReinstate = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
+    setShowReinstateModal(false);
   };
 
   const handleDelete = async () => {
@@ -576,7 +584,7 @@ export default function BrandDetailPage() {
               </Button>
             )}
             {brand.status === 'suspended' && (
-              <Button variant="primary" onClick={() => {}}>
+              <Button variant="primary" onClick={() => setShowReinstateModal(true)}>
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reinstate Account
               </Button>
@@ -687,6 +695,30 @@ export default function BrandDetailPage() {
             <li>Notify all associated athletes</li>
           </ul>
         </div>
+      </Modal>
+
+      {/* Reinstate Modal */}
+      <Modal
+        isOpen={showReinstateModal}
+        onClose={() => setShowReinstateModal(false)}
+        title="Reinstate Brand Account"
+        size="sm"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setShowReinstateModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleReinstate} isLoading={isLoading}>
+              Reinstate
+            </Button>
+          </>
+        }
+      >
+        <p className="text-[var(--text-secondary)]">
+          Are you sure you want to reinstate <strong>{brand.name}</strong>&apos;s
+          account? They will regain full access to the platform and can resume
+          creating deals with athletes.
+        </p>
       </Modal>
 
       {/* Delete Modal */}

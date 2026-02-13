@@ -14,16 +14,21 @@ import {
   Camera,
   Save,
   Loader2,
+  Link2,
+  Unlink,
+  ExternalLink,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
+import { Modal } from '@/components/ui/modal';
 import { useToastActions } from '@/components/ui/toast';
 import { useFormValidation, validators } from '@/lib/utils/validation';
 import { useRequireAuth } from '@/context';
 import { updateAthleteProfile, uploadAthleteMedia } from '@/lib/services/athlete';
+import { HighlightTapeSection } from '@/components/athlete/HighlightTapeSection';
 import type { Athlete } from '@/types';
 
 function VerificationBadge({ verified, label }: { verified: boolean; label: string }) {
@@ -42,7 +47,12 @@ function VerificationBadge({ verified, label }: { verified: boolean; label: stri
 }
 
 interface ProfileHeaderProps {
-  profile: { first_name: string | null; last_name: string | null; avatar_url: string | null; bio: string | null } | null;
+  profile: {
+    first_name?: string | null;
+    last_name?: string | null;
+    avatar_url?: string | null;
+    bio?: string | null;
+  } | null;
   athlete: Athlete | null;
   onAvatarUpload: () => void;
 }
@@ -353,9 +363,10 @@ interface SocialLinksCardProps {
   instagram?: string;
   twitter?: string;
   tiktok?: string;
+  onManage: () => void;
 }
 
-function SocialLinksCard({ instagram, twitter, tiktok }: SocialLinksCardProps) {
+function SocialLinksCard({ instagram, twitter, tiktok, onManage }: SocialLinksCardProps) {
   const hasSocials = instagram || twitter || tiktok;
 
   return (
@@ -365,9 +376,15 @@ function SocialLinksCard({ instagram, twitter, tiktok }: SocialLinksCardProps) {
       </CardHeader>
       <CardContent>
         {!hasSocials ? (
-          <p className="text-sm text-[var(--text-muted)] text-center py-4">
-            No social accounts connected yet
-          </p>
+          <div className="text-center py-4">
+            <p className="text-sm text-[var(--text-muted)] mb-3">
+              No social accounts connected yet
+            </p>
+            <Button variant="outline" size="sm" onClick={onManage}>
+              <Link2 className="h-4 w-4 mr-2" />
+              Connect Accounts
+            </Button>
+          </div>
         ) : (
           <div className="space-y-4">
             {instagram && (
@@ -410,7 +427,7 @@ function SocialLinksCard({ instagram, twitter, tiktok }: SocialLinksCardProps) {
       </CardContent>
       {hasSocials && (
         <CardFooter>
-          <Button variant="outline" size="sm" className="w-full">
+          <Button variant="outline" size="sm" className="w-full" onClick={onManage}>
             Manage Connected Accounts
           </Button>
         </CardFooter>
@@ -423,6 +440,47 @@ export default function AthleteProfilePage() {
   const { profile, roleData, isLoading, refreshUser } = useRequireAuth({ allowedRoles: ['athlete'] });
   const toast = useToastActions();
   const athleteData = roleData as Athlete | null;
+
+  // Modal states
+  const [socialAccountsModalOpen, setSocialAccountsModalOpen] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  // Social accounts state (mock data - would come from API in production)
+  const [connectedAccounts, setConnectedAccounts] = useState({
+    instagram: '@marcusjohnson',
+    twitter: '@mjohnson_duke',
+    tiktok: '',
+  });
+
+  // Handlers
+  const handleConnectAccount = async (platform: 'instagram' | 'twitter' | 'tiktok') => {
+    setIsConnecting(true);
+    // Simulate OAuth flow
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsConnecting(false);
+
+    // Simulate successful connection
+    const mockHandles: Record<string, string> = {
+      instagram: '@marcusjohnson',
+      twitter: '@mjohnson_duke',
+      tiktok: '@marcusj_official',
+    };
+
+    setConnectedAccounts((prev) => ({
+      ...prev,
+      [platform]: mockHandles[platform],
+    }));
+
+    toast.success('Account Connected', `Your ${platform} account has been connected successfully.`);
+  };
+
+  const handleDisconnectAccount = async (platform: 'instagram' | 'twitter' | 'tiktok') => {
+    setConnectedAccounts((prev) => ({
+      ...prev,
+      [platform]: '',
+    }));
+    toast.info('Account Disconnected', `Your ${platform} account has been disconnected.`);
+  };
 
   // Handle avatar upload
   const handleAvatarUpload = async () => {
@@ -472,12 +530,14 @@ export default function AthleteProfilePage() {
     );
   }
 
+  // Profile may be a full Profile object or a demo stub
+  const profileAny = profile as Record<string, unknown> | null;
   const initialFormValues = {
     firstName: profile?.first_name || '',
     lastName: profile?.last_name || '',
     email: profile?.email || '',
-    phone: profile?.phone || '',
-    bio: profile?.bio || '',
+    phone: (profileAny?.phone as string) || '',
+    bio: (profileAny?.bio as string) || '',
   };
 
   return (
@@ -495,8 +555,168 @@ export default function AthleteProfilePage() {
       />
       <div className="grid lg:grid-cols-2 gap-6">
         <PersonalInfoForm initialValues={initialFormValues} onSave={handleSaveProfile} />
-        <SocialLinksCard />
+        <SocialLinksCard
+          instagram={connectedAccounts.instagram}
+          twitter={connectedAccounts.twitter}
+          tiktok={connectedAccounts.tiktok}
+          onManage={() => setSocialAccountsModalOpen(true)}
+        />
       </div>
+
+      {/* Highlight Tape */}
+      <HighlightTapeSection />
+
+      {/* Manage Social Accounts Modal */}
+      <Modal
+        isOpen={socialAccountsModalOpen}
+        onClose={() => setSocialAccountsModalOpen(false)}
+        title="Manage Connected Accounts"
+        size="md"
+        footer={
+          <Button variant="outline" onClick={() => setSocialAccountsModalOpen(false)}>
+            Done
+          </Button>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-[var(--text-muted)]">
+            Connect your social media accounts to display your follower counts and increase
+            your visibility to brands.
+          </p>
+
+          {/* Instagram */}
+          <div className="flex items-center gap-4 p-4 rounded-[var(--radius-md)] border border-[var(--border-color)]">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 flex items-center justify-center">
+              <Instagram className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="font-medium text-[var(--text-primary)]">Instagram</p>
+              {connectedAccounts.instagram ? (
+                <p className="text-sm text-[var(--text-muted)]">{connectedAccounts.instagram}</p>
+              ) : (
+                <p className="text-sm text-[var(--text-muted)]">Not connected</p>
+              )}
+            </div>
+            {connectedAccounts.instagram ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDisconnectAccount('instagram')}
+              >
+                <Unlink className="h-4 w-4 mr-1" />
+                Disconnect
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => handleConnectAccount('instagram')}
+                disabled={isConnecting}
+              >
+                {isConnecting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ExternalLink className="h-4 w-4 mr-1" />
+                    Connect
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+
+          {/* Twitter/X */}
+          <div className="flex items-center gap-4 p-4 rounded-[var(--radius-md)] border border-[var(--border-color)]">
+            <div className="h-12 w-12 rounded-full bg-black flex items-center justify-center">
+              <Twitter className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="font-medium text-[var(--text-primary)]">X (Twitter)</p>
+              {connectedAccounts.twitter ? (
+                <p className="text-sm text-[var(--text-muted)]">{connectedAccounts.twitter}</p>
+              ) : (
+                <p className="text-sm text-[var(--text-muted)]">Not connected</p>
+              )}
+            </div>
+            {connectedAccounts.twitter ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDisconnectAccount('twitter')}
+              >
+                <Unlink className="h-4 w-4 mr-1" />
+                Disconnect
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => handleConnectAccount('twitter')}
+                disabled={isConnecting}
+              >
+                {isConnecting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ExternalLink className="h-4 w-4 mr-1" />
+                    Connect
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+
+          {/* TikTok */}
+          <div className="flex items-center gap-4 p-4 rounded-[var(--radius-md)] border border-[var(--border-color)]">
+            <div className="h-12 w-12 rounded-full bg-black flex items-center justify-center">
+              <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="font-medium text-[var(--text-primary)]">TikTok</p>
+              {connectedAccounts.tiktok ? (
+                <p className="text-sm text-[var(--text-muted)]">{connectedAccounts.tiktok}</p>
+              ) : (
+                <p className="text-sm text-[var(--text-muted)]">Not connected</p>
+              )}
+            </div>
+            {connectedAccounts.tiktok ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDisconnectAccount('tiktok')}
+              >
+                <Unlink className="h-4 w-4 mr-1" />
+                Disconnect
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => handleConnectAccount('tiktok')}
+                disabled={isConnecting}
+              >
+                {isConnecting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ExternalLink className="h-4 w-4 mr-1" />
+                    Connect
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+
+          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+            <p className="text-sm text-[var(--text-muted)]">
+              <strong>Privacy Note:</strong> We only access your public profile information
+              and follower count. We never post on your behalf without permission.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

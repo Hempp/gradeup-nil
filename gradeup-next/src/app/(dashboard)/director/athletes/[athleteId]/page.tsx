@@ -331,6 +331,17 @@ export default function AthleteDetailPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Individual verification modal states
+  const [showVerifyEnrollmentModal, setShowVerifyEnrollmentModal] = useState(false);
+  const [showVerifyGradesModal, setShowVerifyGradesModal] = useState(false);
+  const [showVerifyStatsModal, setShowVerifyStatsModal] = useState(false);
+  const [showRevokeEnrollmentModal, setShowRevokeEnrollmentModal] = useState(false);
+  const [showRevokeGradesModal, setShowRevokeGradesModal] = useState(false);
+  const [showRevokeStatsModal, setShowRevokeStatsModal] = useState(false);
+
+  // Verification notes state
+  const [verificationNotes, setVerificationNotes] = useState('');
+
   // Get athlete data (mock)
   const athlete = mockAthleteData[athleteId as keyof typeof mockAthleteData];
 
@@ -381,6 +392,56 @@ export default function AthleteDetailPage() {
     setIsLoading(false);
     setShowDeleteModal(false);
     router.push('/director/athletes');
+  };
+
+  // Individual verification handlers
+  const handleVerifyEnrollment = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // In production, this would update the database
+    setIsLoading(false);
+    setShowVerifyEnrollmentModal(false);
+    setVerificationNotes('');
+  };
+
+  const handleVerifyGrades = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
+    setShowVerifyGradesModal(false);
+    setVerificationNotes('');
+  };
+
+  const handleVerifyStats = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
+    setShowVerifyStatsModal(false);
+    setVerificationNotes('');
+  };
+
+  const handleRevokeEnrollment = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
+    setShowRevokeEnrollmentModal(false);
+    setVerificationNotes('');
+  };
+
+  const handleRevokeGrades = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
+    setShowRevokeGradesModal(false);
+    setVerificationNotes('');
+  };
+
+  const handleRevokeStats = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
+    setShowRevokeStatsModal(false);
+    setVerificationNotes('');
   };
 
   return (
@@ -527,72 +588,145 @@ export default function AthleteDetailPage() {
         </div>
       </div>
 
-      {/* Verification Status */}
-      <Card>
+      {/* Verification Status - Interactive Controls */}
+      <Card className="border-l-4 border-l-[var(--color-success)]">
         <CardHeader>
-          <CardTitle>Verification Status</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-[var(--color-success)]" />
+              <CardTitle>Verification Management</CardTitle>
+            </div>
+            <Badge variant={athlete.verified ? 'success' : 'warning'}>
+              {athlete.verified ? 'Fully Verified' : 'Pending Verification'}
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
-              {athlete.enrollmentVerified ? (
-                <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
-              ) : (
-                <XCircle className="h-5 w-5 text-[var(--color-error)]" />
-              )}
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  Enrollment
-                </p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  {athlete.enrollmentVerified ? 'Verified' : 'Pending'}
-                </p>
+          <div className="space-y-4">
+            {/* Enrollment Verification */}
+            <div className="flex items-center justify-between p-4 rounded-[var(--radius-lg)] bg-[var(--bg-tertiary)] border border-[var(--border-color)]">
+              <div className="flex items-center gap-4">
+                {athlete.enrollmentVerified ? (
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-success)]/20 flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
+                  </div>
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-warning)]/20 flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-[var(--color-warning)]" />
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium text-[var(--text-primary)]">Enrollment Verification</p>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Confirms student is actively enrolled at the institution
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {athlete.enrollmentVerified ? (
+                  <>
+                    <Badge variant="success" size="sm">Verified</Badge>
+                    <Button variant="ghost" size="sm" onClick={() => setShowRevokeEnrollmentModal(true)}>
+                      <XCircle className="h-4 w-4 mr-1" />
+                      Revoke
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="primary" size="sm" onClick={() => setShowVerifyEnrollmentModal(true)}>
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Verify Enrollment
+                  </Button>
+                )}
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
-              {athlete.sportVerified ? (
-                <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
-              ) : (
-                <XCircle className="h-5 w-5 text-[var(--color-error)]" />
-              )}
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  Sport Eligibility
-                </p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  {athlete.sportVerified ? 'Verified' : 'Pending'}
-                </p>
+
+            {/* Grades Verification */}
+            <div className="flex items-center justify-between p-4 rounded-[var(--radius-lg)] bg-[var(--bg-tertiary)] border border-[var(--border-color)]">
+              <div className="flex items-center gap-4">
+                {athlete.gradesVerified ? (
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-success)]/20 flex items-center justify-center">
+                    <GraduationCap className="h-5 w-5 text-[var(--color-success)]" />
+                  </div>
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-warning)]/20 flex items-center justify-center">
+                    <GraduationCap className="h-5 w-5 text-[var(--color-warning)]" />
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium text-[var(--text-primary)]">Academic Standing (Grades)</p>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Current GPA: <span className="font-semibold text-[var(--gpa-gold)]">{athlete.gpa.toFixed(2)}</span> — Verifies academic eligibility
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {athlete.gradesVerified ? (
+                  <>
+                    <Badge variant="success" size="sm">Verified</Badge>
+                    <Button variant="ghost" size="sm" onClick={() => setShowRevokeGradesModal(true)}>
+                      <XCircle className="h-4 w-4 mr-1" />
+                      Revoke
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="primary" size="sm" onClick={() => setShowVerifyGradesModal(true)}>
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Verify Grades
+                  </Button>
+                )}
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
-              {athlete.gradesVerified ? (
-                <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
-              ) : (
-                <XCircle className="h-5 w-5 text-[var(--color-error)]" />
-              )}
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  Academic Standing
-                </p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  {athlete.gradesVerified ? 'Verified' : 'Pending'}
-                </p>
+
+            {/* Sport/Stats Verification */}
+            <div className="flex items-center justify-between p-4 rounded-[var(--radius-lg)] bg-[var(--bg-tertiary)] border border-[var(--border-color)]">
+              <div className="flex items-center gap-4">
+                {athlete.sportVerified ? (
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-success)]/20 flex items-center justify-center">
+                    <Trophy className="h-5 w-5 text-[var(--color-success)]" />
+                  </div>
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-warning)]/20 flex items-center justify-center">
+                    <Trophy className="h-5 w-5 text-[var(--color-warning)]" />
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium text-[var(--text-primary)]">Sport Eligibility & Stats</p>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    {athlete.sport} — {athlete.position} — Verifies roster status and athletic data
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {athlete.sportVerified ? (
+                  <>
+                    <Badge variant="success" size="sm">Verified</Badge>
+                    <Button variant="ghost" size="sm" onClick={() => setShowRevokeStatsModal(true)}>
+                      <XCircle className="h-4 w-4 mr-1" />
+                      Revoke
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="primary" size="sm" onClick={() => setShowVerifyStatsModal(true)}>
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Verify Stats
+                  </Button>
+                )}
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
-              {athlete.verified ? (
-                <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
-              ) : (
-                <Clock className="h-5 w-5 text-[var(--color-warning)]" />
+
+            {/* Quick Actions */}
+            <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)]">
+              <p className="text-sm text-[var(--text-muted)]">
+                {athlete.enrollmentVerified && athlete.gradesVerified && athlete.sportVerified
+                  ? 'All verifications complete'
+                  : `${[!athlete.enrollmentVerified, !athlete.gradesVerified, !athlete.sportVerified].filter(Boolean).length} verification(s) pending`}
+              </p>
+              {!athlete.verified && athlete.enrollmentVerified && athlete.gradesVerified && athlete.sportVerified && (
+                <Button variant="primary" onClick={() => setShowVerifyModal(true)}>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Complete Full Verification
+                </Button>
               )}
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  Overall Status
-                </p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  {athlete.verified ? 'Fully Verified' : 'In Progress'}
-                </p>
-              </div>
             </div>
           </div>
         </CardContent>
@@ -771,6 +905,306 @@ export default function AthleteDetailPage() {
             Are you sure you want to permanently delete <strong>{athlete.name}</strong>&apos;s
             account? All data including deal history and audit logs will be removed.
           </p>
+        </div>
+      </Modal>
+
+      {/* Verify Enrollment Modal */}
+      <Modal
+        isOpen={showVerifyEnrollmentModal}
+        onClose={() => { setShowVerifyEnrollmentModal(false); setVerificationNotes(''); }}
+        title="Verify Enrollment"
+        size="md"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowVerifyEnrollmentModal(false); setVerificationNotes(''); }}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleVerifyEnrollment} isLoading={isLoading}>
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Confirm Enrollment
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-[var(--text-muted)]">Student Name</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.name}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Email</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.email}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Year</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.year}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Major</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.major}</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-[var(--text-secondary)]">
+            By verifying enrollment, you confirm that <strong>{athlete.name}</strong> is currently enrolled as a student at your institution.
+          </p>
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+              Verification Notes (Optional)
+            </label>
+            <textarea
+              value={verificationNotes}
+              onChange={(e) => setVerificationNotes(e.target.value)}
+              placeholder="Add any notes about this verification..."
+              className="w-full h-20 px-3 py-2 text-sm rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Verify Grades Modal */}
+      <Modal
+        isOpen={showVerifyGradesModal}
+        onClose={() => { setShowVerifyGradesModal(false); setVerificationNotes(''); }}
+        title="Verify Academic Standing"
+        size="md"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowVerifyGradesModal(false); setVerificationNotes(''); }}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleVerifyGrades} isLoading={isLoading}>
+              <GraduationCap className="h-4 w-4 mr-2" />
+              Confirm Grades
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-[var(--text-muted)] text-sm">Current GPA</p>
+                <p className="text-3xl font-bold text-[var(--gpa-gold)]">{athlete.gpa.toFixed(2)}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[var(--text-muted)] text-sm">NCAA Minimum</p>
+                <p className="text-lg font-semibold text-[var(--text-primary)]">2.30</p>
+              </div>
+            </div>
+            <div className="h-2 rounded-full bg-[var(--bg-secondary)] overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-[var(--color-success)] to-[var(--gpa-gold)]"
+                style={{ width: `${Math.min((athlete.gpa / 4.0) * 100, 100)}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-1 text-xs text-[var(--text-muted)]">
+              <span>0.0</span>
+              <span>2.0</span>
+              <span>3.0</span>
+              <span>4.0</span>
+            </div>
+          </div>
+          <p className="text-[var(--text-secondary)]">
+            By verifying grades, you confirm that <strong>{athlete.name}</strong>&apos;s academic records have been reviewed and they meet NCAA academic eligibility requirements.
+          </p>
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+              Verification Notes (Optional)
+            </label>
+            <textarea
+              value={verificationNotes}
+              onChange={(e) => setVerificationNotes(e.target.value)}
+              placeholder="Add any notes about transcript review, academic standing, etc..."
+              className="w-full h-20 px-3 py-2 text-sm rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Verify Stats Modal */}
+      <Modal
+        isOpen={showVerifyStatsModal}
+        onClose={() => { setShowVerifyStatsModal(false); setVerificationNotes(''); }}
+        title="Verify Sport Eligibility & Stats"
+        size="md"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowVerifyStatsModal(false); setVerificationNotes(''); }}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleVerifyStats} isLoading={isLoading}>
+              <Trophy className="h-4 w-4 mr-2" />
+              Confirm Stats
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-[var(--text-muted)]">Sport</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.sport}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Position</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.position}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Year</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.year}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Social Following</p>
+                <p className="font-medium text-[var(--text-primary)]">{athlete.followers.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20">
+            <p className="text-sm text-[var(--text-secondary)]">
+              <strong>Verification confirms:</strong> Active roster status, sport eligibility, position accuracy, and that athletic stats/data are accurate.
+            </p>
+          </div>
+          <p className="text-[var(--text-secondary)]">
+            By verifying stats, you confirm that <strong>{athlete.name}</strong> is on the official {athlete.sport} roster and their athletic information is accurate.
+          </p>
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+              Verification Notes (Optional)
+            </label>
+            <textarea
+              value={verificationNotes}
+              onChange={(e) => setVerificationNotes(e.target.value)}
+              placeholder="Add any notes about roster verification, stats accuracy, etc..."
+              className="w-full h-20 px-3 py-2 text-sm rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Revoke Enrollment Modal */}
+      <Modal
+        isOpen={showRevokeEnrollmentModal}
+        onClose={() => { setShowRevokeEnrollmentModal(false); setVerificationNotes(''); }}
+        title="Revoke Enrollment Verification"
+        size="sm"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowRevokeEnrollmentModal(false); setVerificationNotes(''); }}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleRevokeEnrollment} isLoading={isLoading}>
+              Revoke Verification
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--text-secondary)]">
+            Are you sure you want to revoke enrollment verification for <strong>{athlete.name}</strong>?
+          </p>
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/20">
+            <p className="text-sm text-[var(--color-warning)]">
+              This will mark the athlete as unverified and may affect their ability to participate in NIL deals.
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+              Reason for Revocation <span className="text-[var(--color-error)]">*</span>
+            </label>
+            <textarea
+              value={verificationNotes}
+              onChange={(e) => setVerificationNotes(e.target.value)}
+              placeholder="Explain why enrollment verification is being revoked..."
+              className="w-full h-20 px-3 py-2 text-sm rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+              required
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Revoke Grades Modal */}
+      <Modal
+        isOpen={showRevokeGradesModal}
+        onClose={() => { setShowRevokeGradesModal(false); setVerificationNotes(''); }}
+        title="Revoke Academic Verification"
+        size="sm"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowRevokeGradesModal(false); setVerificationNotes(''); }}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleRevokeGrades} isLoading={isLoading}>
+              Revoke Verification
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--text-secondary)]">
+            Are you sure you want to revoke academic standing verification for <strong>{athlete.name}</strong>?
+          </p>
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/20">
+            <p className="text-sm text-[var(--color-warning)]">
+              This may indicate the athlete no longer meets academic eligibility requirements.
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+              Reason for Revocation <span className="text-[var(--color-error)]">*</span>
+            </label>
+            <textarea
+              value={verificationNotes}
+              onChange={(e) => setVerificationNotes(e.target.value)}
+              placeholder="Explain why academic verification is being revoked..."
+              className="w-full h-20 px-3 py-2 text-sm rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+              required
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Revoke Stats Modal */}
+      <Modal
+        isOpen={showRevokeStatsModal}
+        onClose={() => { setShowRevokeStatsModal(false); setVerificationNotes(''); }}
+        title="Revoke Sport Verification"
+        size="sm"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowRevokeStatsModal(false); setVerificationNotes(''); }}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleRevokeStats} isLoading={isLoading}>
+              Revoke Verification
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--text-secondary)]">
+            Are you sure you want to revoke sport eligibility verification for <strong>{athlete.name}</strong>?
+          </p>
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/20">
+            <p className="text-sm text-[var(--color-warning)]">
+              This may indicate the athlete is no longer on the active roster or their stats need review.
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+              Reason for Revocation <span className="text-[var(--color-error)]">*</span>
+            </label>
+            <textarea
+              value={verificationNotes}
+              onChange={(e) => setVerificationNotes(e.target.value)}
+              placeholder="Explain why sport verification is being revoked..."
+              className="w-full h-20 px-3 py-2 text-sm rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+              required
+            />
+          </div>
         </div>
       </Modal>
     </div>

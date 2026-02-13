@@ -261,3 +261,178 @@ export async function rejectDeal(dealId: string, reason?: string) {
 
   return data as Deal;
 }
+
+// Input type for creating a new deal
+export interface CreateDealInput {
+  athlete_id: string;
+  brand_id: string;
+  opportunity_id?: string;
+  title: string;
+  description?: string;
+  deal_type: DealType;
+  compensation_amount: number;
+  compensation_type: 'fixed' | 'hourly' | 'performance';
+  start_date?: string;
+  end_date?: string;
+  deliverables?: string;
+}
+
+// Input type for counter offer
+export interface CounterOfferInput {
+  compensation_amount?: number;
+  compensation_type?: 'fixed' | 'hourly' | 'performance';
+  start_date?: string;
+  end_date?: string;
+  deliverables?: string;
+  counter_notes?: string;
+}
+
+/**
+ * Create a new deal
+ */
+export async function createDeal(data: CreateDealInput): Promise<{ data: Deal | null; error: Error | null }> {
+  const supabase = createClient();
+
+  const { data: deal, error } = await supabase
+    .from('deals')
+    .insert({
+      ...data,
+      status: 'pending' as DealStatus,
+    })
+    .select(`
+      *,
+      brand:brands(company_name, logo_url)
+    `)
+    .single();
+
+  if (error) {
+    return { data: null, error: new Error(`Failed to create deal: ${error.message}`) };
+  }
+
+  return { data: deal as Deal, error: null };
+}
+
+/**
+ * Submit a counter offer for a deal
+ */
+export async function submitCounterOffer(
+  dealId: string,
+  newTerms: CounterOfferInput
+): Promise<{ data: Deal | null; error: Error | null }> {
+  const supabase = createClient();
+
+  // First, log the counter offer to deal_history for audit trail
+  const { error: historyError } = await supabase
+    .from('deal_history')
+    .insert({
+      deal_id: dealId,
+      action: 'counter_offer',
+      changes: newTerms,
+      created_at: new Date().toISOString(),
+    });
+
+  if (historyError) {
+    console.warn('Failed to log counter offer to history:', historyError.message);
+    // Continue with the update even if history logging fails
+  }
+
+  // Update the deal with new terms and set status to negotiating
+  const updateData = {
+    ...newTerms,
+    status: 'negotiating' as DealStatus,
+    updated_at: new Date().toISOString(),
+  };
+
+  const { data: deal, error } = await supabase
+    .from('deals')
+    .update(updateData)
+    .eq('id', dealId)
+    .select(`
+      *,
+      brand:brands(company_name, logo_url)
+    `)
+    .single();
+
+  if (error) {
+    return { data: null, error: new Error(`Failed to submit counter offer: ${error.message}`) };
+  }
+
+  return { data: deal as Deal, error: null };
+}
+
+/**
+ * Mark a deal as completed
+ */
+export async function completeDeal(
+  dealId: string
+): Promise<{ data: Deal | null; error: Error | null }> {
+  const supabase = createClient();
+
+  const { data: deal, error } = await supabase
+    .from('deals')
+    .update({
+      status: 'completed' as DealStatus,
+      completed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', dealId)
+    .select(`
+      *,
+      brand:brands(company_name, logo_url)
+    `)
+    .single();
+
+  if (error) {
+    return { data: null, error: new Error(`Failed to complete deal: ${error.message}`) };
+  }
+
+  return { data: deal as Deal, error: null };
+}
+
+/**
+ * Cancel a deal with a reason
+ */
+export async function cancelDeal(
+  dealId: string,
+  reason: string
+): Promise<{ data: null; error: Error | null }> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('deals')
+    .update({
+      status: 'cancelled' as DealStatus,
+      cancellation_reason: reason,
+      cancelled_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', dealId);
+
+  if (error) {
+    return { data: null, error: new Error(`Failed to cancel deal: ${error.message}`) };
+  }
+
+  return { data: null, error: null };
+}
+
+/**
+ * Get deal history (all changes and counter offers)
+ */
+export async function getDealHistory(dealId: string): Promise<{
+  data: Array<{ id: string; action: string; changes: Record<string, unknown>; created_at: string }> | null;
+  error: Error | null
+}> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('deal_history')
+    .select('*')
+    .eq('deal_id', dealId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    return { data: null, error: new Error(`Failed to fetch deal history: ${error.message}`) };
+  }
+
+  return { data, error: null };
+}

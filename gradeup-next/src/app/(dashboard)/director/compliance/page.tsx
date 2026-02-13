@@ -584,10 +584,61 @@ function ComplianceRulesPanel() {
   );
 }
 
+function EmptyDealsState({ hasFilters }: { hasFilters: boolean }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="w-16 h-16 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center mb-4">
+        {hasFilters ? (
+          <Search className="h-8 w-8 text-[var(--text-muted)]" />
+        ) : (
+          <CheckCircle className="h-8 w-8 text-[var(--color-success)]" />
+        )}
+      </div>
+      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+        {hasFilters ? 'No matching deals found' : 'All clear!'}
+      </h3>
+      <p className="text-[var(--text-muted)] max-w-sm mb-4">
+        {hasFilters
+          ? 'Try adjusting your filters or search terms to find what you\'re looking for.'
+          : 'There are no flagged deals requiring review. Great job maintaining compliance!'}
+      </p>
+      {hasFilters && (
+        <Badge variant="outline" className="cursor-pointer hover:bg-[var(--bg-tertiary)]">
+          Clear filters to see all deals
+        </Badge>
+      )}
+    </div>
+  );
+}
+
+function EmptyAuditLogState({ hasFilters }: { hasFilters: boolean }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-10 text-center">
+      <div className="w-14 h-14 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center mb-3">
+        {hasFilters ? (
+          <Filter className="h-6 w-6 text-[var(--text-muted)]" />
+        ) : (
+          <FileText className="h-6 w-6 text-[var(--text-muted)]" />
+        )}
+      </div>
+      <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
+        {hasFilters ? 'No matching audit entries' : 'No activity yet'}
+      </h3>
+      <p className="text-sm text-[var(--text-muted)] max-w-xs">
+        {hasFilters
+          ? 'Try a different action type filter to see more results.'
+          : 'Compliance actions will appear here as they happen.'}
+      </p>
+    </div>
+  );
+}
+
 function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showInvestigateModal, setShowInvestigateModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [investigationNotes, setInvestigationNotes] = useState('');
   const toast = useToastActions();
 
   const handleApprove = async () => {
@@ -622,6 +673,23 @@ function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
     }
   };
 
+  const handleInvestigate = async () => {
+    setIsLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success(
+        'Investigation Started',
+        `An investigation has been opened for the deal between ${deal.athleteName} and ${deal.brandName}.`
+      );
+      setShowInvestigateModal(false);
+      setInvestigationNotes('');
+    } catch (error) {
+      toast.error('Action Failed', 'Unable to start investigation. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (deal.status !== 'pending' && deal.status !== 'investigating') {
     return null;
   }
@@ -637,7 +705,7 @@ function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
           <XCircle className="h-3 w-3 mr-1" />
           Reject
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={() => setShowInvestigateModal(true)}>
           <Eye className="h-3 w-3 mr-1" />
           Investigate
         </Button>
@@ -686,6 +754,68 @@ function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
           Are you sure you want to reject this deal? The athlete and brand will be
           notified of the rejection.
         </p>
+      </Modal>
+
+      <Modal
+        isOpen={showInvestigateModal}
+        onClose={() => { setShowInvestigateModal(false); setInvestigationNotes(''); }}
+        title="Open Investigation"
+        size="md"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowInvestigateModal(false); setInvestigationNotes(''); }}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleInvestigate} isLoading={isLoading}>
+              <Eye className="h-4 w-4 mr-2" />
+              Start Investigation
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-[var(--text-muted)]">Athlete</p>
+                <p className="font-medium text-[var(--text-primary)]">{deal.athleteName}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Brand</p>
+                <p className="font-medium text-[var(--text-primary)]">{deal.brandName}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Deal Value</p>
+                <p className="font-semibold text-[var(--color-success)]">{formatCurrency(deal.dealAmount)}</p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Deal Type</p>
+                <p className="font-medium text-[var(--text-primary)]">{deal.dealType}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/20">
+            <p className="text-sm font-medium text-[var(--color-warning)] mb-1">Flag Reason:</p>
+            <p className="text-sm text-[var(--text-secondary)]">{deal.flagReason}</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1.5">
+              Investigation Notes
+            </label>
+            <textarea
+              value={investigationNotes}
+              onChange={(e) => setInvestigationNotes(e.target.value)}
+              placeholder="Add notes about this investigation..."
+              className="w-full h-24 px-3 py-2 text-sm rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+            />
+          </div>
+
+          <p className="text-sm text-[var(--text-muted)]">
+            Starting an investigation will change the deal status to &quot;Investigating&quot; and notify the compliance team.
+          </p>
+        </div>
       </Modal>
     </>
   );
@@ -842,15 +972,19 @@ export default function DirectorCompliancePage() {
                 onSearchChange={setSearchQuery}
                 className="mb-4"
               />
-              <div className="overflow-x-auto -mx-6">
-                <div className="min-w-[800px] px-6">
-                  <DataTable
-                    columns={extendedDealColumns}
-                    data={filteredDeals}
-                    keyExtractor={(row) => row.id}
-                  />
+              {filteredDeals.length === 0 ? (
+                <EmptyDealsState hasFilters={!!(searchQuery || severityFilter || statusFilter)} />
+              ) : (
+                <div className="overflow-x-auto -mx-6">
+                  <div className="min-w-[800px] px-6">
+                    <DataTable
+                      columns={extendedDealColumns}
+                      data={filteredDeals}
+                      keyExtractor={(row) => row.id}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -881,15 +1015,19 @@ export default function DirectorCompliancePage() {
               filters={auditFilters}
               className="mb-4"
             />
-            <div className="overflow-x-auto -mx-6">
-              <div className="min-w-[600px] px-6">
-                <DataTable
-                  columns={auditLogColumns}
-                  data={filteredAuditLog}
-                  keyExtractor={(row) => row.id}
-                />
+            {filteredAuditLog.length === 0 ? (
+              <EmptyAuditLogState hasFilters={!!actionTypeFilter} />
+            ) : (
+              <div className="overflow-x-auto -mx-6">
+                <div className="min-w-[600px] px-6">
+                  <DataTable
+                    columns={auditLogColumns}
+                    data={filteredAuditLog}
+                    keyExtractor={(row) => row.id}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       </div>

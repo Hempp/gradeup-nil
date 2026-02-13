@@ -274,9 +274,11 @@ export default function AthleteSignupPage() {
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
                     error={!!(touched.firstName && fieldErrors.firstName)}
+                    aria-invalid={!!(touched.firstName && fieldErrors.firstName)}
+                    aria-describedby={touched.firstName && fieldErrors.firstName ? 'firstName-error' : undefined}
                   />
                   {touched.firstName && fieldErrors.firstName && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.firstName}</p>
+                    <p id="firstName-error" className="text-xs text-[var(--error-600)]">{fieldErrors.firstName}</p>
                   )}
                 </div>
 
@@ -298,9 +300,11 @@ export default function AthleteSignupPage() {
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
                     error={!!(touched.lastName && fieldErrors.lastName)}
+                    aria-invalid={!!(touched.lastName && fieldErrors.lastName)}
+                    aria-describedby={touched.lastName && fieldErrors.lastName ? 'lastName-error' : undefined}
                   />
                   {touched.lastName && fieldErrors.lastName && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.lastName}</p>
+                    <p id="lastName-error" className="text-xs text-[var(--error-600)]">{fieldErrors.lastName}</p>
                   )}
                 </div>
               </div>
@@ -323,9 +327,11 @@ export default function AthleteSignupPage() {
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
                   error={!!(touched.email && fieldErrors.email)}
+                  aria-invalid={!!(touched.email && fieldErrors.email)}
+                  aria-describedby={touched.email && fieldErrors.email ? 'email-error' : undefined}
                 />
                 {touched.email && fieldErrors.email && (
-                  <p className="text-xs text-[var(--error-600)]">{fieldErrors.email}</p>
+                  <p id="email-error" className="text-xs text-[var(--error-600)]">{fieldErrors.email}</p>
                 )}
               </div>
 
@@ -348,9 +354,11 @@ export default function AthleteSignupPage() {
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
                     error={!!(touched.password && fieldErrors.password)}
+                    aria-invalid={!!(touched.password && fieldErrors.password)}
+                    aria-describedby={touched.password && fieldErrors.password ? 'password-error' : undefined}
                   />
                   {touched.password && fieldErrors.password && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.password}</p>
+                    <p id="password-error" className="text-xs text-[var(--error-600)]">{fieldErrors.password}</p>
                   )}
                 </div>
 
@@ -372,9 +380,11 @@ export default function AthleteSignupPage() {
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
                     error={!!(touched.confirmPassword && fieldErrors.confirmPassword)}
+                    aria-invalid={!!(touched.confirmPassword && fieldErrors.confirmPassword)}
+                    aria-describedby={touched.confirmPassword && fieldErrors.confirmPassword ? 'confirmPassword-error' : undefined}
                   />
                   {touched.confirmPassword && fieldErrors.confirmPassword && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.confirmPassword}</p>
+                    <p id="confirmPassword-error" className="text-xs text-[var(--error-600)]">{fieldErrors.confirmPassword}</p>
                   )}
                 </div>
               </div>
@@ -403,9 +413,11 @@ export default function AthleteSignupPage() {
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
                   error={!!(touched.school && fieldErrors.school)}
+                  aria-invalid={!!(touched.school && fieldErrors.school)}
+                  aria-describedby={touched.school && fieldErrors.school ? 'school-error' : undefined}
                 />
                 {touched.school && fieldErrors.school && (
-                  <p className="text-xs text-[var(--error-600)]">{fieldErrors.school}</p>
+                  <p id="school-error" className="text-xs text-[var(--error-600)]">{fieldErrors.school}</p>
                 )}
               </div>
 
@@ -424,6 +436,8 @@ export default function AthleteSignupPage() {
                     onChange={handleInputChange}
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
+                    aria-invalid={!!(touched.sport && fieldErrors.sport)}
+                    aria-describedby={touched.sport && fieldErrors.sport ? 'sport-error' : undefined}
                     className={`w-full h-10 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border px-3 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${
                       touched.sport && fieldErrors.sport ? 'border-[var(--error-600)]' : 'border-[var(--border-color)]'
                     }`}
@@ -436,7 +450,7 @@ export default function AthleteSignupPage() {
                     ))}
                   </select>
                   {touched.sport && fieldErrors.sport && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.sport}</p>
+                    <p id="sport-error" className="text-xs text-[var(--error-600)]">{fieldErrors.sport}</p>
                   )}
                 </div>
 
@@ -457,9 +471,11 @@ export default function AthleteSignupPage() {
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
                     error={!!(touched.position && fieldErrors.position)}
+                    aria-invalid={!!(touched.position && fieldErrors.position)}
+                    aria-describedby={touched.position && fieldErrors.position ? 'position-error' : undefined}
                   />
                   {touched.position && fieldErrors.position && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.position}</p>
+                    <p id="position-error" className="text-xs text-[var(--error-600)]">{fieldErrors.position}</p>
                   )}
                 </div>
               </div>
@@ -478,6 +494,8 @@ export default function AthleteSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
+                  aria-invalid={!!(touched.year && fieldErrors.year)}
+                  aria-describedby={touched.year && fieldErrors.year ? 'year-error' : undefined}
                   className={`w-full h-10 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border px-3 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${
                     touched.year && fieldErrors.year ? 'border-[var(--error-600)]' : 'border-[var(--border-color)]'
                   }`}
@@ -490,7 +508,7 @@ export default function AthleteSignupPage() {
                   ))}
                 </select>
                 {touched.year && fieldErrors.year && (
-                  <p className="text-xs text-[var(--error-600)]">{fieldErrors.year}</p>
+                  <p id="year-error" className="text-xs text-[var(--error-600)]">{fieldErrors.year}</p>
                 )}
               </div>
             </div>

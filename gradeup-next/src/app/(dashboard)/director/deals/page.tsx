@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Search, Filter, MoreVertical } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, Filter, MoreVertical, Eye, CheckCircle, XCircle, MessageSquare, FileText } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import type { DealStatus } from '@/types';
 
@@ -98,6 +99,45 @@ function DealRowSkeleton() {
 }
 
 function DealRow({ deal }: { deal: (typeof mockDeals)[0] }) {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const toast = useToastActions();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDropdown]);
+
+  const handleAction = (action: string) => {
+    setShowDropdown(false);
+    switch (action) {
+      case 'view':
+        toast.info('View Details', `Opening details for ${deal.title}`);
+        break;
+      case 'approve':
+        toast.success('Deal Approved', `${deal.title} has been approved.`);
+        break;
+      case 'reject':
+        toast.error('Deal Rejected', `${deal.title} has been rejected.`);
+        break;
+      case 'message':
+        toast.info('Message Sent', `Opening conversation for ${deal.title}`);
+        break;
+      case 'export':
+        toast.success('Exported', `Deal contract exported successfully.`);
+        break;
+    }
+  };
+
   return (
     <div className="flex items-center gap-4 p-4 border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-tertiary)] transition-colors">
       <div className="flex -space-x-2" aria-label={`${deal.athlete.name} and ${deal.brand.name}`}>
@@ -119,9 +159,70 @@ function DealRow({ deal }: { deal: (typeof mockDeals)[0] }) {
         <p className="text-sm text-[var(--text-muted)]">{formatDate(deal.createdAt)}</p>
       </div>
       <StatusBadge status={deal.status} size="sm" />
-      <Button variant="ghost" size="sm" aria-label={`More options for ${deal.title}`}>
-        <MoreVertical className="h-4 w-4" />
-      </Button>
+      <div className="relative" ref={dropdownRef}>
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label={`More options for ${deal.title}`}
+          aria-expanded={showDropdown}
+          aria-haspopup="menu"
+          onClick={() => setShowDropdown(!showDropdown)}
+        >
+          <MoreVertical className="h-4 w-4" />
+        </Button>
+        {showDropdown && (
+          <div
+            role="menu"
+            className="absolute right-0 top-full mt-1 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] z-50 py-1"
+          >
+            <button
+              role="menuitem"
+              onClick={() => handleAction('view')}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
+            >
+              <Eye className="h-4 w-4 text-[var(--text-muted)]" />
+              View Details
+            </button>
+            {(deal.status === 'pending' || deal.status === 'negotiating') && (
+              <>
+                <button
+                  role="menuitem"
+                  onClick={() => handleAction('approve')}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-success)] hover:bg-[var(--bg-tertiary)] transition-colors"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Approve Deal
+                </button>
+                <button
+                  role="menuitem"
+                  onClick={() => handleAction('reject')}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-error)] hover:bg-[var(--bg-tertiary)] transition-colors"
+                >
+                  <XCircle className="h-4 w-4" />
+                  Reject Deal
+                </button>
+              </>
+            )}
+            <button
+              role="menuitem"
+              onClick={() => handleAction('message')}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
+            >
+              <MessageSquare className="h-4 w-4 text-[var(--text-muted)]" />
+              Send Message
+            </button>
+            <div className="border-t border-[var(--border-color)] my-1" />
+            <button
+              role="menuitem"
+              onClick={() => handleAction('export')}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
+            >
+              <FileText className="h-4 w-4 text-[var(--text-muted)]" />
+              Export Contract
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

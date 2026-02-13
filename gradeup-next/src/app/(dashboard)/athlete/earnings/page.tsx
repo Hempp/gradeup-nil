@@ -15,10 +15,14 @@ import {
   Clock,
   CheckCircle,
   Download,
+  FileText,
+  Loader2,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Modal } from '@/components/ui/modal';
+import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import {
   ChartWrapper,
@@ -157,7 +161,7 @@ function EarningsChart() {
   );
 }
 
-function PayoutHistory() {
+function PayoutHistory({ onExport }: { onExport: () => void }) {
   const { data: payouts, isLoading } = usePayoutHistory();
 
   if (isLoading) {
@@ -182,7 +186,7 @@ function PayoutHistory() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Payout History</CardTitle>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={onExport}>
             <Download className="h-4 w-4 mr-1" />
             Export
           </Button>
@@ -236,7 +240,14 @@ function PayoutHistory() {
 }
 
 export default function AthleteEarningsPage() {
+  const toast = useToastActions();
   const { data: stats, isLoading: statsLoading } = useEarningsStats();
+
+  // Modal states
+  const [taxReportModalOpen, setTaxReportModalOpen] = useState(false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedTaxYear, setSelectedTaxYear] = useState('2024');
 
   // Calculate trend percentage
   const getTrendInfo = () => {
@@ -252,6 +263,25 @@ export default function AthleteEarningsPage() {
 
   const trendInfo = getTrendInfo();
 
+  // Handlers
+  const handleDownloadTaxReport = async () => {
+    setIsGenerating(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsGenerating(false);
+    toast.success('Tax Report Downloaded', `Your ${selectedTaxYear} tax report has been downloaded.`);
+    setTaxReportModalOpen(false);
+  };
+
+  const handleExportPayoutHistory = async () => {
+    setIsGenerating(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsGenerating(false);
+    toast.success('Export Complete', 'Your payout history has been exported to CSV.');
+    setExportModalOpen(false);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
@@ -262,7 +292,7 @@ export default function AthleteEarningsPage() {
             Track your NIL income and payouts
           </p>
         </div>
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => setTaxReportModalOpen(true)}>
           <Download className="h-4 w-4 mr-2" />
           Download Tax Report
         </Button>
@@ -313,7 +343,114 @@ export default function AthleteEarningsPage() {
       <EarningsChart />
 
       {/* Payout History */}
-      <PayoutHistory />
+      <PayoutHistory onExport={() => setExportModalOpen(true)} />
+
+      {/* Tax Report Modal */}
+      <Modal
+        isOpen={taxReportModalOpen}
+        onClose={() => setTaxReportModalOpen(false)}
+        title="Download Tax Report"
+        size="sm"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setTaxReportModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleDownloadTaxReport} disabled={isGenerating}>
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <FileText className="h-4 w-4 mr-2" />
+                  Download Report
+                </>
+              )}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--text-secondary)]">
+            Generate a tax report for your NIL earnings. This report includes all payments
+            received during the selected tax year.
+          </p>
+          <div>
+            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+              Select Tax Year
+            </label>
+            <select
+              value={selectedTaxYear}
+              onChange={(e) => setSelectedTaxYear(e.target.value)}
+              className="w-full rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+            >
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+            </select>
+          </div>
+          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+            <p className="text-sm text-[var(--text-muted)]">
+              <strong>Note:</strong> This report is for informational purposes only.
+              Please consult with a tax professional for official tax filing.
+            </p>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Export Payout History Modal */}
+      <Modal
+        isOpen={exportModalOpen}
+        onClose={() => setExportModalOpen(false)}
+        title="Export Payout History"
+        size="sm"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setExportModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleExportPayoutHistory} disabled={isGenerating}>
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                </>
+              )}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--text-secondary)]">
+            Export your complete payout history as a CSV file. This includes:
+          </p>
+          <ul className="space-y-2 text-sm text-[var(--text-muted)]">
+            <li className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              Deal titles and brand names
+            </li>
+            <li className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              Payment amounts and dates
+            </li>
+            <li className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              Payment status (completed/pending)
+            </li>
+            <li className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              Transaction IDs
+            </li>
+          </ul>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -15,6 +15,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       inline-flex items-center justify-center gap-2
       font-semibold rounded-[var(--radius-md)]
       transition-all duration-[var(--transition-fast)]
+      motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100
       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]
       disabled:opacity-50 disabled:cursor-not-allowed
     `;
@@ -22,18 +23,18 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variants = {
       primary: `
         bg-[var(--color-primary)] text-[var(--text-inverse)]
-        hover:bg-[var(--color-primary-hover)]
-        active:scale-[0.98]
+        hover:bg-[var(--color-primary-hover)] hover:-translate-y-0.5 hover:shadow-lg
+        active:scale-[0.98] active:translate-y-0
       `,
       secondary: `
         bg-[var(--color-secondary)] text-white
-        hover:bg-[var(--color-secondary-hover)]
-        active:scale-[0.98]
+        hover:bg-[var(--color-secondary-hover)] hover:-translate-y-0.5 hover:shadow-lg
+        active:scale-[0.98] active:translate-y-0
       `,
       outline: `
         border border-[var(--border-color)] bg-transparent text-[var(--text-primary)]
-        hover:bg-[var(--bg-card)] hover:border-[var(--border-color-hover)]
-        active:scale-[0.98]
+        hover:bg-[var(--bg-card)] hover:border-[var(--border-color-hover)] hover:-translate-y-0.5
+        active:scale-[0.98] active:translate-y-0
       `,
       ghost: `
         bg-transparent text-[var(--text-secondary)]
@@ -42,8 +43,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       `,
       danger: `
         bg-[var(--color-error)] text-white
-        hover:bg-[#dc2626]
-        active:scale-[0.98]
+        hover:bg-[#dc2626] hover:-translate-y-0.5 hover:shadow-lg
+        active:scale-[0.98] active:translate-y-0
       `,
     };
 
@@ -58,13 +59,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(baseStyles, variants[variant], sizes[size], className)}
         disabled={disabled || isLoading}
+        aria-busy={isLoading || undefined}
         {...props}
       >
         {isLoading && (
           <>
-            <span className="sr-only">Loading</span>
+            <span className="sr-only">Loading, please wait</span>
             <svg
-              className="animate-spin h-4 w-4"
+              className="animate-spin motion-reduce:animate-none h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"

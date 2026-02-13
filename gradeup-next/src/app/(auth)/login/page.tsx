@@ -180,6 +180,8 @@ export default function LoginPage() {
               onBlur={handleFieldBlur}
               disabled={isLoading}
               error={!!(touched.email && fieldErrors.email)}
+              aria-invalid={!!(touched.email && fieldErrors.email)}
+              aria-describedby={touched.email && fieldErrors.email ? 'email-error' : undefined}
               className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)]/20"
               icon={
                 <svg
@@ -199,7 +201,7 @@ export default function LoginPage() {
               }
             />
             {touched.email && fieldErrors.email && (
-              <p className="text-xs text-red-400">{fieldErrors.email}</p>
+              <p id="email-error" className="text-xs text-red-400">{fieldErrors.email}</p>
             )}
           </div>
 
@@ -222,6 +224,8 @@ export default function LoginPage() {
               onBlur={handleFieldBlur}
               disabled={isLoading}
               error={!!(touched.password && fieldErrors.password)}
+              aria-invalid={!!(touched.password && fieldErrors.password)}
+              aria-describedby={touched.password && fieldErrors.password ? 'password-error' : undefined}
               className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)]/20"
               icon={
                 <svg
@@ -241,7 +245,7 @@ export default function LoginPage() {
               }
             />
             {touched.password && fieldErrors.password && (
-              <p className="text-xs text-red-400">{fieldErrors.password}</p>
+              <p id="password-error" className="text-xs text-red-400">{fieldErrors.password}</p>
             )}
           </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
+import type { HighlightUrl, VideoPlatform } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Type Definitions
@@ -442,6 +443,226 @@ export async function uploadAthleteMedia(
     }
 
     return { data: { url: urlData.publicUrl }, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('An unexpected error occurred'),
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Highlight URL Functions
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Get highlight URLs for the current user's athlete profile
+ */
+export async function getHighlightUrls(): Promise<ServiceResult<HighlightUrl[]>> {
+  const supabase = createClient();
+
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return { data: null, error: userError || new Error('Not authenticated') };
+    }
+
+    const { data: athlete, error: athleteError } = await supabase
+      .from('athletes')
+      .select('highlight_urls')
+      .eq('profile_id', user.id)
+      .single();
+
+    if (athleteError) {
+      return { data: null, error: new Error(`Failed to fetch highlight URLs: ${athleteError.message}`) };
+    }
+
+    const highlightUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
+    return { data: highlightUrls, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('An unexpected error occurred'),
+    };
+  }
+}
+
+/**
+ * Add a highlight URL to the current user's athlete profile
+ */
+export async function addHighlightUrl(
+  url: string,
+  platform: VideoPlatform,
+  title?: string
+): Promise<ServiceResult<HighlightUrl>> {
+  const supabase = createClient();
+
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return { data: null, error: userError || new Error('Not authenticated') };
+    }
+
+    // Get current highlight URLs
+    const { data: athlete, error: fetchError } = await supabase
+      .from('athletes')
+      .select('highlight_urls')
+      .eq('profile_id', user.id)
+      .single();
+
+    if (fetchError) {
+      return { data: null, error: new Error(`Failed to fetch athlete: ${fetchError.message}`) };
+    }
+
+    const currentUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
+
+    // Check for duplicates
+    if (currentUrls.some(h => h.url === url)) {
+      return { data: null, error: new Error('This video has already been added') };
+    }
+
+    // Create new highlight entry
+    const newHighlight: HighlightUrl = {
+      id: crypto.randomUUID(),
+      platform,
+      url,
+      title,
+      added_at: new Date().toISOString(),
+    };
+
+    // Update the athlete record with the new highlight
+    const { error: updateError } = await supabase
+      .from('athletes')
+      .update({ highlight_urls: [...currentUrls, newHighlight] })
+      .eq('profile_id', user.id);
+
+    if (updateError) {
+      return { data: null, error: new Error(`Failed to add highlight URL: ${updateError.message}`) };
+    }
+
+    return { data: newHighlight, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('An unexpected error occurred'),
+    };
+  }
+}
+
+/**
+ * Remove a highlight URL from the current user's athlete profile
+ */
+export async function removeHighlightUrl(highlightId: string): Promise<ServiceResult<null>> {
+  const supabase = createClient();
+
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return { data: null, error: userError || new Error('Not authenticated') };
+    }
+
+    // Get current highlight URLs
+    const { data: athlete, error: fetchError } = await supabase
+      .from('athletes')
+      .select('highlight_urls')
+      .eq('profile_id', user.id)
+      .single();
+
+    if (fetchError) {
+      return { data: null, error: new Error(`Failed to fetch athlete: ${fetchError.message}`) };
+    }
+
+    const currentUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
+    const updatedUrls = currentUrls.filter(h => h.id !== highlightId);
+
+    if (updatedUrls.length === currentUrls.length) {
+      return { data: null, error: new Error('Highlight not found') };
+    }
+
+    // Update the athlete record without the removed highlight
+    const { error: updateError } = await supabase
+      .from('athletes')
+      .update({ highlight_urls: updatedUrls })
+      .eq('profile_id', user.id);
+
+    if (updateError) {
+      return { data: null, error: new Error(`Failed to remove highlight URL: ${updateError.message}`) };
+    }
+
+    return { data: null, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('An unexpected error occurred'),
+    };
+  }
+}
+
+/**
+ * Update a highlight URL's title
+ */
+export async function updateHighlightTitle(
+  highlightId: string,
+  title: string
+): Promise<ServiceResult<HighlightUrl>> {
+  const supabase = createClient();
+
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return { data: null, error: userError || new Error('Not authenticated') };
+    }
+
+    // Get current highlight URLs
+    const { data: athlete, error: fetchError } = await supabase
+      .from('athletes')
+      .select('highlight_urls')
+      .eq('profile_id', user.id)
+      .single();
+
+    if (fetchError) {
+      return { data: null, error: new Error(`Failed to fetch athlete: ${fetchError.message}`) };
+    }
+
+    const currentUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
+    const highlightIndex = currentUrls.findIndex(h => h.id === highlightId);
+
+    if (highlightIndex === -1) {
+      return { data: null, error: new Error('Highlight not found') };
+    }
+
+    // Update the title
+    const updatedHighlight = { ...currentUrls[highlightIndex], title };
+    const updatedUrls = [...currentUrls];
+    updatedUrls[highlightIndex] = updatedHighlight;
+
+    // Save the updated list
+    const { error: updateError } = await supabase
+      .from('athletes')
+      .update({ highlight_urls: updatedUrls })
+      .eq('profile_id', user.id);
+
+    if (updateError) {
+      return { data: null, error: new Error(`Failed to update highlight: ${updateError.message}`) };
+    }
+
+    return { data: updatedHighlight, error: null };
   } catch (error) {
     return {
       data: null,

@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   Users,
   DollarSign,
@@ -16,7 +18,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { StatCard } from '@/components/ui/stat-card';
-import { formatCurrency, formatRelativeTime } from '@/lib/utils';
+import { Modal } from '@/components/ui/modal';
+import { formatCurrency, formatRelativeTime, formatDateTime } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useDirectorStats, useSchoolAthletes, useComplianceAlerts } from '@/lib/hooks/use-data';
 import type { ComplianceAlert } from '@/lib/services/director';
@@ -38,9 +41,10 @@ interface AthleticDirectorData {
 interface AlertsPanelCardProps {
   alerts: ComplianceAlert[] | null;
   loading: boolean;
+  onViewAlert: (alert: ComplianceAlert) => void;
 }
 
-function AlertsPanelCard({ alerts, loading }: AlertsPanelCardProps) {
+function AlertsPanelCard({ alerts, loading, onViewAlert }: AlertsPanelCardProps) {
   const severityColors = {
     high: {
       bg: 'bg-[var(--color-error-muted)]',
@@ -122,7 +126,7 @@ function AlertsPanelCard({ alerts, loading }: AlertsPanelCardProps) {
                       </p>
                     </div>
                     <div className="flex gap-2 flex-shrink-0">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => onViewAlert(alert)}>
                         <Eye className="h-3 w-3 mr-1" />
                         View
                       </Button>
@@ -143,14 +147,32 @@ function AlertsPanelCard({ alerts, loading }: AlertsPanelCardProps) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export default function DirectorDashboardPage() {
+  const router = useRouter();
+
   // Require auth and get director data
   const { roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['athletic_director'] });
   const directorData = roleData as AthleticDirectorData | null;
+
+  // Modal state for alert details
+  const [selectedAlert, setSelectedAlert] = useState<ComplianceAlert | null>(null);
+  const [showAlertModal, setShowAlertModal] = useState(false);
 
   // Fetch dashboard data
   const { data: stats, loading: statsLoading } = useDirectorStats();
   const { data: athletesData, loading: athletesLoading } = useSchoolAthletes();
   const { data: alerts, loading: alertsLoading } = useComplianceAlerts();
+
+  // Handler for viewing alert details
+  const handleViewAlert = (alert: ComplianceAlert) => {
+    setSelectedAlert(alert);
+    setShowAlertModal(true);
+  };
+
+  // Handler for navigating to compliance page
+  const handleGoToCompliance = () => {
+    setShowAlertModal(false);
+    router.push('/director/compliance');
+  };
 
   // Show loading state while auth is checking
   if (authLoading) {
@@ -263,7 +285,82 @@ export default function DirectorDashboardPage() {
       </Card>
 
       {/* Compliance Alerts Panel */}
-      <AlertsPanelCard alerts={alerts} loading={alertsLoading} />
+      <AlertsPanelCard alerts={alerts} loading={alertsLoading} onViewAlert={handleViewAlert} />
+
+      {/* Alert Detail Modal */}
+      <Modal
+        isOpen={showAlertModal}
+        onClose={() => { setShowAlertModal(false); setSelectedAlert(null); }}
+        title="Alert Details"
+        size="md"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowAlertModal(false); setSelectedAlert(null); }}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleGoToCompliance}>
+              <Shield className="h-4 w-4 mr-2" />
+              Go to Compliance Center
+            </Button>
+          </>
+        }
+      >
+        {selectedAlert && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className={`h-12 w-12 rounded-full flex items-center justify-center ${
+                selectedAlert.severity === 'high' ? 'bg-[var(--color-error)]/20' :
+                selectedAlert.severity === 'medium' ? 'bg-[var(--color-warning)]/20' :
+                'bg-[var(--color-primary)]/20'
+              }`}>
+                <Bell className={`h-6 w-6 ${
+                  selectedAlert.severity === 'high' ? 'text-[var(--color-error)]' :
+                  selectedAlert.severity === 'medium' ? 'text-[var(--color-warning)]' :
+                  'text-[var(--color-primary)]'
+                }`} />
+              </div>
+              <div>
+                <p className="font-semibold text-[var(--text-primary)]">{selectedAlert.athlete_name}</p>
+                <Badge
+                  variant={
+                    selectedAlert.severity === 'high' ? 'error' :
+                    selectedAlert.severity === 'medium' ? 'warning' : 'primary'
+                  }
+                  size="sm"
+                >
+                  {selectedAlert.severity.charAt(0).toUpperCase() + selectedAlert.severity.slice(1)} Priority
+                </Badge>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+              <p className="text-sm text-[var(--text-muted)] mb-1">Alert Message</p>
+              <p className="text-[var(--text-primary)]">{selectedAlert.message}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-[var(--text-muted)]">Created</p>
+                <p className="font-medium text-[var(--text-primary)]">
+                  {formatDateTime(selectedAlert.created_at)}
+                </p>
+              </div>
+              <div>
+                <p className="text-[var(--text-muted)]">Time Ago</p>
+                <p className="font-medium text-[var(--text-primary)]">
+                  {formatRelativeTime(selectedAlert.created_at)}
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20">
+              <p className="text-sm text-[var(--text-secondary)]">
+                To take action on this alert, visit the Compliance Center where you can review flagged deals, approve or reject items, and manage compliance rules.
+              </p>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

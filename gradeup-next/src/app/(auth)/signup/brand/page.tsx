@@ -249,6 +249,8 @@ export default function BrandSignupPage() {
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
                   error={!!(touched.companyName && fieldErrors.companyName)}
+                  aria-invalid={!!(touched.companyName && fieldErrors.companyName)}
+                  aria-describedby={touched.companyName && fieldErrors.companyName ? 'companyName-error' : undefined}
                   icon={
                     <svg
                       width="16"
@@ -271,7 +273,7 @@ export default function BrandSignupPage() {
                   }
                 />
                 {touched.companyName && fieldErrors.companyName && (
-                  <p className="text-xs text-[var(--error-600)]">{fieldErrors.companyName}</p>
+                  <p id="companyName-error" className="text-xs text-[var(--error-600)]">{fieldErrors.companyName}</p>
                 )}
               </div>
 
@@ -289,6 +291,8 @@ export default function BrandSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
+                  aria-invalid={!!(touched.industry && fieldErrors.industry)}
+                  aria-describedby={touched.industry && fieldErrors.industry ? 'industry-error' : undefined}
                   className={`w-full h-10 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border px-3 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${
                     touched.industry && fieldErrors.industry ? 'border-[var(--error-600)]' : 'border-[var(--border-color)]'
                   }`}
@@ -301,7 +305,7 @@ export default function BrandSignupPage() {
                   ))}
                 </select>
                 {touched.industry && fieldErrors.industry && (
-                  <p className="text-xs text-[var(--error-600)]">{fieldErrors.industry}</p>
+                  <p id="industry-error" className="text-xs text-[var(--error-600)]">{fieldErrors.industry}</p>
                 )}
               </div>
 
@@ -366,6 +370,8 @@ export default function BrandSignupPage() {
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
                   error={!!(touched.fullName && fieldErrors.fullName)}
+                  aria-invalid={!!(touched.fullName && fieldErrors.fullName)}
+                  aria-describedby={touched.fullName && fieldErrors.fullName ? 'fullName-error' : undefined}
                   icon={
                     <svg
                       width="16"
@@ -383,7 +389,7 @@ export default function BrandSignupPage() {
                   }
                 />
                 {touched.fullName && fieldErrors.fullName && (
-                  <p className="text-xs text-[var(--error-600)]">{fieldErrors.fullName}</p>
+                  <p id="fullName-error" className="text-xs text-[var(--error-600)]">{fieldErrors.fullName}</p>
                 )}
               </div>
 
@@ -405,6 +411,8 @@ export default function BrandSignupPage() {
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
                   error={!!(touched.email && fieldErrors.email)}
+                  aria-invalid={!!(touched.email && fieldErrors.email)}
+                  aria-describedby={touched.email && fieldErrors.email ? 'email-error' : undefined}
                   icon={
                     <svg
                       width="16"
@@ -422,7 +430,7 @@ export default function BrandSignupPage() {
                   }
                 />
                 {touched.email && fieldErrors.email && (
-                  <p className="text-xs text-[var(--error-600)]">{fieldErrors.email}</p>
+                  <p id="email-error" className="text-xs text-[var(--error-600)]">{fieldErrors.email}</p>
                 )}
               </div>
 
@@ -445,9 +453,11 @@ export default function BrandSignupPage() {
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
                     error={!!(touched.password && fieldErrors.password)}
+                    aria-invalid={!!(touched.password && fieldErrors.password)}
+                    aria-describedby={touched.password && fieldErrors.password ? 'password-error' : undefined}
                   />
                   {touched.password && fieldErrors.password && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.password}</p>
+                    <p id="password-error" className="text-xs text-[var(--error-600)]">{fieldErrors.password}</p>
                   )}
                 </div>
 
@@ -469,9 +479,11 @@ export default function BrandSignupPage() {
                     onBlur={handleFieldBlur}
                     disabled={isLoading}
                     error={!!(touched.confirmPassword && fieldErrors.confirmPassword)}
+                    aria-invalid={!!(touched.confirmPassword && fieldErrors.confirmPassword)}
+                    aria-describedby={touched.confirmPassword && fieldErrors.confirmPassword ? 'confirmPassword-error' : undefined}
                   />
                   {touched.confirmPassword && fieldErrors.confirmPassword && (
-                    <p className="text-xs text-[var(--error-600)]">{fieldErrors.confirmPassword}</p>
+                    <p id="confirmPassword-error" className="text-xs text-[var(--error-600)]">{fieldErrors.confirmPassword}</p>
                   )}
                 </div>
               </div>

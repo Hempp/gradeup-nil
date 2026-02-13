@@ -222,7 +222,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
 
   if (viewMode === 'list') {
     return (
-      <div className="card-marketing p-4 hover:border-[var(--marketing-cyan)]/50 transition-all group">
+      <div className="card-marketing p-4 hover:border-[var(--marketing-cyan)]/50 transition-all group hover-lift animate-reveal-up">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
           {/* Brand logo placeholder */}
           <div className="w-16 h-16 bg-[var(--marketing-gray-800)] rounded-lg flex items-center justify-center flex-shrink-0">
@@ -274,7 +274,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
 
   // Grid view
   return (
-    <div className="card-marketing overflow-hidden hover:border-[var(--marketing-cyan)]/50 transition-all group flex flex-col">
+    <div className="card-marketing overflow-hidden hover:border-[var(--marketing-cyan)]/50 transition-all group flex flex-col hover-lift animate-reveal-up">
       {/* Header */}
       <div className="p-4 border-b border-[var(--marketing-gray-800)]">
         <div className="flex items-center justify-between gap-3">
@@ -429,8 +429,8 @@ export default function OpportunitiesPage() {
           <div
             className={cn(
               viewMode === 'grid'
-                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-                : 'flex flex-col gap-4'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children'
+                : 'flex flex-col gap-4 stagger-children'
             )}
           >
             {sortedOpportunities.map((opportunity) => (

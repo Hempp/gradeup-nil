@@ -16,7 +16,10 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "validate": "npm run type-check && npm run lint && npm run test",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "remotion:preview": "remotion studio src/remotion/Root.tsx",
+    "remotion:render": "remotion render src/remotion/Root.tsx GradeUpDemo out/demo.mp4",
+    "remotion:render:short": "remotion render src/remotion/Root.tsx GradeUpDemoShort out/demo-short.mp4"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -41,6 +44,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "@remotion/cli": "^4.0.421",
+    "@remotion/player": "^4.0.421",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -55,8 +60,10 @@
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "lint-staged": "^16.2.7",
+    "remotion": "^4.0.421",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "zod": "^3.22.3"
   }
 }

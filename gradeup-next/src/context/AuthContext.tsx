@@ -330,7 +330,15 @@ export function useRequireAuth(options: UseRequireAuthOptions = {}) {
   const auth = useAuth();
   const router = useRouter();
 
+  // Check if demo mode is enabled (SKIP_AUTH_CHECK env var)
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+
   useEffect(() => {
+    // Skip auth redirects in demo mode
+    if (isDemoMode) {
+      return;
+    }
+
     if (!auth.isLoading) {
       if (!auth.isAuthenticated) {
         router.push(redirectTo);
@@ -339,7 +347,126 @@ export function useRequireAuth(options: UseRequireAuthOptions = {}) {
         router.push(auth.getDashboardPath());
       }
     }
-  }, [auth.isLoading, auth.isAuthenticated, auth.user, allowedRoles, redirectTo, router, auth]);
+  }, [auth.isLoading, auth.isAuthenticated, auth.user, allowedRoles, redirectTo, router, auth, isDemoMode]);
+
+  // In demo mode, return mock auth data
+  if (isDemoMode && !auth.isAuthenticated) {
+    const demoRole = allowedRoles?.[0] || 'athlete';
+
+    // Complete mock athlete data for demo mode
+    const demoAthleteData: Athlete = {
+      id: 'demo-athlete-id',
+      profile_id: 'demo-user-id',
+      name: 'Marcus Johnson',
+      first_name: 'Marcus',
+      last_name: 'Johnson',
+      email: 'marcus.johnson@duke.edu',
+      phone: '(919) 555-0147',
+      gpa: 3.78,
+      school_id: 'duke-university',
+      sport_id: 'basketball',
+      major: 'Business Administration',
+      minor: 'Sports Management',
+      position: 'Point Guard',
+      gender: 'Male',
+      jersey_number: '23',
+      height: '6\'2"',
+      weight: '185 lbs',
+      hometown: 'Durham, NC',
+      expected_graduation: '2027',
+      academic_year: 'Junior',
+      avatar_url: undefined,
+      bio: 'Student-athlete focused on excellence both on and off the field. Team captain with a passion for community service and mentoring youth athletes.',
+      instagram_handle: '@marcusjohnson',
+      twitter_handle: '@mjohnson_duke',
+      tiktok_handle: '@marcusj_official',
+      total_followers: 45000,
+      enrollment_verified: true,
+      sport_verified: true,
+      grades_verified: true,
+      identity_verified: true,
+      created_at: '2024-08-15T10:00:00Z',
+      updated_at: '2026-02-10T10:00:00Z',
+      school: {
+        id: 'duke-university',
+        name: 'Duke University',
+        short_name: 'Duke',
+        city: 'Durham',
+        state: 'NC',
+        division: 'Division I',
+        conference: 'ACC',
+        logo_url: undefined,
+      },
+      sport: {
+        id: 'basketball',
+        name: 'Basketball',
+        category: 'Team Sports',
+        gender: 'Men',
+        icon_name: 'basketball',
+      },
+    };
+
+    // Complete mock brand data for demo mode
+    const demoBrandData: Brand = {
+      id: 'demo-brand-id',
+      profile_id: 'demo-user-id',
+      company_name: 'SportsFuel Athletics',
+      company_type: 'Corporation',
+      industry: 'Sports & Fitness',
+      website_url: 'https://sportsfuel.demo',
+      logo_url: undefined,
+      contact_name: 'Sarah Mitchell',
+      contact_title: 'Partnership Director',
+      contact_email: 'partnerships@sportsfuel.demo',
+      contact_phone: '(800) 555-FUEL',
+      address_line1: '123 Sports Plaza',
+      city: 'New York',
+      state: 'NY',
+      zip_code: '10001',
+      country: 'USA',
+      total_spent: 125000,
+      deals_completed: 18,
+      avg_deal_rating: 4.8,
+      active_campaigns: 3,
+      preferred_sports: ['Basketball', 'Football', 'Soccer'],
+      min_gpa: 3.0,
+      min_followers: 5000,
+      budget_range_min: 1000,
+      budget_range_max: 25000,
+      is_verified: true,
+      verified_at: '2024-02-01T10:00:00Z',
+      created_at: '2024-01-15T10:00:00Z',
+      updated_at: '2026-02-10T10:00:00Z',
+    };
+
+    return {
+      ...auth,
+      isLoading: false,
+      isAuthenticated: true,
+      user: {
+        id: 'demo-user-id',
+        email: demoRole === 'athlete' ? 'marcus.johnson@duke.edu' : `demo@${demoRole}.gradeup.com`,
+        role: demoRole,
+      },
+      profile: {
+        id: 'demo-user-id',
+        email: demoRole === 'athlete' ? 'marcus.johnson@duke.edu' : `demo@${demoRole}.gradeup.com`,
+        first_name: demoRole === 'athlete' ? 'Marcus' : demoRole === 'brand' ? 'Sarah' : 'Director',
+        last_name: demoRole === 'athlete' ? 'Johnson' : demoRole === 'brand' ? 'Mitchell' : 'Admin',
+        role: demoRole,
+        phone: demoRole === 'athlete' ? '(919) 555-0147' : null,
+        avatar_url: null,
+        bio: demoRole === 'athlete'
+          ? 'Student-athlete focused on excellence both on and off the field. Team captain with a passion for community service and mentoring youth athletes.'
+          : null,
+      },
+      roleData: demoRole === 'athlete'
+        ? demoAthleteData
+        : demoRole === 'brand'
+        ? demoBrandData
+        : { id: 'demo-director-id', school_id: 'demo-school', title: 'Athletic Director' },
+    };
+  }
 
   return auth;
 }

@@ -8,11 +8,16 @@ import {
   Users,
   DollarSign,
   ChevronRight,
+  Mail,
+  Trash2,
+  UserPlus,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Modal } from '@/components/ui/modal';
+import { useToastActions } from '@/components/ui/toast';
 
 function SettingsSection({
   icon: Icon,
@@ -88,13 +93,88 @@ function SettingsRow({
   );
 }
 
+// Mock staff data
+const mockStaffMembers = [
+  { id: '1', name: 'John Smith', email: 'john.smith@duke.edu', role: 'Athletic Director' },
+  { id: '2', name: 'Jane Doe', email: 'jane.doe@duke.edu', role: 'Compliance Officer' },
+  { id: '3', name: 'Mike Johnson', email: 'mike.j@duke.edu', role: 'Assistant AD' },
+  { id: '4', name: 'Sarah Wilson', email: 'sarah.w@duke.edu', role: 'Compliance Assistant' },
+  { id: '5', name: 'David Brown', email: 'david.b@duke.edu', role: 'Sports Administrator' },
+];
+
 export default function DirectorSettingsPage() {
+  const toast = useToastActions();
+
+  // Form state for program information
+  const [programInfo, setProgramInfo] = useState({
+    institutionName: 'Duke University',
+    athleticDepartment: 'Duke Athletics',
+  });
+
+  // Approval settings state
+  const [approvalThreshold, setApprovalThreshold] = useState('1000');
+
   const [settings, setSettings] = useState({
     autoApprove: false,
     complianceAlerts: true,
     weeklyReports: true,
     dealNotifications: true,
   });
+
+  // Modal states
+  const [showManageStaffModal, setShowManageStaffModal] = useState(false);
+  const [showInviteStaffModal, setShowInviteStaffModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Invite form state
+  const [inviteForm, setInviteForm] = useState({
+    email: '',
+    role: 'Compliance Officer',
+  });
+
+  // Handlers
+  const handleSaveChanges = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success('Settings Saved', 'Program information has been updated successfully.');
+    } catch (error) {
+      toast.error('Save Failed', 'Unable to save settings. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInviteStaff = async () => {
+    if (!inviteForm.email) {
+      toast.error('Email Required', 'Please enter an email address.');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success('Invitation Sent', `An invitation has been sent to ${inviteForm.email}.`);
+      setShowInviteStaffModal(false);
+      setInviteForm({ email: '', role: 'Compliance Officer' });
+    } catch (error) {
+      toast.error('Invitation Failed', 'Unable to send invitation. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRemoveStaff = async (staffId: string, staffName: string) => {
+    setIsLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success('Staff Removed', `${staffName} has been removed from your team.`);
+    } catch (error) {
+      toast.error('Removal Failed', 'Unable to remove staff member. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-fade-in max-w-3xl">
@@ -118,13 +198,19 @@ export default function DirectorSettingsPage() {
               <label className="block text-sm text-[var(--text-muted)] mb-1.5">
                 Institution Name
               </label>
-              <Input defaultValue="Duke University" />
+              <Input
+                value={programInfo.institutionName}
+                onChange={(e) => setProgramInfo({ ...programInfo, institutionName: e.target.value })}
+              />
             </div>
             <div>
               <label className="block text-sm text-[var(--text-muted)] mb-1.5">
                 Athletic Department
               </label>
-              <Input defaultValue="Duke Athletics" />
+              <Input
+                value={programInfo.athleticDepartment}
+                onChange={(e) => setProgramInfo({ ...programInfo, athleticDepartment: e.target.value })}
+              />
             </div>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
@@ -141,7 +227,9 @@ export default function DirectorSettingsPage() {
               <Input defaultValue="ACC" disabled />
             </div>
           </div>
-          <Button variant="primary">Save Changes</Button>
+          <Button variant="primary" onClick={handleSaveChanges} isLoading={isLoading}>
+            Save Changes
+          </Button>
         </div>
       </SettingsSection>
 
@@ -170,7 +258,8 @@ export default function DirectorSettingsPage() {
             action={
               <Input
                 type="number"
-                defaultValue="1000"
+                value={approvalThreshold}
+                onChange={(e) => setApprovalThreshold(e.target.value)}
                 className="w-32"
               />
             }
@@ -249,7 +338,7 @@ export default function DirectorSettingsPage() {
             label="Staff Members"
             description="5 active staff members"
             action={
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => setShowManageStaffModal(true)}>
                 Manage
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
@@ -259,7 +348,7 @@ export default function DirectorSettingsPage() {
             label="Invite New Staff"
             description="Add compliance officers, assistants"
             action={
-              <Button variant="primary" size="sm">
+              <Button variant="primary" size="sm" onClick={() => setShowInviteStaffModal(true)}>
                 Invite
               </Button>
             }
@@ -291,6 +380,109 @@ export default function DirectorSettingsPage() {
           />
         </div>
       </SettingsSection>
+
+      {/* Manage Staff Modal */}
+      <Modal
+        isOpen={showManageStaffModal}
+        onClose={() => setShowManageStaffModal(false)}
+        title="Manage Staff Members"
+        size="lg"
+        footer={
+          <Button variant="outline" onClick={() => setShowManageStaffModal(false)}>
+            Close
+          </Button>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--text-muted)] text-sm">
+            Manage access and permissions for your team members.
+          </p>
+          <div className="space-y-3">
+            {mockStaffMembers.map((staff) => (
+              <div
+                key={staff.id}
+                className="flex items-center justify-between p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] border border-[var(--border-color)]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-primary)] font-semibold">
+                    {staff.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-medium text-[var(--text-primary)]">{staff.name}</p>
+                    <p className="text-sm text-[var(--text-muted)]">{staff.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge variant="outline" size="sm">{staff.role}</Badge>
+                  {staff.role !== 'Athletic Director' && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemoveStaff(staff.id, staff.name)}
+                    >
+                      <Trash2 className="h-4 w-4 text-[var(--color-error)]" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Modal>
+
+      {/* Invite Staff Modal */}
+      <Modal
+        isOpen={showInviteStaffModal}
+        onClose={() => { setShowInviteStaffModal(false); setInviteForm({ email: '', role: 'Compliance Officer' }); }}
+        title="Invite New Staff Member"
+        size="md"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => { setShowInviteStaffModal(false); setInviteForm({ email: '', role: 'Compliance Officer' }); }}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleInviteStaff} isLoading={isLoading}>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Send Invitation
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1.5">
+              Email Address
+            </label>
+            <Input
+              type="email"
+              value={inviteForm.email}
+              onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
+              placeholder="staff.member@university.edu"
+              icon={<Mail className="h-4 w-4" />}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1.5">
+              Role
+            </label>
+            <select
+              value={inviteForm.role}
+              onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
+              className="w-full h-10 px-3 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+            >
+              <option value="Compliance Officer">Compliance Officer</option>
+              <option value="Assistant AD">Assistant AD</option>
+              <option value="Compliance Assistant">Compliance Assistant</option>
+              <option value="Sports Administrator">Sports Administrator</option>
+            </select>
+          </div>
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20">
+            <p className="text-sm text-[var(--text-secondary)]">
+              The invited staff member will receive an email with instructions to set up their account.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

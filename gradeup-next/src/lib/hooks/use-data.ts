@@ -12,6 +12,208 @@ import type { BrandAnalytics } from '@/lib/services/brand';
 import type { DirectorStats, ComplianceAlert } from '@/lib/services/director';
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Demo Mode Detection
+// ═══════════════════════════════════════════════════════════════════════════
+
+const isDemoMode = () => process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Demo Mode Mock Data
+// ═══════════════════════════════════════════════════════════════════════════
+
+const demoAthleteStats: AthleteStats = {
+  total_deals: 15,
+  active_deals: 3,
+  completed_deals: 12,
+  total_earnings: 45250,
+  pending_earnings: 8500,
+  profile_views: 1847,
+  search_appearances: 342,
+  avg_deal_value: 3017,
+};
+
+const demoDeals: Deal[] = [
+  {
+    id: 'demo-deal-1',
+    brand_id: 'demo-brand-1',
+    athlete_id: 'demo-athlete-id',
+    opportunity_id: null,
+    deal_type: 'social_post',
+    compensation_type: 'fixed',
+    compensation_amount: 5000,
+    status: 'active',
+    title: 'Nike Social Campaign',
+    description: 'Create 3 Instagram posts featuring Nike products',
+    start_date: '2026-01-15',
+    end_date: '2026-03-15',
+    created_at: '2026-01-10T10:00:00Z',
+    brand: { company_name: 'Nike', logo_url: null },
+  },
+  {
+    id: 'demo-deal-2',
+    brand_id: 'demo-brand-2',
+    athlete_id: 'demo-athlete-id',
+    opportunity_id: null,
+    deal_type: 'appearance',
+    compensation_type: 'fixed',
+    compensation_amount: 2500,
+    status: 'pending',
+    title: 'Gatorade Event Appearance',
+    description: 'Attend product launch event',
+    start_date: '2026-02-20',
+    end_date: '2026-02-20',
+    created_at: '2026-02-01T10:00:00Z',
+    brand: { company_name: 'Gatorade', logo_url: null },
+  },
+  {
+    id: 'demo-deal-3',
+    brand_id: 'demo-brand-3',
+    athlete_id: 'demo-athlete-id',
+    opportunity_id: null,
+    deal_type: 'endorsement',
+    compensation_type: 'fixed',
+    compensation_amount: 1500,
+    status: 'completed',
+    title: 'Local Dealership Promo',
+    description: 'Social media promotion for car dealership',
+    start_date: '2026-01-01',
+    end_date: '2026-01-10',
+    created_at: '2025-12-15T10:00:00Z',
+    brand: { company_name: 'Durham Auto', logo_url: null },
+  },
+];
+
+const demoEarnings: EarningsData = {
+  total_earned: 45250,
+  pending_amount: 8500,
+  this_month: 10500,
+  last_month: 12050,
+  monthly_breakdown: [
+    { month: 'Sep', amount: 3200 },
+    { month: 'Oct', amount: 4500 },
+    { month: 'Nov', amount: 6800 },
+    { month: 'Dec', amount: 8200 },
+    { month: 'Jan', amount: 12050 },
+    { month: 'Feb', amount: 10500 },
+  ],
+};
+
+const demoActivities: Activity[] = [
+  {
+    id: 'demo-activity-1',
+    profile_id: 'demo-user-id',
+    type: 'deal_accepted',
+    description: 'Nike accepted your deal proposal',
+    metadata: { brand: 'Nike', amount: 5000 },
+    created_at: '2026-02-11T14:30:00Z',
+  },
+  {
+    id: 'demo-activity-2',
+    profile_id: 'demo-user-id',
+    type: 'payment',
+    description: 'Received payment from Gatorade',
+    metadata: { brand: 'Gatorade', amount: 2500 },
+    created_at: '2026-02-10T09:15:00Z',
+  },
+  {
+    id: 'demo-activity-3',
+    profile_id: 'demo-user-id',
+    type: 'profile_view',
+    description: 'Your profile was viewed 15 times today',
+    metadata: { views: 15 },
+    created_at: '2026-02-09T18:00:00Z',
+  },
+  {
+    id: 'demo-activity-4',
+    profile_id: 'demo-user-id',
+    type: 'new_offer',
+    description: 'New offer from Under Armour',
+    metadata: { brand: 'Under Armour', amount: 3500 },
+    created_at: '2026-02-08T11:00:00Z',
+  },
+  {
+    id: 'demo-activity-5',
+    profile_id: 'demo-user-id',
+    type: 'deal_completed',
+    description: 'Completed deal with Durham Auto',
+    metadata: { brand: 'Durham Auto', amount: 1500 },
+    created_at: '2026-02-07T16:45:00Z',
+  },
+  {
+    id: 'demo-activity-6',
+    profile_id: 'demo-user-id',
+    type: 'message',
+    description: 'New message from Nike representative',
+    metadata: { brand: 'Nike' },
+    created_at: '2026-02-06T10:30:00Z',
+  },
+];
+
+const demoBrandAnalytics: BrandAnalytics = {
+  total_spent: 125000,
+  total_deals: 18,
+  active_deals: 5,
+  total_impressions: 245000,
+  total_engagements: 18500,
+  avg_roi: 285,
+};
+
+const demoCampaigns: Campaign[] = [
+  {
+    id: 'demo-campaign-1',
+    brand_id: 'demo-brand-id',
+    title: 'Spring Collection Launch',
+    description: 'Promote our new spring athletic wear line',
+    budget: 50000,
+    start_date: '2026-02-01',
+    end_date: '2026-04-30',
+    status: 'active',
+    target_sports: ['basketball', 'football'],
+  },
+  {
+    id: 'demo-campaign-2',
+    brand_id: 'demo-brand-id',
+    title: 'Back to School',
+    description: 'Fall semester promotional campaign',
+    budget: 25000,
+    start_date: '2025-08-01',
+    end_date: '2025-09-30',
+    status: 'completed',
+    target_sports: ['all'],
+  },
+];
+
+const demoDirectorStats: DirectorStats = {
+  total_athletes: 247,
+  active_deals: 42,
+  total_earnings: 892500,
+  avg_gpa: 3.45,
+  verified_athletes: 198,
+  pending_verifications: 49,
+};
+
+const demoComplianceAlerts: ComplianceAlert[] = [
+  {
+    id: 'demo-alert-1',
+    athlete_id: 'demo-athlete-1',
+    athlete_name: 'Marcus Johnson',
+    type: 'deal_review',
+    severity: 'high',
+    message: 'Contract with Nike exceeds NCAA compensation guidelines - requires review',
+    created_at: '2026-02-11T10:00:00Z',
+  },
+  {
+    id: 'demo-alert-2',
+    athlete_id: 'demo-athlete-2',
+    athlete_name: 'Jordan Davis',
+    type: 'gpa_drop',
+    severity: 'medium',
+    message: 'GPA verification pending for Jordan Davis',
+    created_at: '2026-02-10T14:00:00Z',
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Types & Interfaces
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -151,6 +353,15 @@ export function useAthleteDeals(
   filters?: DealFilters
 ): UseDataResult<Deal[]> {
   const fetcher = useCallback(async (): Promise<{ data: Deal[] | null; error: Error | null }> => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      let filteredDeals = [...demoDeals];
+      if (filters?.status && filters.status.length > 0) {
+        filteredDeals = filteredDeals.filter(d => filters.status!.includes(d.status));
+      }
+      return { data: filteredDeals, error: null };
+    }
+
     if (!athleteId) {
       return { data: null, error: null };
     }
@@ -175,6 +386,11 @@ export function useAthleteDeals(
  */
 export function useAthleteEarnings(athleteId?: string): UseDataResult<EarningsData> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoEarnings, error: null };
+    }
+
     if (!athleteId) {
       return { data: null, error: null };
     }
@@ -199,6 +415,11 @@ export function useAthleteEarnings(athleteId?: string): UseDataResult<EarningsDa
  */
 export function useAthleteStats(athleteId?: string): UseDataResult<AthleteStats> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoAthleteStats, error: null };
+    }
+
     if (!athleteId) {
       return { data: null, error: null };
     }
@@ -223,6 +444,11 @@ export function useAthleteStats(athleteId?: string): UseDataResult<AthleteStats>
  */
 export function useActivity(limit: number = 10): UseDataResult<Activity[]> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoActivities.slice(0, limit), error: null };
+    }
+
     try {
       const { getMyActivity } = await import('@/lib/services/activity');
       const result = await getMyActivity(limit);
@@ -247,6 +473,11 @@ export function useActivity(limit: number = 10): UseDataResult<Activity[]> {
  */
 export function useBrandCampaigns(brandId?: string): UseDataResult<Campaign[]> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoCampaigns, error: null };
+    }
+
     if (!brandId) {
       return { data: null, error: null };
     }
@@ -271,6 +502,11 @@ export function useBrandCampaigns(brandId?: string): UseDataResult<Campaign[]> {
  */
 export function useBrandDeals(brandId?: string): UseDataResult<Deal[]> {
   const fetcher = useCallback(async (): Promise<{ data: Deal[] | null; error: Error | null }> => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoDeals, error: null };
+    }
+
     if (!brandId) {
       return { data: null, error: null };
     }
@@ -371,6 +607,11 @@ export function useMessages(conversationId?: string): UseDataResult<Message[]> {
  */
 export function useBrandAnalytics(brandId?: string): UseDataResult<BrandAnalytics> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoBrandAnalytics, error: null };
+    }
+
     try {
       const { getBrandAnalytics } = await import('@/lib/services/brand');
       const result = await getBrandAnalytics(brandId);
@@ -415,6 +656,11 @@ export function useBrandShortlist(brandId?: string): UseDataResult<Athlete[]> {
  */
 export function useDirectorStats(): UseDataResult<DirectorStats> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoDirectorStats, error: null };
+    }
+
     try {
       const { getDirectorStats } = await import('@/lib/services/director');
       const result = await getDirectorStats();
@@ -455,6 +701,11 @@ export function useSchoolAthletes(page: number = 1): UseDataResult<{ athletes: A
  */
 export function useComplianceAlerts(): UseDataResult<ComplianceAlert[]> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoComplianceAlerts, error: null };
+    }
+
     try {
       const { getComplianceAlerts } = await import('@/lib/services/director');
       const result = await getComplianceAlerts();

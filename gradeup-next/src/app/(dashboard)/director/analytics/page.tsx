@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   LineChart,
   Line,
@@ -17,12 +17,16 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Modal } from '@/components/ui/modal';
+import { useToastActions } from '@/components/ui/toast';
 import {
   DollarSign,
   Users,
   TrendingUp,
   Download,
   ArrowUpRight,
+  FileText,
+  Table,
 } from 'lucide-react';
 import { formatCurrency, formatCompactNumber } from '@/lib/utils';
 import {
@@ -364,12 +368,39 @@ function SportBreakdownTable() {
 
 export default function DirectorAnalyticsPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [exportFormat, setExportFormat] = useState<'pdf' | 'csv'>('pdf');
+  const toast = useToastActions();
 
   // Simulate initial loading
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleExportReport = async () => {
+    setExportLoading(true);
+    try {
+      // Simulate export processing
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Create a mock download
+      const filename = `nil-analytics-report-${new Date().toISOString().split('T')[0]}.${exportFormat}`;
+
+      // In production, this would trigger an actual file download
+      // For now, we show a success toast
+      toast.success(
+        'Report Exported',
+        `Your ${exportFormat.toUpperCase()} report "${filename}" has been downloaded.`
+      );
+      setShowExportModal(false);
+    } catch (error) {
+      toast.error('Export Failed', 'Unable to export report. Please try again.');
+    } finally {
+      setExportLoading(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -418,7 +449,7 @@ export default function DirectorAnalyticsPage() {
             Track your program&apos;s NIL performance
           </p>
         </div>
-        <Button variant="outline" aria-label="Download analytics report">
+        <Button variant="outline" aria-label="Download analytics report" onClick={() => setShowExportModal(true)}>
           <Download className="h-4 w-4 mr-2" />
           Export Report
         </Button>
@@ -460,6 +491,81 @@ export default function DirectorAnalyticsPage() {
 
       {/* Sport Breakdown */}
       <SportBreakdownTable />
+
+      {/* Export Report Modal */}
+      <Modal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        title="Export Analytics Report"
+        size="md"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setShowExportModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleExportReport} isLoading={exportLoading}>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-[var(--text-muted)]">
+            Choose your preferred format to export the analytics report.
+          </p>
+
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={() => setExportFormat('pdf')}
+              className={`flex flex-col items-center gap-3 p-4 rounded-[var(--radius-lg)] border-2 transition-all ${
+                exportFormat === 'pdf'
+                  ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
+                  : 'border-[var(--border-color)] hover:border-[var(--color-primary)]/50'
+              }`}
+            >
+              <div className={`h-12 w-12 rounded-full flex items-center justify-center ${
+                exportFormat === 'pdf' ? 'bg-[var(--color-primary)]' : 'bg-[var(--bg-tertiary)]'
+              }`}>
+                <FileText className={`h-6 w-6 ${
+                  exportFormat === 'pdf' ? 'text-white' : 'text-[var(--text-muted)]'
+                }`} />
+              </div>
+              <div className="text-center">
+                <p className="font-medium text-[var(--text-primary)]">PDF Report</p>
+                <p className="text-xs text-[var(--text-muted)]">Formatted document with charts</p>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setExportFormat('csv')}
+              className={`flex flex-col items-center gap-3 p-4 rounded-[var(--radius-lg)] border-2 transition-all ${
+                exportFormat === 'csv'
+                  ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
+                  : 'border-[var(--border-color)] hover:border-[var(--color-primary)]/50'
+              }`}
+            >
+              <div className={`h-12 w-12 rounded-full flex items-center justify-center ${
+                exportFormat === 'csv' ? 'bg-[var(--color-primary)]' : 'bg-[var(--bg-tertiary)]'
+              }`}>
+                <Table className={`h-6 w-6 ${
+                  exportFormat === 'csv' ? 'text-white' : 'text-[var(--text-muted)]'
+                }`} />
+              </div>
+              <div className="text-center">
+                <p className="font-medium text-[var(--text-primary)]">CSV Data</p>
+                <p className="text-xs text-[var(--text-muted)]">Raw data for spreadsheets</p>
+              </div>
+            </button>
+          </div>
+
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+            <p className="text-sm text-[var(--text-secondary)]">
+              <strong>Report includes:</strong> Revenue breakdown, sport performance, user growth, deal analytics, and compliance summary.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

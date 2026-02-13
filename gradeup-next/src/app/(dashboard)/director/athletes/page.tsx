@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useCallback, useMemo, memo } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, CheckCircle, Eye } from 'lucide-react';
+import { Search, CheckCircle, XCircle, Eye, GraduationCap, Trophy, UserCheck, Filter } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,32 @@ import { formatCurrency } from '@/lib/utils';
 import { useDirectorAthletes, type DirectorAthlete } from '@/lib/hooks/use-director-athletes';
 
 const statusFilters = ['All', 'Verified', 'Pending', 'Issues'];
+const verificationFilters = ['All Verifications', 'Enrollment Pending', 'Grades Pending', 'Stats Pending'];
+
+// Small verification badge indicator
+function VerificationBadge({
+  verified,
+  icon: Icon,
+  label
+}: {
+  verified: boolean;
+  icon: React.ElementType;
+  label: string;
+}) {
+  return (
+    <div
+      className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-xs ${
+        verified
+          ? 'bg-[var(--color-success)]/10 text-[var(--color-success)]'
+          : 'bg-[var(--color-warning)]/10 text-[var(--color-warning)]'
+      }`}
+      title={`${label}: ${verified ? 'Verified' : 'Pending'}`}
+    >
+      <Icon className="h-3 w-3" />
+      {verified ? <CheckCircle className="h-2.5 w-2.5" /> : <XCircle className="h-2.5 w-2.5" />}
+    </div>
+  );
+}
 
 // Memoized to prevent re-renders when filter/search state changes
 const AthleteRow = memo(function AthleteRow({ athlete, onView }: { athlete: DirectorAthlete; onView: (id: string) => void }) {
@@ -29,19 +55,37 @@ const AthleteRow = memo(function AthleteRow({ athlete, onView }: { athlete: Dire
           {athlete.sport} • {athlete.year}
         </p>
       </div>
+      {/* Verification Status Badges */}
+      <div className="hidden md:flex items-center gap-1">
+        <VerificationBadge
+          verified={athlete.enrollmentVerified}
+          icon={UserCheck}
+          label="Enrollment"
+        />
+        <VerificationBadge
+          verified={athlete.gradesVerified}
+          icon={GraduationCap}
+          label="Grades"
+        />
+        <VerificationBadge
+          verified={athlete.sportVerified}
+          icon={Trophy}
+          label="Stats"
+        />
+      </div>
       <div className="text-center">
         <p className="text-sm font-semibold text-[var(--gpa-gold)]">
           {athlete.gpa.toFixed(2)}
         </p>
         <p className="text-xs text-[var(--text-muted)]">GPA</p>
       </div>
-      <div className="text-center">
+      <div className="text-center hidden sm:block">
         <p className="text-sm font-semibold text-[var(--text-primary)]">
           {athlete.deals}
         </p>
         <p className="text-xs text-[var(--text-muted)]">Deals</p>
       </div>
-      <div className="text-center">
+      <div className="text-center hidden lg:block">
         <p className="text-sm font-semibold text-[var(--color-success)]">
           {formatCurrency(athlete.earnings)}
         </p>
@@ -101,6 +145,8 @@ export default function DirectorAthletesPage() {
   const { athletes, stats, isLoading } = useDirectorAthletes();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('All');
+  const [verificationFilter, setVerificationFilter] = useState('All Verifications');
+  const [showVerificationFilters, setShowVerificationFilters] = useState(false);
 
   // Memoize callback to prevent AthleteRow re-renders
   const handleViewAthlete = useCallback((athleteId: string) => {
@@ -118,9 +164,14 @@ export default function DirectorAthletesPage() {
         (filter === 'Verified' && athlete.verified) ||
         (filter === 'Pending' && athlete.complianceStatus === 'pending') ||
         (filter === 'Issues' && athlete.complianceStatus === 'issue');
-      return matchesSearch && matchesFilter;
+      const matchesVerificationFilter =
+        verificationFilter === 'All Verifications' ||
+        (verificationFilter === 'Enrollment Pending' && !athlete.enrollmentVerified) ||
+        (verificationFilter === 'Grades Pending' && !athlete.gradesVerified) ||
+        (verificationFilter === 'Stats Pending' && !athlete.sportVerified);
+      return matchesSearch && matchesFilter && matchesVerificationFilter;
     });
-  }, [athletes, searchQuery, filter]);
+  }, [athletes, searchQuery, filter, verificationFilter]);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -167,27 +218,60 @@ export default function DirectorAthletesPage() {
       {/* Search and Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Search athletes..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                icon={<Search className="h-4 w-4" />}
-              />
-            </div>
-            <div className="flex gap-2">
-              {statusFilters.map((status) => (
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Search athletes..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  icon={<Search className="h-4 w-4" />}
+                />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {statusFilters.map((status) => (
+                  <Button
+                    key={status}
+                    variant={filter === status ? 'primary' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilter(status)}
+                  >
+                    {status}
+                  </Button>
+                ))}
                 <Button
-                  key={status}
-                  variant={filter === status ? 'primary' : 'outline'}
+                  variant={showVerificationFilters ? 'secondary' : 'ghost'}
                   size="sm"
-                  onClick={() => setFilter(status)}
+                  onClick={() => setShowVerificationFilters(!showVerificationFilters)}
+                  className="ml-2"
                 >
-                  {status}
+                  <Filter className="h-4 w-4 mr-1" />
+                  Verifications
                 </Button>
-              ))}
+              </div>
             </div>
+            {/* Verification Type Filters */}
+            {showVerificationFilters && (
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-[var(--border-color)]">
+                <span className="text-sm text-[var(--text-muted)] flex items-center mr-2">
+                  Filter by verification:
+                </span>
+                {verificationFilters.map((vFilter) => (
+                  <Button
+                    key={vFilter}
+                    variant={verificationFilter === vFilter ? 'secondary' : 'ghost'}
+                    size="sm"
+                    onClick={() => setVerificationFilter(vFilter)}
+                    className={verificationFilter === vFilter ? '' : 'text-[var(--text-muted)]'}
+                  >
+                    {vFilter === 'Enrollment Pending' && <UserCheck className="h-3 w-3 mr-1" />}
+                    {vFilter === 'Grades Pending' && <GraduationCap className="h-3 w-3 mr-1" />}
+                    {vFilter === 'Stats Pending' && <Trophy className="h-3 w-3 mr-1" />}
+                    {vFilter}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
