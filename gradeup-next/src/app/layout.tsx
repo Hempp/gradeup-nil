@@ -17,11 +17,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "GradeUp NIL - Student Athlete NIL Platform",
+    default: "GradeUp NIL - Your GPA Is Worth Money",
     template: "%s | GradeUp NIL",
   },
-  description: "Connect student-athletes with brands based on academic excellence and athletic performance. The NIL marketplace that rewards scholar-athletes.",
-  keywords: ["NIL", "student athlete", "college sports", "endorsement", "sponsorship", "name image likeness", "GradeUp"],
+  description: "The only NIL platform where grades unlock better deals. $127,450+ paid to 847 verified athletes. Higher GPA = higher value. Join free today.",
+  keywords: ["NIL", "student athlete", "college sports", "NIL deals", "athlete sponsorship", "name image likeness", "GradeUp", "college athlete earnings", "NCAA NIL", "athlete brand deals", "scholar athlete"],
   authors: [{ name: "GradeUp NIL" }],
   creator: "GradeUp NIL",
   publisher: "GradeUp NIL",
@@ -36,22 +36,22 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://gradeup-next.vercel.app",
     siteName: "GradeUp NIL",
-    title: "GradeUp NIL - Student Athlete NIL Platform",
-    description: "Connect student-athletes with brands based on academic excellence and athletic performance.",
+    title: "GradeUp NIL - Your GPA Is Worth Money",
+    description: "The only NIL platform where grades unlock better deals. $127,450+ paid to 847 verified athletes. Higher GPA = higher value.",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=630&fit=crop",
         width: 1200,
         height: 630,
-        alt: "GradeUp NIL Platform",
+        alt: "GradeUp NIL - Student Athlete Platform",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GradeUp NIL - Student Athlete NIL Platform",
-    description: "Connect student-athletes with brands based on academic excellence and athletic performance.",
-    images: ["/og-image.png"],
+    title: "GradeUp NIL - Your GPA Is Worth Money",
+    description: "The only NIL platform where grades unlock better deals. $127,450+ paid to athletes. Join free today.",
+    images: ["https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=630&fit=crop"],
   },
   robots: {
     index: true,

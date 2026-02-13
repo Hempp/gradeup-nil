@@ -649,14 +649,14 @@ function HowItWorksSection() {
                     aria-label={isPlaying ? 'Pause video' : 'Play video'}
                   >
                     <div className="absolute inset-0 bg-black/40" />
-                    <div className="relative w-20 h-20 rounded-full bg-[var(--marketing-cyan)] flex items-center justify-center shadow-lg shadow-[var(--marketing-cyan)]/40 hover:scale-110 transition-transform">
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[var(--marketing-cyan)] flex items-center justify-center shadow-lg shadow-[var(--marketing-cyan)]/40 hover:scale-110 transition-transform">
                       {isPlaying ? (
                         <div className="flex gap-1">
-                          <div className="w-2 h-8 bg-black rounded-sm" />
-                          <div className="w-2 h-8 bg-black rounded-sm" />
+                          <div className="w-1.5 sm:w-2 h-6 sm:h-8 bg-black rounded-sm" />
+                          <div className="w-1.5 sm:w-2 h-6 sm:h-8 bg-black rounded-sm" />
                         </div>
                       ) : (
-                        <Play className="h-8 w-8 text-black ml-1" fill="currentColor" />
+                        <Play className="h-6 w-6 sm:h-8 sm:w-8 text-black ml-1" fill="currentColor" />
                       )}
                     </div>
                   </button>
@@ -675,18 +675,18 @@ function HowItWorksSection() {
               </div>
 
               {/* Video stats below */}
-              <div className="grid grid-cols-3 gap-4 mt-6">
-                <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-xl font-bold text-[var(--marketing-cyan)]">$127,450</div>
-                  <div className="text-xs text-[var(--marketing-gray-500)]">Paid Out</div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-4 sm:mt-6">
+                <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="text-base sm:text-xl font-bold text-[var(--marketing-cyan)]">$127K</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Paid Out</div>
                 </div>
-                <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-xl font-bold text-[var(--marketing-lime)]">68%</div>
-                  <div className="text-xs text-[var(--marketing-gray-500)]">Match Rate</div>
+                <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="text-base sm:text-xl font-bold text-[var(--marketing-lime)]">68%</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Match Rate</div>
                 </div>
-                <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-xl font-bold text-[var(--marketing-gold)]">48 hrs</div>
-                  <div className="text-xs text-[var(--marketing-gray-500)]">First Deal</div>
+                <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="text-base sm:text-xl font-bold text-[var(--marketing-gold)]">48hrs</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">First Deal</div>
                 </div>
               </div>
             </div>
@@ -694,9 +694,9 @@ function HowItWorksSection() {
 
           {/* Steps Column - Takes 2/5 of space */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="hidden lg:block mb-6">
-              <h3 className="text-xl font-bold text-white mb-2">Three Simple Steps</h3>
-              <p className="text-sm text-[var(--marketing-gray-500)]">
+            <div className="mb-4 lg:mb-6 text-center lg:text-left">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">Three Simple Steps</h3>
+              <p className="text-xs sm:text-sm text-[var(--marketing-gray-500)]">
                 Our 68% conversion rate means most athletes close deals within a week.
               </p>
             </div>

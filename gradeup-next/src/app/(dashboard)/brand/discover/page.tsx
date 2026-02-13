@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback, useId } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Heart, MapPin, Users, TrendingUp, DollarSign, SlidersHorizontal, X, Loader2 } from 'lucide-react';
+import { Search, Heart, MapPin, Users, TrendingUp, DollarSign, SlidersHorizontal, X, Loader2, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,10 @@ import { searchAthletes, type AthleteFilters, type Athlete as ServiceAthlete } f
 import { addToShortlist, removeFromShortlist } from '@/lib/services/brand';
 import { useBrandShortlist } from '@/lib/hooks/use-data';
 import { useToastActions } from '@/components/ui/toast';
+import { VerifiedBadge } from '@/components/ui/verified-badge';
+import { InstagramIcon, TikTokIcon, SOCIAL_BRAND_COLORS } from '@/components/ui/social-icons';
+import { getSportGradient } from '@/lib/utils/sport-theme';
+import { MOCK_ATHLETES, SPORTS, SCHOOLS } from '@/lib/mock-data/athletes';
 import type { HighlightUrl } from '@/types';
 import { HighlightTapeView } from '@/components/athlete/HighlightTapeSection';
 
@@ -36,13 +40,6 @@ const ANIMATION_DURATION = {
   FAST: 150,    // Buttons, toggles
   NORMAL: 200,  // Cards, panels
   SLOW: 300,    // Modals, page transitions
-} as const;
-
-// Brand colors for social platforms (intentionally hardcoded for brand compliance)
-const BRAND_COLORS = {
-  INSTAGRAM_FROM: '#E4405F',
-  INSTAGRAM_TO: '#F77737',
-  TIKTOK_BG: '#000000',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -505,22 +502,6 @@ interface Filters {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// ICONS
-// ═══════════════════════════════════════════════════════════════════════════
-
-const TikTokIcon = () => (
-  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
-  </svg>
-);
-
-const InstagramIcon = ({ className }: { className?: string }) => (
-  <svg className={className || "h-3 w-3"} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-  </svg>
-);
-
-// ═══════════════════════════════════════════════════════════════════════════
 // COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -576,44 +557,6 @@ function AthleteSkeletonCard() {
       </CardContent>
     </Card>
   );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Verified Badge Component
-// ═══════════════════════════════════════════════════════════════════════════
-
-function VerifiedBadge({ className = '' }: { className?: string }) {
-  return (
-    <div className={`h-5 w-5 rounded-full bg-[var(--color-primary)] flex items-center justify-center ${className}`}>
-      <svg className="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Sport Gradient Helper
-// NOTE: Tailwind color classes are intentionally used here (not CSS variables)
-// to provide distinct visual identification for each sport. These are carefully
-// chosen to be visually distinguishable while maintaining accessibility contrast.
-// ═══════════════════════════════════════════════════════════════════════════
-
-const sportGradients: Record<string, string> = {
-  'Basketball': 'from-orange-500 via-red-500 to-rose-600',
-  'Football': 'from-emerald-500 via-teal-500 to-cyan-600',
-  'Soccer': 'from-green-500 via-emerald-500 to-teal-500',
-  'Volleyball': 'from-purple-500 via-violet-500 to-indigo-600',
-  'Gymnastics': 'from-pink-500 via-rose-500 to-red-500',
-  'Swimming': 'from-blue-400 via-cyan-500 to-teal-500',
-  'Tennis': 'from-lime-500 via-green-500 to-emerald-500',
-  'Track & Field': 'from-amber-500 via-orange-500 to-red-500',
-  'Baseball': 'from-red-500 via-rose-500 to-pink-500',
-  'Softball': 'from-yellow-500 via-amber-500 to-orange-500',
-};
-
-function getSportGradient(sport: string): string {
-  return sportGradients[sport] || 'from-[var(--color-secondary)] via-[var(--color-magenta)] to-[var(--color-primary)]';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -721,13 +664,13 @@ function AthleteDiscoveryCard({
                 <div className="flex -space-x-1">
                   <div
                     className="h-5 w-5 rounded-full flex items-center justify-center"
-                    style={{ background: `linear-gradient(to bottom right, ${BRAND_COLORS.INSTAGRAM_FROM}, ${BRAND_COLORS.INSTAGRAM_TO})` }}
+                    style={{ background: `linear-gradient(to bottom right, ${SOCIAL_BRAND_COLORS.INSTAGRAM.from}, ${SOCIAL_BRAND_COLORS.INSTAGRAM.to})` }}
                   >
                     <InstagramIcon className="h-2.5 w-2.5 text-white" />
                   </div>
                   <div
                     className="h-5 w-5 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: BRAND_COLORS.TIKTOK_BG }}
+                    style={{ backgroundColor: SOCIAL_BRAND_COLORS.TIKTOK.bg }}
                   >
                     <TikTokIcon />
                   </div>
@@ -1547,15 +1490,31 @@ export default function BrandDiscoverPage() {
               Close
             </Button>
             {selectedAthlete && (
-              <Button
-                variant={selectedAthlete.saved ? 'secondary' : 'primary'}
-                onClick={() => {
-                  handleToggleSave(selectedAthlete.id);
-                }}
-              >
-                <Heart className={`h-4 w-4 mr-2 ${selectedAthlete.saved ? 'fill-current' : ''}`} />
-                {selectedAthlete.saved ? 'Remove from Shortlist' : 'Add to Shortlist'}
-              </Button>
+              <>
+                <Button
+                  variant={selectedAthlete.saved ? 'secondary' : 'outline'}
+                  onClick={() => {
+                    handleToggleSave(selectedAthlete.id);
+                  }}
+                  aria-label={`${selectedAthlete.saved ? 'Remove' : 'Add'} ${selectedAthlete.name} ${selectedAthlete.saved ? 'from' : 'to'} shortlist`}
+                >
+                  <Heart className={`h-4 w-4 mr-2 ${selectedAthlete.saved ? 'fill-current' : ''}`} />
+                  {selectedAthlete.saved ? 'Saved' : 'Save'}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    const athleteId = selectedAthlete.id;
+                    setShowProfileModal(false);
+                    setSelectedAthlete(null);
+                    router.push(`/brand/athletes/${athleteId}`);
+                  }}
+                  aria-label={`View full profile for ${selectedAthlete.name}`}
+                >
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  View Full Profile
+                </Button>
+              </>
             )}
           </>
         }
@@ -1630,7 +1589,7 @@ export default function BrandDiscoverPage() {
                 <div className="flex items-center gap-3 mb-2">
                   <div
                     className="h-10 w-10 rounded-full flex items-center justify-center"
-                    style={{ background: `linear-gradient(to bottom right, ${BRAND_COLORS.INSTAGRAM_FROM}, ${BRAND_COLORS.INSTAGRAM_TO})` }}
+                    style={{ background: `linear-gradient(to bottom right, ${SOCIAL_BRAND_COLORS.INSTAGRAM.from}, ${SOCIAL_BRAND_COLORS.INSTAGRAM.to})` }}
                     aria-hidden="true"
                   >
                     <InstagramIcon className="h-5 w-5 text-white" />
@@ -1648,7 +1607,7 @@ export default function BrandDiscoverPage() {
                 <div className="flex items-center gap-3 mb-2">
                   <div
                     className="h-10 w-10 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: BRAND_COLORS.TIKTOK_BG }}
+                    style={{ backgroundColor: SOCIAL_BRAND_COLORS.TIKTOK.bg }}
                     aria-hidden="true"
                   >
                     <TikTokIcon />
