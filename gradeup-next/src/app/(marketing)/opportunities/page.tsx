@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, Filter, Grid, List, Calendar, DollarSign, GraduationCap, ChevronDown } from 'lucide-react';
+import { Search, Filter, Grid, List, Calendar, DollarSign, GraduationCap, ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLandingOpportunities, type LandingOpportunity } from '@/lib/hooks/use-landing-data';
@@ -14,6 +14,61 @@ import { cn } from '@/lib/utils';
 
 type ViewMode = 'grid' | 'list';
 type CompensationType = 'all' | 'cash' | 'product' | 'hybrid';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Skeleton Loading Card
+// ═══════════════════════════════════════════════════════════════════════════
+
+function OpportunityCardSkeleton({ viewMode }: { viewMode: ViewMode }) {
+  if (viewMode === 'list') {
+    return (
+      <div className="card-marketing p-4 animate-pulse">
+        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+          <div className="w-16 h-16 bg-[var(--marketing-gray-800)] rounded-lg" />
+          <div className="flex-1 space-y-3">
+            <div className="h-5 bg-[var(--marketing-gray-800)] rounded w-3/4" />
+            <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-1/2" />
+            <div className="flex gap-4">
+              <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-20" />
+              <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-24" />
+            </div>
+          </div>
+          <div className="h-10 bg-[var(--marketing-gray-800)] rounded w-28" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card-marketing overflow-hidden animate-pulse">
+      <div className="p-4 border-b border-[var(--marketing-gray-800)]">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-[var(--marketing-gray-800)] rounded-lg" />
+          <div className="flex-1 space-y-2">
+            <div className="h-5 bg-[var(--marketing-gray-800)] rounded w-3/4" />
+            <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-1/2" />
+          </div>
+        </div>
+      </div>
+      <div className="p-4 space-y-4">
+        <div className="space-y-2">
+          <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-full" />
+          <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-2/3" />
+        </div>
+        <div className="flex gap-2">
+          <div className="h-6 bg-[var(--marketing-gray-800)] rounded w-16" />
+          <div className="h-6 bg-[var(--marketing-gray-800)] rounded w-20" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-full" />
+          <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-full" />
+          <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-full" />
+        </div>
+        <div className="h-10 bg-[var(--marketing-gray-800)] rounded w-full" />
+      </div>
+    </div>
+  );
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Hero Section
@@ -360,6 +415,98 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// CTA Section with Scroll Animation
+// ═══════════════════════════════════════════════════════════════════════════
+
+function CTASection() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="py-20 px-4 bg-gradient-to-r from-[var(--marketing-cyan)]/10 via-[var(--marketing-magenta)]/5 to-[var(--marketing-cyan)]/10 border-t border-[var(--marketing-gray-800)] overflow-hidden"
+    >
+      <div className="max-w-4xl mx-auto text-center">
+        {/* Stats row */}
+        <div
+          className={`flex flex-wrap justify-center gap-8 mb-10 transition-all duration-700 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <div className="text-center">
+            <div className="text-3xl font-bold text-[var(--marketing-cyan)]">$127K+</div>
+            <div className="text-sm text-[var(--marketing-gray-500)]">Paid to Athletes</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-[var(--marketing-lime)]">847</div>
+            <div className="text-sm text-[var(--marketing-gray-500)]">Active Athletes</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-[var(--marketing-gold)]">68%</div>
+            <div className="text-sm text-[var(--marketing-gray-500)]">Match Rate</div>
+          </div>
+        </div>
+
+        <div
+          className={`transition-all duration-700 delay-200 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
+            <Sparkles className="h-4 w-4 text-[var(--marketing-gold)]" />
+            <span className="text-sm text-white/80">Join 847 athletes already earning</span>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Ready to Start Earning?
+          </h2>
+          <p className="text-lg text-[var(--marketing-gray-400)] mb-8 max-w-2xl mx-auto">
+            Your GPA is your competitive advantage. Higher grades unlock better deals.
+          </p>
+        </div>
+
+        <div
+          className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 delay-300 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <Link href="/signup/athlete">
+            <Button className="btn-marketing-primary px-8 py-3 text-lg">
+              Create Your Profile
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="border-white/30 text-white hover:bg-white/10 px-8 py-3 text-lg"
+          >
+            Browse More Deals
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Main Page
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -403,8 +550,16 @@ export default function OpportunitiesPage() {
       {/* Opportunities Grid/List */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--marketing-cyan)]"></div>
+          <div
+            className={cn(
+              viewMode === 'grid'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+                : 'flex flex-col gap-4'
+            )}
+          >
+            {[...Array(6)].map((_, i) => (
+              <OpportunityCardSkeleton key={i} viewMode={viewMode} />
+            ))}
           </div>
         ) : sortedOpportunities.length === 0 ? (
           <div className="text-center py-20">
@@ -440,31 +595,8 @@ export default function OpportunitiesPage() {
         )}
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-[var(--marketing-cyan)]/10 to-[var(--marketing-magenta)]/10 border-t border-[var(--marketing-gray-800)]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Start Earning?
-          </h2>
-          <p className="text-lg text-[var(--marketing-gray-400)] mb-8 max-w-2xl mx-auto">
-            Join thousands of scholar-athletes who are monetizing their NIL while maintaining academic excellence.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup/athlete">
-              <Button className="btn-marketing-primary px-8 py-3 text-lg">
-                Create Your Profile
-              </Button>
-            </Link>
-            <Button
-              variant="outline"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="border-white/30 text-white hover:bg-white/10 px-8 py-3 text-lg"
-            >
-              Browse More Deals
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* CTA Section with Stats */}
+      <CTASection />
     </div>
   );
 }
