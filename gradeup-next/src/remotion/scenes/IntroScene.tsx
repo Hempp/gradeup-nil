@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, spring } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, interpolate, spring, Img, staticFile } from 'remotion';
 
 export const IntroScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -76,43 +76,15 @@ export const IntroScene: React.FC = () => {
           opacity: logoOpacity,
         }}
       >
-        {/* Logo mark - Shield + Arrow */}
-        <svg
-          viewBox="0 0 512 512"
-          width={140}
-          height={140}
+        {/* Logo from public folder */}
+        <Img
+          src={staticFile('logo.svg')}
+          width={160}
+          height={160}
           style={{
             filter: 'drop-shadow(0 20px 60px rgba(0,240,255,0.5))',
           }}
-        >
-          <defs>
-            <linearGradient id="video-grad" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#00f0ff" />
-              <stop offset="100%" stopColor="#adff2f" />
-            </linearGradient>
-            <filter id="video-glow">
-              <feGaussianBlur stdDeviation="8" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          <g filter="url(#video-glow)">
-            {/* Shield outline */}
-            <path
-              d="M256 64L416 112V240C416 344 344 424 256 448C168 424 96 344 96 240V112L256 64Z"
-              fill="#0a0a0a"
-              stroke="url(#video-grad)"
-              strokeWidth="12"
-            />
-            {/* Upward arrow */}
-            <path
-              d="M256 128L352 240H304V384H208V240H160L256 128Z"
-              fill="url(#video-grad)"
-            />
-          </g>
-        </svg>
+        />
 
         {/* Wordmark */}
         <div style={{ fontSize: 72, fontWeight: 'bold', color: '#fff', letterSpacing: -2 }}>

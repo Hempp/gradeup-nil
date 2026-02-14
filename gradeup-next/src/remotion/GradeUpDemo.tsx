@@ -5,7 +5,8 @@ import {
   useVideoConfig,
   interpolate,
   spring,
-  Easing,
+  Audio,
+  staticFile,
 } from 'remotion';
 import { IntroScene } from './scenes/IntroScene';
 import { StatsScene } from './scenes/StatsScene';
@@ -13,7 +14,18 @@ import { FeaturesScene } from './scenes/FeaturesScene';
 import { TestimonialsScene } from './scenes/TestimonialsScene';
 import { CTAScene } from './scenes/CTAScene';
 
-export const GradeUpDemo: React.FC = () => {
+// Props for the demo video - allows passing voiceover audio path
+interface GradeUpDemoProps {
+  voiceoverPath?: string;
+  backgroundMusicPath?: string;
+  backgroundMusicVolume?: number;
+}
+
+export const GradeUpDemo: React.FC<GradeUpDemoProps> = ({
+  voiceoverPath,
+  backgroundMusicPath,
+  backgroundMusicVolume = 0.3,
+}) => {
   const { fps, durationInFrames } = useVideoConfig();
 
   // Scene durations (in frames)
@@ -29,6 +41,16 @@ export const GradeUpDemo: React.FC = () => {
         background: 'linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #111111 100%)',
       }}
     >
+      {/* Voiceover Audio - Add your voiceover MP3/WAV to public/audio/voiceover.mp3 */}
+      {voiceoverPath && (
+        <Audio src={staticFile(voiceoverPath)} volume={1} />
+      )}
+
+      {/* Background Music - Add ambient music to public/audio/background.mp3 */}
+      {backgroundMusicPath && (
+        <Audio src={staticFile(backgroundMusicPath)} volume={backgroundMusicVolume} />
+      )}
+
       {/* Intro - Logo & Tagline */}
       <Sequence from={0} durationInFrames={introDuration}>
         <IntroScene />
