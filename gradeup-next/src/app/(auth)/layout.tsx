@@ -57,33 +57,34 @@ export default function AuthLayout({
             href="/"
             className="inline-flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
+            {/* Shield + Arrow Logo */}
             <svg
               viewBox="0 0 32 32"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8"
+              className="h-9 w-9"
             >
-              <rect width="32" height="32" rx="6" fill="url(#auth-gradient)" />
-              <text
-                x="16"
-                y="22"
-                textAnchor="middle"
-                fill="white"
-                fontSize="16"
-                fontWeight="bold"
-                fontFamily="system-ui"
-              >
-                G
-              </text>
               <defs>
-                <linearGradient id="auth-gradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop stopColor="#00f0ff" />
-                  <stop offset="1" stopColor="#adff2f" />
+                <linearGradient id="auth-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#00f0ff" />
+                  <stop offset="100%" stopColor="#adff2f" />
                 </linearGradient>
               </defs>
+              {/* Shield outline */}
+              <path
+                d="M16 2L28 6V15C28 22.5 22.5 28.5 16 30C9.5 28.5 4 22.5 4 15V6L16 2Z"
+                fill="#0a0a0a"
+                stroke="url(#auth-gradient)"
+                strokeWidth="1.5"
+              />
+              {/* Upward arrow */}
+              <path
+                d="M16 8L22 15H19V24H13V15H10L16 8Z"
+                fill="url(#auth-gradient)"
+              />
             </svg>
-            <span className="text-xl font-bold tracking-tight text-white">
-              Grade<span className="text-[var(--marketing-cyan)]">Up</span>
+            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-[#00f0ff] to-[#adff2f] bg-clip-text text-transparent">
+              GradeUp
             </span>
           </Link>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -27,6 +27,7 @@ import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { StatCard } from '@/components/ui/stat-card';
 import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
+import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate, formatCompactNumber } from '@/lib/utils';
 import type { DealStatus } from '@/types';
 
@@ -681,6 +682,134 @@ function AnalyticsTab({ campaign }: { campaign: CampaignData }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// LOADING SKELETON
+// ═══════════════════════════════════════════════════════════════════════════
+
+function CampaignDetailSkeleton() {
+  return (
+    <div className="space-y-6 animate-fade-in">
+      {/* Header Skeleton */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10 rounded-[var(--radius-md)]" />
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-8 w-48" />
+              <Skeleton className="h-6 w-16 rounded-full" />
+            </div>
+            <Skeleton className="h-4 w-36" />
+          </div>
+        </div>
+        <Skeleton className="h-10 w-32" />
+      </div>
+
+      {/* Tabs Skeleton */}
+      <div className="border-b border-[var(--border-color)]">
+        <div className="flex gap-4 -mb-px">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-10 w-28 rounded-t-[var(--radius-md)]" />
+          ))}
+        </div>
+      </div>
+
+      {/* Stats Grid Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <Card key={i}>
+            <CardContent className="pt-6 pb-6">
+              <div className="flex items-center justify-between mb-4">
+                <Skeleton className="h-10 w-10 rounded-[var(--radius-md)]" />
+                <Skeleton className="h-4 w-12" />
+              </div>
+              <Skeleton className="h-8 w-24 mb-2" />
+              <Skeleton className="h-3 w-20" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Content Cards Skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <Skeleton className="h-6 w-32" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Skeleton className="h-4 w-24 mb-2" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4 mt-1" />
+            </div>
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[var(--border-color)]">
+              <div>
+                <Skeleton className="h-4 w-20 mb-1" />
+                <Skeleton className="h-5 w-28" />
+              </div>
+              <div>
+                <Skeleton className="h-4 w-20 mb-1" />
+                <Skeleton className="h-5 w-28" />
+              </div>
+            </div>
+            <div className="pt-4 border-t border-[var(--border-color)]">
+              <Skeleton className="h-4 w-24 mb-2" />
+              <div className="flex flex-wrap gap-2">
+                <Skeleton className="h-6 w-20 rounded-full" />
+                <Skeleton className="h-6 w-16 rounded-full" />
+                <Skeleton className="h-6 w-24 rounded-full" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-32" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-center">
+              <Skeleton className="h-12 w-16 mx-auto mb-2" />
+              <Skeleton className="h-4 w-24 mx-auto" />
+            </div>
+            <div>
+              <div className="flex justify-between mb-2">
+                <Skeleton className="h-3 w-12" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+              <Skeleton className="h-3 w-full rounded-full" />
+              <div className="flex justify-between mt-2">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-3 w-14" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Activity Skeleton */}
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-32" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center gap-4 p-3 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)]">
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <div className="flex-1">
+                  <Skeleton className="h-4 w-48 mb-1" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+                <Skeleton className="h-6 w-20 rounded-full" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -688,9 +817,26 @@ export default function CampaignDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const [isLoading, setIsLoading] = useState(true);
+  const [campaign, setCampaign] = useState<CampaignData | null>(null);
 
-  // In a real app, fetch campaign data based on params.campaignId
-  const campaign = mockCampaign;
+  // Simulate fetching campaign data based on params.campaignId
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      setIsLoading(true);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      // In a real app, fetch campaign data based on params.campaignId
+      setCampaign(mockCampaign);
+      setIsLoading(false);
+    };
+    fetchCampaign();
+  }, [params.campaignId]);
+
+  // Show loading skeleton while fetching
+  if (isLoading || !campaign) {
+    return <CampaignDetailSkeleton />;
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   AlertTriangle,
   CheckCircle,
@@ -18,6 +18,12 @@ import {
   Calendar,
   ChevronDown,
   ChevronRight,
+  Loader2,
+  RefreshCw,
+  History,
+  TrendingUp,
+  TrendingDown,
+  Percent,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,6 +32,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
 import { FilterBar, type Filter as FilterType } from '@/components/ui/filter-bar';
 import { Modal } from '@/components/ui/modal';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { StatCard } from '@/components/ui/stat-card';
 import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatDate, formatDateTime, formatRelativeTime } from '@/lib/utils';
@@ -76,230 +83,448 @@ interface AuditLogEntry extends Record<string, unknown> {
 const mockFlaggedDeals: FlaggedDeal[] = [
   {
     id: '1',
-    dealId: 'D-001',
+    dealId: 'NIL-2026-0847',
     athleteName: 'Jordan Davis',
     athleteId: '3',
     brandName: 'Nike',
     brandId: '1',
-    dealAmount: 75000,
-    dealType: 'Endorsement Contract',
-    flagReason: 'Deal value exceeds NCAA compensation guidelines for football athletes',
+    dealAmount: 125000,
+    dealType: 'Multi-Year Endorsement',
+    flagReason: 'Deal value ($125,000) exceeds single-season compensation cap of $100,000 for football athletes under Big 12 Conference guidelines',
     severity: 'high',
-    assignedReviewer: 'John Smith (AD)',
-    createdAt: '2026-02-10T16:45:00Z',
+    assignedReviewer: 'Dr. Michael Chen (AD)',
+    createdAt: '2026-02-12T14:23:00Z',
     status: 'pending',
   },
   {
     id: '2',
-    dealId: 'D-002',
-    athleteName: 'Emma Chen',
-    athleteId: '4',
-    brandName: 'Sports Memorabilia Inc',
-    brandId: '5',
-    dealAmount: 8500,
-    dealType: 'Autograph Session',
-    flagReason: 'Missing tax documentation (W-9 form)',
-    severity: 'medium',
+    dealId: 'NIL-2026-0851',
+    athleteName: 'Marcus Johnson',
+    athleteId: '1',
+    brandName: 'DraftKings',
+    brandId: '8',
+    dealAmount: 45000,
+    dealType: 'Brand Ambassador',
+    flagReason: 'Sports betting companies are restricted under university NIL policy. Requires Athletic Director and General Counsel review.',
+    severity: 'high',
     assignedReviewer: null,
-    createdAt: '2026-02-09T11:20:00Z',
+    createdAt: '2026-02-12T10:15:00Z',
     status: 'pending',
   },
   {
     id: '3',
-    dealId: 'D-003',
+    dealId: 'NIL-2026-0839',
+    athleteName: 'Emma Chen',
+    athleteId: '4',
+    brandName: 'Topps Trading Cards',
+    brandId: '5',
+    dealAmount: 12500,
+    dealType: 'Autograph Session Series',
+    flagReason: 'Missing required tax documentation: W-9 form not submitted. IRS compliance requirement.',
+    severity: 'medium',
+    assignedReviewer: 'Sarah Martinez (Compliance)',
+    createdAt: '2026-02-11T16:45:00Z',
+    status: 'pending',
+  },
+  {
+    id: '4',
+    dealId: 'NIL-2026-0832',
     athleteName: 'Tyler Brooks',
     athleteId: '5',
     brandName: 'Gatorade',
     brandId: '2',
-    dealAmount: 3500,
+    dealAmount: 8500,
     dealType: 'Social Media Campaign',
-    flagReason: 'Social media post missing required #ad disclosure',
+    flagReason: 'FTC disclosure violation: Instagram posts missing required #ad or #sponsored hashtags. 3 posts identified.',
     severity: 'low',
-    assignedReviewer: 'Jane Doe (Compliance)',
-    createdAt: '2026-02-08T09:00:00Z',
+    assignedReviewer: 'James Wilson (Digital Media)',
+    createdAt: '2026-02-10T09:30:00Z',
     status: 'investigating',
   },
   {
-    id: '4',
-    dealId: 'D-004',
-    athleteName: 'Marcus Johnson',
-    athleteId: '1',
-    brandName: 'Local Auto Dealer',
-    brandId: '6',
-    dealAmount: 15000,
-    dealType: 'TV Commercial',
-    flagReason: 'Brand category requires additional approval (automotive)',
+    id: '5',
+    dealId: 'NIL-2026-0828',
+    athleteName: 'Mia Rodriguez',
+    athleteId: '6',
+    brandName: 'Tesla Motors',
+    brandId: '9',
+    dealAmount: 35000,
+    dealType: 'Product Placement',
+    flagReason: 'Automotive category requires additional insurance verification and liability waiver per Risk Management.',
     severity: 'medium',
-    assignedReviewer: 'John Smith (AD)',
-    createdAt: '2026-02-07T14:30:00Z',
+    assignedReviewer: 'Dr. Michael Chen (AD)',
+    createdAt: '2026-02-09T11:20:00Z',
+    status: 'investigating',
+  },
+  {
+    id: '6',
+    dealId: 'NIL-2026-0815',
+    athleteName: 'DeShawn Williams',
+    athleteId: '7',
+    brandName: 'Beats by Dre',
+    brandId: '10',
+    dealAmount: 75000,
+    dealType: 'Equipment Endorsement',
+    flagReason: 'Potential conflict with existing university equipment contract with Bose. Legal review required.',
+    severity: 'high',
+    assignedReviewer: 'Lisa Park (General Counsel)',
+    createdAt: '2026-02-08T14:00:00Z',
+    status: 'pending',
+  },
+  {
+    id: '7',
+    dealId: 'NIL-2026-0798',
+    athleteName: 'Sarah Williams',
+    athleteId: '2',
+    brandName: 'Celsius Energy',
+    brandId: '7',
+    dealAmount: 28000,
+    dealType: 'Product Endorsement',
+    flagReason: 'Energy drink category flagged for review. University policy requires health advisory review for caffeinated products.',
+    severity: 'medium',
+    assignedReviewer: 'Sarah Martinez (Compliance)',
+    createdAt: '2026-02-07T10:00:00Z',
+    status: 'rejected',
+  },
+  {
+    id: '8',
+    dealId: 'NIL-2026-0785',
+    athleteName: 'Andre Washington',
+    athleteId: '8',
+    brandName: 'State Farm Insurance',
+    brandId: '11',
+    dealAmount: 18500,
+    dealType: 'Commercial Appearance',
+    flagReason: 'Standard review: First NIL deal for freshman athlete. Academic eligibility verification required.',
+    severity: 'low',
+    assignedReviewer: 'Dr. Michael Chen (AD)',
+    createdAt: '2026-02-06T15:30:00Z',
     status: 'approved',
   },
   {
-    id: '5',
-    dealId: 'D-005',
-    athleteName: 'Sarah Williams',
-    athleteId: '2',
-    brandName: 'Energy Drink Co',
-    brandId: '7',
-    dealAmount: 25000,
-    dealType: 'Product Endorsement',
-    flagReason: 'Restricted category (energy drinks)',
-    severity: 'high',
-    assignedReviewer: 'Jane Doe (Compliance)',
-    createdAt: '2026-02-06T10:00:00Z',
-    status: 'rejected',
+    id: '9',
+    dealId: 'NIL-2026-0772',
+    athleteName: 'Zoe Thompson',
+    athleteId: '9',
+    brandName: 'Adidas',
+    brandId: '12',
+    dealAmount: 42000,
+    dealType: 'Apparel Partnership',
+    flagReason: 'Cleared after Nike exclusivity waiver received. No conflicts with university athletic contracts.',
+    severity: 'low',
+    assignedReviewer: 'James Wilson (Digital Media)',
+    createdAt: '2026-02-05T09:15:00Z',
+    status: 'approved',
   },
 ];
 
 const mockComplianceRules: ComplianceRule[] = [
+  // Compensation Limits
   {
     id: '1',
-    name: 'Maximum Deal Value - Basketball',
-    description: 'Maximum single deal value for basketball athletes',
+    name: 'Single-Season Cap - Football',
+    description: 'Maximum total NIL compensation per season for football athletes (Big 12 guideline)',
+    category: 'Compensation Limits',
+    enabled: true,
+    threshold: 100000,
+    unit: 'USD',
+  },
+  {
+    id: '2',
+    name: 'Single-Season Cap - Basketball',
+    description: 'Maximum total NIL compensation per season for basketball athletes',
+    category: 'Compensation Limits',
+    enabled: true,
+    threshold: 85000,
+    unit: 'USD',
+  },
+  {
+    id: '3',
+    name: 'Single-Season Cap - Olympic Sports',
+    description: 'Maximum total NIL compensation per season for Olympic sport athletes',
     category: 'Compensation Limits',
     enabled: true,
     threshold: 50000,
     unit: 'USD',
   },
   {
-    id: '2',
-    name: 'Maximum Deal Value - Football',
-    description: 'Maximum single deal value for football athletes',
-    category: 'Compensation Limits',
-    enabled: true,
-    threshold: 75000,
-    unit: 'USD',
-  },
-  {
-    id: '3',
-    name: 'Maximum Deal Value - Other Sports',
-    description: 'Maximum single deal value for other sports',
+    id: '4',
+    name: 'Individual Deal Cap',
+    description: 'Maximum value for a single NIL deal (requires AD approval above this amount)',
     category: 'Compensation Limits',
     enabled: true,
     threshold: 25000,
     unit: 'USD',
   },
-  {
-    id: '4',
-    name: 'Restricted Category - Alcohol',
-    description: 'Block deals with alcohol brands',
-    category: 'Restricted Categories',
-    enabled: true,
-  },
+  // Restricted Categories
   {
     id: '5',
-    name: 'Restricted Category - Gambling',
-    description: 'Block deals with gambling companies',
+    name: 'Alcohol & Tobacco',
+    description: 'Block all deals with alcohol, tobacco, and vaping companies (NCAA required)',
     category: 'Restricted Categories',
     enabled: true,
   },
   {
     id: '6',
-    name: 'Restricted Category - Tobacco',
-    description: 'Block deals with tobacco companies',
+    name: 'Sports Betting & Gambling',
+    description: 'Block deals with sportsbooks, casinos, and gambling platforms (Conference required)',
     category: 'Restricted Categories',
     enabled: true,
   },
   {
     id: '7',
-    name: 'Restricted Category - Energy Drinks',
-    description: 'Flag deals with energy drink companies for review',
+    name: 'Adult Entertainment',
+    description: 'Block deals with adult entertainment and dating services',
     category: 'Restricted Categories',
     enabled: true,
   },
   {
     id: '8',
-    name: 'Required Disclosure - Social Media',
-    description: 'Require #ad disclosure on all sponsored posts',
-    category: 'Disclosure Requirements',
+    name: 'Cannabis & CBD',
+    description: 'Block deals with cannabis dispensaries and CBD product companies',
+    category: 'Restricted Categories',
     enabled: true,
   },
   {
     id: '9',
-    name: 'Required Documentation - W-9',
-    description: 'Require W-9 form before deal activation',
-    category: 'Documentation',
+    name: 'Energy Drinks (Review)',
+    description: 'Flag energy drink deals for health advisory review (not blocked)',
+    category: 'Restricted Categories',
     enabled: true,
   },
   {
     id: '10',
-    name: 'GPA Minimum',
-    description: 'Minimum GPA requirement for NIL eligibility',
+    name: 'Competing Athletic Brands',
+    description: 'Flag deals that may conflict with university athletic contracts',
+    category: 'Restricted Categories',
+    enabled: true,
+  },
+  // Disclosure Requirements
+  {
+    id: '11',
+    name: 'FTC Social Media Disclosure',
+    description: 'Require #ad or #sponsored disclosure on all paid social media posts',
+    category: 'Disclosure Requirements',
+    enabled: true,
+  },
+  {
+    id: '12',
+    name: 'Material Connection Disclosure',
+    description: 'Require disclosure of material connection in testimonials and reviews',
+    category: 'Disclosure Requirements',
+    enabled: true,
+  },
+  {
+    id: '13',
+    name: 'University Disclaimer',
+    description: 'Require "Not affiliated with [University]" disclaimer in brand content',
+    category: 'Disclosure Requirements',
+    enabled: false,
+  },
+  // Documentation Requirements
+  {
+    id: '14',
+    name: 'W-9 Tax Form',
+    description: 'Require IRS W-9 form before deal activation (federal requirement)',
+    category: 'Documentation',
+    enabled: true,
+  },
+  {
+    id: '15',
+    name: 'Contract Review',
+    description: 'All contracts over $10,000 must be reviewed by university legal counsel',
+    category: 'Documentation',
+    enabled: true,
+  },
+  {
+    id: '16',
+    name: 'Agent Disclosure',
+    description: 'Require disclosure of agent/representative information if applicable',
+    category: 'Documentation',
+    enabled: true,
+  },
+  {
+    id: '17',
+    name: 'Insurance Verification',
+    description: 'Verify liability insurance for physical appearance and event deals',
+    category: 'Documentation',
+    enabled: true,
+  },
+  // Academic Requirements
+  {
+    id: '18',
+    name: 'Minimum GPA',
+    description: 'Athletes must maintain minimum GPA for NIL eligibility',
     category: 'Academic Requirements',
     enabled: true,
     threshold: 2.5,
     unit: 'GPA',
+  },
+  {
+    id: '19',
+    name: 'Full-Time Enrollment',
+    description: 'Athletes must be enrolled full-time (12+ credit hours)',
+    category: 'Academic Requirements',
+    enabled: true,
+    threshold: 12,
+    unit: 'credits',
+  },
+  {
+    id: '20',
+    name: 'Academic Good Standing',
+    description: 'Athletes must not be on academic probation',
+    category: 'Academic Requirements',
+    enabled: true,
+  },
+  // Practice & Competition
+  {
+    id: '21',
+    name: 'Practice Conflict Check',
+    description: 'NIL activities cannot conflict with scheduled practices or team meetings',
+    category: 'Practice & Competition',
+    enabled: true,
+  },
+  {
+    id: '22',
+    name: 'Game Day Restrictions',
+    description: 'No NIL commercial activities within 4 hours of scheduled competitions',
+    category: 'Practice & Competition',
+    enabled: true,
+    threshold: 4,
+    unit: 'hours',
+  },
+  {
+    id: '23',
+    name: 'Travel Approval',
+    description: 'NIL activities requiring travel must be approved by coaching staff',
+    category: 'Practice & Competition',
+    enabled: false,
   },
 ];
 
 const mockAuditLog: AuditLogEntry[] = [
   {
     id: '1',
-    timestamp: '2026-02-11T10:30:00Z',
-    adminUser: 'John Smith (AD)',
+    timestamp: '2026-02-13T09:45:00Z',
+    adminUser: 'Dr. Michael Chen (AD)',
     actionType: 'deal_approved',
-    target: 'Marcus Johnson - Nike Deal',
-    details: 'Deal approved after compliance review',
+    target: 'Andre Washington - State Farm Deal (NIL-2026-0785)',
+    details: 'Freshman eligibility verified. Academic standing confirmed at 3.62 GPA. Deal value: $18,500',
   },
   {
     id: '2',
-    timestamp: '2026-02-11T09:15:00Z',
+    timestamp: '2026-02-13T08:30:00Z',
     adminUser: 'System',
     actionType: 'flag_raised',
-    target: 'Jordan Davis - Nike Deal',
-    details: 'Auto-flagged: Deal exceeds compensation limit',
+    target: 'Marcus Johnson - DraftKings Deal (NIL-2026-0851)',
+    details: 'Auto-flagged: Sports betting category restricted under university NIL policy Section 4.2',
   },
   {
     id: '3',
-    timestamp: '2026-02-10T16:45:00Z',
-    adminUser: 'Jane Doe (Compliance)',
-    actionType: 'athlete_verified',
-    target: 'Sarah Williams',
-    details: 'Verification completed: enrollment, sport, grades',
+    timestamp: '2026-02-12T16:20:00Z',
+    adminUser: 'Lisa Park (General Counsel)',
+    actionType: 'flag_raised',
+    target: 'DeShawn Williams - Beats by Dre (NIL-2026-0815)',
+    details: 'Potential conflict identified with existing Bose equipment contract. Forwarded to legal review.',
   },
   {
     id: '4',
-    timestamp: '2026-02-10T14:00:00Z',
-    adminUser: 'John Smith (AD)',
-    actionType: 'rule_changed',
-    target: 'Max Deal Value - Basketball',
-    details: 'Threshold updated: $40,000 -> $50,000',
+    timestamp: '2026-02-12T14:23:00Z',
+    adminUser: 'System',
+    actionType: 'flag_raised',
+    target: 'Jordan Davis - Nike Deal (NIL-2026-0847)',
+    details: 'Auto-flagged: Deal value ($125,000) exceeds Big 12 single-season cap ($100,000)',
   },
   {
     id: '5',
-    timestamp: '2026-02-09T11:20:00Z',
-    adminUser: 'System',
-    actionType: 'flag_raised',
-    target: 'Emma Chen',
-    details: 'Missing documentation: W-9 form required',
+    timestamp: '2026-02-12T11:00:00Z',
+    adminUser: 'Dr. Michael Chen (AD)',
+    actionType: 'rule_changed',
+    target: 'Single-Season Cap - Football',
+    details: 'Threshold updated: $75,000 -> $100,000 per Big 12 Conference guideline update effective Feb 2026',
   },
   {
     id: '6',
-    timestamp: '2026-02-08T09:00:00Z',
-    adminUser: 'Jane Doe (Compliance)',
-    actionType: 'deal_rejected',
-    target: 'Sarah Williams - Energy Drink Co',
-    details: 'Rejected: Restricted category (energy drinks)',
+    timestamp: '2026-02-11T15:45:00Z',
+    adminUser: 'Sarah Martinez (Compliance)',
+    actionType: 'athlete_verified',
+    target: 'Zoe Thompson',
+    details: 'Full verification completed: enrollment (confirmed), sport eligibility (basketball), academic standing (3.75 GPA)',
   },
   {
     id: '7',
-    timestamp: '2026-02-07T14:30:00Z',
-    adminUser: 'John Smith (AD)',
+    timestamp: '2026-02-10T14:30:00Z',
+    adminUser: 'James Wilson (Digital Media)',
     actionType: 'flag_resolved',
-    target: 'Tyler Brooks - Gatorade',
-    details: 'Disclosure added; issue resolved',
+    target: 'Tyler Brooks - Gatorade (NIL-2026-0832)',
+    details: 'FTC disclosure compliance verified. Athlete added required #ad hashtags to 3 Instagram posts.',
+  },
+  {
+    id: '8',
+    timestamp: '2026-02-09T10:15:00Z',
+    adminUser: 'System',
+    actionType: 'flag_raised',
+    target: 'Mia Rodriguez - Tesla Motors (NIL-2026-0828)',
+    details: 'Auto-flagged: Automotive category requires additional insurance verification per Risk Management policy',
+  },
+  {
+    id: '9',
+    timestamp: '2026-02-08T16:00:00Z',
+    adminUser: 'Sarah Martinez (Compliance)',
+    actionType: 'deal_rejected',
+    target: 'Sarah Williams - Celsius Energy (NIL-2026-0798)',
+    details: 'Rejected: Energy drink product failed health advisory review. Contains 300mg caffeine per serving.',
+  },
+  {
+    id: '10',
+    timestamp: '2026-02-07T09:30:00Z',
+    adminUser: 'Dr. Michael Chen (AD)',
+    actionType: 'deal_approved',
+    target: 'Zoe Thompson - Adidas Deal (NIL-2026-0772)',
+    details: 'Nike exclusivity waiver received and verified. No conflicts with university contracts.',
+  },
+  {
+    id: '11',
+    timestamp: '2026-02-06T14:20:00Z',
+    adminUser: 'System',
+    actionType: 'athlete_verified',
+    target: 'Marcus Johnson',
+    details: 'Automatic re-verification: Spring semester enrollment confirmed, GPA maintained at 3.87',
+  },
+  {
+    id: '12',
+    timestamp: '2026-02-05T11:45:00Z',
+    adminUser: 'Sarah Martinez (Compliance)',
+    actionType: 'rule_changed',
+    target: 'W-9 Tax Form',
+    details: 'Rule enabled: All NIL payments now require W-9 on file before disbursement (IRS requirement)',
   },
 ];
 
-// Compliance score breakdown
+// Compliance score breakdown with trend data
 const mockComplianceScore = {
   overall: 94,
+  previousMonth: 91,
   breakdown: {
     documentation: 98,
     dealCompliance: 92,
     disclosureAdherence: 95,
     academicStanding: 91,
   },
+  trends: {
+    documentation: { current: 98, previous: 96, trend: 'up' },
+    dealCompliance: { current: 92, previous: 94, trend: 'down' },
+    disclosureAdherence: { current: 95, previous: 92, trend: 'up' },
+    academicStanding: { current: 91, previous: 91, trend: 'stable' },
+  },
+};
+
+// Key metrics for the stats row
+const mockMetrics = {
+  totalDealsReviewed: 168,
+  dealsThisMonth: 23,
+  avgResolutionHours: 18.5,
+  complianceRate: 94.2,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -439,44 +664,118 @@ function ComplianceScoreCard() {
     return 'text-[var(--color-error)]';
   };
 
+  const getScoreBg = (score: number) => {
+    if (score >= 90) return 'bg-[var(--color-success)]';
+    if (score >= 70) return 'bg-[var(--color-warning)]';
+    return 'bg-[var(--color-error)]';
+  };
+
+  const scoreDiff = mockComplianceScore.overall - mockComplianceScore.previousMonth;
+
+  const trendLabels: Record<string, string> = {
+    documentation: 'Documentation',
+    dealCompliance: 'Deal Compliance',
+    disclosureAdherence: 'FTC Disclosure',
+    academicStanding: 'Academic Standing',
+  };
+
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <Shield className="h-5 w-5 text-[var(--color-primary)]" />
-          <CardTitle>Compliance Score</CardTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-[var(--color-primary)]" />
+            <CardTitle>Compliance Score</CardTitle>
+          </div>
+          <Badge variant={mockComplianceScore.overall >= 90 ? 'success' : 'warning'} size="sm">
+            {mockComplianceScore.overall >= 95 ? 'Excellent' : mockComplianceScore.overall >= 90 ? 'Good' : 'Needs Work'}
+          </Badge>
         </div>
       </CardHeader>
       <CardContent>
+        {/* Main Score Circle */}
         <div className="flex flex-col items-center mb-6">
-          <div className={`text-6xl font-bold ${getScoreColor(mockComplianceScore.overall)}`}>
-            {mockComplianceScore.overall}%
+          <div className="relative">
+            <svg className="w-32 h-32 transform -rotate-90">
+              <circle
+                cx="64"
+                cy="64"
+                r="56"
+                stroke="var(--bg-tertiary)"
+                strokeWidth="12"
+                fill="none"
+              />
+              <circle
+                cx="64"
+                cy="64"
+                r="56"
+                stroke={mockComplianceScore.overall >= 90 ? 'var(--color-success)' : mockComplianceScore.overall >= 70 ? 'var(--color-warning)' : 'var(--color-error)'}
+                strokeWidth="12"
+                fill="none"
+                strokeLinecap="round"
+                strokeDasharray={`${(mockComplianceScore.overall / 100) * 351.86} 351.86`}
+                className="transition-all duration-1000"
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className={`text-4xl font-bold ${getScoreColor(mockComplianceScore.overall)}`}>
+                {mockComplianceScore.overall}
+              </span>
+              <span className="text-xs text-[var(--text-muted)]">out of 100</span>
+            </div>
           </div>
-          <p className="text-[var(--text-muted)] mt-1">Overall Score</p>
+          <div className="flex items-center gap-1.5 mt-3">
+            {scoreDiff > 0 ? (
+              <TrendingUp className="h-4 w-4 text-[var(--color-success)]" />
+            ) : scoreDiff < 0 ? (
+              <TrendingDown className="h-4 w-4 text-[var(--color-error)]" />
+            ) : (
+              <Activity className="h-4 w-4 text-[var(--text-muted)]" />
+            )}
+            <span className={`text-sm font-medium ${scoreDiff > 0 ? 'text-[var(--color-success)]' : scoreDiff < 0 ? 'text-[var(--color-error)]' : 'text-[var(--text-muted)]'}`}>
+              {scoreDiff > 0 ? '+' : ''}{scoreDiff}% from last month
+            </span>
+          </div>
         </div>
-        <div className="space-y-4">
-          {Object.entries(mockComplianceScore.breakdown).map(([key, value]) => (
+
+        {/* Score Breakdown */}
+        <div className="space-y-3">
+          {Object.entries(mockComplianceScore.trends).map(([key, data]) => (
             <div key={key}>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-[var(--text-secondary)] capitalize">
-                  {key.replace(/([A-Z])/g, ' $1').trim()}
+                <span className="text-sm text-[var(--text-secondary)]">
+                  {trendLabels[key] || key}
                 </span>
-                <span className={`text-sm font-semibold ${getScoreColor(value)}`}>
-                  {value}%
-                </span>
+                <div className="flex items-center gap-2">
+                  {data.trend === 'up' && <TrendingUp className="h-3 w-3 text-[var(--color-success)]" />}
+                  {data.trend === 'down' && <TrendingDown className="h-3 w-3 text-[var(--color-error)]" />}
+                  <span className={`text-sm font-semibold ${getScoreColor(data.current)}`}>
+                    {data.current}%
+                  </span>
+                </div>
               </div>
               <div className="h-2 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    value >= 90 ? 'bg-[var(--color-success)]' :
-                    value >= 70 ? 'bg-[var(--color-warning)]' :
-                    'bg-[var(--color-error)]'
-                  }`}
-                  style={{ width: `${value}%` }}
+                  className={`h-full rounded-full transition-all duration-500 ${getScoreBg(data.current)}`}
+                  style={{ width: `${data.current}%` }}
                 />
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Quick Stats */}
+        <div className="mt-6 pt-4 border-t border-[var(--border-color)]">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="text-center p-2 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+              <p className="text-lg font-bold text-[var(--text-primary)]">{mockMetrics.totalDealsReviewed}</p>
+              <p className="text-xs text-[var(--text-muted)]">Deals Reviewed</p>
+            </div>
+            <div className="text-center p-2 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
+              <p className="text-lg font-bold text-[var(--color-success)]">{mockMetrics.complianceRate}%</p>
+              <p className="text-xs text-[var(--text-muted)]">Pass Rate</p>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -485,7 +784,10 @@ function ComplianceScoreCard() {
 
 function ComplianceRulesPanel() {
   const [rules, setRules] = useState(mockComplianceRules);
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['Compensation Limits']);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['Compensation Limits', 'Restricted Categories']);
+  const [pendingToggle, setPendingToggle] = useState<{ rule: ComplianceRule; newState: boolean } | null>(null);
+  const [isToggling, setIsToggling] = useState<string | null>(null);
+  const toast = useToastActions();
 
   const toggleCategory = (category: string) => {
     setExpandedCategories((prev) =>
@@ -495,12 +797,41 @@ function ComplianceRulesPanel() {
     );
   };
 
-  const toggleRule = (ruleId: string) => {
+  const handleToggleRequest = (rule: ComplianceRule) => {
+    const newState = !rule.enabled;
+    // Critical rules require confirmation when disabling
+    const criticalRules = ['1', '2', '3', '5', '6', '7', '8', '14', '18']; // IDs of critical rules
+    if (criticalRules.includes(rule.id) && rule.enabled) {
+      setPendingToggle({ rule, newState });
+    } else {
+      executeToggle(rule.id, newState);
+    }
+  };
+
+  const executeToggle = async (ruleId: string, newState: boolean) => {
+    setIsToggling(ruleId);
+    // Simulate API call with optimistic update
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
     setRules((prev) =>
-      prev.map((rule) =>
-        rule.id === ruleId ? { ...rule, enabled: !rule.enabled } : rule
+      prev.map((r) =>
+        r.id === ruleId ? { ...r, enabled: newState } : r
       )
     );
+
+    const rule = rules.find(r => r.id === ruleId);
+    toast.success(
+      newState ? 'Rule Enabled' : 'Rule Disabled',
+      `"${rule?.name}" has been ${newState ? 'enabled' : 'disabled'}.`
+    );
+
+    setIsToggling(null);
+  };
+
+  const handleConfirmToggle = async () => {
+    if (!pendingToggle) return;
+    await executeToggle(pendingToggle.rule.id, pendingToggle.newState);
+    setPendingToggle(null);
   };
 
   const groupedRules = rules.reduce((acc, rule) => {
@@ -509,78 +840,140 @@ function ComplianceRulesPanel() {
     return acc;
   }, {} as Record<string, ComplianceRule[]>);
 
+  // Category icons
+  const categoryIcons: Record<string, React.ReactNode> = {
+    'Compensation Limits': <DollarSign className="h-4 w-4" />,
+    'Restricted Categories': <XCircle className="h-4 w-4" />,
+    'Disclosure Requirements': <FileText className="h-4 w-4" />,
+    'Documentation': <FileText className="h-4 w-4" />,
+    'Academic Requirements': <Activity className="h-4 w-4" />,
+    'Practice & Competition': <Calendar className="h-4 w-4" />,
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Settings className="h-5 w-5 text-[var(--color-primary)]" />
-            <CardTitle>Compliance Rules</CardTitle>
+    <>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Settings className="h-5 w-5 text-[var(--color-primary)]" />
+              <CardTitle>Compliance Rules</CardTitle>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="success" size="sm">
+                {rules.filter((r) => r.enabled).length} Active
+              </Badge>
+              <Badge variant="outline" size="sm">
+                {rules.filter((r) => !r.enabled).length} Inactive
+              </Badge>
+            </div>
           </div>
-          <Badge variant="outline">{rules.filter((r) => r.enabled).length} Active</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {Object.entries(groupedRules).map(([category, categoryRules]) => (
-            <div key={category} className="border border-[var(--border-color)] rounded-[var(--radius-md)]">
-              <button
-                onClick={() => toggleCategory(category)}
-                className="w-full flex items-center justify-between p-3 hover:bg-[var(--bg-tertiary)] transition-colors"
-              >
-                <span className="font-medium text-[var(--text-primary)]">{category}</span>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" size="sm">
-                    {categoryRules.filter((r) => r.enabled).length}/{categoryRules.length}
-                  </Badge>
-                  {expandedCategories.includes(category) ? (
-                    <ChevronDown className="h-4 w-4 text-[var(--text-muted)]" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 text-[var(--text-muted)]" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {Object.entries(groupedRules).map(([category, categoryRules]) => {
+              const enabledCount = categoryRules.filter((r) => r.enabled).length;
+              const allEnabled = enabledCount === categoryRules.length;
+              const noneEnabled = enabledCount === 0;
+
+              return (
+                <div key={category} className="border border-[var(--border-color)] rounded-[var(--radius-md)] overflow-hidden">
+                  <button
+                    onClick={() => toggleCategory(category)}
+                    className="w-full flex items-center justify-between p-3 hover:bg-[var(--bg-tertiary)] transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[var(--text-muted)]">
+                        {categoryIcons[category] || <Settings className="h-4 w-4" />}
+                      </span>
+                      <span className="font-medium text-[var(--text-primary)]">{category}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={allEnabled ? 'success' : noneEnabled ? 'error' : 'warning'}
+                        size="sm"
+                      >
+                        {enabledCount}/{categoryRules.length}
+                      </Badge>
+                      {expandedCategories.includes(category) ? (
+                        <ChevronDown className="h-4 w-4 text-[var(--text-muted)]" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 text-[var(--text-muted)]" />
+                      )}
+                    </div>
+                  </button>
+                  {expandedCategories.includes(category) && (
+                    <div className="border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+                      {categoryRules.map((rule) => (
+                        <div
+                          key={rule.id}
+                          className={`flex items-center justify-between p-3 border-b border-[var(--border-color)] last:border-b-0 transition-colors ${
+                            isToggling === rule.id ? 'bg-[var(--bg-tertiary)]' : ''
+                          }`}
+                        >
+                          <div className="flex-1 pr-4">
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-medium text-[var(--text-primary)]">
+                                {rule.name}
+                              </p>
+                              {!rule.enabled && (
+                                <Badge variant="outline" size="sm" className="text-[var(--text-muted)]">
+                                  Disabled
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-xs text-[var(--text-muted)] mt-0.5">{rule.description}</p>
+                            {rule.threshold !== undefined && (
+                              <p className="text-xs text-[var(--color-primary)] mt-1 font-medium">
+                                Threshold: {rule.unit === 'USD' ? formatCurrency(rule.threshold) : `${rule.threshold} ${rule.unit}`}
+                              </p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => handleToggleRequest(rule)}
+                            disabled={isToggling === rule.id}
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 ${
+                              rule.enabled ? 'bg-[var(--color-success)]' : 'bg-[var(--bg-tertiary)]'
+                            } ${isToggling === rule.id ? 'opacity-70' : ''}`}
+                            role="switch"
+                            aria-checked={rule.enabled}
+                            aria-label={`Toggle ${rule.name}`}
+                          >
+                            {isToggling === rule.id ? (
+                              <span className="absolute inset-0 flex items-center justify-center">
+                                <Loader2 className="h-4 w-4 animate-spin text-[var(--text-muted)]" />
+                              </span>
+                            ) : (
+                              <span
+                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                  rule.enabled ? 'translate-x-5' : 'translate-x-0'
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
-              </button>
-              {expandedCategories.includes(category) && (
-                <div className="border-t border-[var(--border-color)]">
-                  {categoryRules.map((rule) => (
-                    <div
-                      key={rule.id}
-                      className="flex items-center justify-between p-3 border-b border-[var(--border-color)] last:border-b-0"
-                    >
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-[var(--text-primary)]">
-                          {rule.name}
-                        </p>
-                        <p className="text-xs text-[var(--text-muted)]">{rule.description}</p>
-                        {rule.threshold && (
-                          <p className="text-xs text-[var(--color-primary)] mt-1">
-                            Threshold: {rule.unit === 'USD' ? formatCurrency(rule.threshold) : rule.threshold} {rule.unit !== 'USD' && rule.unit}
-                          </p>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => toggleRule(rule.id)}
-                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 ${
-                          rule.enabled ? 'bg-[var(--color-primary)]' : 'bg-[var(--bg-tertiary)]'
-                        }`}
-                        role="switch"
-                        aria-checked={rule.enabled}
-                      >
-                        <span
-                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                            rule.enabled ? 'translate-x-5' : 'translate-x-0'
-                          }`}
-                        />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Confirmation Dialog for Critical Rules */}
+      <ConfirmDialog
+        isOpen={!!pendingToggle}
+        onClose={() => setPendingToggle(null)}
+        onConfirm={handleConfirmToggle}
+        variant="warning"
+        title="Disable Compliance Rule?"
+        description={pendingToggle ? `You are about to disable "${pendingToggle.rule.name}". This is a critical compliance rule and disabling it may affect NCAA compliance monitoring. Are you sure you want to proceed?` : ''}
+        confirmLabel="Disable Rule"
+        cancelLabel="Keep Enabled"
+      />
+    </>
   );
 }
 
@@ -927,26 +1320,31 @@ export default function DirectorCompliancePage() {
           title="Pending Reviews"
           value={pendingCount.toString()}
           icon={<Clock className="h-5 w-5" />}
+          subtitle={highSeverityCount > 0 ? `${highSeverityCount} high severity` : 'No urgent items'}
         />
         <StatCard
-          title="High Severity"
+          title="High Severity Flags"
           value={highSeverityCount.toString()}
           icon={<AlertTriangle className="h-5 w-5" />}
+          trend={-2}
           trendDirection="down"
+          subtitle="vs. last week"
         />
         <StatCard
-          title="Resolved (30d)"
-          value="12"
+          title="Resolved This Month"
+          value={mockMetrics.dealsThisMonth.toString()}
           icon={<CheckCircle className="h-5 w-5" />}
-          trend={25}
+          trend={18}
           trendDirection="up"
+          subtitle={`${mockMetrics.complianceRate}% compliance rate`}
         />
         <StatCard
-          title="Avg Resolution"
-          value="2.3 days"
+          title="Avg Resolution Time"
+          value={`${mockMetrics.avgResolutionHours}h`}
           icon={<Activity className="h-5 w-5" />}
-          trend={15}
+          trend={12}
           trendDirection="down"
+          subtitle="Faster than target (24h)"
         />
       </div>
 

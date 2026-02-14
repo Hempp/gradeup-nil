@@ -96,7 +96,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
 
         <div className="relative">
           {icon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" aria-hidden="true">
               <span className={iconSizes[size]}>{icon}</span>
             </div>
           )}
@@ -128,13 +128,13 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           />
 
           {rightIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" aria-hidden="true">
               <span className={iconSizes[size]}>{rightIcon}</span>
             </div>
           )}
 
           {hasError && !rightIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-error)]">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-error)]" aria-hidden="true">
               <AlertCircle className={iconSizes[size]} />
             </div>
           )}
@@ -145,6 +145,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
             id={`${inputId}-error`}
             className="text-sm text-[var(--color-error)] flex items-center gap-1"
             role="alert"
+            aria-live="assertive"
           >
             {error}
           </p>

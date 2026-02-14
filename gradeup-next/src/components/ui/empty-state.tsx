@@ -39,15 +39,17 @@ const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
     return (
       <div
         ref={ref}
+        role="status"
+        aria-live="polite"
         className={cn(
           'flex flex-col items-center justify-center py-12 px-4 sm:py-16',
           className
         )}
         {...props}
       >
-        {/* Icon */}
+        {/* Icon - decorative, hidden from screen readers */}
         {Icon && (
-          <div className="mb-4 rounded-full bg-[var(--bg-card)] p-4">
+          <div className="mb-4 rounded-full bg-[var(--bg-card)] p-4" aria-hidden="true">
             <Icon
               className="h-10 w-10 sm:h-12 sm:w-12 text-[var(--text-muted)]"
               strokeWidth={1.5}
@@ -60,7 +62,7 @@ const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
           {title}
         </h3>
 
-        {/* Description */}
+        {/* Description with guidance on what to do */}
         {description && (
           <p className="text-sm text-[var(--text-secondary)] max-w-sm text-center mb-6">
             {description}

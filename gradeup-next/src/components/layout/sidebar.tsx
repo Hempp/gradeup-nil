@@ -79,35 +79,34 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
       {/* Logo */}
       <div className="h-[72px] flex items-center justify-between px-4 border-b border-white/10">
         <Link href="/" className="flex items-center gap-3">
-          <div className="h-6 w-6 flex items-center justify-center">
-            <svg
-              viewBox="0 0 32 32"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-            >
-              <rect width="32" height="32" rx="6" fill="url(#gradient)" />
-              <text
-                x="16"
-                y="22"
-                textAnchor="middle"
-                fill="white"
-                fontSize="16"
-                fontWeight="bold"
-                fontFamily="system-ui"
-              >
-                G
-              </text>
-              <defs>
-                <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop stopColor="#00f0ff" />
-                  <stop offset="1" stopColor="#adff2f" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
+          {/* Shield + Arrow Logo */}
+          <svg
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8"
+          >
+            <defs>
+              <linearGradient id="sidebar-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#00f0ff" />
+                <stop offset="100%" stopColor="#adff2f" />
+              </linearGradient>
+            </defs>
+            {/* Shield outline */}
+            <path
+              d="M16 2L28 6V15C28 22.5 22.5 28.5 16 30C9.5 28.5 4 22.5 4 15V6L16 2Z"
+              fill="#0a0a0a"
+              stroke="url(#sidebar-grad)"
+              strokeWidth="1.5"
+            />
+            {/* Upward arrow */}
+            <path
+              d="M16 8L22 15H19V24H13V15H10L16 8Z"
+              fill="url(#sidebar-grad)"
+            />
+          </svg>
           {!collapsed && (
-            <span className="font-bold text-lg text-white tracking-tight">
+            <span className="font-bold text-lg bg-gradient-to-r from-[#00f0ff] to-[#adff2f] bg-clip-text text-transparent tracking-tight">
               GradeUp
             </span>
           )}
@@ -115,9 +114,10 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
         <button
           onClick={toggleCollapsed}
           className={cn(
-            'h-8 w-8 flex items-center justify-center rounded-lg',
-            'text-white/60 hover:text-white hover:bg-white/5',
-            'transition-colors',
+            // Touch-friendly sizing (44px minimum)
+            'h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg',
+            'text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10',
+            'transition-colors touch-manipulation',
             collapsed && 'rotate-180'
           )}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -138,12 +138,20 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
                 <Link
                   href={item.href}
                   className={cn(
-                    'flex items-center gap-3 py-2.5 px-3 rounded-lg',
+                    // Base layout
+                    'flex items-center gap-3 rounded-lg',
+                    // Touch-friendly sizing (44px min height)
+                    'min-h-[44px] py-2.5 px-3',
+                    // Typography
                     'text-sm transition-all duration-200',
+                    // Active state
                     isActive
                       ? 'bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)] font-medium border-l-2 border-[var(--marketing-cyan)]'
-                      : 'text-white/60 hover:text-white hover:bg-white/5',
-                    collapsed && 'justify-center px-0'
+                      : 'text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10',
+                    // Collapsed state
+                    collapsed && 'justify-center px-0',
+                    // Touch optimization
+                    'touch-manipulation'
                   )}
                   title={collapsed ? item.label : undefined}
                 >

@@ -12,6 +12,10 @@ export interface DataTableColumn<T> {
   header: string;
   render?: (value: T[keyof T], row: T) => ReactNode;
   width?: string;
+  /** Hide this column on mobile screens */
+  hideOnMobile?: boolean;
+  /** Priority for mobile card view (lower = higher priority) */
+  mobilePriority?: number;
 }
 
 export interface DataTableProps<T> extends HTMLAttributes<HTMLDivElement> {
@@ -25,6 +29,10 @@ export interface DataTableProps<T> extends HTMLAttributes<HTMLDivElement> {
   caption?: string;
   /** Description for row click action for screen readers */
   rowActionDescription?: string;
+  /** Enable card view on mobile instead of scrollable table */
+  mobileCardView?: boolean;
+  /** Custom render function for mobile card view */
+  renderMobileCard?: (row: T, index: number) => ReactNode;
 }
 
 // ─── Loading Row Component ───
@@ -87,6 +95,82 @@ function DefaultEmptyState({ children }: EmptyStateProps) {
   );
 }
 
+// ─── Mobile Card Component ───
+interface MobileCardProps<T> {
+  row: T;
+  columns: DataTableColumn<T>[];
+  onClick?: () => void;
+  rowActionDescription: string;
+  getValue: (row: T, key: string) => T[keyof T];
+}
+
+function MobileCard<T extends Record<string, unknown>>({
+  row,
+  columns,
+  onClick,
+  rowActionDescription,
+  getValue,
+}: MobileCardProps<T>) {
+  // Sort columns by mobilePriority, filter out those marked hideOnMobile
+  const visibleColumns = columns
+    .filter((col) => !col.hideOnMobile && col.key !== 'actions')
+    .sort((a, b) => (a.mobilePriority || 99) - (b.mobilePriority || 99));
+
+  const actionColumn = columns.find((col) => col.key === 'actions');
+
+  return (
+    <div
+      className={cn(
+        'bg-[var(--bg-card)] rounded-[var(--radius-lg)] p-4 border border-[var(--border-color)]',
+        'transition-all duration-150',
+        onClick && 'cursor-pointer hover:border-[var(--border-color-hover)] hover:shadow-[var(--shadow-md)] active:scale-[0.99]'
+      )}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      tabIndex={onClick ? 0 : undefined}
+      role={onClick ? 'button' : undefined}
+      aria-label={onClick ? rowActionDescription : undefined}
+    >
+      <div className="space-y-3">
+        {visibleColumns.map((column, index) => {
+          const value = getValue(row, column.key);
+          return (
+            <div
+              key={column.key}
+              className={cn(
+                index === 0 ? 'pb-2 border-b border-[var(--border-color)]' : ''
+              )}
+            >
+              {index > 0 && (
+                <span className="text-xs text-[var(--text-muted)] uppercase tracking-wide">
+                  {column.header}
+                </span>
+              )}
+              <div className={index === 0 ? 'text-base' : 'text-sm mt-0.5'}>
+                {column.render
+                  ? column.render(value, row)
+                  : value !== null && value !== undefined
+                  ? String(value)
+                  : '-'}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {actionColumn && (
+        <div className="mt-4 pt-3 border-t border-[var(--border-color)] flex justify-end">
+          {actionColumn.render?.(undefined as T[keyof T], row)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── DataTable Component ───
 function DataTableInner<T extends Record<string, unknown>>(
   {
@@ -98,6 +182,8 @@ function DataTableInner<T extends Record<string, unknown>>(
     keyExtractor,
     caption,
     rowActionDescription = 'View details',
+    mobileCardView = false,
+    renderMobileCard,
     className,
     ...props
   }: DataTableProps<T>,
@@ -113,17 +199,49 @@ function DataTableInner<T extends Record<string, unknown>>(
     return row[key as keyof T];
   };
 
+  // Mobile Card View
+  if (mobileCardView && !loading && data.length > 0) {
+    return (
+      <div
+        ref={ref}
+        className={cn('md:hidden', className)}
+        {...props}
+      >
+        <div className="space-y-3">
+          {data.map((row, rowIndex) => (
+            renderMobileCard ? (
+              <div key={getRowKey(row, rowIndex)}>
+                {renderMobileCard(row, rowIndex)}
+              </div>
+            ) : (
+              <MobileCard
+                key={getRowKey(row, rowIndex)}
+                row={row}
+                columns={columns}
+                onClick={onRowClick ? () => onRowClick(row) : undefined}
+                rowActionDescription={`${rowActionDescription} for row ${rowIndex + 1}`}
+                getValue={getValue}
+              />
+            )
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={ref}
       className={cn(
         'bg-[var(--surface-white)] rounded-xl shadow-sm border border-[var(--surface-200)] overflow-hidden',
+        mobileCardView && 'hidden md:block',
         className
       )}
       {...props}
     >
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      {/* Horizontal scroll wrapper with custom scrollbar styling */}
+      <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-[var(--border-color)] scrollbar-track-transparent">
+        <table className="w-full min-w-[600px]">
           {/* ─── Table Caption (Screen Reader Only) ─── */}
           {caption && <caption className="sr-only">{caption}</caption>}
           {/* ─── Table Header ─── */}
@@ -212,4 +330,4 @@ const DataTable = forwardRef(DataTableInner) as <T extends Record<string, unknow
   props: DataTableProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
 ) => ReturnType<typeof DataTableInner>;
 
-export { DataTable, LoadingRow, DefaultEmptyState as EmptyState };
+export { DataTable, LoadingRow, DefaultEmptyState as EmptyState, MobileCard };

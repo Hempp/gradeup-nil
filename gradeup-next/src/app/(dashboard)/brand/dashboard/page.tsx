@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import {
   DollarSign,
@@ -13,6 +14,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
+import { ErrorState } from '@/components/ui/error-state';
 import { formatCurrency, formatCompactNumber } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useBrandAnalytics, useBrandCampaigns, useBrandShortlist, useBrandDeals } from '@/lib/hooks/use-data';
@@ -217,15 +219,39 @@ function ActiveCampaignsCard({ campaigns, loading }: ActiveCampaignsCardProps) {
 }
 
 export default function BrandDashboardPage() {
+  const [isRetrying, setIsRetrying] = useState(false);
+
   // Require auth and get brand data
   const { roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['brand'] });
   const brandData = roleData as { id: string; company_name: string; is_verified: boolean } | null;
 
   // Fetch dashboard data
-  const { data: analytics, loading: analyticsLoading } = useBrandAnalytics(brandData?.id);
-  const { data: campaigns, loading: campaignsLoading } = useBrandCampaigns(brandData?.id);
-  const { data: shortlist, loading: shortlistLoading } = useBrandShortlist(brandData?.id);
-  const { data: deals, loading: dealsLoading } = useBrandDeals(brandData?.id);
+  const { data: analytics, loading: analyticsLoading, error: analyticsError, refetch: refetchAnalytics } = useBrandAnalytics(brandData?.id);
+  const { data: campaigns, loading: campaignsLoading, error: campaignsError, refetch: refetchCampaigns } = useBrandCampaigns(brandData?.id);
+  const { data: shortlist, loading: shortlistLoading, error: shortlistError, refetch: refetchShortlist } = useBrandShortlist(brandData?.id);
+  const { data: deals, loading: dealsLoading, error: dealsError, refetch: refetchDeals } = useBrandDeals(brandData?.id);
+
+  // Aggregate errors
+  const hasError = analyticsError || campaignsError || shortlistError || dealsError;
+  const errorMessage = analyticsError?.message || campaignsError?.message || shortlistError?.message || dealsError?.message;
+
+  // Handle retry
+  const handleRetry = useCallback(async () => {
+    setIsRetrying(true);
+    console.error('Brand dashboard data fetch error:', { analyticsError, campaignsError, shortlistError, dealsError });
+    try {
+      await Promise.all([
+        refetchAnalytics(),
+        refetchCampaigns(),
+        refetchShortlist(),
+        refetchDeals(),
+      ]);
+    } catch (err) {
+      console.error('Error during retry:', err);
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [analyticsError, campaignsError, shortlistError, dealsError, refetchAnalytics, refetchCampaigns, refetchShortlist, refetchDeals]);
 
   // Show loading state while auth is checking
   if (authLoading) {
@@ -233,6 +259,21 @@ export default function BrandDashboardPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
       </div>
+    );
+  }
+
+  // Show error state if data fetch failed
+  if (hasError && !analyticsLoading && !campaignsLoading && !shortlistLoading && !dealsLoading) {
+    return (
+      <Card className="animate-fade-in">
+        <ErrorState
+          errorType="data"
+          title="Failed to load dashboard"
+          description={errorMessage || 'We could not load your dashboard data. Please try again.'}
+          onRetry={handleRetry}
+          isRetrying={isRetrying}
+        />
+      </Card>
     );
   }
 

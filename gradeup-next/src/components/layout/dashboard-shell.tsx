@@ -25,7 +25,7 @@ function MobileSidebar({ isOpen, onClose, navItems, variant, user }: MobileSideb
     onClose();
   }, [pathname, onClose]);
 
-  // Close on escape key
+  // Close on escape key and handle body scroll lock
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -33,10 +33,15 @@ function MobileSidebar({ isOpen, onClose, navItems, variant, user }: MobileSideb
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+      // Prevent iOS Safari bounce effect
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     }
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
   }, [isOpen, onClose]);
 
@@ -54,11 +59,24 @@ function MobileSidebar({ isOpen, onClose, navItems, variant, user }: MobileSideb
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed top-0 left-0 h-full w-64 z-40 lg:hidden',
+          'fixed top-0 left-0 h-full w-[280px] max-w-[85vw] z-40 lg:hidden',
           'transform transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
+        aria-label="Mobile navigation"
+        role="dialog"
+        aria-modal="true"
       >
+        {/* Close button for accessibility */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-white/10 text-white/80 hover:text-white hover:bg-white/20 active:bg-white/30 transition-colors touch-manipulation"
+          aria-label="Close navigation menu"
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
         <Sidebar navItems={navItems} variant={variant} user={user} className="relative" />
       </aside>
     </>

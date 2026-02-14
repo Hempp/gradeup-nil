@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   DollarSign,
   FileText,
@@ -37,6 +37,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { StatCard } from '@/components/ui/stat-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ErrorState } from '@/components/ui/error-state';
 import { formatCurrency, formatCompactNumber, formatRelativeTime, formatDate } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useAthleteStats, useAthleteDeals, useActivity, useAthleteEarnings } from '@/lib/hooks/use-data';
@@ -344,15 +345,41 @@ function EarningsChart({ earningsData, loading, trend }: EarningsChartProps) {
 }
 
 export default function AthleteDashboardPage() {
+  const [isRetrying, setIsRetrying] = useState(false);
+
   // Require auth and get athlete data
   const { profile, roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['athlete'] });
   const athleteData = roleData as { id: string; nil_valuation: number | null } | null;
 
   // Fetch dashboard data
-  const { data: stats, loading: statsLoading } = useAthleteStats(athleteData?.id);
-  const { data: deals, loading: dealsLoading } = useAthleteDeals(athleteData?.id);
-  const { data: activities, loading: activitiesLoading } = useActivity(6);
-  const { data: earningsData, loading: earningsLoading } = useAthleteEarnings(athleteData?.id);
+  const { data: stats, loading: statsLoading, error: statsError, refetch: refetchStats } = useAthleteStats(athleteData?.id);
+  const { data: deals, loading: dealsLoading, error: dealsError, refetch: refetchDeals } = useAthleteDeals(athleteData?.id);
+  const { data: activities, loading: activitiesLoading, error: activitiesError, refetch: refetchActivities } = useActivity(6);
+  const { data: earningsData, loading: earningsLoading, error: earningsError, refetch: refetchEarnings } = useAthleteEarnings(athleteData?.id);
+
+  // Aggregate errors for display
+  const hasError = statsError || dealsError || activitiesError || earningsError;
+  const errorMessage = statsError?.message || dealsError?.message || activitiesError?.message || earningsError?.message;
+
+  // Handle retry - refetch all data
+  const handleRetry = useCallback(async () => {
+    setIsRetrying(true);
+    try {
+      // Log error for debugging
+      console.error('Dashboard data fetch error:', { statsError, dealsError, activitiesError, earningsError });
+
+      await Promise.all([
+        refetchStats(),
+        refetchDeals(),
+        refetchActivities(),
+        refetchEarnings(),
+      ]);
+    } catch (err) {
+      console.error('Error during retry:', err);
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [refetchStats, refetchDeals, refetchActivities, refetchEarnings, statsError, dealsError, activitiesError, earningsError]);
 
   // Transform earnings data for chart
   const chartData = useMemo(() => {
@@ -378,6 +405,21 @@ export default function AthleteDashboardPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
       </div>
+    );
+  }
+
+  // Show error state if any data fetch failed
+  if (hasError && !statsLoading && !dealsLoading && !activitiesLoading && !earningsLoading) {
+    return (
+      <Card className="animate-fade-in">
+        <ErrorState
+          errorType="data"
+          title="Failed to load dashboard"
+          description={errorMessage || 'We could not load your dashboard data. Please try again.'}
+          onRetry={handleRetry}
+          isRetrying={isRetrying}
+        />
+      </Card>
     );
   }
 

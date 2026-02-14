@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#adff2f"/>
+    </linearGradient>
+  </defs>
+  <!-- Compact shield -->
+  <path d="M16 2L28 6V15C28 22.5 22.5 28.5 16 30C9.5 28.5 4 22.5 4 15V6L16 2Z" fill="#0a0a0a" stroke="url(#g)" stroke-width="1.5"/>
+  <!-- Arrow up -->
+  <path d="M16 8L22 15H19V24H13V15H10L16 8Z" fill="url(#g)"/>
+</svg>

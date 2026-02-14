@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { FormInput, FormSelect, FormCheckbox } from '@/components/ui/form-input';
 import { useToastActions } from '@/components/ui/toast';
 import { useFormValidation, validators } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
@@ -231,119 +231,83 @@ export default function BrandSignupPage() {
                 Company Information
               </h3>
 
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="companyName"
-                  className="block text-sm font-medium text-[var(--neutral-900)]"
-                >
-                  Company Name
-                </label>
-                <Input
-                  id="companyName"
-                  name="companyName"
-                  type="text"
-                  autoComplete="organization"
-                  placeholder="Acme Inc."
-                  value={values.companyName}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  error={!!(touched.companyName && fieldErrors.companyName)}
-                  aria-invalid={!!(touched.companyName && fieldErrors.companyName)}
-                  aria-describedby={touched.companyName && fieldErrors.companyName ? 'companyName-error' : undefined}
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
-                      <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
-                      <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
-                      <path d="M10 6h4" />
-                      <path d="M10 10h4" />
-                      <path d="M10 14h4" />
-                      <path d="M10 18h4" />
-                    </svg>
-                  }
-                />
-                {touched.companyName && fieldErrors.companyName && (
-                  <p id="companyName-error" className="text-xs text-[var(--error-600)]">{fieldErrors.companyName}</p>
-                )}
-              </div>
+              <FormInput
+                id="companyName"
+                name="companyName"
+                label="Company Name"
+                autoComplete="organization"
+                placeholder="Acme Inc."
+                value={values.companyName}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                touched={touched.companyName}
+                error={fieldErrors.companyName}
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+                    <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+                    <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+                    <path d="M10 6h4" />
+                    <path d="M10 10h4" />
+                    <path d="M10 14h4" />
+                    <path d="M10 18h4" />
+                  </svg>
+                }
+              />
 
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="industry"
-                  className="block text-sm font-medium text-[var(--neutral-900)]"
-                >
-                  Industry
-                </label>
-                <select
-                  id="industry"
-                  name="industry"
-                  value={values.industry}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  aria-invalid={!!(touched.industry && fieldErrors.industry)}
-                  aria-describedby={touched.industry && fieldErrors.industry ? 'industry-error' : undefined}
-                  className={`w-full h-10 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border px-3 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed ${
-                    touched.industry && fieldErrors.industry ? 'border-[var(--error-600)]' : 'border-[var(--border-color)]'
-                  }`}
-                >
-                  <option value="">Select industry</option>
-                  {INDUSTRIES.map((industry) => (
-                    <option key={industry} value={industry}>
-                      {industry}
-                    </option>
-                  ))}
-                </select>
-                {touched.industry && fieldErrors.industry && (
-                  <p id="industry-error" className="text-xs text-[var(--error-600)]">{fieldErrors.industry}</p>
-                )}
-              </div>
+              <FormSelect
+                id="industry"
+                name="industry"
+                label="Industry"
+                value={values.industry}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                touched={touched.industry}
+                error={fieldErrors.industry}
+                options={INDUSTRIES}
+                placeholder="Select industry"
+              />
 
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="website"
-                  className="block text-sm font-medium text-[var(--neutral-900)]"
-                >
-                  Company Website{' '}
-                  <span className="font-normal text-[var(--neutral-400)]">(Optional)</span>
-                </label>
-                <Input
-                  id="website"
-                  name="website"
-                  type="url"
-                  autoComplete="url"
-                  placeholder="https://www.example.com"
-                  value={values.website}
-                  onChange={handleInputChange}
-                  disabled={isLoading}
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                      <path d="M2 12h20" />
-                    </svg>
-                  }
-                />
-              </div>
+              <FormInput
+                id="website"
+                name="website"
+                label="Company Website"
+                type="url"
+                autoComplete="url"
+                placeholder="https://www.example.com"
+                value={values.website}
+                onChange={handleInputChange}
+                disabled={isLoading}
+                optional
+                required={false}
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                    <path d="M2 12h20" />
+                  </svg>
+                }
+              />
             </div>
 
             {/* Section: Contact Info */}
@@ -352,171 +316,121 @@ export default function BrandSignupPage() {
                 Contact Information
               </h3>
 
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm font-medium text-[var(--neutral-900)]"
-                >
-                  Your Full Name
-                </label>
-                <Input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  autoComplete="name"
-                  placeholder="John Smith"
-                  value={values.fullName}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  error={!!(touched.fullName && fieldErrors.fullName)}
-                  aria-invalid={!!(touched.fullName && fieldErrors.fullName)}
-                  aria-describedby={touched.fullName && fieldErrors.fullName ? 'fullName-error' : undefined}
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
-                  }
-                />
-                {touched.fullName && fieldErrors.fullName && (
-                  <p id="fullName-error" className="text-xs text-[var(--error-600)]">{fieldErrors.fullName}</p>
-                )}
-              </div>
+              <FormInput
+                id="fullName"
+                name="fullName"
+                label="Your Full Name"
+                autoComplete="name"
+                placeholder="John Smith"
+                value={values.fullName}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                touched={touched.fullName}
+                error={fieldErrors.fullName}
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                }
+              />
 
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-[var(--neutral-900)]"
-                >
-                  Work Email Address
-                </label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@company.com"
-                  value={values.email}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  error={!!(touched.email && fieldErrors.email)}
-                  aria-invalid={!!(touched.email && fieldErrors.email)}
-                  aria-describedby={touched.email && fieldErrors.email ? 'email-error' : undefined}
-                  icon={
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect width="20" height="16" x="2" y="4" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                  }
-                />
-                {touched.email && fieldErrors.email && (
-                  <p id="email-error" className="text-xs text-[var(--error-600)]">{fieldErrors.email}</p>
-                )}
-              </div>
+              <FormInput
+                id="email"
+                name="email"
+                label="Work Email Address"
+                type="email"
+                autoComplete="email"
+                placeholder="you@company.com"
+                value={values.email}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                touched={touched.email}
+                error={fieldErrors.email}
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                }
+              />
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-[var(--neutral-900)]"
-                  >
-                    Password
-                  </label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder="Min. 8 characters"
-                    value={values.password}
-                    onChange={handleInputChange}
-                    onBlur={handleFieldBlur}
-                    disabled={isLoading}
-                    error={!!(touched.password && fieldErrors.password)}
-                    aria-invalid={!!(touched.password && fieldErrors.password)}
-                    aria-describedby={touched.password && fieldErrors.password ? 'password-error' : undefined}
-                  />
-                  {touched.password && fieldErrors.password && (
-                    <p id="password-error" className="text-xs text-[var(--error-600)]">{fieldErrors.password}</p>
-                  )}
-                </div>
-
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-[var(--neutral-900)]"
-                  >
-                    Confirm Password
-                  </label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder="Confirm password"
-                    value={values.confirmPassword}
-                    onChange={handleInputChange}
-                    onBlur={handleFieldBlur}
-                    disabled={isLoading}
-                    error={!!(touched.confirmPassword && fieldErrors.confirmPassword)}
-                    aria-invalid={!!(touched.confirmPassword && fieldErrors.confirmPassword)}
-                    aria-describedby={touched.confirmPassword && fieldErrors.confirmPassword ? 'confirmPassword-error' : undefined}
-                  />
-                  {touched.confirmPassword && fieldErrors.confirmPassword && (
-                    <p id="confirmPassword-error" className="text-xs text-[var(--error-600)]">{fieldErrors.confirmPassword}</p>
-                  )}
-                </div>
+                <FormInput
+                  id="password"
+                  name="password"
+                  label="Password"
+                  type="password"
+                  autoComplete="new-password"
+                  placeholder="Min. 8 characters"
+                  value={values.password}
+                  onChange={handleInputChange}
+                  onBlur={handleFieldBlur}
+                  disabled={isLoading}
+                  touched={touched.password}
+                  error={fieldErrors.password}
+                />
+                <FormInput
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  autoComplete="new-password"
+                  placeholder="Confirm password"
+                  value={values.confirmPassword}
+                  onChange={handleInputChange}
+                  onBlur={handleFieldBlur}
+                  disabled={isLoading}
+                  touched={touched.confirmPassword}
+                  error={fieldErrors.confirmPassword}
+                />
               </div>
             </div>
 
             {/* Terms Checkbox */}
             <div className="pt-2">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="agreeToTerms"
-                  checked={agreeToTerms}
-                  onChange={handleInputChange}
-                  disabled={isLoading}
-                  className="mt-0.5 w-4 h-4 rounded border-[var(--surface-200)] text-[var(--primary-500)] focus:ring-[var(--primary-500)] focus:ring-offset-0"
-                />
-                <span className="text-sm text-[var(--neutral-600)]">
-                  I agree to the{' '}
-                  <Link
-                    href="/terms"
-                    className="text-[var(--primary-500)] hover:text-[var(--primary-700)] underline"
-                  >
-                    Terms of Service
-                  </Link>{' '}
-                  and{' '}
-                  <Link
-                    href="/privacy"
-                    className="text-[var(--primary-500)] hover:text-[var(--primary-700)] underline"
-                  >
-                    Privacy Policy
-                  </Link>
-                </span>
-              </label>
+              <FormCheckbox
+                id="agreeToTerms"
+                name="agreeToTerms"
+                checked={agreeToTerms}
+                onChange={handleInputChange}
+                disabled={isLoading}
+              >
+                I agree to the{' '}
+                <Link
+                  href="/terms"
+                  className="text-[var(--primary-500)] hover:text-[var(--primary-700)] underline"
+                >
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link
+                  href="/privacy"
+                  className="text-[var(--primary-500)] hover:text-[var(--primary-700)] underline"
+                >
+                  Privacy Policy
+                </Link>
+              </FormCheckbox>
             </div>
 
             {/* Create Account Button */}

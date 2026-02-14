@@ -1,12 +1,13 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Plus, Users, DollarSign, Calendar, MoreVertical, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
+import { ErrorState } from '@/components/ui/error-state';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { useBrandCampaigns, type EnrichedCampaign } from '@/lib/hooks/use-campaigns-data';
 
@@ -132,11 +133,54 @@ function CampaignSkeleton() {
 }
 
 export default function BrandCampaignsPage() {
-  const { data: campaigns, isLoading } = useBrandCampaigns();
+  const { data: campaigns, isLoading, error: campaignsError, refetch } = useBrandCampaigns();
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const activeCampaigns = campaigns.filter((c) => c.status === 'active');
   const draftCampaigns = campaigns.filter((c) => c.status === 'draft' || c.status === 'pending');
   const completedCampaigns = campaigns.filter((c) => c.status === 'completed');
+
+  // Handle retry
+  const handleRetry = useCallback(async () => {
+    setIsRetrying(true);
+    console.error('Campaigns fetch error:', campaignsError);
+    try {
+      refetch();
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [campaignsError, refetch]);
+
+  // Show error state if data fetch failed
+  if (campaignsError && !isLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Campaigns</h1>
+            <p className="text-[var(--text-muted)]">
+              Manage your NIL marketing campaigns
+            </p>
+          </div>
+          <Link href="/brand/campaigns/new">
+            <Button variant="primary">
+              <Plus className="h-4 w-4 mr-2" />
+              New Campaign
+            </Button>
+          </Link>
+        </div>
+        <Card>
+          <ErrorState
+            errorType="data"
+            title="Failed to load campaigns"
+            description={campaignsError.message || 'We could not load your campaigns. Please try again.'}
+            onRetry={handleRetry}
+            isRetrying={isRetrying}
+          />
+        </Card>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

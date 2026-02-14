@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   LayoutGrid,
@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { FilterBar, type Filter } from '@/components/ui/filter-bar';
 import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
 import { EmptyState } from '@/components/ui/empty-state';
+import { ErrorState } from '@/components/ui/error-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
@@ -58,7 +59,16 @@ function KanbanCard({ deal, onClick }: KanbanCardProps) {
   return (
     <div
       onClick={onClick}
-      className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[var(--radius-lg)] p-4 cursor-pointer hover:border-[var(--border-color-hover)] hover:shadow-[var(--shadow-md)] transition-all group"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View deal: ${deal.title} with ${brandName}`}
+      className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[var(--radius-lg)] p-4 cursor-pointer hover:border-[var(--border-color-hover)] hover:shadow-[var(--shadow-md)] transition-all group min-h-[44px] touch-manipulation"
     >
       {/* Brand */}
       <div className="flex items-center gap-2 mb-3">
@@ -101,7 +111,7 @@ interface KanbanColumnProps {
 
 function KanbanColumn({ label, color, deals, onDealClick }: KanbanColumnProps) {
   return (
-    <div className="flex-1 min-w-[280px] max-w-[320px]">
+    <div className="w-full md:flex-1 md:min-w-[280px] md:max-w-[320px] snap-start shrink-0">
       {/* Column Header */}
       <div className="flex items-center gap-2 mb-4 pb-3 border-b-2" style={{ borderColor: color }}>
         <span className="font-semibold text-[var(--text-primary)]">{label}</span>
@@ -158,15 +168,29 @@ export default function AthleteDealsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [dealTypeFilter, setDealTypeFilter] = useState('');
+  const [isRetrying, setIsRetrying] = useState(false);
 
   // Require auth and get athlete data
   const { roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['athlete'] });
   const athleteData = roleData as { id: string } | null;
 
   // Fetch deals from Supabase
-  const { data: deals, loading: dealsLoading } = useAthleteDeals(athleteData?.id);
+  const { data: deals, loading: dealsLoading, error: dealsError, refetch: refetchDeals } = useAthleteDeals(athleteData?.id);
   const isLoading = authLoading || dealsLoading;
   const allDeals = deals || [];
+
+  // Handle retry
+  const handleRetry = useCallback(async () => {
+    setIsRetrying(true);
+    console.error('Deals fetch error:', dealsError);
+    try {
+      await refetchDeals();
+    } catch (err) {
+      console.error('Error during retry:', err);
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [dealsError, refetchDeals]);
 
   // Filter deals based on search and filters
   const filteredDeals = useMemo(() => {
@@ -293,6 +317,29 @@ export default function AthleteDealsPage() {
     );
   }
 
+  // Show error state if data fetch failed
+  if (dealsError && !dealsLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">My Deals</h1>
+          <p className="text-[var(--text-muted)]">
+            Manage your NIL partnerships and opportunities
+          </p>
+        </div>
+        <Card>
+          <ErrorState
+            errorType="data"
+            title="Failed to load deals"
+            description={dealsError.message || 'We could not load your deals. Please try again.'}
+            onRetry={handleRetry}
+            isRetrying={isRetrying}
+          />
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
@@ -394,7 +441,8 @@ export default function AthleteDealsPage() {
           onRowClick={(row) => handleDealClick((row as unknown as Deal).id)}
         />
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-4">
+        /* Mobile: Stack columns vertically or scroll horizontally with snap */
+        <div className="flex flex-col gap-6 md:flex-row md:gap-4 md:overflow-x-auto md:pb-4 md:snap-x md:snap-mandatory md:-mx-6 md:px-6">
           {kanbanColumns.map((column) => (
             <KanbanColumn
               key={column.status}

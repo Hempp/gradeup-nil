@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Logo, LogoIcon } from '@/components/brand';
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -48,13 +49,8 @@ function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="h-8 w-8 bg-gradient-to-br from-[var(--marketing-cyan)] to-[var(--marketing-lime)] rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
-              <span className="text-black font-bold text-lg">G</span>
-            </div>
-            <span className="font-bold text-xl tracking-tight text-white">
-              GradeUp
-            </span>
+          <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105">
+            <Logo size="md" variant="gradient" />
           </Link>
 
           {/* Desktop Nav */}
@@ -149,11 +145,8 @@ function Footer() {
         <div className="grid md:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 bg-gradient-to-br from-[var(--marketing-cyan)] to-[var(--marketing-lime)] rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-lg">G</span>
-              </div>
-              <span className="font-bold text-xl">GradeUp</span>
+            <div className="mb-4">
+              <Logo size="md" variant="gradient" />
             </div>
             <p className="text-[var(--marketing-gray-400)] text-sm">
               The NIL platform where your GPA unlocks better deals.

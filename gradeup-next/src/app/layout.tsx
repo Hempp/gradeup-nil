@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
 import { AuthProvider } from "@/context";
 import { WebVitalsReporter } from "@/components/analytics/web-vitals-reporter";
+import { NavigationProgressBar } from "@/components/ui/navigation-progress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,9 +66,12 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/logo-icon.svg",
   },
   manifest: "/site.webmanifest",
 };
@@ -84,6 +88,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ToastProvider>
+            <NavigationProgressBar />
             {children}
           </ToastProvider>
         </AuthProvider>

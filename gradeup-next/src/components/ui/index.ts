@@ -21,6 +21,7 @@ export {
   type PasswordFieldProps,
 } from './form-field';
 export { Select, MultiSelect, type SelectOption, type SelectProps, type MultiSelectProps } from './select';
+export { Switch, type SwitchProps } from './switch';
 export { AvatarUpload, DocumentUpload, type AvatarUploadProps, type DocumentUploadProps, type AvatarUploadVariant } from './avatar-upload';
 
 // Navigation & Filtering

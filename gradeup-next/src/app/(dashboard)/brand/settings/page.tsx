@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/modal';
+import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
 
 function SettingsSection({
@@ -36,7 +37,7 @@ function SettingsSection({
       <CardHeader>
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-[var(--radius-md)] bg-[var(--color-secondary)]/10 flex items-center justify-center">
-            <Icon className="h-5 w-5 text-[var(--color-secondary)]" />
+            <Icon className="h-5 w-5 text-[var(--color-secondary)]" aria-hidden="true" />
           </div>
           <div>
             <CardTitle className="text-base">{title}</CardTitle>
@@ -49,42 +50,21 @@ function SettingsSection({
   );
 }
 
-function ToggleSwitch({
-  enabled,
-  onToggle,
-}: {
-  enabled: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      onClick={onToggle}
-      className={`relative h-6 w-11 rounded-full transition-colors ${
-        enabled ? 'bg-[var(--color-secondary)]' : 'bg-[var(--border-color)]'
-      }`}
-    >
-      <span
-        className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${
-          enabled ? 'left-6' : 'left-1'
-        }`}
-      />
-    </button>
-  );
-}
-
 function SettingsRow({
   label,
   description,
   action,
+  labelId,
 }: {
   label: string;
   description?: string;
   action: React.ReactNode;
+  labelId?: string;
 }) {
   return (
     <div className="flex items-center justify-between py-4 border-b border-[var(--border-color)] last:border-0">
       <div>
-        <p className="font-medium text-[var(--text-primary)]">{label}</p>
+        <p id={labelId} className="font-medium text-[var(--text-primary)]">{label}</p>
         {description && (
           <p className="text-sm text-[var(--text-muted)]">{description}</p>
         )}
@@ -248,73 +228,83 @@ export default function BrandSettingsPage() {
         title="Notifications"
         description="Control your notification preferences"
       >
-        <div>
+        <div role="group" aria-label="Notification preferences">
           <SettingsRow
             label="Email Notifications"
             description="Receive notifications via email"
+            labelId="brand-email-notifications-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.email}
-                onToggle={() =>
-                  setNotifications({ ...notifications, email: !notifications.email })
+              <Switch
+                checked={notifications.email}
+                onCheckedChange={(checked) =>
+                  setNotifications({ ...notifications, email: checked })
                 }
+                aria-labelledby="brand-email-notifications-label"
               />
             }
           />
           <SettingsRow
             label="Push Notifications"
             description="Browser push notifications"
+            labelId="brand-push-notifications-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.push}
-                onToggle={() =>
-                  setNotifications({ ...notifications, push: !notifications.push })
+              <Switch
+                checked={notifications.push}
+                onCheckedChange={(checked) =>
+                  setNotifications({ ...notifications, push: checked })
                 }
+                aria-labelledby="brand-push-notifications-label"
               />
             }
           />
           <SettingsRow
             label="Athlete Responses"
             description="When athletes respond to your offers"
+            labelId="brand-athlete-responses-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.athleteResponses}
-                onToggle={() =>
+              <Switch
+                checked={notifications.athleteResponses}
+                onCheckedChange={(checked) =>
                   setNotifications({
                     ...notifications,
-                    athleteResponses: !notifications.athleteResponses,
+                    athleteResponses: checked,
                   })
                 }
+                aria-labelledby="brand-athlete-responses-label"
               />
             }
           />
           <SettingsRow
             label="Campaign Updates"
             description="Updates on your active campaigns"
+            labelId="brand-campaign-updates-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.campaignUpdates}
-                onToggle={() =>
+              <Switch
+                checked={notifications.campaignUpdates}
+                onCheckedChange={(checked) =>
                   setNotifications({
                     ...notifications,
-                    campaignUpdates: !notifications.campaignUpdates,
+                    campaignUpdates: checked,
                   })
                 }
+                aria-labelledby="brand-campaign-updates-label"
               />
             }
           />
           <SettingsRow
             label="Weekly Report"
             description="Receive weekly performance summary"
+            labelId="brand-weekly-report-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.weeklyReport}
-                onToggle={() =>
+              <Switch
+                checked={notifications.weeklyReport}
+                onCheckedChange={(checked) =>
                   setNotifications({
                     ...notifications,
-                    weeklyReport: !notifications.weeklyReport,
+                    weeklyReport: checked,
                   })
                 }
+                aria-labelledby="brand-weekly-report-label"
               />
             }
           />
@@ -395,7 +385,7 @@ export default function BrandSettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-[var(--radius-md)] bg-[var(--color-error-muted)] flex items-center justify-center">
-              <LogOut className="h-5 w-5 text-[var(--color-error)]" />
+              <LogOut className="h-5 w-5 text-[var(--color-error)]" aria-hidden="true" />
             </div>
             <div>
               <CardTitle className="text-base text-[var(--color-error)]">
@@ -441,37 +431,37 @@ export default function BrandSettingsPage() {
       >
         <div className="space-y-4">
           <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] flex items-center gap-3">
-            <CreditCard className="h-8 w-8 text-[var(--text-muted)]" />
+            <CreditCard className="h-8 w-8 text-[var(--text-muted)]" aria-hidden="true" />
             <div>
               <p className="font-medium text-[var(--text-primary)]">Current Card</p>
               <p className="text-sm text-[var(--text-muted)]">Visa ending in 4242</p>
             </div>
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="card-number" className="block text-sm text-[var(--text-muted)] mb-1.5">
               Card Number
             </label>
-            <Input placeholder="1234 5678 9012 3456" />
+            <Input id="card-number" placeholder="1234 5678 9012 3456" autoComplete="cc-number" aria-required="true" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+              <label htmlFor="card-expiry" className="block text-sm text-[var(--text-muted)] mb-1.5">
                 Expiry Date
               </label>
-              <Input placeholder="MM/YY" />
+              <Input id="card-expiry" placeholder="MM/YY" autoComplete="cc-exp" aria-required="true" />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+              <label htmlFor="card-cvc" className="block text-sm text-[var(--text-muted)] mb-1.5">
                 CVC
               </label>
-              <Input placeholder="123" />
+              <Input id="card-cvc" placeholder="123" autoComplete="cc-csc" aria-required="true" />
             </div>
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="cardholder-name" className="block text-sm text-[var(--text-muted)] mb-1.5">
               Cardholder Name
             </label>
-            <Input placeholder="John Doe" />
+            <Input id="cardholder-name" placeholder="John Doe" autoComplete="cc-name" aria-required="true" />
           </div>
         </div>
       </Modal>
@@ -488,14 +478,15 @@ export default function BrandSettingsPage() {
           </Button>
         }
       >
-        <div className="space-y-2">
+        <div className="space-y-2" role="list" aria-label="Invoice history">
           {mockBillingHistory.map((item) => (
             <div
               key={item.id}
+              role="listitem"
               className="flex items-center justify-between p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-secondary)] transition-colors"
             >
               <div className="flex items-center gap-3">
-                <Receipt className="h-5 w-5 text-[var(--text-muted)]" />
+                <Receipt className="h-5 w-5 text-[var(--text-muted)]" aria-hidden="true" />
                 <div>
                   <p className="font-medium text-[var(--text-primary)]">{item.description}</p>
                   <p className="text-sm text-[var(--text-muted)]">{item.date}</p>
@@ -506,7 +497,7 @@ export default function BrandSettingsPage() {
                   ${item.amount.toFixed(2)}
                 </span>
                 <Badge variant="success">{item.status}</Badge>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" aria-label={`Download invoice for ${item.description} on ${item.date}`}>
                   Download
                 </Button>
               </div>
@@ -534,42 +525,51 @@ export default function BrandSettingsPage() {
       >
         <div className="space-y-4">
           <div className="p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] flex items-center gap-3">
-            <Key className="h-5 w-5 text-[var(--color-primary)]" />
+            <Key className="h-5 w-5 text-[var(--color-primary)]" aria-hidden="true" />
             <p className="text-sm text-[var(--text-secondary)]">
               Choose a strong password with at least 8 characters, including uppercase, lowercase, and numbers.
             </p>
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="brand-current-password" className="block text-sm text-[var(--text-muted)] mb-1.5">
               Current Password
             </label>
             <Input
+              id="brand-current-password"
               type="password"
+              autoComplete="current-password"
               value={passwordForm.currentPassword}
               onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
               placeholder="Enter current password"
+              aria-required="true"
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="brand-new-password" className="block text-sm text-[var(--text-muted)] mb-1.5">
               New Password
             </label>
             <Input
+              id="brand-new-password"
               type="password"
+              autoComplete="new-password"
               value={passwordForm.newPassword}
               onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
               placeholder="Enter new password"
+              aria-required="true"
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="brand-confirm-password" className="block text-sm text-[var(--text-muted)] mb-1.5">
               Confirm New Password
             </label>
             <Input
+              id="brand-confirm-password"
               type="password"
+              autoComplete="new-password"
               value={passwordForm.confirmPassword}
               onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
               placeholder="Confirm new password"
+              aria-required="true"
             />
           </div>
         </div>
@@ -587,14 +587,15 @@ export default function BrandSettingsPage() {
           </Button>
         }
       >
-        <div className="space-y-3">
+        <div className="space-y-3" role="list" aria-label="Active sessions">
           {mockSessions.map((session) => (
             <div
               key={session.id}
+              role="listitem"
               className="flex items-center justify-between p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]"
             >
               <div className="flex items-center gap-3">
-                <Monitor className="h-5 w-5 text-[var(--text-muted)]" />
+                <Monitor className="h-5 w-5 text-[var(--text-muted)]" aria-hidden="true" />
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="font-medium text-[var(--text-primary)]">
@@ -614,6 +615,7 @@ export default function BrandSettingsPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => handleRevokeSession(session.id)}
+                  aria-label={`Revoke session on ${session.device}`}
                 >
                   Revoke
                 </Button>
@@ -641,8 +643,8 @@ export default function BrandSettingsPage() {
         }
       >
         <div className="space-y-4">
-          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-[var(--color-error)] flex-shrink-0 mt-0.5" />
+          <div className="p-4 rounded-[var(--radius-md)] bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 flex items-start gap-3" role="alert">
+            <AlertTriangle className="h-5 w-5 text-[var(--color-error)] flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
               <p className="font-medium text-[var(--color-error)]">Warning: This action cannot be undone</p>
               <p className="text-sm text-[var(--text-secondary)] mt-1">
@@ -650,29 +652,30 @@ export default function BrandSettingsPage() {
               </p>
             </div>
           </div>
-          <ul className="space-y-2 text-sm text-[var(--text-secondary)] ml-4">
+          <ul className="space-y-2 text-sm text-[var(--text-secondary)] ml-4" aria-label="Data that will be deleted">
             <li className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" aria-hidden="true" />
               All campaign history and analytics
             </li>
             <li className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" aria-hidden="true" />
               Athlete connections and shortlists
             </li>
             <li className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" aria-hidden="true" />
               Billing history and invoices
             </li>
             <li className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" aria-hidden="true" />
               Brand profile and settings
             </li>
           </ul>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
-              Type "DELETE" to confirm
+            <label htmlFor="brand-delete-confirmation" className="block text-sm text-[var(--text-muted)] mb-1.5">
+              Type &quot;DELETE&quot; to confirm
             </label>
-            <Input placeholder="DELETE" />
+            <Input id="brand-delete-confirmation" placeholder="DELETE" aria-describedby="brand-delete-hint" />
+            <p id="brand-delete-hint" className="sr-only">Type the word DELETE in all capital letters to confirm account closure</p>
           </div>
         </div>
       </Modal>

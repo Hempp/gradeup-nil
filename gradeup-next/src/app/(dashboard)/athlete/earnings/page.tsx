@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   AreaChart,
   Area,
@@ -22,6 +22,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/modal';
+import { ErrorState } from '@/components/ui/error-state';
 import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import {
@@ -241,13 +242,37 @@ function PayoutHistory({ onExport }: { onExport: () => void }) {
 
 export default function AthleteEarningsPage() {
   const toast = useToastActions();
-  const { data: stats, isLoading: statsLoading } = useEarningsStats();
+  const { data: stats, isLoading: statsLoading, error: statsError, refetch: refetchStats } = useEarningsStats();
+  const { error: payoutsError, refetch: refetchPayouts } = usePayoutHistory();
+  const { error: monthlyError, refetch: refetchMonthly } = useMonthlyEarnings();
 
   // Modal states
   const [taxReportModalOpen, setTaxReportModalOpen] = useState(false);
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedTaxYear, setSelectedTaxYear] = useState('2024');
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  // Aggregate errors
+  const hasError = statsError || payoutsError || monthlyError;
+  const errorMessage = statsError?.message || payoutsError?.message || monthlyError?.message;
+
+  // Handle retry
+  const handleRetry = useCallback(async () => {
+    setIsRetrying(true);
+    console.error('Earnings data fetch error:', { statsError, payoutsError, monthlyError });
+    try {
+      await Promise.all([
+        refetchStats(),
+        refetchPayouts(),
+        refetchMonthly(),
+      ]);
+    } catch (err) {
+      console.error('Error during retry:', err);
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [statsError, payoutsError, monthlyError, refetchStats, refetchPayouts, refetchMonthly]);
 
   // Calculate trend percentage
   const getTrendInfo = () => {
@@ -262,6 +287,31 @@ export default function AthleteEarningsPage() {
   };
 
   const trendInfo = getTrendInfo();
+
+  // Show error state if data fetch failed
+  if (hasError && !statsLoading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Earnings</h1>
+            <p className="text-[var(--text-muted)]">
+              Track your NIL income and payouts
+            </p>
+          </div>
+        </div>
+        <Card>
+          <ErrorState
+            errorType="data"
+            title="Failed to load earnings"
+            description={errorMessage || 'We could not load your earnings data. Please try again.'}
+            onRetry={handleRetry}
+            isRetrying={isRetrying}
+          />
+        </Card>
+      </div>
+    );
+  }
 
   // Handlers
   const handleDownloadTaxReport = async () => {

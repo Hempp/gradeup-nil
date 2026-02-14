@@ -74,12 +74,12 @@ export function Topbar({
     >
       {/* Left side: Hamburger (mobile) + Breadcrumbs */}
       <div className="flex items-center gap-4">
-        {/* Mobile hamburger menu */}
+        {/* Mobile hamburger menu - 44px min touch target */}
         {onMenuClick && (
           <button
             onClick={onMenuClick}
-            className="lg:hidden h-10 w-10 flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-            aria-label="Toggle menu"
+            className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 active:bg-white/20 transition-colors touch-manipulation"
+            aria-label="Open navigation menu"
           >
             <Menu className="h-6 w-6" />
           </button>
@@ -93,9 +93,9 @@ export function Topbar({
 
       {/* Right side: Notifications + User dropdown */}
       <div className="flex items-center gap-2">
-        {/* Notification bell */}
+        {/* Notification bell - 44px min touch target */}
         <button
-          className="relative h-10 w-10 flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          className="relative h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 active:bg-white/20 transition-colors touch-manipulation"
           aria-label={`Notifications${notificationCount > 0 ? ` (${notificationCount} unread)` : ''}`}
         >
           <Bell className="h-5 w-5" />

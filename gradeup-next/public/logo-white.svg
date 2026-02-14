@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- White version for dark backgrounds -->
+  <path
+    d="M256 64L416 112V240C416 344 344 424 256 448C168 424 96 344 96 240V112L256 64Z"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="12"
+  />
+  <path
+    d="M256 128L352 240H304V384H208V240H160L256 128Z"
+    fill="#ffffff"
+  />
+</svg>

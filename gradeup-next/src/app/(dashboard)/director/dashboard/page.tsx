@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Users,
   DollarSign,
@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { StatCard } from '@/components/ui/stat-card';
 import { Modal } from '@/components/ui/modal';
+import { ErrorState } from '@/components/ui/error-state';
 import { formatCurrency, formatRelativeTime, formatDateTime } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useDirectorStats, useSchoolAthletes, useComplianceAlerts } from '@/lib/hooks/use-data';
@@ -148,6 +149,7 @@ function AlertsPanelCard({ alerts, loading, onViewAlert }: AlertsPanelCardProps)
 
 export default function DirectorDashboardPage() {
   const router = useRouter();
+  const [isRetrying, setIsRetrying] = useState(false);
 
   // Require auth and get director data
   const { roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['athletic_director'] });
@@ -158,9 +160,30 @@ export default function DirectorDashboardPage() {
   const [showAlertModal, setShowAlertModal] = useState(false);
 
   // Fetch dashboard data
-  const { data: stats, loading: statsLoading } = useDirectorStats();
-  const { data: athletesData, loading: athletesLoading } = useSchoolAthletes();
-  const { data: alerts, loading: alertsLoading } = useComplianceAlerts();
+  const { data: stats, loading: statsLoading, error: statsError, refetch: refetchStats } = useDirectorStats();
+  const { data: athletesData, loading: athletesLoading, error: athletesError, refetch: refetchAthletes } = useSchoolAthletes();
+  const { data: alerts, loading: alertsLoading, error: alertsError, refetch: refetchAlerts } = useComplianceAlerts();
+
+  // Aggregate errors
+  const hasError = statsError || athletesError || alertsError;
+  const errorMessage = statsError?.message || athletesError?.message || alertsError?.message;
+
+  // Handle retry
+  const handleRetry = useCallback(async () => {
+    setIsRetrying(true);
+    console.error('Director dashboard data fetch error:', { statsError, athletesError, alertsError });
+    try {
+      await Promise.all([
+        refetchStats(),
+        refetchAthletes(),
+        refetchAlerts(),
+      ]);
+    } catch (err) {
+      console.error('Error during retry:', err);
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [statsError, athletesError, alertsError, refetchStats, refetchAthletes, refetchAlerts]);
 
   // Handler for viewing alert details
   const handleViewAlert = (alert: ComplianceAlert) => {
@@ -180,6 +203,21 @@ export default function DirectorDashboardPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
       </div>
+    );
+  }
+
+  // Show error state if data fetch failed
+  if (hasError && !statsLoading && !athletesLoading && !alertsLoading) {
+    return (
+      <Card className="animate-fade-in">
+        <ErrorState
+          errorType="data"
+          title="Failed to load dashboard"
+          description={errorMessage || 'We could not load your dashboard data. Please try again.'}
+          onRetry={handleRetry}
+          isRetrying={isRetrying}
+        />
+      </Card>
     );
   }
 

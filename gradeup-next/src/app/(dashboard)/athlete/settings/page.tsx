@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import {
   User,
   Bell,
@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/modal';
+import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
 import { PaymentMethodsSection } from '@/components/athlete/PaymentMethodsSection';
 
@@ -26,21 +27,23 @@ function SettingsSection({
   title,
   description,
   children,
+  id,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   children: React.ReactNode;
+  id?: string;
 }) {
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-[var(--radius-md)] bg-[var(--color-primary-muted)] flex items-center justify-center">
-            <Icon className="h-5 w-5 text-[var(--color-primary)]" />
+            <Icon className="h-5 w-5 text-[var(--color-primary)]" aria-hidden="true" />
           </div>
           <div>
-            <CardTitle className="text-base">{title}</CardTitle>
+            <CardTitle className="text-base" id={id}>{title}</CardTitle>
             <p className="text-sm text-[var(--text-muted)]">{description}</p>
           </div>
         </div>
@@ -50,42 +53,21 @@ function SettingsSection({
   );
 }
 
-function ToggleSwitch({
-  enabled,
-  onToggle,
-}: {
-  enabled: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      onClick={onToggle}
-      className={`relative h-6 w-11 rounded-full transition-colors ${
-        enabled ? 'bg-[var(--color-primary)]' : 'bg-[var(--border-color)]'
-      }`}
-    >
-      <span
-        className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${
-          enabled ? 'left-6' : 'left-1'
-        }`}
-      />
-    </button>
-  );
-}
-
 function SettingsRow({
   label,
   description,
   action,
+  labelId,
 }: {
   label: string;
   description?: string;
   action: React.ReactNode;
+  labelId?: string;
 }) {
   return (
     <div className="flex items-center justify-between py-4 border-b border-[var(--border-color)] last:border-0">
       <div>
-        <p className="font-medium text-[var(--text-primary)]">{label}</p>
+        <p id={labelId} className="font-medium text-[var(--text-primary)]">{label}</p>
         {description && (
           <p className="text-sm text-[var(--text-muted)]">{description}</p>
         )}
@@ -162,12 +144,6 @@ export default function AthleteSettingsPage() {
     setDeleteConfirmText('');
   };
 
-  const handleToggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    // Here you would integrate with your theme system
-    toast.info('Theme Updated', `Switched to ${!darkMode ? 'dark' : 'light'} mode.`);
-  };
-
   return (
     <div className="space-y-6 animate-fade-in max-w-3xl">
       {/* Page Header */}
@@ -209,70 +185,80 @@ export default function AthleteSettingsPage() {
         title="Notifications"
         description="Control how you receive notifications"
       >
-        <div>
+        <div role="group" aria-label="Notification preferences">
           <SettingsRow
             label="Email Notifications"
             description="Receive notifications via email"
+            labelId="email-notifications-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.email}
-                onToggle={() =>
-                  setNotifications({ ...notifications, email: !notifications.email })
+              <Switch
+                checked={notifications.email}
+                onCheckedChange={(checked) =>
+                  setNotifications({ ...notifications, email: checked })
                 }
+                aria-labelledby="email-notifications-label"
               />
             }
           />
           <SettingsRow
             label="Push Notifications"
             description="Receive push notifications on your device"
+            labelId="push-notifications-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.push}
-                onToggle={() =>
-                  setNotifications({ ...notifications, push: !notifications.push })
+              <Switch
+                checked={notifications.push}
+                onCheckedChange={(checked) =>
+                  setNotifications({ ...notifications, push: checked })
                 }
+                aria-labelledby="push-notifications-label"
               />
             }
           />
           <SettingsRow
             label="Deal Alerts"
             description="Get notified about new deal opportunities"
+            labelId="deal-alerts-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.deals}
-                onToggle={() =>
-                  setNotifications({ ...notifications, deals: !notifications.deals })
+              <Switch
+                checked={notifications.deals}
+                onCheckedChange={(checked) =>
+                  setNotifications({ ...notifications, deals: checked })
                 }
+                aria-labelledby="deal-alerts-label"
               />
             }
           />
           <SettingsRow
             label="Message Notifications"
             description="Get notified when you receive a message"
+            labelId="message-notifications-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.messages}
-                onToggle={() =>
+              <Switch
+                checked={notifications.messages}
+                onCheckedChange={(checked) =>
                   setNotifications({
                     ...notifications,
-                    messages: !notifications.messages,
+                    messages: checked,
                   })
                 }
+                aria-labelledby="message-notifications-label"
               />
             }
           />
           <SettingsRow
             label="Marketing Emails"
             description="Receive updates about new features and promotions"
+            labelId="marketing-emails-label"
             action={
-              <ToggleSwitch
-                enabled={notifications.marketing}
-                onToggle={() =>
+              <Switch
+                checked={notifications.marketing}
+                onCheckedChange={(checked) =>
                   setNotifications({
                     ...notifications,
-                    marketing: !notifications.marketing,
+                    marketing: checked,
                   })
                 }
+                aria-labelledby="marketing-emails-label"
               />
             }
           />
@@ -324,12 +310,20 @@ export default function AthleteSettingsPage() {
         title="Preferences"
         description="Customize your experience"
       >
-        <div>
+        <div role="group" aria-label="Display preferences">
           <SettingsRow
             label="Dark Mode"
             description="Use dark theme"
+            labelId="dark-mode-label"
             action={
-              <ToggleSwitch enabled={darkMode} onToggle={handleToggleDarkMode} />
+              <Switch
+                checked={darkMode}
+                onCheckedChange={(checked) => {
+                  setDarkMode(checked);
+                  toast.info('Theme Updated', `Switched to ${checked ? 'dark' : 'light'} mode.`);
+                }}
+                aria-labelledby="dark-mode-label"
+              />
             }
           />
           <SettingsRow
@@ -347,7 +341,7 @@ export default function AthleteSettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-[var(--radius-md)] bg-[var(--color-error-muted)] flex items-center justify-center">
-              <LogOut className="h-5 w-5 text-[var(--color-error)]" />
+              <LogOut className="h-5 w-5 text-[var(--color-error)]" aria-hidden="true" />
             </div>
             <div>
               <CardTitle className="text-base text-[var(--color-error)]">
@@ -386,7 +380,7 @@ export default function AthleteSettingsPage() {
               Cancel
             </Button>
             <Button variant="primary" onClick={handleChangePassword}>
-              <Key className="h-4 w-4 mr-2" />
+              <Key className="h-4 w-4 mr-2" aria-hidden="true" />
               Update Password
             </Button>
           </>
@@ -394,36 +388,45 @@ export default function AthleteSettingsPage() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="current-password" className="block text-sm text-[var(--text-muted)] mb-1.5">
               Current Password
             </label>
             <Input
+              id="current-password"
               type="password"
+              autoComplete="current-password"
               value={passwordForm.currentPassword}
               onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
               placeholder="Enter current password"
+              aria-required="true"
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="new-password" className="block text-sm text-[var(--text-muted)] mb-1.5">
               New Password
             </label>
             <Input
+              id="new-password"
               type="password"
+              autoComplete="new-password"
               value={passwordForm.newPassword}
               onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
               placeholder="Enter new password"
+              aria-required="true"
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="confirm-password" className="block text-sm text-[var(--text-muted)] mb-1.5">
               Confirm New Password
             </label>
             <Input
+              id="confirm-password"
               type="password"
+              autoComplete="new-password"
               value={passwordForm.confirmPassword}
               onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
               placeholder="Confirm new password"
+              aria-required="true"
             />
           </div>
         </div>
@@ -441,7 +444,7 @@ export default function AthleteSettingsPage() {
               Cancel
             </Button>
             <Button variant="primary" onClick={handleEnable2FA}>
-              <Smartphone className="h-4 w-4 mr-2" />
+              <Smartphone className="h-4 w-4 mr-2" aria-hidden="true" />
               Enable 2FA
             </Button>
           </>
@@ -449,7 +452,7 @@ export default function AthleteSettingsPage() {
       >
         <div className="space-y-4">
           <div className="flex items-center gap-3 p-4 rounded-[var(--radius-md)] bg-[var(--color-primary-muted)]">
-            <Shield className="h-8 w-8 text-[var(--color-primary)]" />
+            <Shield className="h-8 w-8 text-[var(--color-primary)]" aria-hidden="true" />
             <div>
               <p className="font-medium text-[var(--text-primary)]">Secure Your Account</p>
               <p className="text-sm text-[var(--text-muted)]">
@@ -463,7 +466,7 @@ export default function AthleteSettingsPage() {
           </p>
           <div className="p-4 border border-[var(--border-color)] rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]">
             <p className="text-sm text-[var(--text-muted)] mb-2">Scan this QR code with your authenticator app:</p>
-            <div className="h-32 w-32 mx-auto bg-white rounded-[var(--radius-sm)] flex items-center justify-center">
+            <div className="h-32 w-32 mx-auto bg-white rounded-[var(--radius-sm)] flex items-center justify-center" role="img" aria-label="QR code for authenticator app setup">
               <span className="text-xs text-gray-400">[QR Code Placeholder]</span>
             </div>
           </div>
@@ -482,7 +485,7 @@ export default function AthleteSettingsPage() {
               Cancel
             </Button>
             <Button variant="primary" onClick={handleRequestDataDownload}>
-              <Download className="h-4 w-4 mr-2" />
+              <Download className="h-4 w-4 mr-2" aria-hidden="true" />
               Request Download
             </Button>
           </>
@@ -492,21 +495,21 @@ export default function AthleteSettingsPage() {
           <p className="text-[var(--text-secondary)]">
             You can request a copy of all your personal data stored on GradeUp. This includes:
           </p>
-          <ul className="space-y-2 text-sm text-[var(--text-muted)]">
+          <ul className="space-y-2 text-sm text-[var(--text-muted)]" aria-label="Data included in download">
             <li className="flex items-center gap-2">
-              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" aria-hidden="true" />
               Profile information
             </li>
             <li className="flex items-center gap-2">
-              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" aria-hidden="true" />
               Deal history and earnings
             </li>
             <li className="flex items-center gap-2">
-              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" aria-hidden="true" />
               Messages and communications
             </li>
             <li className="flex items-center gap-2">
-              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" aria-hidden="true" />
               Activity logs
             </li>
           </ul>
@@ -528,15 +531,15 @@ export default function AthleteSettingsPage() {
               Cancel
             </Button>
             <Button variant="danger" onClick={handleDeleteAccount}>
-              <AlertTriangle className="h-4 w-4 mr-2" />
+              <AlertTriangle className="h-4 w-4 mr-2" aria-hidden="true" />
               Delete My Account
             </Button>
           </>
         }
       >
         <div className="space-y-4">
-          <div className="flex items-center gap-3 p-4 rounded-[var(--radius-md)] bg-[var(--color-error-muted)]">
-            <AlertTriangle className="h-8 w-8 text-[var(--color-error)]" />
+          <div className="flex items-center gap-3 p-4 rounded-[var(--radius-md)] bg-[var(--color-error-muted)]" role="alert">
+            <AlertTriangle className="h-8 w-8 text-[var(--color-error)]" aria-hidden="true" />
             <div>
               <p className="font-medium text-[var(--color-error)]">This action is irreversible</p>
               <p className="text-sm text-[var(--text-muted)]">
@@ -547,21 +550,24 @@ export default function AthleteSettingsPage() {
           <p className="text-sm text-[var(--text-secondary)]">
             Deleting your account will permanently remove:
           </p>
-          <ul className="space-y-1 text-sm text-[var(--text-muted)]">
+          <ul className="space-y-1 text-sm text-[var(--text-muted)]" aria-label="Data that will be deleted">
             <li>- Your profile and all personal information</li>
             <li>- All deal history and earnings records</li>
             <li>- All messages and communications</li>
             <li>- Any pending payouts (will be forfeited)</li>
           </ul>
           <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-1.5">
+            <label htmlFor="delete-confirmation" className="block text-sm text-[var(--text-muted)] mb-1.5">
               Type DELETE to confirm
             </label>
             <Input
+              id="delete-confirmation"
               value={deleteConfirmText}
               onChange={(e) => setDeleteConfirmText(e.target.value)}
               placeholder="Type DELETE"
+              aria-describedby="delete-hint"
             />
+            <p id="delete-hint" className="sr-only">Type the word DELETE in all capital letters to confirm account deletion</p>
           </div>
         </div>
       </Modal>

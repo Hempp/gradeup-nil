@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="anim-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff">
+        <animate attributeName="stop-color" values="#00f0ff;#adff2f;#00f0ff" dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#adff2f">
+        <animate attributeName="stop-color" values="#adff2f;#ff00ff;#adff2f" dur="3s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    <filter id="anim-glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#0a0a0a"/>
+
+  <!-- Shield with glow - draws in -->
+  <g filter="url(#anim-glow)">
+    <path
+      d="M256 64L416 112V240C416 344 344 424 256 448C168 424 96 344 96 240V112L256 64Z"
+      fill="#0a0a0a"
+      stroke="url(#anim-grad)"
+      stroke-width="12"
+      stroke-dasharray="1200"
+      stroke-dashoffset="1200"
+    >
+      <animate attributeName="stroke-dashoffset" from="1200" to="0" dur="1.5s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+    </path>
+
+    <!-- Arrow - slides up and fades in -->
+    <path
+      d="M256 128L352 240H304V384H208V240H160L256 128Z"
+      fill="url(#anim-grad)"
+      opacity="0"
+    >
+      <animate attributeName="opacity" from="0" to="1" dur="0.5s" begin="1s" fill="freeze"/>
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        from="0 50"
+        to="0 0"
+        dur="0.5s"
+        begin="1s"
+        fill="freeze"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1"
+      />
+    </path>
+  </g>
+
+  <!-- Pulse effect on arrow -->
+  <path
+    d="M256 128L352 240H304V384H208V240H160L256 128Z"
+    fill="url(#anim-grad)"
+    opacity="0"
+  >
+    <animate attributeName="opacity" values="0;0;0.3;0" dur="2s" begin="2s" repeatCount="indefinite"/>
+    <animateTransform
+      attributeName="transform"
+      type="scale"
+      values="1;1;1.1;1"
+      dur="2s"
+      begin="2s"
+      repeatCount="indefinite"
+      additive="sum"
+    />
+  </path>
+</svg>

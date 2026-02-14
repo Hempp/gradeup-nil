@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
    MODAL TYPES
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   isOpen: boolean;
@@ -29,6 +29,10 @@ export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
   closeOnEscape?: boolean;
   footer?: ReactNode;
   children: ReactNode;
+  /** On mobile, show as bottom sheet instead of centered modal */
+  mobileBottomSheet?: boolean;
+  /** On mobile, make modal full screen */
+  mobileFullScreen?: boolean;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -57,6 +61,7 @@ const sizeConfig: Record<ModalSize, string> = {
   md: 'max-w-[560px]',
   lg: 'max-w-[720px]',
   xl: 'max-w-[960px]',
+  full: 'max-w-full',
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -89,6 +94,8 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       closeOnEscape = true,
       footer,
       children,
+      mobileBottomSheet = true,
+      mobileFullScreen = false,
       ...props
     },
     ref
@@ -192,7 +199,11 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
     return (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        className={cn(
+          'fixed inset-0 z-50 flex p-0 sm:p-4',
+          mobileBottomSheet ? 'items-end sm:items-center justify-center' : 'items-center justify-center',
+          mobileFullScreen && 'sm:items-center sm:justify-center'
+        )}
         role="presentation"
       >
         {/* Overlay */}
@@ -218,24 +229,40 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           tabIndex={-1}
           onKeyDown={handleKeyDown}
           className={cn(
-            `
-            relative w-full
-            bg-[var(--bg-card)] rounded-[var(--radius-xl)]
-            shadow-[var(--shadow-lg)] border border-[var(--border-color)]
-            flex flex-col max-h-[90vh]
-            animate-fade-in
-            `,
-            sizeConfig[size],
+            // Base styles
+            'relative w-full bg-[var(--bg-card)] shadow-[var(--shadow-lg)] border border-[var(--border-color)] flex flex-col animate-fade-in',
+            // Mobile: Full width, bottom sheet style with rounded top corners only
+            mobileBottomSheet && 'rounded-t-[var(--radius-xl)] rounded-b-none max-h-[85vh] sm:rounded-[var(--radius-xl)] sm:max-h-[90vh]',
+            // Mobile full screen option
+            mobileFullScreen && 'h-full max-h-full rounded-none sm:h-auto sm:max-h-[90vh] sm:rounded-[var(--radius-xl)]',
+            // Default (not bottom sheet, not full screen)
+            !mobileBottomSheet && !mobileFullScreen && 'rounded-[var(--radius-xl)] max-h-[90vh]',
+            // Size config (only applies on sm+ screens when using mobile variants)
+            (mobileBottomSheet || mobileFullScreen) ? `sm:${sizeConfig[size]}` : sizeConfig[size],
+            // Default size config when no mobile variant
+            !mobileBottomSheet && !mobileFullScreen && sizeConfig[size],
             className
           )}
           style={{
-            animation: 'fadeIn 0.2s ease-out, slideUp 0.3s ease-out',
+            animation: mobileBottomSheet
+              ? 'fadeIn 0.2s ease-out, slideUpMobile 0.3s ease-out'
+              : 'fadeIn 0.2s ease-out, slideUp 0.3s ease-out',
           }}
           {...props}
         >
+          {/* Mobile drag handle indicator (bottom sheet style) */}
+          {mobileBottomSheet && (
+            <div className="flex justify-center pt-3 pb-1 sm:hidden">
+              <div className="w-10 h-1 rounded-full bg-[var(--border-color)]" aria-hidden="true" />
+            </div>
+          )}
+
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-color)]">
+            <div className={cn(
+              'flex items-center justify-between px-6 py-4 border-b border-[var(--border-color)]',
+              mobileBottomSheet && 'pt-2 sm:pt-4'
+            )}>
               {title && (
                 <h2
                   id={titleId}

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#adff2f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shield/Badge shape with upward arrow -->
+  <path
+    d="M256 32
+       L448 96
+       L448 240
+       C448 360 360 456 256 480
+       C152 456 64 360 64 240
+       L64 96
+       Z"
+    fill="#0a0a0a"
+    stroke="url(#grad)"
+    stroke-width="8"
+  />
+
+  <!-- Upward Arrow - the core "Grade Up" symbol -->
+  <path
+    d="M256 128
+       L352 240
+       L304 240
+       L304 368
+       L208 368
+       L208 240
+       L160 240
+       Z"
+    fill="url(#grad)"
+  />
+</svg>

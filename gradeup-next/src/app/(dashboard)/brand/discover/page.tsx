@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback, useId } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Heart, MapPin, Users, TrendingUp, DollarSign, SlidersHorizontal, X, Loader2, ArrowRight } from 'lucide-react';
+import { Search, Heart, MapPin, Users, TrendingUp, X, Loader2, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/ui/empty-state';
+import { ErrorState } from '@/components/ui/error-state';
 import { Modal } from '@/components/ui/modal';
 import { formatCompactNumber, formatCurrency, formatPercentage } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
@@ -21,8 +22,10 @@ import { VerifiedBadge } from '@/components/ui/verified-badge';
 import { InstagramIcon, TikTokIcon, SOCIAL_BRAND_COLORS } from '@/components/ui/social-icons';
 import { getSportGradient } from '@/lib/utils/sport-theme';
 import { MOCK_ATHLETES, SPORTS, SCHOOLS } from '@/lib/mock-data/athletes';
+import { AthleteDiscoveryCard } from '@/components/brand/AthleteDiscoveryCard';
 import type { HighlightUrl } from '@/types';
 import { HighlightTapeView } from '@/components/athlete/HighlightTapeSection';
+import { MultiSelectDropdown, RangeSlider, FilterPanel, type FilterTag } from '@/components/filters';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS - Design System Compliance & Magic Number Prevention
@@ -34,12 +37,6 @@ const FILTER_DEFAULTS = {
   ENGAGEMENT_MIN: 0,
   ENGAGEMENT_MAX: 10,
   ENGAGEMENT_STEP: 0.5,
-} as const;
-
-const ANIMATION_DURATION = {
-  FAST: 150,    // Buttons, toggles
-  NORMAL: 200,  // Cards, panels
-  SLOW: 300,    // Modals, page transitions
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -86,27 +83,6 @@ interface Athlete {
   major?: string;
   academicYear?: string;
   hometown?: string;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// AVATAR GENERATION - Uses UI Avatars for realistic placeholder images
-// ═══════════════════════════════════════════════════════════════════════════
-
-function generateAvatarUrl(name: string, seed?: string): string {
-  // Use a combination of placeholder services for variety
-  const encodedName = encodeURIComponent(name);
-  const hash = seed
-    ? seed.split('').reduce((a, b) => a + b.charCodeAt(0), 0)
-    : name.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-
-  // Alternate between different avatar styles for variety
-  if (hash % 3 === 0) {
-    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodedName}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
-  } else if (hash % 3 === 1) {
-    return `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodedName}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
-  } else {
-    return `https://ui-avatars.com/api/?name=${encodedName}&background=6366f1&color=fff&size=256&bold=true`;
-  }
 }
 
 interface Filters {
@@ -175,316 +151,13 @@ function AthleteSkeletonCard() {
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// Athlete Discovery Card - Enhanced Design
-// ═══════════════════════════════════════════════════════════════════════════
+// AthleteDiscoveryCard component is imported from @/components/brand/AthleteDiscoveryCard
+// Filter components are imported from @/components/filters
 
-function AthleteDiscoveryCard({
-  athlete,
-  onToggleSave,
-  onViewProfile
-}: {
-  athlete: Athlete;
-  onToggleSave: (id: string) => void;
-  onViewProfile: (athlete: Athlete) => void;
-}) {
-  const totalFollowers = athlete.instagramFollowers + athlete.tiktokFollowers;
-
-  return (
-    <Card
-      hover
-      className="group overflow-hidden transition-all duration-200 hover:shadow-xl hover:shadow-[var(--color-primary)]/10 hover:-translate-y-1 motion-reduce:hover:translate-y-0 motion-reduce:transition-none cursor-pointer focus-within:ring-2 focus-within:ring-[var(--color-primary)] active:scale-[0.98] motion-reduce:active:scale-100"
-      onClick={() => onViewProfile(athlete)}
-      role="article"
-      aria-label={`${athlete.name}, ${athlete.sport} at ${athlete.school}`}
-    >
-      <CardContent className="p-0">
-        {/* Cover Photo / Sport Gradient with mesh overlay */}
-        <div className={`h-28 bg-gradient-to-br ${getSportGradient(athlete.sport)} relative overflow-hidden`}>
-          {/* Decorative mesh pattern */}
-          <div
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: 'radial-gradient(circle at 25% 25%, white 2%, transparent 2%), radial-gradient(circle at 75% 75%, white 2%, transparent 2%)',
-              backgroundSize: '24px 24px'
-            }}
-            aria-hidden="true"
-          />
-
-          {/* Shortlist Heart Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleSave(athlete.id);
-            }}
-            className={`
-              absolute top-3 right-3 h-11 w-11 rounded-full
-              flex items-center justify-center
-              transition-all duration-150 backdrop-blur-sm
-              motion-reduce:transition-none
-              focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent
-              ${athlete.saved
-                ? 'bg-[var(--color-gold)] text-[var(--text-inverse)] shadow-lg scale-110 motion-reduce:scale-100'
-                : 'bg-black/30 text-white hover:bg-black/50 hover:scale-110 motion-reduce:hover:scale-100'
-              }
-            `}
-            aria-label={athlete.saved ? `Remove ${athlete.name} from shortlist` : `Add ${athlete.name} to shortlist`}
-            aria-pressed={athlete.saved}
-          >
-            <Heart className={`h-5 w-5 ${athlete.saved ? 'fill-current' : ''}`} aria-hidden="true" />
-          </button>
-
-          {/* Sport & Position labels */}
-          <div className="absolute bottom-3 left-3 flex gap-2">
-            <Badge variant="default" size="sm" className="bg-black/40 backdrop-blur-sm text-white border-0 font-medium">
-              {athlete.sport}
-            </Badge>
-            <Badge variant="default" size="sm" className="bg-white/20 backdrop-blur-sm text-white border-0">
-              {athlete.position}
-            </Badge>
-          </div>
-        </div>
-
-        {/* Avatar Section - Centered with verified badge */}
-        <div className="relative -mt-10 flex justify-center">
-          <div className="relative">
-            <Avatar
-              src={athlete.avatarUrl || undefined}
-              fallback={athlete.name.split(' ').map(n => n[0]).join('')}
-              size="xl"
-              className="h-20 w-20 text-xl border-4 border-[var(--bg-card)] shadow-lg ring-2 ring-[var(--color-primary)]/30"
-            />
-            {athlete.verified && (
-              <VerifiedBadge className="absolute -bottom-1 -right-1 border-2 border-[var(--bg-card)]" />
-            )}
-          </div>
-        </div>
-
-        {/* Name & School - Centered */}
-        <div className="px-4 pt-3 text-center">
-          <h3 className="font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--color-primary)] transition-colors duration-150 motion-reduce:transition-none">
-            {athlete.name}
-          </h3>
-          <p className="text-sm text-[var(--text-muted)] flex items-center justify-center gap-1 mt-0.5">
-            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-            {athlete.school}
-          </p>
-        </div>
-
-        {/* Stats Grid - 2x2 layout for better readability */}
-        <div className="px-4 pt-4 pb-4">
-          <div className="grid grid-cols-2 gap-2 mb-4">
-            {/* Social Reach */}
-            <div className="p-3 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-secondary)] hover:from-[var(--bg-secondary)] hover:to-[var(--bg-tertiary)] transition-all motion-reduce:transition-none">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="flex -space-x-1">
-                  <div
-                    className="h-5 w-5 rounded-full flex items-center justify-center"
-                    style={{ background: `linear-gradient(to bottom right, ${SOCIAL_BRAND_COLORS.INSTAGRAM.from}, ${SOCIAL_BRAND_COLORS.INSTAGRAM.to})` }}
-                  >
-                    <InstagramIcon className="h-2.5 w-2.5 text-white" />
-                  </div>
-                  <div
-                    className="h-5 w-5 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: SOCIAL_BRAND_COLORS.TIKTOK.bg }}
-                  >
-                    <TikTokIcon />
-                  </div>
-                </div>
-                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-medium">Reach</span>
-              </div>
-              <p className="font-bold text-lg text-[var(--text-primary)]">
-                {formatCompactNumber(totalFollowers)}
-              </p>
-            </div>
-
-            {/* Engagement Rate */}
-            <div className="p-3 rounded-[var(--radius-md)] bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-secondary)] hover:from-[var(--bg-secondary)] hover:to-[var(--bg-tertiary)] transition-all motion-reduce:transition-none">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="h-5 w-5 rounded-full bg-[var(--color-success)]/20 flex items-center justify-center">
-                  <TrendingUp className="h-3 w-3 text-[var(--color-success)]" aria-hidden="true" />
-                </div>
-                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-medium">Engagement</span>
-              </div>
-              <p className="font-bold text-lg text-[var(--color-success)]">
-                {formatPercentage(athlete.engagementRate)}
-              </p>
-            </div>
-
-            {/* NIL Value - Full width, prominent */}
-            <div className="col-span-2 p-3 rounded-[var(--radius-md)] bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-primary)]/5 to-transparent border border-[var(--color-primary)]/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-medium">NIL Valuation</span>
-                  <p className="font-bold text-xl text-[var(--color-primary)]">
-                    {formatCurrency(athlete.nilValue)}
-                  </p>
-                </div>
-                <div className="flex flex-col items-end text-right">
-                  <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">GPA</span>
-                  <span className="font-semibold text-[var(--text-primary)]">{athlete.gpa.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-2">
-            <Button
-              variant="primary"
-              size="sm"
-              className="flex-1 font-medium"
-              onClick={(e) => {
-                e.stopPropagation();
-                onViewProfile(athlete);
-              }}
-            >
-              View Profile
-            </Button>
-            <Button
-              variant={athlete.saved ? 'secondary' : 'outline'}
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleSave(athlete.id);
-              }}
-              className="px-4"
-            >
-              <Heart className={`h-4 w-4 ${athlete.saved ? 'fill-current' : ''}`} />
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function MultiSelectDropdown({
-  label,
-  options,
-  selected,
-  onChange,
-  placeholder = 'Select...',
-}: {
-  label: string;
-  options: string[];
-  selected: string[];
-  onChange: (values: string[]) => void;
-  placeholder?: string;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleOption = (option: string) => {
-    if (selected.includes(option)) {
-      onChange(selected.filter((s) => s !== option));
-    } else {
-      onChange([...selected, option]);
-    }
-  };
-
-  return (
-    <div className="relative">
-      <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">{label}</label>
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={`
-          w-full h-10 px-3 text-left
-          rounded-[var(--radius-md)]
-          bg-[var(--bg-secondary)] border border-[var(--border-color)]
-          text-sm text-[var(--text-primary)]
-          transition-colors duration-[var(--transition-fast)]
-          focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]
-          flex items-center justify-between
-        `}
-      >
-        <span className={selected.length === 0 ? 'text-[var(--text-muted)]' : ''}>
-          {selected.length === 0 ? placeholder : `${selected.length} selected`}
-        </span>
-        <svg className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-
-      {isOpen && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-          <div className="absolute z-20 mt-1 w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[var(--radius-md)] shadow-lg max-h-60 overflow-auto">
-            {options.map((option) => (
-              <label
-                key={option}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-[var(--bg-tertiary)] cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selected.includes(option)}
-                  onChange={() => toggleOption(option)}
-                  className="h-4 w-4 rounded border-[var(--border-color)] text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                />
-                <span className="text-sm text-[var(--text-primary)]">{option}</span>
-              </label>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-function RangeSlider({
-  label,
-  min,
-  max,
-  step,
-  value,
-  onChange,
-  formatValue,
-}: {
-  label: string;
-  min: number;
-  max: number;
-  step: number;
-  value: number;
-  onChange: (value: number) => void;
-  formatValue: (value: number) => string;
-}) {
-  const sliderId = useId();
-
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-1.5">
-        <label
-          htmlFor={sliderId}
-          className="text-xs font-medium text-[var(--text-muted)]"
-        >
-          {label}
-        </label>
-        <span
-          className="text-xs font-medium text-[var(--color-primary)]"
-          aria-live="polite"
-        >
-          {formatValue(value)}
-        </span>
-      </div>
-      <input
-        id={sliderId}
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        aria-valuemin={min}
-        aria-valuemax={max}
-        aria-valuenow={value}
-        aria-valuetext={formatValue(value)}
-        className="w-full h-2 bg-[var(--bg-tertiary)] rounded-lg appearance-none cursor-pointer accent-[var(--color-primary)] transition-opacity duration-150 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[var(--bg-card)]"
-      />
-    </div>
-  );
-}
-
-function FilterPanel({
+/**
+ * DiscoverFilterPanel - Wraps the generic FilterPanel with discover-specific filter controls
+ */
+function DiscoverFilterPanel({
   filters,
   onFiltersChange,
   onClear,
@@ -493,9 +166,6 @@ function FilterPanel({
   onFiltersChange: (filters: Filters) => void;
   onClear: () => void;
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const filterPanelId = useId();
-
   const hasActiveFilters =
     filters.sports.length > 0 ||
     filters.followerMin > FILTER_DEFAULTS.FOLLOWER_MIN ||
@@ -511,202 +181,101 @@ function FilterPanel({
     filters.school !== '',
   ].filter(Boolean).length;
 
-  // Handle keyboard navigation for collapsible panel
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      setIsExpanded(!isExpanded);
-    }
-  };
+  // Build filter tags for display
+  const filterTags: FilterTag[] = [
+    ...filters.sports.map((sport) => ({
+      id: `sport-${sport}`,
+      label: sport,
+      onRemove: () => onFiltersChange({ ...filters, sports: filters.sports.filter(s => s !== sport) }),
+    })),
+    ...(filters.followerMin > FILTER_DEFAULTS.FOLLOWER_MIN ? [{
+      id: 'follower-min',
+      label: `Min: ${formatCompactNumber(filters.followerMin)} followers`,
+      onRemove: () => onFiltersChange({ ...filters, followerMin: FILTER_DEFAULTS.FOLLOWER_MIN }),
+    }] : []),
+    ...(filters.followerMax < FILTER_DEFAULTS.FOLLOWER_MAX ? [{
+      id: 'follower-max',
+      label: `Max: ${formatCompactNumber(filters.followerMax)} followers`,
+      onRemove: () => onFiltersChange({ ...filters, followerMax: FILTER_DEFAULTS.FOLLOWER_MAX }),
+    }] : []),
+    ...(filters.engagementMin > FILTER_DEFAULTS.ENGAGEMENT_MIN ? [{
+      id: 'engagement-min',
+      label: `${filters.engagementMin}%+ engagement`,
+      onRemove: () => onFiltersChange({ ...filters, engagementMin: FILTER_DEFAULTS.ENGAGEMENT_MIN }),
+    }] : []),
+    ...(filters.school ? [{
+      id: 'school',
+      label: filters.school,
+      onRemove: () => onFiltersChange({ ...filters, school: '' }),
+    }] : []),
+  ];
 
   return (
-    <Card className="overflow-hidden border-[var(--border-color)]">
-      <CardContent className="p-0">
-        {/* Collapsible Header - Accessible */}
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          onKeyDown={handleKeyDown}
-          aria-expanded={isExpanded}
-          aria-controls={filterPanelId}
-          className="w-full flex items-center justify-between p-4 hover:bg-[var(--bg-tertiary)] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)]"
-        >
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-[var(--radius-md)] bg-[var(--color-primary)]/10 flex items-center justify-center" aria-hidden="true">
-              <SlidersHorizontal className="h-4 w-4 text-[var(--color-primary)]" />
-            </div>
-            <div className="text-left">
-              <span className="font-medium text-[var(--text-primary)]">Filters</span>
-              {activeFilterCount > 0 && (
-                <span className="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)]">
-                  {activeFilterCount} active
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {hasActiveFilters && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClear();
-                }}
-                className="text-[var(--text-muted)] hover:text-[var(--color-error)]"
-                aria-label="Clear all filters"
-              >
-                <X className="h-4 w-4 mr-1" aria-hidden="true" />
-                Clear
-              </Button>
-            )}
-            <svg
-              className={`h-5 w-5 text-[var(--text-muted)] transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </button>
+    <FilterPanel
+      hasActiveFilters={hasActiveFilters}
+      activeFilterCount={activeFilterCount}
+      onClearAll={onClear}
+      filterTags={filterTags}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Sport Multi-select */}
+        <MultiSelectDropdown
+          label="Sport"
+          options={SPORTS}
+          selected={filters.sports}
+          onChange={(newSports) => onFiltersChange({ ...filters, sports: newSports })}
+          placeholder="All sports"
+        />
 
-        {/* Expandable Filter Controls - CSS Grid for smooth animation */}
-        <div
-          id={filterPanelId}
-          className={`grid transition-all duration-300 ease-out motion-reduce:transition-none ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-        >
-          <div className="overflow-hidden">
-          <div className="p-4 pt-0 border-t border-[var(--border-color)]">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pt-4">
-              {/* Sport Multi-select */}
-              <MultiSelectDropdown
-                label="Sport"
-                options={SPORTS}
-                selected={filters.sports}
-                onChange={(newSports) => onFiltersChange({ ...filters, sports: newSports })}
-                placeholder="All sports"
-              />
-
-              {/* Follower Range */}
-              <div>
-                <label className="block text-xs font-medium text-[var(--text-muted)] mb-1.5">Followers (min)</label>
-                <Input
-                  type="number"
-                  placeholder="Min followers"
-                  value={filters.followerMin || ''}
-                  onChange={(e) => onFiltersChange({ ...filters, followerMin: Number(e.target.value) || 0 })}
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-[var(--text-muted)] mb-1.5">Followers (max)</label>
-                <Input
-                  type="number"
-                  placeholder="Max followers"
-                  value={filters.followerMax === 500000 ? '' : filters.followerMax}
-                  onChange={(e) => onFiltersChange({ ...filters, followerMax: Number(e.target.value) || 500000 })}
-                />
-              </div>
-
-              {/* Engagement Rate */}
-              <RangeSlider
-                label="Min Engagement Rate"
-                min={0}
-                max={10}
-                step={0.5}
-                value={filters.engagementMin}
-                onChange={(engagementMin) => onFiltersChange({ ...filters, engagementMin })}
-                formatValue={(v) => `${v}%+`}
-              />
-
-              {/* School Search */}
-              <div>
-                <label htmlFor="school-filter" className="block text-xs font-medium text-[var(--text-muted)] mb-1.5">School</label>
-                <select
-                  id="school-filter"
-                  value={filters.school}
-                  onChange={(e) => onFiltersChange({ ...filters, school: e.target.value })}
-                  className="w-full h-10 px-3 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-sm text-[var(--text-primary)] transition-colors duration-150 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
-                >
-                  <option value="">All schools</option>
-                  {SCHOOLS.map((school) => (
-                    <option key={school} value={school}>{school}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-          </div>
+        {/* Follower Range */}
+        <div>
+          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1.5">Followers (min)</label>
+          <Input
+            type="number"
+            placeholder="Min followers"
+            value={filters.followerMin || ''}
+            onChange={(e) => onFiltersChange({ ...filters, followerMin: Number(e.target.value) || 0 })}
+          />
         </div>
 
-        {/* Active filter tags - Accessible with keyboard support */}
-        {hasActiveFilters && (
-          <div
-            className="flex flex-wrap gap-2 px-4 pb-4 pt-2 border-t border-[var(--border-color)]"
-            role="list"
-            aria-label="Active filters"
+        <div>
+          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1.5">Followers (max)</label>
+          <Input
+            type="number"
+            placeholder="Max followers"
+            value={filters.followerMax === 500000 ? '' : filters.followerMax}
+            onChange={(e) => onFiltersChange({ ...filters, followerMax: Number(e.target.value) || 500000 })}
+          />
+        </div>
+
+        {/* Engagement Rate */}
+        <RangeSlider
+          label="Min Engagement Rate"
+          min={0}
+          max={10}
+          step={0.5}
+          value={filters.engagementMin}
+          onChange={(engagementMin) => onFiltersChange({ ...filters, engagementMin })}
+          formatValue={(v) => `${v}%+`}
+        />
+
+        {/* School Search */}
+        <div>
+          <label htmlFor="school-filter" className="block text-xs font-medium text-[var(--text-muted)] mb-1.5">School</label>
+          <select
+            id="school-filter"
+            value={filters.school}
+            onChange={(e) => onFiltersChange({ ...filters, school: e.target.value })}
+            className="w-full h-10 px-3 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-sm text-[var(--text-primary)] transition-colors duration-150 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
           >
-            {filters.sports.map((sport) => (
-              <button
-                key={sport}
-                onClick={() => onFiltersChange({ ...filters, sports: filters.sports.filter(s => s !== sport) })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)] hover:bg-[var(--color-primary)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 transition-colors duration-150"
-                aria-label={`Remove ${sport} filter`}
-                role="listitem"
-              >
-                {sport}
-                <X className="h-3 w-3" aria-hidden="true" />
-              </button>
+            <option value="">All schools</option>
+            {SCHOOLS.map((school) => (
+              <option key={school} value={school}>{school}</option>
             ))}
-            {filters.followerMin > FILTER_DEFAULTS.FOLLOWER_MIN && (
-              <button
-                onClick={() => onFiltersChange({ ...filters, followerMin: FILTER_DEFAULTS.FOLLOWER_MIN })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)] hover:bg-[var(--color-primary)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 transition-colors duration-150"
-                aria-label="Remove minimum followers filter"
-                role="listitem"
-              >
-                Min: {formatCompactNumber(filters.followerMin)} followers
-                <X className="h-3 w-3" aria-hidden="true" />
-              </button>
-            )}
-            {filters.followerMax < FILTER_DEFAULTS.FOLLOWER_MAX && (
-              <button
-                onClick={() => onFiltersChange({ ...filters, followerMax: FILTER_DEFAULTS.FOLLOWER_MAX })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)] hover:bg-[var(--color-primary)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 transition-colors duration-150"
-                aria-label="Remove maximum followers filter"
-                role="listitem"
-              >
-                Max: {formatCompactNumber(filters.followerMax)} followers
-                <X className="h-3 w-3" aria-hidden="true" />
-              </button>
-            )}
-            {filters.engagementMin > FILTER_DEFAULTS.ENGAGEMENT_MIN && (
-              <button
-                onClick={() => onFiltersChange({ ...filters, engagementMin: FILTER_DEFAULTS.ENGAGEMENT_MIN })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)] hover:bg-[var(--color-primary)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 transition-colors duration-150"
-                aria-label="Remove engagement rate filter"
-                role="listitem"
-              >
-                {filters.engagementMin}%+ engagement
-                <X className="h-3 w-3" aria-hidden="true" />
-              </button>
-            )}
-            {filters.school && (
-              <button
-                onClick={() => onFiltersChange({ ...filters, school: '' })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)] hover:bg-[var(--color-primary)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 transition-colors duration-150"
-                aria-label={`Remove ${filters.school} filter`}
-                role="listitem"
-              >
-                {filters.school}
-                <X className="h-3 w-3" aria-hidden="true" />
-              </button>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          </select>
+        </div>
+      </div>
+    </FilterPanel>
   );
 }
 
@@ -719,6 +288,8 @@ export default function BrandDiscoverPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [athletes, setAthletes] = useState<ServiceAthlete[]>([]);
+  const [fetchError, setFetchError] = useState<Error | null>(null);
+  const [isRetrying, setIsRetrying] = useState(false);
   const [filters, setFilters] = useState<Filters>({
     sports: [],
     followerMin: FILTER_DEFAULTS.FOLLOWER_MIN,
@@ -749,6 +320,7 @@ export default function BrandDiscoverPage() {
   // Fetch athletes from Supabase (or use mock data in demo mode)
   const fetchAthletes = useCallback(async () => {
     setIsLoading(true);
+    setFetchError(null);
     try {
       // In demo mode, skip Supabase and use mock data
       if (isDemoMode()) {
@@ -770,10 +342,21 @@ export default function BrandDiscoverPage() {
       }
     } catch (err) {
       console.error('Error fetching athletes:', err);
+      setFetchError(err instanceof Error ? err : new Error('Failed to fetch athletes'));
     } finally {
       setIsLoading(false);
     }
   }, [searchQuery, filters.engagementMin]);
+
+  // Handle retry
+  const handleRetry = useCallback(async () => {
+    setIsRetrying(true);
+    try {
+      await fetchAthletes();
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [fetchAthletes]);
 
   // Fetch athletes on mount and when search changes
   useEffect(() => {
@@ -937,6 +520,29 @@ export default function BrandDiscoverPage() {
     );
   }
 
+  // Show error state if data fetch failed (and not in demo mode with fallback data)
+  if (fetchError && !isLoading && !isDemoMode()) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Discover Athletes</h1>
+          <p className="text-[var(--text-muted)]">
+            Find and connect with top student-athletes
+          </p>
+        </div>
+        <Card>
+          <ErrorState
+            errorType="data"
+            title="Failed to load athletes"
+            description={fetchError.message || 'We could not load athlete data. Please try again.'}
+            onRetry={handleRetry}
+            isRetrying={isRetrying}
+          />
+        </Card>
+      </div>
+    );
+  }
+
   // Calculate summary stats
   const summaryStats = useMemo(() => {
     const totalFollowers = displayAthletes.reduce((sum, a) => sum + a.instagramFollowers + a.tiktokFollowers, 0);
@@ -1029,7 +635,7 @@ export default function BrandDiscoverPage() {
       </div>
 
       {/* Filter Panel */}
-      <FilterPanel
+      <DiscoverFilterPanel
         filters={filters}
         onFiltersChange={setFilters}
         onClear={handleClearFilters}
@@ -1037,17 +643,28 @@ export default function BrandDiscoverPage() {
 
       {/* Results Info - Live region for screen readers */}
       <div className="flex items-center justify-between">
-        <p
-          className="text-sm text-[var(--text-muted)]"
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          Showing <span className="font-medium text-[var(--text-primary)]">{filteredAthletes.length}</span> athletes
-          {(searchQuery || filters.sports.length > 0 || filters.school) && (
-            <span> matching your criteria</span>
+        <div className="flex items-center gap-2">
+          {isLoading && (
+            <Loader2 className="h-4 w-4 animate-spin text-[var(--color-primary)]" />
           )}
-        </p>
+          <p
+            className="text-sm text-[var(--text-muted)]"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {isLoading ? (
+              <span>Searching athletes...</span>
+            ) : (
+              <>
+                Showing <span className="font-medium text-[var(--text-primary)]">{filteredAthletes.length}</span> athletes
+                {(searchQuery || filters.sports.length > 0 || filters.school) && (
+                  <span> matching your criteria</span>
+                )}
+              </>
+            )}
+          </p>
+        </div>
         <div className="flex items-center gap-2">
           <label htmlFor="sort-select" className="text-sm text-[var(--text-muted)]">Sort by:</label>
           <select
@@ -1073,15 +690,21 @@ export default function BrandDiscoverPage() {
           ))}
         </div>
       ) : filteredAthletes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredAthletes.map((athlete) => (
-            <AthleteDiscoveryCard
-              key={athlete.id}
-              athlete={athlete}
-              onToggleSave={handleToggleSave}
-              onViewProfile={handleViewProfile}
-            />
-          ))}
+        <div className="relative">
+          {/* Filter loading overlay - shows briefly when filters change */}
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 transition-opacity duration-200"
+            style={{ opacity: 1 }}
+          >
+            {filteredAthletes.map((athlete) => (
+              <AthleteDiscoveryCard
+                key={athlete.id}
+                athlete={athlete}
+                onToggleSave={handleToggleSave}
+                onViewProfile={handleViewProfile}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <Card>

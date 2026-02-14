@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/modal';
+import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
 
 function SettingsSection({
@@ -35,7 +36,7 @@ function SettingsSection({
       <CardHeader>
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-[var(--radius-md)] bg-[var(--color-accent)]/10 flex items-center justify-center">
-            <Icon className="h-5 w-5 text-[var(--color-accent)]" />
+            <Icon className="h-5 w-5 text-[var(--color-accent)]" aria-hidden="true" />
           </div>
           <div>
             <CardTitle className="text-base">{title}</CardTitle>
@@ -48,42 +49,21 @@ function SettingsSection({
   );
 }
 
-function ToggleSwitch({
-  enabled,
-  onToggle,
-}: {
-  enabled: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      onClick={onToggle}
-      className={`relative h-6 w-11 rounded-full transition-colors ${
-        enabled ? 'bg-[var(--color-accent)]' : 'bg-[var(--border-color)]'
-      }`}
-    >
-      <span
-        className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${
-          enabled ? 'left-6' : 'left-1'
-        }`}
-      />
-    </button>
-  );
-}
-
 function SettingsRow({
   label,
   description,
   action,
+  labelId,
 }: {
   label: string;
   description?: string;
   action: React.ReactNode;
+  labelId?: string;
 }) {
   return (
     <div className="flex items-center justify-between py-4 border-b border-[var(--border-color)] last:border-0">
       <div>
-        <p className="font-medium text-[var(--text-primary)]">{label}</p>
+        <p id={labelId} className="font-medium text-[var(--text-primary)]">{label}</p>
         {description && (
           <p className="text-sm text-[var(--text-muted)]">{description}</p>
         )}
@@ -239,16 +219,18 @@ export default function DirectorSettingsPage() {
         title="Deal Approval"
         description="Configure deal approval workflow"
       >
-        <div>
+        <div role="group" aria-label="Deal approval settings">
           <SettingsRow
             label="Auto-Approve Deals Under Threshold"
             description="Automatically approve deals under $1,000"
+            labelId="director-auto-approve-label"
             action={
-              <ToggleSwitch
-                enabled={settings.autoApprove}
-                onToggle={() =>
-                  setSettings({ ...settings, autoApprove: !settings.autoApprove })
+              <Switch
+                checked={settings.autoApprove}
+                onCheckedChange={(checked) =>
+                  setSettings({ ...settings, autoApprove: checked })
                 }
+                aria-labelledby="director-auto-approve-label"
               />
             }
           />
@@ -261,6 +243,7 @@ export default function DirectorSettingsPage() {
                 value={approvalThreshold}
                 onChange={(e) => setApprovalThreshold(e.target.value)}
                 className="w-32"
+                aria-label="Approval threshold amount in dollars"
               />
             }
           />
@@ -278,49 +261,55 @@ export default function DirectorSettingsPage() {
         title="Notifications"
         description="Configure notification preferences"
       >
-        <div>
+        <div role="group" aria-label="Notification preferences">
           <SettingsRow
             label="Compliance Alerts"
             description="Get notified about compliance issues"
+            labelId="director-compliance-alerts-label"
             action={
-              <ToggleSwitch
-                enabled={settings.complianceAlerts}
-                onToggle={() =>
+              <Switch
+                checked={settings.complianceAlerts}
+                onCheckedChange={(checked) =>
                   setSettings({
                     ...settings,
-                    complianceAlerts: !settings.complianceAlerts,
+                    complianceAlerts: checked,
                   })
                 }
+                aria-labelledby="director-compliance-alerts-label"
               />
             }
           />
           <SettingsRow
             label="Deal Notifications"
             description="Get notified about new deals"
+            labelId="director-deal-notifications-label"
             action={
-              <ToggleSwitch
-                enabled={settings.dealNotifications}
-                onToggle={() =>
+              <Switch
+                checked={settings.dealNotifications}
+                onCheckedChange={(checked) =>
                   setSettings({
                     ...settings,
-                    dealNotifications: !settings.dealNotifications,
+                    dealNotifications: checked,
                   })
                 }
+                aria-labelledby="director-deal-notifications-label"
               />
             }
           />
           <SettingsRow
             label="Weekly Reports"
             description="Receive weekly program summary"
+            labelId="director-weekly-reports-label"
             action={
-              <ToggleSwitch
-                enabled={settings.weeklyReports}
-                onToggle={() =>
+              <Switch
+                checked={settings.weeklyReports}
+                onCheckedChange={(checked) =>
                   setSettings({
                     ...settings,
-                    weeklyReports: !settings.weeklyReports,
+                    weeklyReports: checked,
                   })
                 }
+                aria-labelledby="director-weekly-reports-label"
               />
             }
           />
@@ -397,14 +386,15 @@ export default function DirectorSettingsPage() {
           <p className="text-[var(--text-muted)] text-sm">
             Manage access and permissions for your team members.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-3" role="list" aria-label="Staff members">
             {mockStaffMembers.map((staff) => (
               <div
                 key={staff.id}
+                role="listitem"
                 className="flex items-center justify-between p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] border border-[var(--border-color)]"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-primary)] font-semibold">
+                  <div className="h-10 w-10 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-primary)] font-semibold" aria-hidden="true">
                     {staff.name.charAt(0)}
                   </div>
                   <div>
@@ -419,8 +409,9 @@ export default function DirectorSettingsPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRemoveStaff(staff.id, staff.name)}
+                      aria-label={`Remove ${staff.name} from staff`}
                     >
-                      <Trash2 className="h-4 w-4 text-[var(--color-error)]" />
+                      <Trash2 className="h-4 w-4 text-[var(--color-error)]" aria-hidden="true" />
                     </Button>
                   )}
                 </div>
@@ -442,7 +433,7 @@ export default function DirectorSettingsPage() {
               Cancel
             </Button>
             <Button variant="primary" onClick={handleInviteStaff} isLoading={isLoading}>
-              <UserPlus className="h-4 w-4 mr-2" />
+              <UserPlus className="h-4 w-4 mr-2" aria-hidden="true" />
               Send Invitation
             </Button>
           </>
@@ -450,25 +441,30 @@ export default function DirectorSettingsPage() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1.5">
+            <label htmlFor="staff-email" className="block text-sm font-medium text-[var(--text-primary)] mb-1.5">
               Email Address
             </label>
             <Input
+              id="staff-email"
               type="email"
+              autoComplete="email"
               value={inviteForm.email}
               onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
               placeholder="staff.member@university.edu"
-              icon={<Mail className="h-4 w-4" />}
+              icon={<Mail className="h-4 w-4" aria-hidden="true" />}
+              aria-required="true"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-1.5">
+            <label htmlFor="staff-role" className="block text-sm font-medium text-[var(--text-primary)] mb-1.5">
               Role
             </label>
             <select
+              id="staff-role"
               value={inviteForm.role}
               onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
               className="w-full h-10 px-3 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
+              aria-required="true"
             >
               <option value="Compliance Officer">Compliance Officer</option>
               <option value="Assistant AD">Assistant AD</option>
