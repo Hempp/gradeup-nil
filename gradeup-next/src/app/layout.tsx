@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
+import { KeyboardShortcutsProvider } from "@/components/ui/keyboard-shortcuts";
 import { AuthProvider } from "@/context";
 import { WebVitalsReporter } from "@/components/analytics/web-vitals-reporter";
 import { NavigationProgressBar } from "@/components/ui/navigation-progress";
@@ -88,9 +89,11 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ToastProvider>
-            <ToastGlobalHandler />
-            <NavigationProgressBar />
-            {children}
+            <KeyboardShortcutsProvider>
+              <ToastGlobalHandler />
+              <NavigationProgressBar />
+              {children}
+            </KeyboardShortcutsProvider>
           </ToastProvider>
         </AuthProvider>
         <WebVitalsReporter

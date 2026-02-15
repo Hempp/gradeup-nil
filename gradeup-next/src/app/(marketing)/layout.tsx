@@ -207,6 +207,11 @@ function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/help" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">
+                  Help Center
+                </Link>
+              </li>
+              <li>
                 <Link href="/privacy" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">
                   Privacy Policy
                 </Link>

@@ -835,3 +835,157 @@ export function maskAccountNumber(accountNumber: string): string {
   if (!accountNumber || accountNumber.length < 4) return '****';
   return '****' + accountNumber.slice(-4);
 }
+
+/* ===============================================================================
+   ADDITIONAL VALIDATORS FOR VALIDATED INPUT COMPONENT
+   =============================================================================== */
+
+/**
+ * Username validators
+ */
+export const usernameValidators = {
+  /**
+   * Validates alphanumeric username with underscores allowed
+   */
+  alphanumeric: (value: string): string | null => {
+    if (!value) return null;
+    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+      return 'Only letters, numbers, and underscores allowed';
+    }
+    return null;
+  },
+
+  /**
+   * Validates username starts with a letter
+   */
+  startsWithLetter: (value: string): string | null => {
+    if (!value) return null;
+    if (!/^[a-zA-Z]/.test(value)) {
+      return 'Must start with a letter';
+    }
+    return null;
+  },
+
+  /**
+   * Creates a username validator with all rules
+   */
+  username: (value: string): string | null => {
+    if (!value) return null;
+    if (value.length < 3) {
+      return 'Username must be at least 3 characters';
+    }
+    if (value.length > 20) {
+      return 'Username must be 20 characters or less';
+    }
+    if (!/^[a-zA-Z]/.test(value)) {
+      return 'Username must start with a letter';
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+      return 'Only letters, numbers, and underscores allowed';
+    }
+    return null;
+  },
+};
+
+/**
+ * Name validators
+ */
+export const nameValidators = {
+  /**
+   * Validates name contains only letters, spaces, hyphens, and apostrophes
+   */
+  name: (value: string): string | null => {
+    if (!value) return null;
+    if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+      return 'Please enter a valid name';
+    }
+    return null;
+  },
+
+  /**
+   * Validates first name (no spaces)
+   */
+  firstName: (value: string): string | null => {
+    if (!value) return null;
+    if (!/^[a-zA-Z'-]+$/.test(value)) {
+      return 'Please enter a valid first name';
+    }
+    if (value.length < 2) {
+      return 'First name must be at least 2 characters';
+    }
+    return null;
+  },
+
+  /**
+   * Validates last name (no spaces)
+   */
+  lastName: (value: string): string | null => {
+    if (!value) return null;
+    if (!/^[a-zA-Z'-]+$/.test(value)) {
+      return 'Please enter a valid last name';
+    }
+    if (value.length < 2) {
+      return 'Last name must be at least 2 characters';
+    }
+    return null;
+  },
+};
+
+/**
+ * Confirm field validator creator
+ * Creates a validator that checks if value matches another field
+ */
+export function confirmField(
+  getOriginalValue: () => string,
+  fieldName = 'password'
+): ValidatorFn {
+  return (value: string): string | null => {
+    if (!value) return null;
+    const original = getOriginalValue();
+    if (value !== original) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}s do not match`;
+    }
+    return null;
+  };
+}
+
+/**
+ * Extended GPA validator with customizable scale
+ */
+export function gpaValidator(maxGpa: number = 4.0): ValidatorFn {
+  return (value: string): string | null => {
+    if (!value) return null;
+    const num = parseFloat(value);
+    if (isNaN(num)) {
+      return 'Please enter a valid GPA';
+    }
+    if (num < 0) {
+      return 'GPA cannot be negative';
+    }
+    if (num > maxGpa) {
+      return `GPA must be ${maxGpa.toFixed(2)} or less`;
+    }
+    // Check for proper decimal format (up to 2 decimal places)
+    if (!/^\d+(\.\d{1,2})?$/.test(value)) {
+      return 'GPA format should be like 3.50';
+    }
+    return null;
+  };
+}
+
+/**
+ * Creates an async-compatible validator wrapper
+ * Useful for server-side validation like checking email availability
+ */
+export function createAsyncValidator(
+  asyncFn: (value: string) => Promise<string | null>,
+  loadingMessage = 'Checking...'
+): {
+  validate: (value: string) => Promise<string | null>;
+  getLoadingMessage: () => string;
+} {
+  return {
+    validate: asyncFn,
+    getLoadingMessage: () => loadingMessage,
+  };
+}

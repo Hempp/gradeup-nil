@@ -20,6 +20,15 @@ export {
   type TextAreaFieldProps,
   type PasswordFieldProps,
 } from './form-field';
+export {
+  ValidatedInput,
+  PasswordInput,
+  PasswordStrengthIndicator,
+  type ValidatedInputProps,
+  type PasswordInputProps,
+  type PasswordStrengthIndicatorProps,
+  type ValidationState,
+} from './validated-input';
 export { Select, MultiSelect, type SelectOption, type SelectProps, type MultiSelectProps } from './select';
 export { Switch, type SwitchProps } from './switch';
 export { AvatarUpload, DocumentUpload, type AvatarUploadProps, type DocumentUploadProps, type AvatarUploadVariant } from './avatar-upload';
@@ -72,3 +81,27 @@ export {
   Tooltip,
   Legend,
 } from './lazy-chart';
+
+// Keyboard Shortcuts
+export {
+  KeyboardShortcutsProvider,
+  KeyboardShortcutsDialog,
+  KeyCombo,
+  useKeyboardShortcuts,
+  useRegisterShortcut,
+  type Shortcut,
+  type ShortcutCategory,
+  type ShortcutCategoryInfo,
+  type KeyboardShortcutsContextValue,
+} from './keyboard-shortcuts';
+
+// Onboarding Tour
+export {
+  OnboardingTourProvider,
+  useOnboardingTour,
+  athleteOnboardingSteps,
+  athleteOnboardingConfig,
+  type TourStep,
+  type OnboardingTourConfig,
+  type OnboardingTourProviderProps,
+} from './onboarding-tour';
