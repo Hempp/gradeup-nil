@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FormInput, FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { ValidatedInput, PasswordInput, validators } from '@/components/ui/validated-input';
 import { useToastActions } from '@/components/ui/toast';
-import { useFormValidation, validators } from '@/lib/utils/validation';
+import { useFormValidation } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
 
 const SPORTS = [
@@ -92,7 +93,7 @@ export default function AthleteSignupPage() {
       firstName: [validators.required, validators.minLength(2)],
       lastName: [validators.required, validators.minLength(2)],
       email: [validators.required, validators.email],
-      password: [validators.required, validators.password],
+      password: [validators.required, validators.strongPassword],
       confirmPassword: [validators.required],
       school: [validators.required],
       sport: [validators.required],
@@ -256,8 +257,7 @@ export default function AthleteSignupPage() {
               </h3>
 
               <div className="grid grid-cols-2 gap-3">
-                <FormInput
-                  id="firstName"
+                <ValidatedInput
                   name="firstName"
                   label="First Name"
                   autoComplete="given-name"
@@ -266,11 +266,11 @@ export default function AthleteSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.firstName}
-                  error={fieldErrors.firstName}
+                  required
+                  validators={[validators.required, validators.minLength(2)]}
+                  error={touched.firstName ? fieldErrors.firstName : null}
                 />
-                <FormInput
-                  id="lastName"
+                <ValidatedInput
                   name="lastName"
                   label="Last Name"
                   autoComplete="family-name"
@@ -279,13 +279,13 @@ export default function AthleteSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.lastName}
-                  error={fieldErrors.lastName}
+                  required
+                  validators={[validators.required, validators.minLength(2)]}
+                  error={touched.lastName ? fieldErrors.lastName : null}
                 />
               </div>
 
-              <FormInput
-                id="email"
+              <ValidatedInput
                 name="email"
                 label="Email Address"
                 type="email"
@@ -295,40 +295,41 @@ export default function AthleteSignupPage() {
                 onChange={handleInputChange}
                 onBlur={handleFieldBlur}
                 disabled={isLoading}
-                touched={touched.email}
-                error={fieldErrors.email}
+                required
+                validators={[validators.required, validators.email]}
+                error={touched.email ? fieldErrors.email : null}
               />
 
-              <div className="grid grid-cols-2 gap-3">
-                <FormInput
-                  id="password"
-                  name="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="Min. 8 characters"
-                  value={values.password}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  touched={touched.password}
-                  error={fieldErrors.password}
-                />
-                <FormInput
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="Confirm password"
-                  value={values.confirmPassword}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  touched={touched.confirmPassword}
-                  error={fieldErrors.confirmPassword}
-                />
-              </div>
+              <PasswordInput
+                name="password"
+                label="Password"
+                autoComplete="new-password"
+                placeholder="Min. 8 characters"
+                value={values.password}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                required
+                showStrength
+                showRequirements
+                validators={[validators.required, validators.strongPassword]}
+                error={touched.password ? fieldErrors.password : null}
+              />
+
+              <ValidatedInput
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Confirm password"
+                value={values.confirmPassword}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                required
+                validators={[validators.required]}
+                error={touched.confirmPassword ? fieldErrors.confirmPassword : null}
+              />
             </div>
 
             {/* Section: Athletic Info */}
@@ -337,8 +338,7 @@ export default function AthleteSignupPage() {
                 Athletic Information
               </h3>
 
-              <FormInput
-                id="school"
+              <ValidatedInput
                 name="school"
                 label="School / University"
                 placeholder="Search your school..."
@@ -346,8 +346,9 @@ export default function AthleteSignupPage() {
                 onChange={handleInputChange}
                 onBlur={handleFieldBlur}
                 disabled={isLoading}
-                touched={touched.school}
-                error={fieldErrors.school}
+                required
+                validators={[validators.required]}
+                error={touched.school ? fieldErrors.school : null}
               />
 
               <div className="grid grid-cols-2 gap-3">
@@ -364,8 +365,7 @@ export default function AthleteSignupPage() {
                   options={SPORTS}
                   placeholder="Select sport"
                 />
-                <FormInput
-                  id="position"
+                <ValidatedInput
                   name="position"
                   label="Position"
                   placeholder="e.g., Point Guard"
@@ -373,8 +373,9 @@ export default function AthleteSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.position}
-                  error={fieldErrors.position}
+                  required
+                  validators={[validators.required]}
+                  error={touched.position ? fieldErrors.position : null}
                 />
               </div>
 
@@ -400,16 +401,14 @@ export default function AthleteSignupPage() {
                 <span className="font-normal text-[var(--neutral-400)]">(Optional)</span>
               </h3>
 
-              <FormInput
-                id="instagram"
+              <ValidatedInput
                 name="instagram"
                 label="Instagram Handle"
                 placeholder="@yourhandle"
                 value={values.instagram}
                 onChange={handleInputChange}
                 disabled={isLoading}
-                optional
-                required={false}
+                hint="Optional"
                 icon={
                   <svg
                     width="16"

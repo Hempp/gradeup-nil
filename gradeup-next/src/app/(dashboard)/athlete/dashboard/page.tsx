@@ -16,6 +16,7 @@ import {
   Handshake,
   Upload,
   Loader2,
+  HelpCircle,
 } from 'lucide-react';
 import {
   BarChart,
@@ -41,6 +42,7 @@ import { ErrorState } from '@/components/ui/error-state';
 import { formatCurrency, formatCompactNumber, formatRelativeTime, formatDate } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useAthleteStats, useAthleteDeals, useActivity, useAthleteEarnings } from '@/lib/hooks/use-data';
+import { useOnboardingTour } from '@/components/ui/onboarding-tour';
 import type { Activity } from '@/lib/services/activity';
 import type { Deal } from '@/lib/services/deals';
 
@@ -68,6 +70,26 @@ const activityColors: Record<string, string> = {
   payment: 'text-[var(--color-success)]',
   new_offer: 'text-[var(--color-primary)]',
 };
+
+function StartTourButton() {
+  const { startTour, isComplete, isActive } = useOnboardingTour();
+
+  // Don't show button while tour is active
+  if (isActive) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={startTour}
+      className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] rounded-[var(--radius-md)] transition-colors"
+      aria-label={isComplete ? 'Restart dashboard tour' : 'Start dashboard tour'}
+      title={isComplete ? 'Restart Tour' : 'Take a Tour'}
+    >
+      <HelpCircle className="h-4 w-4" />
+      <span className="hidden sm:inline">{isComplete ? 'Restart Tour' : 'Take a Tour'}</span>
+    </button>
+  );
+}
 
 function QuickActionsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -438,11 +460,16 @@ export default function AthleteDashboardPage() {
             Here&apos;s what&apos;s happening with your NIL deals
           </p>
         </div>
-        <QuickActionsDropdown />
+        <div className="flex items-center gap-3">
+          <StartTourButton />
+          <div data-tour="profile-completion">
+            <QuickActionsDropdown />
+          </div>
+        </div>
       </div>
 
       {/* Stats Grid - 4 cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-tour="earnings-dashboard">
         <StatCard
           title="Total Earnings"
           value={statsLoading ? '...' : formatCurrency(stats?.total_earnings || 0)}
@@ -481,10 +508,10 @@ export default function AthleteDashboardPage() {
 
       {/* Two-column section: Activity Feed + Deadlines */}
       <div className="grid lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-3" data-tour="deal-notifications">
           <ActivityFeed activities={activities} loading={activitiesLoading} />
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2" data-tour="browse-opportunities">
           <UpcomingDeadlines deals={deals} loading={dealsLoading} />
         </div>
       </div>

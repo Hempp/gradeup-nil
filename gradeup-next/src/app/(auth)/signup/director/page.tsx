@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FormInput, FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { ValidatedInput, PasswordInput, validators } from '@/components/ui/validated-input';
 import { useToastActions } from '@/components/ui/toast';
-import { useFormValidation, validators } from '@/lib/utils/validation';
+import { useFormValidation } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
 
 const DIVISIONS = [
@@ -77,7 +78,7 @@ export default function DirectorSignupPage() {
       title: [validators.required],
       email: [validators.required, validators.email],
       phone: [validators.phone],
-      password: [validators.required, validators.password],
+      password: [validators.required, validators.strongPassword],
       confirmPassword: [validators.required],
     }
   );
@@ -235,8 +236,7 @@ export default function DirectorSignupPage() {
                 School Information
               </h3>
 
-              <FormInput
-                id="schoolName"
+              <ValidatedInput
                 name="schoolName"
                 label="School/University Name"
                 autoComplete="organization"
@@ -245,8 +245,9 @@ export default function DirectorSignupPage() {
                 onChange={handleInputChange}
                 onBlur={handleFieldBlur}
                 disabled={isLoading}
-                touched={touched.schoolName}
-                error={fieldErrors.schoolName}
+                required
+                validators={[validators.required, validators.minLength(2)]}
+                error={touched.schoolName ? fieldErrors.schoolName : null}
                 icon={
                   <svg
                     width="16"
@@ -278,8 +279,7 @@ export default function DirectorSignupPage() {
                   options={DIVISIONS}
                   placeholder="Select division"
                 />
-                <FormInput
-                  id="department"
+                <ValidatedInput
                   name="department"
                   label="Department"
                   placeholder="Athletics"
@@ -287,8 +287,9 @@ export default function DirectorSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.department}
-                  error={fieldErrors.department}
+                  required
+                  validators={[validators.required]}
+                  error={touched.department ? fieldErrors.department : null}
                 />
               </div>
             </div>
@@ -300,8 +301,7 @@ export default function DirectorSignupPage() {
               </h3>
 
               <div className="grid grid-cols-2 gap-3">
-                <FormInput
-                  id="fullName"
+                <ValidatedInput
                   name="fullName"
                   label="Full Name"
                   autoComplete="name"
@@ -310,8 +310,9 @@ export default function DirectorSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.fullName}
-                  error={fieldErrors.fullName}
+                  required
+                  validators={[validators.required, validators.minLength(2)]}
+                  error={touched.fullName ? fieldErrors.fullName : null}
                   icon={
                     <svg
                       width="16"
@@ -328,8 +329,7 @@ export default function DirectorSignupPage() {
                     </svg>
                   }
                 />
-                <FormInput
-                  id="title"
+                <ValidatedInput
                   name="title"
                   label="Job Title"
                   placeholder="Athletic Director"
@@ -337,14 +337,14 @@ export default function DirectorSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.title}
-                  error={fieldErrors.title}
+                  required
+                  validators={[validators.required]}
+                  error={touched.title ? fieldErrors.title : null}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <FormInput
-                  id="email"
+                <ValidatedInput
                   name="email"
                   label="Work Email"
                   type="email"
@@ -354,8 +354,9 @@ export default function DirectorSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.email}
-                  error={fieldErrors.email}
+                  required
+                  validators={[validators.required, validators.email]}
+                  error={touched.email ? fieldErrors.email : null}
                   icon={
                     <svg
                       width="16"
@@ -372,8 +373,7 @@ export default function DirectorSignupPage() {
                     </svg>
                   }
                 />
-                <FormInput
-                  id="phone"
+                <ValidatedInput
                   name="phone"
                   label="Phone"
                   type="tel"
@@ -383,43 +383,42 @@ export default function DirectorSignupPage() {
                   onChange={handleInputChange}
                   onBlur={handleFieldBlur}
                   disabled={isLoading}
-                  touched={touched.phone}
-                  error={fieldErrors.phone}
-                  optional
-                  required={false}
+                  hint="Optional"
+                  validators={[validators.phone]}
+                  error={touched.phone ? fieldErrors.phone : null}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <FormInput
-                  id="password"
-                  name="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="Min. 8 characters"
-                  value={values.password}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  touched={touched.password}
-                  error={fieldErrors.password}
-                />
-                <FormInput
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="Confirm password"
-                  value={values.confirmPassword}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  touched={touched.confirmPassword}
-                  error={fieldErrors.confirmPassword}
-                />
-              </div>
+              <PasswordInput
+                name="password"
+                label="Password"
+                autoComplete="new-password"
+                placeholder="Min. 8 characters"
+                value={values.password}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                required
+                showStrength
+                showRequirements
+                validators={[validators.required, validators.strongPassword]}
+                error={touched.password ? fieldErrors.password : null}
+              />
+
+              <ValidatedInput
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Confirm password"
+                value={values.confirmPassword}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                required
+                validators={[validators.required]}
+                error={touched.confirmPassword ? fieldErrors.confirmPassword : null}
+              />
             </div>
 
             {/* Terms Checkbox */}

@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FormInput, FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { ValidatedInput, PasswordInput, validators } from '@/components/ui/validated-input';
 import { useToastActions } from '@/components/ui/toast';
-import { useFormValidation, validators } from '@/lib/utils/validation';
+import { useFormValidation } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
 
 const INDUSTRIES = [
@@ -76,7 +77,7 @@ export default function BrandSignupPage() {
       industry: [validators.required],
       fullName: [validators.required, validators.minLength(2)],
       email: [validators.required, validators.email],
-      password: [validators.required, validators.password],
+      password: [validators.required, validators.strongPassword],
       confirmPassword: [validators.required],
     }
   );
@@ -231,8 +232,7 @@ export default function BrandSignupPage() {
                 Company Information
               </h3>
 
-              <FormInput
-                id="companyName"
+              <ValidatedInput
                 name="companyName"
                 label="Company Name"
                 autoComplete="organization"
@@ -241,8 +241,9 @@ export default function BrandSignupPage() {
                 onChange={handleInputChange}
                 onBlur={handleFieldBlur}
                 disabled={isLoading}
-                touched={touched.companyName}
-                error={fieldErrors.companyName}
+                required
+                validators={[validators.required, validators.minLength(2)]}
+                error={touched.companyName ? fieldErrors.companyName : null}
                 icon={
                   <svg
                     width="16"
@@ -279,8 +280,7 @@ export default function BrandSignupPage() {
                 placeholder="Select industry"
               />
 
-              <FormInput
-                id="website"
+              <ValidatedInput
                 name="website"
                 label="Company Website"
                 type="url"
@@ -289,8 +289,8 @@ export default function BrandSignupPage() {
                 value={values.website}
                 onChange={handleInputChange}
                 disabled={isLoading}
-                optional
-                required={false}
+                hint="Optional"
+                validators={[validators.url]}
                 icon={
                   <svg
                     width="16"
@@ -316,8 +316,7 @@ export default function BrandSignupPage() {
                 Contact Information
               </h3>
 
-              <FormInput
-                id="fullName"
+              <ValidatedInput
                 name="fullName"
                 label="Your Full Name"
                 autoComplete="name"
@@ -326,8 +325,9 @@ export default function BrandSignupPage() {
                 onChange={handleInputChange}
                 onBlur={handleFieldBlur}
                 disabled={isLoading}
-                touched={touched.fullName}
-                error={fieldErrors.fullName}
+                required
+                validators={[validators.required, validators.minLength(2)]}
+                error={touched.fullName ? fieldErrors.fullName : null}
                 icon={
                   <svg
                     width="16"
@@ -345,8 +345,7 @@ export default function BrandSignupPage() {
                 }
               />
 
-              <FormInput
-                id="email"
+              <ValidatedInput
                 name="email"
                 label="Work Email Address"
                 type="email"
@@ -356,8 +355,9 @@ export default function BrandSignupPage() {
                 onChange={handleInputChange}
                 onBlur={handleFieldBlur}
                 disabled={isLoading}
-                touched={touched.email}
-                error={fieldErrors.email}
+                required
+                validators={[validators.required, validators.email]}
+                error={touched.email ? fieldErrors.email : null}
                 icon={
                   <svg
                     width="16"
@@ -375,36 +375,36 @@ export default function BrandSignupPage() {
                 }
               />
 
-              <div className="grid grid-cols-2 gap-3">
-                <FormInput
-                  id="password"
-                  name="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="Min. 8 characters"
-                  value={values.password}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  touched={touched.password}
-                  error={fieldErrors.password}
-                />
-                <FormInput
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="Confirm password"
-                  value={values.confirmPassword}
-                  onChange={handleInputChange}
-                  onBlur={handleFieldBlur}
-                  disabled={isLoading}
-                  touched={touched.confirmPassword}
-                  error={fieldErrors.confirmPassword}
-                />
-              </div>
+              <PasswordInput
+                name="password"
+                label="Password"
+                autoComplete="new-password"
+                placeholder="Min. 8 characters"
+                value={values.password}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                required
+                showStrength
+                showRequirements
+                validators={[validators.required, validators.strongPassword]}
+                error={touched.password ? fieldErrors.password : null}
+              />
+
+              <ValidatedInput
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Confirm password"
+                value={values.confirmPassword}
+                onChange={handleInputChange}
+                onBlur={handleFieldBlur}
+                disabled={isLoading}
+                required
+                validators={[validators.required]}
+                error={touched.confirmPassword ? fieldErrors.confirmPassword : null}
+              />
             </div>
 
             {/* Terms Checkbox */}

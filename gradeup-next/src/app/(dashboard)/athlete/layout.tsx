@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { DashboardShell, type BreadcrumbItem } from '@/components/layout';
+import { OnboardingTourProvider, athleteOnboardingConfig } from '@/components/ui/onboarding-tour';
 import type { NavItem } from '@/types';
 
 const athleteNavItems: NavItem[] = [
@@ -56,16 +57,18 @@ export default function AthleteLayout({
   };
 
   return (
-    <DashboardShell
-      navItems={athleteNavItems}
-      variant="athlete"
-      breadcrumbs={breadcrumbs}
-      user={user}
-      notificationCount={3}
-    >
-      <div className="max-w-[var(--container-max)] mx-auto">
-        {children}
-      </div>
-    </DashboardShell>
+    <OnboardingTourProvider config={athleteOnboardingConfig}>
+      <DashboardShell
+        navItems={athleteNavItems}
+        variant="athlete"
+        breadcrumbs={breadcrumbs}
+        user={user}
+        notificationCount={3}
+      >
+        <div className="max-w-[var(--container-max)] mx-auto">
+          {children}
+        </div>
+      </DashboardShell>
+    </OnboardingTourProvider>
   );
 }
