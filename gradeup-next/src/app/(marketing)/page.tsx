@@ -630,7 +630,7 @@ function HowItWorksSection() {
                   <video
                     ref={videoRef}
                     className="w-full h-full object-cover"
-                    poster="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=675&fit=crop"
+                    poster="/videos/poster.jpg"
                     playsInline
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
