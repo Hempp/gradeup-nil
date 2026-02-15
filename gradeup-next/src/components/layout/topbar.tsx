@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { Bell, ChevronDown, Menu, Settings, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ChevronDown, Menu, Settings, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb, type BreadcrumbItem } from './breadcrumb';
+import { NotificationDropdown, type Notification } from '@/components/notifications';
+import { useNotifications } from '@/lib/hooks/use-notifications';
 
 export interface TopbarUser {
   name: string;
@@ -15,6 +18,7 @@ export interface TopbarUser {
 export interface TopbarProps {
   breadcrumbs?: BreadcrumbItem[];
   user?: TopbarUser;
+  userId?: string;
   notificationCount?: number;
   onMenuClick?: () => void;
   className?: string;
@@ -23,12 +27,34 @@ export interface TopbarProps {
 export function Topbar({
   breadcrumbs = [],
   user,
+  userId = 'mock-user-id',
   notificationCount = 0,
   onMenuClick,
   className,
 }: TopbarProps) {
+  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Notifications hook
+  const {
+    notifications: rawNotifications,
+    markAsRead,
+    markAllAsRead,
+  } = useNotifications(userId);
+
+  // Transform notifications to match NotificationDropdown expected format
+  const notifications: Notification[] = useMemo(() => {
+    return rawNotifications.map(n => ({
+      id: n.id,
+      type: n.type as Notification['type'],
+      title: n.title,
+      message: n.message,
+      timestamp: new Date(n.created_at),
+      read: n.read,
+      href: n.url,
+    }));
+  }, [rawNotifications]);
 
   // Default user for display
   const displayUser = user || {
@@ -93,18 +119,19 @@ export function Topbar({
 
       {/* Right side: Notifications + User dropdown */}
       <div className="flex items-center gap-2">
-        {/* Notification bell - 44px min touch target */}
-        <button
-          className="relative h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 active:bg-white/20 transition-colors touch-manipulation"
-          aria-label={`Notifications${notificationCount > 0 ? ` (${notificationCount} unread)` : ''}`}
-        >
-          <Bell className="h-5 w-5" />
-          {notificationCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 h-4 min-w-4 px-1 flex items-center justify-center rounded-full bg-[var(--marketing-cyan)] text-black text-[10px] font-semibold">
-              {notificationCount > 99 ? '99+' : notificationCount}
-            </span>
-          )}
-        </button>
+        {/* Notification dropdown */}
+        <NotificationDropdown
+          notifications={notifications}
+          onMarkAsRead={markAsRead}
+          onMarkAllAsRead={markAllAsRead}
+          onNotificationClick={(notification) => {
+            if (notification.href) {
+              router.push(notification.href);
+            }
+          }}
+          viewAllHref="/notifications"
+          className="h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 active:bg-white/20 transition-colors touch-manipulation"
+        />
 
         {/* User dropdown */}
         <div className="relative" ref={dropdownRef}>
