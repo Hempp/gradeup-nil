@@ -371,7 +371,10 @@ export default function LoginPage() {
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => router.push('/athlete/dashboard')}
+                onClick={() => {
+                  document.cookie = 'demo_role=athlete; path=/; max-age=3600';
+                  router.push('/athlete/dashboard');
+                }}
                 disabled={isLoading}
                 className="px-3 py-2 text-xs font-medium rounded-lg bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)] border border-[var(--marketing-cyan)]/20 hover:bg-[var(--marketing-cyan)]/20 hover:border-[var(--marketing-cyan)]/40 transition-all disabled:opacity-50"
               >
@@ -379,7 +382,10 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => router.push('/brand/dashboard')}
+                onClick={() => {
+                  document.cookie = 'demo_role=brand; path=/; max-age=3600';
+                  router.push('/brand/dashboard');
+                }}
                 disabled={isLoading}
                 className="px-3 py-2 text-xs font-medium rounded-lg bg-[var(--marketing-lime)]/10 text-[var(--marketing-lime)] border border-[var(--marketing-lime)]/20 hover:bg-[var(--marketing-lime)]/20 hover:border-[var(--marketing-lime)]/40 transition-all disabled:opacity-50"
               >
@@ -387,13 +393,19 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => router.push('/director/dashboard')}
+                onClick={() => {
+                  document.cookie = 'demo_role=director; path=/; max-age=3600';
+                  router.push('/director/dashboard');
+                }}
                 disabled={isLoading}
                 className="px-3 py-2 text-xs font-medium rounded-lg bg-[var(--marketing-magenta)]/10 text-[var(--marketing-magenta)] border border-[var(--marketing-magenta)]/20 hover:bg-[var(--marketing-magenta)]/20 hover:border-[var(--marketing-magenta)]/40 transition-all disabled:opacity-50"
               >
                 Director
               </button>
             </div>
+            <p className="text-center text-[10px] text-white/30 mt-2">
+              Demo sessions expire in 1 hour
+            </p>
           </div>
         </form>
       </CardContent>

@@ -6,6 +6,8 @@ export async function middleware(request: NextRequest) {
     request: { headers: request.headers },
   });
 
+  const path = request.nextUrl.pathname;
+
   // Skip auth checks if Supabase is not configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return response;
@@ -16,6 +18,30 @@ export async function middleware(request: NextRequest) {
   if (process.env.SKIP_AUTH_CHECK === 'true') {
     console.warn('[SECURITY WARNING] Auth checks disabled via SKIP_AUTH_CHECK=true');
     return response;
+  }
+
+  // Demo mode: Allow access to dashboards with demo cookie
+  // This enables the "Quick Access" demo feature on the login page
+  const demoRole = request.cookies.get('demo_role')?.value;
+  if (demoRole) {
+    const demoRolePaths: Record<string, string> = {
+      athlete: '/athlete',
+      brand: '/brand',
+      director: '/director',
+    };
+    const allowedPath = demoRolePaths[demoRole];
+
+    // Allow access if the demo role matches the path
+    if (allowedPath && path.startsWith(allowedPath)) {
+      return response;
+    }
+
+    // Redirect to correct demo dashboard if accessing wrong one
+    if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director')) {
+      if (allowedPath && !path.startsWith(allowedPath)) {
+        return NextResponse.redirect(new URL(`${allowedPath}/dashboard`, request.url));
+      }
+    }
   }
 
   const supabase = createServerClient(
@@ -40,7 +66,6 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
 
   // Protected dashboard routes
   if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director')) {
