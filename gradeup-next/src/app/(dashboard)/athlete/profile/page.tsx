@@ -29,6 +29,7 @@ import { useFormValidation, validators } from '@/lib/utils/validation';
 import { useRequireAuth } from '@/context';
 import { updateAthleteProfile, uploadAthleteMedia } from '@/lib/services/athlete';
 import { HighlightTapeSection } from '@/components/athlete/HighlightTapeSection';
+import { VerificationStatusCard } from '@/components/athlete/VerificationStatusCard';
 import type { Athlete } from '@/types';
 
 function VerificationBadge({ verified, label }: { verified: boolean; label: string }) {
@@ -547,12 +548,9 @@ export default function AthleteProfilePage() {
         athlete={athleteData}
         onAvatarUpload={handleAvatarUpload}
       />
-      <VerificationStatus
-        enrollmentVerified={true}
-        sportVerified={true}
-        gradesVerified={athleteData?.gpa ? athleteData.gpa > 0 : false}
-        identityVerified={true}
-      />
+      {athleteData?.id && (
+        <VerificationStatusCard athleteId={athleteData.id} />
+      )}
       <div className="grid lg:grid-cols-2 gap-6">
         <PersonalInfoForm initialValues={initialFormValues} onSave={handleSaveProfile} />
         <SocialLinksCard

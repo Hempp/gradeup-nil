@@ -6,6 +6,7 @@ export type VerificationType =
   | 'sport'
   | 'grades'
   | 'identity'
+  | 'stats'
   | 'ncaa_eligibility';
 
 export type VerificationStatus =
@@ -362,7 +363,127 @@ function getVerificationField(type: VerificationType): string | null {
     sport: 'sport_verified',
     grades: 'grades_verified',
     identity: 'identity_verified',
+    stats: 'stats_verified',
     ncaa_eligibility: null, // May need separate handling
   };
   return fieldMap[type];
+}
+
+/**
+ * Bulk approve multiple verification requests
+ */
+export async function bulkApproveVerifications(
+  requestIds: string[],
+  directorId: string
+): Promise<{ data: { approved: number; failed: number }; error: Error | null }> {
+  const supabase = createClient();
+  let approved = 0;
+  let failed = 0;
+
+  // Get all requests to approve
+  const { data: requests, error: fetchError } = await supabase
+    .from('verification_requests')
+    .select('id, athlete_id, type')
+    .in('id', requestIds)
+    .in('status', ['pending', 'in_review']);
+
+  if (fetchError) {
+    return { data: { approved: 0, failed: requestIds.length }, error: new Error(fetchError.message) };
+  }
+
+  // Approve each request
+  for (const request of requests || []) {
+    const result = await approveVerification(request.athlete_id, request.type, directorId);
+    if (result.error) {
+      failed++;
+    } else {
+      approved++;
+    }
+  }
+
+  return { data: { approved, failed }, error: null };
+}
+
+/**
+ * Get pending verification count for a director's school
+ */
+export async function getPendingVerificationCount(
+  schoolId: string
+): Promise<{ data: number; error: Error | null }> {
+  const supabase = createClient();
+
+  // Get athletes from the school
+  const { data: athletes, error: athleteError } = await supabase
+    .from('athletes')
+    .select('id')
+    .eq('school_id', schoolId);
+
+  if (athleteError) {
+    return { data: 0, error: new Error(athleteError.message) };
+  }
+
+  const athleteIds = athletes?.map(a => a.id) || [];
+  if (athleteIds.length === 0) {
+    return { data: 0, error: null };
+  }
+
+  // Count pending requests
+  const { count, error } = await supabase
+    .from('verification_requests')
+    .select('id', { count: 'exact', head: true })
+    .in('athlete_id', athleteIds)
+    .in('status', ['pending', 'in_review']);
+
+  if (error) {
+    return { data: 0, error: new Error(error.message) };
+  }
+
+  return { data: count || 0, error: null };
+}
+
+/**
+ * Get detailed pending verifications for a director's school
+ */
+export async function getSchoolPendingVerifications(
+  schoolId: string
+): Promise<{ data: (VerificationRequest & { athlete: { id: string; first_name: string; last_name: string; gpa: number; sport?: { name: string } } })[] | null; error: Error | null }> {
+  const supabase = createClient();
+
+  // Get athletes from the school
+  const { data: athletes, error: athleteError } = await supabase
+    .from('athletes')
+    .select('id')
+    .eq('school_id', schoolId);
+
+  if (athleteError) {
+    return { data: null, error: new Error(athleteError.message) };
+  }
+
+  const athleteIds = athletes?.map(a => a.id) || [];
+  if (athleteIds.length === 0) {
+    return { data: [], error: null };
+  }
+
+  // Get pending requests with athlete details
+  const { data, error } = await supabase
+    .from('verification_requests')
+    .select(`
+      *,
+      athlete:athletes(
+        id,
+        first_name,
+        last_name,
+        gpa,
+        sport:sports(name)
+      )
+    `)
+    .in('athlete_id', athleteIds)
+    .in('status', ['pending', 'in_review'])
+    .order('submitted_at', { ascending: true });
+
+  if (error) {
+    return { data: null, error: new Error(error.message) };
+  }
+
+  return { data: data as any, error: null };
 }

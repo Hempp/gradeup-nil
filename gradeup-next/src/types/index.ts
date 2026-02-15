@@ -280,3 +280,43 @@ export interface NavItem {
   icon: string;
   badge?: number;
 }
+
+// ─── Verification Workflow ───
+export type VerificationType = 'enrollment' | 'sport' | 'grades' | 'stats';
+export type VerificationStatus = 'pending' | 'approved' | 'rejected';
+
+export interface VerificationRequest {
+  id: string;
+  athlete_id: string;
+  director_id?: string;
+  type: VerificationType;
+  status: VerificationStatus;
+  notes?: string;
+  rejection_reason?: string;
+  submitted_at: string;
+  reviewed_at?: string;
+  reviewed_by?: string;
+  created_at: string;
+  updated_at?: string;
+  // Joined relations
+  athlete?: Athlete;
+}
+
+export interface NotificationPreferences {
+  id: string;
+  user_id: string;
+  email_enabled: boolean;
+  push_enabled: boolean;
+  in_app_enabled: boolean;
+}
+
+export interface AppNotification {
+  id: string;
+  user_id: string;
+  type: 'verification_request' | 'verification_approved' | 'verification_rejected' | 'deal' | 'message' | 'system';
+  title: string;
+  message: string;
+  data?: Record<string, unknown>;
+  read: boolean;
+  created_at: string;
+}

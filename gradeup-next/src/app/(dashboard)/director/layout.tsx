@@ -7,6 +7,7 @@ import type { NavItem } from '@/types';
 const directorNavItems: NavItem[] = [
   { label: 'Dashboard', href: '/director/dashboard', icon: 'LayoutDashboard' },
   { label: 'Athletes', href: '/director/athletes', icon: 'Users' },
+  { label: 'Verifications', href: '/director/verifications', icon: 'BadgeCheck' },
   { label: 'Brands', href: '/director/brands', icon: 'Target' },
   { label: 'Deals', href: '/director/deals', icon: 'FileText' },
   { label: 'Compliance', href: '/director/compliance', icon: 'Shield', badge: 2 },
@@ -18,6 +19,7 @@ const directorNavItems: NavItem[] = [
 const pathToBreadcrumb: Record<string, string> = {
   '/director/dashboard': 'Dashboard',
   '/director/athletes': 'Athletes',
+  '/director/verifications': 'Verifications',
   '/director/brands': 'Brands',
   '/director/deals': 'Deals',
   '/director/compliance': 'Compliance',
