@@ -2905,8 +2905,8 @@
     </aside>
 
     <!-- Dashboard Content -->
-    <main class="dashboard">
-        <main id="main-content" class="dashboard-container">
+    <main class="dashboard" id="main-content">
+        <div class="dashboard-container">
             <div class="dashboard-grid">
                 <!-- Main Content -->
                 <div class="dashboard-main">
@@ -3071,6 +3071,24 @@
                             <span class="stat-label">Profile Views</span>
                         </div>
 
+                        <div class="stat-card animate-in delay-4">
+                            <div class="stat-icon xp">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value-row">
+                                <span class="stat-main-value" id="achievementXP">0</span>
+                                <span class="stat-trend positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 15l-6-6-6 6"/>
+                                    </svg>
+                                    +450
+                                </span>
+                            </div>
+                            <span class="stat-label">Achievement XP</span>
+                        </div>
+
                     </div>
 
                     <!-- Active Deals Table -->
@@ -3139,6 +3157,73 @@
                         </div>
                     </div>
 
+                    <!-- Achievements Widget -->
+                    <div class="glass-card animate-in delay-5">
+                        <div class="card-header">
+                            <h3 class="card-title">Achievements</h3>
+                            <button class="card-action" id="viewAllAchievements">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="achievements-grid" id="achievementsGrid">
+                                <!-- Achievements will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Widget -->
+                    <div class="glass-card animate-in delay-6">
+                        <div class="card-header">
+                            <h3 class="card-title">Upcoming Events</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="calendar-widget" id="calendarWidget">
+                                <!-- Calendar items will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brand Matches Widget -->
+                    <div class="glass-card animate-in delay-7">
+                        <div class="card-header">
+                            <h3 class="card-title">Top Brand Matches</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="brand-matches" id="brandMatches">
+                                <!-- Brand matches will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Highlights Widget -->
+                    <div class="glass-card animate-in delay-8">
+                        <div class="card-header">
+                            <h3 class="card-title">Video Highlights</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="video-grid" id="videoGrid">
+                                <!-- Videos will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monetization Controls -->
+                    <div class="glass-card animate-in delay-9">
+                        <div class="card-header">
+                            <h3 class="card-title">Monetization</h3>
+                            <button class="card-action" id="settingsBtn" aria-label="Monetization settings">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="monetization-controls" id="monetizationControls">
+                                <!-- Monetization toggles will be inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -3146,7 +3231,7 @@
     </main>
 
     <!-- Modal Container -->
-    <div class="dashboard-modal" id="dashboardModal">
+    <div class="dashboard-modal" id="dashboardModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="modalTitle">Modal Title</h3>
@@ -3168,6 +3253,51 @@
         //  Note: All data is mock/hardcoded for demo purposes. No user input is
         //  used in dynamic HTML generation, eliminating XSS concerns.
         // ═══════════════════════════════════════════════════════════════════════════
+
+        // ─── Focus Trap Utility (WCAG 2.2 Keyboard Accessibility) ───
+        let lastFocusedElement = null;
+        const dashboardModal = document.getElementById('dashboardModal');
+
+        function setupModalFocusTrap() {
+            const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            const focusableElements = dashboardModal.querySelectorAll(focusableSelectors);
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+
+            lastFocusedElement = document.activeElement;
+
+            if (firstFocusable) {
+                setTimeout(function() { firstFocusable.focus(); }, 50);
+            }
+        }
+
+        function handleModalKeydown(e) {
+            if (!dashboardModal.classList.contains('active')) return;
+
+            const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            const focusableElements = dashboardModal.querySelectorAll(focusableSelectors);
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+
+            if (e.key === 'Tab') {
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusable) {
+                        e.preventDefault();
+                        lastFocusable.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusable) {
+                        e.preventDefault();
+                        firstFocusable.focus();
+                    }
+                }
+            }
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        }
+
+        document.addEventListener('keydown', handleModalKeydown);
 
         // ─── Mock Data ───
         const athleteData = {
@@ -4362,12 +4492,18 @@
             }
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            setupModalFocusTrap();
         }
 
         function closeModal() {
             const modal = document.getElementById('dashboardModal');
             modal.classList.remove('active');
             document.body.style.overflow = '';
+            // Restore focus to the element that opened the modal
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
         }
 
         // ─── Create Modal Content Safely ───

@@ -24,12 +24,12 @@
     <nav class="dashboard-nav">
         <div class="dashboard-nav-left">
             <a href="index.html" class="dashboard-logo">GRADEUP</a>
-            <div class="dashboard-nav-tabs">
-                <a href="director-dashboard.html" class="nav-tab active" data-tab="dashboard">Dashboard</a>
-                <a href="#" class="nav-tab" data-tab="athletes">Athletes</a>
-                <a href="#" class="nav-tab" data-tab="compliance">Compliance</a>
-                <a href="#" class="nav-tab" data-tab="reports">Reports</a>
-                <a href="settings.html" class="nav-tab highlighted" data-tab="settings">Settings</a>
+            <div class="dashboard-nav-tabs" role="tablist">
+                <a href="director-dashboard.html" class="nav-tab active" role="tab" aria-selected="true" data-tab="dashboard">Dashboard</a>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="athletes" onclick="alert('Athletes section coming soon')">Athletes</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="compliance" onclick="alert('Compliance section coming soon')">Compliance</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="reports" onclick="alert('Reports section coming soon')">Reports</button>
+                <button class="nav-tab highlighted" role="tab" aria-selected="false" data-tab="settings" id="settingsNavBtn">Settings</button>
             </div>
         </div>
 
@@ -139,16 +139,16 @@
                     <table class="athletes-table" id="athletesTable">
                         <thead>
                             <tr>
-                                <th><label class="sr-only" for="selectAll">Select all athletes</label><input type="checkbox" id="selectAll" aria-label="Select all athletes"></th>
-                                <th class="sortable" data-sort="name">Athlete <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></th>
-                                <th class="sortable" data-sort="sport">Sport</th>
-                                <th class="sortable" data-sort="year">Year</th>
-                                <th class="sortable" data-sort="gpa">GPA</th>
-                                <th class="sortable" data-sort="deals">NIL Deals</th>
-                                <th class="sortable" data-sort="earnings">Earnings</th>
-                                <th class="sortable" data-sort="score">GradeUp Score</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th scope="col"><label class="sr-only" for="selectAll">Select all athletes</label><input type="checkbox" id="selectAll"></th>
+                                <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none" data-sort="name">Athlete <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></th>
+                                <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none" data-sort="sport">Sport</th>
+                                <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none" data-sort="year">Year</th>
+                                <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none" data-sort="gpa">GPA</th>
+                                <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none" data-sort="deals">NIL Deals</th>
+                                <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none" data-sort="earnings">Earnings</th>
+                                <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none" data-sort="score">GradeUp Score</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="athletesTableBody">
@@ -158,14 +158,14 @@
                 </div>
                 <div class="table-pagination">
                     <span class="pagination-info">Showing 1-20 of 156 athletes</span>
-                    <div class="pagination-controls">
-                        <button class="pagination-btn" disabled>&laquo;</button>
-                        <button class="pagination-btn active">1</button>
-                        <button class="pagination-btn">2</button>
-                        <button class="pagination-btn">3</button>
-                        <button class="pagination-btn">...</button>
-                        <button class="pagination-btn">8</button>
-                        <button class="pagination-btn">&raquo;</button>
+                    <div class="pagination-controls" role="navigation" aria-label="Athletes table pagination">
+                        <button class="pagination-btn" disabled aria-label="Previous page">&laquo;</button>
+                        <button class="pagination-btn active" aria-label="Page 1, current page" aria-current="page">1</button>
+                        <button class="pagination-btn" aria-label="Go to page 2">2</button>
+                        <button class="pagination-btn" aria-label="Go to page 3">3</button>
+                        <button class="pagination-btn" aria-disabled="true">...</button>
+                        <button class="pagination-btn" aria-label="Go to page 8">8</button>
+                        <button class="pagination-btn" aria-label="Next page">&raquo;</button>
                     </div>
                 </div>
             </section>
@@ -837,16 +837,16 @@
         </aside>
 
         <!-- Quick Actions Panel -->
-        <div class="quick-actions">
-            <button class="quick-action-btn" title="Bulk Verify Athletes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
-            <button class="quick-action-btn" title="Send Team Announcement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
-            <button class="quick-action-btn" title="Generate Compliance Report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></button>
-            <button class="quick-action-btn" title="Schedule Meeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
+        <div class="quick-actions" role="toolbar" aria-label="Quick actions">
+            <button class="quick-action-btn" title="Bulk Verify Athletes" aria-label="Bulk verify athletes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>
+            <button class="quick-action-btn" title="Send Team Announcement" aria-label="Send team announcement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+            <button class="quick-action-btn" title="Generate Compliance Report" aria-label="Generate compliance report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></button>
+            <button class="quick-action-btn" title="Schedule Meeting" aria-label="Schedule meeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
         </div>
     </main>
 
     <!-- Document Preview Modal -->
-    <div class="modal-overlay" id="docPreviewModal">
+    <div class="modal-overlay" id="docPreviewModal" role="dialog" aria-modal="true" aria-labelledby="docPreviewTitle">
         <div class="modal doc-preview-modal">
             <div class="doc-preview-header">
                 <div class="doc-preview-title">
@@ -883,11 +883,11 @@
     </div>
 
     <!-- Settings Modal -->
-    <div class="modal-overlay" id="settingsModal">
+    <div class="modal-overlay" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
         <div class="modal settings-modal">
-            <button class="modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <button class="modal-close" aria-label="Close settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             <div class="modal-content">
-                <h2 class="modal-title">Settings</h2>
+                <h2 class="modal-title" id="settingsTitle">Settings</h2>
                 <div class="settings-tabs">
                     <button class="settings-tab active" data-settings="profile">School Profile</button>
                     <button class="settings-tab" data-settings="compliance">Compliance Rules</button>
@@ -898,24 +898,28 @@
                 <div class="settings-content" id="settingsContent">
                     <div class="settings-panel active" id="profilePanel">
                         <div class="form-group">
-                            <label for="schoolName">School Name</label>
-                            <input type="text" id="schoolName" value="Duke University" class="form-input">
+                            <label for="schoolName">School Name <span class="required-indicator" aria-hidden="true">*</span></label>
+                            <input type="text" id="schoolName" value="Duke University" class="form-input" aria-required="true" aria-invalid="false" aria-describedby="schoolName-error">
+                            <span id="schoolName-error" class="error-message" role="alert" aria-live="polite"></span>
                         </div>
                         <div class="form-group">
-                            <label for="athleticDept">Athletic Department</label>
-                            <input type="text" id="athleticDept" value="Duke Blue Devils Athletics" class="form-input">
+                            <label for="athleticDept">Athletic Department <span class="required-indicator" aria-hidden="true">*</span></label>
+                            <input type="text" id="athleticDept" value="Duke Blue Devils Athletics" class="form-input" aria-required="true" aria-invalid="false" aria-describedby="athleticDept-error">
+                            <span id="athleticDept-error" class="error-message" role="alert" aria-live="polite"></span>
                         </div>
                         <div class="form-group">
-                            <label for="contactEmail">Primary Contact Email</label>
-                            <input type="email" id="contactEmail" value="athletics@duke.edu" class="form-input">
+                            <label for="contactEmail">Primary Contact Email <span class="required-indicator" aria-hidden="true">*</span></label>
+                            <input type="email" id="contactEmail" value="athletics@duke.edu" class="form-input" aria-required="true" aria-invalid="false" aria-describedby="contactEmail-error">
+                            <span id="contactEmail-error" class="error-message" role="alert" aria-live="polite"></span>
                         </div>
                         <div class="form-group">
                             <label for="phoneNumber">Phone Number</label>
-                            <input type="tel" id="phoneNumber" value="(919) 684-2633" class="form-input">
+                            <input type="tel" id="phoneNumber" value="(919) 684-2633" class="form-input" aria-describedby="phoneNumber-hint">
+                            <span id="phoneNumber-hint" class="input-hint">Format: (XXX) XXX-XXXX</span>
                         </div>
                         <div class="form-group">
-                            <label for="conference">Conference</label>
-                            <select id="conference" class="form-input">
+                            <label for="conference">Conference <span class="required-indicator" aria-hidden="true">*</span></label>
+                            <select id="conference" class="form-input" aria-required="true">
                                 <option selected>ACC (Atlantic Coast Conference)</option>
                                 <option>Big Ten</option>
                                 <option>SEC</option>
@@ -924,59 +928,62 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>School Logo</label>
-                            <div class="file-upload">
-                                <div class="current-logo">D</div>
-                                <button class="btn btn-secondary btn-sm">Upload New Logo</button>
+                            <label id="logoLabel">School Logo</label>
+                            <div class="file-upload" role="group" aria-labelledby="logoLabel">
+                                <div class="current-logo" aria-label="Current logo: D">D</div>
+                                <button class="btn btn-secondary btn-sm" type="button" aria-label="Upload new school logo">Upload New Logo</button>
                             </div>
                         </div>
-                        <button class="btn btn-primary">Save Changes</button>
+                        <button class="btn btn-primary" type="button" id="saveProfileBtn">Save Changes</button>
                     </div>
                     <div class="settings-panel" id="compliancePanel">
                         <h4>GPA Requirements</h4>
                         <div class="form-group">
-                            <label for="minGpa">Minimum GPA for NIL Eligibility</label>
-                            <input type="number" id="minGpa" value="2.5" step="0.1" min="0" max="4.0" class="form-input">
+                            <label for="minGpa">Minimum GPA for NIL Eligibility <span class="required-indicator" aria-hidden="true">*</span></label>
+                            <input type="number" id="minGpa" value="2.5" step="0.1" min="0" max="4.0" class="form-input" aria-required="true" aria-describedby="minGpa-hint">
+                            <span id="minGpa-hint" class="input-hint">Enter a value between 0.0 and 4.0</span>
                         </div>
                         <div class="form-group">
                             <label for="gpaWarning">GPA Warning Threshold</label>
-                            <input type="number" id="gpaWarning" value="2.7" step="0.1" min="0" max="4.0" class="form-input">
+                            <input type="number" id="gpaWarning" value="2.7" step="0.1" min="0" max="4.0" class="form-input" aria-describedby="gpaWarning-hint">
+                            <span id="gpaWarning-hint" class="input-hint">Athletes below this GPA will receive a warning</span>
                         </div>
                         <h4>Deal Limits</h4>
                         <div class="form-group">
                             <label for="maxDeals">Maximum Concurrent Deals</label>
-                            <input type="number" id="maxDeals" value="10" class="form-input">
+                            <input type="number" id="maxDeals" value="10" min="1" class="form-input">
                         </div>
                         <div class="form-group">
                             <label for="dealThreshold">Deal Review Threshold ($)</label>
-                            <input type="number" id="dealThreshold" value="5000" class="form-input">
+                            <input type="number" id="dealThreshold" value="5000" min="0" class="form-input" aria-describedby="dealThreshold-hint">
+                            <span id="dealThreshold-hint" class="input-hint">Deals above this amount require director approval</span>
                         </div>
-                        <h4>Verification Requirements</h4>
-                        <div class="checkbox-group">
-                            <label class="checkbox"><input type="checkbox" checked> Require enrollment verification</label>
-                            <label class="checkbox"><input type="checkbox" checked> Require sport verification</label>
-                            <label class="checkbox"><input type="checkbox" checked> Require GPA verification</label>
-                            <label class="checkbox"><input type="checkbox"> Require identity verification</label>
+                        <h4 id="verificationReqLabel">Verification Requirements</h4>
+                        <div class="checkbox-group" role="group" aria-labelledby="verificationReqLabel">
+                            <label class="checkbox" for="reqEnrollment"><input type="checkbox" id="reqEnrollment" checked> Require enrollment verification</label>
+                            <label class="checkbox" for="reqSport"><input type="checkbox" id="reqSport" checked> Require sport verification</label>
+                            <label class="checkbox" for="reqGpa"><input type="checkbox" id="reqGpa" checked> Require GPA verification</label>
+                            <label class="checkbox" for="reqIdentity"><input type="checkbox" id="reqIdentity"> Require identity verification</label>
                         </div>
-                        <button class="btn btn-primary">Save Compliance Rules</button>
+                        <button class="btn btn-primary" type="button" id="saveComplianceBtn">Save Compliance Rules</button>
                     </div>
                     <div class="settings-panel" id="notificationsPanel">
-                        <h4>Email Notifications</h4>
-                        <div class="checkbox-group">
-                            <label class="checkbox"><input type="checkbox" checked> New athlete signups</label>
-                            <label class="checkbox"><input type="checkbox" checked> Verification requests</label>
-                            <label class="checkbox"><input type="checkbox" checked> Compliance alerts</label>
-                            <label class="checkbox"><input type="checkbox" checked> New NIL deals over threshold</label>
-                            <label class="checkbox"><input type="checkbox"> Weekly summary report</label>
-                            <label class="checkbox"><input type="checkbox"> Monthly analytics digest</label>
+                        <h4 id="emailNotifLabel">Email Notifications</h4>
+                        <div class="checkbox-group" role="group" aria-labelledby="emailNotifLabel">
+                            <label class="checkbox" for="emailSignups"><input type="checkbox" id="emailSignups" checked> New athlete signups</label>
+                            <label class="checkbox" for="emailVerification"><input type="checkbox" id="emailVerification" checked> Verification requests</label>
+                            <label class="checkbox" for="emailCompliance"><input type="checkbox" id="emailCompliance" checked> Compliance alerts</label>
+                            <label class="checkbox" for="emailDeals"><input type="checkbox" id="emailDeals" checked> New NIL deals over threshold</label>
+                            <label class="checkbox" for="emailWeekly"><input type="checkbox" id="emailWeekly"> Weekly summary report</label>
+                            <label class="checkbox" for="emailMonthly"><input type="checkbox" id="emailMonthly"> Monthly analytics digest</label>
                         </div>
-                        <h4>Push Notifications</h4>
-                        <div class="checkbox-group">
-                            <label class="checkbox"><input type="checkbox" checked> High priority compliance alerts</label>
-                            <label class="checkbox"><input type="checkbox"> New athlete signups</label>
-                            <label class="checkbox"><input type="checkbox" checked> Urgent verification requests</label>
+                        <h4 id="pushNotifLabel">Push Notifications</h4>
+                        <div class="checkbox-group" role="group" aria-labelledby="pushNotifLabel">
+                            <label class="checkbox" for="pushCompliance"><input type="checkbox" id="pushCompliance" checked> High priority compliance alerts</label>
+                            <label class="checkbox" for="pushSignups"><input type="checkbox" id="pushSignups"> New athlete signups</label>
+                            <label class="checkbox" for="pushVerification"><input type="checkbox" id="pushVerification" checked> Urgent verification requests</label>
                         </div>
-                        <button class="btn btn-primary">Save Notification Preferences</button>
+                        <button class="btn btn-primary" type="button" id="saveNotificationsBtn">Save Notification Preferences</button>
                     </div>
                     <div class="settings-panel" id="staffPanel">
                         <h4>Staff Members</h4>
@@ -1044,6 +1051,54 @@
         :root {
             --purple: #9333ea;
             --purple-glow: rgba(147, 51, 234, 0.4);
+        }
+
+        /* ─── Screen Reader Only (Accessibility) ─── */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* ─── Form Accessibility ─── */
+        .required-indicator {
+            color: var(--error, #ef4444);
+            margin-left: 0.25rem;
+        }
+
+        .error-message {
+            display: block;
+            color: var(--error, #ef4444);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            min-height: 1rem;
+        }
+
+        .error-message:empty {
+            display: none;
+        }
+
+        .input-hint {
+            display: block;
+            color: var(--gray-400, #9ca3af);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-input[aria-invalid="true"] {
+            border-color: var(--error, #ef4444);
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+        }
+
+        .form-input:focus {
+            outline: 2px solid var(--cyan, #00f0ff);
+            outline-offset: 2px;
         }
 
         /* ─── Dashboard Layout ─── */
@@ -3327,6 +3382,65 @@
         const notificationBtn = document.getElementById('notificationBtn');
         const notificationsSidebar = document.getElementById('notificationsSidebar');
         const settingsModal = document.getElementById('settingsModal');
+        const docPreviewModal = document.getElementById('docPreviewModal');
+
+        // ─── Focus Trap Utility (WCAG 2.2 Keyboard Accessibility) ───
+        let lastFocusedElement = null;
+
+        function setupFocusTrap(modal) {
+            const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            const focusableElements = modal.querySelectorAll(focusableSelectors);
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+
+            // Store the element that opened the modal
+            lastFocusedElement = document.activeElement;
+
+            // Move focus to first focusable element
+            if (firstFocusable) {
+                setTimeout(function() { firstFocusable.focus(); }, 50);
+            }
+
+            // Handle Tab key to trap focus
+            function handleKeydown(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable.focus();
+                        }
+                    }
+                }
+                if (e.key === 'Escape') {
+                    closeActiveModal(modal);
+                }
+            }
+
+            modal.addEventListener('keydown', handleKeydown);
+            modal._focusTrapHandler = handleKeydown;
+        }
+
+        function removeFocusTrap(modal) {
+            if (modal._focusTrapHandler) {
+                modal.removeEventListener('keydown', modal._focusTrapHandler);
+                delete modal._focusTrapHandler;
+            }
+            // Restore focus to the element that opened the modal
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
+        }
+
+        function closeActiveModal(modal) {
+            modal.classList.remove('active');
+            removeFocusTrap(modal);
+        }
 
         // Render Athletes Table
         function renderAthletesTable(athletes) {
@@ -3420,18 +3534,19 @@
                 const tabName = tab.dataset.tab;
                 if (tabName === 'settings') {
                     settingsModal.classList.add('active');
+                    setupFocusTrap(settingsModal);
                 }
             });
         });
 
-        // Settings Modal
+        // Settings Modal Close
         document.querySelector('.modal-close').addEventListener('click', function() {
-            settingsModal.classList.remove('active');
+            closeActiveModal(settingsModal);
         });
 
         settingsModal.addEventListener('click', function(e) {
             if (e.target === settingsModal) {
-                settingsModal.classList.remove('active');
+                closeActiveModal(settingsModal);
             }
         });
 
@@ -3704,8 +3819,9 @@
             var container = document.getElementById('docPreviewContainer');
             generateDocumentContent(container, verificationType, athleteName, athleteSport, submitDate);
 
-            // Show modal
-            document.getElementById('docPreviewModal').classList.add('active');
+            // Show modal with focus trap
+            docPreviewModal.classList.add('active');
+            setupFocusTrap(docPreviewModal);
         }
 
         function generateDocumentContent(container, type, athleteName, athleteSport, submitDate) {
@@ -3886,7 +4002,7 @@
         }
 
         function closeDocPreview() {
-            document.getElementById('docPreviewModal').classList.remove('active');
+            closeActiveModal(docPreviewModal);
             currentPreviewAthleteId = null;
             currentPreviewType = null;
         }

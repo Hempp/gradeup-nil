@@ -2226,6 +2226,12 @@
             </div>
 
             <div class="dashboard-nav-right">
+                <button class="btn btn-primary" id="createOpportunityBtn" aria-label="Create new opportunity for athletes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; margin-right: 0.5rem;">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Create Opportunity
+                </button>
                 <button class="nav-icon-btn" id="notificationsBtn" aria-label="Notifications">
                     <span class="notification-badge">5</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2502,6 +2508,57 @@
     </div>
 
     <script>
+        // ─── Focus Trap Utility (WCAG 2.2 Keyboard Accessibility) ───
+        var lastFocusedElement = null;
+
+        function setupModalFocusTrap(modalElement) {
+            var focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            var focusableElements = modalElement.querySelectorAll(focusableSelectors);
+            var firstFocusable = focusableElements[0];
+            var lastFocusable = focusableElements[focusableElements.length - 1];
+
+            lastFocusedElement = document.activeElement;
+
+            if (firstFocusable) {
+                setTimeout(function() { firstFocusable.focus(); }, 50);
+            }
+
+            function handleKeydown(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable.focus();
+                        }
+                    }
+                }
+                if (e.key === 'Escape') {
+                    closeAndRestoreFocus(modalElement);
+                }
+            }
+
+            modalElement.addEventListener('keydown', handleKeydown);
+            modalElement._focusTrapHandler = handleKeydown;
+        }
+
+        function closeAndRestoreFocus(modalElement) {
+            if (modalElement._focusTrapHandler) {
+                modalElement.removeEventListener('keydown', modalElement._focusTrapHandler);
+            }
+            if (modalElement.parentNode) {
+                document.body.removeChild(modalElement);
+            }
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
+        }
+
         // Mock Data - Athletes
         const athletesData = [
             {
@@ -3462,6 +3519,9 @@
         function openContactModal(athlete) {
             var modalHtml = document.createElement('div');
             modalHtml.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 2rem;';
+            modalHtml.setAttribute('role', 'dialog');
+            modalHtml.setAttribute('aria-modal', 'true');
+            modalHtml.setAttribute('aria-labelledby', 'contactModalTitle');
 
             var modal = document.createElement('div');
             modal.style.cssText = 'background: var(--gray-900); border: 1px solid var(--gray-800); border-radius: 20px; width: 100%; max-width: 500px;';
@@ -3470,6 +3530,7 @@
             header.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid var(--gray-800);';
 
             var title = document.createElement('h2');
+            title.id = 'contactModalTitle';
             title.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: var(--white); margin: 0;';
             title.textContent = 'Contact ' + athlete.name;
             header.appendChild(title);
@@ -3477,7 +3538,7 @@
             var closeBtn = document.createElement('button');
             closeBtn.style.cssText = 'width: 36px; height: 36px; background: var(--gray-800); border: none; border-radius: 8px; color: var(--gray-400); cursor: pointer;';
             closeBtn.textContent = '✕';
-            closeBtn.addEventListener('click', function() { document.body.removeChild(modalHtml); });
+            closeBtn.addEventListener('click', function() { closeAndRestoreFocus(modalHtml); });
             header.appendChild(closeBtn);
             modal.appendChild(header);
 
@@ -3534,14 +3595,18 @@
 
             modal.appendChild(body);
             modalHtml.appendChild(modal);
-            modalHtml.addEventListener('click', function(e) { if (e.target === modalHtml) document.body.removeChild(modalHtml); });
+            modalHtml.addEventListener('click', function(e) { if (e.target === modalHtml) closeAndRestoreFocus(modalHtml); });
             document.body.appendChild(modalHtml);
+            setupModalFocusTrap(modalHtml);
         }
 
         // ─── Athlete Profile Modal ───
         function openAthleteProfileModal(athlete) {
             var modalHtml = document.createElement('div');
             modalHtml.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 2rem;';
+            modalHtml.setAttribute('role', 'dialog');
+            modalHtml.setAttribute('aria-modal', 'true');
+            modalHtml.setAttribute('aria-labelledby', 'profileModalTitle');
 
             var modal = document.createElement('div');
             modal.style.cssText = 'background: var(--gray-900); border: 1px solid var(--gray-800); border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;';
@@ -3550,6 +3615,7 @@
             header.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid var(--gray-800);';
 
             var title = document.createElement('h2');
+            title.id = 'profileModalTitle';
             title.style.cssText = 'font-size: 1.25rem; font-weight: 800; color: var(--white); margin: 0;';
             title.textContent = 'Athlete Profile';
             header.appendChild(title);
@@ -3557,7 +3623,7 @@
             var closeBtn = document.createElement('button');
             closeBtn.style.cssText = 'width: 36px; height: 36px; background: var(--gray-800); border: none; border-radius: 8px; color: var(--gray-400); cursor: pointer;';
             closeBtn.textContent = '✕';
-            closeBtn.addEventListener('click', function() { document.body.removeChild(modalHtml); });
+            closeBtn.addEventListener('click', function() { closeAndRestoreFocus(modalHtml); });
             header.appendChild(closeBtn);
             modal.appendChild(header);
 
@@ -3569,7 +3635,7 @@
             profileHeader.style.cssText = 'display: flex; gap: 1.5rem; margin-bottom: 1.5rem;';
 
             var avatar = document.createElement('img');
-            avatar.src = athlete.photo;
+            avatar.src = athlete.image;
             avatar.alt = athlete.name;
             avatar.style.cssText = 'width: 100px; height: 100px; border-radius: 16px; object-fit: cover;';
             profileHeader.appendChild(avatar);
@@ -3601,7 +3667,7 @@
                 { label: 'GPA', value: athlete.gpa.toFixed(2) },
                 { label: 'Followers', value: formatNumber(athlete.followers) },
                 { label: 'Match Score', value: athlete.matchScore + '%' },
-                { label: 'Engagement', value: athlete.engagement }
+                { label: 'Engagement', value: ((athlete.followers / 1000) * 0.042).toFixed(1) + '%' }
             ];
 
             stats.forEach(function(stat) {
@@ -3658,8 +3724,9 @@
 
             modal.appendChild(body);
             modalHtml.appendChild(modal);
-            modalHtml.addEventListener('click', function(e) { if (e.target === modalHtml) document.body.removeChild(modalHtml); });
+            modalHtml.addEventListener('click', function(e) { if (e.target === modalHtml) closeAndRestoreFocus(modalHtml); });
             document.body.appendChild(modalHtml);
+            setupModalFocusTrap(modalHtml);
         }
 
         // ─── Create Opportunity Modal ───
@@ -3803,11 +3870,12 @@
 
             modalHtml.addEventListener('click', function(e) {
                 if (e.target === modalHtml) {
-                    document.body.removeChild(modalHtml);
+                    closeAndRestoreFocus(modalHtml);
                 }
             });
 
             document.body.appendChild(modalHtml);
+            setupModalFocusTrap(modalHtml);
         }
 
         function createOppFormGroup(labelText, inputType, inputId, placeholder) {
@@ -3930,7 +3998,44 @@
             initMobileDrawer();
 
             // Create Opportunity button
-            document.getElementById('createOpportunityBtn').addEventListener('click', openCreateOpportunityModal);
+            var createBtn = document.getElementById('createOpportunityBtn');
+            if (createBtn) {
+                createBtn.addEventListener('click', openCreateOpportunityModal);
+            }
+
+            // Filter dropdown event listeners
+            ['sportFilter', 'schoolFilter', 'gpaFilter', 'gradeupScoreFilter', 'tierFilter'].forEach(function(filterId) {
+                var element = document.getElementById(filterId);
+                if (element) {
+                    element.addEventListener('change', filterAthletes);
+                }
+            });
+
+            // Athlete card click handlers for profile modal
+            document.getElementById('athletesGrid').addEventListener('click', function(e) {
+                var card = e.target.closest('.athlete-card');
+                if (card) {
+                    var athleteId = parseInt(card.getAttribute('data-id'));
+                    var athlete = athletesData.find(function(a) { return a.id === athleteId; });
+                    if (athlete) {
+                        openAthleteProfileModal(athlete);
+                    }
+                }
+            });
+
+            // Pagination functionality
+            document.querySelectorAll('.pagination-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    if (this.disabled || this.querySelector('svg')) return;
+                    document.querySelectorAll('.pagination-btn').forEach(function(b) {
+                        b.classList.remove('active');
+                        b.removeAttribute('aria-current');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-current', 'page');
+                    // Note: Full pagination would slice athletesData based on page number
+                });
+            });
         });
     </script>
 
