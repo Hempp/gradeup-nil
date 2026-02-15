@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ToastProvider } from "@/components/ui/toast";
+import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
 import { AuthProvider } from "@/context";
 import { WebVitalsReporter } from "@/components/analytics/web-vitals-reporter";
 import { NavigationProgressBar } from "@/components/ui/navigation-progress";
@@ -88,6 +88,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ToastProvider>
+            <ToastGlobalHandler />
             <NavigationProgressBar />
             {children}
           </ToastProvider>

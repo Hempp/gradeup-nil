@@ -6,6 +6,7 @@ import { Search, Filter, Grid, List, Calendar, DollarSign, GraduationCap, Chevro
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLandingOpportunities, type LandingOpportunity } from '@/lib/hooks/use-landing-data';
+import { MarketingEmptyState } from '@/components/marketing';
 import { cn } from '@/lib/utils';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -562,24 +563,16 @@ export default function OpportunitiesPage() {
             ))}
           </div>
         ) : sortedOpportunities.length === 0 ? (
-          <div className="text-center py-20">
-            <Filter className="h-16 w-16 text-[var(--marketing-gray-600)] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">No opportunities found</h3>
-            <p className="text-[var(--marketing-gray-400)] mb-6">
-              Try adjusting your filters or search query.
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setSearch('');
-                setCategory('all');
-                setCompensationType('all');
-              }}
-              className="border-[var(--marketing-cyan)] text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10"
-            >
-              Clear Filters
-            </Button>
-          </div>
+          <MarketingEmptyState
+            variant={search || category !== 'all' || compensationType !== 'all' ? 'no-results' : 'no-opportunities'}
+            searchQuery={search || undefined}
+            onClearFilters={() => {
+              setSearch('');
+              setCategory('all');
+              setCompensationType('all');
+            }}
+            showSignupCTA={true}
+          />
         ) : (
           <div
             className={cn(
