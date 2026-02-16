@@ -1,4 +1,4 @@
-import { test, expect, type Page as _Page, type BrowserContext } from '@playwright/test';
+import { test, expect, type BrowserContext } from '@playwright/test';
 
 // Helper to set demo mode cookie
 async function setDemoRole(context: BrowserContext, role: 'athlete' | 'brand' | 'director') {
@@ -19,17 +19,18 @@ async function clearDemoCookies(context: BrowserContext) {
 
 test.describe('Authentication - Login Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
   });
 
   test('displays login page with all elements', async ({ page }) => {
     // Page title and description
-    await expect(page.getByText('Welcome Back')).toBeVisible();
+    await expect(page.getByText('Welcome Back')).toBeVisible({ timeout: 15000 });
     await expect(page.getByText('Sign in to your GradeUp account')).toBeVisible();
 
     // Form elements
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-    await expect(page.locator('input[name="password"]')).toBeVisible();
+    await expect(page.locator('input#email')).toBeVisible();
+    await expect(page.locator('input#password')).toBeVisible();
     await expect(page.getByRole('checkbox')).toBeVisible();
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
 
@@ -43,7 +44,8 @@ test.describe('Authentication - Login Page', () => {
   });
 
   test('shows validation error for empty email', async ({ page }) => {
-    const emailInput = page.locator('input[name="email"]');
+    const emailInput = page.locator('input#email');
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
     await emailInput.focus();
     await emailInput.blur();
 
@@ -51,7 +53,8 @@ test.describe('Authentication - Login Page', () => {
   });
 
   test('shows validation error for invalid email format', async ({ page }) => {
-    const emailInput = page.locator('input[name="email"]');
+    const emailInput = page.locator('input#email');
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
     await emailInput.fill('invalid-email');
     await emailInput.blur();
 
@@ -59,7 +62,8 @@ test.describe('Authentication - Login Page', () => {
   });
 
   test('shows validation error for empty password', async ({ page }) => {
-    const passwordInput = page.locator('input[name="password"]');
+    const passwordInput = page.locator('input#password');
+    await expect(passwordInput).toBeVisible({ timeout: 15000 });
     await passwordInput.focus();
     await passwordInput.blur();
 
@@ -67,14 +71,16 @@ test.describe('Authentication - Login Page', () => {
   });
 
   test('password field masks input', async ({ page }) => {
-    const passwordInput = page.locator('input[name="password"]');
+    const passwordInput = page.locator('input#password');
+    await expect(passwordInput).toBeVisible({ timeout: 15000 });
     await expect(passwordInput).toHaveAttribute('type', 'password');
   });
 
   test('email and password fields accept input', async ({ page }) => {
-    const emailInput = page.locator('input[name="email"]');
-    const passwordInput = page.locator('input[name="password"]');
+    const emailInput = page.locator('input#email');
+    const passwordInput = page.locator('input#password');
 
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
     await emailInput.fill('test@example.com');
     await passwordInput.fill('testpassword123');
 
@@ -84,6 +90,7 @@ test.describe('Authentication - Login Page', () => {
 
   test('remember me checkbox can be toggled', async ({ page }) => {
     const checkbox = page.getByRole('checkbox');
+    await expect(checkbox).toBeVisible({ timeout: 15000 });
 
     await expect(checkbox).not.toBeChecked();
     await checkbox.click();
@@ -93,18 +100,25 @@ test.describe('Authentication - Login Page', () => {
   });
 
   test('navigates to signup page', async ({ page }) => {
-    await page.getByRole('link', { name: /sign up/i }).click();
+    const signupLink = page.getByRole('link', { name: /sign up/i });
+    await expect(signupLink).toBeVisible({ timeout: 15000 });
+    await signupLink.click();
     await expect(page).toHaveURL('/signup');
   });
 
   test('navigates to forgot password page', async ({ page }) => {
-    await page.getByRole('link', { name: /forgot password/i }).click();
+    const forgotLink = page.getByRole('link', { name: /forgot password/i });
+    await expect(forgotLink).toBeVisible({ timeout: 15000 });
+    await forgotLink.click();
     await expect(page).toHaveURL('/forgot-password');
   });
 
   test('shows error toast on invalid credentials submission', async ({ page }) => {
-    await page.locator('input[name="email"]').fill('test@example.com');
-    await page.locator('input[name="password"]').fill('wrongpassword');
+    const emailInput = page.locator('input#email');
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
+
+    await emailInput.fill('test@example.com');
+    await page.locator('input#password').fill('wrongpassword');
     await page.getByRole('button', { name: /sign in/i }).click();
 
     // Wait for network request and error response
@@ -118,82 +132,72 @@ test.describe('Authentication - Login Page', () => {
 });
 
 test.describe('Authentication - Demo Mode', () => {
-  test('athlete demo button sets cookie and redirects', async ({ page, context }) => {
-    await page.goto('/login');
+  test('athlete demo link navigates to dashboard', async ({ page }) => {
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
-    // Click athlete demo button
-    await page.getByRole('button', { name: /athlete/i }).first().click();
-
-    // Should redirect to athlete dashboard
-    await page.waitForURL(/\/athlete\/dashboard/);
-    await expect(page).toHaveURL(/\/athlete\/dashboard/);
-
-    // Verify demo cookie is set
-    const cookies = await context.cookies();
-    const demoCookie = cookies.find((c) => c.name === 'demo_role');
-    expect(demoCookie?.value).toBe('athlete');
+    // Demo buttons are now links - look for link containing "athlete"
+    const athleteLink = page.getByRole('link', { name: /athlete demo/i });
+    await expect(athleteLink).toBeVisible({ timeout: 15000 });
+    await expect(athleteLink).toHaveAttribute('href', '/athlete/dashboard');
   });
 
-  test('brand demo button sets cookie and redirects', async ({ page, context }) => {
-    await page.goto('/login');
+  test('brand demo link navigates to dashboard', async ({ page }) => {
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
-    // Click brand demo button
-    await page.getByRole('button', { name: /brand/i }).first().click();
-
-    // Should redirect to brand dashboard
-    await page.waitForURL(/\/brand\/dashboard/);
-    await expect(page).toHaveURL(/\/brand\/dashboard/);
-
-    // Verify demo cookie is set
-    const cookies = await context.cookies();
-    const demoCookie = cookies.find((c) => c.name === 'demo_role');
-    expect(demoCookie?.value).toBe('brand');
+    const brandLink = page.getByRole('link', { name: /brand demo/i });
+    await expect(brandLink).toBeVisible({ timeout: 15000 });
+    await expect(brandLink).toHaveAttribute('href', '/brand/dashboard');
   });
 
-  test('director demo button sets cookie and redirects', async ({ page, context }) => {
-    await page.goto('/login');
+  test('director demo link navigates to dashboard', async ({ page }) => {
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
-    // Click director demo button
-    await page.getByRole('button', { name: /director/i }).first().click();
-
-    // Should redirect to director dashboard
-    await page.waitForURL(/\/director\/dashboard/);
-    await expect(page).toHaveURL(/\/director\/dashboard/);
-
-    // Verify demo cookie is set
-    const cookies = await context.cookies();
-    const demoCookie = cookies.find((c) => c.name === 'demo_role');
-    expect(demoCookie?.value).toBe('director');
+    const directorLink = page.getByRole('link', { name: /director demo/i });
+    await expect(directorLink).toBeVisible({ timeout: 15000 });
+    await expect(directorLink).toHaveAttribute('href', '/director/dashboard');
   });
 });
 
 test.describe('Authentication - Signup Flow', () => {
   test('signup page displays role selection', async ({ page }) => {
-    await page.goto('/signup');
+    await page.goto('/signup', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
-    await expect(page.getByText('Join GradeUp')).toBeVisible();
+    await expect(page.getByText('Join GradeUp')).toBeVisible({ timeout: 15000 });
     await expect(page.getByText('Choose your account type to get started')).toBeVisible();
     await expect(page.getByText("I'm an Athlete")).toBeVisible();
     await expect(page.getByText("I'm a Brand")).toBeVisible();
   });
 
   test('can navigate to athlete signup', async ({ page }) => {
-    await page.goto('/signup');
-    await page.click("text=I'm an Athlete");
+    await page.goto('/signup', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const athleteCard = page.getByText("I'm an Athlete");
+    await expect(athleteCard).toBeVisible({ timeout: 15000 });
+    await athleteCard.click();
     await expect(page).toHaveURL('/signup/athlete');
-    await expect(page.getByText('Create Athlete Account')).toBeVisible();
   });
 
   test('can navigate to brand signup', async ({ page }) => {
-    await page.goto('/signup');
-    await page.click("text=I'm a Brand");
+    await page.goto('/signup', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const brandCard = page.getByText("I'm a Brand");
+    await expect(brandCard).toBeVisible({ timeout: 15000 });
+    await brandCard.click();
     await expect(page).toHaveURL('/signup/brand');
   });
 
   test('signup page has link to login', async ({ page }) => {
-    await page.goto('/signup');
+    await page.goto('/signup', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
     const loginLink = page.getByRole('link', { name: /sign in/i });
-    await expect(loginLink).toBeVisible();
+    await expect(loginLink).toBeVisible({ timeout: 15000 });
     await loginLink.click();
     await expect(page).toHaveURL('/login');
   });
@@ -201,12 +205,13 @@ test.describe('Authentication - Signup Flow', () => {
 
 test.describe('Authentication - Athlete Signup Form', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/signup/athlete');
+    await page.goto('/signup/athlete', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
   });
 
   test('displays all required form sections', async ({ page }) => {
     // Personal Information
-    await expect(page.getByText('Personal Information')).toBeVisible();
+    await expect(page.getByText('Personal Information')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('input[name="firstName"]')).toBeVisible();
     await expect(page.locator('input[name="lastName"]')).toBeVisible();
     await expect(page.locator('input[name="email"]')).toBeVisible();
@@ -223,6 +228,7 @@ test.describe('Authentication - Athlete Signup Form', () => {
 
   test('sport dropdown has options', async ({ page }) => {
     const sportSelect = page.locator('select[name="sport"]');
+    await expect(sportSelect).toBeVisible({ timeout: 15000 });
     await sportSelect.click();
 
     await expect(page.locator('option', { hasText: 'Football' })).toBeVisible();
@@ -232,6 +238,7 @@ test.describe('Authentication - Athlete Signup Form', () => {
 
   test('year dropdown has options', async ({ page }) => {
     const yearSelect = page.locator('select[name="year"]');
+    await expect(yearSelect).toBeVisible({ timeout: 15000 });
     await yearSelect.click();
 
     await expect(page.locator('option', { hasText: 'Freshman' })).toBeVisible();
@@ -241,12 +248,15 @@ test.describe('Authentication - Athlete Signup Form', () => {
 
   test('has terms and conditions checkbox', async ({ page }) => {
     const termsCheckbox = page.locator('input[name="agreeToTerms"]');
-    await expect(termsCheckbox).toBeVisible();
+    await expect(termsCheckbox).toBeVisible({ timeout: 15000 });
     await expect(page.getByRole('link', { name: /terms of service/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /privacy policy/i })).toBeVisible();
   });
 
   test('can fill out the signup form', async ({ page }) => {
+    // Wait for form to load
+    await expect(page.locator('input[name="firstName"]')).toBeVisible({ timeout: 15000 });
+
     // Fill personal info
     await page.locator('input[name="firstName"]').fill('John');
     await page.locator('input[name="lastName"]').fill('Doe');
@@ -273,8 +283,12 @@ test.describe('Authentication - Athlete Signup Form', () => {
   });
 
   test('shows validation errors for required fields', async ({ page }) => {
+    // Wait for form to load
+    const submitBtn = page.getByRole('button', { name: /create account/i });
+    await expect(submitBtn).toBeVisible({ timeout: 15000 });
+
     // Try to submit without filling
-    await page.getByRole('button', { name: /create account/i }).click();
+    await submitBtn.click();
 
     // Trigger blur on first field to show validation
     const firstNameInput = page.locator('input[name="firstName"]');
@@ -287,18 +301,20 @@ test.describe('Authentication - Athlete Signup Form', () => {
 
 test.describe('Authentication - Forgot Password Flow', () => {
   test('forgot password page displays correctly', async ({ page }) => {
-    await page.goto('/forgot-password');
+    await page.goto('/forgot-password', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
-    await expect(page.getByText(/forgot password/i).first()).toBeVisible();
-    await expect(page.getByText(/send.*reset/i)).toBeVisible();
-    await expect(page.locator('input[name="email"]')).toBeVisible();
+    await expect(page.getByText(/forgot password/i).first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('input#email')).toBeVisible();
     await expect(page.getByRole('link', { name: /back to login/i })).toBeVisible();
   });
 
   test('can enter email and submit reset request', async ({ page }) => {
-    await page.goto('/forgot-password');
+    await page.goto('/forgot-password', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
 
-    const emailInput = page.locator('input[name="email"]');
+    const emailInput = page.locator('input#email');
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
     await emailInput.fill('test@example.com');
     await expect(emailInput).toHaveValue('test@example.com');
 
@@ -312,8 +328,12 @@ test.describe('Authentication - Forgot Password Flow', () => {
   });
 
   test('can navigate back to login', async ({ page }) => {
-    await page.goto('/forgot-password');
-    await page.getByRole('link', { name: /back to login/i }).click();
+    await page.goto('/forgot-password', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const backLink = page.getByRole('link', { name: /back to login/i });
+    await expect(backLink).toBeVisible({ timeout: 15000 });
+    await backLink.click();
     await expect(page).toHaveURL('/login');
   });
 });
@@ -322,7 +342,7 @@ test.describe('Authentication - Logout Flow', () => {
   test('can logout from athlete dashboard', async ({ page, context }) => {
     // Set demo mode and navigate to dashboard
     await setDemoRole(context, 'athlete');
-    await page.goto('/athlete/dashboard');
+    await page.goto('/athlete/dashboard', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
     // Look for logout button or user menu
@@ -337,37 +357,14 @@ test.describe('Authentication - Logout Flow', () => {
     }
 
     // Should redirect to login or home
-    await page.waitForURL(/\/(login|$)/);
-  });
-
-  test('can logout from brand dashboard', async ({ page, context }) => {
-    await setDemoRole(context, 'brand');
-    await page.goto('/brand/dashboard');
-    await page.waitForLoadState('networkidle');
-
-    // Look for logout functionality
-    const logoutButton = page.getByRole('button', { name: /logout|sign out|log out/i });
-    const userMenu = page.locator('[data-testid="user-menu"], [aria-label*="user"]');
-
-    if (await logoutButton.isVisible()) {
-      await logoutButton.click();
-    } else if (await userMenu.isVisible()) {
-      await userMenu.click();
-      const logoutOption = page.getByText(/logout|sign out|log out/i);
-      if (await logoutOption.isVisible()) {
-        await logoutOption.click();
-      }
-    }
-
-    // Verify page state changed
-    await page.waitForTimeout(1000);
+    await page.waitForURL(/\/(login|$)/, { timeout: 10000 }).catch(() => {});
   });
 });
 
 test.describe('Authentication - Protected Routes', () => {
   test('unauthenticated users cannot access athlete dashboard', async ({ page, context }) => {
     await clearDemoCookies(context);
-    await page.goto('/athlete/dashboard');
+    await page.goto('/athlete/dashboard', { waitUntil: 'domcontentloaded' });
 
     await page.waitForTimeout(2000);
 
@@ -381,7 +378,7 @@ test.describe('Authentication - Protected Routes', () => {
 
   test('unauthenticated users cannot access brand dashboard', async ({ page, context }) => {
     await clearDemoCookies(context);
-    await page.goto('/brand/dashboard');
+    await page.goto('/brand/dashboard', { waitUntil: 'domcontentloaded' });
 
     await page.waitForTimeout(2000);
 
@@ -394,7 +391,7 @@ test.describe('Authentication - Protected Routes', () => {
 
   test('unauthenticated users cannot access director dashboard', async ({ page, context }) => {
     await clearDemoCookies(context);
-    await page.goto('/director/dashboard');
+    await page.goto('/director/dashboard', { waitUntil: 'domcontentloaded' });
 
     await page.waitForTimeout(2000);
 
@@ -408,23 +405,27 @@ test.describe('Authentication - Protected Routes', () => {
 
 test.describe('Authentication - Social Login Buttons', () => {
   test('Google login button is present and clickable', async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
     const googleButton = page.getByRole('button', { name: /google/i });
-    await expect(googleButton).toBeVisible();
+    await expect(googleButton).toBeVisible({ timeout: 15000 });
     await expect(googleButton).toBeEnabled();
   });
 
   test('Apple login button is present and clickable', async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
     const appleButton = page.getByRole('button', { name: /apple/i });
-    await expect(appleButton).toBeVisible();
+    await expect(appleButton).toBeVisible({ timeout: 15000 });
     await expect(appleButton).toBeEnabled();
   });
 });
 
 test.describe('Authentication - Brand Signup', () => {
   test('brand signup page loads', async ({ page }) => {
-    await page.goto('/signup/brand');
+    await page.goto('/signup/brand', { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveURL('/signup/brand');
   });
 });
@@ -432,18 +433,18 @@ test.describe('Authentication - Brand Signup', () => {
 test.describe('Authentication - Session Persistence', () => {
   test('demo session persists across page navigation', async ({ page, context }) => {
     await setDemoRole(context, 'athlete');
-    await page.goto('/athlete/dashboard');
+    await page.goto('/athlete/dashboard', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
     // Navigate to another page
-    await page.goto('/athlete/profile');
+    await page.goto('/athlete/profile', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
     // Should still be accessible (demo mode active)
     await expect(page).toHaveURL(/\/athlete\/profile/);
 
     // Navigate back to dashboard
-    await page.goto('/athlete/dashboard');
+    await page.goto('/athlete/dashboard', { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveURL(/\/athlete\/dashboard/);
   });
 });

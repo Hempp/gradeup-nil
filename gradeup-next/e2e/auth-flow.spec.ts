@@ -2,12 +2,14 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Login Form Validation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
   });
 
   test('shows validation error for empty email', async ({ page }) => {
     // Focus and blur email field without entering value
-    const emailInput = page.locator('input[name="email"]');
+    const emailInput = page.locator('input#email');
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
     await emailInput.focus();
     await emailInput.blur();
 
@@ -16,7 +18,8 @@ test.describe('Login Form Validation', () => {
   });
 
   test('shows validation error for invalid email format', async ({ page }) => {
-    const emailInput = page.locator('input[name="email"]');
+    const emailInput = page.locator('input#email');
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
     await emailInput.fill('invalid-email');
     await emailInput.blur();
 
@@ -25,7 +28,8 @@ test.describe('Login Form Validation', () => {
   });
 
   test('shows validation error for empty password', async ({ page }) => {
-    const passwordInput = page.locator('input[name="password"]');
+    const passwordInput = page.locator('input#password');
+    await expect(passwordInput).toBeVisible({ timeout: 15000 });
     await passwordInput.focus();
     await passwordInput.blur();
 
@@ -35,8 +39,8 @@ test.describe('Login Form Validation', () => {
 
   test('form elements are present and interactive', async ({ page }) => {
     // Check all form elements exist
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-    await expect(page.locator('input[name="password"]')).toBeVisible();
+    await expect(page.locator('input#email')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('input#password')).toBeVisible();
     await expect(page.getByRole('checkbox')).toBeVisible(); // Remember me
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
 
@@ -46,9 +50,10 @@ test.describe('Login Form Validation', () => {
   });
 
   test('email and password fields accept input', async ({ page }) => {
-    const emailInput = page.locator('input[name="email"]');
-    const passwordInput = page.locator('input[name="password"]');
+    const emailInput = page.locator('input#email');
+    const passwordInput = page.locator('input#password');
 
+    await expect(emailInput).toBeVisible({ timeout: 15000 });
     await emailInput.fill('test@example.com');
     await passwordInput.fill('testpassword123');
 
@@ -58,6 +63,7 @@ test.describe('Login Form Validation', () => {
 
   test('remember me checkbox can be toggled', async ({ page }) => {
     const checkbox = page.getByRole('checkbox');
+    await expect(checkbox).toBeVisible({ timeout: 15000 });
 
     // Initially unchecked
     await expect(checkbox).not.toBeChecked();
@@ -74,12 +80,13 @@ test.describe('Login Form Validation', () => {
 
 test.describe('Athlete Signup Form Validation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/signup/athlete');
+    await page.goto('/signup/athlete', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
   });
 
   test('displays all required form sections', async ({ page }) => {
     // Personal Information section
-    await expect(page.getByText('Personal Information')).toBeVisible();
+    await expect(page.getByText('Personal Information')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('input[name="firstName"]')).toBeVisible();
     await expect(page.locator('input[name="lastName"]')).toBeVisible();
     await expect(page.locator('input[name="email"]')).toBeVisible();
@@ -100,7 +107,9 @@ test.describe('Athlete Signup Form Validation', () => {
 
   test('shows validation errors for required fields', async ({ page }) => {
     // Click submit without filling anything
-    await page.getByRole('button', { name: /create account/i }).click();
+    const submitBtn = page.getByRole('button', { name: /create account/i });
+    await expect(submitBtn).toBeVisible({ timeout: 15000 });
+    await submitBtn.click();
 
     // Should show validation errors (toast or inline)
     // The form uses validation that shows errors on blur/submit
@@ -113,6 +122,7 @@ test.describe('Athlete Signup Form Validation', () => {
 
   test('sport dropdown has options', async ({ page }) => {
     const sportSelect = page.locator('select[name="sport"]');
+    await expect(sportSelect).toBeVisible({ timeout: 15000 });
     await sportSelect.click();
 
     // Check that sport options are available
@@ -123,6 +133,7 @@ test.describe('Athlete Signup Form Validation', () => {
 
   test('year dropdown has options', async ({ page }) => {
     const yearSelect = page.locator('select[name="year"]');
+    await expect(yearSelect).toBeVisible({ timeout: 15000 });
     await yearSelect.click();
 
     // Check that year options are available
@@ -134,7 +145,7 @@ test.describe('Athlete Signup Form Validation', () => {
   test('terms checkbox exists and is required', async ({ page }) => {
     // Find the terms checkbox
     const termsCheckbox = page.locator('input[name="agreeToTerms"]');
-    await expect(termsCheckbox).toBeVisible();
+    await expect(termsCheckbox).toBeVisible({ timeout: 15000 });
 
     // Should have links to Terms and Privacy Policy
     await expect(page.getByRole('link', { name: /terms of service/i })).toBeVisible();
@@ -142,6 +153,9 @@ test.describe('Athlete Signup Form Validation', () => {
   });
 
   test('can fill out the form', async ({ page }) => {
+    // Wait for form to load
+    await expect(page.locator('input[name="firstName"]')).toBeVisible({ timeout: 15000 });
+
     // Fill personal info
     await page.locator('input[name="firstName"]').fill('John');
     await page.locator('input[name="lastName"]').fill('Doe');
@@ -172,7 +186,7 @@ test.describe('Athlete Signup Form Validation', () => {
 
 test.describe('Brand Signup Form', () => {
   test('brand signup page loads', async ({ page }) => {
-    await page.goto('/signup/brand');
+    await page.goto('/signup/brand', { waitUntil: 'domcontentloaded' });
 
     // Should be on brand signup page
     await expect(page).toHaveURL('/signup/brand');
