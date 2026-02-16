@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import {
-  LineChart,
+  LazyLineChart as LineChart,
   Line,
-  BarChart,
+  LazyBarChart as BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-} from 'recharts';
+} from '@/components/ui/lazy-chart';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

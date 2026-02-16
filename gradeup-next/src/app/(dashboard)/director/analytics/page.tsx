@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import {
-  LineChart,
+  LazyLineChart as LineChart,
   Line,
-  BarChart,
+  LazyBarChart as BarChart,
   Bar,
-  AreaChart,
+  LazyAreaChart as AreaChart,
   Area,
-  PieChart,
+  LazyPieChart as PieChart,
   Pie,
   Cell,
   XAxis,
@@ -16,7 +16,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-} from 'recharts';
+} from '@/components/ui/lazy-chart';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

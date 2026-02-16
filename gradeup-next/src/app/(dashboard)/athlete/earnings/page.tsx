@@ -2,13 +2,13 @@
 
 import { useState, useCallback } from 'react';
 import {
-  AreaChart,
+  LazyAreaChart as AreaChart,
   Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-} from 'recharts';
+} from '@/components/ui/lazy-chart';
 import {
   DollarSign,
   TrendingUp,

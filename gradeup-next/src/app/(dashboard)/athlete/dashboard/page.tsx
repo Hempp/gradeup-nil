@@ -19,13 +19,13 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import {
-  BarChart,
+  LazyBarChart as BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-} from 'recharts';
+} from '@/components/ui/lazy-chart';
 import {
   ChartWrapper,
   chartColors,

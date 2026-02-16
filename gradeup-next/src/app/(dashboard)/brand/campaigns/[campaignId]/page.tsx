@@ -21,16 +21,16 @@ import {
   Loader2,
 } from 'lucide-react';
 import {
-  AreaChart,
+  LazyAreaChart as AreaChart,
   Area,
-  BarChart,
+  LazyBarChart as BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts';
+} from '@/components/ui/lazy-chart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartWrapper, tooltipStyle, axisStyle, chartColors } from '@/components/ui/chart';
 import { Button } from '@/components/ui/button';
