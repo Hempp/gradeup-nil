@@ -15,3 +15,5 @@ export * as payments from './payments';
 export * as notifications from './notifications';
 export * as verification from './verification';
 export * as opportunities from './opportunities';
+export * as stripe from './stripe';
+export * as email from './email';
