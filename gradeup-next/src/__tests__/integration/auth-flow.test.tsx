@@ -89,6 +89,16 @@ function renderWithProviders(component: React.ReactElement) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('Authentication Flow Integration Tests', () => {
+  const originalEnv = process.env;
+
+  beforeAll(() => {
+    process.env = { ...originalEnv, NEXT_PUBLIC_DEMO_MODE: 'true' };
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockPush.mockClear();
@@ -119,12 +129,12 @@ describe('Authentication Flow Integration Tests', () => {
         expect(screen.getByRole('button', { name: /apple/i })).toBeInTheDocument();
       });
 
-      it('renders demo mode buttons', () => {
+      it('renders demo mode links', () => {
         renderWithProviders(<LoginPage />);
 
-        expect(screen.getByRole('button', { name: /athlete/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /brand/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /director/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /athlete demo/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /brand demo/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /director demo/i })).toBeInTheDocument();
       });
     });
 
@@ -343,40 +353,25 @@ describe('Authentication Flow Integration Tests', () => {
     });
 
     describe('Demo Mode', () => {
-      it('navigates to athlete dashboard when clicking athlete demo button', async () => {
-        const user = userEvent.setup();
+      it('has athlete demo link pointing to athlete dashboard', () => {
         renderWithProviders(<LoginPage />);
 
-        const athleteDemoButton = screen.getByRole('button', { name: /^athlete$/i });
-        await user.click(athleteDemoButton);
-
-        await waitFor(() => {
-          expect(mockPush).toHaveBeenCalledWith('/athlete/dashboard');
-        });
+        const athleteLink = screen.getByRole('link', { name: /athlete demo/i });
+        expect(athleteLink).toHaveAttribute('href', '/athlete/dashboard');
       });
 
-      it('navigates to brand dashboard when clicking brand demo button', async () => {
-        const user = userEvent.setup();
+      it('has brand demo link pointing to brand dashboard', () => {
         renderWithProviders(<LoginPage />);
 
-        const brandDemoButton = screen.getByRole('button', { name: /^brand$/i });
-        await user.click(brandDemoButton);
-
-        await waitFor(() => {
-          expect(mockPush).toHaveBeenCalledWith('/brand/dashboard');
-        });
+        const brandLink = screen.getByRole('link', { name: /brand demo/i });
+        expect(brandLink).toHaveAttribute('href', '/brand/dashboard');
       });
 
-      it('navigates to director dashboard when clicking director demo button', async () => {
-        const user = userEvent.setup();
+      it('has director demo link pointing to director dashboard', () => {
         renderWithProviders(<LoginPage />);
 
-        const directorDemoButton = screen.getByRole('button', { name: /^director$/i });
-        await user.click(directorDemoButton);
-
-        await waitFor(() => {
-          expect(mockPush).toHaveBeenCalledWith('/director/dashboard');
-        });
+        const directorLink = screen.getByRole('link', { name: /director demo/i });
+        expect(directorLink).toHaveAttribute('href', '/director/dashboard');
       });
     });
 

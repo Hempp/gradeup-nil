@@ -1,0 +1,91 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e7]:
+      - img [ref=e8]
+    - generic [ref=e11]:
+      - button "Open issues overlay" [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "2"
+          - generic [ref=e15]: "3"
+        - generic [ref=e16]:
+          - text: Issue
+          - generic [ref=e17]: s
+      - button "Collapse issues badge" [ref=e18]:
+        - img [ref=e19]
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - link "28Solutio" [ref=e23] [cursor=pointer]:
+        - /url: /
+        - img [ref=e25]
+        - generic [ref=e31]: 28Solutio
+      - generic [ref=e32]:
+        - blockquote [ref=e33]: “28Solutio saved us thousands on legal fees. We created all our founding documents in one afternoon.”
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: Sarah Chen
+          - paragraph [ref=e36]: Startup Founder
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: 50,000+
+          - paragraph [ref=e41]: Documents Created
+        - generic [ref=e42]:
+          - paragraph [ref=e43]: 10,000+
+          - paragraph [ref=e44]: Happy Customers
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - heading "Create an account" [level=3] [ref=e49]
+        - paragraph [ref=e50]: Start creating legal documents in minutes
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - img [ref=e54]
+            - generic [ref=e56]: 3 free documents every month
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - generic [ref=e60]: 50+ professional templates
+          - generic [ref=e61]:
+            - img [ref=e62]
+            - generic [ref=e64]: AI-powered document generation
+          - generic [ref=e65]:
+            - img [ref=e66]
+            - generic [ref=e68]: No credit card required
+        - button "Continue with Google" [ref=e69]:
+          - img [ref=e70]
+          - text: Continue with Google
+        - generic [ref=e79]: Or continue with email
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - text: First name
+              - textbox "First name" [ref=e83]:
+                - /placeholder: John
+            - generic [ref=e84]:
+              - text: Last name
+              - textbox "Last name" [ref=e85]:
+                - /placeholder: Doe
+          - generic [ref=e86]:
+            - text: Email
+            - textbox "Email" [ref=e87]:
+              - /placeholder: name@example.com
+          - generic [ref=e88]:
+            - text: Password
+            - textbox "Password" [ref=e89]:
+              - /placeholder: Create a strong password
+            - paragraph [ref=e90]: Must be at least 8 characters
+          - button "Create Account" [ref=e91]
+        - paragraph [ref=e92]:
+          - text: By creating an account, you agree to our
+          - link "Terms of Service" [ref=e93] [cursor=pointer]:
+            - /url: /terms
+          - text: and
+          - link "Privacy Policy" [ref=e94] [cursor=pointer]:
+            - /url: /privacy
+      - paragraph [ref=e96]:
+        - text: Already have an account?
+        - link "Sign in" [ref=e97] [cursor=pointer]:
+          - /url: /login
+  - region "Notifications alt+T"
+  - alert [ref=e98]
+```

@@ -1,0 +1,64 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e7]:
+      - img [ref=e8]
+    - generic [ref=e11]:
+      - button "Open issues overlay" [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "2"
+          - generic [ref=e15]: "3"
+        - generic [ref=e16]:
+          - text: Issue
+          - generic [ref=e17]: s
+      - button "Collapse issues badge" [ref=e18]:
+        - img [ref=e19]
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - link "28Solutio" [ref=e23] [cursor=pointer]:
+        - /url: /
+        - img [ref=e25]
+        - generic [ref=e31]: 28Solutio
+      - generic [ref=e32]:
+        - blockquote [ref=e33]: “28Solutio saved us thousands on legal fees. We created all our founding documents in one afternoon.”
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: Sarah Chen
+          - paragraph [ref=e36]: Startup Founder
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: 50,000+
+          - paragraph [ref=e41]: Documents Created
+        - generic [ref=e42]:
+          - paragraph [ref=e43]: 10,000+
+          - paragraph [ref=e44]: Happy Customers
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - heading "Welcome back" [level=3] [ref=e49]
+        - paragraph [ref=e50]: Enter your credentials to access your account
+      - generic [ref=e51]:
+        - button "Continue with Google" [ref=e52]:
+          - img [ref=e53]
+          - text: Continue with Google
+        - generic [ref=e62]: Or continue with
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - text: Email
+            - textbox "Email" [ref=e65]:
+              - /placeholder: name@example.com
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]: Password
+              - link "Forgot password?" [ref=e69] [cursor=pointer]:
+                - /url: /forgot-password
+            - textbox "Password" [ref=e70]:
+              - /placeholder: Enter your password
+          - button "Sign In" [ref=e71]
+      - paragraph [ref=e73]:
+        - text: Don't have an account?
+        - link "Sign up for free" [ref=e74] [cursor=pointer]:
+          - /url: /signup
+  - region "Notifications alt+T"
+  - alert [ref=e75]
+```

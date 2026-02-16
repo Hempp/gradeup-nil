@@ -20,7 +20,7 @@ describe('Card', () => {
     expect(screen.getByText('Default')).toHaveClass('bg-[var(--bg-card)]');
 
     rerender(<Card variant="glass">Glass</Card>);
-    expect(screen.getByText('Glass')).toHaveClass('glass-card');
+    expect(screen.getByText('Glass')).toHaveClass('glass-premium');
 
     rerender(<Card variant="glow">Glow</Card>);
     expect(screen.getByText('Glow')).toHaveClass('border-[var(--color-primary)]');
