@@ -18,7 +18,6 @@ import {
   GraduationCap,
   Trophy,
   BarChart3,
-  MessageSquare,
   Handshake,
   ChevronRight,
 } from 'lucide-react';

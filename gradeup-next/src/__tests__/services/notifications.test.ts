@@ -61,7 +61,7 @@ const mockNotificationRecord = {
   created_at: '2024-01-15T10:00:00Z',
 };
 
-const mockNotification: Notification = {
+const _mockNotification: Notification = {
   id: 'notification-123',
   type: 'deal_offer',
   title: 'New Deal Offer',

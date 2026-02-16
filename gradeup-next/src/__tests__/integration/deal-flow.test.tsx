@@ -9,13 +9,11 @@
  * - Navigation between deal views
  */
 
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useRouter } from 'next/navigation';
 import AthleteDealsPage from '@/app/(dashboard)/athlete/deals/page';
 import { ToastProvider } from '@/components/ui/toast';
-import { AuthProvider } from '@/context/AuthContext';
-import type { Deal, DealStatus } from '@/types';
+import type { Deal } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Mock Data

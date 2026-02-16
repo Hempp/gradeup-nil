@@ -387,7 +387,8 @@ export const CheckboxField = forwardRef<HTMLInputElement, CheckboxFieldProps>(
     { className, label, description, error, id, disabled, ...props },
     ref
   ) {
-    const inputId = id || `checkbox-${props.name || Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id || `checkbox-${props.name || generatedId}`;
     const hasError = !!error;
 
     return (

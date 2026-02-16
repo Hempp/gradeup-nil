@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, Filter, Grid, List, Calendar, DollarSign, GraduationCap, ChevronDown, Sparkles } from 'lucide-react';
+import { Search, Grid, List, Calendar, DollarSign, GraduationCap, ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLandingOpportunities, type LandingOpportunity } from '@/lib/hooks/use-landing-data';
@@ -268,7 +268,9 @@ interface OpportunityCardProps {
 
 function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
   const deadlineDate = new Date(opportunity.deadline);
-  const isExpiringSoon = deadlineDate.getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000; // 7 days
+  // Calculate if expiring soon (within 7 days) - use a ref for stable timestamp
+  const nowRef = useRef(Date.now());
+  const isExpiringSoon = deadlineDate.getTime() - nowRef.current < 7 * 24 * 60 * 60 * 1000;
 
   const compensationBadgeColor = {
     cash: 'bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)] border-[var(--marketing-lime)]/30',

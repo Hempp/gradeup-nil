@@ -10,7 +10,6 @@ import {
   Trophy,
   Instagram,
   Twitter,
-  CheckCircle,
   Camera,
   Save,
   Loader2,
@@ -32,20 +31,6 @@ import { HighlightTapeSection } from '@/components/athlete/HighlightTapeSection'
 import { VerificationStatusCard } from '@/components/athlete/VerificationStatusCard';
 import type { Athlete } from '@/types';
 
-function VerificationBadge({ verified, label }: { verified: boolean; label: string }) {
-  return (
-    <div
-      className={`flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] ${
-        verified
-          ? 'bg-[var(--color-success-muted)] text-[var(--color-success)]'
-          : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)]'
-      }`}
-    >
-      <CheckCircle className={`h-4 w-4 ${verified ? '' : 'opacity-50'}`} />
-      <span className="text-sm font-medium">{label}</span>
-    </div>
-  );
-}
 
 interface ProfileHeaderProps {
   profile: {
@@ -137,35 +122,6 @@ function ProfileHeader({ profile, athlete, onAvatarUpload }: ProfileHeaderProps)
   );
 }
 
-interface VerificationStatusProps {
-  enrollmentVerified?: boolean;
-  sportVerified?: boolean;
-  gradesVerified?: boolean;
-  identityVerified?: boolean;
-}
-
-function VerificationStatus({
-  enrollmentVerified = false,
-  sportVerified = false,
-  gradesVerified = false,
-  identityVerified = false,
-}: VerificationStatusProps) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Verification Status</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <VerificationBadge verified={enrollmentVerified} label="Enrollment" />
-          <VerificationBadge verified={sportVerified} label="Sport" />
-          <VerificationBadge verified={gradesVerified} label="Grades" />
-          <VerificationBadge verified={identityVerified} label="Identity" />
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 
 interface ProfileFormValues {
   firstName: string;

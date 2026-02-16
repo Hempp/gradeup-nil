@@ -11,16 +11,12 @@ import {
   Shield,
   Mail,
   MessageSquare,
-  ArrowRight,
   GraduationCap,
-  DollarSign,
   BadgeCheck,
   Clock,
   FileText,
   CreditCard,
   Lock,
-  User,
-  Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

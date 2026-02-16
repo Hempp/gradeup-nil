@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import {
   AlertTriangle,
   CheckCircle,
@@ -13,17 +13,13 @@ import {
   XCircle,
   Settings,
   Activity,
-  Users,
   DollarSign,
   Calendar,
   ChevronDown,
   ChevronRight,
   Loader2,
-  RefreshCw,
-  History,
   TrendingUp,
   TrendingDown,
-  Percent,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,7 +31,7 @@ import { Modal } from '@/components/ui/modal';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { StatCard } from '@/components/ui/stat-card';
 import { useToastActions } from '@/components/ui/toast';
-import { formatCurrency, formatDate, formatDateTime, formatRelativeTime } from '@/lib/utils';
+import { formatCurrency, formatDateTime } from '@/lib/utils';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -1043,7 +1039,7 @@ function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
         `The deal between ${deal.athleteName} and ${deal.brandName} has been approved.`
       );
       setShowApproveModal(false);
-    } catch (error) {
+    } catch {
       toast.error('Approval Failed', 'Unable to approve deal. Please try again.');
     } finally {
       setIsLoading(false);
@@ -1059,7 +1055,7 @@ function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
         `The deal between ${deal.athleteName} and ${deal.brandName} has been rejected.`
       );
       setShowRejectModal(false);
-    } catch (error) {
+    } catch {
       toast.error('Rejection Failed', 'Unable to reject deal. Please try again.');
     } finally {
       setIsLoading(false);
@@ -1076,7 +1072,7 @@ function FlaggedDealsActions({ deal }: { deal: FlaggedDeal }) {
       );
       setShowInvestigateModal(false);
       setInvestigationNotes('');
-    } catch (error) {
+    } catch {
       toast.error('Action Failed', 'Unable to start investigation. Please try again.');
     } finally {
       setIsLoading(false);
@@ -1223,7 +1219,7 @@ export default function DirectorCompliancePage() {
   const [severityFilter, setSeverityFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [actionTypeFilter, setActionTypeFilter] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
+  const [_dateFilter, _setDateFilter] = useState('');
 
   // Filter flagged deals
   const filteredDeals = mockFlaggedDeals.filter((deal) => {

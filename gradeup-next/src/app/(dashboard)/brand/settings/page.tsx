@@ -151,6 +151,8 @@ export default function BrandSettingsPage() {
   };
 
   const handleRevokeSession = (sessionId: string) => {
+    // TODO: Implement actual session revocation API call using sessionId
+    void sessionId;
     toast.success('Session Revoked', 'The session has been terminated.');
   };
 

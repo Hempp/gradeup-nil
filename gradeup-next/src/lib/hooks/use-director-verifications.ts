@@ -189,7 +189,7 @@ export function useDirectorVerifications(schoolId: string | null): UseDirectorVe
       setSelectedIds([]);
 
       return result.data;
-    } catch (err) {
+    } catch {
       return { approved: 0, failed: requestIds.length };
     }
   }, [fetchRequests]);

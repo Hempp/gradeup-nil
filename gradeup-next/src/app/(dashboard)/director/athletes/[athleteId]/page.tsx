@@ -19,7 +19,6 @@ import {
   Ban,
   Trash2,
   RotateCcw,
-  ExternalLink,
   Instagram,
   Twitter,
 } from 'lucide-react';
@@ -29,7 +28,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
 import { Modal } from '@/components/ui/modal';
-import { formatCurrency, formatDate, formatDateTime, formatRelativeTime } from '@/lib/utils';
+import { formatCurrency, formatDate, formatDateTime } from '@/lib/utils';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MOCK DATA - Athlete Detail

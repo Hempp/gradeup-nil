@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useId } from 'react';
+import { useState } from 'react';
 import {
   User,
   Bell,
@@ -83,7 +83,7 @@ function SettingsRow({
 
 export default function AthleteSettingsPage() {
   const toast = useToastActions();
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   const [notifications, setNotifications] = useState({
     email: true,

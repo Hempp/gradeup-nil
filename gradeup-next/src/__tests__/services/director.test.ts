@@ -93,10 +93,8 @@ describe('director service', () => {
         }),
       };
 
-      let callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
           if (table === 'athletic_directors') {
             return directorQuery;
           }

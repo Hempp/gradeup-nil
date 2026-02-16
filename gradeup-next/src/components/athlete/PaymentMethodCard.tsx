@@ -5,7 +5,6 @@ import { Building2, CreditCard, Smartphone, Mail, MoreVertical, Star, Trash2, Ed
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { maskAccountNumber } from '@/lib/utils/validation';
 import type { PaymentAccount, PaymentMethod } from '@/lib/services/payments';
 
 // ═══════════════════════════════════════════════════════════════════════════

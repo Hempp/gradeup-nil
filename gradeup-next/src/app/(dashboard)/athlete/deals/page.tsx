@@ -22,7 +22,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useAthleteDeals } from '@/lib/hooks/use-data';
-import type { Deal, DealStatus, DealType } from '@/lib/services/deals';
+import type { Deal, DealStatus } from '@/lib/services/deals';
 import { DEAL_STATUS_CONFIG, KANBAN_COLUMNS } from '@/lib/constants/deal-status';
 
 type ViewMode = 'table' | 'kanban';

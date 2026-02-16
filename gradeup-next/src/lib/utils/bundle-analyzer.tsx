@@ -5,7 +5,7 @@
  * Development-only utilities for tracking component performance
  */
 
-import { useEffect, useRef, useCallback, useId, type ComponentType } from 'react';
+import { useEffect, useLayoutEffect, useRef, useCallback, useId, type ComponentType } from 'react';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -70,17 +70,19 @@ export function useRenderTiming(options: RenderTimingOptions = {}): void {
     warnThreshold = 16,
   } = options;
 
-  const renderStartRef = useRef<number>(performance.now());
+  const renderStartRef = useRef<number>(0);
   const isFirstRender = useRef(true);
+
+  // Initialize render start time before effects run
+  useLayoutEffect(() => {
+    renderStartRef.current = performance.now();
+  });
 
   useEffect(() => {
     if (!isDev) return;
 
     const renderEnd = performance.now();
     const renderTime = renderEnd - renderStartRef.current;
-
-    // Reset for next render
-    renderStartRef.current = performance.now();
 
     // Update timing data
     let timing = renderTimings.get(componentName);

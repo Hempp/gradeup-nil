@@ -1,10 +1,7 @@
 import {
   AbsoluteFill,
   Sequence,
-  useCurrentFrame,
   useVideoConfig,
-  interpolate,
-  spring,
   Audio,
   staticFile,
 } from 'remotion';
@@ -26,7 +23,7 @@ export const GradeUpDemo: React.FC<GradeUpDemoProps> = ({
   backgroundMusicPath,
   backgroundMusicVolume = 0.3,
 }) => {
-  const { fps, durationInFrames } = useVideoConfig();
+  const { fps: _fps, durationInFrames: _durationInFrames } = useVideoConfig();
 
   // Scene durations (in frames)
   const introDuration = 180; // 6 seconds

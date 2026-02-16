@@ -186,7 +186,7 @@ export async function updateAthleteProfile(updates: Partial<Athlete>): Promise<S
     }
 
     // Remove relation fields from updates (they shouldn't be directly updated)
-    const { profile, school, sport, ...athleteUpdates } = updates;
+    const { profile: _profile, school: _school, sport: _sport, ...athleteUpdates } = updates;
 
     // Update the athlete record
     const { data: athlete, error: updateError } = await supabase

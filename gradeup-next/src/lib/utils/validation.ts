@@ -14,11 +14,11 @@ const DOMPurify: DOMPurifyType = DOMPurifyModule;
 export type ValidatorFn = (value: string) => string | null;
 export type ValidationRules<T> = Partial<Record<keyof T, ValidatorFn[]>>;
 
-export interface FormErrors<T> {
-  [K: string]: string | null;
-}
+export type FormErrors<T extends object> = {
+  [K in keyof T]?: string | null;
+};
 
-export interface UseFormValidationReturn<T> {
+export interface UseFormValidationReturn<T extends object> {
   values: T;
   errors: FormErrors<T>;
   touched: Partial<Record<keyof T, boolean>>;
@@ -250,7 +250,7 @@ export function useFormValidation<T extends { [K in keyof T]: string }>(
 
     for (const key of Object.keys(validationRules) as Array<keyof T>) {
       const error = validateField(key);
-      newErrors[key as string] = error;
+      (newErrors as Record<keyof T, string | null | undefined>)[key] = error;
       if (error) isValid = false;
     }
 

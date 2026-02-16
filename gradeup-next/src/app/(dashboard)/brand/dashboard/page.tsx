@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { ErrorState } from '@/components/ui/error-state';
-import { formatCurrency, formatCompactNumber } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useBrandAnalytics, useBrandCampaigns, useBrandShortlist, useBrandDeals } from '@/lib/hooks/use-data';
 import type { Campaign } from '@/lib/services/brand';

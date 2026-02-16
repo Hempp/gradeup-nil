@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Logo, LogoIcon } from '@/components/brand';
+import { Logo } from '@/components/brand';
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);

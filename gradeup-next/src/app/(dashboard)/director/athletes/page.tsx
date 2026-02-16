@@ -12,14 +12,11 @@ import {
   UserCheck,
   Filter,
   ChevronDown,
-  Loader2,
   Download,
   Mail,
-  MoreHorizontal,
   CheckSquare,
   Square,
   MinusSquare,
-  UserPlus,
   AlertTriangle,
   RefreshCw,
 } from 'lucide-react';
@@ -212,7 +209,7 @@ export default function DirectorAthletesPage() {
   const [verificationFilter, setVerificationFilter] = useState('All Verifications');
   const [sportFilter, setSportFilter] = useState('All Sports');
   const [yearFilter, setYearFilter] = useState('All Years');
-  const [showVerificationFilters, setShowVerificationFilters] = useState(false);
+  const [_showVerificationFilters, _setShowVerificationFilters] = useState(false);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   // Bulk selection state
@@ -256,7 +253,7 @@ export default function DirectorAthletesPage() {
       );
       clearSelection();
       setShowBulkVerifyConfirm(false);
-    } catch (error) {
+    } catch {
       toast.error('Verification Failed', 'Unable to verify athletes. Please try again.');
     } finally {
       setBulkActionLoading(false);

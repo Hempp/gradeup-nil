@@ -384,7 +384,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
       disabled = false,
       searchable = false,
       fullWidth = true,
-      size = 'md',
+      size: _size = 'md',
       className,
       name,
       required,

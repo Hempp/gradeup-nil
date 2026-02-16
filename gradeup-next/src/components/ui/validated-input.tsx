@@ -11,7 +11,7 @@ import {
 } from 'react';
 import { Check, X, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { type ValidatorFn, getPasswordStrength, type PasswordStrength } from '@/lib/utils/validation';
+import { type ValidatorFn, getPasswordStrength } from '@/lib/utils/validation';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -198,7 +198,7 @@ export const ValidatedInput = forwardRef<HTMLInputElement, ValidatedInputProps>(
     const isDark = variant === 'dark';
 
     return (
-      <div className={cn('space-y-1.5', fullWidth && 'w-full')}>
+      <div className={cn('space-y-1.5', fullWidth && 'w-full', className)}>
         {label && (
           <label
             htmlFor={inputId}

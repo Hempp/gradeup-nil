@@ -195,7 +195,7 @@ export async function getEarningsSummary(
     for (const payment of payments || []) {
       const amount = payment.amount ?? 0;
       const paidAt = payment.paid_at ? new Date(payment.paid_at) : null;
-      const createdAt = new Date(payment.created_at);
+      const _createdAt = new Date(payment.created_at);
 
       if (payment.status === 'completed' && paidAt) {
         totalEarned += amount;
@@ -347,7 +347,7 @@ export async function updatePaymentAccount(
     }
 
     // Remove fields that shouldn't be updated directly
-    const { id, user_id, is_verified, ...safeUpdates } = updates;
+    const { id: _id, user_id: _user_id, is_verified: _is_verified, ...safeUpdates } = updates;
 
     const { data: updatedAccount, error } = await supabase
       .from('payment_accounts')

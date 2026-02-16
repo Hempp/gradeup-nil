@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Edit,
-  Calendar,
   DollarSign,
   Users,
   Target,
@@ -415,7 +414,7 @@ function AthletesTab({ campaign }: { campaign: CampaignData }) {
     {
       key: 'actions',
       header: '',
-      render: (_, athlete) => (
+      render: () => (
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm">
             <MessageSquare className="h-4 w-4" />

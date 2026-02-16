@@ -29,13 +29,12 @@ export function Topbar({
   breadcrumbs = [],
   user,
   userId = 'mock-user-id',
-  notificationCount = 0,
   onMenuClick,
   className,
 }: TopbarProps) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [focusedMenuIndex, setFocusedMenuIndex] = useState(-1);
+  const [_focusedMenuIndex, setFocusedMenuIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLElement | null)[]>([]);
 

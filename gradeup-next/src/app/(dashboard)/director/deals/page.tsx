@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Filter, MoreVertical, Eye, CheckCircle, XCircle, MessageSquare, FileText } from 'lucide-react';
+import { Search, MoreVertical, Eye, CheckCircle, XCircle, MessageSquare, FileText } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

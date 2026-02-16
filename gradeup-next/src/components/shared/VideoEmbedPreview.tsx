@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Play, ExternalLink, Youtube, AlertCircle } from 'lucide-react';
+import { Play, ExternalLink, Youtube } from 'lucide-react';
 import type { VideoPlatform } from '@/types';
 import { extractYouTubeVideoId } from '@/lib/utils/validation';
 

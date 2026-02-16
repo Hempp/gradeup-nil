@@ -57,7 +57,7 @@ const mockMessage: Message = {
   attachments: [],
 };
 
-const mockConversation: Conversation = {
+const _mockConversation: Conversation = {
   id: 'conversation-123',
   deal_id: 'deal-123',
   created_at: '2024-01-10T00:00:00Z',
@@ -116,7 +116,7 @@ describe('messaging service', () => {
 
       const conversationsQuery = createChainableQuery({ data: conversationsData, error: null });
 
-      const lastMessageQuery = createChainableQuery({
+      const _lastMessageQuery = createChainableQuery({
         data: { ...mockMessage, message_attachments: [] },
         error: null
       });
@@ -131,11 +131,11 @@ describe('messaging service', () => {
         }),
       };
 
-      let callCount = 0;
+      let _callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
-          if (table === 'conversation_participants' && callCount === 1) {
+          _callCount++;
+          if (table === 'conversation_participants' && _callCount === 1) {
             return participantQuery;
           }
           if (table === 'conversations') {
@@ -241,7 +241,7 @@ describe('messaging service', () => {
         error: null
       });
 
-      const messageQuery = createChainableQuery({ data: mockMessage, error: null });
+      const _messageQuery = createChainableQuery({ data: mockMessage, error: null });
       const countQuery = createChainableQuery({ data: null, error: null, count: 0 });
       countQuery.is = jest.fn().mockResolvedValue({ count: 0, error: null });
 
@@ -252,11 +252,11 @@ describe('messaging service', () => {
         }),
       };
 
-      let callCount = 0;
+      let _callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
-          if (table === 'conversation_participants' && callCount === 1) {
+          _callCount++;
+          if (table === 'conversation_participants' && _callCount === 1) {
             return participantCheckQuery;
           }
           if (table === 'conversations') {
@@ -339,10 +339,8 @@ describe('messaging service', () => {
         }),
       };
 
-      let callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
           if (table === 'conversation_participants') {
             return participantCheckQuery;
           }
@@ -409,10 +407,8 @@ describe('messaging service', () => {
         }),
       };
 
-      let callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
           if (table === 'conversation_participants') {
             return participantCheckQuery;
           }
@@ -451,10 +447,8 @@ describe('messaging service', () => {
         }),
       };
 
-      let callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
           if (table === 'conversation_participants') {
             return participantCheckQuery;
           }
@@ -528,10 +522,8 @@ describe('messaging service', () => {
         }),
       };
 
-      let callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
           if (table === 'conversation_participants') {
             return participantCheckQuery;
           }
@@ -561,10 +553,8 @@ describe('messaging service', () => {
         }),
       };
 
-      let callCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          callCount++;
           if (table === 'conversation_participants') {
             return participantCheckQuery;
           }
@@ -663,17 +653,17 @@ describe('messaging service', () => {
         }),
       };
 
-      let fromCallCount = 0;
+      let _fromCallCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          fromCallCount++;
+          _fromCallCount++;
           if (table === 'profiles') {
             return profilesQuery;
           }
-          if (table === 'conversations' && fromCallCount <= 2) {
+          if (table === 'conversations' && _fromCallCount <= 2) {
             return conversationInsertQuery;
           }
-          if (table === 'conversation_participants' && fromCallCount === 3) {
+          if (table === 'conversation_participants' && _fromCallCount === 3) {
             return participantsInsertQuery;
           }
           if (table === 'conversation_participants') {
@@ -903,10 +893,8 @@ describe('messaging service', () => {
         }),
       };
 
-      let fromCallCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table: string) => {
-          fromCallCount++;
           if (table === 'conversation_participants') {
             return participantQuery;
           }

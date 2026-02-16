@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import {
   useNotifications,
@@ -7,7 +6,7 @@ import {
   getRelativeTime,
   getNotificationColorClass,
 } from '@/lib/hooks/use-notifications';
-import type { Notification, NotificationType } from '@/lib/hooks/use-notifications';
+import type { Notification } from '@/lib/hooks/use-notifications';
 
 // Mock the notification service
 jest.mock('@/lib/services/notifications', () => ({

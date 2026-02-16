@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { Search, Send, FileText, MoreVertical, Edit, Trash2, Eye, X } from 'lucide-react';
+import { Search, Send, FileText, MoreVertical, Edit, Trash2, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -190,7 +189,6 @@ function DealRow({ deal, onEditOffer, onViewContract, onMoreMenu }: DealRowProps
 }
 
 export default function BrandDealsPage() {
-  const router = useRouter();
   const toast = useToastActions();
   const [filter, setFilter] = useState<DealStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');

@@ -176,7 +176,7 @@ export async function updateBrandProfile(
     }
 
     // Remove id and profile_id from updates to prevent changing them
-    const { id, profile_id, ...safeUpdates } = updates;
+    const { id: _id, profile_id: _profile_id, ...safeUpdates } = updates;
 
     const { data: brand, error: brandError } = await supabase
       .from('brands')
@@ -342,7 +342,7 @@ export async function updateCampaign(
     }
 
     // Remove id and brand_id from updates to prevent changing them
-    const { id, brand_id, ...safeUpdates } = updates;
+    const { id: _id, brand_id: _brand_id, ...safeUpdates } = updates;
 
     const { data: campaign, error: campaignError } = await supabase
       .from('campaigns')

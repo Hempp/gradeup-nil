@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, spring } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion';
 
 interface FeatureProps {
   icon: string;

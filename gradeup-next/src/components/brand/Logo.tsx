@@ -1,5 +1,6 @@
 'use client';
 
+import { useId } from 'react';
 import { cn } from '@/lib/utils';
 
 interface LogoProps {
@@ -50,7 +51,8 @@ interface LogoIconProps {
 }
 
 export function LogoIcon({ size = 32, variant = 'gradient', className }: LogoIconProps) {
-  const gradientId = `logo-grad-${Math.random().toString(36).slice(2, 9)}`;
+  const uniqueId = useId();
+  const gradientId = `logo-grad-${uniqueId}`;
 
   const getFill = () => {
     if (variant === 'gradient') return `url(#${gradientId})`;

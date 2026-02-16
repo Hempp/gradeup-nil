@@ -119,7 +119,7 @@ export default function DirectorSettingsPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success('Settings Saved', 'Program information has been updated successfully.');
-    } catch (error) {
+    } catch {
       toast.error('Save Failed', 'Unable to save settings. Please try again.');
     } finally {
       setIsLoading(false);
@@ -137,7 +137,7 @@ export default function DirectorSettingsPage() {
       toast.success('Invitation Sent', `An invitation has been sent to ${inviteForm.email}.`);
       setShowInviteStaffModal(false);
       setInviteForm({ email: '', role: 'Compliance Officer' });
-    } catch (error) {
+    } catch {
       toast.error('Invitation Failed', 'Unable to send invitation. Please try again.');
     } finally {
       setIsLoading(false);
@@ -149,7 +149,7 @@ export default function DirectorSettingsPage() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       toast.success('Staff Removed', `${staffName} has been removed from your team.`);
-    } catch (error) {
+    } catch {
       toast.error('Removal Failed', 'Unable to remove staff member. Please try again.');
     } finally {
       setIsLoading(false);

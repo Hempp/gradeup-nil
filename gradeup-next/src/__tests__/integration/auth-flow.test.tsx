@@ -9,9 +9,8 @@
  * - Success/error toast notifications
  */
 
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useRouter } from 'next/navigation';
 import LoginPage from '@/app/(auth)/login/page';
 import SignupPage from '@/app/(auth)/signup/page';
 import { ToastProvider } from '@/components/ui/toast';

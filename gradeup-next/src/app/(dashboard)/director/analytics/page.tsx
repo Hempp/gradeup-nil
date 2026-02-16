@@ -16,7 +16,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,6 @@ import {
   DollarSign,
   Users,
   TrendingUp,
-  TrendingDown,
   Download,
   ArrowUpRight,
   ArrowDownRight,
@@ -40,7 +38,7 @@ import {
   Activity,
   ChevronDown,
 } from 'lucide-react';
-import { formatCurrency, formatCompactNumber, cn } from '@/lib/utils';
+import { formatCurrency, cn } from '@/lib/utils';
 import { exportToCSV, exportToPDF } from '@/lib/utils/export';
 import { ExportButton } from '@/components/ui/export-button';
 import {
@@ -49,8 +47,6 @@ import {
   chartColors,
   tooltipStyle,
   axisStyle,
-  formatCurrencyValue,
-  formatAxisValue,
 } from '@/components/ui/chart';
 
 // Date range options
@@ -140,7 +136,7 @@ const mockRevenueBreakdown = [
 ];
 
 // Deal status breakdown
-const mockDealStatus = [
+const _mockDealStatus = [
   { status: 'Active', count: 89, color: '#10B981' },
   { status: 'Completed', count: 156, color: '#3B82F6' },
   { status: 'Pending Review', count: 12, color: '#F59E0B' },
@@ -176,11 +172,11 @@ function ChartSkeleton({ title, description }: { title: string; description?: st
         <div className="h-[280px] flex items-center justify-center">
           <div className="w-full space-y-4">
             <div className="flex justify-between items-end h-48">
-              {[...Array(6)].map((_, i) => (
+              {[65, 85, 45, 75, 55, 90].map((height, i) => (
                 <Skeleton
                   key={i}
                   className="w-12"
-                  style={{ height: `${Math.random() * 60 + 40}%` }}
+                  style={{ height: `${height}%` }}
                 />
               ))}
             </div>
@@ -482,7 +478,7 @@ function UserGrowthChart() {
 }
 
 function RevenueBreakdownChart() {
-  const total = mockRevenueBreakdown.reduce((sum, item) => sum + item.value, 0);
+  const _total = mockRevenueBreakdown.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <ChartWrapper
@@ -772,7 +768,7 @@ export default function DirectorAnalyticsPage() {
         `Your ${exportFormat.toUpperCase()} report has been downloaded.`
       );
       setShowExportModal(false);
-    } catch (error) {
+    } catch {
       toast.error('Export Failed', 'Unable to export report. Please try again.');
     } finally {
       setExportLoading(false);

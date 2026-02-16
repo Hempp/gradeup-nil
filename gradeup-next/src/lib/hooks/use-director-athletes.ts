@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { getSchoolAthletes, getDirectorStats, type DirectorStats } from '@/lib/services/director';
+import { getSchoolAthletes } from '@/lib/services/director';
 import type { Athlete } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -10,7 +10,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
 } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,8 +25,9 @@ import {
   ArrowUpRight,
   Download,
 } from 'lucide-react';
-import { formatCurrency, formatCompactNumber } from '@/lib/utils';
-import { exportToCSV, exportToPDF } from '@/lib/utils/export';
+import { formatCurrency } from '@/lib/utils';
+import { formatCompactNumber } from '@/lib/utils/format';
+import { exportToCSV } from '@/lib/utils/export';
 import { ExportButton } from '@/components/ui/export-button';
 import {
   ChartWrapper,
@@ -59,7 +59,7 @@ const mockTopAthletes = [
   { name: 'Emma Chen', engagementRate: 7.5, impressions: 320000, roi: 3.5 },
 ];
 
-const mockMonthlySpend = [
+const _mockMonthlySpend = [
   { month: 'Sep', amount: 15000 },
   { month: 'Oct', amount: 18500 },
   { month: 'Nov', amount: 22000 },

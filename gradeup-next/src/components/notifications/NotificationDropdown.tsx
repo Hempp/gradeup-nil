@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Bell, Check, CheckCheck, Settings, Inbox } from 'lucide-react';
+import { Bell, CheckCheck, Settings, Inbox } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { NotificationBadge } from './NotificationBadge';

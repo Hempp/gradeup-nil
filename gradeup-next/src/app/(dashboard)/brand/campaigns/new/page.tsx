@@ -15,10 +15,8 @@ import {
   Plus,
   Trash2,
   Search,
-  Instagram,
-  X,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -97,7 +95,7 @@ const contentTypes = [
 
 const sports = ['Basketball', 'Football', 'Soccer', 'Volleyball', 'Gymnastics', 'Swimming', 'Tennis', 'Track & Field'];
 
-const schools = [
+const _schools = [
   'Duke University',
   'Stanford University',
   'Ohio State University',
@@ -728,7 +726,7 @@ function ReviewStep({ data }: { data: CampaignFormData }) {
         <CardContent>
           {data.deliverables.length > 0 ? (
             <div className="space-y-2">
-              {data.deliverables.map((deliverable, index) => (
+              {data.deliverables.map((deliverable) => (
                 <div key={deliverable.id} className="flex items-center justify-between p-3 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)]">
                   <div className="flex items-center gap-3">
                     <span className="h-6 w-6 rounded-full bg-[var(--color-primary-muted)] text-[var(--color-primary)] text-xs font-medium flex items-center justify-center">
@@ -863,7 +861,7 @@ export default function NewCampaignPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.info('Draft Saved', 'Your campaign has been saved as a draft. You can continue editing anytime.');
       router.push('/brand/campaigns');
-    } catch (error) {
+    } catch {
       toast.error('Save Failed', 'Unable to save draft. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -877,7 +875,7 @@ export default function NewCampaignPage() {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       toast.success('Campaign Launched', 'Your campaign is now live. Athletes will be notified shortly.');
       router.push('/brand/campaigns');
-    } catch (error) {
+    } catch {
       toast.error('Launch Failed', 'Unable to launch campaign. Please try again.');
     } finally {
       setIsSubmitting(false);

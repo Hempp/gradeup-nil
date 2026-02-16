@@ -17,12 +17,11 @@ import {
   GraduationCap,
   Trophy,
   FileText,
-  User,
   BarChart3,
   Send,
   Loader2,
 } from 'lucide-react';
-import { useVerificationRequests, getVerificationLabel } from '@/lib/hooks/use-verification-requests';
+import { useVerificationRequests } from '@/lib/hooks/use-verification-requests';
 import type { VerificationType } from '@/lib/services/verification';
 import { VerificationRequestModal } from './VerificationRequestModal';
 import { cn } from '@/lib/utils';
@@ -51,7 +50,6 @@ interface VerificationItemProps {
 // ═══════════════════════════════════════════════════════════════════════════
 
 function VerificationItem({
-  type,
   label,
   icon,
   isVerified,

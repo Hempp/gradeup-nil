@@ -8,7 +8,6 @@ import {
   useState,
   useRef,
   type ReactNode,
-  type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -566,12 +565,13 @@ export function KeyboardShortcutsProvider({ children }: KeyboardShortcutsProvide
       const key = event.key.toLowerCase();
 
       // Build the current key combination string
-      let keyCombo = '';
-      if (event.metaKey) keyCombo += 'meta+';
-      if (event.ctrlKey) keyCombo += 'ctrl+';
-      if (event.altKey) keyCombo += 'alt+';
-      if (event.shiftKey && key.length > 1) keyCombo += 'shift+';
-      keyCombo += key;
+      // Build key combo string for debugging/matching purposes
+      let _keyCombo = '';
+      if (event.metaKey) _keyCombo += 'meta+';
+      if (event.ctrlKey) _keyCombo += 'ctrl+';
+      if (event.altKey) _keyCombo += 'alt+';
+      if (event.shiftKey && key.length > 1) _keyCombo += 'shift+';
+      _keyCombo += key;
 
       // Check each shortcut
       for (const shortcut of shortcuts.values()) {

@@ -13,7 +13,6 @@ import {
   TrendingUp,
   Users,
   DollarSign,
-  Calendar,
   ExternalLink,
   CheckCircle,
   Clock,

@@ -44,7 +44,7 @@ function addSentryContext(context?: LogContext): void {
       scope.setUser({ id: context.userId });
     }
     // Add any additional context as extra data
-    const { component, userId, ...extra } = context;
+    const { component: _component, userId: _userId, ...extra } = context;
     if (Object.keys(extra).length > 0) {
       scope.setExtras(extra);
     }
