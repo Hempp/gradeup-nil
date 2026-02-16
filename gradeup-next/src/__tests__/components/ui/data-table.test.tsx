@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { DataTable, DataTableColumn } from '@/components/ui/data-table';
 
-interface TestRow {
+interface TestRow extends Record<string, unknown> {
   id: string;
   name: string;
   email: string;

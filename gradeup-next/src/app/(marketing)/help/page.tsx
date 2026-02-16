@@ -526,7 +526,7 @@ function FAQSection({
         {searchQuery && highlightedFAQs.size > 0 && (
           <div className="mb-8 p-4 rounded-xl bg-[var(--marketing-cyan)]/10 border border-[var(--marketing-cyan)]/20">
             <p className="text-[var(--marketing-cyan)] text-sm">
-              Found {highlightedFAQs.size} result{highlightedFAQs.size !== 1 ? 's' : ''} for "{searchQuery}"
+              Found {highlightedFAQs.size} result{highlightedFAQs.size !== 1 ? 's' : ''} for &quot;{searchQuery}&quot;
             </p>
           </div>
         )}
@@ -539,7 +539,7 @@ function FAQSection({
             </div>
             <h3 className="text-xl font-bold text-white mb-2">No results found</h3>
             <p className="text-[var(--marketing-gray-400)] mb-6">
-              We couldn't find any answers matching "{searchQuery}". Try different keywords or browse categories.
+              We couldn&apos;t find any answers matching &quot;{searchQuery}&quot;. Try different keywords or browse categories.
             </p>
             <Button
               onClick={() => setActiveCategory(null)}
@@ -655,7 +655,7 @@ function ContactSupportSection() {
           Still Need Help?
         </h2>
         <p className="text-xl text-black/70 mb-8 max-w-2xl mx-auto">
-          Our support team is here to help you succeed. Reach out and we'll get back to you within 24 hours.
+          Our support team is here to help you succeed. Reach out and we&apos;ll get back to you within 24 hours.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

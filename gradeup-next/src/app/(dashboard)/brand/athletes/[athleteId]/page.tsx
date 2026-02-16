@@ -434,7 +434,7 @@ export default function BrandAthleteProfilePage() {
           Athlete Not Found
         </h2>
         <p className="text-sm text-[var(--text-muted)] mb-6">
-          This athlete profile doesn't exist or has been removed.
+          This athlete profile doesn&apos;t exist or has been removed.
         </p>
         <Button variant="outline" onClick={() => router.push('/brand/discover')}>
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -622,7 +622,7 @@ export default function BrandAthleteProfilePage() {
                 {athlete.gpa.toFixed(2)}
               </p>
               {athlete.gpa >= 3.5 && (
-                <Badge variant="warning" size="sm">Dean's List</Badge>
+                <Badge variant="warning" size="sm">Dean&apos;s List</Badge>
               )}
             </div>
           </CardContent>

@@ -41,7 +41,7 @@ export const TestimonialsScene: React.FC = () => {
         }}
       >
         <div style={{ fontSize: 28, color: '#fff', lineHeight: 1.6, marginBottom: 32, fontStyle: 'italic' }}>
-          "After verifying my 3.9 GPA on GradeUp, a tutoring company reached out with a $3,500 semester deal. They specifically wanted someone who could represent academic excellence."
+          &quot;After verifying my 3.9 GPA on GradeUp, a tutoring company reached out with a $3,500 semester deal. They specifically wanted someone who could represent academic excellence.&quot;
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -55,7 +55,7 @@ export const TestimonialsScene: React.FC = () => {
           />
           <div>
             <div style={{ fontSize: 20, fontWeight: 'bold', color: '#fff' }}>Jasmine Taylor</div>
-            <div style={{ fontSize: 16, color: '#666' }}>Women's Basketball, Stanford</div>
+            <div style={{ fontSize: 16, color: '#666' }}>Women&apos;s Basketball, Stanford</div>
           </div>
           <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
             <div style={{ fontSize: 24, fontWeight: 'bold', color: '#adff2f' }}>$12,400</div>

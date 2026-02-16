@@ -511,6 +511,18 @@ export default function BrandDiscoverPage() {
     return displayAthletes.filter(athlete => shortlistedIds.has(athlete.id));
   }, [displayAthletes, shortlistedIds]);
 
+  // Calculate summary stats - must be before early returns to follow hooks rules
+  const summaryStats = useMemo(() => {
+    if (displayAthletes.length === 0) {
+      return { totalFollowers: 0, avgEngagement: 0, totalNilValue: 0, verifiedCount: 0 };
+    }
+    const totalFollowers = displayAthletes.reduce((sum, a) => sum + a.instagramFollowers + a.tiktokFollowers, 0);
+    const avgEngagement = displayAthletes.reduce((sum, a) => sum + a.engagementRate, 0) / displayAthletes.length;
+    const totalNilValue = displayAthletes.reduce((sum, a) => sum + a.nilValue, 0);
+    const verifiedCount = displayAthletes.filter(a => a.verified).length;
+    return { totalFollowers, avgEngagement, totalNilValue, verifiedCount };
+  }, [displayAthletes]);
+
   // Show loading state while auth is checking
   if (authLoading) {
     return (
@@ -542,15 +554,6 @@ export default function BrandDiscoverPage() {
       </div>
     );
   }
-
-  // Calculate summary stats
-  const summaryStats = useMemo(() => {
-    const totalFollowers = displayAthletes.reduce((sum, a) => sum + a.instagramFollowers + a.tiktokFollowers, 0);
-    const avgEngagement = displayAthletes.reduce((sum, a) => sum + a.engagementRate, 0) / displayAthletes.length;
-    const totalNilValue = displayAthletes.reduce((sum, a) => sum + a.nilValue, 0);
-    const verifiedCount = displayAthletes.filter(a => a.verified).length;
-    return { totalFollowers, avgEngagement, totalNilValue, verifiedCount };
-  }, [displayAthletes]);
 
   return (
     <div className="space-y-6 animate-fade-in">

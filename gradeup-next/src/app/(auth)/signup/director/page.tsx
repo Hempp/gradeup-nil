@@ -212,7 +212,7 @@ export default function DirectorSignupPage() {
             Create Director Account
           </CardTitle>
           <CardDescription className="text-[var(--neutral-600)]">
-            Manage your athletic program's NIL activities
+            Manage your athletic program&apos;s NIL activities
           </CardDescription>
         </CardHeader>
 

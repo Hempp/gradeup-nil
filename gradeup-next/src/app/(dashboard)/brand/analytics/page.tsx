@@ -115,11 +115,11 @@ function ChartSkeleton({ title }: { title: string }) {
         <div className="h-[280px] flex items-center justify-center">
           <div className="w-full space-y-4">
             <div className="flex justify-between items-end h-40">
-              {[...Array(6)].map((_, i) => (
+              {[65, 80, 45, 90, 55, 70].map((height, i) => (
                 <Skeleton
                   key={i}
                   className="w-12"
-                  style={{ height: `${Math.random() * 60 + 40}%` }}
+                  style={{ height: `${height}%` }}
                 />
               ))}
             </div>
