@@ -10,9 +10,11 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
    * - 'default': Standard card with solid background and border
    * - 'glass': Glassmorphism effect with backdrop blur
    * - 'glow': Card with glowing border using primary color
+   * - 'gradient': Animated gradient border (premium)
+   * - 'premium': 3D tilt effect with glow (premium)
    * @default 'default'
    */
-  variant?: 'default' | 'glass' | 'glow';
+  variant?: 'default' | 'glass' | 'glow' | 'gradient' | 'premium';
   /**
    * Enable hover effects (lift, shadow, background change)
    * @default false
@@ -55,16 +57,25 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     const variants = {
       default: `
         bg-[var(--bg-card)] border border-[var(--border-color)]
-        ${hover ? 'hover:bg-[var(--bg-card-hover)] hover:border-[var(--border-color-hover)] hover:-translate-y-1 hover:shadow-lg' : ''}
+        ${hover ? 'card-shine hover:bg-[var(--bg-card-hover)] hover:border-[var(--border-color-hover)] hover:-translate-y-1 hover:shadow-lg' : ''}
       `,
       glass: `
-        glass-card
+        glass-premium
         ${hover ? 'hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1' : ''}
       `,
       glow: `
         bg-[var(--bg-card)] border border-[var(--color-primary)]
         shadow-[0_0_20px_var(--color-primary-glow)]
-        ${hover ? 'hover:shadow-[0_0_30px_var(--color-primary-glow)] hover:-translate-y-1' : ''}
+        ${hover ? 'card-hover-glow hover:shadow-[0_0_40px_var(--color-primary-glow)] hover:-translate-y-1' : ''}
+      `,
+      gradient: `
+        gradient-border gradient-border-subtle bg-[var(--bg-card)]
+        ${hover ? 'hover:-translate-y-1' : ''}
+      `,
+      premium: `
+        card-3d card-shine
+        bg-[var(--bg-card)] border border-[var(--border-color)]
+        ${hover ? 'hover:shadow-[0_20px_40px_rgba(0,0,0,0.2),0_0_40px_var(--color-primary-glow)]' : ''}
       `,
     };
 

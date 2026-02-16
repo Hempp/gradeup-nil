@@ -103,9 +103,13 @@ function HeroSection() {
     >
       {/* Background Effects */}
       <div className="absolute inset-0">
-        {/* Gradient orbs */}
-        <div className="hero-orb hero-orb-cyan absolute -top-40 -left-40 w-[500px] h-[500px]" />
-        <div className="hero-orb hero-orb-magenta absolute -bottom-40 -right-40 w-[600px] h-[600px]" />
+        {/* Morphing blob backgrounds */}
+        <div className="blob-cyan blob-morph absolute -top-40 -left-40 w-[500px] h-[500px]" />
+        <div className="blob-magenta blob-morph absolute -bottom-40 -right-40 w-[600px] h-[600px]" style={{ animationDelay: '-3s' }} />
+        <div className="blob-lime blob-morph absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]" style={{ animationDelay: '-5s' }} />
+
+        {/* Mesh gradient layer */}
+        <div className="absolute inset-0 mesh-gradient-bg opacity-30" />
 
         {/* Grid pattern */}
         <div className="absolute inset-0 hero-grid opacity-50" />
@@ -129,9 +133,9 @@ function HeroSection() {
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white mb-6">
-              <span className="block">Your GPA</span>
-              <span className="block gradient-text-cyan">Is Worth</span>
-              <span className="block bg-gradient-to-r from-[var(--marketing-gold)] to-[var(--marketing-lime)] bg-clip-text text-transparent">
+              <span className="block animate-float-slow">Your GPA</span>
+              <span className="block gradient-text-cyan text-glow-animated">Is Worth</span>
+              <span className="block bg-gradient-to-r from-[var(--marketing-gold)] to-[var(--marketing-lime)] bg-clip-text text-transparent text-glow-gold">
                 Money.
               </span>
             </h1>
@@ -406,7 +410,7 @@ function PartnerLogosSection() {
 
 function AthleteCard({ athlete }: { athlete: FeaturedAthlete }) {
   return (
-    <div className="group relative card-marketing overflow-hidden hover-lift animate-reveal-up">
+    <div className="group relative card-marketing overflow-hidden hover-lift animate-reveal-up card-shine spotlight-hover">
       {/* Image */}
       <div className="relative h-56 overflow-hidden">
         <Image
@@ -626,7 +630,7 @@ function HowItWorksSection() {
               {/* Glow effect */}
               <div className="absolute -inset-4 bg-gradient-to-r from-[var(--marketing-cyan)]/20 via-[var(--marketing-magenta)]/20 to-[var(--marketing-lime)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
 
-              <div className="relative card-marketing overflow-hidden">
+              <div className="relative card-marketing overflow-hidden gradient-border gradient-border-subtle">
                 {/* Video container */}
                 <div className="relative aspect-video bg-[var(--marketing-gray-900)]">
                   <video
@@ -729,7 +733,7 @@ function HowItWorksSection() {
               return (
                 <div
                   key={step.number}
-                  className={`relative card-marketing p-5 border-l-4 ${colors.border} hover:bg-white/5 transition-colors`}
+                  className={`relative card-marketing p-5 border-l-4 ${colors.border} hover:bg-white/5 transition-colors card-hover-glow`}
                 >
                   {/* Connector */}
                   {index < steps.length - 1 && (
@@ -1052,12 +1056,13 @@ function TestimonialsSection() {
 function FinalCTASection() {
   return (
     <section
-      className="section-spacing-lg bg-marketing-cta relative overflow-hidden"
+      className="section-spacing-lg aurora-bg relative overflow-hidden"
       aria-label="Sign up call-to-action"
       role="region"
     >
       {/* Background effects */}
-      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2)_0%,transparent_60%)]" />
+      <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.3)_0%,transparent_60%)]" />
+      <div className="absolute inset-0 opacity-10 hero-grid" />
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Social proof */}

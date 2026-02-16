@@ -63,18 +63,20 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary: `
+        btn-shine
         bg-[var(--color-primary)] text-[var(--text-inverse)]
-        hover:bg-[var(--color-primary-hover)] hover:-translate-y-0.5 hover:shadow-lg
+        hover:bg-[var(--color-primary-hover)] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_var(--color-primary-glow)]
         active:scale-[0.98] active:translate-y-0
       `,
       secondary: `
+        btn-shine
         bg-[var(--color-secondary)] text-white
-        hover:bg-[var(--color-secondary-hover)] hover:-translate-y-0.5 hover:shadow-lg
+        hover:bg-[var(--color-secondary-hover)] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(255,215,0,0.3)]
         active:scale-[0.98] active:translate-y-0
       `,
       outline: `
         border border-[var(--border-color)] bg-transparent text-[var(--text-primary)]
-        hover:bg-[var(--bg-card)] hover:border-[var(--border-color-hover)] hover:-translate-y-0.5
+        hover:bg-[var(--bg-card)] hover:border-[var(--color-primary)] hover:-translate-y-0.5 hover:shadow-[0_0_20px_var(--color-primary-glow)]
         active:scale-[0.98] active:translate-y-0
       `,
       ghost: `
@@ -83,8 +85,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         active:scale-[0.98]
       `,
       danger: `
+        btn-shine ripple-effect
         bg-[var(--color-error)] text-white
-        hover:bg-[#dc2626] hover:-translate-y-0.5 hover:shadow-lg
+        hover:bg-[#dc2626] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(239,68,68,0.4)]
         active:scale-[0.98] active:translate-y-0
       `,
     };

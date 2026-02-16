@@ -10,6 +10,8 @@ export interface StatCardProps extends HTMLAttributes<HTMLDivElement> {
   trendDirection?: 'up' | 'down';
   icon?: ReactNode;
   subtitle?: ReactNode;
+  /** Enable premium visual effects (glow, shine) */
+  premium?: boolean;
 }
 
 const TrendArrowUp = () => (
@@ -37,24 +39,29 @@ const TrendArrowDown = () => (
 );
 
 const StatCard = memo(forwardRef<HTMLDivElement, StatCardProps>(
-  ({ className, title, value, trend, trendDirection = 'up', icon, subtitle, ...props }, ref) => {
+  ({ className, title, value, trend, trendDirection = 'up', icon, subtitle, premium = false, ...props }, ref) => {
     const trendColor = trendDirection === 'up'
       ? 'text-[var(--color-success)]'
       : 'text-[var(--color-error)]';
 
+    const baseStyles = `
+      bg-[var(--bg-card)] rounded-[var(--radius-xl)] p-6
+      border border-[var(--border-color)]
+      shadow-[var(--shadow-sm)]
+      transition-all duration-[var(--transition-normal)]
+      hover:shadow-[var(--shadow-md)] hover:border-[var(--border-color-hover)]
+    `;
+
+    const premiumStyles = premium ? `
+      card-shine card-hover-glow
+      hover:shadow-[0_10px_40px_var(--color-primary-glow)]
+      hover:border-[var(--color-primary)]
+    ` : '';
+
     return (
       <div
         ref={ref}
-        className={cn(
-          `
-          bg-[var(--bg-card)] rounded-[var(--radius-xl)] p-6
-          border border-[var(--border-color)]
-          shadow-[var(--shadow-sm)]
-          transition-all duration-[var(--transition-normal)]
-          hover:shadow-[var(--shadow-md)] hover:border-[var(--border-color-hover)]
-          `,
-          className
-        )}
+        className={cn(baseStyles, premiumStyles, className)}
         {...props}
       >
         {/* Top row: Icon + Trend */}
@@ -73,7 +80,10 @@ const StatCard = memo(forwardRef<HTMLDivElement, StatCardProps>(
         </div>
 
         {/* Center: Large stat value */}
-        <div className="text-3xl font-bold text-[var(--text-primary)] mb-1">
+        <div className={cn(
+          "text-3xl font-bold text-[var(--text-primary)] mb-1",
+          premium && "gradient-text-cyan"
+        )}>
           {value}
         </div>
 
