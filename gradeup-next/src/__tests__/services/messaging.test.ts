@@ -12,6 +12,7 @@ import {
   createConversation,
   getOrCreateConversationByDealId,
   getUnreadCount,
+  subscribeToMessages,
   type Conversation,
   type Message,
 } from '@/lib/services/messaging';
@@ -949,6 +950,33 @@ describe('messaging service', () => {
 
       expect(result.data).toBeNull();
       expect(result.error?.message).toBe('Not authenticated');
+    });
+  });
+
+  describe('subscribeToMessages', () => {
+    it('creates subscription and returns unsubscribe function', () => {
+      const mockUnsubscribe = jest.fn();
+      const mockChannel = {
+        on: jest.fn().mockReturnThis(),
+        subscribe: jest.fn().mockReturnThis(),
+      };
+      const mockSupabase = {
+        channel: jest.fn().mockReturnValue(mockChannel),
+        removeChannel: mockUnsubscribe,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const callback = jest.fn();
+      const unsubscribe = subscribeToMessages('conv-123', callback);
+
+      expect(mockSupabase.channel).toHaveBeenCalledWith('messages:conv-123');
+      expect(mockChannel.on).toHaveBeenCalled();
+      expect(mockChannel.subscribe).toHaveBeenCalled();
+      expect(typeof unsubscribe).toBe('function');
+
+      // Call unsubscribe
+      unsubscribe();
+      expect(mockUnsubscribe).toHaveBeenCalled();
     });
   });
 });

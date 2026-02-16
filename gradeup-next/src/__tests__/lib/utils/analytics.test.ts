@@ -43,7 +43,7 @@ describe('analytics utilities', () => {
   });
 
   afterAll(() => {
-    process.env.NODE_ENV = originalEnv;
+    (process.env as { NODE_ENV: string }).NODE_ENV = originalEnv;
   });
 
   describe('initializeAnalytics', () => {

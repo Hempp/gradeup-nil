@@ -49,7 +49,8 @@ const mockVerificationHistory: VerificationHistory = {
 
 // Helper to create chainable query mock
 function createChainableQuery(finalResult: { data?: unknown; error?: unknown; count?: number | null }) {
-  const mockQuery: Record<string, jest.Mock> = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mockQuery: any = {};
 
   const chainableMethods = ['select', 'eq', 'in', 'update', 'insert', 'delete', 'order', 'neq'];
   chainableMethods.forEach((method) => {

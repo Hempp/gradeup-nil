@@ -44,7 +44,7 @@ describe('logger', () => {
   });
 
   afterAll(() => {
-    process.env.NODE_ENV = originalEnv;
+    (process.env as { NODE_ENV: string }).NODE_ENV = originalEnv;
   });
 
   describe('in development mode', () => {

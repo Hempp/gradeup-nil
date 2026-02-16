@@ -148,7 +148,7 @@ describe('useErrorHandler', () => {
     it('wraps function and returns data on success', async () => {
       const { result } = renderHook(() => useErrorHandler());
 
-      const asyncFn = async (value: string) => `Result: ${value}`;
+      const asyncFn = async (value: unknown) => `Result: ${value}`;
       const wrappedFn = result.current.wrapAsync(asyncFn);
 
       const { data, error } = await wrappedFn('test');

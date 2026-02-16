@@ -15,6 +15,8 @@ import {
   completeDeal,
   cancelDeal,
   submitCounterOffer,
+  getDealHistory,
+  getDealDeliverables,
   type Deal,
   type DealFilters,
   type DealStatus,
@@ -604,6 +606,72 @@ describe('deals service', () => {
 
       expect(result.data).toBeNull();
       expect(result.error?.message).toContain('Failed to submit counter offer');
+    });
+  });
+
+  describe('getDealHistory', () => {
+    it('returns deal history', async () => {
+      const mockHistory = [
+        { id: 'h1', action: 'created', changes: {}, created_at: '2024-01-01T00:00:00Z' },
+        { id: 'h2', action: 'updated', changes: { status: 'accepted' }, created_at: '2024-01-02T00:00:00Z' },
+      ];
+      const mockQuery = createChainableQuery({ data: mockHistory, error: null });
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getDealHistory('deal-123');
+
+      expect(result.data).toEqual(mockHistory);
+      expect(result.error).toBeNull();
+      expect(mockQuery.eq).toHaveBeenCalledWith('deal_id', 'deal-123');
+    });
+
+    it('returns error on failure', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: { message: 'Query failed' } });
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getDealHistory('deal-123');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toContain('Failed to fetch deal history');
+    });
+  });
+
+  describe('getDealDeliverables', () => {
+    it('returns deliverables for a deal', async () => {
+      const mockDeliverables = [
+        { id: 'd1', deal_id: 'deal-123', description: 'Post 1', due_date: '2024-02-01' },
+        { id: 'd2', deal_id: 'deal-123', description: 'Post 2', due_date: '2024-02-15' },
+      ];
+      const mockQuery = createChainableQuery({ data: mockDeliverables, error: null });
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getDealDeliverables('deal-123');
+
+      expect(result.data).toEqual(mockDeliverables);
+      expect(result.error).toBeNull();
+      expect(mockQuery.eq).toHaveBeenCalledWith('deal_id', 'deal-123');
+    });
+
+    it('returns error on failure', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: { message: 'Query failed', code: 'ERROR' } });
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getDealDeliverables('deal-123');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toContain('Query failed');
     });
   });
 });

@@ -50,6 +50,18 @@ const mockAuthSignIn = authSignIn as jest.MockedFunction<typeof authSignIn>;
 const mockAuthSignOut = authSignOut as jest.MockedFunction<typeof authSignOut>;
 const mockGetFullProfile = getFullProfile as jest.MockedFunction<typeof getFullProfile>;
 
+// Helper to create complete mock profiles
+function createMockProfile(overrides: { id: string; email: string; role: 'athlete' | 'brand' | 'athletic_director' }) {
+  return {
+    ...overrides,
+    first_name: 'Test',
+    last_name: 'User',
+    phone: null,
+    avatar_url: null,
+    bio: null,
+  };
+}
+
 // Test component that uses auth context
 function AuthConsumer() {
   const {
@@ -133,13 +145,11 @@ describe('AuthContext', () => {
     });
 
     it('loads user data when session exists', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        first_name: 'John',
-        last_name: 'Doe',
-        role: 'athlete' as const,
-      };
+        role: 'athlete',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -172,18 +182,17 @@ describe('AuthContext', () => {
     it('handles sign in', async () => {
       const user = userEvent.setup();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockAuthSignIn.mockResolvedValue({
         data: { user: { id: 'user-123' }, session: {} },
         error: null,
-      });
+      } as any);
 
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        first_name: 'John',
-        last_name: 'Doe',
-        role: 'athlete' as const,
-      };
+        role: 'athlete',
+      });
 
       mockGetFullProfile.mockResolvedValue({
         data: {
@@ -213,13 +222,14 @@ describe('AuthContext', () => {
     it('handles sign out', async () => {
       const user = userEvent.setup();
 
-      mockAuthSignOut.mockResolvedValue({ error: null });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockAuthSignOut.mockResolvedValue({ data: null, error: null } as any);
 
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'athlete' as const,
-      };
+        role: 'athlete',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -274,11 +284,11 @@ describe('AuthContext', () => {
 
   describe('role helpers', () => {
     it('identifies athlete role correctly', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'athlete' as const,
-      };
+        role: 'athlete',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -308,11 +318,11 @@ describe('AuthContext', () => {
     });
 
     it('identifies brand role correctly', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'brand' as const,
-      };
+        role: 'brand',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -341,11 +351,11 @@ describe('AuthContext', () => {
     });
 
     it('identifies director role correctly', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'athletic_director' as const,
-      };
+        role: 'athletic_director',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -374,11 +384,11 @@ describe('AuthContext', () => {
 
   describe('getDashboardPath', () => {
     it('returns correct path for athlete', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'athlete' as const,
-      };
+        role: 'athlete',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -405,11 +415,11 @@ describe('AuthContext', () => {
     });
 
     it('returns correct path for brand', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'brand' as const,
-      };
+        role: 'brand',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -436,11 +446,11 @@ describe('AuthContext', () => {
     });
 
     it('returns correct path for director', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'athletic_director' as const,
-      };
+        role: 'athletic_director',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -507,11 +517,11 @@ describe('AuthContext', () => {
     });
 
     it('does not redirect when authenticated', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'athlete' as const,
-      };
+        role: 'athlete',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },
@@ -541,11 +551,11 @@ describe('AuthContext', () => {
     });
 
     it('redirects to dashboard when role not allowed', async () => {
-      const mockProfile = {
+      const mockProfile = createMockProfile({
         id: 'user-123',
         email: 'test@example.com',
-        role: 'athlete' as const,
-      };
+        role: 'athlete',
+      });
 
       mockGetSession.mockResolvedValue({
         data: { session: { user: { id: 'user-123' } } },

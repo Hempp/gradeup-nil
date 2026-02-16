@@ -164,7 +164,7 @@ describe('useProfileCallback', () => {
   });
 
   it('passes arguments to callback', () => {
-    const callback = jest.fn((a: string, b: number) => `${a}-${b}`);
+    const callback = jest.fn((a: unknown, b: unknown) => `${a}-${b}`);
     const { result } = renderHook(() =>
       useProfileCallback(callback, 'testCallback')
     );

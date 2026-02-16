@@ -12,6 +12,7 @@ import {
   getNotificationsWithFilters,
   createNotification,
   deleteReadNotifications,
+  checkTableExists,
   type Notification,
   type NotificationType,
   type NotificationFilters,
@@ -652,6 +653,60 @@ describe('notifications service', () => {
       const result = await deleteReadNotifications('user-123');
 
       expect(result.error?.message).toContain('Failed to delete read notifications');
+    });
+  });
+
+  describe('checkTableExists', () => {
+    it('returns true when table exists', async () => {
+      const mockQuery = createChainableQuery({ data: [], error: null });
+      mockQuery.limit = jest.fn().mockResolvedValue({ data: [], error: null });
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await checkTableExists();
+
+      expect(result).toBe(true);
+    });
+
+    it('returns false when table does not exist', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: { code: '42P01', message: 'table does not exist' } });
+      mockQuery.limit = jest.fn().mockResolvedValue({ data: null, error: { code: '42P01', message: 'table does not exist' } });
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await checkTableExists();
+
+      expect(result).toBe(false);
+    });
+
+    it('returns true on RLS errors (table exists but access restricted)', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: { code: 'PGRST301', message: 'RLS policy violation' } });
+      mockQuery.limit = jest.fn().mockResolvedValue({ data: null, error: { code: 'PGRST301', message: 'RLS policy violation' } });
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await checkTableExists();
+
+      expect(result).toBe(true);
+    });
+
+    it('returns false on unexpected errors', async () => {
+      const mockSupabase = {
+        from: jest.fn().mockImplementation(() => {
+          throw new Error('Connection failed');
+        }),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await checkTableExists();
+
+      expect(result).toBe(false);
     });
   });
 });

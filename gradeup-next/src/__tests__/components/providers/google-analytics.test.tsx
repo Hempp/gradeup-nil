@@ -27,7 +27,7 @@ describe('GoogleAnalytics', () => {
   });
 
   it('returns null in development mode', () => {
-    process.env.NODE_ENV = 'development';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'development';
     process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = 'G-TEST123';
 
     const { container } = render(<GoogleAnalytics />);
@@ -36,7 +36,7 @@ describe('GoogleAnalytics', () => {
   });
 
   it('returns null when GA_MEASUREMENT_ID is not set', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
     const { container } = render(<GoogleAnalytics />);

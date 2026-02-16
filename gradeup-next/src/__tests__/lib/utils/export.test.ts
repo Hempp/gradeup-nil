@@ -36,9 +36,10 @@ describe('exportToCSV', () => {
     exportToCSV(data, 'test');
 
     expect(mockCreateObjectURL).toHaveBeenCalled();
-    const blob = mockCreateObjectURL.mock.calls[0][0];
+    const calls = mockCreateObjectURL.mock.calls as unknown[][];
+    const blob = calls[0]?.[0] as Blob | undefined;
     expect(blob).toBeInstanceOf(Blob);
-    expect(blob.type).toBe('text/csv');
+    expect(blob?.type).toBe('text/csv');
   });
 
   it('uses custom columns when provided', () => {
@@ -46,12 +47,12 @@ describe('exportToCSV', () => {
       { name: 'John', age: 30, email: 'john@test.com' },
     ];
 
-    const columns = [
-      { key: 'name' as const, label: 'Full Name' },
-      { key: 'age' as const, label: 'Age' },
+    const columns: Array<{ key: keyof typeof data[0]; label: string }> = [
+      { key: 'name', label: 'Full Name' },
+      { key: 'age', label: 'Age' },
     ];
 
-    exportToCSV(data, columns);
+    exportToCSV(data, 'test', columns);
 
     expect(mockCreateObjectURL).toHaveBeenCalled();
   });
