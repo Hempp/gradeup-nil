@@ -2,10 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
+# Cancel in-progress runs for the same branch
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -14,6 +15,7 @@ env:
   NODE_VERSION: '20'
 
 jobs:
+  # Lint and type check
   lint:
     name: Lint & Type Check
     runs-on: ubuntu-latest
@@ -31,11 +33,12 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: npm run lint -- --max-warnings=100
+        run: npm run lint
 
       - name: Run TypeScript type check
         run: npm run type-check
 
+  # Unit tests
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -52,7 +55,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests with coverage
+      - name: Run unit tests
         run: npm run test:ci
 
       - name: Upload coverage reports
@@ -62,10 +65,46 @@ jobs:
           file: ./coverage/lcov.info
           fail_ci_if_error: false
 
+  # E2E tests
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          CI: true
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # Build check
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint, test]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -81,13 +120,10 @@ jobs:
 
       - name: Build application
         run: npm run build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
-      - name: Upload build artifact
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build
-          path: .next
-          retention-days: 7
+          name: build-output
+          path: .next/
+          retention-days: 1
