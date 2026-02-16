@@ -41,6 +41,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
                   'text-sm',
                   isLast ? 'text-neutral-900 font-medium' : 'text-neutral-600'
                 )}
+                aria-current={isLast ? 'page' : undefined}
               >
                 {item.label}
               </span>

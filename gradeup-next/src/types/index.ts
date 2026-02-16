@@ -200,19 +200,16 @@ export interface ConversationParticipant {
   subtitle?: string; // e.g., school name, deal title
 }
 
+/**
+ * Represents a conversation thread between participants (e.g., athlete and brand).
+ * Contains the list of participants, the most recent message, and unread count.
+ */
 export interface Conversation {
   id: string;
   participants: ConversationParticipant[];
   lastMessage: Message | null;
   unreadCount: number;
-  // Legacy fields for backward compatibility
-  deal_id?: string;
-  athlete_id?: string;
-  brand_id?: string;
-  last_message?: string;
-  last_message_at?: string;
-  unread_count?: number;
-  created_at?: string;
+  createdAt?: string;
 }
 
 // ─── Campaign ───

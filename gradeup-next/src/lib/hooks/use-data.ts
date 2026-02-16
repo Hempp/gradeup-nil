@@ -250,8 +250,8 @@ export type OpportunityFilters = DealFilters;
 /**
  * Generic data fetching hook with loading, error states, and refetch capability.
  *
- * @param fetcher - Async function that returns { data, error }
- * @param deps - Dependency array to trigger refetch
+ * @param fetcher - Async function that returns { data, error }. Should be wrapped in useCallback by the caller.
+ * @param deps - Dependency array to trigger refetch. Values are serialized to create a stable key.
  * @returns { data, loading, error, refetch }
  */
 export function useData<T>(
@@ -266,6 +266,12 @@ export function useData<T>(
   const isMountedRef = useRef<boolean>(true);
   // Track current fetch to handle race conditions
   const fetchIdRef = useRef<number>(0);
+  // Store fetcher in a ref to avoid including it in dependencies
+  const fetcherRef = useRef(fetcher);
+  fetcherRef.current = fetcher;
+
+  // Serialize deps to create a stable dependency key
+  const depsKey = JSON.stringify(deps);
 
   const fetchData = useCallback(async () => {
     const currentFetchId = ++fetchIdRef.current;
@@ -274,7 +280,7 @@ export function useData<T>(
     setError(null);
 
     try {
-      const result = await fetcher();
+      const result = await fetcherRef.current();
 
       // Only update state if this is the latest fetch and component is mounted
       if (isMountedRef.current && currentFetchId === fetchIdRef.current) {
@@ -296,8 +302,7 @@ export function useData<T>(
         setLoading(false);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetcher, ...deps]);
+  }, [depsKey]);
 
   useEffect(() => {
     isMountedRef.current = true;

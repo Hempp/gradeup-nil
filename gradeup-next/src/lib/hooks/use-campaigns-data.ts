@@ -4,6 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { getBrandCampaigns, type Campaign } from '@/lib/services/brand';
 import type { DealStatus } from '@/types';
+import { createLogger } from '@/lib/utils/logger';
+
+const log = createLogger('useCampaignsData');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -201,9 +204,7 @@ export function useBrandCampaigns(): UseCampaignsResult {
         if (abortController.signal.aborted) return;
 
         if (result.error || !result.data) {
-          if (process.env.NODE_ENV === 'development') {
-            console.warn('Using mock campaigns:', result.error?.message);
-          }
+          log.warn('Using mock campaigns', { reason: result.error?.message });
           setData(mockCampaigns);
         } else if (result.data.length === 0) {
           // No campaigns yet, show mock data as placeholder
@@ -230,9 +231,7 @@ export function useBrandCampaigns(): UseCampaignsResult {
         }
       } catch (err) {
         if (abortController.signal.aborted) return;
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Error fetching campaigns:', err);
-        }
+        log.error('Error fetching campaigns', err instanceof Error ? err : undefined);
         setError(err instanceof Error ? err : new Error('Failed to fetch campaigns'));
         setData(mockCampaigns);
       } finally {

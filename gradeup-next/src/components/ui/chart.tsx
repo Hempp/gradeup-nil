@@ -102,6 +102,10 @@ export interface ChartWrapperProps {
   className?: string;
   headerAction?: ReactNode;
   loading?: boolean;
+  /** Accessible label describing the chart data for screen readers */
+  ariaLabel?: string;
+  /** Detailed description of chart data for screen readers */
+  ariaDescription?: string;
 }
 
 /**
@@ -121,6 +125,8 @@ export const ChartWrapper = forwardRef<HTMLDivElement, ChartWrapperProps>(
       className,
       headerAction,
       loading = false,
+      ariaLabel,
+      ariaDescription,
     },
     ref
   ) => {
@@ -145,21 +151,41 @@ export const ChartWrapper = forwardRef<HTMLDivElement, ChartWrapperProps>(
           </CardHeader>
         )}
         <CardContent className={cn(!title && 'pt-6')}>
-          <div style={{ height: `${height}px` }} className="w-full">
+          <div
+            style={{ height: `${height}px` }}
+            className="w-full"
+            role="img"
+            aria-label={ariaLabel || title || 'Chart visualization'}
+            aria-describedby={ariaDescription ? `chart-desc-${title?.replace(/\s+/g, '-').toLowerCase() || 'default'}` : undefined}
+          >
+            {ariaDescription && (
+              <span
+                id={`chart-desc-${title?.replace(/\s+/g, '-').toLowerCase() || 'default'}`}
+                className="sr-only"
+              >
+                {ariaDescription}
+              </span>
+            )}
             {isMounted && !loading ? (
               <ResponsiveContainer width="100%" height="100%">
                 {children as React.ReactElement}
               </ResponsiveContainer>
             ) : (
               // Loading skeleton
-              <div className="w-full h-full flex items-end gap-2 p-4">
+              <div
+                className="w-full h-full flex items-end gap-2 p-4"
+                role="status"
+                aria-label="Loading chart data"
+              >
                 {[45, 70, 35, 80, 55, 65].map((height, i) => (
                   <div
                     key={i}
                     className="flex-1 bg-[var(--surface-100)] rounded-t animate-pulse"
                     style={{ height: `${height}%` }}
+                    aria-hidden="true"
                   />
                 ))}
+                <span className="sr-only">Loading chart...</span>
               </div>
             )}
           </div>

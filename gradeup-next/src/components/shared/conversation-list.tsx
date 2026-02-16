@@ -36,8 +36,8 @@ export function ConversationList({
 }: ConversationListProps) {
   // Sort conversations by most recent message
   const sortedConversations = [...conversations].sort((a, b) => {
-    const aTime = a.lastMessage?.timestamp || a.last_message_at || '';
-    const bTime = b.lastMessage?.timestamp || b.last_message_at || '';
+    const aTime = a.lastMessage?.timestamp || a.createdAt || '';
+    const bTime = b.lastMessage?.timestamp || b.createdAt || '';
     return new Date(bTime).getTime() - new Date(aTime).getTime();
   });
 
@@ -45,9 +45,9 @@ export function ConversationList({
   const getDisplayInfo = (conv: Conversation) => {
     // Use the first participant that's not the current user (in a real app, filter by current user)
     const participant = conv.participants[0];
-    const lastMessageContent = conv.lastMessage?.content || conv.last_message || '';
-    const lastMessageTime = conv.lastMessage?.timestamp || conv.last_message_at || '';
-    const unread = conv.unreadCount ?? conv.unread_count ?? 0;
+    const lastMessageContent = conv.lastMessage?.content || '';
+    const lastMessageTime = conv.lastMessage?.timestamp || '';
+    const unread = conv.unreadCount ?? 0;
 
     return {
       name: participant?.name || 'Unknown',

@@ -14,6 +14,9 @@ import {
   type LandingStats,
   type LandingOpportunity,
 } from '@/data/mock/landing';
+import { createLogger } from '@/lib/utils/logger';
+
+const log = createLogger('useLandingData');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -83,9 +86,9 @@ export function useFeaturedAthletes(limit: number = 4): UseLandingDataResult<Fea
       }
     } catch (err) {
       // Silently fall back to mock data in production
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Featured athletes fetch failed, using mock data:', err);
-      }
+      log.warn('Featured athletes fetch failed, using mock data', {
+        error: err instanceof Error ? err.message : String(err),
+      });
       if (isMountedRef.current) {
         setData(mockFeaturedAthletes);
         setError(err instanceof Error ? err : new Error('Failed to fetch athletes'));
@@ -188,9 +191,9 @@ export function useTestimonials(): UseLandingDataResult<Testimonial[]> {
       }
     } catch (err) {
       // Silently fall back to mock data in production
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Testimonials fetch failed, using mock data:', err);
-      }
+      log.warn('Testimonials fetch failed, using mock data', {
+        error: err instanceof Error ? err.message : String(err),
+      });
       if (isMountedRef.current) {
         setData(mockTestimonials);
         setError(err instanceof Error ? err : new Error('Failed to fetch testimonials'));
@@ -285,9 +288,9 @@ export function useLandingStats(): UseLandingDataResult<LandingStats> {
       }
     } catch (err) {
       // Silently fall back to mock data in production
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Landing stats fetch failed, using mock data:', err);
-      }
+      log.warn('Landing stats fetch failed, using mock data', {
+        error: err instanceof Error ? err.message : String(err),
+      });
       if (isMountedRef.current) {
         setData(mockLandingStats);
         setError(err instanceof Error ? err : new Error('Failed to fetch stats'));
@@ -404,9 +407,9 @@ export function useLandingOpportunities(
       }
     } catch (err) {
       // Silently fall back to mock data in production
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Opportunities fetch failed, using mock data:', err);
-      }
+      log.warn('Opportunities fetch failed, using mock data', {
+        error: err instanceof Error ? err.message : String(err),
+      });
       if (isMountedRef.current) {
         // Fall back to filtered mock data
         let filtered = [...mockOpportunities];

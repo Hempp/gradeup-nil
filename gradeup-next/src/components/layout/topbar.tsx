@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, Menu, Settings, LogOut } from 'lucide-react';
@@ -34,7 +34,9 @@ export function Topbar({
 }: TopbarProps) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [focusedMenuIndex, setFocusedMenuIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuItemsRef = useRef<(HTMLElement | null)[]>([]);
 
   // Notifications hook
   const {
@@ -74,19 +76,65 @@ export function Topbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Close on escape key
+  // Reset focused index when dropdown closes
   useEffect(() => {
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        setIsDropdownOpen(false);
-      }
+    if (!isDropdownOpen) {
+      setFocusedMenuIndex(-1);
     }
-
-    if (isDropdownOpen) {
-      document.addEventListener('keydown', handleEscape);
-    }
-    return () => document.removeEventListener('keydown', handleEscape);
   }, [isDropdownOpen]);
+
+  // Keyboard navigation handler for dropdown menu
+  const handleDropdownKeyDown = useCallback((event: KeyboardEvent) => {
+    if (!isDropdownOpen) return;
+
+    const menuItems = menuItemsRef.current.filter(Boolean);
+    const itemCount = menuItems.length;
+
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault();
+        setIsDropdownOpen(false);
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        setFocusedMenuIndex((prev) => {
+          const nextIndex = prev < itemCount - 1 ? prev + 1 : 0;
+          menuItems[nextIndex]?.focus();
+          return nextIndex;
+        });
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        setFocusedMenuIndex((prev) => {
+          const nextIndex = prev > 0 ? prev - 1 : itemCount - 1;
+          menuItems[nextIndex]?.focus();
+          return nextIndex;
+        });
+        break;
+      case 'Home':
+        event.preventDefault();
+        setFocusedMenuIndex(0);
+        menuItems[0]?.focus();
+        break;
+      case 'End':
+        event.preventDefault();
+        setFocusedMenuIndex(itemCount - 1);
+        menuItems[itemCount - 1]?.focus();
+        break;
+      case 'Tab':
+        // Allow Tab to close the dropdown and move focus naturally
+        setIsDropdownOpen(false);
+        break;
+    }
+  }, [isDropdownOpen]);
+
+  // Attach keyboard listener when dropdown is open
+  useEffect(() => {
+    if (isDropdownOpen) {
+      document.addEventListener('keydown', handleDropdownKeyDown);
+    }
+    return () => document.removeEventListener('keydown', handleDropdownKeyDown);
+  }, [isDropdownOpen, handleDropdownKeyDown]);
 
   return (
     <header
@@ -177,6 +225,7 @@ export function Topbar({
                 'py-2 animate-in fade-in-0 zoom-in-95 duration-200'
               )}
               role="menu"
+              aria-label="User menu"
             >
               {/* User info */}
               <div className="px-4 py-3 border-b border-white/10">
@@ -192,11 +241,13 @@ export function Topbar({
               <div className="py-1">
                 <Link
                   href="/athlete/settings"
+                  ref={(el) => { menuItemsRef.current[0] = el; }}
                   className="flex items-center gap-3 px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--marketing-cyan)] transition-colors"
                   role="menuitem"
+                  tabIndex={isDropdownOpen ? 0 : -1}
                   onClick={() => setIsDropdownOpen(false)}
                 >
-                  <Settings className="h-4 w-4" />
+                  <Settings className="h-4 w-4" aria-hidden="true" />
                   Settings
                 </Link>
               </div>
@@ -204,14 +255,16 @@ export function Topbar({
               {/* Logout */}
               <div className="py-1 border-t border-white/10">
                 <button
+                  ref={(el) => { menuItemsRef.current[1] = el; }}
                   className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 transition-colors"
                   role="menuitem"
+                  tabIndex={isDropdownOpen ? 0 : -1}
                   onClick={() => {
                     setIsDropdownOpen(false);
                     // Handle logout logic here
                   }}
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
                   Logout
                 </button>
               </div>

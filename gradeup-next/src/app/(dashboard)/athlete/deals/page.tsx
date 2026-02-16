@@ -23,15 +23,16 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useAthleteDeals } from '@/lib/hooks/use-data';
 import type { Deal, DealStatus, DealType } from '@/lib/services/deals';
+import { DEAL_STATUS_CONFIG, KANBAN_COLUMNS } from '@/lib/constants/deal-status';
 
 type ViewMode = 'table' | 'kanban';
 
-const kanbanColumns: { status: DealStatus; label: string; color: string }[] = [
-  { status: 'pending', label: 'Incoming', color: 'var(--color-warning)' },
-  { status: 'negotiating', label: 'Negotiating', color: 'var(--color-gold)' },
-  { status: 'active', label: 'Active', color: 'var(--color-success)' },
-  { status: 'completed', label: 'Completed', color: 'var(--color-info)' },
-];
+// Build kanban column configuration from centralized config
+const kanbanColumns = KANBAN_COLUMNS.map((status) => ({
+  status,
+  label: DEAL_STATUS_CONFIG[status].label,
+  color: DEAL_STATUS_CONFIG[status].color,
+}));
 
 const statusOptions = [
   { value: 'pending', label: 'Pending' },

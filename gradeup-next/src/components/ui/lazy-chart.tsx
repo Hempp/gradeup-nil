@@ -11,8 +11,14 @@ import { Skeleton } from './skeleton';
 // Loading placeholder for charts
 function ChartLoadingPlaceholder({ height = 300 }: { height?: number }) {
   return (
-    <div style={{ height }} className="w-full flex items-center justify-center">
-      <Skeleton className="w-full h-full rounded-[var(--radius-md)]" />
+    <div
+      style={{ height }}
+      className="w-full flex items-center justify-center"
+      role="status"
+      aria-label="Loading chart"
+    >
+      <Skeleton className="w-full h-full rounded-[var(--radius-md)]" aria-hidden="true" />
+      <span className="sr-only">Loading chart data...</span>
     </div>
   );
 }
