@@ -6,3 +6,4 @@ export * from './analytics';
 export * from './performance';
 export * from './bundle-analyzer';
 export * from './logger';
+export * from './export';

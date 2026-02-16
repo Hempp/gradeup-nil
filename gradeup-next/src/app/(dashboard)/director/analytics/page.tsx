@@ -41,6 +41,8 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { formatCurrency, formatCompactNumber, cn } from '@/lib/utils';
+import { exportToCSV, exportToPDF } from '@/lib/utils/export';
+import { ExportButton } from '@/components/ui/export-button';
 import {
   ChartWrapper,
   ChartLegend,
@@ -577,6 +579,23 @@ function SportPerformanceChart() {
   );
 }
 
+// Prepare sport breakdown data for CSV export (without color field)
+const sportBreakdownExportData = mockSportBreakdown.map(({ sport, athletes, deals, revenue, avgDeal }) => ({
+  sport,
+  athletes,
+  deals,
+  revenue,
+  avgDeal,
+}));
+
+const sportBreakdownColumns = [
+  { key: 'sport' as const, label: 'Sport' },
+  { key: 'athletes' as const, label: 'Athletes' },
+  { key: 'deals' as const, label: 'Active Deals' },
+  { key: 'revenue' as const, label: 'Total Revenue' },
+  { key: 'avgDeal' as const, label: 'Avg Deal' },
+];
+
 function SportBreakdownTable() {
   const totalAthletes = mockSportBreakdown.reduce((sum, s) => sum + s.athletes, 0);
   const totalDeals = mockSportBreakdown.reduce((sum, s) => sum + s.deals, 0);
@@ -593,11 +612,20 @@ function SportBreakdownTable() {
               Complete NIL performance metrics by athletic program
             </p>
           </div>
-          <Badge variant="outline">{mockSportBreakdown.length} Programs</Badge>
+          <div className="flex items-center gap-3">
+            <ExportButton
+              data={sportBreakdownExportData}
+              filename="sport-breakdown"
+              columns={sportBreakdownColumns}
+              variant="both"
+              tableId="sport-breakdown-table"
+            />
+            <Badge variant="outline">{mockSportBreakdown.length} Programs</Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div id="sport-breakdown-table" className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[var(--border-color)]">
@@ -715,28 +743,33 @@ export default function DirectorAnalyticsPage() {
     setExportLoading(true);
     try {
       // Simulate export processing
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Create a mock download
-      const filename = `nil-analytics-report-${new Date().toISOString().split('T')[0]}.${exportFormat}`;
+      const filename = `nil-analytics-report-${new Date().toISOString().split('T')[0]}`;
 
-      // Create and trigger download
-      const blob = new Blob(
-        [exportFormat === 'csv' ? generateCSVContent() : 'PDF content would be generated here'],
-        { type: exportFormat === 'csv' ? 'text/csv' : 'application/pdf' }
-      );
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      if (exportFormat === 'csv') {
+        // Use the new exportToCSV utility for comprehensive analytics export
+        const analyticsData = [
+          { metric: 'Total Revenue', value: formatCurrency(mockStats.totalRevenue), change: `+${mockStats.revenueGrowth}%` },
+          { metric: 'Average Deal Size', value: formatCurrency(mockStats.avgDealSize), change: `+${mockStats.avgDealGrowth}%` },
+          { metric: 'Active Deals', value: mockStats.activeDeals.toString(), change: `+${mockStats.dealGrowth}%` },
+          { metric: 'Total Athletes', value: mockStats.totalAthletes.toString(), change: '' },
+          { metric: 'Verified Athletes', value: mockStats.verifiedAthletes.toString(), change: '' },
+          { metric: 'Compliance Rate', value: `${mockStats.complianceRate}%`, change: '' },
+        ];
+        exportToCSV(analyticsData, filename, [
+          { key: 'metric', label: 'Metric' },
+          { key: 'value', label: 'Value' },
+          { key: 'change', label: 'Change' },
+        ]);
+      } else {
+        // Use exportToPDF for the analytics summary
+        exportToPDF('sport-breakdown-table', filename);
+      }
 
       toast.success(
         'Report Exported',
-        `Your ${exportFormat.toUpperCase()} report "${filename}" has been downloaded.`
+        `Your ${exportFormat.toUpperCase()} report has been downloaded.`
       );
       setShowExportModal(false);
     } catch (error) {
@@ -744,29 +777,6 @@ export default function DirectorAnalyticsPage() {
     } finally {
       setExportLoading(false);
     }
-  };
-
-  // Generate CSV content for export
-  const generateCSVContent = () => {
-    const headers = ['Metric', 'Value', 'Change'];
-    const rows = [
-      ['Total Revenue', formatCurrency(mockStats.totalRevenue), `+${mockStats.revenueGrowth}%`],
-      ['Average Deal Size', formatCurrency(mockStats.avgDealSize), `+${mockStats.avgDealGrowth}%`],
-      ['Active Deals', mockStats.activeDeals.toString(), `+${mockStats.dealGrowth}%`],
-      ['Total Athletes', mockStats.totalAthletes.toString(), ''],
-      ['Verified Athletes', mockStats.verifiedAthletes.toString(), ''],
-      ['Compliance Rate', `${mockStats.complianceRate}%`, ''],
-      '',
-      ['Sport', 'Athletes', 'Revenue', 'Deals', 'Avg Deal'],
-      ...mockSportBreakdown.map((s) => [
-        s.sport,
-        s.athletes.toString(),
-        formatCurrency(s.revenue),
-        s.deals.toString(),
-        formatCurrency(s.avgDeal),
-      ]),
-    ];
-    return [headers.join(','), ...rows.map((r) => (Array.isArray(r) ? r.join(',') : r))].join('\n');
   };
 
   if (isLoading) {

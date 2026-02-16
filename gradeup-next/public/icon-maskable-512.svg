@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="main-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#adff2f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Full background for maskable icon (safe zone is 80% center) -->
+  <rect width="512" height="512" fill="#0a0a0a"/>
+
+  <!-- Shield - scaled to fit within 80% safe zone -->
+  <path
+    d="M256 102L384 140V240C384 322 326 386 256 406C186 386 128 322 128 240V140L256 102Z"
+    fill="#0a0a0a"
+    stroke="url(#main-grad)"
+    stroke-width="10"
+  />
+
+  <!-- Arrow pointing up -->
+  <path
+    d="M256 150L332 240H292V350H220V240H180L256 150Z"
+    fill="url(#main-grad)"
+  />
+</svg>

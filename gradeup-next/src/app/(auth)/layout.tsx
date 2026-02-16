@@ -13,6 +13,13 @@ export default function AuthLayout({
 }) {
   return (
     <div className="auth-theme min-h-screen bg-black flex flex-col relative overflow-hidden">
+      {/* Skip Link for Accessibility - WCAG 2.4.1 */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--marketing-cyan)] focus:text-black focus:rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--marketing-cyan)]"
+      >
+        Skip to main content
+      </a>
       {/* Background Effects - Matching Landing Page */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Gradient orbs */}
@@ -91,7 +98,7 @@ export default function AuthLayout({
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 focus:outline-none">
         <div className="w-full max-w-md">
           {children}
         </div>

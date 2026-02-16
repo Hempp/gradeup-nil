@@ -27,6 +27,8 @@ import {
   Download,
 } from 'lucide-react';
 import { formatCurrency, formatCompactNumber } from '@/lib/utils';
+import { exportToCSV, exportToPDF } from '@/lib/utils/export';
+import { ExportButton } from '@/components/ui/export-button';
 import {
   ChartWrapper,
   ChartLegend,
@@ -334,14 +336,53 @@ function PlatformEngagementChart() {
   );
 }
 
+// Prepare campaign data for export
+const campaignExportData = mockCampaignPerformance.map(({ name, impressions, engagements, roi }) => ({
+  name,
+  impressions,
+  engagements,
+  roi,
+}));
+
+const campaignColumns = [
+  { key: 'name' as const, label: 'Campaign' },
+  { key: 'impressions' as const, label: 'Impressions' },
+  { key: 'engagements' as const, label: 'Engagements' },
+  { key: 'roi' as const, label: 'ROI' },
+];
+
+// Prepare top athletes data for export
+const topAthletesExportData = mockTopAthletes.map(({ name, engagementRate, impressions, roi }) => ({
+  name,
+  engagementRate,
+  impressions,
+  roi,
+}));
+
+const topAthletesColumns = [
+  { key: 'name' as const, label: 'Athlete' },
+  { key: 'impressions' as const, label: 'Impressions' },
+  { key: 'engagementRate' as const, label: 'Engagement Rate (%)' },
+  { key: 'roi' as const, label: 'ROI' },
+];
+
 function CampaignPerformanceTable() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Campaign Performance</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>Campaign Performance</CardTitle>
+          <ExportButton
+            data={campaignExportData}
+            filename="campaign-performance"
+            columns={campaignColumns}
+            variant="both"
+            tableId="campaign-performance-table"
+          />
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div id="campaign-performance-table" className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[var(--border-color)]">
@@ -391,7 +432,15 @@ function TopAthletesCard() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top Performing Athletes</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>Top Performing Athletes</CardTitle>
+          <ExportButton
+            data={topAthletesExportData}
+            filename="top-athletes"
+            columns={topAthletesColumns}
+            variant="csv"
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -483,7 +532,24 @@ export default function BrandAnalyticsPage() {
             Track your campaign performance and ROI
           </p>
         </div>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          onClick={() => {
+            // Export comprehensive brand analytics
+            const analyticsData = [
+              { metric: 'Total Spent', value: formatCurrency(mockOverview.totalSpent), change: '+15.3%' },
+              { metric: 'Total Impressions', value: formatCompactNumber(mockOverview.totalImpressions), change: '+22.1%' },
+              { metric: 'Total Engagements', value: formatCompactNumber(mockOverview.totalEngagements), change: '+18.5%' },
+              { metric: 'Average ROI', value: `${mockOverview.avgROI}x`, change: '+0.5x' },
+              { metric: 'Athletes Reached', value: mockOverview.athletesReached.toString(), change: '' },
+            ];
+            exportToCSV(analyticsData, `brand-analytics-${new Date().toISOString().split('T')[0]}`, [
+              { key: 'metric', label: 'Metric' },
+              { key: 'value', label: 'Value' },
+              { key: 'change', label: 'Change' },
+            ]);
+          }}
+        >
           <Download className="h-4 w-4 mr-2" />
           Export Report
         </Button>

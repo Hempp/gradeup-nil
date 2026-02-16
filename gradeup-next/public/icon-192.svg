@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" fill="none">
+  <defs>
+    <linearGradient id="main-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#adff2f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="192" height="192" rx="36" fill="#0a0a0a"/>
+
+  <!-- Shield -->
+  <path
+    d="M96 24L156 42V90C156 129 126 159 96 168C66 159 36 129 36 90V42L96 24Z"
+    fill="#0a0a0a"
+    stroke="url(#main-grad)"
+    stroke-width="4.5"
+  />
+
+  <!-- Arrow pointing up -->
+  <path
+    d="M96 48L132 90H114V144H78V90H60L96 48Z"
+    fill="url(#main-grad)"
+  />
+</svg>

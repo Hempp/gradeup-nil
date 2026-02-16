@@ -12,6 +12,9 @@ import {
   Key,
   Download,
   Smartphone,
+  Sun,
+  Moon,
+  Monitor,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,6 +24,7 @@ import { Modal } from '@/components/ui/modal';
 import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
 import { PaymentMethodsSection } from '@/components/athlete/PaymentMethodsSection';
+import { useTheme } from '@/context';
 
 function SettingsSection({
   icon: Icon,
@@ -79,6 +83,7 @@ function SettingsRow({
 
 export default function AthleteSettingsPage() {
   const toast = useToastActions();
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   const [notifications, setNotifications] = useState({
     email: true,
@@ -101,9 +106,6 @@ export default function AthleteSettingsPage() {
     confirmPassword: '',
   });
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
-
-  // Dark mode state
-  const [darkMode, setDarkMode] = useState(true);
 
   // Handlers
   const handleChangePassword = () => {
@@ -312,18 +314,60 @@ export default function AthleteSettingsPage() {
       >
         <div role="group" aria-label="Display preferences">
           <SettingsRow
-            label="Dark Mode"
-            description="Use dark theme"
-            labelId="dark-mode-label"
+            label="Theme"
+            description="Choose your preferred color scheme"
+            labelId="theme-label"
             action={
-              <Switch
-                checked={darkMode}
-                onCheckedChange={(checked) => {
-                  setDarkMode(checked);
-                  toast.info('Theme Updated', `Switched to ${checked ? 'dark' : 'light'} mode.`);
-                }}
-                aria-labelledby="dark-mode-label"
-              />
+              <div className="flex items-center gap-1 rounded-lg border border-[var(--border-color)] p-1">
+                <button
+                  onClick={() => {
+                    setTheme('light');
+                    toast.info('Theme Updated', 'Switched to light mode.');
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    theme === 'light'
+                      ? 'bg-[var(--color-primary)] text-white'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                  }`}
+                  aria-pressed={theme === 'light'}
+                  aria-label="Light theme"
+                >
+                  <Sun className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">Light</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setTheme('dark');
+                    toast.info('Theme Updated', 'Switched to dark mode.');
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    theme === 'dark'
+                      ? 'bg-[var(--color-primary)] text-white'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                  }`}
+                  aria-pressed={theme === 'dark'}
+                  aria-label="Dark theme"
+                >
+                  <Moon className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">Dark</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setTheme('system');
+                    toast.info('Theme Updated', 'Theme will follow your system preference.');
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    theme === 'system'
+                      ? 'bg-[var(--color-primary)] text-white'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                  }`}
+                  aria-pressed={theme === 'system'}
+                  aria-label="System theme"
+                >
+                  <Monitor className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">System</span>
+                </button>
+              </div>
             }
           />
           <SettingsRow

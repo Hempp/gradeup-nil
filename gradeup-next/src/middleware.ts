@@ -175,26 +175,43 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // Demo mode: Allow access to dashboards with demo cookie
-  // This enables the "Quick Access" demo feature on the login page
-  const demoRole = request.cookies.get('demo_role')?.value;
-  if (demoRole) {
-    const demoRolePaths: Record<string, string> = {
-      athlete: '/athlete',
-      brand: '/brand',
-      director: '/director',
-    };
-    const allowedPath = demoRolePaths[demoRole];
+  // =============================================================================
+  // DEMO MODE AUTHENTICATION BYPASS
+  // =============================================================================
+  // SECURITY WARNING: This demo mode allows unauthenticated access to dashboards
+  // for demonstration purposes ONLY. It is gated by ENABLE_DEMO_MODE environment
+  // variable which must be explicitly set to "true".
+  //
+  // PRODUCTION SAFETY:
+  // - NEVER set ENABLE_DEMO_MODE=true in production
+  // - This feature is intended for local development and staging demos only
+  // - In production, users must authenticate via Supabase
+  //
+  // ALTERNATIVE APPROACH: For production demos, consider using test user accounts
+  // with pre-defined credentials instead of bypassing authentication entirely.
+  // =============================================================================
+  const isDemoModeEnabled = process.env.ENABLE_DEMO_MODE === 'true' && process.env.NODE_ENV !== 'production';
 
-    // Allow access if the demo role matches the path
-    if (allowedPath && path.startsWith(allowedPath)) {
-      return response;
-    }
+  if (isDemoModeEnabled) {
+    const demoRole = request.cookies.get('demo_role')?.value;
+    if (demoRole) {
+      const demoRolePaths: Record<string, string> = {
+        athlete: '/athlete',
+        brand: '/brand',
+        director: '/director',
+      };
+      const allowedPath = demoRolePaths[demoRole];
 
-    // Redirect to correct demo dashboard if accessing wrong one
-    if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director')) {
-      if (allowedPath && !path.startsWith(allowedPath)) {
-        return NextResponse.redirect(new URL(`${allowedPath}/dashboard`, request.url));
+      // Allow access if the demo role matches the path
+      if (allowedPath && path.startsWith(allowedPath)) {
+        return response;
+      }
+
+      // Redirect to correct demo dashboard if accessing wrong one
+      if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director')) {
+        if (allowedPath && !path.startsWith(allowedPath)) {
+          return NextResponse.redirect(new URL(`${allowedPath}/dashboard`, request.url));
+        }
       }
     }
   }

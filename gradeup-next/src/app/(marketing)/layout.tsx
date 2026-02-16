@@ -243,8 +243,17 @@ function Footer() {
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="marketing-dark min-h-screen">
+      {/* Skip Link for Accessibility - WCAG 2.4.1 */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--marketing-cyan)] focus:text-black focus:rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--marketing-cyan)]"
+      >
+        Skip to main content
+      </a>
       <Navbar />
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1} className="focus:outline-none">
+        {children}
+      </main>
       <Footer />
     </div>
   );
