@@ -9,6 +9,9 @@ import {
   getAthleteStats,
   getMyAthleteProfile,
   updateAthleteProfile,
+  getHighlightUrls,
+  addHighlightUrl,
+  removeHighlightUrl,
   type Athlete,
   type AthleteFilters,
   type AthleteStats,
@@ -621,6 +624,227 @@ describe('athlete service', () => {
 
       expect(result.data).toBeNull();
       expect(result.error?.message).toContain('Failed to update athlete profile');
+    });
+  });
+
+  describe('getHighlightUrls', () => {
+    const mockHighlights = [
+      { id: 'h1', platform: 'youtube', url: 'https://youtube.com/watch?v=123', title: 'Game Highlights', added_at: '2024-01-01T00:00:00Z' },
+      { id: 'h2', platform: 'tiktok', url: 'https://tiktok.com/@user/video/123', title: 'Practice Video', added_at: '2024-01-02T00:00:00Z' },
+    ];
+
+    it('returns highlight URLs for authenticated user', async () => {
+      const mockQuery = createChainableQuery({ data: { highlight_urls: mockHighlights }, error: null });
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'profile-123' } },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getHighlightUrls();
+
+      expect(result.data).toEqual(mockHighlights);
+      expect(result.error).toBeNull();
+    });
+
+    it('returns empty array when no highlights exist', async () => {
+      const mockQuery = createChainableQuery({ data: { highlight_urls: null }, error: null });
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'profile-123' } },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getHighlightUrls();
+
+      expect(result.data).toEqual([]);
+      expect(result.error).toBeNull();
+    });
+
+    it('returns error when not authenticated', async () => {
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: null },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getHighlightUrls();
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toBe('Not authenticated');
+    });
+
+    it('returns error on fetch failure', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: { message: 'DB error' } });
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'profile-123' } },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getHighlightUrls();
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toContain('Failed to fetch highlight URLs');
+    });
+  });
+
+  describe('addHighlightUrl', () => {
+    const existingHighlights = [
+      { id: 'h1', platform: 'youtube', url: 'https://youtube.com/watch?v=existing', title: 'Existing', added_at: '2024-01-01T00:00:00Z' },
+    ];
+
+    it('adds new highlight URL successfully', async () => {
+      const mockQuery = createChainableQuery({ data: { highlight_urls: existingHighlights }, error: null });
+      mockQuery.update = jest.fn().mockReturnValue({
+        eq: jest.fn().mockResolvedValue({ error: null }),
+      });
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'profile-123' } },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await addHighlightUrl('https://youtube.com/watch?v=new123', 'youtube', 'New Video');
+
+      expect(result.data).not.toBeNull();
+      expect(result.data?.platform).toBe('youtube');
+      expect(result.data?.url).toBe('https://youtube.com/watch?v=new123');
+      expect(result.data?.title).toBe('New Video');
+      expect(result.error).toBeNull();
+    });
+
+    it('returns error for duplicate URL', async () => {
+      const mockQuery = createChainableQuery({ data: { highlight_urls: existingHighlights }, error: null });
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'profile-123' } },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await addHighlightUrl('https://youtube.com/watch?v=existing', 'youtube');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toBe('This video has already been added');
+    });
+
+    it('returns error when not authenticated', async () => {
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: null },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await addHighlightUrl('https://youtube.com/watch?v=123', 'youtube');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toBe('Not authenticated');
+    });
+  });
+
+  describe('removeHighlightUrl', () => {
+    const existingHighlights = [
+      { id: 'h1', platform: 'youtube', url: 'https://youtube.com/watch?v=123', title: 'Video 1', added_at: '2024-01-01T00:00:00Z' },
+      { id: 'h2', platform: 'tiktok', url: 'https://tiktok.com/@user/video/123', title: 'Video 2', added_at: '2024-01-02T00:00:00Z' },
+    ];
+
+    it('removes highlight URL successfully', async () => {
+      const mockQuery = createChainableQuery({ data: { highlight_urls: existingHighlights }, error: null });
+      mockQuery.update = jest.fn().mockReturnValue({
+        eq: jest.fn().mockResolvedValue({ error: null }),
+      });
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'profile-123' } },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await removeHighlightUrl('h1');
+
+      expect(result.error).toBeNull();
+    });
+
+    it('returns error when highlight not found', async () => {
+      const mockQuery = createChainableQuery({ data: { highlight_urls: existingHighlights }, error: null });
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'profile-123' } },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await removeHighlightUrl('nonexistent');
+
+      expect(result.error?.message).toBe('Highlight not found');
+    });
+
+    it('returns error when not authenticated', async () => {
+      const mockAuth = {
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: null },
+          error: null,
+        }),
+      };
+      const mockSupabase = {
+        auth: mockAuth,
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await removeHighlightUrl('h1');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toBe('Not authenticated');
     });
   });
 });
