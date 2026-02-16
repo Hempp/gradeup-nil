@@ -47,8 +47,8 @@ function AnimatedCounter({
   const [hasAnimated, setHasAnimated] = useState(skipAnimation);
 
   useEffect(() => {
+    // Skip if animation already ran or disabled - state is already correct
     if (skipAnimation || hasAnimated) {
-      setCount(target);
       return;
     }
 
@@ -87,13 +87,13 @@ function AnimatedCounter({
 }
 
 function HeroSection() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  // Use lazy initialization to read media query (SSR-safe)
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  );
   const { data: stats } = useLandingStats();
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-  }, []);
 
   return (
     <section

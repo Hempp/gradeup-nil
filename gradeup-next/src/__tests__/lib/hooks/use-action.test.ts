@@ -3,7 +3,7 @@
  * @module __tests__/lib/hooks/use-action.test
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useAction } from '@/lib/hooks/use-action';
 
 // Mock toast

@@ -491,25 +491,9 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
     ref
   ) {
     const [showPassword, setShowPassword] = useState(false);
-    const [internalValue, setInternalValue] = useState(
-      typeof value === 'string' ? value : ''
-    );
     const isDark = variant === 'dark';
-
-    // Keep internal value in sync with external value
-    useEffect(() => {
-      if (typeof value === 'string') {
-        setInternalValue(value);
-      }
-    }, [value]);
-
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInternalValue(e.target.value);
-        props.onChange?.(e);
-      },
-      [props]
-    );
+    // Use value directly for strength indicator - no need for internal state sync
+    const passwordValue = typeof value === 'string' ? value : '';
 
     return (
       <div className="space-y-2">
@@ -518,7 +502,6 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             ref={ref}
             type={showPassword ? 'text' : 'password'}
             value={value}
-            onChange={handleChange}
             variant={variant}
             {...props}
           />
@@ -548,9 +531,9 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         </div>
 
         {/* Password Strength Indicator */}
-        {showStrength && internalValue && (
+        {showStrength && passwordValue && (
           <PasswordStrengthIndicator
-            password={internalValue}
+            password={passwordValue}
             showRequirements={showRequirements}
             variant={variant}
           />

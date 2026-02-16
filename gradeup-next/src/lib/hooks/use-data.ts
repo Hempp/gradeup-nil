@@ -473,9 +473,6 @@ export function useData<T>(
   const fetcherRef = useRef(fetcher);
   fetcherRef.current = fetcher;
 
-  // Serialize deps to create a stable dependency key
-  const depsKey = JSON.stringify(deps);
-
   const fetchData = useCallback(async () => {
     const currentFetchId = ++fetchIdRef.current;
 
@@ -505,7 +502,8 @@ export function useData<T>(
         setLoading(false);
       }
     }
-  }, [depsKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps]);
 
   useEffect(() => {
     isMountedRef.current = true;

@@ -3,7 +3,7 @@
  * @module __tests__/lib/hooks/use-search.test
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useSearch, useFilters, type FilterValue } from '@/lib/hooks/use-search';
 
 // Mock Next.js navigation

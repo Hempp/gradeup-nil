@@ -16,7 +16,6 @@ import {
   type PaymentStatus,
   type PaymentMethod,
   type PaymentAccount,
-  type EarningsSummary,
 } from '@/lib/services/payments';
 
 // Mock the Supabase client
@@ -572,7 +571,6 @@ describe('payments service', () => {
         athlete_id: 'athlete-123',
       };
 
-      let fromCallCount = 0;
       const mockSupabase = {
         auth: {
           getUser: jest.fn().mockResolvedValue({
@@ -581,7 +579,6 @@ describe('payments service', () => {
           }),
         },
         from: jest.fn().mockImplementation((table) => {
-          fromCallCount++;
           if (table === 'athletes') {
             return {
               select: jest.fn().mockReturnThis(),

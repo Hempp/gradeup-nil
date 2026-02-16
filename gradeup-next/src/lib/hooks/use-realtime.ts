@@ -159,6 +159,8 @@ export function useRealtimeMessages({
     if (!conversationId) return;
 
     const supabase = createClient();
+    // Capture ref value for cleanup to avoid stale closure warning
+    const timeoutsMap = typingTimeoutsRef.current;
 
     typingChannelRef.current = supabase
       .channel(`typing:${conversationId}`)
@@ -210,9 +212,9 @@ export function useRealtimeMessages({
         typingChannelRef.current = null;
       }
 
-      // Clear all timeouts
-      typingTimeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
-      typingTimeoutsRef.current.clear();
+      // Clear all timeouts using captured ref value
+      timeoutsMap.forEach((timeout) => clearTimeout(timeout));
+      timeoutsMap.clear();
     };
   }, [conversationId, onTypingStart, onTypingEnd]);
 

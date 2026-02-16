@@ -219,7 +219,6 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(
           onClick={() => !disabled && setIsOpen(!isOpen)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          aria-invalid={hasError}
           className={cn(
             'w-full flex items-center justify-between gap-2 px-3',
             'rounded-[var(--radius-md)] border',
@@ -472,7 +471,6 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           onClick={() => !disabled && setIsOpen(!isOpen)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          aria-invalid={hasError}
           className={cn(
             'w-full flex items-center justify-between gap-2 px-3 min-h-[40px] py-1.5',
             'rounded-[var(--radius-md)] border',

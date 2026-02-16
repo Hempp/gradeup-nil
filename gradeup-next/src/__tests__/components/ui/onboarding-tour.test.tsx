@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, renderHook, waitFor, act } from '@testing-library/react';
+import { render, screen, renderHook, waitFor, act } from '@testing-library/react';
 import {
   OnboardingTourProvider,
   useOnboardingTour,

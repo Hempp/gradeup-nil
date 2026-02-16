@@ -182,10 +182,10 @@ describe('AuthContext', () => {
     it('handles sign in', async () => {
       const user = userEvent.setup();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockAuthSignIn.mockResolvedValue({
         data: { user: { id: 'user-123' }, session: {} },
         error: null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
       const mockProfile = createMockProfile({

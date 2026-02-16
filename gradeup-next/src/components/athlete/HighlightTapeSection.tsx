@@ -183,6 +183,7 @@ export function HighlightTapeSection() {
     setIsLoading(false);
   }, []);
 
+  // Fetch highlights on mount
   useEffect(() => {
     fetchHighlights();
   }, [fetchHighlights]);

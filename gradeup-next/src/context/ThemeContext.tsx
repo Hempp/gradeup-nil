@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useRef } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -17,11 +17,11 @@ const THEME_STORAGE_KEY = 'gradeup-theme';
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('system');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
-  const [mounted, setMounted] = useState(false);
+  const mountedRef = useRef(false);
 
   // Load saved theme on mount
   useEffect(() => {
-    setMounted(true);
+    mountedRef.current = true;
     const saved = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     if (saved && ['light', 'dark', 'system'].includes(saved)) {
       setThemeState(saved);
@@ -30,7 +30,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   // Apply theme changes
   useEffect(() => {
-    if (!mounted) return;
+    if (!mountedRef.current) return;
 
     const root = document.documentElement;
 
@@ -55,7 +55,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     } else {
       applyTheme(theme === 'dark');
     }
-  }, [theme, mounted]);
+  }, [theme]);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);

@@ -268,9 +268,9 @@ interface OpportunityCardProps {
 
 function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
   const deadlineDate = new Date(opportunity.deadline);
-  // Calculate if expiring soon (within 7 days) - use a ref for stable timestamp
-  const nowRef = useRef(Date.now());
-  const isExpiringSoon = deadlineDate.getTime() - nowRef.current < 7 * 24 * 60 * 60 * 1000;
+  // Calculate if expiring soon (within 7 days) - memoize timestamp for stable comparison
+  const mountTime = useMemo(() => Date.now(), []);
+  const isExpiringSoon = deadlineDate.getTime() - mountTime < 7 * 24 * 60 * 60 * 1000;
 
   const compensationBadgeColor = {
     cash: 'bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)] border-[var(--marketing-lime)]/30',

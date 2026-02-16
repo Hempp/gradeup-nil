@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { render, renderHook, act } from '@testing-library/react';
+import { render, renderHook } from '@testing-library/react';
 import {
   useRenderTiming,
   useRenderCount,

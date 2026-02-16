@@ -18,8 +18,6 @@ jest.mock('@sentry/nextjs', () => ({
   captureException: jest.fn(),
 }));
 
-import * as Sentry from '@sentry/nextjs';
-
 describe('logger', () => {
   const originalEnv = process.env.NODE_ENV;
   let consoleSpy: {

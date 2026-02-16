@@ -178,7 +178,8 @@ export default function AthleteDealsPage() {
   // Fetch deals from Supabase
   const { data: deals, loading: dealsLoading, error: dealsError, refetch: refetchDeals } = useAthleteDeals(athleteData?.id);
   const isLoading = authLoading || dealsLoading;
-  const allDeals = deals || [];
+  // Memoize to provide stable reference when deals is null/undefined
+  const allDeals = useMemo(() => deals || [], [deals]);
 
   // Handle retry
   const handleRetry = useCallback(async () => {

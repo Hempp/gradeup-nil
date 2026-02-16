@@ -159,10 +159,8 @@ describe('verification service', () => {
         eq: jest.fn().mockResolvedValue({ error: null }),
       };
 
-      let fromCallCount = 0;
       const mockSupabase = {
         from: jest.fn().mockImplementation((table) => {
-          fromCallCount++;
           if (table === 'verification_history') {
             return historyInsert;
           }

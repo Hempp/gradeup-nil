@@ -237,7 +237,7 @@ export function useRegisterShortcut(shortcut: Shortcut): void {
   useEffect(() => {
     registerShortcut(shortcut);
     return () => unregisterShortcut(shortcut.id);
-  }, [shortcut.id, shortcut.keys, registerShortcut, unregisterShortcut]);
+  }, [shortcut, registerShortcut, unregisterShortcut]);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

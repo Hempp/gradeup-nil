@@ -349,8 +349,6 @@ describe('use-landing-data hooks', () => {
     });
 
     it('aggregates stats from multiple queries', async () => {
-      // Mock for athletes count
-      const athletesMock = { count: 100, data: null, error: null };
       // Mock for brands count
       const brandsMock = { count: 50, data: null, error: null };
       // Mock for completed deals
@@ -361,8 +359,6 @@ describe('use-landing-data hooks', () => {
         ],
         error: null,
       };
-      // Mock for all deals count
-      const allDealsMock = { count: 10, data: null, error: null };
       // Mock for GPA
       const gpaMock = {
         data: [{ gpa: 3.8 }, { gpa: 3.5 }, { gpa: 3.7 }],

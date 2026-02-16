@@ -440,7 +440,7 @@ export function useLandingOpportunities(
         setLoading(false);
       }
     }
-  }, [options.search, options.category, options.compensationType, options.minGpa, options.sport, options.featured, options.page, options.pageSize]);
+  }, [options.search, options.category, options.compensationType, options.featured, options.page, options.pageSize]);
 
   useEffect(() => {
     isMountedRef.current = true;
