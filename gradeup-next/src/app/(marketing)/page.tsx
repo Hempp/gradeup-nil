@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -26,18 +26,6 @@ import {
   type FeaturedAthlete,
 } from '@/lib/hooks/use-landing-data';
 import { LazyDashboardPreview } from '@/components/marketing';
-
-// Skeleton loader for lazy sections
-function SectionSkeleton() {
-  return (
-    <div className="py-20 flex items-center justify-center">
-      <div className="animate-pulse flex flex-col items-center gap-4">
-        <div className="h-8 w-48 bg-white/10 rounded" />
-        <div className="h-4 w-72 bg-white/5 rounded" />
-      </div>
-    </div>
-  );
-}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HERO SECTION
