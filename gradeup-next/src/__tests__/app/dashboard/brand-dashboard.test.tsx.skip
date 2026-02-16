@@ -1,0 +1,590 @@
+/**
+ * Tests: Brand Dashboard Page
+ *
+ * Tests cover:
+ * - Component rendering and layout
+ * - Stats display (total spent, partnerships, campaigns, ROI)
+ * - Recommended athletes card
+ * - Active campaigns card
+ * - Loading and error states
+ * - Verified brand badge
+ */
+
+import { render, screen, waitFor } from '@testing-library/react';
+import BrandDashboardPage from '@/app/(dashboard)/brand/dashboard/page';
+import { ToastProvider } from '@/components/ui/toast';
+import type { Athlete } from '@/types';
+import type { Campaign, BrandAnalytics } from '@/lib/services/brand';
+import type { Deal } from '@/lib/services/deals';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Mock Data
+// ═══════════════════════════════════════════════════════════════════════════
+
+const mockAnalytics: BrandAnalytics = {
+  total_spent: 75000,
+  total_deals: 15,
+  active_deals: 5,
+  total_impressions: 250000,
+  total_engagements: 12500,
+  avg_roi: 3.2,
+};
+
+const mockCampaigns: Campaign[] = [
+  {
+    id: 'campaign-1',
+    brand_id: 'brand-1',
+    title: 'Spring Collection Launch',
+    description: 'Promote our new spring athletic wear',
+    budget: 50000,
+    start_date: '2026-02-01',
+    end_date: '2026-04-30',
+    status: 'active',
+    target_sports: ['Basketball', 'Soccer'],
+  },
+  {
+    id: 'campaign-2',
+    brand_id: 'brand-1',
+    title: 'Summer Sports Partnership',
+    description: 'Long-term partnerships with athletes',
+    budget: 75000,
+    start_date: '2026-03-01',
+    end_date: '2026-08-31',
+    status: 'active',
+    target_sports: ['Swimming', 'Tennis'],
+  },
+  {
+    id: 'campaign-3',
+    brand_id: 'brand-1',
+    title: 'Draft Campaign',
+    description: 'Campaign in progress',
+    budget: 30000,
+    start_date: '2026-05-01',
+    end_date: null,
+    status: 'draft',
+    target_sports: ['Football'],
+  },
+];
+
+const mockAthletes: Athlete[] = [
+  {
+    id: 'athlete-1',
+    profile_id: 'profile-1',
+    name: 'John Smith',
+    first_name: 'John',
+    last_name: 'Smith',
+    email: 'john@example.com',
+    gpa: 3.8,
+    avatar_url: undefined,
+    enrollment_verified: true,
+    sport_verified: true,
+    grades_verified: true,
+    identity_verified: true,
+    created_at: '2025-01-01',
+    updated_at: '2026-01-01',
+    school: { id: 'school-1', name: 'Duke University', short_name: 'Duke', city: 'Durham', state: 'NC' },
+    sport: { id: 'sport-1', name: 'Basketball', category: 'team', gender: 'M' },
+  },
+  {
+    id: 'athlete-2',
+    profile_id: 'profile-2',
+    name: 'Jane Doe',
+    first_name: 'Jane',
+    last_name: 'Doe',
+    email: 'jane@example.com',
+    gpa: 3.9,
+    avatar_url: undefined,
+    enrollment_verified: true,
+    sport_verified: true,
+    grades_verified: true,
+    identity_verified: true,
+    created_at: '2025-01-01',
+    updated_at: '2026-01-01',
+    school: { id: 'school-2', name: 'UNC Chapel Hill', short_name: 'UNC', city: 'Chapel Hill', state: 'NC' },
+    sport: { id: 'sport-2', name: 'Soccer', category: 'team', gender: 'F' },
+  },
+];
+
+const mockDeals: Deal[] = [
+  {
+    id: 'deal-1',
+    brand_id: 'brand-1',
+    athlete_id: 'athlete-1',
+    opportunity_id: null,
+    title: 'Social Media Campaign',
+    description: 'Instagram posts',
+    deal_type: 'social_post',
+    compensation_type: 'fixed',
+    compensation_amount: 5000,
+    status: 'active',
+    start_date: '2026-01-01',
+    end_date: '2026-03-01',
+    created_at: '2026-01-01T10:00:00Z',
+  },
+  {
+    id: 'deal-2',
+    brand_id: 'brand-1',
+    athlete_id: 'athlete-2',
+    opportunity_id: null,
+    title: 'Event Appearance',
+    description: 'Product launch',
+    deal_type: 'appearance',
+    compensation_type: 'fixed',
+    compensation_amount: 2500,
+    status: 'accepted',
+    start_date: '2026-02-01',
+    end_date: '2026-02-15',
+    created_at: '2026-02-01T10:00:00Z',
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Mocks
+// ═══════════════════════════════════════════════════════════════════════════
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  usePathname: () => '/brand/dashboard',
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+jest.mock('@/lib/supabase/client', () => ({
+  createClient: jest.fn(() => ({
+    auth: {
+      getSession: jest.fn().mockResolvedValue({
+        data: { session: { user: { id: 'brand-1', email: 'brand@example.com' } } },
+      }),
+      getUser: jest.fn().mockResolvedValue({
+        data: { user: { id: 'brand-1', email: 'brand@example.com' } },
+      }),
+      onAuthStateChange: jest.fn().mockReturnValue({
+        data: { subscription: { unsubscribe: jest.fn() } },
+      }),
+    },
+    from: jest.fn(() => ({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({ data: { role: 'brand' }, error: null }),
+    })),
+  })),
+}));
+
+let mockAnalyticsData: BrandAnalytics | null = { ...mockAnalytics };
+let mockAnalyticsError: Error | null = null;
+let mockAnalyticsLoading = false;
+
+let mockCampaignsData: Campaign[] | null = [...mockCampaigns];
+let mockCampaignsError: Error | null = null;
+let mockCampaignsLoading = false;
+
+let mockShortlistData: Athlete[] | null = [...mockAthletes];
+let mockShortlistError: Error | null = null;
+let mockShortlistLoading = false;
+
+let mockDealsData: Deal[] | null = [...mockDeals];
+let mockDealsError: Error | null = null;
+let mockDealsLoading = false;
+
+jest.mock('@/lib/hooks/use-data', () => ({
+  useBrandAnalytics: jest.fn(() => ({
+    data: mockAnalyticsData,
+    loading: mockAnalyticsLoading,
+    error: mockAnalyticsError,
+    refetch: jest.fn().mockResolvedValue(undefined),
+  })),
+  useBrandCampaigns: jest.fn(() => ({
+    data: mockCampaignsData,
+    loading: mockCampaignsLoading,
+    error: mockCampaignsError,
+    refetch: jest.fn().mockResolvedValue(undefined),
+  })),
+  useBrandShortlist: jest.fn(() => ({
+    data: mockShortlistData,
+    loading: mockShortlistLoading,
+    error: mockShortlistError,
+    refetch: jest.fn().mockResolvedValue(undefined),
+  })),
+  useBrandDeals: jest.fn(() => ({
+    data: mockDealsData,
+    loading: mockDealsLoading,
+    error: mockDealsError,
+    refetch: jest.fn().mockResolvedValue(undefined),
+  })),
+}));
+
+let mockIsVerified = true;
+
+jest.mock('@/context', () => ({
+  useRequireAuth: jest.fn(() => ({
+    user: { id: 'brand-1', email: 'brand@example.com', role: 'brand' },
+    profile: {
+      id: 'brand-1',
+      email: 'brand@example.com',
+      first_name: 'Brand',
+      last_name: 'Manager',
+      role: 'brand',
+    },
+    roleData: {
+      id: 'brand-1',
+      profile_id: 'brand-1',
+      company_name: 'Nike',
+      is_verified: mockIsVerified,
+    },
+    isLoading: false,
+    isAuthenticated: true,
+    error: null,
+  })),
+}));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Test Utilities
+// ═══════════════════════════════════════════════════════════════════════════
+
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return <ToastProvider>{children}</ToastProvider>;
+}
+
+function renderWithProviders(component: React.ReactElement) {
+  return render(component, { wrapper: TestWrapper });
+}
+
+function resetMocks() {
+  mockAnalyticsData = { ...mockAnalytics };
+  mockAnalyticsError = null;
+  mockAnalyticsLoading = false;
+  mockCampaignsData = [...mockCampaigns];
+  mockCampaignsError = null;
+  mockCampaignsLoading = false;
+  mockShortlistData = [...mockAthletes];
+  mockShortlistError = null;
+  mockShortlistLoading = false;
+  mockDealsData = [...mockDeals];
+  mockDealsError = null;
+  mockDealsLoading = false;
+  mockIsVerified = true;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Tests
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('Brand Dashboard Page', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    resetMocks();
+  });
+
+  describe('Page Rendering', () => {
+    it('renders welcome message with company name', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/welcome back, nike/i)).toBeInTheDocument();
+      });
+    });
+
+    it('renders dashboard description', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/overview of your nil partnerships/i)).toBeInTheDocument();
+      });
+    });
+
+    it('shows verified brand badge when verified', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Verified Brand')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Stats Cards', () => {
+    it('displays total spent stat', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Total Spent')).toBeInTheDocument();
+        expect(screen.getByText('$75,000')).toBeInTheDocument();
+      });
+    });
+
+    it('displays active partnerships stat', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Active Partnerships')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument(); // 2 active/accepted deals
+      });
+    });
+
+    it('displays active campaigns stat', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Active Campaigns')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument(); // 2 active campaigns
+      });
+    });
+
+    it('displays average ROI stat', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Average ROI')).toBeInTheDocument();
+        expect(screen.getByText('3.2x')).toBeInTheDocument();
+      });
+    });
+
+    it('shows loading indicators when stats are loading', async () => {
+      mockAnalyticsLoading = true;
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        const loadingIndicators = screen.getAllByText('...');
+        expect(loadingIndicators.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('Recommended Athletes Card', () => {
+    it('renders recommended athletes section', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Recommended Athletes')).toBeInTheDocument();
+      });
+    });
+
+    it('displays athlete names', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('John Smith')).toBeInTheDocument();
+        expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+      });
+    });
+
+    it('displays athlete school and sport', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/duke university/i)).toBeInTheDocument();
+        expect(screen.getByText(/basketball/i)).toBeInTheDocument();
+      });
+    });
+
+    it('displays GPA badges', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('3.80 GPA')).toBeInTheDocument();
+        expect(screen.getByText('3.90 GPA')).toBeInTheDocument();
+      });
+    });
+
+    it('shows view all link', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        const viewAllLink = screen.getAllByText(/view all/i)[0];
+        expect(viewAllLink).toBeInTheDocument();
+        expect(viewAllLink.closest('a')).toHaveAttribute('href', '/brand/discover');
+      });
+    });
+
+    it('shows empty state when no athletes in shortlist', async () => {
+      mockShortlistData = [];
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/no athletes in your shortlist yet/i)).toBeInTheDocument();
+      });
+    });
+
+    it('shows loading state for athletes', async () => {
+      mockShortlistLoading = true;
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Recommended Athletes')).toBeInTheDocument();
+        // Loading spinner should be present
+      });
+    });
+  });
+
+  describe('Active Campaigns Card', () => {
+    it('renders active campaigns section', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Active Campaigns')).toBeInTheDocument();
+      });
+    });
+
+    it('displays campaign titles', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Spring Collection Launch')).toBeInTheDocument();
+        expect(screen.getByText('Summer Sports Partnership')).toBeInTheDocument();
+      });
+    });
+
+    it('displays campaign budgets', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('$50,000')).toBeInTheDocument();
+        expect(screen.getByText('$75,000')).toBeInTheDocument();
+      });
+    });
+
+    it('displays campaign status badges', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        // Multiple active badges
+        const activeBadges = screen.getAllByText('Active');
+        expect(activeBadges.length).toBeGreaterThanOrEqual(2);
+      });
+    });
+
+    it('shows view all link to campaigns page', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        const viewAllLinks = screen.getAllByText(/view all/i);
+        const campaignsLink = viewAllLinks.find(link =>
+          link.closest('a')?.getAttribute('href') === '/brand/campaigns'
+        );
+        expect(campaignsLink).toBeInTheDocument();
+      });
+    });
+
+    it('shows empty state when no active campaigns', async () => {
+      mockCampaignsData = [];
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/no active campaigns yet/i)).toBeInTheDocument();
+      });
+    });
+
+    it('only shows active campaigns (not draft)', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Spring Collection Launch')).toBeInTheDocument();
+        expect(screen.queryByText('Draft Campaign')).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('shows error state when data fetch fails', async () => {
+      mockAnalyticsError = new Error('Failed to fetch analytics');
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/failed to load dashboard/i)).toBeInTheDocument();
+      });
+    });
+
+    it('shows retry button in error state', async () => {
+      mockAnalyticsError = new Error('Failed to fetch');
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
+      });
+    });
+
+    it('displays error message from any failed service', async () => {
+      mockCampaignsError = new Error('Campaign service unavailable');
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/failed to load dashboard/i)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Loading States', () => {
+    it('shows loading spinner when auth is loading', async () => {
+      // Mock auth loading
+      const mockUseRequireAuth = jest.requireMock('@/context').useRequireAuth;
+      mockUseRequireAuth.mockReturnValueOnce({
+        user: null,
+        profile: null,
+        roleData: null,
+        isLoading: true,
+        isAuthenticated: false,
+        error: null,
+      });
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      // Loading state should be shown
+      await waitFor(() => {
+        const spinners = document.querySelectorAll('.animate-spin');
+        expect(spinners.length).toBeGreaterThan(0);
+      });
+    });
+
+    it('shows loading indicators for individual cards', async () => {
+      mockCampaignsLoading = true;
+      mockShortlistLoading = true;
+
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Recommended Athletes')).toBeInTheDocument();
+        expect(screen.getByText('Active Campaigns')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has accessible heading structure', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        const heading = screen.getByRole('heading', { level: 1 });
+        expect(heading).toHaveTextContent(/welcome back/i);
+      });
+    });
+
+    it('cards have accessible titles', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Recommended Athletes')).toBeInTheDocument();
+        expect(screen.getByText('Active Campaigns')).toBeInTheDocument();
+      });
+    });
+
+    it('links are accessible', async () => {
+      renderWithProviders(<BrandDashboardPage />);
+
+      await waitFor(() => {
+        const viewAllLinks = screen.getAllByText(/view all/i);
+        viewAllLinks.forEach(link => {
+          expect(link.closest('a')).toHaveAttribute('href');
+        });
+      });
+    });
+  });
+});

@@ -1,0 +1,597 @@
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import AthleteSignupPage from '@/app/(auth)/signup/athlete/page';
+
+// Mock Next.js router
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  usePathname: () => '/signup/athlete',
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+// Mock toast
+const mockToastSuccess = jest.fn();
+const mockToastError = jest.fn();
+jest.mock('@/components/ui/toast', () => ({
+  useToastActions: () => ({
+    success: mockToastSuccess,
+    error: mockToastError,
+  }),
+}));
+
+// Mock Supabase client
+const mockSignUp = jest.fn();
+const mockInsert = jest.fn();
+jest.mock('@/lib/supabase/client', () => ({
+  getSupabaseClient: () => ({
+    auth: {
+      signUp: mockSignUp,
+    },
+    from: () => ({
+      insert: mockInsert,
+    }),
+  }),
+}));
+
+const VALID_FORM_DATA = {
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john.doe@university.edu',
+  password: 'SecurePassword123',
+  confirmPassword: 'SecurePassword123',
+  school: 'State University',
+  sport: 'Basketball',
+  position: 'Point Guard',
+  year: 'Junior',
+};
+
+describe('AthleteSignupPage', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Initial Render', () => {
+    it('renders the signup form', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByRole('heading', { name: /create athlete account/i })).toBeInTheDocument();
+      expect(screen.getByText(/showcase your achievements/i)).toBeInTheDocument();
+    });
+
+    it('renders personal information section', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByText(/personal information/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
+    });
+
+    it('renders password fields', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+    });
+
+    it('renders athletic information section', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByText(/athletic information/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/school/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/sport/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/position/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/year/i)).toBeInTheDocument();
+    });
+
+    it('renders optional social links section', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByText(/social links/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/instagram handle/i)).toBeInTheDocument();
+    });
+
+    it('renders terms checkbox', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByRole('checkbox', { name: /i agree to the/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /terms of service/i })).toHaveAttribute('href', '/terms');
+      expect(screen.getByRole('link', { name: /privacy policy/i })).toHaveAttribute('href', '/privacy');
+    });
+
+    it('renders submit button', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+    });
+
+    it('renders sign in link', () => {
+      render(<AthleteSignupPage />);
+
+      expect(screen.getByText(/already have an account/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/login');
+    });
+  });
+
+  describe('Sport Selection', () => {
+    it('renders all sport options', () => {
+      render(<AthleteSignupPage />);
+
+      const sportSelect = screen.getByLabelText(/sport/i);
+      expect(sportSelect).toBeInTheDocument();
+
+      const options = within(sportSelect).getAllByRole('option');
+      expect(options.length).toBeGreaterThan(10);
+    });
+
+    it('includes common sports', () => {
+      render(<AthleteSignupPage />);
+
+      const sportSelect = screen.getByLabelText(/sport/i);
+      const sports = ['Football', 'Basketball', 'Baseball', 'Soccer', 'Track & Field'];
+
+      sports.forEach((sport) => {
+        expect(within(sportSelect).getByRole('option', { name: sport })).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Year Selection', () => {
+    it('renders all year options', () => {
+      render(<AthleteSignupPage />);
+
+      const yearSelect = screen.getByLabelText(/year/i);
+      const years = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate'];
+
+      years.forEach((year) => {
+        expect(within(yearSelect).getByRole('option', { name: year })).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Form Validation', () => {
+    it('shows validation error for empty required fields on submit', async () => {
+      const user = userEvent.setup();
+      render(<AthleteSignupPage />);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith('Validation Error', expect.any(String));
+      });
+    });
+
+    it('shows error when passwords do not match', async () => {
+      const user = userEvent.setup();
+      render(<AthleteSignupPage />);
+
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      const confirmInput = screen.getByLabelText(/confirm password/i);
+
+      await user.type(passwordInput, 'SecurePassword123');
+      await user.type(confirmInput, 'DifferentPassword123');
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalled();
+      });
+    });
+
+    it('shows error when terms not agreed', async () => {
+      const user = userEvent.setup();
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/terms of service/i);
+      });
+    });
+
+    it('validates email format on blur', async () => {
+      const user = userEvent.setup();
+      render(<AthleteSignupPage />);
+
+      const emailInput = screen.getByLabelText(/email address/i);
+      await user.type(emailInput, 'invalid-email');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/valid email/i)).toBeInTheDocument();
+      });
+    });
+
+    it('validates password strength', async () => {
+      const user = userEvent.setup();
+      render(<AthleteSignupPage />);
+
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      await user.type(passwordInput, 'weak');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/at least 8 characters/i)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Form Submission', () => {
+    it('submits form with valid data', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<AthleteSignupPage />);
+
+      // Fill in all required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockSignUp).toHaveBeenCalledWith(
+          expect.objectContaining({
+            email: VALID_FORM_DATA.email,
+            password: VALID_FORM_DATA.password,
+            options: expect.objectContaining({
+              data: expect.objectContaining({
+                first_name: VALID_FORM_DATA.firstName,
+                last_name: VALID_FORM_DATA.lastName,
+                role: 'athlete',
+              }),
+            }),
+          })
+        );
+      });
+    });
+
+    it('shows loading state during submission', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockImplementation(() => new Promise(() => {}));
+
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      expect(submitButton).toBeDisabled();
+    });
+
+    it('creates athlete profile after successful signup', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            id: '123',
+            first_name: VALID_FORM_DATA.firstName,
+            last_name: VALID_FORM_DATA.lastName,
+            sport: VALID_FORM_DATA.sport,
+          })
+        );
+      });
+    });
+  });
+
+  describe('Success Flow', () => {
+    it('shows success toast on successful signup', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastSuccess).toHaveBeenCalledWith('Account Created', expect.any(String));
+      });
+    });
+
+    it('redirects to athlete dashboard on success', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockPush).toHaveBeenCalledWith('/athlete/dashboard');
+      });
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('displays auth error message', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Email already registered' } });
+
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent('Email already registered');
+      });
+    });
+
+    it('displays profile creation error', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: { message: 'Profile creation failed' } });
+
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/failed to create profile/i);
+      });
+    });
+
+    it('handles unexpected errors', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockRejectedValue(new Error('Network error'));
+
+      render(<AthleteSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/unexpected error/i);
+      });
+    });
+
+    it('clears error when user modifies form', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Some error' } });
+
+      render(<AthleteSignupPage />);
+
+      // Submit with error
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument();
+      });
+
+      // Modify form to clear error
+      await user.type(screen.getByLabelText(/first name/i), 'x');
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Optional Fields', () => {
+    it('allows submission without instagram handle', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<AthleteSignupPage />);
+
+      // Fill only required fields (no instagram)
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            instagram: null,
+          })
+        );
+      });
+    });
+
+    it('includes instagram handle when provided', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<AthleteSignupPage />);
+
+      // Fill all fields including instagram
+      await user.type(screen.getByLabelText(/first name/i), VALID_FORM_DATA.firstName);
+      await user.type(screen.getByLabelText(/last name/i), VALID_FORM_DATA.lastName);
+      await user.type(screen.getByLabelText(/email address/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+      await user.type(screen.getByLabelText(/school/i), VALID_FORM_DATA.school);
+      await user.selectOptions(screen.getByLabelText(/sport/i), VALID_FORM_DATA.sport);
+      await user.type(screen.getByLabelText(/position/i), VALID_FORM_DATA.position);
+      await user.selectOptions(screen.getByLabelText(/year/i), VALID_FORM_DATA.year);
+      await user.type(screen.getByLabelText(/instagram handle/i), '@johndoe');
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            instagram: '@johndoe',
+          })
+        );
+      });
+    });
+  });
+});

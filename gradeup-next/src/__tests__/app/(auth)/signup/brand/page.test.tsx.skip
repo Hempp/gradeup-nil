@@ -1,0 +1,580 @@
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import BrandSignupPage from '@/app/(auth)/signup/brand/page';
+
+// Mock Next.js router
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  usePathname: () => '/signup/brand',
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+// Mock toast
+const mockToastSuccess = jest.fn();
+const mockToastError = jest.fn();
+jest.mock('@/components/ui/toast', () => ({
+  useToastActions: () => ({
+    success: mockToastSuccess,
+    error: mockToastError,
+  }),
+}));
+
+// Mock Supabase client
+const mockSignUp = jest.fn();
+const mockInsert = jest.fn();
+jest.mock('@/lib/supabase/client', () => ({
+  getSupabaseClient: () => ({
+    auth: {
+      signUp: mockSignUp,
+    },
+    from: () => ({
+      insert: mockInsert,
+    }),
+  }),
+}));
+
+const VALID_FORM_DATA = {
+  companyName: 'Acme Corporation',
+  industry: 'Sports & Fitness',
+  website: 'https://www.acme.com',
+  fullName: 'John Smith',
+  email: 'john@acme.com',
+  password: 'SecurePassword123',
+  confirmPassword: 'SecurePassword123',
+};
+
+describe('BrandSignupPage', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Initial Render', () => {
+    it('renders the signup form', () => {
+      render(<BrandSignupPage />);
+
+      expect(screen.getByRole('heading', { name: /create brand account/i })).toBeInTheDocument();
+      expect(screen.getByText(/connect with scholar-athletes/i)).toBeInTheDocument();
+    });
+
+    it('renders company information section', () => {
+      render(<BrandSignupPage />);
+
+      expect(screen.getByText(/company information/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/company name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/industry/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/company website/i)).toBeInTheDocument();
+    });
+
+    it('renders contact information section', () => {
+      render(<BrandSignupPage />);
+
+      expect(screen.getByText(/contact information/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/your full name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/work email/i)).toBeInTheDocument();
+    });
+
+    it('renders password fields', () => {
+      render(<BrandSignupPage />);
+
+      expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+    });
+
+    it('renders terms checkbox', () => {
+      render(<BrandSignupPage />);
+
+      expect(screen.getByRole('checkbox', { name: /i agree to the/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /terms of service/i })).toHaveAttribute('href', '/terms');
+      expect(screen.getByRole('link', { name: /privacy policy/i })).toHaveAttribute('href', '/privacy');
+    });
+
+    it('renders submit button', () => {
+      render(<BrandSignupPage />);
+
+      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+    });
+
+    it('renders sign in link', () => {
+      render(<BrandSignupPage />);
+
+      expect(screen.getByText(/already have an account/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/login');
+    });
+  });
+
+  describe('Industry Selection', () => {
+    it('renders all industry options', () => {
+      render(<BrandSignupPage />);
+
+      const industrySelect = screen.getByLabelText(/industry/i);
+      expect(industrySelect).toBeInTheDocument();
+
+      const options = within(industrySelect).getAllByRole('option');
+      expect(options.length).toBeGreaterThan(5);
+    });
+
+    it('includes common industries', () => {
+      render(<BrandSignupPage />);
+
+      const industrySelect = screen.getByLabelText(/industry/i);
+      const industries = ['Sports & Fitness', 'Fashion & Apparel', 'Technology', 'Health & Wellness'];
+
+      industries.forEach((industry) => {
+        expect(within(industrySelect).getByRole('option', { name: industry })).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Form Validation', () => {
+    it('shows validation error for empty required fields on submit', async () => {
+      const user = userEvent.setup();
+      render(<BrandSignupPage />);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith('Validation Error', expect.any(String));
+      });
+    });
+
+    it('shows error when passwords do not match', async () => {
+      const user = userEvent.setup();
+      render(<BrandSignupPage />);
+
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      const confirmInput = screen.getByLabelText(/confirm password/i);
+
+      await user.type(passwordInput, 'SecurePassword123');
+      await user.type(confirmInput, 'DifferentPassword123');
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalled();
+      });
+    });
+
+    it('shows error when terms not agreed', async () => {
+      const user = userEvent.setup();
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/terms of service/i);
+      });
+    });
+
+    it('validates email format on blur', async () => {
+      const user = userEvent.setup();
+      render(<BrandSignupPage />);
+
+      const emailInput = screen.getByLabelText(/work email/i);
+      await user.type(emailInput, 'invalid-email');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/valid email/i)).toBeInTheDocument();
+      });
+    });
+
+    it('validates password strength', async () => {
+      const user = userEvent.setup();
+      render(<BrandSignupPage />);
+
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      await user.type(passwordInput, 'weak');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/at least 8 characters/i)).toBeInTheDocument();
+      });
+    });
+
+    it('validates URL format for website', async () => {
+      const user = userEvent.setup();
+      render(<BrandSignupPage />);
+
+      const websiteInput = screen.getByLabelText(/company website/i);
+      await user.type(websiteInput, 'not-a-url');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/valid url/i)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Form Submission', () => {
+    it('submits form with valid data', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<BrandSignupPage />);
+
+      // Fill in all required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockSignUp).toHaveBeenCalledWith(
+          expect.objectContaining({
+            email: VALID_FORM_DATA.email,
+            password: VALID_FORM_DATA.password,
+            options: expect.objectContaining({
+              data: expect.objectContaining({
+                full_name: VALID_FORM_DATA.fullName,
+                company_name: VALID_FORM_DATA.companyName,
+                role: 'brand',
+              }),
+            }),
+          })
+        );
+      });
+    });
+
+    it('shows loading state during submission', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockImplementation(() => new Promise(() => {}));
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      expect(submitButton).toBeDisabled();
+    });
+
+    it('creates brand profile after successful signup', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/company website/i), VALID_FORM_DATA.website);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            id: '123',
+            company_name: VALID_FORM_DATA.companyName,
+            industry: VALID_FORM_DATA.industry,
+            website: VALID_FORM_DATA.website,
+            contact_name: VALID_FORM_DATA.fullName,
+            contact_email: VALID_FORM_DATA.email,
+          })
+        );
+      });
+    });
+  });
+
+  describe('Success Flow', () => {
+    it('shows success toast on successful signup', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastSuccess).toHaveBeenCalledWith('Account Created', expect.any(String));
+      });
+    });
+
+    it('redirects to brand dashboard on success', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockPush).toHaveBeenCalledWith('/brand/dashboard');
+      });
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('displays auth error message', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Email already registered' } });
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent('Email already registered');
+      });
+    });
+
+    it('displays profile creation error', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: { message: 'Profile creation failed' } });
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/failed to create profile/i);
+      });
+    });
+
+    it('handles unexpected errors', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockRejectedValue(new Error('Network error'));
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/unexpected error/i);
+      });
+    });
+  });
+
+  describe('Optional Fields', () => {
+    it('allows submission without website', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<BrandSignupPage />);
+
+      // Fill only required fields (no website)
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            website: null,
+          })
+        );
+      });
+    });
+
+    it('includes website when provided', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<BrandSignupPage />);
+
+      // Fill all fields including website
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/company website/i), VALID_FORM_DATA.website);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            website: VALID_FORM_DATA.website,
+          })
+        );
+      });
+    });
+  });
+
+  describe('Input Interactions', () => {
+    it('disables all inputs during loading', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockImplementation(() => new Promise(() => {}));
+
+      render(<BrandSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      expect(screen.getByLabelText(/company name/i)).toBeDisabled();
+      expect(screen.getByLabelText(/industry/i)).toBeDisabled();
+      expect(screen.getByLabelText(/your full name/i)).toBeDisabled();
+    });
+
+    it('clears error when form is modified', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Error' } });
+
+      render(<BrandSignupPage />);
+
+      // Fill and submit to get error
+      await user.type(screen.getByLabelText(/company name/i), VALID_FORM_DATA.companyName);
+      await user.selectOptions(screen.getByLabelText(/industry/i), VALID_FORM_DATA.industry);
+      await user.type(screen.getByLabelText(/your full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument();
+      });
+
+      // Modify form
+      await user.type(screen.getByLabelText(/company name/i), 'x');
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    });
+  });
+});

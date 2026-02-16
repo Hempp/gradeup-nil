@@ -1,0 +1,684 @@
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import DirectorSignupPage from '@/app/(auth)/signup/director/page';
+
+// Mock Next.js router
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  usePathname: () => '/signup/director',
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+// Mock toast
+const mockToastSuccess = jest.fn();
+const mockToastError = jest.fn();
+jest.mock('@/components/ui/toast', () => ({
+  useToastActions: () => ({
+    success: mockToastSuccess,
+    error: mockToastError,
+  }),
+}));
+
+// Mock Supabase client
+const mockSignUp = jest.fn();
+const mockInsert = jest.fn();
+jest.mock('@/lib/supabase/client', () => ({
+  getSupabaseClient: () => ({
+    auth: {
+      signUp: mockSignUp,
+    },
+    from: () => ({
+      insert: mockInsert,
+    }),
+  }),
+}));
+
+const VALID_FORM_DATA = {
+  schoolName: 'State University',
+  division: 'NCAA Division I',
+  department: 'Athletics',
+  fullName: 'John Smith',
+  title: 'Athletic Director',
+  email: 'john.smith@school.edu',
+  phone: '(555) 123-4567',
+  password: 'SecurePassword123',
+  confirmPassword: 'SecurePassword123',
+};
+
+describe('DirectorSignupPage', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Initial Render', () => {
+    it('renders the signup form', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByRole('heading', { name: /create director account/i })).toBeInTheDocument();
+      expect(screen.getByText(/manage your athletic program/i)).toBeInTheDocument();
+    });
+
+    it('renders school information section', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByText(/school information/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/school.*university name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/division/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/department/i)).toBeInTheDocument();
+    });
+
+    it('renders contact information section', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByText(/your information/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/job title/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/work email/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/phone/i)).toBeInTheDocument();
+    });
+
+    it('renders password fields', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+    });
+
+    it('renders terms checkbox', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByRole('checkbox', { name: /i agree to the/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /terms of service/i })).toHaveAttribute('href', '/terms');
+      expect(screen.getByRole('link', { name: /privacy policy/i })).toHaveAttribute('href', '/privacy');
+    });
+
+    it('renders submit button', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+    });
+
+    it('renders sign in link', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByText(/already have an account/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/login');
+    });
+  });
+
+  describe('Division Selection', () => {
+    it('renders all division options', () => {
+      render(<DirectorSignupPage />);
+
+      const divisionSelect = screen.getByLabelText(/division/i);
+      expect(divisionSelect).toBeInTheDocument();
+
+      const options = within(divisionSelect).getAllByRole('option');
+      expect(options.length).toBeGreaterThan(3);
+    });
+
+    it('includes NCAA divisions', () => {
+      render(<DirectorSignupPage />);
+
+      const divisionSelect = screen.getByLabelText(/division/i);
+      const divisions = ['NCAA Division I', 'NCAA Division II', 'NCAA Division III', 'NAIA'];
+
+      divisions.forEach((division) => {
+        expect(within(divisionSelect).getByRole('option', { name: division })).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Form Validation', () => {
+    it('shows validation error for empty required fields on submit', async () => {
+      const user = userEvent.setup();
+      render(<DirectorSignupPage />);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith('Validation Error', expect.any(String));
+      });
+    });
+
+    it('shows error when passwords do not match', async () => {
+      const user = userEvent.setup();
+      render(<DirectorSignupPage />);
+
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      const confirmInput = screen.getByLabelText(/confirm password/i);
+
+      await user.type(passwordInput, 'SecurePassword123');
+      await user.type(confirmInput, 'DifferentPassword123');
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalled();
+      });
+    });
+
+    it('shows error when terms not agreed', async () => {
+      const user = userEvent.setup();
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/terms of service/i);
+      });
+    });
+
+    it('validates email format on blur', async () => {
+      const user = userEvent.setup();
+      render(<DirectorSignupPage />);
+
+      const emailInput = screen.getByLabelText(/work email/i);
+      await user.type(emailInput, 'invalid-email');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/valid email/i)).toBeInTheDocument();
+      });
+    });
+
+    it('validates password strength', async () => {
+      const user = userEvent.setup();
+      render(<DirectorSignupPage />);
+
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      await user.type(passwordInput, 'weak');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/at least 8 characters/i)).toBeInTheDocument();
+      });
+    });
+
+    it('validates phone number format', async () => {
+      const user = userEvent.setup();
+      render(<DirectorSignupPage />);
+
+      const phoneInput = screen.getByLabelText(/phone/i);
+      await user.type(phoneInput, '123');
+      await user.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(/valid phone/i)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Form Submission', () => {
+    it('submits form with valid data', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<DirectorSignupPage />);
+
+      // Fill in all required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockSignUp).toHaveBeenCalledWith(
+          expect.objectContaining({
+            email: VALID_FORM_DATA.email,
+            password: VALID_FORM_DATA.password,
+            options: expect.objectContaining({
+              data: expect.objectContaining({
+                full_name: VALID_FORM_DATA.fullName,
+                school_name: VALID_FORM_DATA.schoolName,
+                role: 'director',
+              }),
+            }),
+          })
+        );
+      });
+    });
+
+    it('shows loading state during submission', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockImplementation(() => new Promise(() => {}));
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      expect(submitButton).toBeDisabled();
+    });
+
+    it('creates director profile after successful signup', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/phone/i), VALID_FORM_DATA.phone);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            id: '123',
+            school_name: VALID_FORM_DATA.schoolName,
+            division: VALID_FORM_DATA.division,
+            department: VALID_FORM_DATA.department,
+            full_name: VALID_FORM_DATA.fullName,
+            title: VALID_FORM_DATA.title,
+            email: VALID_FORM_DATA.email,
+            phone: VALID_FORM_DATA.phone,
+          })
+        );
+      });
+    });
+  });
+
+  describe('Success Flow', () => {
+    it('shows success toast on successful signup', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastSuccess).toHaveBeenCalledWith('Account Created', expect.any(String));
+      });
+    });
+
+    it('redirects to director dashboard on success', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockPush).toHaveBeenCalledWith('/director/dashboard');
+      });
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('displays auth error message', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Email already registered' } });
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent('Email already registered');
+      });
+    });
+
+    it('displays profile creation error', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: { message: 'Profile creation failed' } });
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/failed to create profile/i);
+      });
+    });
+
+    it('handles unexpected errors', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockRejectedValue(new Error('Network error'));
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/unexpected error/i);
+      });
+    });
+
+    it('shows error toast on failure', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Error' } });
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('Optional Fields', () => {
+    it('allows submission without phone', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<DirectorSignupPage />);
+
+      // Fill only required fields (no phone)
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            phone: null,
+          })
+        );
+      });
+    });
+
+    it('includes phone when provided', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: { id: '123' } }, error: null });
+      mockInsert.mockResolvedValue({ error: null });
+
+      render(<DirectorSignupPage />);
+
+      // Fill all fields including phone
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/phone/i), VALID_FORM_DATA.phone);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockInsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            phone: VALID_FORM_DATA.phone,
+          })
+        );
+      });
+    });
+  });
+
+  describe('Input Interactions', () => {
+    it('disables all inputs during loading', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockImplementation(() => new Promise(() => {}));
+
+      render(<DirectorSignupPage />);
+
+      // Fill in required fields
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      expect(screen.getByLabelText(/school.*university name/i)).toBeDisabled();
+      expect(screen.getByLabelText(/division/i)).toBeDisabled();
+      expect(screen.getByLabelText(/full name/i)).toBeDisabled();
+    });
+
+    it('clears error when form is modified', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Error' } });
+
+      render(<DirectorSignupPage />);
+
+      // Fill and submit to get error
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument();
+      });
+
+      // Modify form
+      await user.type(screen.getByLabelText(/school.*university name/i), 'x');
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has proper form labels', () => {
+      render(<DirectorSignupPage />);
+
+      expect(screen.getByLabelText(/school.*university name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/division/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/department/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/job title/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/work email/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/phone/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+    });
+
+    it('error message has proper role', async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: { user: null }, error: { message: 'Error' } });
+
+      render(<DirectorSignupPage />);
+
+      // Fill and submit
+      await user.type(screen.getByLabelText(/school.*university name/i), VALID_FORM_DATA.schoolName);
+      await user.selectOptions(screen.getByLabelText(/division/i), VALID_FORM_DATA.division);
+      await user.type(screen.getByLabelText(/department/i), VALID_FORM_DATA.department);
+      await user.type(screen.getByLabelText(/full name/i), VALID_FORM_DATA.fullName);
+      await user.type(screen.getByLabelText(/job title/i), VALID_FORM_DATA.title);
+      await user.type(screen.getByLabelText(/work email/i), VALID_FORM_DATA.email);
+      await user.type(screen.getByLabelText(/^password$/i), VALID_FORM_DATA.password);
+      await user.type(screen.getByLabelText(/confirm password/i), VALID_FORM_DATA.confirmPassword);
+
+      const termsCheckbox = screen.getByRole('checkbox', { name: /i agree to the/i });
+      await user.click(termsCheckbox);
+
+      const submitButton = screen.getByRole('button', { name: /create account/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        const alert = screen.getByRole('alert');
+        expect(alert).toBeInTheDocument();
+        expect(alert).toHaveAttribute('tabindex', '-1');
+      });
+    });
+  });
+});

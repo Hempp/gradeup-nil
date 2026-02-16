@@ -1,0 +1,530 @@
+/**
+ * Tests: Brand Campaigns Page
+ *
+ * Tests cover:
+ * - Page rendering and layout
+ * - Campaign cards display
+ * - Campaign sections (active, drafts, completed)
+ * - Loading skeleton
+ * - Error states
+ * - New campaign button
+ */
+
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import BrandCampaignsPage from '@/app/(dashboard)/brand/campaigns/page';
+import { ToastProvider } from '@/components/ui/toast';
+import type { EnrichedCampaign } from '@/lib/hooks/use-campaigns-data';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Mock Data
+// ═══════════════════════════════════════════════════════════════════════════
+
+const mockCampaigns: EnrichedCampaign[] = [
+  {
+    id: 'campaign-1',
+    name: 'Spring Collection Launch',
+    description: 'Promote our new spring athletic wear collection',
+    budget: 50000,
+    spent: 32500,
+    startDate: '2026-02-01',
+    endDate: '2026-04-30',
+    athletes: 5,
+    targetSports: ['Basketball', 'Soccer'],
+    status: 'active',
+  },
+  {
+    id: 'campaign-2',
+    name: 'Summer Sports Partnership',
+    description: 'Long-term partnerships with summer sport athletes',
+    budget: 75000,
+    spent: 15000,
+    startDate: '2026-03-01',
+    endDate: '2026-08-31',
+    athletes: 8,
+    targetSports: ['Swimming', 'Track & Field', 'Tennis'],
+    status: 'active',
+  },
+  {
+    id: 'campaign-3',
+    name: 'Back to School Campaign',
+    description: 'Student athlete promotion for back to school season',
+    budget: 30000,
+    spent: 0,
+    startDate: '2026-08-01',
+    endDate: '2026-09-15',
+    athletes: 0,
+    targetSports: ['Football', 'Basketball', 'Volleyball'],
+    status: 'draft',
+  },
+  {
+    id: 'campaign-4',
+    name: 'Pending Review Campaign',
+    description: 'Campaign pending approval',
+    budget: 25000,
+    spent: 0,
+    startDate: '2026-06-01',
+    endDate: '2026-07-31',
+    athletes: 0,
+    targetSports: ['Baseball'],
+    status: 'pending',
+  },
+  {
+    id: 'campaign-5',
+    name: 'Holiday Season Push',
+    description: 'Holiday gift guide featuring athlete endorsements',
+    budget: 100000,
+    spent: 100000,
+    startDate: '2025-11-15',
+    endDate: '2025-12-31',
+    athletes: 12,
+    targetSports: ['All Sports'],
+    status: 'completed',
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Mocks
+// ═══════════════════════════════════════════════════════════════════════════
+
+const mockPush = jest.fn();
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  usePathname: () => '/brand/campaigns',
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+jest.mock('next/link', () => {
+  return function Link({ children, href }: { children: React.ReactNode; href: string }) {
+    return <a href={href}>{children}</a>;
+  };
+});
+
+jest.mock('@/lib/supabase/client', () => ({
+  createClient: jest.fn(() => ({
+    auth: {
+      getSession: jest.fn().mockResolvedValue({
+        data: { session: { user: { id: 'brand-1', email: 'brand@example.com' } } },
+      }),
+      getUser: jest.fn().mockResolvedValue({
+        data: { user: { id: 'brand-1', email: 'brand@example.com' } },
+      }),
+      onAuthStateChange: jest.fn().mockReturnValue({
+        data: { subscription: { unsubscribe: jest.fn() } },
+      }),
+    },
+    from: jest.fn(() => ({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({ data: { role: 'brand' }, error: null }),
+    })),
+  })),
+}));
+
+let mockCampaignsData: EnrichedCampaign[] = [...mockCampaigns];
+let mockCampaignsError: Error | null = null;
+let mockCampaignsLoading = false;
+
+jest.mock('@/lib/hooks/use-campaigns-data', () => ({
+  useBrandCampaigns: jest.fn(() => ({
+    data: mockCampaignsData,
+    isLoading: mockCampaignsLoading,
+    error: mockCampaignsError,
+    refetch: jest.fn(),
+  })),
+}));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Test Utilities
+// ═══════════════════════════════════════════════════════════════════════════
+
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return <ToastProvider>{children}</ToastProvider>;
+}
+
+function renderWithProviders(component: React.ReactElement) {
+  return render(component, { wrapper: TestWrapper });
+}
+
+function resetMocks() {
+  mockCampaignsData = [...mockCampaigns];
+  mockCampaignsError = null;
+  mockCampaignsLoading = false;
+  mockPush.mockClear();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Tests
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('Brand Campaigns Page', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    resetMocks();
+  });
+
+  describe('Page Rendering', () => {
+    it('renders page header with title', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: /campaigns/i })).toBeInTheDocument();
+      });
+    });
+
+    it('renders page description', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/manage your nil marketing campaigns/i)).toBeInTheDocument();
+      });
+    });
+
+    it('renders new campaign button', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /new campaign/i })).toBeInTheDocument();
+      });
+    });
+
+    it('new campaign button links to create page', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const newCampaignLink = screen.getByRole('link', { name: /new campaign/i });
+        expect(newCampaignLink).toHaveAttribute('href', '/brand/campaigns/new');
+      });
+    });
+  });
+
+  describe('Campaign Sections', () => {
+    it('renders active campaigns section', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/active campaigns \(2\)/i)).toBeInTheDocument();
+      });
+    });
+
+    it('renders drafts section', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/drafts \(2\)/i)).toBeInTheDocument();
+      });
+    });
+
+    it('renders completed campaigns section', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/completed \(1\)/i)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Campaign Cards', () => {
+    it('displays campaign names', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Spring Collection Launch')).toBeInTheDocument();
+        expect(screen.getByText('Summer Sports Partnership')).toBeInTheDocument();
+        expect(screen.getByText('Back to School Campaign')).toBeInTheDocument();
+      });
+    });
+
+    it('displays campaign descriptions', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/promote our new spring athletic wear/i)).toBeInTheDocument();
+        expect(screen.getByText(/long-term partnerships/i)).toBeInTheDocument();
+      });
+    });
+
+    it('displays campaign budgets', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('$50,000')).toBeInTheDocument();
+        expect(screen.getByText('$75,000')).toBeInTheDocument();
+      });
+    });
+
+    it('displays athlete counts', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('5')).toBeInTheDocument();
+        expect(screen.getByText('8')).toBeInTheDocument();
+      });
+    });
+
+    it('displays target sports badges', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Basketball')).toBeInTheDocument();
+        expect(screen.getByText('Soccer')).toBeInTheDocument();
+        expect(screen.getByText('Swimming')).toBeInTheDocument();
+      });
+    });
+
+    it('displays campaign status badges', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        // Multiple statuses
+        const activeBadges = screen.getAllByText('Active');
+        expect(activeBadges.length).toBeGreaterThanOrEqual(2);
+      });
+    });
+
+    it('displays spent/budget progress', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/\$32,500 \/ \$50,000/)).toBeInTheDocument();
+        expect(screen.getByText(/\$15,000 \/ \$75,000/)).toBeInTheDocument();
+      });
+    });
+
+    it('displays end dates', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        // Dates should be formatted
+        expect(screen.getByText(/apr 30, 2026/i)).toBeInTheDocument();
+      });
+    });
+
+    it('displays "Ongoing" for campaigns without end date', async () => {
+      mockCampaignsData = [
+        {
+          id: 'campaign-ongoing',
+          name: 'Ongoing Campaign',
+          description: 'A campaign with no end date',
+          budget: 10000,
+          spent: 5000,
+          startDate: '2026-01-01',
+          endDate: null,
+          athletes: 3,
+          targetSports: ['Tennis'],
+          status: 'active',
+        },
+      ];
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Ongoing')).toBeInTheDocument();
+      });
+    });
+
+    it('displays view details link for each campaign', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const viewDetailsLinks = screen.getAllByText(/view details/i);
+        expect(viewDetailsLinks.length).toBe(mockCampaigns.length);
+      });
+    });
+
+    it('view details links to correct campaign page', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const viewDetailsLinks = screen.getAllByText(/view details/i);
+        const firstLink = viewDetailsLinks[0].closest('a');
+        expect(firstLink).toHaveAttribute('href', '/brand/campaigns/campaign-1');
+      });
+    });
+  });
+
+  describe('Loading State', () => {
+    it('shows skeleton loading cards when loading', async () => {
+      mockCampaignsLoading = true;
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        // Should show loading skeletons
+        const skeletons = document.querySelectorAll('.animate-pulse');
+        expect(skeletons.length).toBeGreaterThan(0);
+      });
+    });
+
+    it('shows page header while loading', async () => {
+      mockCampaignsLoading = true;
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: /campaigns/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /new campaign/i })).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('shows error state when data fetch fails', async () => {
+      mockCampaignsData = [];
+      mockCampaignsError = new Error('Failed to fetch campaigns');
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/failed to load campaigns/i)).toBeInTheDocument();
+      });
+    });
+
+    it('shows retry button in error state', async () => {
+      mockCampaignsData = [];
+      mockCampaignsError = new Error('Failed to fetch');
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
+      });
+    });
+
+    it('displays error message', async () => {
+      mockCampaignsData = [];
+      mockCampaignsError = new Error('Network connection lost');
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/network connection lost/i)).toBeInTheDocument();
+      });
+    });
+
+    it('shows new campaign button in error state', async () => {
+      mockCampaignsData = [];
+      mockCampaignsError = new Error('Failed to fetch');
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('link', { name: /new campaign/i })).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Empty Sections', () => {
+    it('hides active campaigns section when no active campaigns', async () => {
+      mockCampaignsData = mockCampaigns.filter(c => c.status !== 'active');
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/active campaigns/i)).not.toBeInTheDocument();
+      });
+    });
+
+    it('hides drafts section when no draft campaigns', async () => {
+      mockCampaignsData = mockCampaigns.filter(c => c.status !== 'draft' && c.status !== 'pending');
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/drafts/i)).not.toBeInTheDocument();
+      });
+    });
+
+    it('hides completed section when no completed campaigns', async () => {
+      mockCampaignsData = mockCampaigns.filter(c => c.status !== 'completed');
+
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/completed \(/i)).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Campaign Interactions', () => {
+    it('renders more options button on each campaign card', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        // Each card has a more options button (MoreVertical icon)
+        const moreButtons = screen.getAllByRole('button');
+        const optionsButtons = moreButtons.filter(btn =>
+          btn.querySelector('svg.lucide-more-vertical') ||
+          btn.className.includes('ghost')
+        );
+        expect(optionsButtons.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('Progress Bar', () => {
+    it('displays progress bar for budget spending', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        // Progress bars exist
+        const progressBars = document.querySelectorAll('.h-2.bg-\\[var\\(--bg-secondary\\)\\]');
+        expect(progressBars.length).toBeGreaterThan(0);
+      });
+    });
+
+    it('shows spent label', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const spentLabels = screen.getAllByText('Spent');
+        expect(spentLabels.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has accessible heading structure', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const heading = screen.getByRole('heading', { level: 1 });
+        expect(heading).toHaveTextContent(/campaigns/i);
+      });
+    });
+
+    it('section headings are level 2', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const sectionHeadings = screen.getAllByRole('heading', { level: 2 });
+        expect(sectionHeadings.length).toBeGreaterThan(0);
+      });
+    });
+
+    it('campaign names are level 3', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const campaignHeadings = screen.getAllByRole('heading', { level: 3 });
+        expect(campaignHeadings.length).toBe(mockCampaigns.length);
+      });
+    });
+
+    it('links are accessible', async () => {
+      renderWithProviders(<BrandCampaignsPage />);
+
+      await waitFor(() => {
+        const links = screen.getAllByRole('link');
+        links.forEach(link => {
+          expect(link).toHaveAttribute('href');
+        });
+      });
+    });
+  });
+});
