@@ -21,7 +21,19 @@ import {
   Image as ImageIcon,
   Loader2,
 } from 'lucide-react';
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChartWrapper, tooltipStyle, axisStyle, chartColors } from '@/components/ui/chart';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
@@ -123,6 +135,22 @@ const mockCampaign: CampaignData = {
     contentPieces: 7,
   },
 };
+
+// Chart data for campaign analytics
+const reachOverTimeData = [
+  { week: 'Week 1', reach: 180000, engagement: 12000 },
+  { week: 'Week 2', reach: 320000, engagement: 24000 },
+  { week: 'Week 3', reach: 450000, engagement: 35000 },
+  { week: 'Week 4', reach: 380000, engagement: 28000 },
+  { week: 'Week 5', reach: 520000, engagement: 42000 },
+  { week: 'Week 6', reach: 600000, engagement: 44000 },
+];
+
+const engagementByPlatformData = [
+  { platform: 'Instagram', engagement: 95000, color: chartColors.primary },
+  { platform: 'TikTok', engagement: 65000, color: chartColors.secondary },
+  { platform: 'Twitter/X', engagement: 25000, color: chartColors.info },
+];
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TAB DEFINITIONS
@@ -644,19 +672,40 @@ function AnalyticsTab({ campaign }: { campaign: CampaignData }) {
         />
       </div>
 
-      {/* Placeholder Charts */}
+      {/* Campaign Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Reach Over Time</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)] flex items-center justify-center">
-              <div className="text-center">
-                <BarChart3 className="h-12 w-12 mx-auto text-[var(--text-muted)] mb-2" />
-                <p className="text-[var(--text-muted)]">Chart coming soon</p>
-              </div>
-            </div>
+            <ChartWrapper height={256}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={reachOverTimeData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="reachGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={chartColors.primary} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                  <XAxis dataKey="week" {...axisStyle} />
+                  <YAxis {...axisStyle} tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`} />
+                  <Tooltip
+                    contentStyle={tooltipStyle.contentStyle}
+                    labelStyle={tooltipStyle.labelStyle}
+                    formatter={(value) => [`${(Number(value) / 1000).toFixed(0)}K`, 'Reach']}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="reach"
+                    stroke={chartColors.primary}
+                    strokeWidth={2}
+                    fill="url(#reachGradient)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartWrapper>
           </CardContent>
         </Card>
 
@@ -665,12 +714,25 @@ function AnalyticsTab({ campaign }: { campaign: CampaignData }) {
             <CardTitle>Engagement by Platform</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)] flex items-center justify-center">
-              <div className="text-center">
-                <BarChart3 className="h-12 w-12 mx-auto text-[var(--text-muted)] mb-2" />
-                <p className="text-[var(--text-muted)]">Chart coming soon</p>
-              </div>
-            </div>
+            <ChartWrapper height={256}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={engagementByPlatformData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                  <XAxis dataKey="platform" {...axisStyle} />
+                  <YAxis {...axisStyle} tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`} />
+                  <Tooltip
+                    contentStyle={tooltipStyle.contentStyle}
+                    labelStyle={tooltipStyle.labelStyle}
+                    formatter={(value) => [`${(Number(value) / 1000).toFixed(0)}K`, 'Engagement']}
+                  />
+                  <Bar
+                    dataKey="engagement"
+                    fill={chartColors.primary}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartWrapper>
           </CardContent>
         </Card>
       </div>
