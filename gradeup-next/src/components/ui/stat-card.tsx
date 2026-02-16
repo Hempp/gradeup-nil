@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, memo, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface StatCardProps extends HTMLAttributes<HTMLDivElement> {
@@ -36,7 +36,7 @@ const TrendArrowDown = () => (
   </svg>
 );
 
-const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
+const StatCard = memo(forwardRef<HTMLDivElement, StatCardProps>(
   ({ className, title, value, trend, trendDirection = 'up', icon, subtitle, ...props }, ref) => {
     const trendColor = trendDirection === 'up'
       ? 'text-[var(--color-success)]'
@@ -89,7 +89,7 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
       </div>
     );
   }
-);
+));
 
 StatCard.displayName = 'StatCard';
 

@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
+// Bundle analyzer for performance optimization
+// Run with: npm run analyze
+// Note: Dynamic import wrapped in function to avoid top-level await (Jest compatibility)
+const withBundleAnalyzer = (config: NextConfig) => {
+  if (process.env.ANALYZE === 'true') {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const analyzer = require('@next/bundle-analyzer')({ enabled: true });
+    return analyzer(config);
+  }
+  return config;
+};
+
 // Security headers for production
 const securityHeaders = [
   {
@@ -90,9 +102,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Export with Sentry configuration
+// Export with Sentry configuration and optional bundle analyzer
 // Note: Sentry will only be active when SENTRY_DSN is configured
-export default withSentryConfig(nextConfig, {
+const configWithAnalyzer = withBundleAnalyzer(nextConfig);
+
+export default withSentryConfig(configWithAnalyzer, {
   // Suppress source map upload warnings during build
   silent: true,
   // Source map configuration

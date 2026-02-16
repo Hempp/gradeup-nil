@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, useCallback } from 'react';
 import { Heart, MapPin, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -54,6 +55,7 @@ interface AthleteDiscoveryCardProps {
 /**
  * A discovery card for displaying athlete profiles in a grid layout.
  * Features sport-specific gradients, social stats, and save/view actions.
+ * Memoized to prevent unnecessary re-renders in grid layouts.
  *
  * @example
  * ```tsx
@@ -64,27 +66,41 @@ interface AthleteDiscoveryCardProps {
  * />
  * ```
  */
-export function AthleteDiscoveryCard({
+export const AthleteDiscoveryCard = memo(function AthleteDiscoveryCard({
   athlete,
   onToggleSave,
   onViewProfile,
 }: AthleteDiscoveryCardProps) {
   const totalFollowers = athlete.instagramFollowers + athlete.tiktokFollowers;
 
-  // Handle keyboard navigation for accessibility
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  // Memoized handlers to prevent child re-renders
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onViewProfile(athlete);
     }
-  };
+  }, [onViewProfile, athlete]);
+
+  const handleCardClick = useCallback(() => {
+    onViewProfile(athlete);
+  }, [onViewProfile, athlete]);
+
+  const handleToggleSaveClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleSave(athlete.id);
+  }, [onToggleSave, athlete.id]);
+
+  const handleViewProfileClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onViewProfile(athlete);
+  }, [onViewProfile, athlete]);
 
   return (
     <Card
       hover
       tabIndex={0}
       className="group overflow-hidden transition-all duration-200 hover:shadow-xl hover:shadow-[var(--color-primary)]/10 hover:-translate-y-1 motion-reduce:hover:translate-y-0 motion-reduce:transition-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 active:scale-[0.98] motion-reduce:active:scale-100"
-      onClick={() => onViewProfile(athlete)}
+      onClick={handleCardClick}
       onKeyDown={handleKeyDown}
       role="article"
       aria-label={`${athlete.name}, ${athlete.sport} at ${athlete.school}. Press Enter to view profile.`}
@@ -104,10 +120,7 @@ export function AthleteDiscoveryCard({
 
           {/* Shortlist Heart Button */}
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleSave(athlete.id);
-            }}
+            onClick={handleToggleSaveClick}
             className={`
               absolute top-3 right-3 h-11 w-11 rounded-full
               flex items-center justify-center
@@ -225,20 +238,14 @@ export function AthleteDiscoveryCard({
               variant="primary"
               size="sm"
               className="flex-1 font-medium"
-              onClick={(e) => {
-                e.stopPropagation();
-                onViewProfile(athlete);
-              }}
+              onClick={handleViewProfileClick}
             >
               View Profile
             </Button>
             <Button
               variant={athlete.saved ? 'secondary' : 'outline'}
               size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleSave(athlete.id);
-              }}
+              onClick={handleToggleSaveClick}
               className="px-4"
               aria-label={athlete.saved ? `Remove ${athlete.name} from shortlist` : `Add ${athlete.name} to shortlist`}
             >
@@ -249,4 +256,4 @@ export function AthleteDiscoveryCard({
       </CardContent>
     </Card>
   );
-}
+});

@@ -1,10 +1,4 @@
 import type { Config } from 'jest';
-import nextJest from 'next/jest.js';
-
-const createJestConfig = nextJest({
-  // Provide the path to your Next.js app to load next.config.js and .env files
-  dir: './',
-});
 
 const config: Config = {
   // Test environment
@@ -16,6 +10,13 @@ const config: Config = {
   // Module name mapping (matches tsconfig paths)
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    // Handle CSS imports (with CSS modules)
+    '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
+    // Handle CSS imports (without CSS modules)
+    '^.+\\.(css|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
+    // Handle image imports
+    '^.+\\.(png|jpg|jpeg|gif|webp|avif|ico|bmp|svg)$':
+      '<rootDir>/__mocks__/fileMock.js',
   },
 
   // Test file patterns
@@ -48,6 +49,7 @@ const config: Config = {
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
       tsconfig: 'tsconfig.json',
+      useESM: true,
     }],
   },
 
@@ -58,8 +60,13 @@ const config: Config = {
     '<rootDir>/e2e/',
   ],
 
+  // Transform ignore patterns - don't transform node_modules except certain packages
+  transformIgnorePatterns: [
+    '/node_modules/(?!(lucide-react|recharts|@?react-|@supabase)/)',
+  ],
+
   // Module file extensions
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 };
 
-export default createJestConfig(config);
+export default config;

@@ -3,6 +3,10 @@
  * Web Vitals tracking, long task observation, and memory monitoring
  */
 
+import { createLogger } from '@/lib/utils/logger';
+
+const log = createLogger('Performance');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
@@ -121,7 +125,7 @@ function reportMetric(metric: WebVitalMetric): void {
     try {
       reporter(metric);
     } catch (error) {
-      console.error('[Performance] Reporter error:', error);
+      log.error('Reporter error', error instanceof Error ? error : new Error(String(error)));
     }
   });
 }
@@ -131,7 +135,7 @@ function reportLongTask(entry: LongTaskEntry): void {
     try {
       reporter(entry);
     } catch (error) {
-      console.error('[Performance] Long task reporter error:', error);
+      log.error('Long task reporter error', error instanceof Error ? error : new Error(String(error)));
     }
   });
 }
@@ -141,7 +145,7 @@ function reportMemory(info: MemoryInfo): void {
     try {
       reporter(info);
     } catch (error) {
-      console.error('[Performance] Memory reporter error:', error);
+      log.error('Memory reporter error', error instanceof Error ? error : new Error(String(error)));
     }
   });
 }
@@ -501,30 +505,28 @@ export function createConsoleReporter(): {
   longTaskReporter: LongTaskReporter;
   memoryReporter: MemoryReporter;
 } {
-  const ratingColors = {
-    good: '\x1b[32m',      // Green
-    'needs-improvement': '\x1b[33m', // Yellow
-    poor: '\x1b[31m',      // Red
-  };
-  const reset = '\x1b[0m';
-
   return {
     metricReporter: (metric) => {
-      const color = ratingColors[metric.rating];
-      console.log(
-        `[Web Vital] ${metric.name}: ${color}${formatMetricValue(metric)}${reset} (${metric.rating})`
-      );
+      log.debug(`Web Vital ${metric.name}: ${formatMetricValue(metric)}`, {
+        name: metric.name,
+        value: metric.value,
+        rating: metric.rating,
+        delta: metric.delta,
+      });
     },
     longTaskReporter: (entry) => {
-      console.warn(
-        `[Long Task] ${entry.name}: ${entry.duration.toFixed(2)}ms at ${entry.startTime.toFixed(2)}ms`
-      );
+      log.warn('Long task detected', {
+        name: entry.name,
+        duration: entry.duration,
+        startTime: entry.startTime,
+      });
     },
     memoryReporter: (info) => {
-      console.log(
-        `[Memory] Used: ${formatMemorySize(info.usedJSHeapSize)} / ` +
-        `${formatMemorySize(info.jsHeapSizeLimit)} (${info.usagePercentage.toFixed(1)}%)`
-      );
+      log.debug('Memory usage', {
+        usedJSHeapSize: formatMemorySize(info.usedJSHeapSize),
+        jsHeapSizeLimit: formatMemorySize(info.jsHeapSizeLimit),
+        usagePercentage: `${info.usagePercentage.toFixed(1)}%`,
+      });
     },
   };
 }

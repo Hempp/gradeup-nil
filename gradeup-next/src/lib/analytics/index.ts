@@ -5,6 +5,10 @@
  * different backends (Mixpanel, Google Analytics, PostHog, etc.)
  */
 
+import { createLogger } from '@/lib/utils/logger';
+
+const log = createLogger('Analytics');
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
@@ -213,7 +217,7 @@ function sendToProvider(action: ProviderAction, data: unknown): void {
         userId,
       }),
     }).catch((error) => {
-      console.error('[Analytics] Failed to send event:', error);
+      log.error('Failed to send event', error instanceof Error ? error : new Error(String(error)));
     });
   }
 }

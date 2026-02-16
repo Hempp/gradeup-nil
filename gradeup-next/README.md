@@ -241,15 +241,23 @@ The project includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that
 
 ## Deployment
 
-The application is configured for deployment on Vercel:
+The application is configured for deployment on Vercel. For comprehensive deployment instructions, including:
 
-1. Connect your GitHub repository to Vercel
-2. Configure environment variables in Vercel dashboard
-3. Deploy automatically on push to `main` branch
+- Environment variable configuration
+- Database migrations
+- Stripe/Resend/Sentry setup
+- Post-deployment checklist
+- Troubleshooting guide
+
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the complete deployment guide.
+
+### Quick Deploy
 
 ```bash
-# Manual deployment with Vercel CLI
+# Deploy to Vercel
 vercel --prod
+
+# Or connect your GitHub repository to Vercel for automatic deployments
 ```
 
 ## Contributing
