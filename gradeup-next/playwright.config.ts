@@ -39,6 +39,10 @@ export default defineConfig({
 
     // Record video only when retrying
     video: 'on-first-retry',
+
+    // Reduce motion to disable heavy animations during tests
+    // This triggers prefersReducedMotion checks in the app
+    reducedMotion: 'reduce',
   },
 
   // Only test on Chromium for speed

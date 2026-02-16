@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-// Skip flaky navigation tests - pages have heavy animations causing timeouts
-// TODO: Optimize page performance or implement test-specific reduced animations
+// Navigation tests - uses reducedMotion: 'reduce' in Playwright config
+// to disable heavy animations during testing
 test.describe('Basic Navigation', () => {
-  test.skip('home page loads and displays hero section', async ({ page }) => {
+  test('home page loads and displays hero section', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -20,7 +20,7 @@ test.describe('Basic Navigation', () => {
     await expect(page.getByRole('link', { name: /partner as brand/i })).toBeVisible();
   });
 
-  test.skip('can navigate to login page', async ({ page }) => {
+  test('can navigate to login page', async ({ page }) => {
     await page.goto('/login', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -30,7 +30,7 @@ test.describe('Basic Navigation', () => {
     await expect(page.getByText('Sign in to your GradeUp account')).toBeVisible();
   });
 
-  test.skip('can navigate to signup page', async ({ page }) => {
+  test('can navigate to signup page', async ({ page }) => {
     await page.goto('/signup', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -44,7 +44,7 @@ test.describe('Basic Navigation', () => {
     await expect(page.getByText("I'm a Brand")).toBeVisible();
   });
 
-  test.skip('can navigate to athlete signup from signup page', async ({ page }) => {
+  test('can navigate to athlete signup from signup page', async ({ page }) => {
     await page.goto('/signup', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -57,7 +57,7 @@ test.describe('Basic Navigation', () => {
     await expect(page).toHaveURL('/signup/athlete');
   });
 
-  test.skip('can navigate to brand signup from signup page', async ({ page }) => {
+  test('can navigate to brand signup from signup page', async ({ page }) => {
     await page.goto('/signup', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -70,7 +70,7 @@ test.describe('Basic Navigation', () => {
     await expect(page).toHaveURL('/signup/brand');
   });
 
-  test.skip('login page has link to signup', async ({ page }) => {
+  test('login page has link to signup', async ({ page }) => {
     await page.goto('/login', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -83,7 +83,7 @@ test.describe('Basic Navigation', () => {
     await expect(page).toHaveURL('/signup');
   });
 
-  test.skip('signup page has link to login', async ({ page }) => {
+  test('signup page has link to login', async ({ page }) => {
     await page.goto('/signup', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -96,7 +96,7 @@ test.describe('Basic Navigation', () => {
     await expect(page).toHaveURL('/login');
   });
 
-  test.skip('can navigate to forgot password from login', async ({ page }) => {
+  test('can navigate to forgot password from login', async ({ page }) => {
     await page.goto('/login', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -109,7 +109,7 @@ test.describe('Basic Navigation', () => {
     await expect(page).toHaveURL('/forgot-password');
   });
 
-  test.skip('hero section CTAs navigate correctly', async ({ page }) => {
+  test('hero section CTAs navigate correctly', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
