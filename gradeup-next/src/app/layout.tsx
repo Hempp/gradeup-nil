@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
@@ -6,6 +7,8 @@ import { KeyboardShortcutsProvider } from "@/components/ui/keyboard-shortcuts";
 import { AuthProvider } from "@/context";
 import { WebVitalsReporter } from "@/components/analytics/web-vitals-reporter";
 import { NavigationProgressBar } from "@/components/ui/navigation-progress";
+import { GoogleAnalytics } from "@/components/providers/google-analytics";
+import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -84,15 +87,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
           <ToastProvider>
             <KeyboardShortcutsProvider>
-              <ToastGlobalHandler />
-              <NavigationProgressBar />
-              {children}
+              <Suspense fallback={null}>
+                <AnalyticsProvider>
+                  <ToastGlobalHandler />
+                  <NavigationProgressBar />
+                  {children}
+                </AnalyticsProvider>
+              </Suspense>
             </KeyboardShortcutsProvider>
           </ToastProvider>
         </AuthProvider>

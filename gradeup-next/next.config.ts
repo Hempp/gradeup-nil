@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 // Security headers for production
 const securityHeaders = [
@@ -81,4 +82,14 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Export with Sentry configuration
+// Note: Sentry will only be active when SENTRY_DSN is configured
+export default withSentryConfig(nextConfig, {
+  // Suppress source map upload warnings during build
+  silent: true,
+  // Source map configuration
+  sourcemaps: {
+    // Don't delete source maps after upload
+    deleteSourcemapsAfterUpload: false,
+  },
+});

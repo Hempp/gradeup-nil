@@ -3,6 +3,8 @@
  * Provides consistent error handling, logging, and user-friendly messages
  */
 
+import * as Sentry from '@sentry/nextjs';
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
@@ -268,10 +270,32 @@ export function logError(
     console.groupEnd();
   }
 
-  // In production, send to monitoring service
+  // In production, send to Sentry
   if (process.env.NODE_ENV === 'production' && error.severity !== 'low') {
-    // TODO: Send to error monitoring service (e.g., Sentry, LogRocket)
-    // sendToErrorMonitoring(entry);
+    const severityMap: Record<ErrorSeverity, Sentry.SeverityLevel> = {
+      low: 'info',
+      medium: 'warning',
+      high: 'error',
+      critical: 'fatal',
+    };
+
+    Sentry.withScope((scope) => {
+      scope.setLevel(severityMap[error.severity]);
+      scope.setTag('error_code', error.code);
+      scope.setExtra('userMessage', error.userMessage);
+      if (error.context) {
+        scope.setExtras(error.context);
+      }
+      if (options?.userId) {
+        scope.setUser({ id: options.userId });
+      }
+
+      if (error.originalError) {
+        Sentry.captureException(error.originalError);
+      } else {
+        Sentry.captureMessage(error.message, severityMap[error.severity]);
+      }
+    });
   }
 }
 

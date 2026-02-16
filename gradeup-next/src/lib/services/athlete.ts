@@ -257,7 +257,16 @@ export async function searchAthletes(
 
     // Apply search filter (searches profile names)
     if (filters.search && filters.search.trim()) {
-      const searchTerm = filters.search.trim().toLowerCase();
+      // Sanitize search term to prevent SQL LIKE pattern injection
+      // Escape special characters: % _ \ ' " that have meaning in LIKE patterns or SQL
+      const rawSearch = filters.search.trim().toLowerCase();
+      const searchTerm = rawSearch
+        .replace(/\\/g, '\\\\')  // Escape backslashes first
+        .replace(/%/g, '\\%')    // Escape wildcards
+        .replace(/_/g, '\\_')    // Escape single-char wildcards
+        .replace(/'/g, "''")     // Escape single quotes
+        .replace(/"/g, '\\"');   // Escape double quotes
+
       // Use textSearch or ilike on profile fields through a different approach
       // Since we can't easily filter on joined tables, we'll use a stored procedure or
       // filter on athlete-level searchable fields if available
