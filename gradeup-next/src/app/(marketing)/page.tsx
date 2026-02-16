@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -27,6 +27,18 @@ import {
 } from '@/lib/hooks/use-landing-data';
 import { LazyDashboardPreview } from '@/components/marketing';
 
+// Skeleton loader for lazy sections
+function SectionSkeleton() {
+  return (
+    <div className="py-20 flex items-center justify-center">
+      <div className="animate-pulse flex flex-col items-center gap-4">
+        <div className="h-8 w-48 bg-white/10 rounded" />
+        <div className="h-4 w-72 bg-white/5 rounded" />
+      </div>
+    </div>
+  );
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // HERO SECTION
 // ═══════════════════════════════════════════════════════════════════════════
@@ -44,40 +56,45 @@ function AnimatedCounter({
 }) {
   const [count, setCount] = useState(skipAnimation ? target : 0);
   const ref = useRef<HTMLSpanElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(skipAnimation);
+  const hasAnimatedRef = useRef(skipAnimation);
 
   useEffect(() => {
-    // Skip if animation already ran or disabled - state is already correct
-    if (skipAnimation || hasAnimated) {
+    // Skip observer setup entirely if animation disabled
+    if (skipAnimation || hasAnimatedRef.current) {
+      setCount(target);
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          const duration = 2000;
-          const steps = 60;
-          const increment = target / steps;
-          let current = 0;
+        if (entries[0].isIntersecting && !hasAnimatedRef.current) {
+          hasAnimatedRef.current = true;
+          // Use requestAnimationFrame for smoother animation
+          const duration = 1500; // Reduced from 2000ms
+          const startTime = performance.now();
 
-          const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-              setCount(target);
-              clearInterval(timer);
+          const animate = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Easing function for natural feel
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(target * eased * 10) / 10);
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
             } else {
-              setCount(Math.floor(current * 10) / 10);
+              setCount(target);
             }
-          }, duration / steps);
+          };
+          requestAnimationFrame(animate);
         }
       },
-      { threshold: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.2 : 0.5 }
+      { threshold: 0.3, rootMargin: '50px' }
     );
 
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [target, skipAnimation, hasAnimated]);
+  }, [target, skipAnimation]);
 
   return (
     <span ref={ref}>
@@ -101,18 +118,26 @@ function HeroSection() {
       aria-label="Hero - Turn your GPA into earnings"
       role="region"
     >
-      {/* Background Effects */}
+      {/* Background Effects - simplified for performance */}
       <div className="absolute inset-0">
-        {/* Morphing blob backgrounds */}
-        <div className="blob-cyan blob-morph absolute -top-40 -left-40 w-[500px] h-[500px]" />
-        <div className="blob-magenta blob-morph absolute -bottom-40 -right-40 w-[600px] h-[600px]" style={{ animationDelay: '-3s' }} />
-        <div className="blob-lime blob-morph absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]" style={{ animationDelay: '-5s' }} />
+        {/* Static gradient background for better performance */}
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            background: 'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255, 0, 200, 0.1) 0%, transparent 50%)',
+          }}
+        />
 
-        {/* Mesh gradient layer */}
-        <div className="absolute inset-0 mesh-gradient-bg opacity-30" />
+        {/* Only show morphing blobs if reduced motion is not preferred */}
+        {!prefersReducedMotion && (
+          <>
+            <div className="blob-cyan blob-morph absolute -top-40 -left-40 w-[500px] h-[500px] will-change-transform" />
+            <div className="blob-magenta blob-morph absolute -bottom-40 -right-40 w-[600px] h-[600px] will-change-transform" style={{ animationDelay: '-3s' }} />
+          </>
+        )}
 
         {/* Grid pattern */}
-        <div className="absolute inset-0 hero-grid opacity-50" />
+        <div className="absolute inset-0 hero-grid opacity-30" />
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black" />
@@ -231,6 +256,7 @@ function HeroSection() {
                       fill
                       className="object-cover"
                       priority
+                      sizes="(max-width: 640px) 256px, 288px"
                     />
                     {/* Verified Badge */}
                     <div className="absolute top-3 right-3 verified-badge-marketing p-1.5 shadow-lg">
@@ -285,13 +311,20 @@ function PartnerLogosSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    // Check if reduced motion is preferred - skip animation setup
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          observer.disconnect(); // Disconnect after first trigger
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1, rootMargin: '100px' }
     );
 
     if (sectionRef.current) {
@@ -357,6 +390,7 @@ function PartnerLogosSection() {
                   width={40}
                   height={40}
                   className="w-10 h-10 object-contain"
+                  loading="lazy"
                 />
               </div>
               <span className="text-xs text-[var(--marketing-gray-500)] group-hover:text-white transition-colors font-medium">
@@ -394,6 +428,7 @@ function PartnerLogosSection() {
                   className={`h-7 md:h-9 w-auto object-contain transition-opacity ${
                     brand.invert ? 'brightness-0 invert opacity-70 group-hover:opacity-100' : 'opacity-90 group-hover:opacity-100'
                   }`}
+                  loading="lazy"
                 />
               </div>
             ))}
@@ -418,6 +453,8 @@ function AthleteCard({ athlete }: { athlete: FeaturedAthlete }) {
           alt={athlete.name}
           fill
           className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
         {athlete.verified && (
           <div className="absolute top-3 right-3 verified-badge-marketing p-1.5 shadow-md">
@@ -1021,6 +1058,7 @@ function TestimonialsSection() {
                   width={48}
                   height={48}
                   className="rounded-full object-cover"
+                  loading="lazy"
                 />
                 <div className="flex-1">
                   <div className="font-semibold text-white">{testimonial.name}</div>
@@ -1081,6 +1119,7 @@ function FinalCTASection() {
                 width={32}
                 height={32}
                 className="w-8 h-8 rounded-full border-2 border-black/20 object-cover"
+                loading="lazy"
               />
             ))}
           </div>
