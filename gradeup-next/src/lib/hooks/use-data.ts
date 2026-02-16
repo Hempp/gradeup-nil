@@ -208,6 +208,214 @@ const demoComplianceAlerts: ComplianceAlert[] = [
   },
 ];
 
+// Demo athletes for brand shortlist and director school athletes
+const demoAthletes: Athlete[] = [
+  {
+    id: 'demo-athlete-1',
+    profile_id: 'demo-profile-1',
+    name: 'Marcus Johnson',
+    first_name: 'Marcus',
+    last_name: 'Johnson',
+    email: 'marcus.johnson@duke.edu',
+    gpa: 3.87,
+    school_id: 'duke-university',
+    sport_id: 'basketball',
+    major: 'Business Administration',
+    position: 'Point Guard',
+    gender: 'Male',
+    jersey_number: '23',
+    hometown: 'Chicago, IL',
+    academic_year: 'Junior',
+    avatar_url: undefined,
+    instagram_handle: '@marcusjohnson',
+    total_followers: 125000,
+    enrollment_verified: true,
+    sport_verified: true,
+    grades_verified: true,
+    identity_verified: true,
+    created_at: '2024-08-15T10:00:00Z',
+    updated_at: '2026-02-10T10:00:00Z',
+    school: {
+      id: 'duke-university',
+      name: 'Duke University',
+      short_name: 'Duke',
+      city: 'Durham',
+      state: 'NC',
+      division: 'Division I',
+      conference: 'ACC',
+    },
+    sport: {
+      id: 'basketball',
+      name: 'Basketball',
+      category: 'Team Sports',
+      gender: 'Men',
+    },
+  },
+  {
+    id: 'demo-athlete-2',
+    profile_id: 'demo-profile-2',
+    name: 'Sarah Williams',
+    first_name: 'Sarah',
+    last_name: 'Williams',
+    email: 'sarah.williams@stanford.edu',
+    gpa: 3.92,
+    school_id: 'stanford-university',
+    sport_id: 'soccer',
+    major: 'Computer Science',
+    position: 'Forward',
+    gender: 'Female',
+    jersey_number: '10',
+    hometown: 'Seattle, WA',
+    academic_year: 'Senior',
+    avatar_url: undefined,
+    instagram_handle: '@sarahwilliams',
+    total_followers: 89000,
+    enrollment_verified: true,
+    sport_verified: true,
+    grades_verified: true,
+    identity_verified: true,
+    created_at: '2023-09-01T10:00:00Z',
+    updated_at: '2026-02-08T10:00:00Z',
+    school: {
+      id: 'stanford-university',
+      name: 'Stanford University',
+      short_name: 'Stanford',
+      city: 'Stanford',
+      state: 'CA',
+      division: 'Division I',
+      conference: 'Pac-12',
+    },
+    sport: {
+      id: 'soccer',
+      name: 'Soccer',
+      category: 'Team Sports',
+      gender: 'Women',
+    },
+  },
+  {
+    id: 'demo-athlete-3',
+    profile_id: 'demo-profile-3',
+    name: 'Jordan Davis',
+    first_name: 'Jordan',
+    last_name: 'Davis',
+    email: 'jordan.davis@osu.edu',
+    gpa: 3.65,
+    school_id: 'ohio-state',
+    sport_id: 'football',
+    major: 'Sports Management',
+    position: 'Quarterback',
+    gender: 'Male',
+    jersey_number: '7',
+    hometown: 'Columbus, OH',
+    academic_year: 'Sophomore',
+    avatar_url: undefined,
+    instagram_handle: '@jordandavis',
+    total_followers: 210000,
+    enrollment_verified: true,
+    sport_verified: true,
+    grades_verified: false,
+    identity_verified: true,
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2026-02-05T10:00:00Z',
+    school: {
+      id: 'ohio-state',
+      name: 'Ohio State University',
+      short_name: 'OSU',
+      city: 'Columbus',
+      state: 'OH',
+      division: 'Division I',
+      conference: 'Big Ten',
+    },
+    sport: {
+      id: 'football',
+      name: 'Football',
+      category: 'Team Sports',
+      gender: 'Men',
+    },
+  },
+  {
+    id: 'demo-athlete-4',
+    profile_id: 'demo-profile-4',
+    name: 'Emma Chen',
+    first_name: 'Emma',
+    last_name: 'Chen',
+    email: 'emma.chen@ucla.edu',
+    gpa: 3.95,
+    school_id: 'ucla',
+    sport_id: 'gymnastics',
+    major: 'Psychology',
+    position: 'All-Around',
+    gender: 'Female',
+    hometown: 'San Jose, CA',
+    academic_year: 'Junior',
+    avatar_url: undefined,
+    instagram_handle: '@emmachen',
+    total_followers: 150000,
+    enrollment_verified: true,
+    sport_verified: true,
+    grades_verified: true,
+    identity_verified: true,
+    created_at: '2023-08-20T10:00:00Z',
+    updated_at: '2026-02-12T10:00:00Z',
+    school: {
+      id: 'ucla',
+      name: 'UCLA',
+      short_name: 'UCLA',
+      city: 'Los Angeles',
+      state: 'CA',
+      division: 'Division I',
+      conference: 'Pac-12',
+    },
+    sport: {
+      id: 'gymnastics',
+      name: 'Gymnastics',
+      category: 'Individual Sports',
+      gender: 'Women',
+    },
+  },
+  {
+    id: 'demo-athlete-5',
+    profile_id: 'demo-profile-5',
+    name: 'DeShawn Williams',
+    first_name: 'DeShawn',
+    last_name: 'Williams',
+    email: 'deshawn.williams@alabama.edu',
+    gpa: 3.52,
+    school_id: 'alabama',
+    sport_id: 'football',
+    major: 'Communications',
+    position: 'Running Back',
+    gender: 'Male',
+    jersey_number: '22',
+    hometown: 'Atlanta, GA',
+    academic_year: 'Senior',
+    avatar_url: undefined,
+    instagram_handle: '@deshawnwilliams',
+    total_followers: 320000,
+    enrollment_verified: true,
+    sport_verified: true,
+    grades_verified: true,
+    identity_verified: true,
+    created_at: '2022-08-15T10:00:00Z',
+    updated_at: '2026-02-01T10:00:00Z',
+    school: {
+      id: 'alabama',
+      name: 'University of Alabama',
+      short_name: 'Alabama',
+      city: 'Tuscaloosa',
+      state: 'AL',
+      division: 'Division I',
+      conference: 'SEC',
+    },
+    sport: {
+      id: 'football',
+      name: 'Football',
+      category: 'Team Sports',
+      gender: 'Men',
+    },
+  },
+];
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Types & Interfaces
 // ═══════════════════════════════════════════════════════════════════════════
@@ -632,6 +840,11 @@ export function useBrandAnalytics(brandId?: string): UseDataResult<BrandAnalytic
  */
 export function useBrandShortlist(brandId?: string): UseDataResult<Athlete[]> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: demoAthletes.slice(0, 5), error: null };
+    }
+
     try {
       const { getShortlistedAthletes } = await import('@/lib/services/brand');
       const result = await getShortlistedAthletes(brandId);
@@ -681,6 +894,11 @@ export function useDirectorStats(): UseDataResult<DirectorStats> {
  */
 export function useSchoolAthletes(page: number = 1): UseDataResult<{ athletes: Athlete[]; total: number }> {
   const fetcher = useCallback(async () => {
+    // Return demo data in demo mode
+    if (isDemoMode()) {
+      return { data: { athletes: demoAthletes, total: demoAthletes.length }, error: null };
+    }
+
     try {
       const { getSchoolAthletes } = await import('@/lib/services/director');
       const result = await getSchoolAthletes(page);
