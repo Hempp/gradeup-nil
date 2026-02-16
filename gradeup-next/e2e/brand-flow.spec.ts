@@ -535,7 +535,7 @@ test.describe('Brand Settings Page', () => {
 });
 
 test.describe('Brand Athlete Detail Page', () => {
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page: _page, context }) => {
     await setupBrandDemoMode(context);
   });
 

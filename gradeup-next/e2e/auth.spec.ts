@@ -1,4 +1,4 @@
-import { test, expect, type Page, type BrowserContext } from '@playwright/test';
+import { test, expect, type Page as _Page, type BrowserContext } from '@playwright/test';
 
 // Helper to set demo mode cookie
 async function setDemoRole(context: BrowserContext, role: 'athlete' | 'brand' | 'director') {

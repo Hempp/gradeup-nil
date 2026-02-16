@@ -781,7 +781,7 @@ test.describe('Director Bulk Actions', () => {
 });
 
 test.describe('Director Data Export', () => {
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page: _page, context }) => {
     await setupDirectorDemoMode(context);
   });
 

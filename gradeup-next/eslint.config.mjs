@@ -32,6 +32,13 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  {
+    // Test file overrides - allow require() for Jest mock patterns
+    files: ["**/__tests__/**/*", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/e2e/**/*"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;
