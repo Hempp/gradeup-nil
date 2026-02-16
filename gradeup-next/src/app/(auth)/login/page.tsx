@@ -362,6 +362,30 @@ export default function LoginPage() {
               Sign up
             </Link>
           </p>
+
+          {/* Demo Mode Access */}
+          {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
+            <div className="mt-6 pt-6 border-t border-white/10">
+              <p className="text-center text-xs text-white/40 mb-3">Demo Mode</p>
+              <div className="flex gap-2">
+                <Link href="/athlete/dashboard" className="flex-1">
+                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
+                    Athlete Demo
+                  </Button>
+                </Link>
+                <Link href="/brand/dashboard" className="flex-1">
+                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
+                    Brand Demo
+                  </Button>
+                </Link>
+                <Link href="/director/dashboard" className="flex-1">
+                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
+                    Director Demo
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
         </form>
       </CardContent>
     </Card>
