@@ -474,12 +474,12 @@ function DeliverablesTab({ campaign }: { campaign: CampaignData }) {
       deliverables: campaign.deliverables.filter(d => d.athleteId === athlete.id),
     }));
 
-  const handleApprove = (deliverableId: string) => {
-    console.log('Approve:', deliverableId);
+  const handleApprove = (_deliverableId: string) => {
+    // TODO: Implement deliverable approval via API
   };
 
-  const handleReject = (deliverableId: string) => {
-    console.log('Reject:', deliverableId);
+  const handleReject = (_deliverableId: string) => {
+    // TODO: Implement deliverable rejection via API
   };
 
   return (

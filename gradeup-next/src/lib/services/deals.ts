@@ -331,7 +331,7 @@ export async function submitCounterOffer(
       created_at: new Date().toISOString(),
     });
 
-  if (historyError) {
+  if (historyError && process.env.NODE_ENV === 'development') {
     console.warn('Failed to log counter offer to history:', historyError.message);
     // Continue with the update even if history logging fails
   }

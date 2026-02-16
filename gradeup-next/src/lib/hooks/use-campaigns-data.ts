@@ -201,7 +201,9 @@ export function useBrandCampaigns(): UseCampaignsResult {
         if (abortController.signal.aborted) return;
 
         if (result.error || !result.data) {
-          console.warn('Using mock campaigns:', result.error?.message);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Using mock campaigns:', result.error?.message);
+          }
           setData(mockCampaigns);
         } else if (result.data.length === 0) {
           // No campaigns yet, show mock data as placeholder
@@ -228,7 +230,9 @@ export function useBrandCampaigns(): UseCampaignsResult {
         }
       } catch (err) {
         if (abortController.signal.aborted) return;
-        console.error('Error fetching campaigns:', err);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching campaigns:', err);
+        }
         setError(err instanceof Error ? err : new Error('Failed to fetch campaigns'));
         setData(mockCampaigns);
       } finally {

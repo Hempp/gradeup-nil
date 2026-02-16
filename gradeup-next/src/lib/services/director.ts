@@ -105,7 +105,7 @@ export async function getDirectorStats(): Promise<ServiceResult<DirectorStats>> 
       .select('id, status, compensation_amount')
       .in('athlete_id', athleteIds.length > 0 ? athleteIds : ['none']);
 
-    if (dealsError) {
+    if (dealsError && process.env.NODE_ENV === 'development') {
       console.warn('Error fetching deals:', dealsError);
     }
 
@@ -206,7 +206,7 @@ export async function getComplianceAlerts(): Promise<ServiceResult<ComplianceAle
       .lt('gpa', 2.5)
       .not('gpa', 'is', null);
 
-    if (athletesError) {
+    if (athletesError && process.env.NODE_ENV === 'development') {
       console.warn('Error fetching low GPA athletes:', athletesError);
     }
 

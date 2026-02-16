@@ -180,14 +180,18 @@ export function useEarningsStats(): UseEarningsResult<EarningsStats> {
         if (cancelled) return;
 
         if (result.error || !result.data) {
-          console.warn('Using mock earnings stats:', result.error?.message);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Using mock earnings stats:', result.error?.message);
+          }
           setData(mockEarningsStats);
         } else {
           setData(transformEarningsSummary(result.data));
         }
       } catch (err) {
         if (cancelled) return;
-        console.error('Error fetching earnings stats:', err);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching earnings stats:', err);
+        }
         setError(err instanceof Error ? err : new Error('Failed to fetch earnings'));
         setData(mockEarningsStats);
       } finally {
@@ -229,7 +233,9 @@ export function usePayoutHistory(): UseEarningsResult<Payout[]> {
         if (cancelled) return;
 
         if (result.error || !result.data) {
-          console.warn('Using mock payout history:', result.error?.message);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Using mock payout history:', result.error?.message);
+          }
           setData(mockPayouts);
         } else {
           const transformed = result.data.map(transformPayment);
@@ -237,7 +243,9 @@ export function usePayoutHistory(): UseEarningsResult<Payout[]> {
         }
       } catch (err) {
         if (cancelled) return;
-        console.error('Error fetching payout history:', err);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching payout history:', err);
+        }
         setError(err instanceof Error ? err : new Error('Failed to fetch payouts'));
         setData(mockPayouts);
       } finally {
@@ -279,7 +287,9 @@ export function useMonthlyEarnings(): UseEarningsResult<MonthlyEarning[]> {
         if (cancelled) return;
 
         if (result.error || !result.data) {
-          console.warn('Using mock monthly earnings:', result.error?.message);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Using mock monthly earnings:', result.error?.message);
+          }
           setData(mockMonthlyEarnings);
         } else {
           const transformed = transformMonthlyBreakdown(result.data.monthly_breakdown);
@@ -287,7 +297,9 @@ export function useMonthlyEarnings(): UseEarningsResult<MonthlyEarning[]> {
         }
       } catch (err) {
         if (cancelled) return;
-        console.error('Error fetching monthly earnings:', err);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching monthly earnings:', err);
+        }
         setError(err instanceof Error ? err : new Error('Failed to fetch monthly data'));
         setData(mockMonthlyEarnings);
       } finally {

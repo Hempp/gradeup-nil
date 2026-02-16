@@ -141,7 +141,7 @@ export async function approveVerification(
       })
       .eq('id', athleteId);
 
-    if (athleteError) {
+    if (athleteError && process.env.NODE_ENV === 'development') {
       console.warn(`Failed to update athlete verification status: ${athleteError.message}`);
     }
   }
@@ -195,7 +195,7 @@ export async function revokeVerification(
       })
       .eq('id', athleteId);
 
-    if (athleteError) {
+    if (athleteError && process.env.NODE_ENV === 'development') {
       console.warn(`Failed to update athlete verification status: ${athleteError.message}`);
     }
   }

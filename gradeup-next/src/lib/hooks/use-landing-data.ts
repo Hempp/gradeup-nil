@@ -82,7 +82,10 @@ export function useFeaturedAthletes(limit: number = 4): UseLandingDataResult<Fea
         setError(null);
       }
     } catch (err) {
-      console.warn('Featured athletes fetch failed, using mock data:', err);
+      // Silently fall back to mock data in production
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Featured athletes fetch failed, using mock data:', err);
+      }
       if (isMountedRef.current) {
         setData(mockFeaturedAthletes);
         setError(err instanceof Error ? err : new Error('Failed to fetch athletes'));
@@ -152,11 +155,12 @@ export function useLandingStats(): UseLandingDataResult<LandingStats> {
     try {
       const supabase = createClient();
 
-      // Fetch counts in parallel
-      const [athleteResult, brandResult, dealResult, gpaResult] = await Promise.all([
+      // Fetch counts and compensation data in parallel
+      const [athleteResult, brandResult, completedDealsResult, allDealsResult, gpaResult] = await Promise.all([
         supabase.from('athletes').select('id', { count: 'exact', head: true }),
         supabase.from('brands').select('id', { count: 'exact', head: true }),
-        supabase.from('deals').select('id', { count: 'exact', head: true }).eq('status', 'completed'),
+        supabase.from('deals').select('id, compensation_amount').eq('status', 'completed'),
+        supabase.from('deals').select('id', { count: 'exact', head: true }),
         supabase.from('athletes').select('gpa').not('gpa', 'is', null),
       ]);
 
@@ -167,14 +171,34 @@ export function useLandingStats(): UseLandingDataResult<LandingStats> {
         avgGpa = Math.round((totalGpa / gpaResult.data.length) * 10) / 10;
       }
 
+      // Calculate total paid out and average deal value from completed deals
+      let totalPaidOut = mockLandingStats.totalPaidOut;
+      let avgDealValue = mockLandingStats.avgDealValue;
+      const completedDeals = completedDealsResult.data || [];
+
+      if (completedDeals.length > 0) {
+        totalPaidOut = completedDeals.reduce(
+          (sum, deal) => sum + (deal.compensation_amount || 0),
+          0
+        );
+        avgDealValue = Math.round(totalPaidOut / completedDeals.length);
+      }
+
+      // Calculate conversion rate (completed deals / total deals)
+      const totalDealsCount = allDealsResult.count || 0;
+      const completedCount = completedDeals.length;
+      const conversionRate = totalDealsCount > 0
+        ? Math.round((completedCount / totalDealsCount) * 100)
+        : mockLandingStats.conversionRate;
+
       const stats: LandingStats = {
         athletes: athleteResult.count || mockLandingStats.athletes,
         brands: brandResult.count || mockLandingStats.brands,
         avgGpa,
-        totalDeals: dealResult.count || mockLandingStats.totalDeals,
-        totalPaidOut: mockLandingStats.totalPaidOut,
-        avgDealValue: mockLandingStats.avgDealValue,
-        conversionRate: mockLandingStats.conversionRate,
+        totalDeals: completedCount || mockLandingStats.totalDeals,
+        totalPaidOut,
+        avgDealValue,
+        conversionRate,
       };
 
       if (isMountedRef.current) {
@@ -182,7 +206,10 @@ export function useLandingStats(): UseLandingDataResult<LandingStats> {
         setError(null);
       }
     } catch (err) {
-      console.warn('Landing stats fetch failed, using mock data:', err);
+      // Silently fall back to mock data in production
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Landing stats fetch failed, using mock data:', err);
+      }
       if (isMountedRef.current) {
         setData(mockLandingStats);
         setError(err instanceof Error ? err : new Error('Failed to fetch stats'));
@@ -298,7 +325,10 @@ export function useLandingOpportunities(
         setError(null);
       }
     } catch (err) {
-      console.warn('Opportunities fetch failed, using mock data:', err);
+      // Silently fall back to mock data in production
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Opportunities fetch failed, using mock data:', err);
+      }
       if (isMountedRef.current) {
         // Fall back to filtered mock data
         let filtered = [...mockOpportunities];

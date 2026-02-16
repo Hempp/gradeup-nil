@@ -445,7 +445,7 @@ export async function uploadAthleteMedia(
         .update({ cover_url: urlData.publicUrl })
         .eq('profile_id', user.id);
 
-      if (updateError) {
+      if (updateError && process.env.NODE_ENV === 'development') {
         // Cover URL might not exist in the schema, so we'll just log and continue
         console.warn('Could not update cover_url on athlete record:', updateError.message);
       }

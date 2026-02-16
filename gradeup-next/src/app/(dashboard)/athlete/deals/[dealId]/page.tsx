@@ -412,7 +412,7 @@ function MessagesTab({ deal }: { deal: DealDetail }) {
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
     // TODO: Implement actual message sending via API
-    console.log('Sending message:', newMessage);
+    // For now, just clear the input - message sending not yet implemented
     setNewMessage('');
   };
 
@@ -1046,7 +1046,9 @@ export default function DealDetailPage() {
         }
       }
     } catch (err) {
-      console.error('Failed to fetch deal:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to fetch deal:', err);
+      }
       setError(err instanceof Error ? err : new Error('Failed to load deal'));
       setDeal(null);
     } finally {
@@ -1084,7 +1086,9 @@ export default function DealDetailPage() {
       );
       router.push('/athlete/deals');
     } catch (err) {
-      console.error('Failed to accept deal:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to accept deal:', err);
+      }
       toast.error(
         'Failed to Accept Deal',
         err instanceof Error ? err.message : 'Something went wrong. Please try again.'
@@ -1103,7 +1107,9 @@ export default function DealDetailPage() {
       toast.success('Deal Declined', 'You have declined this deal. The brand will be notified.');
       router.push('/athlete/deals');
     } catch (err) {
-      console.error('Failed to decline deal:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to decline deal:', err);
+      }
       toast.error(
         'Failed to Decline Deal',
         err instanceof Error ? err.message : 'Something went wrong. Please try again.'
@@ -1147,7 +1153,9 @@ export default function DealDetailPage() {
         );
       }
     } catch (err) {
-      console.error('Failed to submit counter offer:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to submit counter offer:', err);
+      }
       toast.error(
         'Failed to Submit Counter Offer',
         err instanceof Error ? err.message : 'Something went wrong. Please try again.'

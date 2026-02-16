@@ -509,7 +509,9 @@ export async function sendMessage(
           .upload(fileName, file);
 
         if (uploadError) {
-          console.error('Failed to upload attachment:', uploadError);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('Failed to upload attachment:', uploadError);
+          }
           continue;
         }
 

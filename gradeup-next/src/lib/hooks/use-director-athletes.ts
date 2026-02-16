@@ -514,7 +514,9 @@ export function useDirectorAthletes(): UseDirectorAthletesResult {
         if (abortController.signal.aborted) return;
 
         if (result.error || !result.data) {
-          console.warn('Using mock athletes:', result.error?.message);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Using mock athletes:', result.error?.message);
+          }
           setAthletes(mockAthletes);
           setStats(mockStats);
         } else if (result.data.athletes.length === 0) {
@@ -544,7 +546,9 @@ export function useDirectorAthletes(): UseDirectorAthletesResult {
         }
       } catch (err) {
         if (abortController.signal.aborted) return;
-        console.error('Error fetching athletes:', err);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching athletes:', err);
+        }
         setError(err instanceof Error ? err : new Error('Failed to fetch athletes'));
         setAthletes(mockAthletes);
         setStats(mockStats);
