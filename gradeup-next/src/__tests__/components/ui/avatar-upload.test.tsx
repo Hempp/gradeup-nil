@@ -8,6 +8,16 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { AvatarUpload, DocumentUpload } from '@/components/ui/avatar-upload';
 
+// Mock Next.js Image component
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: (props: { src: string; alt: string; fill?: boolean; sizes?: string; priority?: boolean; className?: string }) => {
+    const { fill, sizes, priority, ...imgProps } = props;
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...imgProps} alt={props.alt} />;
+  },
+}));
+
 // Mock the upload utilities
 jest.mock('@/lib/utils/upload', () => ({
   uploadAvatar: jest.fn().mockResolvedValue({ url: 'https://example.com/avatar.jpg', path: 'avatar.jpg', error: null }),
@@ -38,8 +48,9 @@ describe('AvatarUpload', () => {
 
   it('renders current URL when provided', () => {
     render(<AvatarUpload currentUrl="https://example.com/avatar.jpg" />);
-    const avatar = screen.getByRole('img');
-    expect(avatar).toHaveAttribute('src', 'https://example.com/avatar.jpg');
+    // The Avatar component uses an img when src is provided
+    const avatarImg = document.querySelector('img[src="https://example.com/avatar.jpg"]');
+    expect(avatarImg).toBeInTheDocument();
   });
 
   it('renders camera button when not disabled', () => {

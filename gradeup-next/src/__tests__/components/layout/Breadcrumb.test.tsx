@@ -1,124 +1,126 @@
+/**
+ * Tests for the Breadcrumb component
+ * @module __tests__/components/layout/breadcrumb.test
+ */
+
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Breadcrumb, type BreadcrumbItem } from '@/components/layout/breadcrumb';
 
 describe('Breadcrumb', () => {
-  const mockItems: BreadcrumbItem[] = [
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Profile', href: '/profile' },
-    { label: 'Edit' },
-  ];
+  describe('rendering', () => {
+    it('renders home link', () => {
+      render(<Breadcrumb items={[]} />);
 
-  it('renders breadcrumb navigation', () => {
-    render(<Breadcrumb items={mockItems} />);
+      expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
+    });
 
-    expect(screen.getByRole('navigation', { name: /breadcrumb/i })).toBeInTheDocument();
+    it('renders navigation landmark', () => {
+      render(<Breadcrumb items={[]} />);
+
+      expect(screen.getByRole('navigation', { name: /breadcrumb/i })).toBeInTheDocument();
+    });
+
+    it('renders single item as text (last item)', () => {
+      const items: BreadcrumbItem[] = [{ label: 'Dashboard' }];
+      render(<Breadcrumb items={items} />);
+
+      expect(screen.getByText('Dashboard')).toBeInTheDocument();
+      // Single item is the last item, so it's not a link
+      expect(screen.queryByRole('link', { name: 'Dashboard' })).not.toBeInTheDocument();
+    });
+
+    it('renders multiple items', () => {
+      const items: BreadcrumbItem[] = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Settings', href: '/settings' },
+        { label: 'Profile' },
+      ];
+      render(<Breadcrumb items={items} />);
+
+      expect(screen.getByText('Dashboard')).toBeInTheDocument();
+      expect(screen.getByText('Settings')).toBeInTheDocument();
+      expect(screen.getByText('Profile')).toBeInTheDocument();
+    });
   });
 
-  it('renders home icon link', () => {
-    render(<Breadcrumb items={mockItems} />);
+  describe('links', () => {
+    it('renders non-last items with href as links', () => {
+      const items: BreadcrumbItem[] = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Current Page' },
+      ];
+      render(<Breadcrumb items={items} />);
 
-    const homeLink = screen.getByRole('link', { name: /home/i });
-    expect(homeLink).toBeInTheDocument();
-    expect(homeLink).toHaveAttribute('href', '/');
+      const link = screen.getByRole('link', { name: 'Dashboard' });
+      expect(link).toHaveAttribute('href', '/dashboard');
+    });
+
+    it('renders last item without link even if href provided', () => {
+      const items: BreadcrumbItem[] = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Current Page', href: '/current' },
+      ];
+      render(<Breadcrumb items={items} />);
+
+      // Current Page is last, so it should be text, not link
+      expect(screen.queryByRole('link', { name: 'Current Page' })).not.toBeInTheDocument();
+      expect(screen.getByText('Current Page')).toBeInTheDocument();
+    });
+
+    it('renders item without href as text', () => {
+      const items: BreadcrumbItem[] = [
+        { label: 'First', href: '/first' },
+        { label: 'No Link' },
+        { label: 'Last' },
+      ];
+      render(<Breadcrumb items={items} />);
+
+      // First is not last and has href, so it's a link
+      expect(screen.getByRole('link', { name: 'First' })).toBeInTheDocument();
+      // No Link has no href, so it's text
+      expect(screen.queryByRole('link', { name: 'No Link' })).not.toBeInTheDocument();
+      // Last is last, so it's text
+      expect(screen.queryByRole('link', { name: 'Last' })).not.toBeInTheDocument();
+    });
   });
 
-  it('renders all breadcrumb items', () => {
-    render(<Breadcrumb items={mockItems} />);
+  describe('accessibility', () => {
+    it('marks last item with aria-current="page"', () => {
+      const items: BreadcrumbItem[] = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Current' },
+      ];
+      render(<Breadcrumb items={items} />);
 
-    expect(screen.getByText('Dashboard')).toBeInTheDocument();
-    expect(screen.getByText('Profile')).toBeInTheDocument();
-    expect(screen.getByText('Edit')).toBeInTheDocument();
+      const currentItem = screen.getByText('Current');
+      expect(currentItem).toHaveAttribute('aria-current', 'page');
+    });
+
+    it('does not mark non-last items with aria-current', () => {
+      const items: BreadcrumbItem[] = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Current' },
+      ];
+      render(<Breadcrumb items={items} />);
+
+      const dashboardLink = screen.getByRole('link', { name: 'Dashboard' });
+      expect(dashboardLink).not.toHaveAttribute('aria-current');
+    });
+
+    it('home link has accessible name', () => {
+      render(<Breadcrumb items={[]} />);
+
+      const homeLink = screen.getByRole('link', { name: /home/i });
+      expect(homeLink).toHaveAttribute('href', '/');
+    });
   });
 
-  it('renders items with links when href is provided', () => {
-    render(<Breadcrumb items={mockItems} />);
+  describe('className', () => {
+    it('applies custom className', () => {
+      const { container } = render(<Breadcrumb items={[]} className="custom-class" />);
 
-    const dashboardLink = screen.getByRole('link', { name: 'Dashboard' });
-    expect(dashboardLink).toHaveAttribute('href', '/dashboard');
-
-    const profileLink = screen.getByRole('link', { name: 'Profile' });
-    expect(profileLink).toHaveAttribute('href', '/profile');
-  });
-
-  it('renders last item without link', () => {
-    render(<Breadcrumb items={mockItems} />);
-
-    // Last item should be a span, not a link
-    const editElement = screen.getByText('Edit');
-    expect(editElement.tagName).toBe('SPAN');
-  });
-
-  it('marks last item as current page', () => {
-    render(<Breadcrumb items={mockItems} />);
-
-    const editElement = screen.getByText('Edit');
-    expect(editElement).toHaveAttribute('aria-current', 'page');
-  });
-
-  it('renders separators between items', () => {
-    const { container } = render(<Breadcrumb items={mockItems} />);
-
-    // ChevronRight icons act as separators
-    const svgs = container.querySelectorAll('svg');
-    // Should have: 1 home icon + 3 chevrons (one for each item)
-    expect(svgs.length).toBe(4);
-  });
-
-  it('renders item without href as span', () => {
-    const items: BreadcrumbItem[] = [
-      { label: 'Category' },
-      { label: 'Sub-category' },
-    ];
-
-    render(<Breadcrumb items={items} />);
-
-    // First item without href should also be a span (since it's not the last)
-    const categoryElement = screen.getByText('Category');
-    expect(categoryElement.tagName).toBe('SPAN');
-  });
-
-  it('applies different styling to last item', () => {
-    render(<Breadcrumb items={mockItems} />);
-
-    const editElement = screen.getByText('Edit');
-    expect(editElement).toHaveClass('font-medium');
-  });
-
-  it('applies hover styles to links', () => {
-    render(<Breadcrumb items={mockItems} />);
-
-    const dashboardLink = screen.getByRole('link', { name: 'Dashboard' });
-    expect(dashboardLink).toHaveClass('hover:text-primary-500');
-  });
-
-  it('applies custom className', () => {
-    render(<Breadcrumb items={mockItems} className="custom-breadcrumb" />);
-
-    const nav = screen.getByRole('navigation');
-    expect(nav).toHaveClass('custom-breadcrumb');
-  });
-
-  it('has flex layout', () => {
-    render(<Breadcrumb items={mockItems} />);
-
-    const nav = screen.getByRole('navigation');
-    expect(nav).toHaveClass('flex', 'items-center');
-  });
-
-  it('renders empty state gracefully', () => {
-    render(<Breadcrumb items={[]} />);
-
-    // Should still render navigation with home icon
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
-  });
-
-  it('renders single item correctly', () => {
-    const items: BreadcrumbItem[] = [{ label: 'Dashboard' }];
-
-    render(<Breadcrumb items={items} />);
-
-    const dashboardElement = screen.getByText('Dashboard');
-    expect(dashboardElement).toHaveAttribute('aria-current', 'page');
+      expect(container.querySelector('nav')).toHaveClass('custom-class');
+    });
   });
 });

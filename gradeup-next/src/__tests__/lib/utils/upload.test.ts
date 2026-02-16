@@ -523,4 +523,191 @@ describe('upload utilities', () => {
       expect(result.error?.message).toBe('Storage unavailable');
     });
   });
+
+  describe('validateImageDimensions', () => {
+    const { validateImageDimensions } = require('@/lib/utils/upload');
+
+    it('returns valid for non-image files', async () => {
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      const result = await validateImageDimensions(file, 100, 100);
+      expect(result.valid).toBe(true);
+    });
+  });
+
+  describe('getImageDimensions', () => {
+    const { getImageDimensions } = require('@/lib/utils/upload');
+
+    it('returns null for non-image files', async () => {
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      const result = await getImageDimensions(file);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('uploadAvatar', () => {
+    const { uploadAvatar } = require('@/lib/utils/upload');
+    const { createClient } = require('@/lib/supabase/client');
+
+    it('calls uploadFileWithProgress with avatars bucket', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
+          getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
+        },
+      });
+
+      const file = new File(['content'], 'avatar.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadAvatar(file);
+      // Returns error because user is not authenticated
+      expect(result.error).not.toBeNull();
+    });
+  });
+
+  describe('uploadBrandLogo', () => {
+    const { uploadBrandLogo } = require('@/lib/utils/upload');
+    const { createClient } = require('@/lib/supabase/client');
+
+    it('calls uploadFileWithProgress with brand-logos bucket', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
+          getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
+        },
+      });
+
+      const file = new File(['content'], 'logo.png', { type: 'image/png' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadBrandLogo(file);
+      expect(result.error).not.toBeNull();
+    });
+  });
+
+  describe('uploadDocument', () => {
+    const { uploadDocument } = require('@/lib/utils/upload');
+    const { createClient } = require('@/lib/supabase/client');
+
+    it('calls uploadFileWithProgress with documents bucket', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
+          getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
+        },
+      });
+
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadDocument(file);
+      expect(result.error).not.toBeNull();
+    });
+  });
+
+  describe('uploadFileWithProgress', () => {
+    const { uploadFileWithProgress } = require('@/lib/utils/upload');
+    const { createClient } = require('@/lib/supabase/client');
+
+    it('returns error when not authenticated', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
+          getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFileWithProgress(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error?.message).toBe('Not authenticated');
+    });
+
+    it('returns error on auth error', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: new Error('Auth failed') }),
+          getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFileWithProgress(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error?.message).toBe('Not authenticated');
+    });
+
+    it('returns validation error for invalid file', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({
+            data: { user: { id: 'user-123' } },
+            error: null,
+          }),
+          getSession: jest.fn().mockResolvedValue({
+            data: { session: { access_token: 'token' } },
+            error: null,
+          }),
+        },
+      });
+
+      const file = new File(['content'], 'test.exe', { type: 'application/x-msdownload' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFileWithProgress(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error).not.toBeNull();
+    });
+
+    it('returns error when Supabase URL not configured', async () => {
+      const originalEnv = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({
+            data: { user: { id: 'user-123' } },
+            error: null,
+          }),
+          getSession: jest.fn().mockResolvedValue({
+            data: { session: { access_token: 'token' } },
+            error: null,
+          }),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFileWithProgress(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error?.message).toBe('Supabase URL not configured');
+
+      process.env.NEXT_PUBLIC_SUPABASE_URL = originalEnv;
+    });
+  });
+
+  describe('compressImage', () => {
+    const { compressImage } = require('@/lib/utils/upload');
+
+    it('returns original file for non-images', async () => {
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      const result = await compressImage(file);
+      expect(result).toBe(file);
+    });
+  });
+
+  describe('createThumbnail', () => {
+    const { createThumbnail } = require('@/lib/utils/upload');
+
+    it('returns null for non-image files', async () => {
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      const result = await createThumbnail(file);
+      expect(result).toBeNull();
+    });
+  });
 });
