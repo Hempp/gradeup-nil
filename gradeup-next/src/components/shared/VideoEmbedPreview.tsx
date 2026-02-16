@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Play, ExternalLink, Youtube, AlertCircle } from 'lucide-react';
 import type { VideoPlatform } from '@/types';
 import { extractYouTubeVideoId } from '@/lib/utils/validation';
@@ -149,10 +150,12 @@ export function VideoEmbedPreview({
       {/* Thumbnail */}
       <div className="aspect-video relative">
         {platform === 'youtube' && youtubeVideoId && !imageError ? (
-          <img
+          <Image
             src={getYouTubeThumbnail(youtubeVideoId)}
             alt={title || 'Video thumbnail'}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
             onError={() => setImageError(true)}
           />
         ) : (
@@ -248,10 +251,12 @@ export function VideoThumbnail({
       aria-label="Play video"
     >
       {platform === 'youtube' && youtubeVideoId && !imageError ? (
-        <img
+        <Image
           src={getYouTubeThumbnail(youtubeVideoId)}
           alt="Video thumbnail"
-          className="w-full h-full object-cover"
+          fill
+          sizes={size === 'sm' ? '96px' : size === 'md' ? '144px' : '192px'}
+          className="object-cover"
           onError={() => setImageError(true)}
         />
       ) : (

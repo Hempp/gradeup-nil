@@ -44,6 +44,19 @@ export interface VerificationHistory {
   created_at: string;
 }
 
+export interface VerificationRequestWithAthlete extends VerificationRequest {
+  athlete: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    gpa: number;
+    avatar_url?: string;
+    sport?: {
+      name: string;
+    };
+  };
+}
+
 // Service functions
 
 /**
@@ -446,7 +459,7 @@ export async function getPendingVerificationCount(
  */
 export async function getSchoolPendingVerifications(
   schoolId: string
-): Promise<{ data: (VerificationRequest & { athlete: { id: string; first_name: string; last_name: string; gpa: number; sport?: { name: string } } })[] | null; error: Error | null }> {
+): Promise<{ data: VerificationRequestWithAthlete[] | null; error: Error | null }> {
   const supabase = createClient();
 
   // Get athletes from the school
@@ -485,5 +498,5 @@ export async function getSchoolPendingVerifications(
     return { data: null, error: new Error(error.message) };
   }
 
-  return { data: data as any, error: null };
+  return { data: data as VerificationRequestWithAthlete[], error: null };
 }

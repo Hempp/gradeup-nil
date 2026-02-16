@@ -3,6 +3,9 @@
  * Export all custom hooks for easy importing
  */
 
+// Demo mode utilities
+export * from './use-demo-mode';
+
 // Data fetching hooks
 export * from './use-data';
 

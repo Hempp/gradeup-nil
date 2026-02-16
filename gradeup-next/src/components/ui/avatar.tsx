@@ -1,11 +1,16 @@
 'use client';
 
-import { forwardRef, memo, type ImgHTMLAttributes } from 'react';
+import { forwardRef, memo } from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-export interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
+export interface AvatarProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   fallback?: string;
+  src?: string;
+  alt?: string;
+  className?: string;
+  priority?: boolean;
 }
 
 const sizes = {
@@ -16,10 +21,19 @@ const sizes = {
   xl: 'h-16 w-16 text-lg',
 };
 
+const sizePixels = {
+  xs: 24,
+  sm: 32,
+  md: 40,
+  lg: 48,
+  xl: 64,
+};
+
 const Avatar = memo(forwardRef<HTMLDivElement, AvatarProps>(
-  ({ className, size = 'md', src, alt, fallback, ...props }, ref) => {
+  ({ className, size = 'md', src, alt, fallback, priority = false }, ref) => {
     const initials = fallback || alt?.charAt(0).toUpperCase() || '?';
     const altText = alt || 'User avatar';
+    const pixelSize = sizePixels[size];
 
     return (
       <div
@@ -33,11 +47,13 @@ const Avatar = memo(forwardRef<HTMLDivElement, AvatarProps>(
         aria-label={altText}
       >
         {src ? (
-          <img
+          <Image
             src={src}
             alt={altText}
-            className="h-full w-full object-cover"
-            {...props}
+            fill
+            sizes={`${pixelSize}px`}
+            priority={priority}
+            className="object-cover"
           />
         ) : (
           <span

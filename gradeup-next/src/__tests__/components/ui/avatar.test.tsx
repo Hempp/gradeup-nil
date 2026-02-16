@@ -12,10 +12,11 @@ describe('Avatar', () => {
     expect(wrapper).toBeInTheDocument();
     expect(wrapper).toHaveAttribute('aria-label', 'Test User');
 
-    // Check the inner img element
+    // Check the inner img element (next/image transforms the src)
     const img = wrapper.querySelector('img');
-    expect(img).toHaveAttribute('src', '/test-image.jpg');
     expect(img).toHaveAttribute('alt', 'Test User');
+    // next/image encodes the src, so we check it contains the original path
+    expect(img?.getAttribute('src')).toContain('test-image.jpg');
   });
 
   it('renders fallback initials when no src is provided', () => {

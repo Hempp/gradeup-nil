@@ -476,3 +476,99 @@ export function useRequestPayout() {
     }
   );
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DELIVERABLE ACTION HOOKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Hook for approving a deliverable with toast notification.
+ * Shows "Deliverable approved!" on success.
+ */
+export function useApproveDeliverable() {
+  return useAction(
+    async (dealId: string, deliverableId: string, feedback?: string) => {
+      const { updateDeliverableStatus } = await import('@/lib/services/deals');
+      const result = await updateDeliverableStatus(dealId, deliverableId, 'approved', feedback);
+
+      if (result.error) {
+        return { data: null, error: new Error(result.error.message) };
+      }
+
+      return { data: result.data, error: null };
+    },
+    {
+      successMessage: 'Deliverable approved!',
+      errorMessage: 'Failed to approve deliverable',
+    }
+  );
+}
+
+/**
+ * Hook for rejecting a deliverable with toast notification.
+ * Shows "Deliverable rejected" on success.
+ */
+export function useRejectDeliverable() {
+  return useAction(
+    async (dealId: string, deliverableId: string, feedback?: string) => {
+      const { updateDeliverableStatus } = await import('@/lib/services/deals');
+      const result = await updateDeliverableStatus(dealId, deliverableId, 'rejected', feedback);
+
+      if (result.error) {
+        return { data: null, error: new Error(result.error.message) };
+      }
+
+      return { data: result.data, error: null };
+    },
+    {
+      successMessage: 'Deliverable rejected',
+      errorMessage: 'Failed to reject deliverable',
+    }
+  );
+}
+
+/**
+ * Hook for submitting a deliverable (athlete submission).
+ * Shows "Deliverable submitted!" on success.
+ */
+export function useSubmitDeliverable() {
+  return useAction(
+    async (deliverableId: string, contentUrl: string, draftUrl?: string) => {
+      const { submitDeliverable } = await import('@/lib/services/deals');
+      const result = await submitDeliverable(deliverableId, contentUrl, draftUrl);
+
+      if (result.error) {
+        return { data: null, error: new Error(result.error.message) };
+      }
+
+      return { data: result.data, error: null };
+    },
+    {
+      successMessage: 'Deliverable submitted!',
+      errorMessage: 'Failed to submit deliverable',
+    }
+  );
+}
+
+/**
+ * Hook for requesting revision on a deliverable.
+ * Shows "Revision requested" on success.
+ */
+export function useRequestDeliverableRevision() {
+  return useAction(
+    async (deliverableId: string, feedback: string) => {
+      const { requestDeliverableRevision } = await import('@/lib/services/deals');
+      const result = await requestDeliverableRevision(deliverableId, feedback);
+
+      if (result.error) {
+        return { data: null, error: new Error(result.error.message) };
+      }
+
+      return { data: result.data, error: null };
+    },
+    {
+      successMessage: 'Revision requested',
+      errorMessage: 'Failed to request revision',
+    }
+  );
+}

@@ -2,24 +2,14 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import type { VerificationType, VerificationRequest } from '@/lib/services/verification';
+import type { VerificationType, VerificationRequestWithAthlete } from '@/lib/services/verification';
+
+// Re-export the type from the service for consumers of this hook
+export type { VerificationRequestWithAthlete } from '@/lib/services/verification';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
-
-export interface VerificationRequestWithAthlete extends VerificationRequest {
-  athlete: {
-    id: string;
-    first_name: string;
-    last_name: string;
-    gpa: number;
-    avatar_url?: string;
-    sport?: {
-      name: string;
-    };
-  };
-}
 
 export interface UseDirectorVerificationsResult {
   requests: VerificationRequestWithAthlete[];

@@ -1,8 +1,51 @@
 import { createClient } from '@/lib/supabase/client';
 
-// Types
+// ═══════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════
+
 export type DealStatus = 'draft' | 'pending' | 'negotiating' | 'accepted' | 'active' | 'completed' | 'cancelled' | 'expired' | 'rejected' | 'paused';
 export type DealType = 'social_post' | 'appearance' | 'endorsement' | 'autograph' | 'camp' | 'merchandise' | 'other';
+
+// Deliverable types
+export type DeliverableStatus = 'pending' | 'in_progress' | 'submitted' | 'approved' | 'rejected' | 'revision';
+export type ContentPlatform = 'instagram' | 'tiktok' | 'youtube' | 'twitter' | 'facebook' | 'linkedin' | 'other';
+export type ContentType = 'reel' | 'story' | 'feed_post' | 'video' | 'short' | 'live' | 'carousel' | 'blog' | 'other';
+
+// Service result type for consistent error handling
+export interface ServiceResult<T = null> {
+  data: T | null;
+  error: { message: string; code?: string } | null;
+}
+
+export interface Deliverable {
+  id: string;
+  deal_id: string;
+  athlete_id: string;
+  campaign_id: string | null;
+  platform: ContentPlatform;
+  content_type: ContentType;
+  title: string | null;
+  description: string | null;
+  requirements: string | null;
+  status: DeliverableStatus;
+  due_date: string | null;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  content_url: string | null;
+  draft_url: string | null;
+  feedback: string | null;
+  reviewed_by: string | null;
+  created_at: string;
+  updated_at: string;
+  // Joined relations
+  athlete?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    avatar_url: string | null;
+  };
+}
 
 export interface Deal {
   id: string;
@@ -435,4 +478,236 @@ export async function getDealHistory(dealId: string): Promise<{
   }
 
   return { data, error: null };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DELIVERABLE SERVICE FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Get all deliverables for a specific deal
+ */
+export async function getDealDeliverables(dealId: string): Promise<ServiceResult<Deliverable[]>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('deliverables')
+    .select(`
+      *,
+      athlete:athletes(id, first_name, last_name, avatar_url)
+    `)
+    .eq('deal_id', dealId)
+    .order('due_date', { ascending: true });
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: data as Deliverable[], error: null };
+}
+
+/**
+ * Get all deliverables for a campaign
+ */
+export async function getCampaignDeliverables(campaignId: string): Promise<ServiceResult<Deliverable[]>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('deliverables')
+    .select(`
+      *,
+      athlete:athletes(id, first_name, last_name, avatar_url)
+    `)
+    .eq('campaign_id', campaignId)
+    .order('due_date', { ascending: true });
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: data as Deliverable[], error: null };
+}
+
+/**
+ * Get a single deliverable by ID
+ */
+export async function getDeliverableById(deliverableId: string): Promise<ServiceResult<Deliverable>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('deliverables')
+    .select(`
+      *,
+      athlete:athletes(id, first_name, last_name, avatar_url)
+    `)
+    .eq('id', deliverableId)
+    .single();
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: data as Deliverable, error: null };
+}
+
+/**
+ * Update deliverable status (approve/reject)
+ * Used by brands to review submitted deliverables
+ */
+export async function updateDeliverableStatus(
+  dealId: string,
+  deliverableId: string,
+  status: 'approved' | 'rejected',
+  feedback?: string
+): Promise<ServiceResult<Deliverable>> {
+  const supabase = createClient();
+
+  const updateData: {
+    status: DeliverableStatus;
+    feedback?: string;
+    reviewed_at: string;
+  } = {
+    status,
+    reviewed_at: new Date().toISOString(),
+  };
+
+  if (feedback) {
+    updateData.feedback = feedback;
+  }
+
+  const { data, error } = await supabase
+    .from('deliverables')
+    .update(updateData)
+    .eq('id', deliverableId)
+    .eq('deal_id', dealId)
+    .select(`
+      *,
+      athlete:athletes(id, first_name, last_name, avatar_url)
+    `)
+    .single();
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: data as Deliverable, error: null };
+}
+
+/**
+ * Submit a deliverable (athlete submits their content)
+ */
+export async function submitDeliverable(
+  deliverableId: string,
+  contentUrl: string,
+  draftUrl?: string
+): Promise<ServiceResult<Deliverable>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('deliverables')
+    .update({
+      status: 'submitted' as DeliverableStatus,
+      content_url: contentUrl,
+      draft_url: draftUrl || null,
+      submitted_at: new Date().toISOString(),
+    })
+    .eq('id', deliverableId)
+    .select(`
+      *,
+      athlete:athletes(id, first_name, last_name, avatar_url)
+    `)
+    .single();
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: data as Deliverable, error: null };
+}
+
+/**
+ * Request revision on a deliverable
+ */
+export async function requestDeliverableRevision(
+  deliverableId: string,
+  feedback: string
+): Promise<ServiceResult<Deliverable>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('deliverables')
+    .update({
+      status: 'revision' as DeliverableStatus,
+      feedback,
+      reviewed_at: new Date().toISOString(),
+    })
+    .eq('id', deliverableId)
+    .select(`
+      *,
+      athlete:athletes(id, first_name, last_name, avatar_url)
+    `)
+    .single();
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: data as Deliverable, error: null };
+}
+
+/**
+ * Create a new deliverable for a deal
+ */
+export interface CreateDeliverableInput {
+  deal_id: string;
+  athlete_id: string;
+  campaign_id?: string;
+  platform: ContentPlatform;
+  content_type: ContentType;
+  title?: string;
+  description?: string;
+  requirements?: string;
+  due_date?: string;
+}
+
+export async function createDeliverable(
+  input: CreateDeliverableInput
+): Promise<ServiceResult<Deliverable>> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('deliverables')
+    .insert({
+      ...input,
+      status: 'pending' as DeliverableStatus,
+    })
+    .select(`
+      *,
+      athlete:athletes(id, first_name, last_name, avatar_url)
+    `)
+    .single();
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: data as Deliverable, error: null };
+}
+
+/**
+ * Delete a deliverable
+ */
+export async function deleteDeliverable(deliverableId: string): Promise<ServiceResult> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('deliverables')
+    .delete()
+    .eq('id', deliverableId);
+
+  if (error) {
+    return { data: null, error: { message: error.message, code: error.code } };
+  }
+
+  return { data: null, error: null };
 }

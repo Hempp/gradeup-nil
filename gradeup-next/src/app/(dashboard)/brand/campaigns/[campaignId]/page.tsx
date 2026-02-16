@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -19,6 +19,7 @@ import {
   Instagram,
   Video,
   Image as ImageIcon,
+  Loader2,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ import { StatCard } from '@/components/ui/stat-card';
 import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate, formatCompactNumber } from '@/lib/utils';
+import { useApproveDeliverable, useRejectDeliverable } from '@/lib/hooks/use-action';
 import type { DealStatus } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -49,6 +51,7 @@ interface CampaignAthlete extends Record<string, unknown> {
 
 interface Deliverable {
   id: string;
+  dealId: string;
   athleteId: string;
   athleteName: string;
   platform: string;
@@ -101,17 +104,17 @@ const mockCampaign: CampaignData = {
     { id: '5', name: 'Emma Chen', school: 'UCLA', sport: 'Gymnastics', status: 'declined', deliverables: 0, completedDeliverables: 0, earnings: 0 },
   ],
   deliverables: [
-    { id: 'd1', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'Instagram', contentType: 'Reel', status: 'approved', dueDate: '2024-02-15', submittedAt: '2024-02-14', link: 'https://instagram.com/reel/123' },
-    { id: 'd2', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'Instagram', contentType: 'Story', status: 'approved', dueDate: '2024-02-20', submittedAt: '2024-02-19' },
-    { id: 'd3', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'TikTok', contentType: 'Video', status: 'approved', dueDate: '2024-03-01', submittedAt: '2024-02-28' },
-    { id: 'd4', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'Instagram', contentType: 'Feed Post', status: 'approved', dueDate: '2024-03-15', submittedAt: '2024-03-14' },
-    { id: 'd5', athleteId: '2', athleteName: 'Sarah Williams', platform: 'Instagram', contentType: 'Reel', status: 'approved', dueDate: '2024-02-20', submittedAt: '2024-02-19' },
-    { id: 'd6', athleteId: '2', athleteName: 'Sarah Williams', platform: 'TikTok', contentType: 'Video', status: 'submitted', dueDate: '2024-03-10', submittedAt: '2024-03-09' },
-    { id: 'd7', athleteId: '2', athleteName: 'Sarah Williams', platform: 'Instagram', contentType: 'Story', status: 'pending', dueDate: '2024-04-01' },
-    { id: 'd8', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'Instagram', contentType: 'Reel', status: 'approved', dueDate: '2024-02-25', submittedAt: '2024-02-24' },
-    { id: 'd9', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'TikTok', contentType: 'Video', status: 'in_progress', dueDate: '2024-03-15' },
-    { id: 'd10', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'Instagram', contentType: 'Feed Post', status: 'pending', dueDate: '2024-03-25' },
-    { id: 'd11', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'Instagram', contentType: 'Story', status: 'pending', dueDate: '2024-04-05' },
+    { id: 'd1', dealId: 'deal-1', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'Instagram', contentType: 'Reel', status: 'approved', dueDate: '2024-02-15', submittedAt: '2024-02-14', link: 'https://instagram.com/reel/123' },
+    { id: 'd2', dealId: 'deal-1', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'Instagram', contentType: 'Story', status: 'approved', dueDate: '2024-02-20', submittedAt: '2024-02-19' },
+    { id: 'd3', dealId: 'deal-1', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'TikTok', contentType: 'Video', status: 'approved', dueDate: '2024-03-01', submittedAt: '2024-02-28' },
+    { id: 'd4', dealId: 'deal-1', athleteId: '1', athleteName: 'Marcus Johnson', platform: 'Instagram', contentType: 'Feed Post', status: 'approved', dueDate: '2024-03-15', submittedAt: '2024-03-14' },
+    { id: 'd5', dealId: 'deal-2', athleteId: '2', athleteName: 'Sarah Williams', platform: 'Instagram', contentType: 'Reel', status: 'approved', dueDate: '2024-02-20', submittedAt: '2024-02-19' },
+    { id: 'd6', dealId: 'deal-2', athleteId: '2', athleteName: 'Sarah Williams', platform: 'TikTok', contentType: 'Video', status: 'submitted', dueDate: '2024-03-10', submittedAt: '2024-03-09' },
+    { id: 'd7', dealId: 'deal-2', athleteId: '2', athleteName: 'Sarah Williams', platform: 'Instagram', contentType: 'Story', status: 'pending', dueDate: '2024-04-01' },
+    { id: 'd8', dealId: 'deal-3', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'Instagram', contentType: 'Reel', status: 'approved', dueDate: '2024-02-25', submittedAt: '2024-02-24' },
+    { id: 'd9', dealId: 'deal-3', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'TikTok', contentType: 'Video', status: 'in_progress', dueDate: '2024-03-15' },
+    { id: 'd10', dealId: 'deal-3', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'Instagram', contentType: 'Feed Post', status: 'pending', dueDate: '2024-03-25' },
+    { id: 'd11', dealId: 'deal-3', athleteId: '3', athleteName: 'Tyler Brooks', platform: 'Instagram', contentType: 'Story', status: 'pending', dueDate: '2024-04-05' },
   ],
   stats: {
     totalReach: 2450000,
@@ -465,7 +468,16 @@ function AthletesTab({ campaign }: { campaign: CampaignData }) {
   );
 }
 
-function DeliverablesTab({ campaign }: { campaign: CampaignData }) {
+interface DeliverablesTabProps {
+  campaign: CampaignData;
+  onDeliverableUpdate: (deliverableId: string, newStatus: Deliverable['status']) => void;
+}
+
+function DeliverablesTab({ campaign, onDeliverableUpdate }: DeliverablesTabProps) {
+  const { execute: approveDeliverable, loading: approving } = useApproveDeliverable();
+  const { execute: rejectDeliverable, loading: rejecting } = useRejectDeliverable();
+  const [processingId, setProcessingId] = useState<string | null>(null);
+
   // Group deliverables by athlete
   const groupedByAthlete = campaign.athletes
     .filter(a => a.status !== 'declined')
@@ -474,13 +486,25 @@ function DeliverablesTab({ campaign }: { campaign: CampaignData }) {
       deliverables: campaign.deliverables.filter(d => d.athleteId === athlete.id),
     }));
 
-  const handleApprove = (_deliverableId: string) => {
-    // TODO: Implement deliverable approval via API
-  };
+  const handleApprove = useCallback(async (deliverable: Deliverable) => {
+    setProcessingId(deliverable.id);
+    const result = await approveDeliverable(deliverable.dealId, deliverable.id);
+    if (result) {
+      onDeliverableUpdate(deliverable.id, 'approved');
+    }
+    setProcessingId(null);
+  }, [approveDeliverable, onDeliverableUpdate]);
 
-  const handleReject = (_deliverableId: string) => {
-    // TODO: Implement deliverable rejection via API
-  };
+  const handleReject = useCallback(async (deliverable: Deliverable) => {
+    setProcessingId(deliverable.id);
+    const result = await rejectDeliverable(deliverable.dealId, deliverable.id);
+    if (result) {
+      onDeliverableUpdate(deliverable.id, 'rejected');
+    }
+    setProcessingId(null);
+  }, [rejectDeliverable, onDeliverableUpdate]);
+
+  const isProcessing = (id: string) => processingId === id && (approving || rejecting);
 
   return (
     <div className="space-y-6">
@@ -542,18 +566,28 @@ function DeliverablesTab({ campaign }: { campaign: CampaignData }) {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleApprove(deliverable.id)}
+                            onClick={() => handleApprove(deliverable)}
+                            disabled={isProcessing(deliverable.id)}
                             className="text-[var(--color-success)] hover:bg-[var(--color-success-muted)]"
                           >
-                            <Check className="h-4 w-4" />
+                            {isProcessing(deliverable.id) && approving ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Check className="h-4 w-4" />
+                            )}
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleReject(deliverable.id)}
+                            onClick={() => handleReject(deliverable)}
+                            disabled={isProcessing(deliverable.id)}
                             className="text-[var(--color-error)] hover:bg-[var(--color-error-muted)]"
                           >
-                            <X className="h-4 w-4" />
+                            {isProcessing(deliverable.id) && rejecting ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <X className="h-4 w-4" />
+                            )}
                           </Button>
                         </div>
                       )}
@@ -833,6 +867,19 @@ export default function CampaignDetailPage() {
     fetchCampaign();
   }, [params.campaignId]);
 
+  // Handle deliverable status updates (optimistic update for UI)
+  const handleDeliverableUpdate = useCallback((deliverableId: string, newStatus: Deliverable['status']) => {
+    setCampaign((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        deliverables: prev.deliverables.map((d) =>
+          d.id === deliverableId ? { ...d, status: newStatus } : d
+        ),
+      };
+    });
+  }, []);
+
   // Show loading skeleton while fetching
   if (isLoading || !campaign) {
     return <CampaignDetailSkeleton />;
@@ -893,7 +940,12 @@ export default function CampaignDetailPage() {
       <div>
         {activeTab === 'overview' && <OverviewTab campaign={campaign} />}
         {activeTab === 'athletes' && <AthletesTab campaign={campaign} />}
-        {activeTab === 'deliverables' && <DeliverablesTab campaign={campaign} />}
+        {activeTab === 'deliverables' && (
+          <DeliverablesTab
+            campaign={campaign}
+            onDeliverableUpdate={handleDeliverableUpdate}
+          />
+        )}
         {activeTab === 'analytics' && <AnalyticsTab campaign={campaign} />}
       </div>
     </div>

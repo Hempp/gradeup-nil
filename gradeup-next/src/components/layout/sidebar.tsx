@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -186,12 +187,14 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
           )}
         >
           {/* Avatar */}
-          <div className="relative">
+          <div className="relative h-8 w-8">
             {displayUser.avatar ? (
-              <img
+              <Image
                 src={displayUser.avatar}
                 alt={displayUser.name}
-                className="h-8 w-8 rounded-full object-cover"
+                fill
+                sizes="32px"
+                className="rounded-full object-cover"
               />
             ) : (
               <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-sm font-medium">

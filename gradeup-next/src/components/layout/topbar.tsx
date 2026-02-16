@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, Menu, Settings, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -196,11 +197,15 @@ export function Topbar({
           >
             {/* Avatar */}
             {displayUser.avatar ? (
-              <img
-                src={displayUser.avatar}
-                alt={displayUser.name}
-                className="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--marketing-cyan)]/30"
-              />
+              <div className="relative h-8 w-8">
+                <Image
+                  src={displayUser.avatar}
+                  alt={displayUser.name}
+                  fill
+                  sizes="32px"
+                  className="rounded-full object-cover ring-2 ring-[var(--marketing-cyan)]/30"
+                />
+              </div>
             ) : (
               <div className="h-8 w-8 rounded-full bg-[var(--marketing-cyan)]/20 flex items-center justify-center text-[var(--marketing-cyan)] text-sm font-medium">
                 {displayUser.name.charAt(0).toUpperCase()}

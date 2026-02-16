@@ -57,6 +57,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'upload.wikimedia.org',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com', // YouTube thumbnails
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com', // YouTube thumbnails (alternate)
+      },
     ],
   },
 

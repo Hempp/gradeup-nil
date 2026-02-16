@@ -10,12 +10,7 @@ import type { Activity } from '@/lib/services/activity';
 import type { AthleteStats } from '@/lib/services/athlete';
 import type { BrandAnalytics } from '@/lib/services/brand';
 import type { DirectorStats, ComplianceAlert } from '@/lib/services/director';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Demo Mode Detection
-// ═══════════════════════════════════════════════════════════════════════════
-
-const isDemoMode = () => process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+import { isDemoMode } from './use-demo-mode';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Demo Mode Mock Data

@@ -3,6 +3,19 @@
  * Provides event tracking, performance monitoring, and user analytics
  */
 
+import * as Sentry from '@sentry/nextjs';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Global Type Declarations
+// ═══════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
@@ -46,9 +59,160 @@ export interface PerformanceMetric {
 let isInitialized = false;
 let userId: string | null = null;
 let userRole: string | null = null;
+let hasConsent = false;
 
 const eventQueue: AnalyticsEvent[] = [];
 const MAX_QUEUE_SIZE = 100;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Consent Management
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Check if user has consented to analytics tracking
+ */
+function checkConsent(): boolean {
+  if (typeof document === 'undefined') return false;
+  return document.cookie.includes('analytics_consent=true');
+}
+
+/**
+ * Set analytics consent status
+ */
+export function setConsent(consent: boolean): void {
+  hasConsent = consent;
+
+  // If consent granted, flush queued events
+  if (consent && eventQueue.length > 0) {
+    eventQueue.forEach(event => {
+      sendToGA4(event);
+      addSentryBreadcrumb(event);
+    });
+    eventQueue.length = 0;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GA4 Integration
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Send event to Google Analytics 4
+ */
+function sendToGA4(event: AnalyticsEvent): void {
+  if (typeof window === 'undefined' || !window.gtag) {
+    return;
+  }
+
+  // Convert event to GA4 format
+  const eventName = `${event.category}_${event.action}`;
+  const params: Record<string, unknown> = {
+    event_category: event.category,
+    event_action: event.action,
+    ...(event.label && { event_label: event.label }),
+    ...(event.value !== undefined && { value: event.value }),
+    ...(event.metadata && { ...event.metadata }),
+    ...(userId && { user_id: userId }),
+    ...(userRole && { user_role: userRole }),
+  };
+
+  window.gtag('event', eventName, params);
+}
+
+/**
+ * Send page view to Google Analytics 4
+ */
+function sendPageViewToGA4(event: PageViewEvent): void {
+  if (typeof window === 'undefined' || !window.gtag) {
+    return;
+  }
+
+  window.gtag('event', 'page_view', {
+    page_path: event.path,
+    page_title: event.title || document.title,
+    page_referrer: event.referrer || document.referrer,
+    ...(userId && { user_id: userId }),
+    ...(event.userRole && { user_role: event.userRole }),
+  });
+}
+
+/**
+ * Set user properties in GA4
+ */
+function setGA4UserProperties(): void {
+  if (typeof window === 'undefined' || !window.gtag) {
+    return;
+  }
+
+  if (userId || userRole) {
+    window.gtag('set', 'user_properties', {
+      ...(userId && { user_id: userId }),
+      ...(userRole && { user_role: userRole }),
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Sentry Integration
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Add analytics event as Sentry breadcrumb
+ */
+function addSentryBreadcrumb(event: AnalyticsEvent): void {
+  try {
+    Sentry.addBreadcrumb({
+      category: 'analytics',
+      message: `${event.category}:${event.action}`,
+      data: {
+        label: event.label,
+        value: event.value,
+        ...event.metadata,
+      },
+      level: event.category === 'error' ? 'error' : 'info',
+    });
+  } catch {
+    // Sentry not available, ignore
+  }
+}
+
+/**
+ * Add page view as Sentry breadcrumb
+ */
+function addPageViewSentryBreadcrumb(event: PageViewEvent): void {
+  try {
+    Sentry.addBreadcrumb({
+      category: 'navigation',
+      message: `Page view: ${event.path}`,
+      data: {
+        title: event.title,
+        referrer: event.referrer,
+        userRole: event.userRole,
+      },
+      level: 'info',
+    });
+  } catch {
+    // Sentry not available, ignore
+  }
+}
+
+/**
+ * Set Sentry user context
+ */
+function setSentryUser(): void {
+  try {
+    if (userId) {
+      Sentry.setUser({
+        id: userId,
+        ...(userRole && { role: userRole }),
+      });
+    } else {
+      Sentry.setUser(null);
+    }
+  } catch {
+    // Sentry not available, ignore
+  }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Initialization
@@ -64,18 +228,31 @@ export function initializeAnalytics(options?: {
   userRole = options?.userRole || null;
   isInitialized = true;
 
+  // Check for existing consent
+  hasConsent = checkConsent();
+
+  // Set user properties in GA4 and Sentry
+  setGA4UserProperties();
+  setSentryUser();
+
   // Setup performance observer
   setupPerformanceObserver();
 
   // Setup error tracking
   setupErrorTracking();
 
-  console.log('[Analytics] Initialized', { userId: !!userId, userRole });
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Analytics] Initialized', { userId: !!userId, userRole, hasConsent });
+  }
 }
 
 export function setUser(id: string | null, role?: string): void {
   userId = id;
   userRole = role || null;
+
+  // Update GA4 and Sentry user context
+  setGA4UserProperties();
+  setSentryUser();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -94,19 +271,26 @@ export function trackEvent(event: AnalyticsEvent): void {
     userAgent: navigator.userAgent,
   };
 
-  // Add to queue
-  eventQueue.push(event);
-  if (eventQueue.length > MAX_QUEUE_SIZE) {
-    eventQueue.shift();
-  }
-
   // Log in development
   if (process.env.NODE_ENV === 'development') {
     console.log('[Analytics] Event:', enrichedEvent);
   }
 
-  // TODO: Send to analytics service (e.g., Google Analytics, Mixpanel, Amplitude)
-  // sendToAnalyticsService(enrichedEvent);
+  // Check consent before sending
+  if (!hasConsent) {
+    // Queue event for later if consent not yet granted
+    eventQueue.push(event);
+    if (eventQueue.length > MAX_QUEUE_SIZE) {
+      eventQueue.shift();
+    }
+    return;
+  }
+
+  // Send to Google Analytics 4
+  sendToGA4(event);
+
+  // Add Sentry breadcrumb for error tracking context
+  addSentryBreadcrumb(event);
 }
 
 export function trackPageView(event: PageViewEvent): void {
@@ -116,7 +300,7 @@ export function trackPageView(event: PageViewEvent): void {
     ...event,
     timestamp: new Date().toISOString(),
     userId,
-    userRole,
+    userRole: event.userRole || userRole,
     screenWidth: window.innerWidth,
     screenHeight: window.innerHeight,
   };
@@ -125,8 +309,16 @@ export function trackPageView(event: PageViewEvent): void {
     console.log('[Analytics] Page View:', pageView);
   }
 
-  // TODO: Send to analytics service
-  // sendToAnalyticsService({ type: 'pageview', ...pageView });
+  // Check consent before sending
+  if (!hasConsent) {
+    return;
+  }
+
+  // Send to Google Analytics 4
+  sendPageViewToGA4(event);
+
+  // Add Sentry breadcrumb for navigation context
+  addPageViewSentryBreadcrumb(event);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -298,7 +490,41 @@ function trackPerformanceMetric(metric: PerformanceMetric): void {
     console.log('[Analytics] Performance:', metric);
   }
 
-  // TODO: Send to monitoring service
+  // Check consent before sending
+  if (!hasConsent) {
+    return;
+  }
+
+  // Send to Google Analytics 4 as a performance event
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'web_vitals', {
+      event_category: 'Web Vitals',
+      event_label: metric.name,
+      value: Math.round(metric.unit === 'ms' ? metric.value : metric.value * 1000),
+      metric_name: metric.name,
+      metric_value: metric.value,
+      metric_unit: metric.unit,
+      metric_rating: metric.rating,
+      non_interaction: true,
+    });
+  }
+
+  // Add Sentry breadcrumb for performance context
+  try {
+    Sentry.addBreadcrumb({
+      category: 'performance',
+      message: `${metric.name}: ${metric.value}${metric.unit}`,
+      data: {
+        name: metric.name,
+        value: metric.value,
+        unit: metric.unit,
+        rating: metric.rating,
+      },
+      level: metric.rating === 'poor' ? 'warning' : 'info',
+    });
+  } catch {
+    // Sentry not available, ignore
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -340,4 +566,23 @@ export function getEventQueue(): readonly AnalyticsEvent[] {
 
 export function isAnalyticsInitialized(): boolean {
   return isInitialized;
+}
+
+export function hasAnalyticsConsent(): boolean {
+  return hasConsent;
+}
+
+/**
+ * Manually flush queued events (useful after consent is granted)
+ */
+export function flushEventQueue(): void {
+  if (!hasConsent || eventQueue.length === 0) {
+    return;
+  }
+
+  eventQueue.forEach(event => {
+    sendToGA4(event);
+    addSentryBreadcrumb(event);
+  });
+  eventQueue.length = 0;
 }
