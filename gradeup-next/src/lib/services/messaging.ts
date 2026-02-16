@@ -699,6 +699,133 @@ export async function createConversation(
 }
 
 /**
+ * Get or create a conversation for a specific deal
+ * This ensures there's a conversation between the deal's brand and athlete
+ */
+export async function getOrCreateConversationByDealId(
+  dealId: string
+): Promise<ServiceResult<Conversation>> {
+  const supabase = createClient();
+
+  try {
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return { data: null, error: userError || new Error('Not authenticated') };
+    }
+
+    // First, check if a conversation already exists for this deal
+    const { data: existingConv, error: existingError } = await supabase
+      .from('conversations')
+      .select('id')
+      .eq('deal_id', dealId)
+      .single();
+
+    if (existingConv && !existingError) {
+      // Conversation exists, return it
+      return getConversationById(existingConv.id);
+    }
+
+    // No existing conversation, need to create one
+    // First, get the deal to find participants
+    const { data: deal, error: dealError } = await supabase
+      .from('deals')
+      .select(
+        `
+        id,
+        athlete_id,
+        brand_id,
+        athletes!inner(profile_id),
+        brands!inner(profile_id)
+      `
+      )
+      .eq('id', dealId)
+      .single();
+
+    if (dealError || !deal) {
+      return {
+        data: null,
+        error: dealError || new Error('Deal not found'),
+      };
+    }
+
+    // Extract profile IDs from the deal
+    // Supabase returns joined data as objects when using single()
+    const athletes = deal.athletes as unknown as { profile_id: string } | null;
+    const brands = deal.brands as unknown as { profile_id: string } | null;
+    const athleteProfileId = athletes?.profile_id;
+    const brandProfileId = brands?.profile_id;
+
+    if (!athleteProfileId || !brandProfileId) {
+      return {
+        data: null,
+        error: new Error('Could not determine deal participants'),
+      };
+    }
+
+    // Verify current user is a participant
+    if (user.id !== athleteProfileId && user.id !== brandProfileId) {
+      return {
+        data: null,
+        error: new Error('Access denied: You are not a participant in this deal'),
+      };
+    }
+
+    // Create the conversation
+    const { data: conversation, error: conversationError } = await supabase
+      .from('conversations')
+      .insert({
+        deal_id: dealId,
+      })
+      .select()
+      .single();
+
+    if (conversationError || !conversation) {
+      return {
+        data: null,
+        error: conversationError || new Error('Failed to create conversation'),
+      };
+    }
+
+    // Add participants
+    const participantsToInsert = [
+      {
+        conversation_id: conversation.id,
+        user_id: athleteProfileId,
+        role: 'athlete',
+      },
+      {
+        conversation_id: conversation.id,
+        user_id: brandProfileId,
+        role: 'brand',
+      },
+    ];
+
+    const { error: participantsError } = await supabase
+      .from('conversation_participants')
+      .insert(participantsToInsert);
+
+    if (participantsError) {
+      // Rollback: delete the conversation
+      await supabase.from('conversations').delete().eq('id', conversation.id);
+      return { data: null, error: participantsError };
+    }
+
+    // Fetch the full conversation with participants
+    return getConversationById(conversation.id);
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('An unexpected error occurred'),
+    };
+  }
+}
+
+/**
  * Get total unread message count for the current user
  */
 export async function getUnreadCount(): Promise<ServiceResult<number>> {

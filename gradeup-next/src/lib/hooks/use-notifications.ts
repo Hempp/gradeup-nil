@@ -1,35 +1,22 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import * as notificationService from '@/lib/services/notifications';
+import type { Notification, NotificationType } from '@/lib/services/notifications';
+
+// Re-export types for consumers
+export type { Notification, NotificationType };
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
-
-export type NotificationType =
-  | 'verification_approved'
-  | 'verification_rejected'
-  | 'verification_request'
-  | 'deal_offer'
-  | 'message';
-
-export interface Notification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  read: boolean;
-  created_at: string;
-  url?: string;
-  metadata?: Record<string, unknown>;
-}
 
 export interface UseNotificationsResult {
   notifications: Notification[];
   unreadCount: number;
   loading: boolean;
   error: Error | null;
+  isUsingMockData: boolean;
   markAsRead: (notificationId: string) => Promise<{ success: boolean; error?: string }>;
   markAllAsRead: () => Promise<{ success: boolean; error?: string }>;
   deleteNotification: (notificationId: string) => Promise<{ success: boolean; error?: string }>;
@@ -37,12 +24,12 @@ export interface UseNotificationsResult {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Mock Data for Testing
+// Mock Data for Testing / Fallback
 // ═══════════════════════════════════════════════════════════════════════════
 
 const MOCK_NOTIFICATIONS: Notification[] = [
   {
-    id: '1',
+    id: 'mock-1',
     type: 'verification_approved',
     title: 'Enrollment Verified',
     message: 'Your enrollment verification has been approved by the athletic director.',
@@ -52,7 +39,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     metadata: { verification_type: 'enrollment' },
   },
   {
-    id: '2',
+    id: 'mock-2',
     type: 'deal_offer',
     title: 'New Deal Offer',
     message: 'Nike has sent you a new endorsement offer worth $5,000.',
@@ -62,7 +49,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     metadata: { brand_name: 'Nike', amount: 5000 },
   },
   {
-    id: '3',
+    id: 'mock-3',
     type: 'message',
     title: 'New Message',
     message: 'You have a new message from Gatorade regarding your partnership.',
@@ -72,7 +59,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     metadata: { sender_name: 'Gatorade', conversation_id: 'conv-456' },
   },
   {
-    id: '4',
+    id: 'mock-4',
     type: 'verification_rejected',
     title: 'GPA Verification Needs Update',
     message: 'Your GPA verification was rejected. Please submit an updated transcript.',
@@ -82,7 +69,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     metadata: { verification_type: 'grades', reason: 'Transcript outdated' },
   },
   {
-    id: '5',
+    id: 'mock-5',
     type: 'verification_request',
     title: 'Verification Request Submitted',
     message: 'Your sport verification request has been submitted and is pending review.',
@@ -94,28 +81,35 @@ const MOCK_NOTIFICATIONS: Notification[] = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Hook
+// Hook Implementation
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
  * Hook for managing user notifications
  * Handles fetching, marking as read, deleting, and real-time updates
+ * Falls back to mock data if the notifications table doesn't exist
  */
 export function useNotifications(userId: string | null): UseNotificationsResult {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [isUsingMockData, setIsUsingMockData] = useState(false);
+
+  // Track if we've determined the table exists
+  const tableExistsRef = useRef<boolean | null>(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   // Calculate unread count from notifications
   const unreadCount = useMemo(() => {
     return notifications.filter(n => !n.read).length;
   }, [notifications]);
 
-  // Fetch notifications
+  // Fetch notifications from Supabase or fall back to mock data
   const fetchNotifications = useCallback(async () => {
     if (!userId) {
       setNotifications([]);
       setLoading(false);
+      setIsUsingMockData(false);
       return;
     }
 
@@ -123,25 +117,36 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
       setLoading(true);
       setError(null);
 
-      // TODO: Replace with actual Supabase query when notifications table is ready
-      // const supabase = createClient();
-      // const { data, error: fetchError } = await supabase
-      //   .from('notifications')
-      //   .select('*')
-      //   .eq('user_id', userId)
-      //   .order('created_at', { ascending: false });
-      //
-      // if (fetchError) {
-      //   throw fetchError;
-      // }
-      //
-      // setNotifications(data || []);
+      // Check if table exists (only on first fetch)
+      if (tableExistsRef.current === null) {
+        tableExistsRef.current = await notificationService.checkTableExists();
+      }
 
-      // For now, use mock data with simulated delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setNotifications(MOCK_NOTIFICATIONS);
+      if (!tableExistsRef.current) {
+        // Fall back to mock data
+        console.info('[useNotifications] Notifications table not available, using mock data');
+        await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network delay
+        setNotifications(MOCK_NOTIFICATIONS);
+        setIsUsingMockData(true);
+        return;
+      }
+
+      // Fetch from Supabase
+      const { data, error: fetchError } = await notificationService.getNotifications(userId);
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      setNotifications(data || []);
+      setIsUsingMockData(false);
     } catch (err) {
+      console.error('[useNotifications] Error fetching notifications:', err);
       setError(err instanceof Error ? err : new Error('Failed to fetch notifications'));
+
+      // Fall back to mock data on error
+      setNotifications(MOCK_NOTIFICATIONS);
+      setIsUsingMockData(true);
     } finally {
       setLoading(false);
     }
@@ -154,69 +159,80 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
 
   // Real-time subscription for notification updates
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || isUsingMockData) {
+      return;
+    }
 
-    const supabase = createClient();
-    const channel = supabase
-      .channel(`notifications:${userId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          // Handle different event types
-          if (payload.eventType === 'INSERT') {
-            // Add new notification at the beginning
-            setNotifications(prev => [payload.new as Notification, ...prev]);
-          } else if (payload.eventType === 'UPDATE') {
-            // Update existing notification
-            setNotifications(prev =>
-              prev.map(n => (n.id === (payload.new as Notification).id ? (payload.new as Notification) : n))
-            );
-          } else if (payload.eventType === 'DELETE') {
-            // Remove deleted notification
-            setNotifications(prev => prev.filter(n => n.id !== (payload.old as { id: string }).id));
-          }
-        }
-      )
-      .subscribe();
+    // Wait for initial fetch to complete and confirm table exists
+    if (tableExistsRef.current !== true) {
+      return;
+    }
+
+    // Set up real-time subscription
+    const unsubscribe = notificationService.subscribeToNotifications(userId, {
+      onInsert: (notification) => {
+        setNotifications(prev => [notification, ...prev]);
+      },
+      onUpdate: (notification) => {
+        setNotifications(prev =>
+          prev.map(n => (n.id === notification.id ? notification : n))
+        );
+      },
+      onDelete: (id) => {
+        setNotifications(prev => prev.filter(n => n.id !== id));
+      },
+      onError: (err) => {
+        console.error('[useNotifications] Real-time subscription error:', err);
+      },
+    });
+
+    unsubscribeRef.current = unsubscribe;
 
     return () => {
-      supabase.removeChannel(channel);
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
+      }
     };
-  }, [userId]);
+  }, [userId, isUsingMockData]);
 
   // Mark single notification as read
   const markAsRead = useCallback(async (
     notificationId: string
   ): Promise<{ success: boolean; error?: string }> => {
-    try {
-      // TODO: Replace with actual Supabase update when notifications table is ready
-      // const supabase = createClient();
-      // const { error: updateError } = await supabase
-      //   .from('notifications')
-      //   .update({ read: true })
-      //   .eq('id', notificationId)
-      //   .eq('user_id', userId);
-      //
-      // if (updateError) {
-      //   return { success: false, error: updateError.message };
-      // }
+    // Optimistic update
+    setNotifications(prev =>
+      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
+    );
 
-      // Optimistic update
-      setNotifications(prev =>
-        prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
+    // If using mock data, just return success
+    if (isUsingMockData) {
+      return { success: true };
+    }
+
+    try {
+      const { error: updateError } = await notificationService.markNotificationAsRead(
+        notificationId,
+        userId ?? undefined
       );
+
+      if (updateError) {
+        // Revert optimistic update on error
+        setNotifications(prev =>
+          prev.map(n => (n.id === notificationId ? { ...n, read: false } : n))
+        );
+        return { success: false, error: updateError.message };
+      }
 
       return { success: true };
     } catch (err) {
+      // Revert optimistic update on error
+      setNotifications(prev =>
+        prev.map(n => (n.id === notificationId ? { ...n, read: false } : n))
+      );
       return { success: false, error: err instanceof Error ? err.message : 'Failed to mark as read' };
     }
-  }, []);
+  }, [userId, isUsingMockData]);
 
   // Mark all notifications as read
   const markAllAsRead = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
@@ -224,62 +240,74 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
       return { success: false, error: 'No user ID provided' };
     }
 
-    try {
-      // TODO: Replace with actual Supabase update when notifications table is ready
-      // const supabase = createClient();
-      // const { error: updateError } = await supabase
-      //   .from('notifications')
-      //   .update({ read: true })
-      //   .eq('user_id', userId)
-      //   .eq('read', false);
-      //
-      // if (updateError) {
-      //   return { success: false, error: updateError.message };
-      // }
+    // Optimistic update
+    const previousNotifications = notifications;
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
 
-      // Optimistic update
-      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    // If using mock data, just return success
+    if (isUsingMockData) {
+      return { success: true };
+    }
+
+    try {
+      const { error: updateError } = await notificationService.markAllAsRead(userId);
+
+      if (updateError) {
+        // Revert optimistic update on error
+        setNotifications(previousNotifications);
+        return { success: false, error: updateError.message };
+      }
 
       return { success: true };
     } catch (err) {
+      // Revert optimistic update on error
+      setNotifications(previousNotifications);
       return { success: false, error: err instanceof Error ? err.message : 'Failed to mark all as read' };
     }
-  }, [userId]);
+  }, [userId, notifications, isUsingMockData]);
 
   // Delete a notification
-  const deleteNotification = useCallback(async (
+  const deleteNotificationHandler = useCallback(async (
     notificationId: string
   ): Promise<{ success: boolean; error?: string }> => {
-    try {
-      // TODO: Replace with actual Supabase delete when notifications table is ready
-      // const supabase = createClient();
-      // const { error: deleteError } = await supabase
-      //   .from('notifications')
-      //   .delete()
-      //   .eq('id', notificationId)
-      //   .eq('user_id', userId);
-      //
-      // if (deleteError) {
-      //   return { success: false, error: deleteError.message };
-      // }
+    // Optimistic update
+    const previousNotifications = notifications;
+    setNotifications(prev => prev.filter(n => n.id !== notificationId));
 
-      // Optimistic update
-      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+    // If using mock data, just return success
+    if (isUsingMockData) {
+      return { success: true };
+    }
+
+    try {
+      const { error: deleteError } = await notificationService.deleteNotification(
+        notificationId,
+        userId ?? undefined
+      );
+
+      if (deleteError) {
+        // Revert optimistic update on error
+        setNotifications(previousNotifications);
+        return { success: false, error: deleteError.message };
+      }
 
       return { success: true };
     } catch (err) {
+      // Revert optimistic update on error
+      setNotifications(previousNotifications);
       return { success: false, error: err instanceof Error ? err.message : 'Failed to delete notification' };
     }
-  }, []);
+  }, [userId, notifications, isUsingMockData]);
 
   return {
     notifications,
     unreadCount,
     loading,
     error,
+    isUsingMockData,
     markAsRead,
     markAllAsRead,
-    deleteNotification,
+    deleteNotification: deleteNotificationHandler,
     refresh: fetchNotifications,
   };
 }
@@ -293,11 +321,23 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
  */
 export function getNotificationTypeLabel(type: NotificationType): string {
   const labels: Record<NotificationType, string> = {
+    deal: 'Deal',
+    deal_offer: 'Deal Offer',
+    deal_accepted: 'Deal Accepted',
+    deal_rejected: 'Deal Rejected',
+    deal_completed: 'Deal Completed',
+    deal_cancelled: 'Deal Cancelled',
+    message: 'Message',
+    message_received: 'New Message',
+    payment: 'Payment',
+    payment_received: 'Payment Received',
+    payment_pending: 'Payment Pending',
+    system: 'System',
     verification_approved: 'Verification Approved',
     verification_rejected: 'Verification Rejected',
     verification_request: 'Verification Request',
-    deal_offer: 'Deal Offer',
-    message: 'Message',
+    opportunity_match: 'Opportunity Match',
+    profile_view: 'Profile View',
   };
   return labels[type] || type;
 }
@@ -307,11 +347,23 @@ export function getNotificationTypeLabel(type: NotificationType): string {
  */
 export function getNotificationTypeIcon(type: NotificationType): string {
   const icons: Record<NotificationType, string> = {
+    deal: 'Briefcase',
+    deal_offer: 'DollarSign',
+    deal_accepted: 'CheckCircle',
+    deal_rejected: 'XCircle',
+    deal_completed: 'Award',
+    deal_cancelled: 'XCircle',
+    message: 'MessageSquare',
+    message_received: 'MessageSquare',
+    payment: 'CreditCard',
+    payment_received: 'CheckCircle',
+    payment_pending: 'Clock',
+    system: 'Bell',
     verification_approved: 'CheckCircle',
     verification_rejected: 'XCircle',
     verification_request: 'Clock',
-    deal_offer: 'DollarSign',
-    message: 'MessageSquare',
+    opportunity_match: 'Star',
+    profile_view: 'Eye',
   };
   return icons[type] || 'Bell';
 }
@@ -355,4 +407,30 @@ export function getRelativeTime(dateString: string): string {
 
   const diffInYears = Math.floor(diffInDays / 365);
   return `${diffInYears} year${diffInYears === 1 ? '' : 's'} ago`;
+}
+
+/**
+ * Get notification color class based on type
+ */
+export function getNotificationColorClass(type: NotificationType): string {
+  const colors: Record<NotificationType, string> = {
+    deal: 'text-blue-500',
+    deal_offer: 'text-green-500',
+    deal_accepted: 'text-green-500',
+    deal_rejected: 'text-red-500',
+    deal_completed: 'text-green-500',
+    deal_cancelled: 'text-red-500',
+    message: 'text-blue-500',
+    message_received: 'text-blue-500',
+    payment: 'text-green-500',
+    payment_received: 'text-green-500',
+    payment_pending: 'text-yellow-500',
+    system: 'text-gray-500',
+    verification_approved: 'text-green-500',
+    verification_rejected: 'text-red-500',
+    verification_request: 'text-yellow-500',
+    opportunity_match: 'text-purple-500',
+    profile_view: 'text-blue-500',
+  };
+  return colors[type] || 'text-gray-500';
 }

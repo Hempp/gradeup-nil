@@ -114,23 +114,101 @@ function formatFollowers(valuation: number): string {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Testimonials Hook - Uses Mock Data (No backend table yet)
+// Testimonials Hook - Fetches from Supabase
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Fetch testimonials for the landing page.
- * Currently uses mock data - can be connected to Supabase when table exists.
+ * Database testimonial row type from Supabase.
+ */
+interface TestimonialRow {
+  id: string;
+  author_name: string;
+  author_role: string;
+  author_image: string | null;
+  content: string;
+  rating: number;
+  featured: boolean;
+  created_at: string;
+}
+
+/**
+ * Transform database row to Testimonial format used by components.
+ */
+function transformTestimonial(row: TestimonialRow): Testimonial {
+  return {
+    id: row.id,
+    quote: row.content,
+    name: row.author_name,
+    role: row.author_role,
+    avatar: row.author_image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+    rating: row.rating,
+    verified: true, // All testimonials in DB are considered verified
+  };
+}
+
+/**
+ * Fetch testimonials for the landing page from Supabase.
+ * Filters by featured=true for landing page display.
+ * Falls back to mock data if table doesn't exist or is empty.
  */
 export function useTestimonials(): UseLandingDataResult<Testimonial[]> {
-  const [data] = useState<Testimonial[]>(mockTestimonials);
-  const [loading] = useState<boolean>(false);
-  const [error] = useState<Error | null>(null);
+  const [data, setData] = useState<Testimonial[]>(mockTestimonials);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+  const isMountedRef = useRef<boolean>(true);
 
-  const refetch = useCallback(async () => {
-    // TODO: Connect to Supabase testimonials table when available
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const supabase = createClient();
+
+      // Fetch featured testimonials, ordered by creation date
+      const { data: rows, error: queryError } = await supabase
+        .from('testimonials')
+        .select('id, author_name, author_role, author_image, content, rating, featured, created_at')
+        .eq('featured', true)
+        .order('created_at', { ascending: false });
+
+      if (queryError) {
+        throw queryError;
+      }
+
+      if (isMountedRef.current) {
+        if (rows && rows.length > 0) {
+          // Transform database rows to Testimonial format
+          const testimonials = rows.map((row: TestimonialRow) => transformTestimonial(row));
+          setData(testimonials);
+        } else {
+          // Fall back to mock data if no testimonials found
+          setData(mockTestimonials);
+        }
+        setError(null);
+      }
+    } catch (err) {
+      // Silently fall back to mock data in production
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Testimonials fetch failed, using mock data:', err);
+      }
+      if (isMountedRef.current) {
+        setData(mockTestimonials);
+        setError(err instanceof Error ? err : new Error('Failed to fetch testimonials'));
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
+    }
   }, []);
 
-  return { data, loading, error, refetch };
+  useEffect(() => {
+    isMountedRef.current = true;
+    fetchData();
+    return () => { isMountedRef.current = false; };
+  }, [fetchData]);
+
+  return { data, loading, error, refetch: fetchData };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

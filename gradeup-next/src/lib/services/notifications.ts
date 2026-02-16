@@ -1,35 +1,59 @@
 import { createClient } from '@/lib/supabase/client';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
+// ═══════════════════════════════════════════════════════════════════════════
 // Types
+// ═══════════════════════════════════════════════════════════════════════════
+
 export type NotificationType =
+  | 'deal'
   | 'deal_offer'
   | 'deal_accepted'
   | 'deal_rejected'
   | 'deal_completed'
   | 'deal_cancelled'
+  | 'message'
   | 'message_received'
-  | 'verification_approved'
-  | 'verification_rejected'
+  | 'payment'
   | 'payment_received'
   | 'payment_pending'
+  | 'system'
+  | 'verification_approved'
+  | 'verification_rejected'
+  | 'verification_request'
   | 'opportunity_match'
-  | 'profile_view'
-  | 'system';
+  | 'profile_view';
 
-export interface Notification {
+/**
+ * Database notification record
+ * Maps to the notifications table in Supabase
+ */
+export interface NotificationRecord {
   id: string;
   user_id: string;
+  type: string;
+  title: string;
+  body: string;
+  read: boolean;
+  read_at?: string | null;
+  url?: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+/**
+ * Client-side notification interface
+ * Provides a friendlier API for UI components
+ */
+export interface Notification {
+  id: string;
   type: NotificationType;
   title: string;
   message: string;
-  data?: Record<string, unknown>;
   read: boolean;
-  read_at: string | null;
   created_at: string;
-  // Related entities
-  deal_id?: string;
-  opportunity_id?: string;
-  sender_id?: string;
+  url?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface NotificationFilters {
@@ -39,14 +63,63 @@ export interface NotificationFilters {
   offset?: number;
 }
 
-// Service functions
+// ═══════════════════════════════════════════════════════════════════════════
+// Helper Functions
+// ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Get notifications for a specific user with optional filters
+ * Transform database record to client-side notification
+ */
+function transformNotification(record: NotificationRecord): Notification {
+  return {
+    id: record.id,
+    type: record.type as NotificationType,
+    title: record.title,
+    message: record.body,
+    read: record.read,
+    created_at: record.created_at,
+    url: record.url ?? undefined,
+    metadata: record.metadata,
+  };
+}
+
+/**
+ * Check if the notifications table exists and is accessible
+ */
+export async function checkTableExists(): Promise<boolean> {
+  try {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from('notifications')
+      .select('id')
+      .limit(1);
+
+    // If we get a specific error about the table not existing, return false
+    if (error) {
+      // PostgreSQL error code 42P01 = undefined_table
+      if (error.code === '42P01' || error.message.includes('does not exist')) {
+        return false;
+      }
+      // For other errors (like RLS), assume table exists
+      return true;
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Service Functions
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Get notifications for a specific user
  */
 export async function getNotifications(
   userId: string,
-  limit: number = 20
+  limit: number = 50
 ): Promise<{ data: Notification[] | null; error: Error | null }> {
   const supabase = createClient();
 
@@ -61,32 +134,39 @@ export async function getNotifications(
     return { data: null, error: new Error(`Failed to fetch notifications: ${error.message}`) };
   }
 
-  return { data: data as Notification[], error: null };
+  const notifications = (data as NotificationRecord[]).map(transformNotification);
+  return { data: notifications, error: null };
 }
 
 /**
  * Mark a single notification as read
  */
 export async function markNotificationAsRead(
-  notificationId: string
+  notificationId: string,
+  userId?: string
 ): Promise<{ data: Notification | null; error: Error | null }> {
   const supabase = createClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('notifications')
     .update({
       read: true,
       read_at: new Date().toISOString()
     })
-    .eq('id', notificationId)
-    .select()
-    .single();
+    .eq('id', notificationId);
+
+  // Optionally scope to user for extra security
+  if (userId) {
+    query = query.eq('user_id', userId);
+  }
+
+  const { data, error } = await query.select().single();
 
   if (error) {
     return { data: null, error: new Error(`Failed to mark notification as read: ${error.message}`) };
   }
 
-  return { data: data as Notification, error: null };
+  return { data: transformNotification(data as NotificationRecord), error: null };
 }
 
 /**
@@ -117,14 +197,22 @@ export async function markAllAsRead(
  * Delete a notification
  */
 export async function deleteNotification(
-  notificationId: string
+  notificationId: string,
+  userId?: string
 ): Promise<{ data: null; error: Error | null }> {
   const supabase = createClient();
 
-  const { error } = await supabase
+  let query = supabase
     .from('notifications')
     .delete()
     .eq('id', notificationId);
+
+  // Optionally scope to user for extra security
+  if (userId) {
+    query = query.eq('user_id', userId);
+  }
+
+  const { error } = await query;
 
   if (error) {
     return { data: null, error: new Error(`Failed to delete notification: ${error.message}`) };
@@ -186,21 +274,34 @@ export async function getNotificationsWithFilters(
     return { data: null, total: 0, error: new Error(`Failed to fetch notifications: ${error.message}`) };
   }
 
-  return { data: data as Notification[], total: count ?? 0, error: null };
+  const notifications = (data as NotificationRecord[]).map(transformNotification);
+  return { data: notifications, total: count ?? 0, error: null };
 }
 
 /**
- * Create a new notification (typically called by backend/triggers)
+ * Create a new notification
  */
 export async function createNotification(
-  notification: Omit<Notification, 'id' | 'created_at' | 'read' | 'read_at'>
+  notification: {
+    user_id: string;
+    type: NotificationType;
+    title: string;
+    message: string;
+    url?: string;
+    metadata?: Record<string, unknown>;
+  }
 ): Promise<{ data: Notification | null; error: Error | null }> {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from('notifications')
     .insert({
-      ...notification,
+      user_id: notification.user_id,
+      type: notification.type,
+      title: notification.title,
+      body: notification.message,
+      url: notification.url ?? null,
+      metadata: notification.metadata ?? {},
       read: false,
       read_at: null,
     })
@@ -211,7 +312,7 @@ export async function createNotification(
     return { data: null, error: new Error(`Failed to create notification: ${error.message}`) };
   }
 
-  return { data: data as Notification, error: null };
+  return { data: transformNotification(data as NotificationRecord), error: null };
 }
 
 /**
@@ -233,4 +334,84 @@ export async function deleteReadNotifications(
   }
 
   return { data: null, error: null };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Real-time Subscription
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface NotificationSubscriptionCallbacks {
+  onInsert?: (notification: Notification) => void;
+  onUpdate?: (notification: Notification) => void;
+  onDelete?: (id: string) => void;
+  onError?: (error: Error) => void;
+}
+
+/**
+ * Subscribe to real-time notification updates for a user
+ * Returns a cleanup function to unsubscribe
+ */
+export function subscribeToNotifications(
+  userId: string,
+  callbacks: NotificationSubscriptionCallbacks
+): () => void {
+  const supabase = createClient();
+
+  const channel: RealtimeChannel = supabase
+    .channel(`notifications:${userId}`)
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'notifications',
+        filter: `user_id=eq.${userId}`,
+      },
+      (payload) => {
+        if (callbacks.onInsert) {
+          const notification = transformNotification(payload.new as NotificationRecord);
+          callbacks.onInsert(notification);
+        }
+      }
+    )
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'notifications',
+        filter: `user_id=eq.${userId}`,
+      },
+      (payload) => {
+        if (callbacks.onUpdate) {
+          const notification = transformNotification(payload.new as NotificationRecord);
+          callbacks.onUpdate(notification);
+        }
+      }
+    )
+    .on(
+      'postgres_changes',
+      {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'notifications',
+        filter: `user_id=eq.${userId}`,
+      },
+      (payload) => {
+        if (callbacks.onDelete) {
+          const oldRecord = payload.old as { id: string };
+          callbacks.onDelete(oldRecord.id);
+        }
+      }
+    )
+    .subscribe((status, err) => {
+      if (err && callbacks.onError) {
+        callbacks.onError(new Error(`Subscription error: ${err.message}`));
+      }
+    });
+
+  // Return cleanup function
+  return () => {
+    supabase.removeChannel(channel);
+  };
 }
