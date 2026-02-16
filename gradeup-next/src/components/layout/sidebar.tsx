@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -48,14 +48,11 @@ export interface SidebarProps {
 
 export function Sidebar({ navItems, variant = 'athlete', className, user }: SidebarProps) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    // Reading localStorage on mount is a valid pattern
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    const saved = localStorage.getItem('sidebar-collapsed');
-    if (saved === 'true') setCollapsed(true);
-  }, []);
+  // Initialize from localStorage on client, default to false for SSR
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('sidebar-collapsed') === 'true';
+  });
 
   const toggleCollapsed = () => {
     const newState = !collapsed;

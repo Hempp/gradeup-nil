@@ -183,10 +183,9 @@ export function HighlightTapeSection() {
     setIsLoading(false);
   }, []);
 
-  // Fetch highlights on mount
+  // Fetch highlights on mount - data fetching on mount is valid pattern
   useEffect(() => {
-    // Data fetching on mount is a valid pattern
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- data fetching on mount
     fetchHighlights();
   }, [fetchHighlights]);
 

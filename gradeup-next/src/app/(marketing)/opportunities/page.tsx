@@ -269,8 +269,8 @@ interface OpportunityCardProps {
 function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
   const deadlineDate = new Date(opportunity.deadline);
   // Calculate if expiring soon (within 7 days) - memoize timestamp for stable comparison
-  // Date.now() is pure and memoized for stable hydration
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  // Date.now() is memoized for stable hydration - impure but intentional for time-based checks
+  // eslint-disable-next-line react-hooks/purity
   const mountTime = useMemo(() => Date.now(), []);
   const isExpiringSoon = deadlineDate.getTime() - mountTime < 7 * 24 * 60 * 60 * 1000;
 

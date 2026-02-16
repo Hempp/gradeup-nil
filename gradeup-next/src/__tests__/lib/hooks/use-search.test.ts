@@ -434,7 +434,7 @@ describe('applyFilters function', () => {
 
     const result = applyFilters(testItems, filters, defaultFilters, definitions);
     expect(result).toHaveLength(2);
-    expect(result.every(item => item.status === 'active')).toBe(true);
+    expect(result.every((item: TestItem) => item.status === 'active')).toBe(true);
   });
 
   it('applies multiple filters', () => {
@@ -456,7 +456,7 @@ describe('applyFilters function', () => {
 
     const result = applyFilters(testItems, filters, defaultFilters, definitions);
     expect(result).toHaveLength(2);
-    expect(result.every(item => item.status === 'active' && item.category === 'sports')).toBe(true);
+    expect(result.every((item: TestItem) => item.status === 'active' && item.category === 'sports')).toBe(true);
   });
 
   it('handles array filter values', () => {
@@ -553,7 +553,7 @@ describe('applySearch function', () => {
   it('searches in specified string fields', () => {
     const result = applySearch(testItems, 'apple', ['name']);
     expect(result).toHaveLength(2);
-    expect(result.every(item => item.name.toLowerCase().includes('apple'))).toBe(true);
+    expect(result.every((item: TestItem) => item.name.toLowerCase().includes('apple'))).toBe(true);
   });
 
   it('searches across multiple fields', () => {
@@ -631,8 +631,8 @@ describe('applySearchAndFilters function', () => {
     );
 
     expect(result).toHaveLength(2);
-    expect(result.every(item => item.name.toLowerCase().includes('nike'))).toBe(true);
-    expect(result.every(item => item.status === 'active')).toBe(true);
+    expect(result.every((item: TestItem) => item.name.toLowerCase().includes('nike'))).toBe(true);
+    expect(result.every((item: TestItem) => item.status === 'active')).toBe(true);
   });
 
   it('returns filtered results when no search query', () => {
@@ -658,7 +658,7 @@ describe('applySearchAndFilters function', () => {
     );
 
     expect(result).toHaveLength(2);
-    expect(result.every(item => item.category === 'sports')).toBe(true);
+    expect(result.every((item: TestItem) => item.category === 'sports')).toBe(true);
   });
 
   it('returns searched results when no filters', () => {

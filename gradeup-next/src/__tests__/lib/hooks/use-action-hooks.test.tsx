@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { ToastProvider } from '@/components/ui/toast';
 import {
   useAcceptDeal,
