@@ -81,7 +81,16 @@ const BUCKET_CONFIGS: Record<UploadBucket, { maxSizeMB: number; allowedTypes: st
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Validate file size
+ * Validate that a file does not exceed the maximum size limit
+ *
+ * @param file - The File object to validate
+ * @param maxSizeMB - Maximum allowed size in megabytes
+ * @returns Validation result with valid boolean and optional error message
+ * @example
+ * const result = validateFileSize(file, 5);
+ * if (!result.valid) {
+ *   showError(result.error);
+ * }
  */
 export function validateFileSize(file: File, maxSizeMB: number): FileValidationResult {
   const maxBytes = maxSizeMB * 1024 * 1024;
@@ -95,7 +104,13 @@ export function validateFileSize(file: File, maxSizeMB: number): FileValidationR
 }
 
 /**
- * Validate file type
+ * Validate that a file's MIME type is in the allowed list
+ *
+ * @param file - The File object to validate
+ * @param allowedTypes - Array of allowed MIME types (e.g., 'image/jpeg')
+ * @returns Validation result with valid boolean and optional error message
+ * @example
+ * const result = validateFileType(file, ['image/jpeg', 'image/png']);
  */
 export function validateFileType(file: File, allowedTypes: string[]): FileValidationResult {
   if (!allowedTypes.includes(file.type)) {
@@ -111,7 +126,18 @@ export function validateFileType(file: File, allowedTypes: string[]): FileValida
 }
 
 /**
- * Validate image dimensions
+ * Validate image dimensions against min/max constraints
+ *
+ * Loads the image to check its dimensions. Skips validation for non-image files.
+ *
+ * @param file - The File object to validate
+ * @param minWidth - Optional minimum width in pixels
+ * @param minHeight - Optional minimum height in pixels
+ * @param maxWidth - Optional maximum width in pixels
+ * @param maxHeight - Optional maximum height in pixels
+ * @returns Promise resolving to validation result
+ * @example
+ * const result = await validateImageDimensions(file, 200, 200, 2000, 2000);
  */
 export async function validateImageDimensions(
   file: File,
@@ -156,7 +182,18 @@ export async function validateImageDimensions(
 }
 
 /**
- * Get image dimensions
+ * Get the dimensions of an image file
+ *
+ * Loads the image and returns its width and height. Returns null for
+ * non-image files or if the image fails to load.
+ *
+ * @param file - The image File object
+ * @returns Promise resolving to dimensions or null
+ * @example
+ * const dims = await getImageDimensions(imageFile);
+ * if (dims) {
+ *   console.log(`${dims.width}x${dims.height}`);
+ * }
  */
 export function getImageDimensions(file: File): Promise<ImageDimensions | null> {
   if (!file.type.startsWith('image/')) {
@@ -175,7 +212,19 @@ export function getImageDimensions(file: File): Promise<ImageDimensions | null> 
 }
 
 /**
- * Validate file for upload
+ * Validate a file for upload against bucket configuration
+ *
+ * Runs size and type validation based on the bucket's configuration
+ * or custom options. Each bucket has predefined constraints.
+ *
+ * @param file - The File object to validate
+ * @param options - Upload options including bucket and optional overrides
+ * @returns Promise resolving to validation result
+ * @example
+ * const result = await validateFile(file, { bucket: 'avatars' });
+ * if (!result.valid) {
+ *   showError(result.error);
+ * }
  */
 export async function validateFile(
   file: File,
@@ -201,7 +250,18 @@ export async function validateFile(
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Generate unique file path
+ * Generate a unique file path for storage
+ *
+ * Creates a path with timestamp and random string to ensure uniqueness.
+ * Format: {userId}/{timestamp}-{random}.{extension}
+ *
+ * @param userId - The user's ID for the path prefix
+ * @param file - The File object (used for extension)
+ * @param customPath - Optional custom path prefix instead of userId
+ * @returns Unique file path string
+ * @example
+ * generateFilePath('user-123', file) // 'user-123/1708123456789-a1b2c3.jpg'
+ * generateFilePath('user-123', file, 'avatars') // 'avatars/1708123456789-a1b2c3.jpg'
  */
 export function generateFilePath(userId: string, file: File, customPath?: string): string {
   const ext = file.name.split('.').pop() || 'bin';
@@ -218,6 +278,18 @@ export function generateFilePath(userId: string, file: File, customPath?: string
 
 /**
  * Upload a file to Supabase Storage
+ *
+ * Validates the file, generates a unique path, and uploads to the
+ * specified bucket. Returns the public URL on success.
+ *
+ * @param file - The File object to upload
+ * @param options - Upload options including bucket and optional path/callbacks
+ * @returns Promise resolving to UploadResult with url, path, or error
+ * @example
+ * const { url, error } = await uploadFile(file, {
+ *   bucket: 'avatars',
+ *   onProgress: (p) => setProgress(p)
+ * });
  */
 export async function uploadFile(
   file: File,
@@ -272,7 +344,21 @@ export async function uploadFile(
 }
 
 /**
- * Upload with XMLHttpRequest for progress tracking
+ * Upload a file with real-time progress tracking
+ *
+ * Uses XMLHttpRequest instead of Supabase client for accurate progress
+ * reporting. Ideal for large files where progress feedback is important.
+ *
+ * @param file - The File object to upload
+ * @param options - Upload options including bucket and onProgress callback
+ * @returns Promise resolving to UploadResult with url, path, or error
+ * @example
+ * const { url } = await uploadFileWithProgress(file, {
+ *   bucket: 'documents',
+ *   onProgress: (progress) => {
+ *     setUploadProgress(progress); // 0-100
+ *   }
+ * });
  */
 export async function uploadFileWithProgress(
   file: File,
@@ -351,7 +437,13 @@ export async function uploadFileWithProgress(
 }
 
 /**
- * Delete a file from storage
+ * Delete a file from Supabase Storage
+ *
+ * @param bucket - The storage bucket name
+ * @param path - The file path within the bucket
+ * @returns Promise resolving to object with error or null on success
+ * @example
+ * const { error } = await deleteFile('avatars', 'user-123/old-avatar.jpg');
  */
 export async function deleteFile(bucket: UploadBucket, path: string): Promise<{ error: Error | null }> {
   const supabase = createClient();
@@ -365,7 +457,17 @@ export async function deleteFile(bucket: UploadBucket, path: string): Promise<{ 
 }
 
 /**
- * Upload avatar specifically
+ * Upload a user avatar image with progress tracking
+ *
+ * Convenience wrapper for uploadFileWithProgress with 'avatars' bucket.
+ * Automatically uses avatar-specific size and type constraints.
+ *
+ * @param file - The image File to upload
+ * @param onProgress - Optional callback for upload progress (0-100)
+ * @returns Promise resolving to UploadResult
+ * @example
+ * const { url } = await uploadAvatar(file, setProgress);
+ * if (url) updateProfile({ avatar_url: url });
  */
 export async function uploadAvatar(
   file: File,
@@ -378,7 +480,13 @@ export async function uploadAvatar(
 }
 
 /**
- * Upload brand logo specifically
+ * Upload a brand logo image with progress tracking
+ *
+ * Convenience wrapper for uploadFileWithProgress with 'brand-logos' bucket.
+ *
+ * @param file - The image File to upload
+ * @param onProgress - Optional callback for upload progress (0-100)
+ * @returns Promise resolving to UploadResult
  */
 export async function uploadBrandLogo(
   file: File,
@@ -391,7 +499,14 @@ export async function uploadBrandLogo(
 }
 
 /**
- * Upload document specifically
+ * Upload a document file with progress tracking
+ *
+ * Convenience wrapper for uploadFileWithProgress with 'documents' bucket.
+ * Supports PDFs, Word docs, and images.
+ *
+ * @param file - The document File to upload
+ * @param onProgress - Optional callback for upload progress (0-100)
+ * @returns Promise resolving to UploadResult
  */
 export async function uploadDocument(
   file: File,
@@ -408,7 +523,18 @@ export async function uploadDocument(
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Compress an image before upload
+ * Compress an image file to reduce size before upload
+ *
+ * Resizes the image if wider than maxWidth and compresses using
+ * canvas. Only returns compressed version if smaller than original.
+ *
+ * @param file - The image File to compress
+ * @param maxWidth - Maximum width in pixels (default: 1200)
+ * @param quality - JPEG quality 0-1 (default: 0.8)
+ * @returns Promise resolving to compressed File (or original if smaller)
+ * @example
+ * const compressed = await compressImage(file, 800, 0.7);
+ * const { url } = await uploadAvatar(compressed);
  */
 export async function compressImage(
   file: File,
@@ -479,7 +605,19 @@ export async function compressImage(
 }
 
 /**
- * Create thumbnail from image
+ * Create a square thumbnail from an image file
+ *
+ * Center-crops the image to a square and scales to the specified size.
+ * Returns a JPEG Blob at 85% quality.
+ *
+ * @param file - The image File to create thumbnail from
+ * @param size - Thumbnail size in pixels (default: 200)
+ * @returns Promise resolving to Blob or null on failure
+ * @example
+ * const thumbnailBlob = await createThumbnail(file, 150);
+ * if (thumbnailBlob) {
+ *   const thumbnailFile = new File([thumbnailBlob], 'thumb.jpg');
+ * }
  */
 export async function createThumbnail(
   file: File,
@@ -523,14 +661,35 @@ export async function createThumbnail(
 }
 
 /**
- * Get file preview URL (for local preview before upload)
+ * Get a local preview URL for a file (before upload)
+ *
+ * Creates an object URL for displaying file preview in the browser.
+ * Remember to revoke the URL when done to free memory.
+ *
+ * @param file - The File to create preview URL for
+ * @returns Object URL string for the file
+ * @example
+ * const previewUrl = getFilePreviewUrl(file);
+ * setImageSrc(previewUrl);
+ * // Later: revokeFilePreviewUrl(previewUrl);
  */
 export function getFilePreviewUrl(file: File): string {
   return URL.createObjectURL(file);
 }
 
 /**
- * Revoke file preview URL to free memory
+ * Revoke a file preview URL to free browser memory
+ *
+ * Should be called when preview is no longer needed (e.g., after upload
+ * completes or component unmounts).
+ *
+ * @param url - The object URL to revoke
+ * @example
+ * useEffect(() => {
+ *   return () => {
+ *     if (previewUrl) revokeFilePreviewUrl(previewUrl);
+ *   };
+ * }, [previewUrl]);
  */
 export function revokeFilePreviewUrl(url: string): void {
   URL.revokeObjectURL(url);

@@ -25,7 +25,7 @@ import {
   useTestimonials,
   type FeaturedAthlete,
 } from '@/lib/hooks/use-landing-data';
-import { DashboardPreview } from '@/components/marketing';
+import { LazyDashboardPreview } from '@/components/marketing';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HERO SECTION
@@ -811,9 +811,9 @@ function PlatformPreviewSection() {
           </p>
         </div>
 
-        {/* Dashboard Preview Component */}
+        {/* Dashboard Preview Component (lazy-loaded for better initial load) */}
         <div className="max-w-5xl mx-auto">
-          <DashboardPreview
+          <LazyDashboardPreview
             showCTA={true}
             ctaText="Get Started Free"
             ctaHref="/signup/athlete"

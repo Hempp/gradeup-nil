@@ -1,11 +1,50 @@
 import { forwardRef, type HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Props for the Card component
+ */
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * Visual style variant of the card
+   * - 'default': Standard card with solid background and border
+   * - 'glass': Glassmorphism effect with backdrop blur
+   * - 'glow': Card with glowing border using primary color
+   * @default 'default'
+   */
   variant?: 'default' | 'glass' | 'glow';
+  /**
+   * Enable hover effects (lift, shadow, background change)
+   * @default false
+   */
   hover?: boolean;
 }
 
+/**
+ * A container component for grouping related content
+ *
+ * Provides consistent styling for card-based layouts with multiple
+ * visual variants. Can be composed with CardHeader, CardTitle,
+ * CardDescription, CardContent, and CardFooter for structured content.
+ *
+ * @example
+ * // Basic card with hover effect
+ * <Card hover>
+ *   <CardHeader>
+ *     <CardTitle>Deal Details</CardTitle>
+ *     <CardDescription>Partnership with Nike</CardDescription>
+ *   </CardHeader>
+ *   <CardContent>
+ *     <p>Deal content here...</p>
+ *   </CardContent>
+ *   <CardFooter>
+ *     <Button>Accept</Button>
+ *   </CardFooter>
+ * </Card>
+ *
+ * // Glass variant for overlay content
+ * <Card variant="glass">...</Card>
+ */
 const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = 'default', hover = false, children, ...props }, ref) => {
     const baseStyles = `
@@ -43,6 +82,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
 
 Card.displayName = 'Card';
 
+/**
+ * Header section of a Card, typically contains CardTitle and CardDescription
+ */
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
@@ -54,6 +96,9 @@ const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 );
 CardHeader.displayName = 'CardHeader';
 
+/**
+ * Title element for Card, renders as h3 with appropriate styling
+ */
 const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h3
@@ -65,6 +110,9 @@ const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEleme
 );
 CardTitle.displayName = 'CardTitle';
 
+/**
+ * Description/subtitle element for Card with muted text styling
+ */
 const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
     <p
@@ -76,6 +124,9 @@ const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLPara
 );
 CardDescription.displayName = 'CardDescription';
 
+/**
+ * Main content area of a Card
+ */
 const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('', className)} {...props} />
@@ -83,6 +134,10 @@ const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 );
 CardContent.displayName = 'CardContent';
 
+/**
+ * Footer section of a Card, typically contains action buttons
+ * Includes top border separator and flex layout for actions
+ */
 const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div

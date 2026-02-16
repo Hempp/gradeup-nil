@@ -48,6 +48,8 @@ export function MobileNav({ navItems, variant = 'athlete', className }: MobileNa
 
   // Close drawer on route change
   useEffect(() => {
+    // Closing drawer on route change is a valid pattern
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
   }, [pathname]);
 

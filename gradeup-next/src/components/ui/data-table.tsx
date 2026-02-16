@@ -7,29 +7,47 @@ import { Skeleton } from './skeleton';
 // A comprehensive, reusable data table with loading states and row interactions
 // ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * Configuration for a table column
+ * @template T - The type of data objects in the table
+ */
 export interface DataTableColumn<T> {
+  /** Unique key matching the data property name */
   key: string;
+  /** Header text displayed in the table header */
   header: string;
+  /** Custom render function for cell content */
   render?: (value: T[keyof T], row: T) => ReactNode;
+  /** CSS width class or value for the column */
   width?: string;
-  /** Hide this column on mobile screens */
+  /** Hide this column on mobile screens (md breakpoint) */
   hideOnMobile?: boolean;
-  /** Priority for mobile card view (lower = higher priority) */
+  /** Priority for mobile card view (lower = higher priority, shown first) */
   mobilePriority?: number;
 }
 
+/**
+ * Props for the DataTable component
+ * @template T - The type of data objects in the table
+ */
 export interface DataTableProps<T> extends HTMLAttributes<HTMLDivElement> {
+  /** Column configuration array */
   columns: DataTableColumn<T>[];
+  /** Array of data objects to display */
   data: T[];
+  /** Show loading skeleton instead of data */
   loading?: boolean;
+  /** Custom empty state component when data is empty */
   emptyState?: ReactNode;
+  /** Callback when a row is clicked (makes rows interactive) */
   onRowClick?: (row: T) => void;
+  /** Custom function to extract unique key for each row */
   keyExtractor?: (row: T, index: number) => string;
-  /** Accessible caption for the table (screen readers) */
+  /** Accessible caption for the table (screen readers only) */
   caption?: string;
   /** Description for row click action for screen readers */
   rowActionDescription?: string;
-  /** Enable card view on mobile instead of scrollable table */
+  /** Enable responsive card view on mobile (md breakpoint) */
   mobileCardView?: boolean;
   /** Custom render function for mobile card view */
   renderMobileCard?: (row: T, index: number) => ReactNode;
@@ -172,6 +190,31 @@ function MobileCard<T extends Record<string, unknown>>({
 }
 
 // ─── DataTable Component ───
+/**
+ * A comprehensive data table component with responsive mobile support
+ *
+ * Features:
+ * - Loading skeleton state
+ * - Customizable column rendering
+ * - Row click interactions with keyboard support
+ * - Responsive mobile card view
+ * - Accessible with ARIA labels
+ * - Empty state handling
+ *
+ * @example
+ * <DataTable
+ *   columns={[
+ *     { key: 'name', header: 'Name', mobilePriority: 1 },
+ *     { key: 'status', header: 'Status', render: (v) => <Badge>{v}</Badge> },
+ *     { key: 'amount', header: 'Amount', hideOnMobile: true }
+ *   ]}
+ *   data={deals}
+ *   loading={isLoading}
+ *   onRowClick={(deal) => router.push(`/deals/${deal.id}`)}
+ *   mobileCardView
+ *   caption="List of active deals"
+ * />
+ */
 function DataTableInner<T extends Record<string, unknown>>(
   {
     columns,

@@ -32,7 +32,35 @@ export interface UseVerificationRequestsResult {
 
 /**
  * Hook for managing athlete verification requests
- * Handles fetching status, submitting requests, and real-time updates
+ *
+ * Provides state and actions for athlete verification workflow including
+ * fetching current verification status, submitting new verification requests,
+ * and receiving real-time updates when verification status changes.
+ *
+ * @param athleteId - The unique athlete ID, or null if not available
+ * @returns UseVerificationRequestsResult with status, loading, error, and action functions
+ * @example
+ * function VerificationPanel({ athleteId }: Props) {
+ *   const {
+ *     status,
+ *     loading,
+ *     submitRequest,
+ *     canRequestVerification
+ *   } = useVerificationRequests(athleteId);
+ *
+ *   if (loading) return <Spinner />;
+ *
+ *   return (
+ *     <div>
+ *       {canRequestVerification('enrollment') && (
+ *         <button onClick={() => submitRequest('enrollment')}>
+ *           Verify Enrollment
+ *         </button>
+ *       )}
+ *       {status?.enrollment_verified && <Badge>Enrollment Verified</Badge>}
+ *     </div>
+ *   );
+ * }
  */
 export function useVerificationRequests(athleteId: string | null): UseVerificationRequestsResult {
   const [status, setStatus] = useState<VerificationStatus | null>(null);

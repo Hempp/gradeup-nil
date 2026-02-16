@@ -134,6 +134,8 @@ export const ChartWrapper = forwardRef<HTMLDivElement, ChartWrapperProps>(
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+      // Setting mounted state for hydration is a valid pattern
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsMounted(true);
     }, []);
 

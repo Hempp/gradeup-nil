@@ -36,7 +36,20 @@ export interface ServiceResult<T> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Get recent activity for the authenticated user
+ * Get recent activity for the currently authenticated user
+ *
+ * Fetches the most recent activity log entries for the current user,
+ * ordered by creation date (newest first).
+ *
+ * @param limit - Maximum number of activities to return (default: 10)
+ * @returns Promise resolving to ServiceResult with Activity array or an error
+ * @example
+ * const { data: activities, error } = await getMyActivity(20);
+ * if (activities) {
+ *   activities.forEach(activity => {
+ *     console.log(`${activity.type}: ${activity.description}`);
+ *   });
+ * }
  */
 export async function getMyActivity(limit: number = 10): Promise<ServiceResult<Activity[]>> {
   const supabase = createClient();
@@ -72,7 +85,16 @@ export async function getMyActivity(limit: number = 10): Promise<ServiceResult<A
 }
 
 /**
- * Get recent activity for a specific athlete
+ * Get recent activity for a specific athlete by their athlete ID
+ *
+ * Looks up the athlete's profile_id and fetches their activity log entries,
+ * ordered by creation date (newest first).
+ *
+ * @param athleteId - The unique athlete ID (not profile_id)
+ * @param limit - Maximum number of activities to return (default: 10)
+ * @returns Promise resolving to ServiceResult with Activity array or an error
+ * @example
+ * const { data: activities, error } = await getAthleteActivity('athlete-uuid', 15);
  */
 export async function getAthleteActivity(
   athleteId: string,
@@ -113,7 +135,21 @@ export async function getAthleteActivity(
 }
 
 /**
- * Log a new activity
+ * Log a new activity entry for the current authenticated user
+ *
+ * Creates an activity log record for tracking user actions such as
+ * deals, messages, payments, and profile interactions.
+ *
+ * @param type - The type of activity (e.g., 'deal_created', 'message', 'payment')
+ * @param description - Human-readable description of the activity
+ * @param metadata - Optional additional data to store with the activity
+ * @returns Promise resolving to ServiceResult with the created Activity or an error
+ * @example
+ * const { data, error } = await logActivity(
+ *   'deal_completed',
+ *   'Completed endorsement deal with Nike',
+ *   { dealId: 'deal-123', amount: 5000 }
+ * );
  */
 export async function logActivity(
   type: ActivityType,

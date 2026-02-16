@@ -346,4 +346,446 @@ describe('useFilters hook', () => {
     expect(result.current.filters.minAmount.value).toBe(1000);
     expect(result.current.hasActiveFilters).toBe(true);
   });
+
+  describe('URL synchronization', () => {
+    it('syncs filters to URL when enabled', () => {
+      const { result } = renderHook(() =>
+        useFilters({
+          defaultFilters: {
+            status: { value: 'all', label: 'All' },
+          },
+          syncWithUrl: true,
+        })
+      );
+
+      act(() => {
+        result.current.setFilter('status', { value: 'active', label: 'Active' });
+      });
+
+      expect(mockReplace).toHaveBeenCalledWith(
+        expect.stringContaining('status=active'),
+        expect.any(Object)
+      );
+    });
+
+    it('removes params from URL when filter is reset', () => {
+      const { result } = renderHook(() =>
+        useFilters({
+          defaultFilters: {
+            status: { value: 'all', label: 'All' },
+          },
+          syncWithUrl: true,
+        })
+      );
+
+      act(() => {
+        result.current.setFilter('status', { value: 'active', label: 'Active' });
+      });
+
+      act(() => {
+        result.current.resetFilters();
+      });
+
+      expect(mockReplace).toHaveBeenLastCalledWith('/test', expect.any(Object));
+    });
+  });
+});
+
+describe('applyFilters function', () => {
+  const { applyFilters } = require('@/lib/hooks/use-search');
+
+  interface TestItem {
+    id: number;
+    name: string;
+    status: string;
+    category: string;
+    price: number;
+  }
+
+  const testItems: TestItem[] = [
+    { id: 1, name: 'Item 1', status: 'active', category: 'sports', price: 100 },
+    { id: 2, name: 'Item 2', status: 'inactive', category: 'tech', price: 200 },
+    { id: 3, name: 'Item 3', status: 'active', category: 'sports', price: 300 },
+    { id: 4, name: 'Item 4', status: 'pending', category: 'tech', price: 400 },
+  ];
+
+  const defaultFilters = {
+    status: { value: '', label: '' },
+    category: { value: '', label: '' },
+  };
+
+  it('returns all items when no filters are active', () => {
+    const result = applyFilters(testItems, defaultFilters, defaultFilters, []);
+    expect(result).toEqual(testItems);
+  });
+
+  it('filters items using predicate', () => {
+    const filters = {
+      status: { value: 'active', label: 'Active' },
+      category: { value: '', label: '' },
+    };
+
+    const definitions = [
+      {
+        key: 'status',
+        predicate: (item: TestItem, value: string) => item.status === value,
+      },
+    ];
+
+    const result = applyFilters(testItems, filters, defaultFilters, definitions);
+    expect(result).toHaveLength(2);
+    expect(result.every(item => item.status === 'active')).toBe(true);
+  });
+
+  it('applies multiple filters', () => {
+    const filters = {
+      status: { value: 'active', label: 'Active' },
+      category: { value: 'sports', label: 'Sports' },
+    };
+
+    const definitions = [
+      {
+        key: 'status',
+        predicate: (item: TestItem, value: string) => item.status === value,
+      },
+      {
+        key: 'category',
+        predicate: (item: TestItem, value: string) => item.category === value,
+      },
+    ];
+
+    const result = applyFilters(testItems, filters, defaultFilters, definitions);
+    expect(result).toHaveLength(2);
+    expect(result.every(item => item.status === 'active' && item.category === 'sports')).toBe(true);
+  });
+
+  it('handles array filter values', () => {
+    const filters = {
+      status: { value: ['active', 'pending'], label: '' },
+      category: { value: '', label: '' },
+    };
+
+    const arrayDefaultFilters = {
+      status: { value: [] as string[], label: '' },
+      category: { value: '', label: '' },
+    };
+
+    const definitions = [
+      {
+        key: 'status',
+        predicate: (item: TestItem, value: string[]) => value.includes(item.status),
+      },
+    ];
+
+    const result = applyFilters(testItems, filters, arrayDefaultFilters, definitions);
+    expect(result).toHaveLength(3);
+  });
+
+  it('skips filters at default value', () => {
+    const filters = {
+      status: { value: 'active', label: 'Active' },
+      category: { value: '', label: '' }, // default value
+    };
+
+    const definitions = [
+      {
+        key: 'status',
+        predicate: (item: TestItem, value: string) => item.status === value,
+      },
+      {
+        key: 'category',
+        predicate: (item: TestItem, value: string) => item.category === value,
+      },
+    ];
+
+    const result = applyFilters(testItems, filters, defaultFilters, definitions);
+    // Only status filter should apply
+    expect(result).toHaveLength(2);
+  });
+
+  it('handles missing filter definition', () => {
+    const filters = {
+      status: { value: 'active', label: 'Active' },
+      nonexistent: { value: 'value', label: 'Value' },
+    };
+
+    const definitions = [
+      {
+        key: 'status',
+        predicate: (item: TestItem, value: string) => item.status === value,
+      },
+      // No definition for 'nonexistent'
+    ];
+
+    const result = applyFilters(testItems, filters, defaultFilters, definitions);
+    // Should only apply status filter, skip nonexistent
+    expect(result).toHaveLength(2);
+  });
+});
+
+describe('applySearch function', () => {
+  const { applySearch } = require('@/lib/hooks/use-search');
+
+  interface TestItem {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+  }
+
+  const testItems: TestItem[] = [
+    { id: 1, name: 'Apple iPhone', description: 'Latest smartphone', price: 999 },
+    { id: 2, name: 'Samsung Galaxy', description: 'Android phone', price: 899 },
+    { id: 3, name: 'Apple Watch', description: 'Smart watch device', price: 399 },
+    { id: 4, name: 'Sony Headphones', description: 'Wireless audio', price: 199 },
+  ];
+
+  it('returns all items when query is empty', () => {
+    const result = applySearch(testItems, '', ['name']);
+    expect(result).toEqual(testItems);
+  });
+
+  it('returns all items when query is whitespace', () => {
+    const result = applySearch(testItems, '   ', ['name']);
+    expect(result).toEqual(testItems);
+  });
+
+  it('searches in specified string fields', () => {
+    const result = applySearch(testItems, 'apple', ['name']);
+    expect(result).toHaveLength(2);
+    expect(result.every(item => item.name.toLowerCase().includes('apple'))).toBe(true);
+  });
+
+  it('searches across multiple fields', () => {
+    const result = applySearch(testItems, 'phone', ['name', 'description']);
+    // iPhone, Android phone, Headphones (wireless audio description doesn't contain 'phone' but name contains 'phone')
+    expect(result).toHaveLength(3); // iPhone, Samsung Galaxy (Android phone), Sony Headphones
+  });
+
+  it('is case insensitive', () => {
+    const result1 = applySearch(testItems, 'APPLE', ['name']);
+    const result2 = applySearch(testItems, 'apple', ['name']);
+    expect(result1).toEqual(result2);
+  });
+
+  it('searches in numeric fields', () => {
+    const result = applySearch(testItems, '999', ['price']);
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe('Apple iPhone');
+  });
+
+  it('handles partial matches', () => {
+    const result = applySearch(testItems, 'watch', ['name', 'description']);
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe('Apple Watch');
+  });
+
+  it('returns empty array when no matches', () => {
+    const result = applySearch(testItems, 'xyz123nonexistent', ['name', 'description']);
+    expect(result).toHaveLength(0);
+  });
+});
+
+describe('applySearchAndFilters function', () => {
+  const { applySearchAndFilters } = require('@/lib/hooks/use-search');
+
+  interface TestItem {
+    id: number;
+    name: string;
+    status: string;
+    category: string;
+  }
+
+  const testItems: TestItem[] = [
+    { id: 1, name: 'Nike Running Shoes', status: 'active', category: 'sports' },
+    { id: 2, name: 'Adidas Soccer Ball', status: 'inactive', category: 'sports' },
+    { id: 3, name: 'Nike Tech Fleece', status: 'active', category: 'apparel' },
+    { id: 4, name: 'Samsung Phone', status: 'active', category: 'tech' },
+  ];
+
+  const defaultFilters = {
+    status: { value: '', label: '' },
+    category: { value: '', label: '' },
+  };
+
+  it('applies both search and filters', () => {
+    const filters = {
+      status: { value: 'active', label: 'Active' },
+      category: { value: '', label: '' },
+    };
+
+    const definitions = [
+      {
+        key: 'status',
+        predicate: (item: TestItem, value: string) => item.status === value,
+      },
+    ];
+
+    const result = applySearchAndFilters(
+      testItems,
+      'nike',
+      ['name'],
+      filters,
+      defaultFilters,
+      definitions
+    );
+
+    expect(result).toHaveLength(2);
+    expect(result.every(item => item.name.toLowerCase().includes('nike'))).toBe(true);
+    expect(result.every(item => item.status === 'active')).toBe(true);
+  });
+
+  it('returns filtered results when no search query', () => {
+    const filters = {
+      status: { value: '', label: '' },
+      category: { value: 'sports', label: 'Sports' },
+    };
+
+    const definitions = [
+      {
+        key: 'category',
+        predicate: (item: TestItem, value: string) => item.category === value,
+      },
+    ];
+
+    const result = applySearchAndFilters(
+      testItems,
+      '',
+      ['name'],
+      filters,
+      defaultFilters,
+      definitions
+    );
+
+    expect(result).toHaveLength(2);
+    expect(result.every(item => item.category === 'sports')).toBe(true);
+  });
+
+  it('returns searched results when no filters', () => {
+    const result = applySearchAndFilters(
+      testItems,
+      'phone',
+      ['name'],
+      defaultFilters,
+      defaultFilters,
+      []
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe('Samsung Phone');
+  });
+
+  it('returns all items when no search and no filters', () => {
+    const result = applySearchAndFilters(
+      testItems,
+      '',
+      ['name'],
+      defaultFilters,
+      defaultFilters,
+      []
+    );
+
+    expect(result).toEqual(testItems);
+  });
+});
+
+describe('useSearchWithFilters hook', () => {
+  const { useSearchWithFilters } = require('@/lib/hooks/use-search');
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('combines search and filter functionality', () => {
+    const defaultFilters = {
+      status: { value: '', label: '' },
+    };
+
+    const { result } = renderHook(() =>
+      useSearchWithFilters({
+        searchOptions: { debounceMs: 100 },
+        filterOptions: { defaultFilters },
+      })
+    );
+
+    // Should have search properties
+    expect(result.current.query).toBe('');
+    expect(typeof result.current.setQuery).toBe('function');
+    expect(typeof result.current.clearQuery).toBe('function');
+
+    // Should have filter properties
+    expect(result.current.filters).toEqual(defaultFilters);
+    expect(typeof result.current.setFilter).toBe('function');
+    expect(typeof result.current.resetFilters).toBe('function');
+  });
+
+  it('updates search state', () => {
+    const { result } = renderHook(() =>
+      useSearchWithFilters({
+        searchOptions: { debounceMs: 100 },
+        filterOptions: { defaultFilters: { status: { value: '', label: '' } } },
+      })
+    );
+
+    act(() => {
+      result.current.setQuery('test');
+    });
+
+    expect(result.current.query).toBe('test');
+
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
+
+    expect(result.current.debouncedQuery).toBe('test');
+  });
+
+  it('updates filter state', () => {
+    const { result } = renderHook(() =>
+      useSearchWithFilters({
+        searchOptions: {},
+        filterOptions: { defaultFilters: { status: { value: '', label: '' } } },
+      })
+    );
+
+    act(() => {
+      result.current.setFilter('status', { value: 'active', label: 'Active' });
+    });
+
+    expect(result.current.filters.status.value).toBe('active');
+    expect(result.current.hasActiveFilters).toBe(true);
+  });
+
+  it('tracks active filter count', () => {
+    const { result } = renderHook(() =>
+      useSearchWithFilters({
+        searchOptions: {},
+        filterOptions: {
+          defaultFilters: {
+            status: { value: '', label: '' },
+            category: { value: '', label: '' },
+          },
+        },
+      })
+    );
+
+    expect(result.current.activeFilterCount).toBe(0);
+
+    act(() => {
+      result.current.setFilter('status', { value: 'active', label: 'Active' });
+    });
+
+    expect(result.current.activeFilterCount).toBe(1);
+
+    act(() => {
+      result.current.setFilter('category', { value: 'sports', label: 'Sports' });
+    });
+
+    expect(result.current.activeFilterCount).toBe(2);
+  });
 });

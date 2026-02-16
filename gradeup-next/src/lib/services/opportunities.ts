@@ -63,6 +63,20 @@ export interface OpportunityFilters {
 
 /**
  * Apply to an opportunity as an athlete
+ *
+ * Submits an application for an athlete to an opportunity. Handles checking
+ * for existing applications and resubmitting withdrawn applications.
+ *
+ * @param athleteId - The unique identifier of the applying athlete
+ * @param opportunityId - The unique identifier of the opportunity
+ * @param applicationData - Optional cover letter, portfolio URL, and additional info
+ * @returns Promise resolving to the created/updated Application or an error
+ * @example
+ * const { data, error } = await applyToOpportunity(
+ *   'athlete-123',
+ *   'opportunity-456',
+ *   { cover_letter: 'I am excited to partner with your brand...' }
+ * );
  */
 export async function applyToOpportunity(
   athleteId: string,
@@ -149,7 +163,18 @@ export async function applyToOpportunity(
 }
 
 /**
- * Get all applications for an athlete
+ * Get all applications submitted by an athlete
+ *
+ * Fetches all opportunity applications for a specific athlete, including
+ * joined opportunity and brand data. Ordered by submission date (newest first).
+ *
+ * @param athleteId - The unique identifier of the athlete
+ * @returns Promise resolving to Application array with opportunity details or an error
+ * @example
+ * const { data: applications, error } = await getMyApplications('athlete-123');
+ * applications?.forEach(app => {
+ *   console.log(`${app.opportunity?.title}: ${app.status}`);
+ * });
  */
 export async function getMyApplications(
   athleteId: string
@@ -176,7 +201,18 @@ export async function getMyApplications(
 }
 
 /**
- * Withdraw an application
+ * Withdraw a pending or under-review application
+ *
+ * Marks an application as withdrawn. Only applications with 'pending'
+ * or 'under_review' status can be withdrawn.
+ *
+ * @param applicationId - The unique identifier of the application to withdraw
+ * @returns Promise resolving to success or an error
+ * @example
+ * const { error } = await withdrawApplication('application-789');
+ * if (!error) {
+ *   showToast('Application withdrawn successfully');
+ * }
  */
 export async function withdrawApplication(
   applicationId: string
@@ -200,7 +236,16 @@ export async function withdrawApplication(
 }
 
 /**
- * Get applications for an opportunity (brand view)
+ * Get all non-withdrawn applications for an opportunity (brand view)
+ *
+ * Fetches applications for a specific opportunity, including full athlete
+ * details with sport and school info. Excludes withdrawn applications.
+ *
+ * @param opportunityId - The unique identifier of the opportunity
+ * @returns Promise resolving to Application array with athlete details or an error
+ * @example
+ * const { data: applications } = await getOpportunityApplications('opp-123');
+ * console.log(`${applications?.length} applicants`);
  */
 export async function getOpportunityApplications(
   opportunityId: string
@@ -229,7 +274,20 @@ export async function getOpportunityApplications(
 }
 
 /**
- * Accept an application (brand action - creates a deal)
+ * Accept an application and create a deal (brand action)
+ *
+ * Updates the application status to 'accepted' and automatically creates
+ * a new deal from the opportunity details. This converts an application
+ * into an active deal between brand and athlete.
+ *
+ * @param applicationId - The unique identifier of the application to accept
+ * @param brandUserId - The user ID of the brand accepting the application
+ * @returns Promise resolving to the updated Application and new deal ID or an error
+ * @example
+ * const { data, error } = await acceptApplication('app-123', currentUser.id);
+ * if (data) {
+ *   router.push(`/deals/${data.dealId}`);
+ * }
  */
 export async function acceptApplication(
   applicationId: string,
@@ -298,7 +356,21 @@ export async function acceptApplication(
 }
 
 /**
- * Reject an application
+ * Reject an application with optional reason (brand action)
+ *
+ * Updates the application status to 'rejected' and records the reviewer
+ * and optional rejection reason.
+ *
+ * @param applicationId - The unique identifier of the application to reject
+ * @param brandUserId - The user ID of the brand rejecting the application
+ * @param reason - Optional reason for the rejection
+ * @returns Promise resolving to success or an error
+ * @example
+ * const { error } = await rejectApplication(
+ *   'app-123',
+ *   currentUser.id,
+ *   'Looking for athletes in a different sport'
+ * );
  */
 export async function rejectApplication(
   applicationId: string,
@@ -326,7 +398,16 @@ export async function rejectApplication(
 }
 
 /**
- * Get a single application by ID
+ * Get a single application by ID with full details
+ *
+ * Fetches an application with joined opportunity, brand, athlete,
+ * sport, and school data.
+ *
+ * @param applicationId - The unique identifier of the application
+ * @returns Promise resolving to the full Application or an error
+ * @example
+ * const { data: application } = await getApplicationById('app-123');
+ * console.log(`Applicant: ${application?.athlete?.first_name}`);
  */
 export async function getApplicationById(
   applicationId: string
@@ -359,6 +440,18 @@ export async function getApplicationById(
 
 /**
  * Check if an athlete has applied to an opportunity
+ *
+ * Returns whether the athlete has an active (non-withdrawn) application
+ * for the specified opportunity, along with the application status.
+ *
+ * @param athleteId - The unique identifier of the athlete
+ * @param opportunityId - The unique identifier of the opportunity
+ * @returns Promise resolving to applied status and optional ApplicationStatus
+ * @example
+ * const { data } = await hasApplied('athlete-123', 'opp-456');
+ * if (data?.applied) {
+ *   console.log(`Already applied with status: ${data.status}`);
+ * }
  */
 export async function hasApplied(
   athleteId: string,

@@ -51,6 +51,8 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
+    // Reading localStorage on mount is a valid pattern
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     const saved = localStorage.getItem('sidebar-collapsed');
     if (saved === 'true') setCollapsed(true);
   }, []);

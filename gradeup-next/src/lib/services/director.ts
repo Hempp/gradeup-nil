@@ -37,6 +37,12 @@ export interface ServiceResult<T = null> {
 
 /**
  * Get the current user's school ID from their athletic director profile
+ *
+ * Internal helper function that retrieves the school_id associated with
+ * the currently authenticated athletic director.
+ *
+ * @returns Promise resolving to the school ID string or null if not found
+ * @internal
  */
 async function getCurrentSchoolId(): Promise<string | null> {
   const supabase = createClient();
@@ -68,7 +74,19 @@ async function getCurrentSchoolId(): Promise<string | null> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Get statistics for the director's school
+ * Get aggregated statistics for the athletic director's school
+ *
+ * Calculates and returns key metrics including total athletes, active deals,
+ * total earnings from completed deals, and average GPA across all athletes
+ * at the director's school.
+ *
+ * @returns Promise resolving to ServiceResult with DirectorStats or an error
+ * @example
+ * const { data: stats, error } = await getDirectorStats();
+ * if (stats) {
+ *   console.log(`School has ${stats.total_athletes} athletes`);
+ *   console.log(`Average GPA: ${stats.avg_gpa.toFixed(2)}`);
+ * }
  */
 export async function getDirectorStats(): Promise<ServiceResult<DirectorStats>> {
   const supabase = createClient();
@@ -133,7 +151,19 @@ export async function getDirectorStats(): Promise<ServiceResult<DirectorStats>> 
 }
 
 /**
- * Get athletes at the director's school
+ * Get paginated list of athletes at the director's school
+ *
+ * Fetches athletes with their profile, school, and sport information.
+ * Results are ordered by creation date (newest first).
+ *
+ * @param page - The page number (1-indexed, default: 1)
+ * @param pageSize - Number of athletes per page (default: 20)
+ * @returns Promise resolving to ServiceResult with athletes array and total count
+ * @example
+ * const { data } = await getSchoolAthletes(1, 10);
+ * if (data) {
+ *   console.log(`Showing ${data.athletes.length} of ${data.total} athletes`);
+ * }
  */
 export async function getSchoolAthletes(
   page: number = 1,
@@ -183,6 +213,16 @@ export async function getSchoolAthletes(
 
 /**
  * Get compliance alerts for the director's school
+ *
+ * Generates alerts for athletes with potential compliance issues,
+ * such as low GPA (below 2.5) that may affect NIL eligibility.
+ * Severity is 'high' for GPA below 2.0, 'medium' otherwise.
+ *
+ * @returns Promise resolving to ServiceResult with ComplianceAlert array
+ * @example
+ * const { data: alerts } = await getComplianceAlerts();
+ * const highPriority = alerts?.filter(a => a.severity === 'high');
+ * console.log(`${highPriority?.length} high priority alerts`);
  */
 export async function getComplianceAlerts(): Promise<ServiceResult<ComplianceAlert[]>> {
   const supabase = createClient();
@@ -237,7 +277,18 @@ export async function getComplianceAlerts(): Promise<ServiceResult<ComplianceAle
 }
 
 /**
- * Get recent deals for the director's school athletes
+ * Get recent deals for athletes at the director's school
+ *
+ * Fetches the most recent deals involving athletes from the school,
+ * including deal title, athlete name, compensation amount, and status.
+ *
+ * @param limit - Maximum number of deals to return (default: 10)
+ * @returns Promise resolving to ServiceResult with formatted deal array
+ * @example
+ * const { data: deals } = await getSchoolDeals(5);
+ * deals?.forEach(deal => {
+ *   console.log(`${deal.athlete_name}: ${deal.title} - $${deal.amount}`);
+ * });
  */
 export async function getSchoolDeals(
   limit: number = 10

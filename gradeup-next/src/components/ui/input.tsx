@@ -1,11 +1,42 @@
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Props for the Input component
+ */
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  /**
+   * Display error styling (red border and focus ring)
+   * Use in conjunction with error message display
+   */
   error?: boolean;
+  /**
+   * Icon element to display on the left side of the input
+   * Input padding adjusts automatically when icon is provided
+   */
   icon?: React.ReactNode;
 }
 
+/**
+ * A styled text input component with optional icon and error state
+ *
+ * Extends native input with consistent styling, focus states, and
+ * support for leading icons. Works with all standard input types.
+ *
+ * @example
+ * // Basic input
+ * <Input placeholder="Enter your name" />
+ *
+ * // With icon
+ * <Input icon={<SearchIcon />} placeholder="Search athletes..." />
+ *
+ * // Error state
+ * <Input error={!!errors.email} {...register('email')} />
+ * {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+ *
+ * // Password input
+ * <Input type="password" placeholder="Password" />
+ */
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, type = 'text', error, icon, ...props }, ref) => {
     return (

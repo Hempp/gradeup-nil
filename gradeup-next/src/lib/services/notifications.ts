@@ -68,7 +68,14 @@ export interface NotificationFilters {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Transform database record to client-side notification
+ * Transform a database notification record to client-side notification format
+ *
+ * Maps database column names to client-friendly property names
+ * (e.g., 'body' becomes 'message').
+ *
+ * @param record - The raw NotificationRecord from Supabase
+ * @returns Transformed Notification object for UI consumption
+ * @internal
  */
 function transformNotification(record: NotificationRecord): Notification {
   return {
@@ -85,6 +92,16 @@ function transformNotification(record: NotificationRecord): Notification {
 
 /**
  * Check if the notifications table exists and is accessible
+ *
+ * Used to determine whether to use real notifications or fall back
+ * to mock data. Returns true if the table exists, even with RLS errors.
+ *
+ * @returns Promise resolving to boolean indicating table availability
+ * @example
+ * const tableExists = await checkTableExists();
+ * if (!tableExists) {
+ *   console.log('Using mock notifications');
+ * }
  */
 export async function checkTableExists(): Promise<boolean> {
   try {
@@ -116,6 +133,16 @@ export async function checkTableExists(): Promise<boolean> {
 
 /**
  * Get notifications for a specific user
+ *
+ * Fetches the most recent notifications for a user, ordered by
+ * creation date (newest first).
+ *
+ * @param userId - The unique identifier of the user
+ * @param limit - Maximum notifications to return (default: 50)
+ * @returns Promise resolving to Notification array or an error
+ * @example
+ * const { data: notifications } = await getNotifications(userId, 20);
+ * const unread = notifications?.filter(n => !n.read);
  */
 export async function getNotifications(
   userId: string,
@@ -140,6 +167,15 @@ export async function getNotifications(
 
 /**
  * Mark a single notification as read
+ *
+ * Updates the read status and read_at timestamp for a notification.
+ * Optionally scopes the update to a specific user for security.
+ *
+ * @param notificationId - The unique identifier of the notification
+ * @param userId - Optional user ID to scope the update for extra security
+ * @returns Promise resolving to the updated Notification or an error
+ * @example
+ * const { data } = await markNotificationAsRead('notif-123', currentUserId);
  */
 export async function markNotificationAsRead(
   notificationId: string,
@@ -170,7 +206,16 @@ export async function markNotificationAsRead(
 }
 
 /**
- * Mark all notifications as read for a user
+ * Mark all unread notifications as read for a user
+ *
+ * Batch updates all notifications with read=false to read=true
+ * and sets the read_at timestamp.
+ *
+ * @param userId - The unique identifier of the user
+ * @returns Promise resolving to success or an error
+ * @example
+ * await markAllAsRead(userId);
+ * setUnreadCount(0);
  */
 export async function markAllAsRead(
   userId: string
@@ -195,6 +240,15 @@ export async function markAllAsRead(
 
 /**
  * Delete a notification
+ *
+ * Permanently removes a notification from the database.
+ * Optionally scopes the deletion to a specific user for security.
+ *
+ * @param notificationId - The unique identifier of the notification
+ * @param userId - Optional user ID to scope the deletion for extra security
+ * @returns Promise resolving to success or an error
+ * @example
+ * const { error } = await deleteNotification('notif-123', currentUserId);
  */
 export async function deleteNotification(
   notificationId: string,
@@ -223,6 +277,15 @@ export async function deleteNotification(
 
 /**
  * Get the count of unread notifications for a user
+ *
+ * Performs a count-only query for efficiency when only the
+ * unread count is needed (e.g., for notification badges).
+ *
+ * @param userId - The unique identifier of the user
+ * @returns Promise resolving to the unread count number
+ * @example
+ * const { data: count } = await getUnreadCount(userId);
+ * setBadgeCount(count);
  */
 export async function getUnreadCount(
   userId: string
@@ -243,7 +306,21 @@ export async function getUnreadCount(
 }
 
 /**
- * Get notifications with advanced filtering
+ * Get notifications with advanced filtering and pagination
+ *
+ * Supports filtering by notification type and read status,
+ * with offset-based pagination. Returns total count for pagination UI.
+ *
+ * @param userId - The unique identifier of the user
+ * @param filters - Optional filter and pagination parameters
+ * @returns Promise resolving to notifications array, total count, or an error
+ * @example
+ * const { data, total } = await getNotificationsWithFilters(userId, {
+ *   type: ['deal_offer', 'deal_accepted'],
+ *   read: false,
+ *   limit: 10,
+ *   offset: 0
+ * });
  */
 export async function getNotificationsWithFilters(
   userId: string,
@@ -279,7 +356,22 @@ export async function getNotificationsWithFilters(
 }
 
 /**
- * Create a new notification
+ * Create a new notification for a user
+ *
+ * Inserts a new notification record with the specified type, title,
+ * message, and optional URL and metadata.
+ *
+ * @param notification - The notification data to create
+ * @returns Promise resolving to the created Notification or an error
+ * @example
+ * await createNotification({
+ *   user_id: athleteId,
+ *   type: 'deal_offer',
+ *   title: 'New Deal Offer',
+ *   message: 'Nike wants to partner with you!',
+ *   url: '/deals/offer-123',
+ *   metadata: { brandName: 'Nike', amount: 5000 }
+ * });
  */
 export async function createNotification(
   notification: {
@@ -316,7 +408,17 @@ export async function createNotification(
 }
 
 /**
- * Delete all read notifications for a user (cleanup)
+ * Delete all read notifications for a user (cleanup utility)
+ *
+ * Removes all notifications that have been marked as read,
+ * useful for cleaning up old notifications.
+ *
+ * @param userId - The unique identifier of the user
+ * @returns Promise resolving to success or an error
+ * @example
+ * // In settings or cleanup action
+ * await deleteReadNotifications(userId);
+ * showToast('Old notifications cleared');
  */
 export async function deleteReadNotifications(
   userId: string
@@ -349,7 +451,33 @@ export interface NotificationSubscriptionCallbacks {
 
 /**
  * Subscribe to real-time notification updates for a user
- * Returns a cleanup function to unsubscribe
+ *
+ * Sets up Supabase Realtime subscriptions for INSERT, UPDATE, and DELETE
+ * events on the user's notifications. Use the returned function to
+ * clean up the subscription.
+ *
+ * @param userId - The unique identifier of the user
+ * @param callbacks - Callback functions for different events
+ * @returns Unsubscribe function to clean up the subscription
+ * @example
+ * const unsubscribe = subscribeToNotifications(userId, {
+ *   onInsert: (notification) => {
+ *     setNotifications(prev => [notification, ...prev]);
+ *     playNotificationSound();
+ *   },
+ *   onUpdate: (notification) => {
+ *     setNotifications(prev =>
+ *       prev.map(n => n.id === notification.id ? notification : n)
+ *     );
+ *   },
+ *   onDelete: (id) => {
+ *     setNotifications(prev => prev.filter(n => n.id !== id));
+ *   },
+ *   onError: (error) => console.error('Subscription error:', error)
+ * });
+ *
+ * // Cleanup on component unmount
+ * return () => unsubscribe();
  */
 export function subscribeToNotifications(
   userId: string,

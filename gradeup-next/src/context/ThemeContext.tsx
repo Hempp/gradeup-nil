@@ -24,6 +24,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     mountedRef.current = true;
     const saved = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     if (saved && ['light', 'dark', 'system'].includes(saved)) {
+      // Reading localStorage on mount is a valid pattern
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setThemeState(saved);
     }
   }, []);

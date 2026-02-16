@@ -482,4 +482,292 @@ describe('verification service', () => {
       }
     });
   });
+
+  describe('getPendingVerifications', () => {
+    it('returns pending verifications without school filter', async () => {
+      const mockQuery = createChainableQuery({
+        data: [mockVerificationRequest],
+        error: null,
+      });
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { getPendingVerifications } = await import('@/lib/services/verification');
+      const result = await getPendingVerifications();
+
+      expect(result.data).toEqual([mockVerificationRequest]);
+      expect(result.error).toBeNull();
+      expect(mockQuery.in).toHaveBeenCalledWith('status', ['pending', 'in_review']);
+    });
+
+    it('returns pending verifications for specific school', async () => {
+      const mockQuery = createChainableQuery({
+        data: [mockVerificationRequest],
+        error: null,
+      });
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { getPendingVerifications } = await import('@/lib/services/verification');
+      const result = await getPendingVerifications('school-123');
+
+      expect(result.data).toEqual([mockVerificationRequest]);
+      expect(result.error).toBeNull();
+      expect(mockQuery.eq).toHaveBeenCalledWith('athletes.school_id', 'school-123');
+    });
+
+    it('handles database error', async () => {
+      const mockQuery = createChainableQuery({
+        data: null,
+        error: { message: 'Database error' },
+      });
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { getPendingVerifications } = await import('@/lib/services/verification');
+      const result = await getPendingVerifications();
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toContain('Failed to fetch pending verifications');
+    });
+  });
+
+  describe('bulkApproveVerifications', () => {
+    it('approves multiple verification requests', async () => {
+      // Create a multi-method chainable query that handles both .in() calls
+      const fetchQuery = createChainableQuery({ data: null, error: null });
+
+      // Make .in() chainable for the multiple .in() calls
+      fetchQuery.in = jest.fn().mockReturnValue(fetchQuery);
+
+      // The query should resolve when awaited
+      fetchQuery.then = function (onFulfilled: (value: unknown) => unknown) {
+        return Promise.resolve({
+          data: [
+            { id: 'req-1', athlete_id: 'athlete-1', type: 'enrollment' },
+            { id: 'req-2', athlete_id: 'athlete-2', type: 'sport' },
+          ],
+          error: null,
+        }).then(onFulfilled);
+      };
+
+      // Approval queries
+      const approvalQuery = createChainableQuery({ data: null, error: null });
+      approvalQuery.in = jest.fn().mockResolvedValue({ error: null });
+
+      const historyInsert = {
+        insert: jest.fn().mockResolvedValue({ error: null }),
+      };
+
+      const athleteQuery = {
+        update: jest.fn().mockReturnThis(),
+        eq: jest.fn().mockResolvedValue({ error: null }),
+      };
+
+      const mockSupabase = {
+        from: jest.fn().mockImplementation((table) => {
+          if (table === 'verification_history') {
+            return historyInsert;
+          }
+          if (table === 'athletes') {
+            return athleteQuery;
+          }
+          if (table === 'verification_requests') {
+            return fetchQuery;
+          }
+          return approvalQuery;
+        }),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { bulkApproveVerifications } = await import('@/lib/services/verification');
+      const result = await bulkApproveVerifications(['req-1', 'req-2'], 'director-123');
+
+      expect(result.data.approved).toBeGreaterThanOrEqual(0);
+      expect(result.error).toBeNull();
+    });
+
+    it('handles fetch error', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: null });
+      // Make .in() chainable
+      mockQuery.in = jest.fn().mockReturnValue(mockQuery);
+      mockQuery.then = function (onFulfilled: (value: unknown) => unknown) {
+        return Promise.resolve({
+          data: null,
+          error: { message: 'Fetch failed' },
+        }).then(onFulfilled);
+      };
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { bulkApproveVerifications } = await import('@/lib/services/verification');
+      const result = await bulkApproveVerifications(['req-1'], 'director-123');
+
+      expect(result.data.approved).toBe(0);
+      expect(result.data.failed).toBe(1);
+      expect(result.error?.message).toBe('Fetch failed');
+    });
+  });
+
+  describe('getSchoolPendingVerifications', () => {
+    it('returns pending verifications with athlete details', async () => {
+      const mockRequestWithAthlete = {
+        ...mockVerificationRequest,
+        athlete: {
+          id: 'athlete-123',
+          first_name: 'John',
+          last_name: 'Doe',
+          gpa: 3.5,
+          sport: { name: 'Basketball' },
+        },
+      };
+
+      // First query gets athlete IDs
+      let callCount = 0;
+      const mockQuery = createChainableQuery({ data: null, error: null });
+      mockQuery.then = function (onFulfilled: (value: unknown) => unknown) {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve({
+            data: [{ id: 'athlete-123' }],
+            error: null,
+          }).then(onFulfilled);
+        }
+        return Promise.resolve({
+          data: [mockRequestWithAthlete],
+          error: null,
+        }).then(onFulfilled);
+      };
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { getSchoolPendingVerifications } = await import('@/lib/services/verification');
+      const result = await getSchoolPendingVerifications('school-123');
+
+      expect(result.data).toEqual([mockRequestWithAthlete]);
+      expect(result.error).toBeNull();
+    });
+
+    it('returns empty array when no athletes in school', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: null });
+      mockQuery.then = function (onFulfilled: (value: unknown) => unknown) {
+        return Promise.resolve({
+          data: [],
+          error: null,
+        }).then(onFulfilled);
+      };
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { getSchoolPendingVerifications } = await import('@/lib/services/verification');
+      const result = await getSchoolPendingVerifications('school-123');
+
+      expect(result.data).toEqual([]);
+      expect(result.error).toBeNull();
+    });
+
+    it('handles athlete fetch error', async () => {
+      const mockQuery = createChainableQuery({ data: null, error: null });
+      mockQuery.then = function (onFulfilled: (value: unknown) => unknown) {
+        return Promise.resolve({
+          data: null,
+          error: { message: 'Athlete fetch failed' },
+        }).then(onFulfilled);
+      };
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { getSchoolPendingVerifications } = await import('@/lib/services/verification');
+      const result = await getSchoolPendingVerifications('school-123');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toBe('Athlete fetch failed');
+    });
+
+    it('handles request fetch error', async () => {
+      let callCount = 0;
+      const mockQuery = createChainableQuery({ data: null, error: null });
+      mockQuery.then = function (onFulfilled: (value: unknown) => unknown) {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve({
+            data: [{ id: 'athlete-123' }],
+            error: null,
+          }).then(onFulfilled);
+        }
+        return Promise.resolve({
+          data: null,
+          error: { message: 'Request fetch failed' },
+        }).then(onFulfilled);
+      };
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const { getSchoolPendingVerifications } = await import('@/lib/services/verification');
+      const result = await getSchoolPendingVerifications('school-123');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toBe('Request fetch failed');
+    });
+  });
+
+  describe('pending request fetch error in getAthleteVerificationStatus', () => {
+    it('handles pending request fetch error', async () => {
+      const athleteData = {
+        enrollment_verified: true,
+        sport_verified: false,
+        grades_verified: false,
+        identity_verified: false,
+      };
+
+      let callCount = 0;
+      const mockQuery = createChainableQuery({ data: null, error: null });
+      mockQuery.single = jest.fn().mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve({ data: athleteData, error: null });
+        }
+        return Promise.resolve({ data: null, error: null });
+      });
+
+      // For pending requests query - return error
+      mockQuery.then = function (onFulfilled: (value: unknown) => unknown) {
+        return Promise.resolve({ data: null, error: { message: 'Request fetch failed' } }).then(onFulfilled);
+      };
+
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue(mockQuery),
+      };
+      mockCreateClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createClient>);
+
+      const result = await getAthleteVerificationStatus('athlete-123');
+
+      expect(result.data).toBeNull();
+      expect(result.error?.message).toContain('Failed to fetch pending requests');
+    });
+  });
 });

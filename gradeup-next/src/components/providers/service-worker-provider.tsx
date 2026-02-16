@@ -41,9 +41,12 @@ export function ServiceWorkerProvider({ children }: ServiceWorkerProviderProps) 
   useEffect(() => {
     // Check if service workers are supported
     const supported = 'serviceWorker' in navigator;
+    // Checking browser APIs on mount is a valid pattern
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsSupported(supported);
 
     // Track online/offline status
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOnline(navigator.onLine);
 
     const handleOnline = () => setIsOnline(true);

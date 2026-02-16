@@ -7,12 +7,25 @@ import { cn } from '@/lib/utils';
    PAGINATION TYPES
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * Props for the Pagination component
+ */
 export interface PaginationProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  /** Current active page (1-indexed) */
   currentPage: number;
+  /** Total number of pages */
   totalPages: number;
+  /** Total number of items across all pages */
   totalItems: number;
+  /** Number of items displayed per page */
   itemsPerPage: number;
+  /** Callback when page changes */
   onPageChange: (page: number) => void;
+  /**
+   * Number of page numbers to show on each side of current page
+   * Higher values show more page numbers but take more space
+   * @default 1
+   */
   siblingCount?: number;
 }
 
@@ -100,6 +113,29 @@ function usePagination({
    PAGINATION COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * A pagination component with page numbers and navigation controls
+ *
+ * Features:
+ * - Shows "Showing X - Y of Z results" summary
+ * - Previous/Next navigation buttons
+ * - Smart page number display with ellipsis for large page counts
+ * - Keyboard accessible
+ * - Responsive (hides text labels on mobile)
+ * - Does not render when totalItems is 0
+ *
+ * @example
+ * const [page, setPage] = useState(1);
+ * const pageSize = 10;
+ *
+ * <Pagination
+ *   currentPage={page}
+ *   totalPages={Math.ceil(total / pageSize)}
+ *   totalItems={total}
+ *   itemsPerPage={pageSize}
+ *   onPageChange={setPage}
+ * />
+ */
 const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
   (
     {

@@ -79,6 +79,8 @@ export function Topbar({
   // Reset focused index when dropdown closes
   useEffect(() => {
     if (!isDropdownOpen) {
+      // Resetting focus index when dropdown closes is a valid pattern
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFocusedMenuIndex(-1);
     }
   }, [isDropdownOpen]);

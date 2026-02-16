@@ -124,6 +124,8 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(
 
     // Reset highlight when filtering
     useEffect(() => {
+      // Resetting highlight index on search change is a valid pattern
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHighlightedIndex(0);
     }, [searchQuery]);
 

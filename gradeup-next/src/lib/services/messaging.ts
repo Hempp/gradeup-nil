@@ -62,7 +62,17 @@ export interface MessageAttachment {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Get all conversations for the current user
+ * Get all conversations for the current authenticated user
+ *
+ * Fetches conversations where the user is a participant, including
+ * participant profiles, brand info, last message, and unread count.
+ * Results are ordered by last update (most recent first).
+ *
+ * @returns Promise resolving to ServiceResult with Conversation array
+ * @example
+ * const { data: conversations } = await getConversations();
+ * const unread = conversations?.filter(c => c.unread_count > 0);
+ * console.log(`${unread?.length} conversations with unread messages`);
  */
 export async function getConversations(): Promise<ServiceResult<Conversation[]>> {
   const supabase = createClient();
@@ -210,7 +220,18 @@ export async function getConversations(): Promise<ServiceResult<Conversation[]>>
 }
 
 /**
- * Get a single conversation by ID
+ * Get a single conversation by ID with full details
+ *
+ * Fetches a conversation if the current user is a participant.
+ * Includes participant profiles, brand info, last message, and unread count.
+ *
+ * @param conversationId - The unique identifier of the conversation
+ * @returns Promise resolving to ServiceResult with Conversation or an error
+ * @example
+ * const { data: conversation, error } = await getConversationById('conv-123');
+ * if (error?.message.includes('access denied')) {
+ *   // User is not a participant
+ * }
  */
 export async function getConversationById(
   conversationId: string
@@ -355,7 +376,27 @@ export async function getConversationById(
 }
 
 /**
- * Get messages for a conversation with pagination
+ * Get messages for a conversation with pagination support
+ *
+ * Fetches messages with attachments for a conversation. Supports cursor-based
+ * pagination using the 'before' timestamp. Messages are returned in
+ * chronological order (oldest to newest).
+ *
+ * @param conversationId - The unique identifier of the conversation
+ * @param options - Optional pagination parameters
+ * @param options.limit - Maximum messages to return (default: 50)
+ * @param options.before - Fetch messages before this timestamp (for infinite scroll)
+ * @returns Promise resolving to ServiceResult with Message array
+ * @example
+ * // Initial load
+ * const { data: messages } = await getMessages('conv-123', { limit: 30 });
+ *
+ * // Load more (older messages)
+ * const oldestMessage = messages?.[0];
+ * const { data: older } = await getMessages('conv-123', {
+ *   limit: 30,
+ *   before: oldestMessage?.created_at
+ * });
  */
 export async function getMessages(
   conversationId: string,
@@ -446,7 +487,21 @@ export async function getMessages(
 }
 
 /**
- * Send a message to a conversation
+ * Send a message to a conversation with optional file attachments
+ *
+ * Creates a new message in the conversation and uploads any attachments
+ * to storage. Updates the conversation's updated_at timestamp.
+ *
+ * @param conversationId - The unique identifier of the conversation
+ * @param content - The text content of the message
+ * @param attachments - Optional array of files to attach to the message
+ * @returns Promise resolving to ServiceResult with the created Message
+ * @example
+ * const { data: message } = await sendMessage(
+ *   'conv-123',
+ *   'Here are the contract details',
+ *   [contractFile]
+ * );
  */
 export async function sendMessage(
   conversationId: string,
@@ -563,7 +618,16 @@ export async function sendMessage(
 }
 
 /**
- * Mark all messages in a conversation as read
+ * Mark all unread messages in a conversation as read
+ *
+ * Updates the read_at timestamp for all messages from other users
+ * that haven't been read yet.
+ *
+ * @param conversationId - The unique identifier of the conversation
+ * @returns Promise resolving to ServiceResult indicating success or error
+ * @example
+ * // Call when user opens a conversation
+ * await markAsRead('conv-123');
  */
 export async function markAsRead(conversationId: string): Promise<ServiceResult> {
   const supabase = createClient();
@@ -617,6 +681,18 @@ export async function markAsRead(conversationId: string): Promise<ServiceResult>
 
 /**
  * Create a new conversation with specified participants
+ *
+ * Creates a conversation and adds all participants including the current user.
+ * Participant roles are determined from their profile roles.
+ *
+ * @param participantIds - Array of user IDs to add as participants
+ * @param dealId - Optional deal ID to associate with the conversation
+ * @returns Promise resolving to ServiceResult with the created Conversation
+ * @example
+ * const { data: conversation } = await createConversation(
+ *   [brandUserId],
+ *   'deal-123'
+ * );
  */
 export async function createConversation(
   participantIds: string[],
@@ -700,7 +776,19 @@ export async function createConversation(
 
 /**
  * Get or create a conversation for a specific deal
- * This ensures there's a conversation between the deal's brand and athlete
+ *
+ * Checks if a conversation exists for the deal and returns it, or creates
+ * a new conversation between the deal's brand and athlete if none exists.
+ * Only participants in the deal can access this conversation.
+ *
+ * @param dealId - The unique identifier of the deal
+ * @returns Promise resolving to ServiceResult with the Conversation
+ * @example
+ * // Opens or creates conversation for a deal
+ * const { data: conversation } = await getOrCreateConversationByDealId('deal-123');
+ * if (conversation) {
+ *   router.push(`/messages/${conversation.id}`);
+ * }
  */
 export async function getOrCreateConversationByDealId(
   dealId: string
@@ -826,7 +914,17 @@ export async function getOrCreateConversationByDealId(
 }
 
 /**
- * Get total unread message count for the current user
+ * Get total unread message count across all conversations for the current user
+ *
+ * Counts all unread messages (from other users) in conversations
+ * where the current user is a participant.
+ *
+ * @returns Promise resolving to ServiceResult with the unread count number
+ * @example
+ * const { data: count } = await getUnreadCount();
+ * if (count && count > 0) {
+ *   showBadge(count);
+ * }
  */
 export async function getUnreadCount(): Promise<ServiceResult<number>> {
   const supabase = createClient();
@@ -880,8 +978,22 @@ export async function getUnreadCount(): Promise<ServiceResult<number>> {
 }
 
 /**
- * Subscribe to new messages in a conversation
- * Returns an unsubscribe function
+ * Subscribe to real-time new messages in a conversation
+ *
+ * Sets up a Supabase Realtime subscription to receive new messages
+ * as they are inserted into the conversation. Automatically fetches
+ * attachments for new messages.
+ *
+ * @param conversationId - The unique identifier of the conversation
+ * @param callback - Function called when a new message arrives
+ * @returns Unsubscribe function to clean up the subscription
+ * @example
+ * const unsubscribe = subscribeToMessages('conv-123', (message) => {
+ *   setMessages(prev => [...prev, message]);
+ * });
+ *
+ * // Cleanup on unmount
+ * return () => unsubscribe();
  */
 export function subscribeToMessages(
   conversationId: string,

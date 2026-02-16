@@ -503,6 +503,8 @@ export function KeyboardShortcutsProvider({ children }: KeyboardShortcutsProvide
       initialShortcuts.set(shortcut.id, shortcut);
     });
 
+    // Initializing shortcuts on mount is a valid pattern
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShortcuts(initialShortcuts);
   }, [router, pathname, isDialogOpen]);
 

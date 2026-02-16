@@ -47,7 +47,33 @@ export interface UseFiltersResult<T extends Record<string, FilterValue>> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Hook for debounced search with optional URL synchronization
+ * Hook for debounced search input with optional URL synchronization
+ *
+ * Provides controlled search input state with debounced output for
+ * performance optimization. Can sync with URL query parameters for
+ * shareable/bookmarkable search states.
+ *
+ * @param options - Configuration options for the search behavior
+ * @param options.debounceMs - Delay before updating debounced value (default: 300)
+ * @param options.minLength - Minimum query length to trigger search (default: 0)
+ * @param options.syncWithUrl - Whether to sync with URL query params (default: false)
+ * @param options.paramName - URL parameter name for query (default: 'q')
+ * @returns UseSearchResult with query state and control functions
+ * @example
+ * function SearchPage() {
+ *   const { query, debouncedQuery, setQuery, clearQuery, isSearching } = useSearch({
+ *     debounceMs: 300,
+ *     syncWithUrl: true
+ *   });
+ *
+ *   return (
+ *     <input
+ *       value={query}
+ *       onChange={(e) => setQuery(e.target.value)}
+ *       placeholder="Search athletes..."
+ *     />
+ *   );
+ * }
  */
 export function useSearch(options: UseSearchOptions = {}): UseSearchResult {
   const {
@@ -141,6 +167,24 @@ export function useSearch(options: UseSearchOptions = {}): UseSearchResult {
 
 /**
  * Hook for managing filter state with optional URL synchronization
+ *
+ * Provides comprehensive filter state management with support for
+ * multiple filter types (strings, numbers, booleans, arrays) and
+ * optional URL synchronization for shareable filter states.
+ *
+ * @param options - Configuration options
+ * @param options.defaultFilters - Initial filter values with type information
+ * @param options.syncWithUrl - Whether to sync with URL query params (default: false)
+ * @returns UseFiltersResult with filter state and control functions
+ * @example
+ * const { filters, setFilter, resetFilters, hasActiveFilters } = useFilters({
+ *   defaultFilters: {
+ *     sport: { value: '', label: 'All Sports' },
+ *     minGpa: { value: 0, label: 'Min GPA' },
+ *     verified: { value: false, label: 'Verified Only' }
+ *   },
+ *   syncWithUrl: true
+ * });
  */
 export function useFilters<T extends Record<string, FilterValue>>(
   options: UseFiltersOptions<T>
@@ -298,6 +342,20 @@ export interface UseSearchWithFiltersResult<T extends Record<string, FilterValue
 
 /**
  * Combined hook for search with filters
+ *
+ * Combines useSearch and useFilters into a single hook for components
+ * that need both search and filter functionality together.
+ *
+ * @param options - Combined search and filter options
+ * @returns Combined result from both useSearch and useFilters
+ * @example
+ * const {
+ *   query, debouncedQuery, setQuery,
+ *   filters, setFilter, resetFilters
+ * } = useSearchWithFilters({
+ *   searchOptions: { debounceMs: 300, syncWithUrl: true },
+ *   filterOptions: { defaultFilters: { ... }, syncWithUrl: true }
+ * });
  */
 export function useSearchWithFilters<T extends Record<string, FilterValue>>(
   options: UseSearchWithFiltersOptions<T>
@@ -323,7 +381,26 @@ export interface FilterDefinition<T> {
 }
 
 /**
- * Apply filters to a list of items locally
+ * Apply filters to a list of items locally (client-side filtering)
+ *
+ * Filters an array of items using predicate functions defined for each
+ * filter key. Skips filters that are at their default values.
+ *
+ * @param items - Array of items to filter
+ * @param filters - Current filter values
+ * @param defaultFilters - Default filter values for comparison
+ * @param definitions - Filter definitions with predicate functions
+ * @returns Filtered array of items
+ * @example
+ * const filtered = applyFilters(
+ *   athletes,
+ *   filters,
+ *   defaultFilters,
+ *   [
+ *     { key: 'sport', predicate: (a, v) => a.sport === v },
+ *     { key: 'minGpa', predicate: (a, v) => a.gpa >= v }
+ *   ]
+ * );
  */
 export function applyFilters<T, F extends Record<string, FilterValue>>(
   items: T[],
@@ -351,7 +428,17 @@ export function applyFilters<T, F extends Record<string, FilterValue>>(
 }
 
 /**
- * Apply search query to items
+ * Apply search query to items (client-side text search)
+ *
+ * Filters items by checking if any of the specified fields contain
+ * the search query (case-insensitive). Supports string and number fields.
+ *
+ * @param items - Array of items to search
+ * @param query - Search query string
+ * @param searchFields - Array of field keys to search within
+ * @returns Filtered array of items matching the query
+ * @example
+ * const results = applySearch(athletes, 'John', ['first_name', 'last_name', 'school']);
  */
 export function applySearch<T>(
   items: T[],
@@ -377,7 +464,27 @@ export function applySearch<T>(
 }
 
 /**
- * Combined search and filter application
+ * Combined search and filter application (client-side)
+ *
+ * Applies both text search and filters to an array of items.
+ * Search is applied first, then filters are applied to the results.
+ *
+ * @param items - Array of items to search and filter
+ * @param query - Search query string
+ * @param searchFields - Array of field keys to search within
+ * @param filters - Current filter values
+ * @param defaultFilters - Default filter values for comparison
+ * @param filterDefinitions - Filter definitions with predicate functions
+ * @returns Filtered array of items matching both search and filters
+ * @example
+ * const results = applySearchAndFilters(
+ *   athletes,
+ *   debouncedQuery,
+ *   ['first_name', 'last_name'],
+ *   filters,
+ *   defaultFilters,
+ *   filterDefinitions
+ * );
  */
 export function applySearchAndFilters<T, F extends Record<string, FilterValue>>(
   items: T[],

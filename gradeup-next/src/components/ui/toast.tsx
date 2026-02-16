@@ -14,14 +14,30 @@ import { cn } from '@/lib/utils';
    TOAST TYPES
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * Visual variants for toast notifications
+ * - 'success': Green styling for successful operations
+ * - 'error': Red styling for errors
+ * - 'warning': Yellow styling for warnings
+ * - 'info': Blue styling for informational messages
+ */
 export type ToastVariant = 'success' | 'error' | 'warning' | 'info';
 
+/**
+ * Toast notification data structure
+ */
 export interface Toast {
+  /** Unique identifier for the toast */
   id: string;
+  /** Main text displayed in the toast */
   title: string;
+  /** Optional secondary text with more details */
   description?: string;
+  /** Visual style variant */
   variant: ToastVariant;
+  /** Auto-dismiss duration in ms (default: 5000) */
   duration?: number;
+  /** Optional action button */
   action?: {
     label: string;
     onClick: () => void;
@@ -101,6 +117,15 @@ const variantConfig: Record<ToastVariant, { icon: ReactNode; stripe: string; ico
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
+/**
+ * Hook to access the toast context
+ *
+ * Must be used within a ToastProvider. For simpler usage,
+ * consider useToastActions() instead.
+ *
+ * @throws Error if used outside of ToastProvider
+ * @returns Toast context with toasts array and control functions
+ */
 export function useToast() {
   const context = useContext(ToastContext);
   if (!context) {
@@ -228,6 +253,19 @@ interface ToastProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Provider component for the toast notification system
+ *
+ * Wrap your app or a section of it with this provider to enable
+ * toast notifications. Toasts appear in the top-right corner.
+ *
+ * @example
+ * // In your layout or app root
+ * <ToastProvider>
+ *   <ToastGlobalHandler />
+ *   <App />
+ * </ToastProvider>
+ */
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -263,6 +301,27 @@ export function ToastProvider({ children }: ToastProviderProps) {
    CONVENIENCE HOOKS
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * Convenience hook for showing toast notifications
+ *
+ * Provides simple methods for each toast variant plus a custom method
+ * for full control.
+ *
+ * @returns Object with success, error, warning, info, and custom methods
+ * @example
+ * function MyComponent() {
+ *   const toast = useToastActions();
+ *
+ *   const handleSave = async () => {
+ *     try {
+ *       await saveData();
+ *       toast.success('Saved!', 'Your changes have been saved.');
+ *     } catch (e) {
+ *       toast.error('Save failed', 'Please try again.');
+ *     }
+ *   };
+ * }
+ */
 export function useToastActions() {
   const { addToast } = useToast();
 
@@ -285,10 +344,39 @@ export function useToastActions() {
 
 let globalAddToast: ((toast: Omit<Toast, 'id'>) => void) | null = null;
 
+/**
+ * Set the global toast handler for use outside React components
+ *
+ * Called automatically by ToastGlobalHandler. You typically don't
+ * need to call this directly.
+ *
+ * @param handler - Function to add a toast
+ * @internal
+ */
 export function setGlobalToastHandler(handler: (toast: Omit<Toast, 'id'>) => void) {
   globalAddToast = handler;
 }
 
+/**
+ * Global toast functions for use outside React components
+ *
+ * Requires ToastGlobalHandler to be rendered inside ToastProvider.
+ * Use this for showing toasts from utility functions, API handlers, etc.
+ *
+ * @example
+ * // In an API utility file
+ * import { toast } from '@/components/ui/toast';
+ *
+ * export async function fetchData() {
+ *   try {
+ *     const data = await api.get('/data');
+ *     return data;
+ *   } catch (e) {
+ *     toast.error('Failed to fetch data');
+ *     throw e;
+ *   }
+ * }
+ */
 export const toast = {
   success: (title: string, description?: string) => {
     globalAddToast?.({ title, description, variant: 'success' });
@@ -309,7 +397,15 @@ export const toast = {
 
 /**
  * Component to connect global toast handler to provider
- * Place inside ToastProvider
+ *
+ * Place this inside your ToastProvider to enable the global `toast`
+ * object for use outside React components.
+ *
+ * @example
+ * <ToastProvider>
+ *   <ToastGlobalHandler />
+ *   <App />
+ * </ToastProvider>
  */
 export function ToastGlobalHandler() {
   const { addToast } = useToast();

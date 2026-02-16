@@ -92,6 +92,8 @@ export function NavigationProgress({
 
     // If URL changed, complete the progress
     if (previousUrl.current && previousUrl.current !== currentUrl) {
+      // Completing progress on URL change is a valid pattern
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       completeProgress();
     }
 

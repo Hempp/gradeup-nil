@@ -17,21 +17,75 @@ import { cn } from '@/lib/utils';
    MODAL TYPES
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * Available modal sizes
+ * - 'sm': 400px max width, compact dialogs
+ * - 'md': 560px max width, standard modals
+ * - 'lg': 720px max width, larger content
+ * - 'xl': 960px max width, complex forms
+ * - 'full': Full width
+ */
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
+/**
+ * Props for the Modal component
+ */
 export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+  /**
+   * Controls modal visibility
+   * When false, modal is not rendered
+   */
   isOpen: boolean;
+  /**
+   * Callback fired when the modal should close
+   * Called on overlay click (if enabled), escape key (if enabled), or close button
+   */
   onClose: () => void;
+  /**
+   * Title displayed in the modal header
+   * Can be a string or React node for custom formatting
+   */
   title?: ReactNode;
+  /**
+   * Maximum width of the modal
+   * @default 'md'
+   */
   size?: ModalSize;
+  /**
+   * Show close button (X) in the header
+   * @default true
+   */
   showCloseButton?: boolean;
+  /**
+   * Close modal when clicking the dark overlay background
+   * @default true
+   */
   closeOnOverlayClick?: boolean;
+  /**
+   * Close modal when pressing the Escape key
+   * @default true
+   */
   closeOnEscape?: boolean;
+  /**
+   * Footer content, typically action buttons
+   * Rendered in a flex container with right alignment
+   */
   footer?: ReactNode;
+  /**
+   * Modal body content
+   */
   children: ReactNode;
-  /** On mobile, show as bottom sheet instead of centered modal */
+  /**
+   * On mobile, show as bottom sheet instead of centered modal
+   * Creates a more touch-friendly interface on small screens
+   * @default true
+   */
   mobileBottomSheet?: boolean;
-  /** On mobile, make modal full screen */
+  /**
+   * On mobile, make modal full screen
+   * Useful for complex forms or content that needs maximum space
+   * @default false
+   */
   mobileFullScreen?: boolean;
 }
 
@@ -81,6 +135,44 @@ function getFocusableElements(container: HTMLElement): HTMLElement[] {
    MODAL COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * An accessible modal dialog component with focus trap and responsive design
+ *
+ * Features:
+ * - Focus trap to keep keyboard navigation within the modal
+ * - Focus restoration to previous element on close
+ * - Escape key and overlay click to close
+ * - Body scroll lock when open
+ * - Mobile-optimized bottom sheet variant
+ * - ARIA attributes for screen readers
+ *
+ * @example
+ * // Basic modal
+ * <Modal
+ *   isOpen={isOpen}
+ *   onClose={() => setIsOpen(false)}
+ *   title="Confirm Action"
+ *   footer={
+ *     <>
+ *       <Button variant="ghost" onClick={() => setIsOpen(false)}>Cancel</Button>
+ *       <Button onClick={handleConfirm}>Confirm</Button>
+ *     </>
+ *   }
+ * >
+ *   <p>Are you sure you want to proceed?</p>
+ * </Modal>
+ *
+ * // Large modal with mobile full screen
+ * <Modal
+ *   isOpen={isOpen}
+ *   onClose={onClose}
+ *   title="Edit Profile"
+ *   size="lg"
+ *   mobileFullScreen
+ * >
+ *   <ProfileForm />
+ * </Modal>
+ */
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
   (
     {

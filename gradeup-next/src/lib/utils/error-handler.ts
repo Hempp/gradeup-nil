@@ -119,6 +119,20 @@ const ERROR_MESSAGES: Record<string, { message: string; userMessage: string; sev
 // Error Factory
 // ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * Create a standardized AppError from an error code
+ *
+ * Looks up the error code in ERROR_MESSAGES to get the appropriate
+ * message, user-friendly message, and severity level.
+ *
+ * @param code - Error code key (e.g., 'AUTH_INVALID_CREDENTIALS')
+ * @param context - Optional additional context data
+ * @param originalError - Optional original Error for stack trace
+ * @returns Fully populated AppError object
+ * @example
+ * const error = createAppError('AUTH_SESSION_EXPIRED', { userId: '123' });
+ * showToast(error.userMessage);
+ */
 export function createAppError(
   code: string,
   context?: Record<string, unknown>,
@@ -140,6 +154,24 @@ export function createAppError(
 // Error Parser
 // ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * Parse any error into a standardized AppError
+ *
+ * Handles AppError, Supabase errors, fetch errors, and generic Error
+ * objects. Automatically categorizes the error and provides appropriate
+ * user-friendly messaging.
+ *
+ * @param error - Any error value (Error, AppError, Supabase error, unknown)
+ * @returns Normalized AppError with consistent structure
+ * @example
+ * try {
+ *   await riskyOperation();
+ * } catch (e) {
+ *   const appError = parseError(e);
+ *   showToast(appError.userMessage);
+ *   logError(appError);
+ * }
+ */
 export function parseError(error: unknown): AppError {
   // Already an AppError
   if (isAppError(error)) {
@@ -180,6 +212,16 @@ export function parseError(error: unknown): AppError {
 // Type Guards
 // ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * Type guard to check if a value is an AppError
+ *
+ * @param error - Value to check
+ * @returns True if the value is an AppError
+ * @example
+ * if (isAppError(error)) {
+ *   console.log(error.userMessage); // TypeScript knows it's AppError
+ * }
+ */
 export function isAppError(error: unknown): error is AppError {
   return (
     typeof error === 'object' &&
@@ -242,6 +284,18 @@ function parseSupabaseError(error: SupabaseError): AppError {
 const errorLog: ErrorLogEntry[] = [];
 const MAX_LOG_SIZE = 100;
 
+/**
+ * Log an error to in-memory log and external services
+ *
+ * In development, logs to console with detailed grouping.
+ * In production, sends medium+ severity errors to Sentry.
+ * Maintains an in-memory error log (max 100 entries).
+ *
+ * @param error - The AppError to log
+ * @param options - Optional context like URL and userId
+ * @example
+ * logError(appError, { userId: currentUser.id });
+ */
 export function logError(
   error: AppError,
   options?: { url?: string; userId?: string }
@@ -299,10 +353,18 @@ export function logError(
   }
 }
 
+/**
+ * Get the in-memory error log (most recent first)
+ *
+ * @returns Readonly array of error log entries
+ */
 export function getErrorLog(): readonly ErrorLogEntry[] {
   return errorLog;
 }
 
+/**
+ * Clear all entries from the in-memory error log
+ */
 export function clearErrorLog(): void {
   errorLog.length = 0;
 }
@@ -311,6 +373,22 @@ export function clearErrorLog(): void {
 // Error Handler Hook Helper
 // ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * Handle an error with parsing, logging, and optional toast notification
+ *
+ * Convenience function that combines parseError, logError, and optional
+ * toast notification into a single call.
+ *
+ * @param error - Any error value to handle
+ * @param options - Optional configuration
+ * @param options.silent - If true, skip toast notification
+ * @param options.showToast - Toast function to display user message
+ * @returns The parsed AppError
+ * @example
+ * const appError = handleError(e, {
+ *   showToast: (msg) => toast.error(msg)
+ * });
+ */
 export function handleError(
   error: unknown,
   options?: { silent?: boolean; showToast?: (message: string) => void }

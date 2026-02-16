@@ -249,4 +249,278 @@ describe('upload utilities', () => {
       expect(result.error).toBe('File too large');
     });
   });
+
+  describe('validateFile', () => {
+    const { validateFile } = require('@/lib/utils/upload');
+
+    it('validates file size and type for avatars bucket', async () => {
+      // Valid avatar image
+      const file = new File(['content'], 'avatar.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 1 * 1024 * 1024 }); // 1MB
+
+      const result = await validateFile(file, { bucket: 'avatars' as UploadBucket });
+      expect(result.valid).toBe(true);
+    });
+
+    it('rejects oversized file for avatars bucket', async () => {
+      const file = new File(['content'], 'avatar.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 10 * 1024 * 1024 }); // 10MB (exceeds 2MB limit)
+
+      const result = await validateFile(file, { bucket: 'avatars' as UploadBucket });
+      expect(result.valid).toBe(false);
+      expect(result.error).toContain('2MB');
+    });
+
+    it('rejects invalid file type for avatars bucket', async () => {
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 }); // 100KB
+
+      const result = await validateFile(file, { bucket: 'avatars' as UploadBucket });
+      expect(result.valid).toBe(false);
+      expect(result.error).toContain('File type not allowed');
+    });
+
+    it('uses custom maxSizeMB from options', async () => {
+      const file = new File(['content'], 'avatar.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 5 * 1024 * 1024 }); // 5MB
+
+      const result = await validateFile(file, {
+        bucket: 'avatars' as UploadBucket,
+        maxSizeMB: 10, // Override default 2MB limit
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    it('uses custom allowedTypes from options', async () => {
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 }); // 100KB
+
+      const result = await validateFile(file, {
+        bucket: 'avatars' as UploadBucket,
+        allowedTypes: ['application/pdf'], // Override allowed types
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    it('validates documents bucket with larger size limit', async () => {
+      const file = new File(['content'], 'doc.pdf', { type: 'application/pdf' });
+      Object.defineProperty(file, 'size', { value: 8 * 1024 * 1024 }); // 8MB
+
+      const result = await validateFile(file, { bucket: 'documents' as UploadBucket });
+      expect(result.valid).toBe(true);
+    });
+
+    it('validates message-attachments bucket', async () => {
+      const file = new File(['content'], 'image.png', { type: 'image/png' });
+      Object.defineProperty(file, 'size', { value: 4 * 1024 * 1024 }); // 4MB
+
+      const result = await validateFile(file, { bucket: 'message-attachments' as UploadBucket });
+      expect(result.valid).toBe(true);
+    });
+
+    it('validates brand-logos bucket', async () => {
+      const file = new File(['content'], 'logo.png', { type: 'image/png' });
+      Object.defineProperty(file, 'size', { value: 1 * 1024 * 1024 }); // 1MB
+
+      const result = await validateFile(file, { bucket: 'brand-logos' as UploadBucket });
+      expect(result.valid).toBe(true);
+    });
+
+    it('validates campaign-assets bucket', async () => {
+      const file = new File(['content'], 'asset.webp', { type: 'image/webp' });
+      Object.defineProperty(file, 'size', { value: 8 * 1024 * 1024 }); // 8MB
+
+      const result = await validateFile(file, { bucket: 'campaign-assets' as UploadBucket });
+      expect(result.valid).toBe(true);
+    });
+  });
+
+  describe('uploadFile', () => {
+    const { uploadFile } = require('@/lib/utils/upload');
+    const { createClient } = require('@/lib/supabase/client');
+
+    it('returns error when not authenticated', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: null }),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFile(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error).not.toBeNull();
+      expect(result.error?.message).toBe('Not authenticated');
+    });
+
+    it('returns error on auth error', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null }, error: new Error('Auth failed') }),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFile(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error?.message).toBe('Not authenticated');
+    });
+
+    it('returns validation error for invalid file', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({
+            data: { user: { id: 'user-123' } },
+            error: null,
+          }),
+        },
+      });
+
+      const file = new File(['content'], 'test.exe', { type: 'application/x-msdownload' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFile(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error).not.toBeNull();
+      expect(result.error?.message).toContain('File type not allowed');
+    });
+
+    it('uploads file successfully', async () => {
+      const mockStorage = {
+        upload: jest.fn().mockResolvedValue({
+          data: { path: 'user-123/file.jpg' },
+          error: null,
+        }),
+        getPublicUrl: jest.fn().mockReturnValue({
+          data: { publicUrl: 'https://example.com/file.jpg' },
+        }),
+      };
+
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({
+            data: { user: { id: 'user-123' } },
+            error: null,
+          }),
+        },
+        storage: {
+          from: jest.fn().mockReturnValue(mockStorage),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const onProgress = jest.fn();
+      const result = await uploadFile(file, {
+        bucket: 'avatars' as UploadBucket,
+        onProgress,
+      });
+
+      expect(result.url).toBe('https://example.com/file.jpg');
+      expect(result.path).toBe('user-123/file.jpg');
+      expect(result.error).toBeNull();
+      expect(onProgress).toHaveBeenCalledWith(100);
+    });
+
+    it('returns upload error', async () => {
+      const mockStorage = {
+        upload: jest.fn().mockResolvedValue({
+          data: null,
+          error: new Error('Storage error'),
+        }),
+      };
+
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({
+            data: { user: { id: 'user-123' } },
+            error: null,
+          }),
+        },
+        storage: {
+          from: jest.fn().mockReturnValue(mockStorage),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFile(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.url).toBeNull();
+      expect(result.error).not.toBeNull();
+    });
+
+    it('handles unexpected exceptions', async () => {
+      createClient.mockReturnValue({
+        auth: {
+          getUser: jest.fn().mockRejectedValue(new Error('Unexpected error')),
+        },
+      });
+
+      const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+      Object.defineProperty(file, 'size', { value: 100 * 1024 });
+
+      const result = await uploadFile(file, { bucket: 'avatars' as UploadBucket });
+
+      expect(result.error?.message).toBe('Unexpected error');
+    });
+  });
+
+  describe('deleteFile', () => {
+    const { deleteFile } = require('@/lib/utils/upload');
+    const { createClient } = require('@/lib/supabase/client');
+
+    it('deletes file successfully', async () => {
+      const mockStorage = {
+        remove: jest.fn().mockResolvedValue({ error: null }),
+      };
+
+      createClient.mockReturnValue({
+        storage: {
+          from: jest.fn().mockReturnValue(mockStorage),
+        },
+      });
+
+      const result = await deleteFile('avatars' as UploadBucket, 'user-123/file.jpg');
+
+      expect(result.error).toBeNull();
+      expect(mockStorage.remove).toHaveBeenCalledWith(['user-123/file.jpg']);
+    });
+
+    it('returns delete error', async () => {
+      const mockStorage = {
+        remove: jest.fn().mockResolvedValue({ error: new Error('Delete failed') }),
+      };
+
+      createClient.mockReturnValue({
+        storage: {
+          from: jest.fn().mockReturnValue(mockStorage),
+        },
+      });
+
+      const result = await deleteFile('avatars' as UploadBucket, 'user-123/file.jpg');
+
+      expect(result.error).not.toBeNull();
+    });
+
+    it('handles unexpected exceptions', async () => {
+      createClient.mockReturnValue({
+        storage: {
+          from: jest.fn().mockImplementation(() => {
+            throw new Error('Storage unavailable');
+          }),
+        },
+      });
+
+      const result = await deleteFile('avatars' as UploadBucket, 'user-123/file.jpg');
+
+      expect(result.error?.message).toBe('Storage unavailable');
+    });
+  });
 });

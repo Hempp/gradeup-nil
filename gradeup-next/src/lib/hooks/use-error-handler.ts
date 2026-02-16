@@ -11,6 +11,36 @@ interface UseErrorHandlerOptions {
 
 /**
  * Hook for consistent error handling across components
+ *
+ * Provides utilities to handle errors with automatic toast notifications,
+ * error logging, and conversion to AppError format. Supports both
+ * synchronous and asynchronous error handling patterns.
+ *
+ * @param options - Configuration options
+ * @param options.showToast - Whether to show error toasts (default: true)
+ * @param options.onError - Optional callback for custom error handling
+ * @returns Object with handle, handleAsync, and wrapAsync functions
+ * @example
+ * function MyComponent() {
+ *   const { handle, handleAsync, wrapAsync } = useErrorHandler({
+ *     onError: (error) => trackError(error)
+ *   });
+ *
+ *   // Synchronous handling
+ *   try {
+ *     doSomething();
+ *   } catch (e) {
+ *     const appError = handle(e);
+ *   }
+ *
+ *   // Async handling
+ *   const { data, error } = await handleAsync(fetchData());
+ *
+ *   // Wrap entire function
+ *   const safeSubmit = wrapAsync(async (data) => {
+ *     return await submitForm(data);
+ *   });
+ * }
  */
 export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
   const { showToast: showToastOption = true, onError } = options;

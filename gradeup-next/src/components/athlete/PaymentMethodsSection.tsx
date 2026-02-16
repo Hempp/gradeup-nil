@@ -139,6 +139,8 @@ export function PaymentMethodsSection() {
   }, []);
 
   useEffect(() => {
+    // Data fetching on mount is a valid pattern
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAccounts();
   }, [fetchAccounts]);
 

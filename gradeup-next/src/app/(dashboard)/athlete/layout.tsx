@@ -2,7 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import { DashboardShell, type BreadcrumbItem } from '@/components/layout';
-import { OnboardingTourProvider, athleteOnboardingConfig } from '@/components/ui/onboarding-tour';
+import { LazyOnboardingTourProvider } from '@/components/ui/lazy-components';
+import { athleteOnboardingConfig } from '@/components/ui/onboarding-tour';
 import type { NavItem } from '@/types';
 
 const athleteNavItems: NavItem[] = [
@@ -57,7 +58,7 @@ export default function AthleteLayout({
   };
 
   return (
-    <OnboardingTourProvider config={athleteOnboardingConfig}>
+    <LazyOnboardingTourProvider config={athleteOnboardingConfig}>
       <DashboardShell
         navItems={athleteNavItems}
         variant="athlete"
@@ -69,6 +70,6 @@ export default function AthleteLayout({
           {children}
         </div>
       </DashboardShell>
-    </OnboardingTourProvider>
+    </LazyOnboardingTourProvider>
   );
 }

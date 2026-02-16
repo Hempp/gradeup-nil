@@ -85,9 +85,42 @@ const MOCK_NOTIFICATIONS: Notification[] = [
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Hook for managing user notifications
- * Handles fetching, marking as read, deleting, and real-time updates
- * Falls back to mock data if the notifications table doesn't exist
+ * Hook for managing user notifications with real-time updates
+ *
+ * Provides comprehensive notification management including fetching,
+ * marking as read, deleting, and real-time subscription. Automatically
+ * falls back to mock data if the notifications table doesn't exist,
+ * making it safe to use during development.
+ *
+ * @param userId - The unique user ID, or null if not authenticated
+ * @returns UseNotificationsResult with notifications array and control functions
+ * @example
+ * function NotificationCenter() {
+ *   const {
+ *     notifications,
+ *     unreadCount,
+ *     loading,
+ *     markAsRead,
+ *     markAllAsRead,
+ *     deleteNotification,
+ *     isUsingMockData
+ *   } = useNotifications(userId);
+ *
+ *   return (
+ *     <div>
+ *       <Badge count={unreadCount} />
+ *       {notifications.map(n => (
+ *         <NotificationItem
+ *           key={n.id}
+ *           notification={n}
+ *           onRead={() => markAsRead(n.id)}
+ *           onDelete={() => deleteNotification(n.id)}
+ *         />
+ *       ))}
+ *       <button onClick={markAllAsRead}>Mark all read</button>
+ *     </div>
+ *   );
+ * }
  */
 export function useNotifications(userId: string | null): UseNotificationsResult {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -317,7 +350,13 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Get display label for notification type
+ * Get human-readable display label for notification type
+ *
+ * @param type - The notification type enum value
+ * @returns Human-readable label string
+ * @example
+ * getNotificationTypeLabel('deal_offer') // "Deal Offer"
+ * getNotificationTypeLabel('verification_approved') // "Verification Approved"
  */
 export function getNotificationTypeLabel(type: NotificationType): string {
   const labels: Record<NotificationType, string> = {
@@ -343,7 +382,15 @@ export function getNotificationTypeLabel(type: NotificationType): string {
 }
 
 /**
- * Get icon name for notification type (for use with icon system)
+ * Get Lucide icon name for notification type
+ *
+ * Returns the name of a Lucide icon appropriate for the notification type.
+ * Use with dynamic icon imports or icon components.
+ *
+ * @param type - The notification type enum value
+ * @returns Lucide icon component name (e.g., 'CheckCircle', 'DollarSign')
+ * @example
+ * const iconName = getNotificationTypeIcon('deal_accepted'); // "CheckCircle"
  */
 export function getNotificationTypeIcon(type: NotificationType): string {
   const icons: Record<NotificationType, string> = {
@@ -369,7 +416,16 @@ export function getNotificationTypeIcon(type: NotificationType): string {
 }
 
 /**
- * Get relative time string (e.g., "2 hours ago")
+ * Get human-readable relative time string from ISO date
+ *
+ * Converts an ISO date string to a relative time description
+ * like "5 minutes ago", "2 hours ago", "3 days ago", etc.
+ *
+ * @param dateString - ISO date string
+ * @returns Human-readable relative time string
+ * @example
+ * getRelativeTime(new Date(Date.now() - 60000).toISOString()) // "1 minute ago"
+ * getRelativeTime(new Date(Date.now() - 3600000).toISOString()) // "1 hour ago"
  */
 export function getRelativeTime(dateString: string): string {
   const date = new Date(dateString);
@@ -410,7 +466,17 @@ export function getRelativeTime(dateString: string): string {
 }
 
 /**
- * Get notification color class based on type
+ * Get Tailwind CSS color class for notification type
+ *
+ * Returns a text color class appropriate for the notification type's
+ * semantic meaning (green for success, red for errors, etc.).
+ *
+ * @param type - The notification type enum value
+ * @returns Tailwind text color class (e.g., 'text-green-500')
+ * @example
+ * <div className={getNotificationColorClass('deal_accepted')}>
+ *   {notification.title}
+ * </div>
  */
 export function getNotificationColorClass(type: NotificationType): string {
   const colors: Record<NotificationType, string> = {

@@ -3,12 +3,53 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Props for the Button component
+ */
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * Visual style variant of the button
+   * - 'primary': Main CTA, uses primary brand color
+   * - 'secondary': Secondary actions, uses secondary color
+   * - 'outline': Bordered button with transparent background
+   * - 'ghost': Minimal style, transparent until hovered
+   * - 'danger': Destructive actions, uses error color
+   * @default 'primary'
+   */
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  /**
+   * Size of the button affecting height and padding
+   * - 'sm': 32px height, compact
+   * - 'md': 40px height, standard
+   * - 'lg': 48px height, prominent
+   * @default 'md'
+   */
   size?: 'sm' | 'md' | 'lg';
+  /**
+   * Shows loading spinner and disables the button
+   * Button remains the same size with spinner replacing content
+   */
   isLoading?: boolean;
 }
 
+/**
+ * A versatile button component with multiple variants and sizes
+ *
+ * Supports loading state, disabled state, and all standard button attributes.
+ * Uses CSS custom properties for theming and includes accessibility features
+ * like focus rings and aria-busy state.
+ *
+ * @example
+ * // Primary action button
+ * <Button onClick={handleSubmit}>Submit</Button>
+ *
+ * // Loading state
+ * <Button isLoading disabled>Processing...</Button>
+ *
+ * // Different variants
+ * <Button variant="outline" size="sm">Cancel</Button>
+ * <Button variant="danger" onClick={handleDelete}>Delete</Button>
+ */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, disabled, children, ...props }, ref) => {
     const baseStyles = `
