@@ -19,10 +19,10 @@ const config: Config = {
       '<rootDir>/__mocks__/fileMock.js',
   },
 
-  // Test file patterns
+  // Test file patterns - only match unit tests in src/__tests__
   testMatch: [
-    '**/__tests__/**/*.[jt]s?(x)',
-    '**/?(*.)+(spec|test).[jt]s?(x)',
+    '<rootDir>/src/__tests__/**/*.[jt]s?(x)',
+    '<rootDir>/src/**/*.test.[jt]s?(x)',
   ],
 
   // Coverage configuration
