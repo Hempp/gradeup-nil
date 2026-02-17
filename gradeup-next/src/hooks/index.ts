@@ -14,3 +14,14 @@ export {
   type Notification,
   type NotificationType,
 } from './useRealtimeNotifications';
+
+// Athlete search hook with debounce, filters, pagination, and URL sync
+export {
+  useAthleteSearch,
+  type AthleteSearchFilters,
+  type AthleteSearchPagination,
+  type AthleteSearchResult,
+  type UseAthleteSearchOptions,
+  type UseAthleteSearchResult,
+  type FilterTag,
+} from './useAthleteSearch';

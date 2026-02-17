@@ -19,6 +19,15 @@ import {
   sendPasswordResetEmail,
   sendDealNotificationEmail,
   sendWelcomeEmail,
+  sendWelcomeEmailLegacy,
+  sendPasswordResetEmailLegacy,
+  sendDealOfferEmail,
+  sendDealAcceptedEmail,
+  sendDealCompletedEmail,
+  sendPaymentReceivedEmail,
+  sendVerificationApprovedEmail,
+  sendVerificationRejectedEmail,
+  sendNewMessageEmail,
   type EmailOptions,
 } from '@/lib/services/email';
 
@@ -31,7 +40,8 @@ describe('email service', () => {
     jest.resetModules();
     process.env = { ...originalEnv };
     process.env.RESEND_API_KEY = 'test-api-key';
-    process.env.EMAIL_FROM = 'Test <test@example.com>';
+    process.env.EMAIL_FROM_ADDRESS = 'test@example.com';
+    process.env.EMAIL_FROM_NAME = 'Test';
   });
 
   afterEach(() => {
@@ -152,7 +162,7 @@ describe('email service', () => {
       const result = await sendEmail(options);
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Failed to send email');
+      expect(result.error).toBe('Failed to send email via Resend');
     });
   });
 
@@ -163,7 +173,12 @@ describe('email service', () => {
         error: null,
       });
 
-      const result = await sendPasswordResetEmail('user@example.com', 'https://gradeupnil.com/reset?token=abc123');
+      const result = await sendPasswordResetEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'user@example.com',
+        resetLink: 'https://gradeupnil.com/reset?token=abc123',
+        expiresInMinutes: 60,
+      });
 
       expect(result.success).toBe(true);
     });
@@ -176,7 +191,12 @@ describe('email service', () => {
         return Promise.resolve({ data: { id: 'email-123' }, error: null });
       });
 
-      await sendPasswordResetEmail('user@example.com', 'https://gradeupnil.com/reset?token=abc123');
+      await sendPasswordResetEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'user@example.com',
+        resetLink: 'https://gradeupnil.com/reset?token=abc123',
+        expiresInMinutes: 60,
+      });
 
       expect(mockSend).toHaveBeenCalled();
     });
@@ -187,14 +207,35 @@ describe('email service', () => {
         error: { message: 'Rate limit exceeded' },
       });
 
-      const result = await sendPasswordResetEmail('user@example.com', 'https://gradeupnil.com/reset');
+      const result = await sendPasswordResetEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'user@example.com',
+        resetLink: 'https://gradeupnil.com/reset',
+        expiresInMinutes: 60,
+      });
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Rate limit exceeded');
     });
   });
 
-  describe('sendDealNotificationEmail', () => {
+  describe('sendPasswordResetEmailLegacy', () => {
+    it('sends password reset email using legacy API', async () => {
+      mockSend.mockResolvedValue({
+        data: { id: 'email-123' },
+        error: null,
+      });
+
+      const result = await sendPasswordResetEmailLegacy(
+        'user@example.com',
+        'https://gradeupnil.com/reset?token=abc123'
+      );
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('sendDealNotificationEmail (legacy)', () => {
     it('sends new deal notification email', async () => {
       mockSend.mockImplementation((options) => {
         expect(options.subject).toBe('New Deal Opportunity from Nike');
@@ -253,7 +294,12 @@ describe('email service', () => {
         return Promise.resolve({ data: { id: 'email-123' }, error: null });
       });
 
-      const result = await sendWelcomeEmail('john@example.com', 'John Doe', 'athlete');
+      const result = await sendWelcomeEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        role: 'athlete',
+        loginUrl: 'https://gradeupnil.com/login',
+      });
 
       expect(result.success).toBe(true);
       expect(mockSend).toHaveBeenCalled();
@@ -266,7 +312,12 @@ describe('email service', () => {
         return Promise.resolve({ data: { id: 'email-123' }, error: null });
       });
 
-      const result = await sendWelcomeEmail('brand@company.com', 'Acme Corp', 'brand');
+      const result = await sendWelcomeEmail({
+        recipientName: 'Acme Corp',
+        recipientEmail: 'brand@company.com',
+        role: 'brand',
+        loginUrl: 'https://gradeupnil.com/login',
+      });
 
       expect(result.success).toBe(true);
       expect(mockSend).toHaveBeenCalled();
@@ -279,7 +330,12 @@ describe('email service', () => {
         return Promise.resolve({ data: { id: 'email-123' }, error: null });
       });
 
-      const result = await sendWelcomeEmail('director@university.edu', 'Coach Smith', 'director');
+      const result = await sendWelcomeEmail({
+        recipientName: 'Coach Smith',
+        recipientEmail: 'director@university.edu',
+        role: 'director',
+        loginUrl: 'https://gradeupnil.com/login',
+      });
 
       expect(result.success).toBe(true);
       expect(mockSend).toHaveBeenCalled();
@@ -291,10 +347,218 @@ describe('email service', () => {
         error: { message: 'Service unavailable' },
       });
 
-      const result = await sendWelcomeEmail('user@example.com', 'User', 'athlete');
+      const result = await sendWelcomeEmail({
+        recipientName: 'User',
+        recipientEmail: 'user@example.com',
+        role: 'athlete',
+        loginUrl: 'https://gradeupnil.com/login',
+      });
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Service unavailable');
+    });
+  });
+
+  describe('sendWelcomeEmailLegacy', () => {
+    it('sends welcome email using legacy API', async () => {
+      mockSend.mockResolvedValue({
+        data: { id: 'email-123' },
+        error: null,
+      });
+
+      const result = await sendWelcomeEmailLegacy('john@example.com', 'John Doe', 'athlete');
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('sendDealOfferEmail', () => {
+    it('sends deal offer email with correct content', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.subject).toBe('New Deal Opportunity from Nike');
+        expect(options.html).toContain('Sponsorship Deal');
+        expect(options.html).toContain('$5,000.00');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      const result = await sendDealOfferEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        dealTitle: 'Sponsorship Deal',
+        brandName: 'Nike',
+        compensationAmount: 5000,
+        compensationType: 'Fixed',
+        viewDealUrl: 'https://gradeupnil.com/deals/123',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSend).toHaveBeenCalled();
+    });
+  });
+
+  describe('sendDealAcceptedEmail', () => {
+    it('sends deal accepted email', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.subject).toBe('Your deal "Sponsorship Deal" has been accepted!');
+        expect(options.html).toContain('Nike');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      const result = await sendDealAcceptedEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        dealTitle: 'Sponsorship Deal',
+        otherPartyName: 'Nike',
+        compensationAmount: 5000,
+        viewDealUrl: 'https://gradeupnil.com/deals/123',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSend).toHaveBeenCalled();
+    });
+  });
+
+  describe('sendDealCompletedEmail', () => {
+    it('sends deal completed email', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.subject).toBe('Deal "Sponsorship Deal" completed - Payment incoming!');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      const result = await sendDealCompletedEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        dealTitle: 'Sponsorship Deal',
+        brandName: 'Nike',
+        athleteName: 'John Doe',
+        compensationAmount: 5000,
+        completedAt: '2024-01-15',
+        viewDealUrl: 'https://gradeupnil.com/deals/123',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSend).toHaveBeenCalled();
+    });
+  });
+
+  describe('sendPaymentReceivedEmail', () => {
+    it('sends payment received email', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.subject).toBe('Payment Received: $5,000.00');
+        expect(options.html).toContain('$5,000.00');
+        expect(options.html).toContain('Nike');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      const result = await sendPaymentReceivedEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        amount: 5000,
+        dealTitle: 'Sponsorship Deal',
+        brandName: 'Nike',
+        viewEarningsUrl: 'https://gradeupnil.com/earnings',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSend).toHaveBeenCalled();
+    });
+
+    it('includes transaction ID when provided', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.html).toContain('txn_12345');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      await sendPaymentReceivedEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        amount: 5000,
+        dealTitle: 'Sponsorship Deal',
+        brandName: 'Nike',
+        transactionId: 'txn_12345',
+        viewEarningsUrl: 'https://gradeupnil.com/earnings',
+      });
+
+      expect(mockSend).toHaveBeenCalled();
+    });
+  });
+
+  describe('sendVerificationApprovedEmail', () => {
+    it('sends verification approved email', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.subject).toBe('School Enrollment Verification Approved');
+        expect(options.html).toContain('School Enrollment');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      const result = await sendVerificationApprovedEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        verificationType: 'enrollment',
+        verifiedAt: '2024-01-15',
+        profileUrl: 'https://gradeupnil.com/profile',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSend).toHaveBeenCalled();
+    });
+  });
+
+  describe('sendVerificationRejectedEmail', () => {
+    it('sends verification rejected email', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.subject).toBe('Action Required: Academic Records (GPA) Verification');
+        expect(options.html).toContain('Academic Records (GPA)');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      const result = await sendVerificationRejectedEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        verificationType: 'grades',
+        resubmitUrl: 'https://gradeupnil.com/verify',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSend).toHaveBeenCalled();
+    });
+
+    it('includes rejection reason when provided', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.html).toContain('Document was illegible');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      await sendVerificationRejectedEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        verificationType: 'grades',
+        rejectionReason: 'Document was illegible',
+        resubmitUrl: 'https://gradeupnil.com/verify',
+      });
+
+      expect(mockSend).toHaveBeenCalled();
+    });
+  });
+
+  describe('sendNewMessageEmail', () => {
+    it('sends new message email', async () => {
+      mockSend.mockImplementation((options) => {
+        expect(options.subject).toBe('New message from Nike Brand Manager');
+        expect(options.html).toContain('Hey, we loved your profile');
+        return Promise.resolve({ data: { id: 'email-123' }, error: null });
+      });
+
+      const result = await sendNewMessageEmail({
+        recipientName: 'John Doe',
+        recipientEmail: 'john@example.com',
+        senderName: 'Nike Brand Manager',
+        messagePreview: 'Hey, we loved your profile and wanted to discuss...',
+        conversationUrl: 'https://gradeupnil.com/messages/123',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSend).toHaveBeenCalled();
     });
   });
 });

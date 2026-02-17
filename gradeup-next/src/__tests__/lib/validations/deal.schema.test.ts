@@ -222,9 +222,9 @@ describe('Deal Validation Schemas', () => {
         athlete_id: validUuid,
         brand_id: validUuid,
         title: 'Product Exchange Deal',
-        deal_type: 'product',
+        deal_type: 'merchandise',
         compensation_amount: 0,
-        compensation_type: 'product',
+        compensation_type: 'fixed',
       };
 
       const result = createDealSchema.safeParse(input);
