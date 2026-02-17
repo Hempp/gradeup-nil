@@ -65,7 +65,7 @@ function getCsrfTokenFromCookie(): string | null {
  * Check if a method requires CSRF protection
  */
 function methodRequiresCsrf(method: string): boolean {
-  return CSRF_CONFIG.PROTECTED_METHODS.includes(method.toUpperCase());
+  return (CSRF_CONFIG.PROTECTED_METHODS as readonly string[]).includes(method.toUpperCase());
 }
 
 // =============================================================================

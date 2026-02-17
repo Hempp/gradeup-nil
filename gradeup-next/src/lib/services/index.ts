@@ -17,3 +17,4 @@ export * as verification from './verification';
 export * as opportunities from './opportunities';
 export * as stripe from './stripe';
 export * as email from './email';
+export * as storage from './storage';

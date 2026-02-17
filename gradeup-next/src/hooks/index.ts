@@ -5,3 +5,12 @@
 
 // CSRF protection hook
 export { useCsrf, getCsrfToken, getCsrfHeaders } from './useCsrf';
+
+// Real-time notifications hook
+export {
+  useRealtimeNotifications,
+  type UseRealtimeNotificationsOptions,
+  type UseRealtimeNotificationsResult,
+  type Notification,
+  type NotificationType,
+} from './useRealtimeNotifications';

@@ -196,7 +196,8 @@ export function isExemptPath(path: string): boolean {
  */
 export function requiresCsrfProtection(method: string, path: string): boolean {
   // Only protect specific HTTP methods
-  if (!CSRF_CONFIG.PROTECTED_METHODS.includes(method.toUpperCase())) {
+  const upperMethod = method.toUpperCase();
+  if (!(CSRF_CONFIG.PROTECTED_METHODS as readonly string[]).includes(upperMethod)) {
     return false;
   }
 

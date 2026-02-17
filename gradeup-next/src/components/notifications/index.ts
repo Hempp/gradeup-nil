@@ -1,5 +1,5 @@
 // Notification Components
-// ═══════════════════════════════════════════════════════════════════════════
+// ========================================================================
 
 export { NotificationBadge, type NotificationBadgeProps } from './NotificationBadge';
 export {
@@ -12,3 +12,7 @@ export {
   NotificationDropdown,
   type NotificationDropdownProps,
 } from './NotificationDropdown';
+export {
+  NotificationBell,
+  type NotificationBellProps,
+} from './NotificationBell';

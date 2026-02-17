@@ -2,6 +2,9 @@
 // GRADEUP NIL - Type Definitions
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Re-export email types
+export * from './email';
+
 export type UserRole = 'athlete' | 'brand' | 'athletic_director' | 'admin';
 
 export type DealStatus = 'draft' | 'pending' | 'negotiating' | 'accepted' | 'active' | 'completed' | 'cancelled' | 'expired' | 'rejected' | 'paused';
