@@ -18,3 +18,5 @@ export * as opportunities from './opportunities';
 export * as stripe from './stripe';
 export * as email from './email';
 export * as storage from './storage';
+export * as contracts from './contracts';
+export * as pushNotifications from './push-notifications';

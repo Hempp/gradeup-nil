@@ -55,15 +55,37 @@ self.addEventListener('fetch', (event) => {
 
 // Push notifications
 self.addEventListener('push', (event) => {
-  const data = event.data?.json() || { title: 'GradeUp NIL', body: 'New notification' };
+  let data = { title: 'GradeUp NIL', body: 'New notification' };
+
+  try {
+    if (event.data) {
+      data = event.data.json();
+    }
+  } catch (e) {
+    // If JSON parsing fails, try to get text
+    if (event.data) {
+      data.body = event.data.text() || data.body;
+    }
+  }
+
+  const options = {
+    body: data.body,
+    icon: data.icon || '/icon-192.svg',
+    badge: data.badge || '/icon-192.svg',
+    tag: data.tag || `gradeup-${Date.now()}`,
+    data: {
+      url: data.url || '/',
+      ...data.data,
+    },
+    requireInteraction: data.requireInteraction || false,
+    silent: data.silent || false,
+    vibrate: data.vibrate || [200, 100, 200],
+    actions: data.actions || [],
+    timestamp: data.timestamp || Date.now(),
+  };
+
   event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: '/icon-192.svg',
-      badge: '/icon-192.svg',
-      tag: data.tag || 'gradeup-notification',
-      data: data.data || {},
-    })
+    self.registration.showNotification(data.title, options)
   );
 });
 
@@ -71,22 +93,72 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const urlToOpen = event.notification.data?.url || '/';
+  const action = event.action;
+  const notificationData = event.notification.data || {};
+
+  // Handle action buttons
+  let urlToOpen = notificationData.url || '/';
+
+  if (action) {
+    // Find the action URL from notification data if available
+    const actionUrl = notificationData.actionUrls?.[action];
+    if (actionUrl) {
+      urlToOpen = actionUrl;
+    }
+
+    // Default action handling for common actions
+    switch (action) {
+      case 'view':
+        urlToOpen = notificationData.url || '/dashboard';
+        break;
+      case 'dismiss':
+        // Just close the notification, don't open anything
+        return;
+      case 'view-deal':
+        urlToOpen = notificationData.dealUrl || '/dashboard/deals';
+        break;
+      case 'view-message':
+        urlToOpen = notificationData.messageUrl || '/dashboard/messages';
+        break;
+      default:
+        break;
+    }
+  }
 
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // If a window is already open, focus it
+      // If a window is already open with the same URL, focus it
       for (const client of clientList) {
-        if (client.url === urlToOpen && 'focus' in client) {
+        const clientUrl = new URL(client.url);
+        const targetUrl = new URL(urlToOpen, self.location.origin);
+
+        if (clientUrl.pathname === targetUrl.pathname && 'focus' in client) {
           return client.focus();
         }
       }
+
+      // If any window is open, navigate it to the URL and focus
+      for (const client of clientList) {
+        if ('navigate' in client && 'focus' in client) {
+          return client.navigate(urlToOpen).then(() => client.focus());
+        }
+      }
+
       // Otherwise open a new window
       if (self.clients.openWindow) {
         return self.clients.openWindow(urlToOpen);
       }
     })
   );
+});
+
+// Notification close handler (for analytics/cleanup)
+self.addEventListener('notificationclose', (event) => {
+  const notificationData = event.notification.data || {};
+
+  // You can track notification dismissals here
+  // Send to analytics endpoint if needed
+  console.log('[SW] Notification closed:', notificationData.tag || 'unknown');
 });
 
 // Background sync for offline actions

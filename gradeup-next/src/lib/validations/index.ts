@@ -25,3 +25,31 @@ export type { CreateCampaignInput, UpdateCampaignInput } from './campaign.schema
 // Brand schemas
 export { createBrandSchema, updateBrandSchema, adminUpdateBrandSchema, brandIndustryEnum, brandVerificationStatusEnum } from './brand.schema';
 export type { CreateBrandInput, UpdateBrandInput, AdminUpdateBrandInput } from './brand.schema';
+
+// Contract schemas
+export {
+  createContractSchema,
+  updateContractSchema,
+  signContractSchema,
+  declineContractSchema,
+  voidContractSchema,
+  contractFiltersSchema,
+  contractStatusEnum,
+  contractTemplateEnum,
+  signatureStatusEnum,
+  contractClauseSchema,
+  signaturePartySchema,
+} from './contract.schema';
+export type {
+  ContractStatus,
+  ContractTemplate,
+  SignatureStatus,
+  ContractClause,
+  SignatureParty,
+  CreateContractInput,
+  UpdateContractInput,
+  SignContractInput,
+  DeclineContractInput,
+  VoidContractInput,
+  ContractFilters,
+} from './contract.schema';

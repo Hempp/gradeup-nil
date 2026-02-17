@@ -1,36 +1,53 @@
 # GradeUp NIL API Documentation
 
-This document provides comprehensive documentation for the GradeUp NIL REST API, covering all available endpoints, authentication requirements, request/response schemas, and error handling.
+**Version:** 2.0.0
+**Base URL:** `https://api.gradeupnil.com` (production)
+**Last Updated:** February 2026
+
+This document provides comprehensive documentation for the GradeUp NIL REST API, covering all available endpoints, authentication requirements, request/response schemas, security features, and error handling.
+
+---
 
 ## Table of Contents
 
 - [Authentication](#authentication)
+  - [Session-Based Authentication](#session-based-authentication)
+  - [CSRF Protection](#csrf-protection)
+  - [Demo Mode](#demo-mode)
+- [Security](#security)
+  - [Rate Limiting](#rate-limiting)
+  - [Input Validation](#input-validation)
 - [Error Handling](#error-handling)
 - [Pagination](#pagination)
-- [Rate Limiting](#rate-limiting)
 - [API Endpoints](#api-endpoints)
   - [Athletes](#athletes)
   - [Deals](#deals)
   - [Campaigns](#campaigns)
+  - [Upload](#upload)
   - [Webhooks](#webhooks)
+- [Type Definitions](#type-definitions)
+- [SDK Examples](#sdk-examples)
 
 ---
 
 ## Authentication
 
-GradeUp NIL uses Supabase authentication with cookie-based sessions. All authenticated endpoints require a valid session cookie.
+GradeUp NIL uses Supabase authentication with cookie-based sessions, combined with CSRF protection for state-changing operations.
 
-### How Authentication Works
+### Session-Based Authentication
+
+#### How Authentication Works
 
 1. **Session Creation**: Users authenticate via Supabase Auth (email/password, OAuth providers)
 2. **Cookie Storage**: Session tokens are stored in HTTP-only cookies managed by Supabase SSR
 3. **Request Authentication**: The API reads the session from cookies on each request
+4. **Role-Based Access**: User roles (`athlete`, `brand`, `athletic_director`, `admin`) determine access permissions
 
-### Authentication Header
+#### Authentication Header
 
 No explicit `Authorization` header is required. The API automatically extracts the user session from cookies.
 
-### Obtaining a Session
+#### Obtaining a Session
 
 ```javascript
 // Using Supabase client
@@ -43,14 +60,137 @@ const { data, error } = await supabase.auth.signInWithPassword({
   email: 'user@example.com',
   password: 'password123'
 });
+
+// Sign up new user
+const { data, error } = await supabase.auth.signUp({
+  email: 'newuser@example.com',
+  password: 'securepassword123',
+  options: {
+    data: {
+      first_name: 'John',
+      last_name: 'Doe',
+      role: 'athlete'
+    }
+  }
+});
+
+// Sign out
+await supabase.auth.signOut();
 ```
 
-### Authentication Errors
+#### Protected Routes
 
-| Status Code | Error Message | Description |
-|-------------|---------------|-------------|
-| 401 | Unauthorized | No valid session found or session expired |
-| 403 | Forbidden | User lacks permission for the requested resource |
+The following dashboard routes require authentication:
+- `/athlete/*` - Athlete dashboard (requires `athlete` role)
+- `/brand/*` - Brand dashboard (requires `brand` role)
+- `/director/*` - Athletic Director dashboard (requires `athletic_director` role)
+
+Unauthenticated users accessing protected routes are redirected to `/login` with a `redirect` query parameter.
+
+### CSRF Protection
+
+All state-changing API requests (`POST`, `PATCH`, `PUT`, `DELETE`) to `/api/*` endpoints require CSRF token validation.
+
+#### How CSRF Protection Works
+
+1. **Token Generation**: On every `GET` request (non-API), the server generates a signed CSRF token
+2. **Token Storage**: Tokens are stored in `csrf-token` and `csrf-secret` cookies
+3. **Token Validation**: State-changing requests must include the token in the `X-CSRF-Token` header
+4. **Double-Submit Pattern**: The API validates the header token against the cookie secret
+
+#### Making CSRF-Protected Requests
+
+```javascript
+// Get the CSRF token from the cookie
+function getCsrfToken() {
+  const match = document.cookie.match(/csrf-token=([^;]+)/);
+  return match ? match[1] : null;
+}
+
+// Include the token in your request
+const response = await fetch('/api/athletes', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSRF-Token': getCsrfToken()
+  },
+  credentials: 'include',
+  body: JSON.stringify({ /* ... */ })
+});
+```
+
+#### CSRF Error Responses
+
+| Status | Error | Description |
+|--------|-------|-------------|
+| 403 | Missing CSRF token | `X-CSRF-Token` header not provided |
+| 403 | Invalid CSRF token | Token validation failed or expired |
+
+### Demo Mode
+
+For development and staging environments, demo mode allows unauthenticated access to dashboards.
+
+**Important**: Demo mode is disabled in production environments.
+
+```javascript
+// Enable demo mode (development only)
+// Set cookie: demo_role=athlete|brand|director
+document.cookie = 'demo_role=athlete; path=/';
+```
+
+---
+
+## Security
+
+### Rate Limiting
+
+GradeUp NIL implements rate limiting to protect against abuse and ensure fair usage.
+
+#### Rate Limit Configuration
+
+| Endpoint Type | Limit | Window | Implementation |
+|---------------|-------|--------|----------------|
+| Auth Endpoints (`/login`, `/signup`, `/forgot-password`, `/reset-password`) | 5 requests | 1 minute | Upstash Redis / In-memory fallback |
+| General API | 100 requests | 1 minute | Upstash Redis (when configured) |
+
+#### Rate Limit Headers
+
+Rate-limited responses include these headers:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Maximum requests allowed in the window |
+| `X-RateLimit-Remaining` | Remaining requests in current window |
+| `X-RateLimit-Reset` | Unix timestamp when the window resets |
+| `Retry-After` | Seconds until rate limit resets (on 429 responses) |
+
+#### Rate Limit Response
+
+When rate limited, the API returns:
+
+```json
+HTTP/1.1 429 Too Many Requests
+Retry-After: 45
+X-RateLimit-Limit: 5
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1708123456
+
+{
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded. Please try again later.",
+  "retryAfter": 45
+}
+```
+
+### Input Validation
+
+All API inputs are validated using Zod schemas with the following protections:
+
+- **Text Sanitization**: HTML/script injection prevention
+- **Length Limits**: Maximum character limits on all string fields
+- **Type Coercion**: Automatic string-to-number conversion where applicable
+- **UUID Validation**: All ID fields must be valid UUIDs
+- **Enum Validation**: Restricted values for status fields, types, etc.
 
 ---
 
@@ -75,8 +215,9 @@ All API errors follow this format:
 | 204 | No Content - Resource deleted successfully |
 | 400 | Bad Request - Invalid input or validation error |
 | 401 | Unauthorized - Authentication required |
-| 403 | Forbidden - Insufficient permissions |
+| 403 | Forbidden - Insufficient permissions or CSRF validation failed |
 | 404 | Not Found - Resource does not exist |
+| 429 | Too Many Requests - Rate limit exceeded |
 | 500 | Internal Server Error - Server-side error |
 
 ### Validation Errors
@@ -89,16 +230,23 @@ When input validation fails, the API returns a 400 status with a formatted messa
 }
 ```
 
+### Authentication Errors
+
+| Status Code | Error Message | Description |
+|-------------|---------------|-------------|
+| 401 | Unauthorized | No valid session found or session expired |
+| 403 | Forbidden | User lacks permission for the requested resource |
+
 ---
 
 ## Pagination
 
 All list endpoints support pagination with the following query parameters:
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `page` | integer | 1 | Page number (1-indexed) |
-| `page_size` | integer | 10 | Number of items per page |
+| Parameter | Type | Default | Max | Description |
+|-----------|------|---------|-----|-------------|
+| `page` | integer | 1 | - | Page number (1-indexed) |
+| `page_size` | integer | 10 | 100 | Number of items per page |
 
 ### Paginated Response Format
 
@@ -116,17 +264,6 @@ All list endpoints support pagination with the following query parameters:
 
 ---
 
-## Rate Limiting
-
-Rate limiting is handled at the infrastructure level (Supabase/Vercel). Current limits:
-
-- **Anonymous requests**: 100 requests per minute
-- **Authenticated requests**: 1000 requests per minute
-
-When rate limited, the API returns a `429 Too Many Requests` response.
-
----
-
 ## API Endpoints
 
 ---
@@ -137,17 +274,22 @@ When rate limited, the API returns a `429 Too Many Requests` response.
 
 Retrieve a paginated list of searchable athletes.
 
-**Authentication**: Optional (public athletes only)
+**Authentication**: Optional (only shows searchable athletes)
 
 **Query Parameters**:
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `page` | integer | Page number (default: 1) |
-| `page_size` | integer | Items per page (default: 10) |
+| `page_size` | integer | Items per page (default: 10, max: 100) |
 | `sport_ids` | string | Comma-separated list of sport UUIDs |
 | `school_ids` | string | Comma-separated list of school UUIDs |
+| `divisions` | string | Comma-separated divisions (D1, D2, D3, NAIA, JUCO) |
 | `min_gpa` | number | Minimum GPA filter (0.0 - 4.0) |
+| `max_gpa` | number | Maximum GPA filter (0.0 - 4.0) |
+| `min_followers` | integer | Minimum social media followers |
+| `max_followers` | integer | Maximum social media followers |
+| `verified` | boolean | Filter to only fully verified athletes |
 | `search` | string | Search term for major, position, or hometown |
 
 **Response**: `200 OK`
@@ -156,10 +298,10 @@ Retrieve a paginated list of searchable athletes.
 {
   "athletes": [
     {
-      "id": "uuid",
-      "profile_id": "uuid",
-      "school_id": "uuid",
-      "sport_id": "uuid",
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "profile_id": "550e8400-e29b-41d4-a716-446655440001",
+      "school_id": "550e8400-e29b-41d4-a716-446655440002",
+      "sport_id": "550e8400-e29b-41d4-a716-446655440003",
       "position": "Quarterback",
       "jersey_number": "12",
       "academic_year": "junior",
@@ -170,7 +312,10 @@ Retrieve a paginated list of searchable athletes.
       "weight_lbs": 210,
       "is_searchable": true,
       "nil_valuation": 50000,
-      "social_followers": 15000,
+      "total_followers": 15000,
+      "enrollment_verified": true,
+      "sport_verified": true,
+      "grades_verified": true,
       "instagram_handle": "athlete123",
       "twitter_handle": "athlete123",
       "tiktok_handle": "athlete123",
@@ -183,15 +328,21 @@ Retrieve a paginated list of searchable athletes.
         "bio": "Student athlete at State University"
       },
       "school": {
-        "id": "uuid",
+        "id": "550e8400-e29b-41d4-a716-446655440002",
         "name": "State University",
+        "short_name": "State",
+        "city": "Austin",
+        "state": "TX",
         "logo_url": "https://example.com/logo.png",
-        "division": "D1"
+        "division": "D1",
+        "conference": "Big 12"
       },
       "sport": {
-        "id": "uuid",
+        "id": "550e8400-e29b-41d4-a716-446655440003",
         "name": "Football",
-        "icon": "football"
+        "category": "team",
+        "gender": "men",
+        "icon_name": "football"
       }
     }
   ],
@@ -207,7 +358,7 @@ Retrieve a paginated list of searchable athletes.
 **Example Request**:
 
 ```bash
-curl -X GET "https://api.gradeupnil.com/api/athletes?page=1&page_size=20&min_gpa=3.0&sport_ids=uuid1,uuid2"
+curl -X GET "https://api.gradeupnil.com/api/athletes?page=1&page_size=20&min_gpa=3.0&divisions=D1&verified=true"
 ```
 
 ---
@@ -218,6 +369,8 @@ Create a new athlete profile for the authenticated user.
 
 **Authentication**: Required
 
+**CSRF**: Required (`X-CSRF-Token` header)
+
 **Request Body**:
 
 | Field | Type | Required | Description |
@@ -226,7 +379,7 @@ Create a new athlete profile for the authenticated user.
 | `sport_id` | uuid | Yes | UUID of the athlete's sport |
 | `position` | string | No | Playing position (max 100 chars) |
 | `jersey_number` | string | No | Jersey number (max 10 chars) |
-| `academic_year` | enum | No | One of: `freshman`, `sophomore`, `junior`, `senior`, `graduate`, `redshirt_freshman`, `redshirt_sophomore`, `redshirt_junior`, `redshirt_senior` |
+| `academic_year` | enum | No | See [Academic Year Enum](#academic-year-enum) |
 | `gpa` | number | No | Grade point average (0.0 - 4.0) |
 | `major` | string | No | Academic major (max 200 chars) |
 | `hometown` | string | No | Hometown (max 200 chars) |
@@ -255,10 +408,10 @@ Create a new athlete profile for the authenticated user.
 
 ```json
 {
-  "id": "uuid",
-  "profile_id": "uuid",
-  "school_id": "uuid",
-  "sport_id": "uuid",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "profile_id": "550e8400-e29b-41d4-a716-446655440001",
+  "school_id": "123e4567-e89b-12d3-a456-426614174000",
+  "sport_id": "987fcdeb-51a2-43e8-b8c9-123456789abc",
   "position": "Point Guard",
   "academic_year": "junior",
   "gpa": 3.75,
@@ -280,6 +433,7 @@ Create a new athlete profile for the authenticated user.
 |--------|-------|-------------|
 | 400 | Validation failed | Invalid input data |
 | 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
 
 ---
 
@@ -304,10 +458,10 @@ Retrieve a specific athlete by ID.
 
 ```json
 {
-  "id": "uuid",
-  "profile_id": "uuid",
-  "school_id": "uuid",
-  "sport_id": "uuid",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "profile_id": "550e8400-e29b-41d4-a716-446655440001",
+  "school_id": "550e8400-e29b-41d4-a716-446655440002",
+  "sport_id": "550e8400-e29b-41d4-a716-446655440003",
   "position": "Quarterback",
   "jersey_number": "12",
   "academic_year": "senior",
@@ -318,7 +472,7 @@ Retrieve a specific athlete by ID.
   "weight_lbs": 220,
   "is_searchable": true,
   "nil_valuation": 75000,
-  "social_followers": 25000,
+  "total_followers": 25000,
   "instagram_handle": "qb12",
   "twitter_handle": "qb12",
   "created_at": "2024-01-01T00:00:00Z",
@@ -339,7 +493,7 @@ Retrieve a specific athlete by ID.
 
 ```json
 {
-  "id": "uuid",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
   "position": "Quarterback",
   "academic_year": "senior",
   "is_searchable": true,
@@ -351,13 +505,13 @@ Retrieve a specific athlete by ID.
     "avatar_url": "https://example.com/avatar.jpg"
   },
   "school": {
-    "id": "uuid",
+    "id": "550e8400-e29b-41d4-a716-446655440002",
     "name": "State University",
     "logo_url": "https://example.com/logo.png",
     "division": "D1"
   },
   "sport": {
-    "id": "uuid",
+    "id": "550e8400-e29b-41d4-a716-446655440003",
     "name": "Football",
     "icon": "football"
   }
@@ -378,6 +532,8 @@ Update an athlete's profile. Users can only update their own athlete profile.
 
 **Authentication**: Required
 
+**CSRF**: Required (`X-CSRF-Token` header)
+
 **Path Parameters**:
 
 | Parameter | Type | Description |
@@ -392,14 +548,14 @@ All fields are optional:
 |-------|------|-------------|
 | `school_id` | uuid | School UUID |
 | `sport_id` | uuid | Sport UUID |
-| `position` | string | Playing position |
-| `jersey_number` | string | Jersey number |
+| `position` | string | Playing position (max 100 chars) |
+| `jersey_number` | string | Jersey number (max 10 chars) |
 | `academic_year` | enum | Academic year |
 | `gpa` | number | GPA (0.0 - 4.0) |
-| `major` | string | Major |
-| `hometown` | string | Hometown |
-| `height_inches` | integer | Height in inches |
-| `weight_lbs` | integer | Weight in pounds |
+| `major` | string | Major (max 200 chars) |
+| `hometown` | string | Hometown (max 200 chars) |
+| `height_inches` | integer | Height in inches (36 - 108) |
+| `weight_lbs` | integer | Weight in pounds (50 - 500) |
 | `is_searchable` | boolean | Public visibility |
 | `nil_valuation` | number | NIL valuation (0 - 100,000,000) |
 | `social_followers` | integer | Total social media followers |
@@ -428,6 +584,7 @@ Returns the updated athlete object with all relations.
 |--------|-------|-------------|
 | 400 | Validation failed | Invalid input data |
 | 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
 | 404 | Athlete not found or not authorized | Athlete doesn't exist or user doesn't own it |
 
 ---
@@ -437,6 +594,8 @@ Returns the updated athlete object with all relations.
 Delete an athlete's profile. Users can only delete their own athlete profile.
 
 **Authentication**: Required
+
+**CSRF**: Required (`X-CSRF-Token` header)
 
 **Path Parameters**:
 
@@ -452,6 +611,7 @@ Delete an athlete's profile. Users can only delete their own athlete profile.
 |--------|-------|-------------|
 | 400 | Error message | Database error |
 | 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
 
 ---
 
@@ -469,8 +629,8 @@ Retrieve a paginated list of deals for the authenticated user.
 |-----------|------|-------------|
 | `page` | integer | Page number (default: 1) |
 | `page_size` | integer | Items per page (default: 10) |
-| `status` | string | Comma-separated statuses: `draft`, `pending`, `accepted`, `rejected`, `in_progress`, `completed`, `cancelled`, `disputed` |
-| `deal_type` | string | Comma-separated types: `social_post`, `appearance`, `endorsement`, `licensing`, `autograph`, `camp`, `speaking`, `merchandise`, `other` |
+| `status` | string | Comma-separated statuses (see [Deal Status Enum](#deal-status-enum)) |
+| `deal_type` | string | Comma-separated types (see [Deal Type Enum](#deal-type-enum)) |
 | `athlete_id` | uuid | Filter by athlete |
 | `brand_id` | uuid | Filter by brand |
 
@@ -480,10 +640,10 @@ Retrieve a paginated list of deals for the authenticated user.
 {
   "deals": [
     {
-      "id": "uuid",
-      "athlete_id": "uuid",
-      "brand_id": "uuid",
-      "opportunity_id": "uuid",
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "athlete_id": "550e8400-e29b-41d4-a716-446655440001",
+      "brand_id": "550e8400-e29b-41d4-a716-446655440002",
+      "opportunity_id": "550e8400-e29b-41d4-a716-446655440003",
       "title": "Social Media Campaign",
       "description": "3 Instagram posts promoting product",
       "deal_type": "social_post",
@@ -499,12 +659,12 @@ Retrieve a paginated list of deals for the authenticated user.
       "updated_at": "2024-01-20T14:30:00Z",
       "accepted_at": "2024-01-18T09:00:00Z",
       "brand": {
-        "id": "uuid",
+        "id": "550e8400-e29b-41d4-a716-446655440002",
         "company_name": "Nike",
         "logo_url": "https://example.com/nike.png"
       },
       "athlete": {
-        "id": "uuid",
+        "id": "550e8400-e29b-41d4-a716-446655440001",
         "profile": {
           "first_name": "John",
           "last_name": "Smith",
@@ -537,6 +697,8 @@ Create a new deal.
 
 **Authentication**: Required
 
+**CSRF**: Required (`X-CSRF-Token` header)
+
 **Request Body**:
 
 | Field | Type | Required | Description |
@@ -546,9 +708,9 @@ Create a new deal.
 | `opportunity_id` | uuid | No | Associated opportunity UUID |
 | `title` | string | Yes | Deal title (max 200 chars) |
 | `description` | string | No | Deal description (max 5000 chars) |
-| `deal_type` | enum | Yes | One of: `social_post`, `appearance`, `endorsement`, `licensing`, `autograph`, `camp`, `speaking`, `merchandise`, `other` |
+| `deal_type` | enum | Yes | See [Deal Type Enum](#deal-type-enum) |
 | `compensation_amount` | number | Yes | Payment amount (0 - 100,000,000) |
-| `compensation_type` | enum | No | One of: `fixed`, `hourly`, `per_post`, `revenue_share`, `product`, `hybrid` (default: `fixed`) |
+| `compensation_type` | enum | No | See [Compensation Type Enum](#compensation-type-enum) (default: `fixed`) |
 | `start_date` | string | No | Start date (ISO 8601 or YYYY-MM-DD) |
 | `end_date` | string | No | End date (ISO 8601 or YYYY-MM-DD) |
 | `deliverables` | array | No | Array of deliverable strings (max 50 items, 500 chars each) |
@@ -584,6 +746,7 @@ Returns the created deal with brand and athlete relations.
 |--------|-------|-------------|
 | 400 | Validation failed | Invalid input data |
 | 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
 
 ---
 
@@ -603,9 +766,9 @@ Retrieve a specific deal by ID.
 
 ```json
 {
-  "id": "uuid",
-  "athlete_id": "uuid",
-  "brand_id": "uuid",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "athlete_id": "550e8400-e29b-41d4-a716-446655440001",
+  "brand_id": "550e8400-e29b-41d4-a716-446655440002",
   "title": "Social Media Campaign",
   "description": "Content creation partnership",
   "deal_type": "social_post",
@@ -619,14 +782,14 @@ Retrieve a specific deal by ID.
   "updated_at": "2024-01-20T14:30:00Z",
   "accepted_at": "2024-01-18T09:00:00Z",
   "brand": {
-    "id": "uuid",
+    "id": "550e8400-e29b-41d4-a716-446655440002",
     "company_name": "Nike",
     "logo_url": "https://example.com/nike.png",
     "contact_name": "Jane Doe",
     "contact_email": "jane@nike.com"
   },
   "athlete": {
-    "id": "uuid",
+    "id": "550e8400-e29b-41d4-a716-446655440001",
     "profile": {
       "first_name": "John",
       "last_name": "Smith",
@@ -654,6 +817,8 @@ Update a deal. Only the athlete or brand involved in the deal can update it.
 
 **Authentication**: Required
 
+**CSRF**: Required (`X-CSRF-Token` header)
+
 **Path Parameters**:
 
 | Parameter | Type | Description |
@@ -666,14 +831,14 @@ All fields are optional:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `title` | string | Deal title |
-| `description` | string | Deal description |
+| `title` | string | Deal title (max 200 chars) |
+| `description` | string | Deal description (max 5000 chars) |
 | `deal_type` | enum | Deal type |
-| `compensation_amount` | number | Payment amount |
+| `compensation_amount` | number | Payment amount (0 - 100,000,000) |
 | `compensation_type` | enum | Compensation type |
 | `start_date` | string | Start date |
 | `end_date` | string | End date |
-| `deliverables` | array | Deliverables list |
+| `deliverables` | array | Deliverables list (max 50 items) |
 | `status` | enum | Deal status (automatically sets timestamps) |
 | `notes` | string | Internal notes (max 2000 chars) |
 | `contract_url` | string | URL to contract document |
@@ -682,9 +847,11 @@ All fields are optional:
 
 When updating the status, the API automatically sets the appropriate timestamp:
 
-- `accepted` -> Sets `accepted_at`
-- `completed` -> Sets `completed_at`
-- `cancelled` -> Sets `cancelled_at`
+| Status | Timestamp Set |
+|--------|---------------|
+| `accepted` | `accepted_at` |
+| `completed` | `completed_at` |
+| `cancelled` | `cancelled_at` |
 
 **Request Example**:
 
@@ -706,6 +873,7 @@ Returns the updated deal object.
 | 400 | Validation failed | Invalid input data |
 | 401 | Unauthorized | Not authenticated |
 | 403 | You do not have permission to modify this deal | User is not the athlete or brand on this deal |
+| 403 | Missing CSRF token | CSRF token not provided |
 | 404 | Deal not found | Deal does not exist |
 
 ---
@@ -715,6 +883,8 @@ Returns the updated deal object.
 Delete a deal. Only the athlete or brand involved can delete, and only deals with status `draft`, `cancelled`, or `rejected` can be deleted.
 
 **Authentication**: Required
+
+**CSRF**: Required (`X-CSRF-Token` header)
 
 **Path Parameters**:
 
@@ -731,6 +901,7 @@ Delete a deal. Only the athlete or brand involved can delete, and only deals wit
 | 400 | Cannot delete an active deal. Cancel it first. | Deal has an active status |
 | 401 | Unauthorized | Not authenticated |
 | 403 | Deal not found or you do not have permission to delete it | User is not authorized |
+| 403 | Missing CSRF token | CSRF token not provided |
 
 ---
 
@@ -749,7 +920,7 @@ Retrieve a paginated list of campaigns.
 | `page` | integer | Page number (default: 1) |
 | `page_size` | integer | Items per page (default: 10) |
 | `brand_id` | uuid | Filter by brand (defaults to user's brand) |
-| `status` | string | Comma-separated statuses: `draft`, `active`, `paused`, `completed`, `cancelled` |
+| `status` | string | Comma-separated statuses (see [Campaign Status Enum](#campaign-status-enum)) |
 
 **Response**: `200 OK`
 
@@ -757,22 +928,22 @@ Retrieve a paginated list of campaigns.
 {
   "campaigns": [
     {
-      "id": "uuid",
-      "brand_id": "uuid",
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "brand_id": "550e8400-e29b-41d4-a716-446655440001",
       "title": "Summer Athlete Campaign",
       "description": "Partner with college athletes for summer promotion",
       "budget": 50000,
       "start_date": "2024-06-01",
       "end_date": "2024-08-31",
       "status": "active",
-      "target_sports": ["uuid1", "uuid2"],
+      "target_sports": ["550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003"],
       "target_divisions": ["D1", "D2"],
       "target_min_gpa": 3.0,
       "target_min_followers": 5000,
       "created_at": "2024-05-01T10:00:00Z",
       "updated_at": "2024-05-15T14:30:00Z",
       "brand": {
-        "id": "uuid",
+        "id": "550e8400-e29b-41d4-a716-446655440001",
         "company_name": "Nike",
         "logo_url": "https://example.com/nike.png"
       }
@@ -795,6 +966,8 @@ Create a new campaign. Automatically associates with the authenticated user's br
 
 **Authentication**: Required (must have a brand profile)
 
+**CSRF**: Required (`X-CSRF-Token` header)
+
 **Request Body**:
 
 | Field | Type | Required | Description |
@@ -804,7 +977,7 @@ Create a new campaign. Automatically associates with the authenticated user's br
 | `budget` | number | Yes | Total budget (0 - 100,000,000) |
 | `start_date` | string | Yes | Start date (ISO 8601 or YYYY-MM-DD) |
 | `end_date` | string | No | End date (ISO 8601 or YYYY-MM-DD) |
-| `status` | enum | No | One of: `draft`, `active`, `paused`, `completed`, `cancelled` (default: `draft`) |
+| `status` | enum | No | See [Campaign Status Enum](#campaign-status-enum) (default: `draft`) |
 | `target_sports` | array | No | Array of sport UUIDs (max 50) |
 | `target_divisions` | array | No | Array of division strings (max 10) |
 | `target_min_gpa` | number | No | Minimum athlete GPA (0.0 - 4.0) |
@@ -837,6 +1010,7 @@ Returns the created campaign with brand relation.
 |--------|-------|-------------|
 | 400 | Validation failed | Invalid input data |
 | 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
 | 404 | Brand not found | User does not have a brand profile |
 
 ---
@@ -857,22 +1031,22 @@ Retrieve a specific campaign by ID with metrics.
 
 ```json
 {
-  "id": "uuid",
-  "brand_id": "uuid",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "brand_id": "550e8400-e29b-41d4-a716-446655440001",
   "title": "Summer Athlete Campaign",
   "description": "Partner with college athletes",
   "budget": 50000,
   "start_date": "2024-06-01",
   "end_date": "2024-08-31",
   "status": "active",
-  "target_sports": ["uuid1", "uuid2"],
+  "target_sports": ["550e8400-e29b-41d4-a716-446655440002"],
   "target_divisions": ["D1"],
   "target_min_gpa": 3.0,
   "target_min_followers": 5000,
   "created_at": "2024-05-01T10:00:00Z",
   "updated_at": "2024-05-15T14:30:00Z",
   "brand": {
-    "id": "uuid",
+    "id": "550e8400-e29b-41d4-a716-446655440001",
     "company_name": "Nike",
     "logo_url": "https://example.com/nike.png"
   },
@@ -898,6 +1072,8 @@ Retrieve a specific campaign by ID with metrics.
 Update a campaign. Only the brand owner can update their campaigns.
 
 **Authentication**: Required
+
+**CSRF**: Required (`X-CSRF-Token` header)
 
 **Path Parameters**:
 
@@ -928,6 +1104,7 @@ Returns the updated campaign object.
 |--------|-------|-------------|
 | 400 | Validation failed | Invalid input data |
 | 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
 | 404 | Campaign not found or not authorized | Campaign doesn't exist or user doesn't own it |
 
 ---
@@ -937,6 +1114,8 @@ Returns the updated campaign object.
 Delete a campaign. Only draft campaigns can be deleted.
 
 **Authentication**: Required
+
+**CSRF**: Required (`X-CSRF-Token` header)
 
 **Path Parameters**:
 
@@ -952,8 +1131,194 @@ Delete a campaign. Only draft campaigns can be deleted.
 |--------|-------|-------------|
 | 400 | Cannot delete an active campaign. Set status to draft first. | Campaign is not in draft status |
 | 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
 | 404 | Brand not found | User does not have a brand profile |
 | 404 | Campaign not found | Campaign does not exist or user doesn't own it |
+
+---
+
+## Upload
+
+### GET /api/upload
+
+Get upload configuration for a specific image type.
+
+**Authentication**: Not required
+
+**Query Parameters**:
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `type` | enum | Image type: `avatar`, `cover`, `document`, `logo`, `campaign` (optional) |
+
+**Response (specific type)**: `200 OK`
+
+```json
+{
+  "maxSizeMB": 2,
+  "allowedTypes": ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
+  "maxWidth": 800,
+  "maxHeight": 800
+}
+```
+
+**Response (all types)**: `200 OK`
+
+```json
+{
+  "avatar": {
+    "maxSizeMB": 2,
+    "allowedTypes": ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
+    "maxWidth": 800,
+    "maxHeight": 800
+  },
+  "cover": {
+    "maxSizeMB": 5,
+    "allowedTypes": ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
+    "maxWidth": 1920,
+    "maxHeight": 1080
+  },
+  "document": {
+    "maxSizeMB": 10,
+    "allowedTypes": ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain", "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
+  },
+  "logo": {
+    "maxSizeMB": 2,
+    "allowedTypes": ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
+    "maxWidth": 500,
+    "maxHeight": 500
+  },
+  "campaign": {
+    "maxSizeMB": 10,
+    "allowedTypes": ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
+    "maxWidth": 2000,
+    "maxHeight": 2000
+  }
+}
+```
+
+---
+
+### POST /api/upload
+
+Upload an image or document file.
+
+**Authentication**: Required
+
+**CSRF**: Required (`X-CSRF-Token` header)
+
+**Content-Type**: `multipart/form-data`
+
+**Form Data**:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `file` | File | Yes | The file to upload |
+| `type` | enum | Yes | Image type: `avatar`, `cover`, `document`, `logo`, `campaign` |
+
+**Upload Configurations**:
+
+| Type | Max Size | Allowed Types | Max Dimensions |
+|------|----------|---------------|----------------|
+| `avatar` | 2 MB | JPEG, PNG, GIF, WebP | 800x800 |
+| `cover` | 5 MB | JPEG, PNG, GIF, WebP | 1920x1080 |
+| `document` | 10 MB | PDF, DOC, DOCX, TXT, Images | N/A |
+| `logo` | 2 MB | JPEG, PNG, GIF, WebP | 500x500 |
+| `campaign` | 10 MB | JPEG, PNG, GIF, WebP | 2000x2000 |
+
+**Image Processing**:
+
+- Images are automatically resized to fit within max dimensions
+- Images are converted to WebP format for optimization (when sharp is available)
+- Thumbnails are generated for avatar, cover, logo, and campaign images
+- Cache headers are set for 1 year
+
+**Request Example**:
+
+```javascript
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+formData.append('type', 'avatar');
+
+const response = await fetch('/api/upload', {
+  method: 'POST',
+  headers: {
+    'X-CSRF-Token': getCsrfToken()
+  },
+  credentials: 'include',
+  body: formData
+});
+```
+
+**Response**: `200 OK`
+
+```json
+{
+  "originalUrl": "https://supabase.storage/avatars/user-id/avatar/1708123456-abc123.webp",
+  "webpUrl": "https://supabase.storage/avatars/user-id/avatar/1708123456-abc123.webp",
+  "thumbnailUrl": "https://supabase.storage/avatars/user-id/avatar/1708123456-abc123-thumb.webp",
+  "width": 800,
+  "height": 600,
+  "format": "webp",
+  "path": "user-id/avatar/1708123456-abc123.webp",
+  "optimized": true
+}
+```
+
+**Error Responses**:
+
+| Status | Error | Description |
+|--------|-------|-------------|
+| 400 | No file provided | File not included in request |
+| 400 | Invalid image type | Invalid type parameter |
+| 400 | File size exceeds Xmb limit | File too large |
+| 400 | File type "X" not allowed | Unsupported file type |
+| 401 | Unauthorized | Not authenticated |
+| 403 | Missing CSRF token | CSRF token not provided |
+| 500 | Upload failed: X | Storage upload error |
+
+---
+
+### DELETE /api/upload
+
+Delete an uploaded file.
+
+**Authentication**: Required
+
+**CSRF**: Required (`X-CSRF-Token` header)
+
+**Query Parameters**:
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | string | Yes | File path in storage |
+| `bucket` | enum | Yes | Storage bucket: `avatars`, `covers`, `documents`, `brand-logos`, `campaign-assets` |
+
+**Request Example**:
+
+```bash
+curl -X DELETE "https://api.gradeupnil.com/api/upload?path=user-id/avatar/file.webp&bucket=avatars" \
+  -H "Cookie: sb-access-token=..." \
+  -H "X-CSRF-Token: token"
+```
+
+**Response**: `200 OK`
+
+```json
+{
+  "success": true
+}
+```
+
+**Error Responses**:
+
+| Status | Error | Description |
+|--------|-------|-------------|
+| 400 | Path and bucket are required | Missing query parameters |
+| 401 | Unauthorized | Not authenticated |
+| 403 | Unauthorized to delete this file | User doesn't own the file |
+| 403 | Missing CSRF token | CSRF token not provided |
+| 500 | Delete failed: X | Storage delete error |
 
 ---
 
@@ -961,7 +1326,7 @@ Delete a campaign. Only draft campaigns can be deleted.
 
 ### POST /api/webhooks/stripe
 
-Stripe webhook endpoint for payment event processing.
+Stripe webhook endpoint for payment and subscription event processing.
 
 **Authentication**: Stripe signature verification
 
@@ -971,14 +1336,25 @@ Stripe webhook endpoint for payment event processing.
 |--------|-------------|
 | `stripe-signature` | Stripe webhook signature for verification |
 
+**Environment Variables Required**:
+
+| Variable | Description |
+|----------|-------------|
+| `STRIPE_SECRET_KEY` | Stripe secret API key |
+| `STRIPE_WEBHOOK_SECRET` | Webhook signing secret from Stripe dashboard |
+
 **Handled Events**:
 
 | Event Type | Action |
 |------------|--------|
-| `payment_intent.succeeded` | Updates payment status to `completed` and sets `paid_at` |
-| `payment_intent.payment_failed` | Updates payment status to `failed` |
+| `payment_intent.succeeded` | Updates payment status to `completed`, sets `paid_at`, updates deal `payment_status` to `paid` |
+| `payment_intent.payment_failed` | Updates payment status to `failed`, records failure reason |
+| `checkout.session.completed` | Updates payment from checkout, handles subscription creation |
+| `customer.subscription.created` | Updates profile subscription status and details |
+| `customer.subscription.updated` | Updates profile subscription status, price, period end |
+| `customer.subscription.deleted` | Clears subscription data from profile, sets status to `canceled` |
 
-**Request Body**: Raw Stripe event payload
+**Request Body**: Raw Stripe event payload (JSON)
 
 **Response**: `200 OK`
 
@@ -992,7 +1368,17 @@ Stripe webhook endpoint for payment event processing.
 
 | Status | Error | Description |
 |--------|-------|-------------|
-| 400 | Invalid signature | Webhook signature verification failed |
+| 400 | Missing stripe-signature header | Signature header not provided |
+| 400 | Webhook signature verification failed | Invalid signature |
+| 500 | Webhook secret not configured | `STRIPE_WEBHOOK_SECRET` not set |
+| 500 | Webhook handler failed | Error processing event |
+
+**Webhook Setup**:
+
+1. Go to [Stripe Dashboard > Webhooks](https://dashboard.stripe.com/webhooks)
+2. Add endpoint: `https://your-domain.com/api/webhooks/stripe`
+3. Select events: `payment_intent.succeeded`, `payment_intent.payment_failed`, `checkout.session.completed`, `customer.subscription.*`
+4. Copy the webhook signing secret to `STRIPE_WEBHOOK_SECRET` environment variable
 
 ---
 
@@ -1065,6 +1451,47 @@ type CampaignStatus =
   | 'cancelled';
 ```
 
+### Brand Industry Enum
+
+```typescript
+type BrandIndustry =
+  | 'sports_apparel'
+  | 'sports_equipment'
+  | 'food_beverage'
+  | 'fitness'
+  | 'technology'
+  | 'automotive'
+  | 'financial_services'
+  | 'entertainment'
+  | 'healthcare'
+  | 'education'
+  | 'retail'
+  | 'media'
+  | 'other';
+```
+
+### User Role Enum
+
+```typescript
+type UserRole =
+  | 'athlete'
+  | 'brand'
+  | 'athletic_director'
+  | 'admin';
+```
+
+### Division Enum
+
+```typescript
+type Division =
+  | 'D1'
+  | 'D2'
+  | 'D3'
+  | 'NAIA'
+  | 'JUCO'
+  | 'other';
+```
+
 ---
 
 ## SDK Examples
@@ -1072,48 +1499,194 @@ type CampaignStatus =
 ### JavaScript/TypeScript
 
 ```typescript
-// Using fetch
-const response = await fetch('/api/athletes?page=1&min_gpa=3.0', {
-  method: 'GET',
-  credentials: 'include', // Include cookies for authentication
-});
+// CSRF token helper
+function getCsrfToken(): string | null {
+  const match = document.cookie.match(/csrf-token=([^;]+)/);
+  return match ? match[1] : null;
+}
 
-const { athletes, pagination } = await response.json();
+// API wrapper with CSRF handling
+async function apiRequest(url: string, options: RequestInit = {}) {
+  const headers = new Headers(options.headers);
 
-// Creating a deal
-const createDeal = await fetch('/api/deals', {
+  if (['POST', 'PATCH', 'PUT', 'DELETE'].includes(options.method || '')) {
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+      headers.set('X-CSRF-Token', csrfToken);
+    }
+  }
+
+  if (options.body && typeof options.body === 'object' && !(options.body instanceof FormData)) {
+    headers.set('Content-Type', 'application/json');
+    options.body = JSON.stringify(options.body);
+  }
+
+  return fetch(url, {
+    ...options,
+    headers,
+    credentials: 'include',
+  });
+}
+
+// List athletes with filters
+const athletesResponse = await apiRequest('/api/athletes?page=1&min_gpa=3.0&divisions=D1');
+const { athletes, pagination } = await athletesResponse.json();
+
+// Create a deal
+const dealResponse = await apiRequest('/api/deals', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  credentials: 'include',
-  body: JSON.stringify({
+  body: {
     athlete_id: 'uuid',
     brand_id: 'uuid',
     title: 'Partnership Deal',
     deal_type: 'social_post',
     compensation_amount: 1000,
-  }),
+  },
+});
+
+// Upload an avatar
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+formData.append('type', 'avatar');
+
+const uploadResponse = await apiRequest('/api/upload', {
+  method: 'POST',
+  body: formData,
+});
+const { originalUrl, thumbnailUrl } = await uploadResponse.json();
+
+// Update campaign status
+const updateResponse = await apiRequest('/api/campaigns/uuid', {
+  method: 'PATCH',
+  body: {
+    status: 'active',
+  },
 });
 ```
 
 ### cURL
 
 ```bash
+# Get CSRF token (from browser cookies after page load)
+CSRF_TOKEN="your-csrf-token"
+
 # List athletes with filters
-curl -X GET "https://api.gradeupnil.com/api/athletes?page=1&page_size=20&min_gpa=3.5" \
+curl -X GET "https://api.gradeupnil.com/api/athletes?page=1&page_size=20&min_gpa=3.5&verified=true" \
   -H "Cookie: sb-access-token=YOUR_TOKEN"
 
 # Create a new campaign
 curl -X POST "https://api.gradeupnil.com/api/campaigns" \
   -H "Content-Type: application/json" \
   -H "Cookie: sb-access-token=YOUR_TOKEN" \
+  -H "X-CSRF-Token: $CSRF_TOKEN" \
   -d '{
     "title": "Spring Campaign",
     "budget": 10000,
     "start_date": "2024-03-01",
     "status": "draft"
   }'
+
+# Upload an image
+curl -X POST "https://api.gradeupnil.com/api/upload" \
+  -H "Cookie: sb-access-token=YOUR_TOKEN" \
+  -H "X-CSRF-Token: $CSRF_TOKEN" \
+  -F "file=@/path/to/image.jpg" \
+  -F "type=avatar"
+
+# Update deal status
+curl -X PATCH "https://api.gradeupnil.com/api/deals/uuid" \
+  -H "Content-Type: application/json" \
+  -H "Cookie: sb-access-token=YOUR_TOKEN" \
+  -H "X-CSRF-Token: $CSRF_TOKEN" \
+  -d '{"status": "accepted"}'
+
+# Delete a draft campaign
+curl -X DELETE "https://api.gradeupnil.com/api/campaigns/uuid" \
+  -H "Cookie: sb-access-token=YOUR_TOKEN" \
+  -H "X-CSRF-Token: $CSRF_TOKEN"
+```
+
+### React Hook Example
+
+```typescript
+import { useState, useCallback } from 'react';
+
+function useApi() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const getCsrfToken = useCallback(() => {
+    const match = document.cookie.match(/csrf-token=([^;]+)/);
+    return match ? match[1] : null;
+  }, []);
+
+  const request = useCallback(async <T>(
+    url: string,
+    options: RequestInit = {}
+  ): Promise<T> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const headers = new Headers(options.headers);
+
+      if (['POST', 'PATCH', 'PUT', 'DELETE'].includes(options.method || '')) {
+        const csrfToken = getCsrfToken();
+        if (csrfToken) {
+          headers.set('X-CSRF-Token', csrfToken);
+        }
+      }
+
+      const response = await fetch(url, {
+        ...options,
+        headers,
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Request failed');
+      }
+
+      if (response.status === 204) {
+        return undefined as T;
+      }
+
+      return response.json();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setError(message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [getCsrfToken]);
+
+  return { request, loading, error };
+}
+
+// Usage
+function AthleteList() {
+  const { request, loading, error } = useApi();
+  const [athletes, setAthletes] = useState([]);
+
+  useEffect(() => {
+    request('/api/athletes?page=1&min_gpa=3.0')
+      .then(data => setAthletes(data.athletes))
+      .catch(console.error);
+  }, [request]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <ul>
+      {athletes.map(athlete => (
+        <li key={athlete.id}>{athlete.profile.first_name}</li>
+      ))}
+    </ul>
+  );
+}
 ```
 
 ---
@@ -1122,8 +1695,10 @@ curl -X POST "https://api.gradeupnil.com/api/campaigns" \
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.0.0 | 2026-02-17 | Added CSRF protection, Upload API, comprehensive Stripe webhook events, rate limiting documentation |
 | 1.0.0 | 2024-01-15 | Initial API release |
 
 ---
 
-*Last updated: February 2024*
+*GradeUp NIL API Documentation*
+*Last updated: February 2026*

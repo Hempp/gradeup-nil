@@ -25,3 +25,12 @@ export {
   type UseAthleteSearchResult,
   type FilterTag,
 } from './useAthleteSearch';
+
+// Push notifications hook for browser push subscription management
+export {
+  usePushNotifications,
+  type PushPermissionState,
+  type PushSubscriptionState,
+  type UsePushNotificationsOptions,
+  type UsePushNotificationsResult,
+} from './usePushNotifications';

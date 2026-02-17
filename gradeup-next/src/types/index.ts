@@ -320,3 +320,64 @@ export interface AppNotification {
   read: boolean;
   created_at: string;
 }
+
+// ─── Contract ───
+export type ContractStatus = 'draft' | 'pending_signature' | 'partially_signed' | 'fully_signed' | 'active' | 'expired' | 'cancelled' | 'voided';
+export type ContractTemplate = 'standard_endorsement' | 'social_media_campaign' | 'appearance_agreement' | 'merchandise_licensing' | 'autograph_session' | 'camp_participation' | 'custom';
+export type SignatureStatus = 'pending' | 'signed' | 'declined' | 'expired';
+
+export interface ContractClause {
+  id?: string;
+  title: string;
+  content: string;
+  is_required: boolean;
+  is_editable: boolean;
+  order: number;
+}
+
+export interface ContractSignature {
+  id: string;
+  contract_id: string;
+  party_type: 'athlete' | 'brand' | 'guardian' | 'witness';
+  user_id: string | null;
+  name: string;
+  email: string;
+  title: string | null;
+  signature_data: string | null;
+  signature_type: 'drawn' | 'typed' | 'uploaded' | null;
+  signature_status: SignatureStatus;
+  signed_at: string | null;
+  signature_ip: string | null;
+  declined_at: string | null;
+  decline_reason: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Contract {
+  id: string;
+  deal_id: string;
+  template_type: ContractTemplate;
+  title: string;
+  description: string | null;
+  effective_date: string | null;
+  expiration_date: string | null;
+  compensation_amount: number;
+  compensation_terms: string | null;
+  deliverables_summary: string | null;
+  clauses: ContractClause[];
+  custom_terms: string | null;
+  requires_guardian_signature: boolean;
+  requires_witness: boolean;
+  status: ContractStatus;
+  pdf_url: string | null;
+  signed_pdf_url: string | null;
+  created_at: string;
+  updated_at: string;
+  signed_at: string | null;
+  voided_at: string | null;
+  void_reason: string | null;
+  // Joined relations
+  deal?: Deal;
+  parties?: ContractSignature[];
+}
