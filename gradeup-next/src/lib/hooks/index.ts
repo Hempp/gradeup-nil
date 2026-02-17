@@ -48,3 +48,7 @@ export {
 // Verification workflow hooks
 export * from './use-verification-requests';
 export * from './use-director-verifications';
+
+// CSRF protection hooks
+// NOTE: Import directly from '@/hooks/useCsrf' for CSRF utilities
+// export { useCsrf, getCsrfToken, getCsrfHeaders } from '@/hooks/useCsrf';

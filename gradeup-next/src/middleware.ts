@@ -1,6 +1,15 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { ratelimit } from '@/lib/rate-limit';
+import {
+  createCsrfToken,
+  validateCsrfToken,
+  requiresCsrfProtection,
+  getCsrfTokenFromHeader,
+  getCsrfSecretFromCookies,
+  createCsrfTokenCookie,
+  createCsrfSecretCookie,
+} from '@/lib/csrf';
 
 // =============================================================================
 // RATE LIMITING CONFIGURATION
@@ -150,6 +159,62 @@ export async function middleware(request: NextRequest) {
   });
 
   const path = request.nextUrl.pathname;
+  const method = request.method;
+
+  // Track if we need to set CSRF cookies (will be done at the end)
+  let csrfTokens: { signedToken: string; secret: string } | null = null;
+
+  // =============================================================================
+  // CSRF PROTECTION
+  // =============================================================================
+  // Implements double-submit cookie pattern with cryptographic signatures.
+  // - GET requests: Generate and set CSRF tokens in cookies
+  // - POST/PATCH/DELETE/PUT requests to /api/*: Validate CSRF token from header
+  // =============================================================================
+
+  // Check if this request requires CSRF validation
+  if (requiresCsrfProtection(method, path)) {
+    const csrfToken = getCsrfTokenFromHeader(request.headers);
+    const csrfSecret = getCsrfSecretFromCookies(request.headers.get('cookie'));
+
+    if (!csrfToken || !csrfSecret) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Forbidden',
+          message: 'Missing CSRF token',
+        }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    }
+
+    const validation = await validateCsrfToken(csrfToken, csrfSecret);
+
+    if (!validation.valid) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Forbidden',
+          message: validation.error || 'Invalid CSRF token',
+        }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    }
+  }
+
+  // Generate new CSRF token for GET requests (and other safe methods)
+  // Store tokens to be set at the end (after response object may be reassigned)
+  if (method === 'GET' && !path.startsWith('/api/')) {
+    csrfTokens = await createCsrfToken();
+  }
 
   // =============================================================================
   // RATE LIMITING FOR AUTH ENDPOINTS
@@ -189,6 +254,11 @@ export async function middleware(request: NextRequest) {
 
   // Skip auth checks if Supabase is not configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    // Set CSRF cookies before returning
+    if (csrfTokens) {
+      response.headers.append('Set-Cookie', createCsrfTokenCookie(csrfTokens.signedToken));
+      response.headers.append('Set-Cookie', createCsrfSecretCookie(csrfTokens.secret));
+    }
     return response;
   }
 
@@ -221,6 +291,11 @@ export async function middleware(request: NextRequest) {
 
       // Allow access if the demo role matches the path
       if (allowedPath && path.startsWith(allowedPath)) {
+        // Set CSRF cookies before returning
+        if (csrfTokens) {
+          response.headers.append('Set-Cookie', createCsrfTokenCookie(csrfTokens.signedToken));
+          response.headers.append('Set-Cookie', createCsrfSecretCookie(csrfTokens.secret));
+        }
         return response;
       }
 
@@ -301,6 +376,14 @@ export async function middleware(request: NextRequest) {
 
     const redirectPath = redirectMap[profile?.role || ''] || '/';
     return NextResponse.redirect(new URL(redirectPath, request.url));
+  }
+
+  // =============================================================================
+  // SET CSRF COOKIES (must be done after all response modifications)
+  // =============================================================================
+  if (csrfTokens) {
+    response.headers.append('Set-Cookie', createCsrfTokenCookie(csrfTokens.signedToken));
+    response.headers.append('Set-Cookie', createCsrfSecretCookie(csrfTokens.secret));
   }
 
   return response;

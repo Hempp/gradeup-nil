@@ -11,3 +11,7 @@ export * from './bundle-analyzer';
 export * from './logger';
 // export utilities removed from barrel to reduce bundle size
 // import directly from '@/lib/utils/export' when needed
+
+// CSRF-protected fetch utilities
+// NOTE: These are client-side only - import directly from '@/lib/utils/fetch'
+// export * from './fetch'; // Commented to avoid SSR issues with document access
