@@ -143,7 +143,7 @@ export const TestimonialsScene: React.FC = () => {
                 fontFamily: 'Georgia, serif',
               }}
             >
-              "
+              &ldquo;
             </div>
 
             {/* Quote text */}
@@ -208,7 +208,7 @@ export const TestimonialsScene: React.FC = () => {
                     Jasmine Taylor
                   </div>
                   <div style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)' }}>
-                    Women's Basketball • Stanford University
+                    Women&apos;s Basketball • Stanford University
                   </div>
                   <div
                     style={{
