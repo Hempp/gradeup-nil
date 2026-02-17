@@ -69,17 +69,13 @@ export {
   formatAxisValue,
   type TimePeriod,
 } from './chart';
+// Lazy-loaded chart containers (import recharts sub-components directly)
 export {
   LazyLineChart,
   LazyBarChart,
   LazyAreaChart,
   LazyPieChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
+  ChartLoadingPlaceholder,
 } from './lazy-chart';
 
 // Keyboard Shortcuts

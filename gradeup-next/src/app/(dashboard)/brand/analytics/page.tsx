@@ -3,14 +3,16 @@
 import { useState, useEffect } from 'react';
 import {
   LazyLineChart as LineChart,
-  Line,
   LazyBarChart as BarChart,
+} from '@/components/ui/lazy-chart';
+import {
+  Line,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-} from '@/components/ui/lazy-chart';
+} from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

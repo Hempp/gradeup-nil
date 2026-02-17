@@ -22,15 +22,17 @@ import {
 } from 'lucide-react';
 import {
   LazyAreaChart as AreaChart,
-  Area,
   LazyBarChart as BarChart,
+} from '@/components/ui/lazy-chart';
+import {
+  Area,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from '@/components/ui/lazy-chart';
+} from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartWrapper, tooltipStyle, axisStyle, chartColors } from '@/components/ui/chart';
 import { Button } from '@/components/ui/button';

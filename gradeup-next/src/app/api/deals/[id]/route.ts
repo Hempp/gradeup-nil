@@ -1,5 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { updateDealSchema, validateInput, formatValidationError } from '@/lib/validations';
+
+/**
+ * Verify that the authenticated user is either the athlete or brand owner on a deal
+ * Returns the deal data if authorized, null otherwise
+ */
+async function verifyDealOwnership(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  dealId: string,
+  userId: string
+): Promise<{ authorized: boolean; deal: { id: string; status: string; athlete_id: string; brand_id: string } | null; role: 'athlete' | 'brand' | null }> {
+  // Fetch the deal with athlete and brand profile IDs
+  const { data: deal, error } = await supabase
+    .from('deals')
+    .select(`
+      id,
+      status,
+      athlete_id,
+      brand_id,
+      athlete:athletes!inner(profile_id),
+      brand:brands!inner(profile_id)
+    `)
+    .eq('id', dealId)
+    .single();
+
+  if (error || !deal) {
+    return { authorized: false, deal: null, role: null };
+  }
+
+  // Check if user is the athlete on this deal
+  const athleteData = deal.athlete as unknown as { profile_id: string };
+  const brandData = deal.brand as unknown as { profile_id: string };
+
+  if (athleteData.profile_id === userId) {
+    return {
+      authorized: true,
+      deal: { id: deal.id, status: deal.status, athlete_id: deal.athlete_id, brand_id: deal.brand_id },
+      role: 'athlete'
+    };
+  }
+
+  // Check if user is the brand on this deal
+  if (brandData.profile_id === userId) {
+    return {
+      authorized: true,
+      deal: { id: deal.id, status: deal.status, athlete_id: deal.athlete_id, brand_id: deal.brand_id },
+      role: 'brand'
+    };
+  }
+
+  return { authorized: false, deal: null, role: null };
+}
 
 export async function GET(
   request: NextRequest,
@@ -60,6 +112,15 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Verify user is either the athlete or brand on this deal
+    const ownership = await verifyDealOwnership(supabase, id, user.id);
+    if (!ownership.authorized) {
+      return NextResponse.json(
+        { error: 'You do not have permission to modify this deal' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
 
     // Remove fields that shouldn't be updated directly
@@ -70,23 +131,34 @@ export async function PATCH(
       brand: _brand,
       athlete: _athlete,
       created_at: _createdAt,
-      ...updates
+      ...rawUpdates
     } = body;
 
+    // Validate input with Zod schema
+    const validation = validateInput(updateDealSchema, rawUpdates);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: formatValidationError(validation.errors) },
+        { status: 400 }
+      );
+    }
+
+    const updates = validation.data;
+
     // Add updated_at timestamp
-    const updateData = {
+    const updateData: Record<string, unknown> = {
       ...updates,
       updated_at: new Date().toISOString(),
     };
 
     // Handle status-specific timestamps
-    if (updates.status === 'accepted' && !updates.accepted_at) {
+    if (updates.status === 'accepted' && !body.accepted_at) {
       updateData.accepted_at = new Date().toISOString();
     }
-    if (updates.status === 'completed' && !updates.completed_at) {
+    if (updates.status === 'completed' && !body.completed_at) {
       updateData.completed_at = new Date().toISOString();
     }
-    if (updates.status === 'cancelled' && !updates.cancelled_at) {
+    if (updates.status === 'cancelled' && !body.cancelled_at) {
       updateData.cancelled_at = new Date().toISOString();
     }
 
@@ -134,19 +206,17 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // First check if deal exists and user has permission
-    const { data: existingDeal, error: fetchError } = await supabase
-      .from('deals')
-      .select('id, status')
-      .eq('id', id)
-      .single();
-
-    if (fetchError || !existingDeal) {
-      return NextResponse.json({ error: 'Deal not found' }, { status: 404 });
+    // Verify user is either the athlete or brand on this deal
+    const ownership = await verifyDealOwnership(supabase, id, user.id);
+    if (!ownership.authorized || !ownership.deal) {
+      return NextResponse.json(
+        { error: 'Deal not found or you do not have permission to delete it' },
+        { status: 403 }
+      );
     }
 
     // Only allow deletion of draft or cancelled deals
-    if (!['draft', 'cancelled', 'rejected'].includes(existingDeal.status)) {
+    if (!['draft', 'cancelled', 'rejected'].includes(ownership.deal.status)) {
       return NextResponse.json(
         { error: 'Cannot delete an active deal. Cancel it first.' },
         { status: 400 }

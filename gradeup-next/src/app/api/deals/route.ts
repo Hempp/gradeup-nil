@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createDealSchema, validateInput, formatValidationError } from '@/lib/validations';
 
 export async function GET(request: NextRequest) {
   try {
@@ -85,27 +86,31 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    if (!body.athlete_id || !body.brand_id || !body.title || !body.deal_type || body.compensation_amount === undefined) {
+    // Validate input with Zod schema
+    const validation = validateInput(createDealSchema, body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Missing required fields: athlete_id, brand_id, title, deal_type, compensation_amount' },
+        { error: formatValidationError(validation.errors) },
         { status: 400 }
       );
     }
 
+    const validatedData = validation.data;
+
     const { data: deal, error } = await supabase
       .from('deals')
       .insert({
-        athlete_id: body.athlete_id,
-        brand_id: body.brand_id,
-        opportunity_id: body.opportunity_id,
-        title: body.title,
-        description: body.description,
-        deal_type: body.deal_type,
-        compensation_amount: body.compensation_amount,
-        compensation_type: body.compensation_type || 'fixed',
-        start_date: body.start_date,
-        end_date: body.end_date,
-        deliverables: body.deliverables,
+        athlete_id: validatedData.athlete_id,
+        brand_id: validatedData.brand_id,
+        opportunity_id: validatedData.opportunity_id,
+        title: validatedData.title,
+        description: validatedData.description,
+        deal_type: validatedData.deal_type,
+        compensation_amount: validatedData.compensation_amount,
+        compensation_type: validatedData.compensation_type,
+        start_date: validatedData.start_date,
+        end_date: validatedData.end_date,
+        deliverables: validatedData.deliverables,
         status: 'pending',
       })
       .select(`

@@ -18,14 +18,8 @@ import {
   Loader2,
   HelpCircle,
 } from 'lucide-react';
-import {
-  LazyBarChart as BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from '@/components/ui/lazy-chart';
+import { LazyBarChart as BarChart } from '@/components/ui/lazy-chart';
+import { Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import {
   ChartWrapper,
   chartColors,

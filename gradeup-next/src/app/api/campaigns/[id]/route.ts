@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { updateCampaignSchema, validateInput, formatValidationError } from '@/lib/validations';
 
 export async function GET(
   request: NextRequest,
@@ -93,8 +94,19 @@ export async function PATCH(
       brand: _brand,
       created_at: _createdAt,
       metrics: _metrics,
-      ...updates
+      ...rawUpdates
     } = body;
+
+    // Validate input with Zod schema
+    const validation = validateInput(updateCampaignSchema, rawUpdates);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: formatValidationError(validation.errors) },
+        { status: 400 }
+      );
+    }
+
+    const updates = validation.data;
 
     const { data: campaign, error } = await supabase
       .from('campaigns')

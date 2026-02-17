@@ -41,7 +41,35 @@ const securityHeaders = [
   },
   {
     key: 'Permissions-Policy',
-    value: 'camera=(), microphone=(), geolocation=()',
+    value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=()',
+  },
+  {
+    key: 'Content-Security-Policy',
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: https:",
+      "font-src 'self' data:",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "object-src 'none'",
+      "upgrade-insecure-requests",
+    ].join('; '),
+  },
+  {
+    key: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin',
+  },
+  {
+    key: 'Cross-Origin-Resource-Policy',
+    value: 'same-origin',
+  },
+  {
+    key: 'Cross-Origin-Embedder-Policy',
+    value: 'credentialless',
   },
 ];
 
@@ -82,7 +110,18 @@ const nextConfig: NextConfig = {
 
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts', 'date-fns'],
+    // Optimize tree-shaking for large icon/chart libraries
+    // These packages have many exports - Next.js will only bundle what's used
+    optimizePackageImports: [
+      'lucide-react',           // Icon library - only bundle used icons
+      'recharts',               // Charting library - lazy loaded but optimize imports
+      'date-fns',               // Date utilities - only bundle used functions
+      '@sentry/nextjs',         // Error tracking - only bundle used integrations
+      'dompurify',              // HTML sanitization - bundle only when needed
+      'clsx',                   // Class name utility
+      'tailwind-merge',         // Tailwind class merging
+      '@supabase/supabase-js',  // Supabase client - only bundle used methods
+    ],
   },
 
   // Compiler optimizations

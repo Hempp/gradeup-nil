@@ -1,14 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import {
-  LazyAreaChart as AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from '@/components/ui/lazy-chart';
+import { LazyAreaChart as AreaChart } from '@/components/ui/lazy-chart';
+import { Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import {
   DollarSign,
   TrendingUp,

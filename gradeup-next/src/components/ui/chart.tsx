@@ -1,9 +1,13 @@
 'use client';
 
-import { forwardRef, type ReactNode, useState, useEffect } from 'react';
-import { ResponsiveContainer } from 'recharts';
+import { forwardRef, type ReactNode, useState, useEffect, lazy, Suspense } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+
+// Lazy load ResponsiveContainer to avoid bundling recharts on pages that don't use charts
+const ResponsiveContainer = lazy(() =>
+  import('recharts').then((mod) => ({ default: mod.ResponsiveContainer }))
+);
 
 // Design system chart colors
 export const chartColors = {
@@ -94,6 +98,27 @@ export const formatNumber = (value: number): string => {
   return value.toString();
 };
 
+// Loading skeleton for lazy-loaded chart container
+function ChartLoadingSkeleton() {
+  return (
+    <div
+      className="w-full h-full flex items-end gap-2 p-4"
+      role="status"
+      aria-label="Loading chart"
+    >
+      {[45, 70, 35, 80, 55, 65].map((height, i) => (
+        <div
+          key={i}
+          className="flex-1 bg-[var(--surface-100)] rounded-t animate-pulse"
+          style={{ height: `${height}%` }}
+          aria-hidden="true"
+        />
+      ))}
+      <span className="sr-only">Loading chart...</span>
+    </div>
+  );
+}
+
 export interface ChartWrapperProps {
   title?: string;
   description?: string;
@@ -169,9 +194,11 @@ export const ChartWrapper = forwardRef<HTMLDivElement, ChartWrapperProps>(
               </span>
             )}
             {isMounted && !loading ? (
-              <ResponsiveContainer width="100%" height="100%">
-                {children as React.ReactElement}
-              </ResponsiveContainer>
+              <Suspense fallback={<ChartLoadingSkeleton />}>
+                <ResponsiveContainer width="100%" height="100%">
+                  {children as React.ReactElement}
+                </ResponsiveContainer>
+              </Suspense>
             ) : (
               // Loading skeleton
               <div

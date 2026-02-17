@@ -6,6 +6,16 @@ import { Skeleton } from './skeleton';
 /**
  * Lazy-loaded chart components using Next.js dynamic imports
  * This reduces initial bundle size by ~350KB
+ *
+ * IMPORTANT: Do NOT re-export recharts sub-components here.
+ * Each page should import them directly from 'recharts' so tree-shaking works.
+ * The optimizePackageImports config in next.config.ts handles tree-shaking.
+ *
+ * Example usage in a page:
+ * ```tsx
+ * import { LazyLineChart as LineChart } from '@/components/ui/lazy-chart';
+ * import { XAxis, YAxis, CartesianGrid, Tooltip, Line, ResponsiveContainer } from 'recharts';
+ * ```
  */
 
 // Loading placeholder for charts
@@ -23,7 +33,8 @@ function ChartLoadingPlaceholder({ height = 300 }: { height?: number }) {
   );
 }
 
-// Lazy load individual Recharts components
+// Lazy load individual Recharts chart containers
+// These are the heavy components that benefit from code-splitting
 export const LazyLineChart = dynamic(
   () => import('recharts').then((mod) => ({ default: mod.LineChart })),
   {
@@ -56,17 +67,5 @@ export const LazyPieChart = dynamic(
   }
 );
 
-// Re-export chart sub-components that don't need lazy loading
-export {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Line,
-  Bar,
-  Area,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-} from 'recharts';
+// Export the loading placeholder for custom usage
+export { ChartLoadingPlaceholder };

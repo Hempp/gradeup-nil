@@ -1,13 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { ratelimit } from '@/lib/rate-limit';
 
 // =============================================================================
 // RATE LIMITING CONFIGURATION
 // =============================================================================
-// In-memory rate limiter for auth endpoints to prevent brute force attacks.
-// Note: This uses in-memory storage which resets on server restart and doesn't
-// share state across Vercel serverless instances. For production at scale,
-// consider using @upstash/ratelimit with Redis for distributed rate limiting.
+// Distributed rate limiting using Upstash Redis for production environments.
+// Falls back to in-memory rate limiting when Redis is not configured.
 // =============================================================================
 
 interface RateLimitEntry {
@@ -15,10 +14,10 @@ interface RateLimitEntry {
   resetTime: number;
 }
 
-// In-memory store for rate limiting (Map<IP, RateLimitEntry>)
+// In-memory store for rate limiting fallback (Map<IP, RateLimitEntry>)
 const rateLimitStore = new Map<string, RateLimitEntry>();
 
-// Rate limit configuration
+// Rate limit configuration for in-memory fallback
 const RATE_LIMIT_CONFIG = {
   maxRequests: 5,           // Maximum requests allowed
   windowMs: 60 * 1000,      // Time window in milliseconds (1 minute)
@@ -68,7 +67,7 @@ function getClientIP(request: NextRequest): string {
 }
 
 /**
- * Clean up expired rate limit entries to prevent memory leaks
+ * Clean up expired rate limit entries to prevent memory leaks (in-memory fallback)
  */
 function cleanupExpiredEntries(): void {
   const now = Date.now();
@@ -84,10 +83,10 @@ function cleanupExpiredEntries(): void {
 }
 
 /**
- * Check rate limit for a given IP and path
+ * In-memory rate limit check (fallback when Redis is not configured)
  * Returns true if request should be allowed, false if rate limited
  */
-function checkRateLimit(ip: string): { allowed: boolean; remaining: number; resetTime: number } {
+function checkInMemoryRateLimit(ip: string): { allowed: boolean; remaining: number; resetTime: number } {
   const now = Date.now();
   const key = `auth:${ip}`;
 
@@ -127,6 +126,24 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number; rese
   };
 }
 
+/**
+ * Check rate limit using Upstash Redis or fall back to in-memory
+ */
+async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
+  // Use Upstash Redis if configured
+  if (ratelimit) {
+    const { success, remaining, reset } = await ratelimit.limit(ip);
+    return {
+      allowed: success,
+      remaining,
+      resetTime: reset
+    };
+  }
+
+  // Fall back to in-memory rate limiting for development
+  return checkInMemoryRateLimit(ip);
+}
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: { headers: request.headers },
@@ -140,7 +157,7 @@ export async function middleware(request: NextRequest) {
   // Apply rate limiting to auth endpoints to prevent brute force attacks
   if (isAuthEndpoint(path)) {
     const ip = getClientIP(request);
-    const { allowed, remaining, resetTime } = checkRateLimit(ip);
+    const { allowed, remaining, resetTime } = await checkRateLimit(ip);
 
     if (!allowed) {
       // Return 429 Too Many Requests

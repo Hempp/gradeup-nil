@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createCampaignSchema, validateInput, formatValidationError } from '@/lib/validations';
 
 export async function GET(request: NextRequest) {
   try {
@@ -96,27 +97,31 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    if (!body.title || body.budget === undefined || !body.start_date) {
+    // Validate input with Zod schema
+    const validation = validateInput(createCampaignSchema, body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, budget, start_date' },
+        { error: formatValidationError(validation.errors) },
         { status: 400 }
       );
     }
+
+    const validatedData = validation.data;
 
     const { data: campaign, error } = await supabase
       .from('campaigns')
       .insert({
         brand_id: brand.id,
-        title: body.title,
-        description: body.description,
-        budget: body.budget,
-        start_date: body.start_date,
-        end_date: body.end_date,
-        status: body.status || 'draft',
-        target_sports: body.target_sports,
-        target_divisions: body.target_divisions,
-        target_min_gpa: body.target_min_gpa,
-        target_min_followers: body.target_min_followers,
+        title: validatedData.title,
+        description: validatedData.description,
+        budget: validatedData.budget,
+        start_date: validatedData.start_date,
+        end_date: validatedData.end_date,
+        status: validatedData.status,
+        target_sports: validatedData.target_sports,
+        target_divisions: validatedData.target_divisions,
+        target_min_gpa: validatedData.target_min_gpa,
+        target_min_followers: validatedData.target_min_followers,
       })
       .select(`
         *,

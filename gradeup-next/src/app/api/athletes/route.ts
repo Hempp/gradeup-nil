@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAthleteSchema, validateInput, formatValidationError } from '@/lib/validations';
 
 export async function GET(request: NextRequest) {
   try {
@@ -82,21 +83,32 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    // Validate input with Zod schema
+    const validation = validateInput(createAthleteSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: formatValidationError(validation.errors) },
+        { status: 400 }
+      );
+    }
+
+    const validatedData = validation.data;
+
     const { data: athlete, error } = await supabase
       .from('athletes')
       .insert({
         profile_id: user.id,
-        school_id: body.school_id,
-        sport_id: body.sport_id,
-        position: body.position,
-        jersey_number: body.jersey_number,
-        academic_year: body.academic_year,
-        gpa: body.gpa,
-        major: body.major,
-        hometown: body.hometown,
-        height_inches: body.height_inches,
-        weight_lbs: body.weight_lbs,
-        is_searchable: body.is_searchable ?? true,
+        school_id: validatedData.school_id,
+        sport_id: validatedData.sport_id,
+        position: validatedData.position,
+        jersey_number: validatedData.jersey_number,
+        academic_year: validatedData.academic_year,
+        gpa: validatedData.gpa,
+        major: validatedData.major,
+        hometown: validatedData.hometown,
+        height_inches: validatedData.height_inches,
+        weight_lbs: validatedData.weight_lbs,
+        is_searchable: validatedData.is_searchable,
       })
       .select(`
         *,
