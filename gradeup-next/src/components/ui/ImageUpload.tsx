@@ -768,7 +768,7 @@ export const ImageUpload = forwardRef<HTMLDivElement, ImageUploadProps>(
 // Preset Components
 // ═══════════════════════════════════════════════════════════════════════════
 
-export interface PresetImageUploadProps extends Omit<ImageUploadProps, 'imageType'> {}
+export type PresetImageUploadProps = Omit<ImageUploadProps, 'imageType'>;
 
 /**
  * Avatar upload component with circular shape and cropping
