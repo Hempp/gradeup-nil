@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -31,7 +31,8 @@ import { LazyDashboardPreview } from '@/components/marketing';
 // HERO SECTION
 // ═══════════════════════════════════════════════════════════════════════════
 
-function AnimatedCounter({
+// Memoized AnimatedCounter to prevent unnecessary re-renders
+const AnimatedCounter = memo(function AnimatedCounter({
   target,
   suffix = '',
   prefix = '',
@@ -42,14 +43,39 @@ function AnimatedCounter({
   prefix?: string;
   skipAnimation?: boolean;
 }) {
-  const [count, setCount] = useState(skipAnimation ? target : 0);
+  // Initialize with target value if skipping animation to avoid cascading setState
+  const [count, setCount] = useState(() => skipAnimation ? target : 0);
   const ref = useRef<HTMLSpanElement>(null);
   const hasAnimatedRef = useRef(skipAnimation);
+  const animationFrameRef = useRef<number | null>(null);
+
+  // Stable animation callback using useCallback
+  const startAnimation = useCallback(() => {
+    const duration = 1500;
+    const startTime = performance.now();
+    const targetValue = target;
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Easing function for natural feel
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(targetValue * eased * 10) / 10);
+
+      if (progress < 1) {
+        animationFrameRef.current = requestAnimationFrame(animate);
+      } else {
+        setCount(targetValue);
+      }
+    };
+    animationFrameRef.current = requestAnimationFrame(animate);
+  }, [target]);
 
   useEffect(() => {
-    // Skip observer setup entirely if animation disabled
+    // Skip observer setup entirely if animation disabled or already animated
     if (skipAnimation || hasAnimatedRef.current) {
-      setCount(target);
+      // Only update if different to avoid unnecessary re-render
+      setCount(prevCount => prevCount === target ? prevCount : target);
       return;
     }
 
@@ -57,47 +83,56 @@ function AnimatedCounter({
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimatedRef.current) {
           hasAnimatedRef.current = true;
-          // Use requestAnimationFrame for smoother animation
-          const duration = 1500; // Reduced from 2000ms
-          const startTime = performance.now();
-
-          const animate = (currentTime: number) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            // Easing function for natural feel
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(target * eased * 10) / 10);
-
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            } else {
-              setCount(target);
-            }
-          };
-          requestAnimationFrame(animate);
+          startAnimation();
         }
       },
       { threshold: 0.3, rootMargin: '50px' }
     );
 
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [target, skipAnimation]);
+    const currentRef = ref.current;
+    if (currentRef) observer.observe(currentRef);
+
+    return () => {
+      observer.disconnect();
+      // Cleanup animation frame on unmount
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [target, skipAnimation, startAnimation]);
 
   return (
     <span ref={ref}>
       {prefix}{count.toLocaleString()}{suffix}
     </span>
   );
+});
+
+// Custom hook for reduced motion preference that avoids hydration mismatches
+function useReducedMotion(): boolean {
+  // Start with false on server and initial client render to ensure hydration match
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    // Only check media query after hydration
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Use functional update to avoid unnecessary re-render if value matches
+    setPrefersReducedMotion(prev => prev === mediaQuery.matches ? prev : mediaQuery.matches);
+
+    // Listen for changes
+    const handler = (event: MediaQueryListEvent) => {
+      setPrefersReducedMotion(event.matches);
+    };
+
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return prefersReducedMotion;
 }
 
 function HeroSection() {
-  // Use lazy initialization to read media query (SSR-safe)
-  const [prefersReducedMotion] = useState(() =>
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false
-  );
+  const prefersReducedMotion = useReducedMotion();
   const { data: stats } = useLandingStats();
 
   return (
@@ -297,30 +332,35 @@ function HeroSection() {
 function PartnerLogosSection() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    // Check if reduced motion is preferred - skip animation setup
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setIsVisible(true);
-      return;
+    // If reduced motion is preferred, set visible immediately but only after initial render
+    if (prefersReducedMotion) {
+      // Schedule state update to avoid synchronous setState during render
+      const timeoutId = setTimeout(() => {
+        setIsVisible(true);
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect(); // Disconnect after first trigger
+          observer.disconnect();
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [prefersReducedMotion]);
 
   // School logos - only keeping ones that display correctly
   const schools = [
@@ -431,7 +471,8 @@ function PartnerLogosSection() {
 // FEATURED ATHLETES SECTION
 // ═══════════════════════════════════════════════════════════════════════════
 
-function AthleteCard({ athlete }: { athlete: FeaturedAthlete }) {
+// Memoized AthleteCard to prevent re-renders when parent re-renders
+const AthleteCard = memo(function AthleteCard({ athlete }: { athlete: FeaturedAthlete }) {
   return (
     <div className="group relative card-marketing overflow-hidden hover-lift animate-reveal-up card-shine spotlight-hover">
       {/* Image */}
@@ -485,7 +526,7 @@ function AthleteCard({ athlete }: { athlete: FeaturedAthlete }) {
       </div>
     </div>
   );
-}
+});
 
 function FeaturedAthletesSection() {
   const { data: athletes, loading } = useFeaturedAthletes(4);
@@ -614,16 +655,21 @@ function HowItWorksSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const toggleVideo = () => {
+  // Stable callback for video toggle to prevent unnecessary re-renders
+  const toggleVideo = useCallback(() => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
+      if (videoRef.current.paused) {
         videoRef.current.play();
+      } else {
+        videoRef.current.pause();
       }
-      setIsPlaying(!isPlaying);
     }
-  };
+  }, []);
+
+  // Stable callbacks for video events to avoid recreating on each render
+  const handlePlay = useCallback(() => setIsPlaying(true), []);
+  const handlePause = useCallback(() => setIsPlaying(false), []);
+  const handleEnded = useCallback(() => setIsPlaying(false), []);
 
   return (
     <section
@@ -663,9 +709,9 @@ function HowItWorksSection() {
                     className="w-full h-full object-cover"
                     poster="/videos/poster.jpg"
                     playsInline
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onEnded={() => setIsPlaying(false)}
+                    onPlay={handlePlay}
+                    onPause={handlePause}
+                    onEnded={handleEnded}
                   >
                     <source src="/videos/gradeup-demo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.

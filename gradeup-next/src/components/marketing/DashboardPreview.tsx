@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import Link from 'next/link';
 import {
   DollarSign,
@@ -76,7 +76,7 @@ const mockAthletes: MockAthlete[] = [
 // UTILITY COMPONENTS
 // ============================================================================
 
-function PreviewBadge({ children, variant = 'default' }: { children: React.ReactNode; variant?: 'default' | 'success' | 'warning' | 'gold' }) {
+const PreviewBadge = memo(function PreviewBadge({ children, variant = 'default' }: { children: React.ReactNode; variant?: 'default' | 'success' | 'warning' | 'gold' }) {
   const variants = {
     default: 'bg-[var(--marketing-gray-800)] text-[var(--marketing-gray-300)] border-[var(--marketing-gray-700)]',
     success: 'bg-[rgba(34,197,94,0.15)] text-[#4ade80] border-[rgba(34,197,94,0.3)]',
@@ -89,9 +89,9 @@ function PreviewBadge({ children, variant = 'default' }: { children: React.React
       {children}
     </span>
   );
-}
+});
 
-function PreviewStatCard({
+const PreviewStatCard = memo(function PreviewStatCard({
   icon: Icon,
   label,
   value,
@@ -116,22 +116,22 @@ function PreviewStatCard({
       <div className="text-xs text-[var(--marketing-gray-400)]">{label}</div>
     </div>
   );
-}
+});
 
-function StatusDot({ status }: { status: 'active' | 'pending' | 'completed' }) {
+const StatusDot = memo(function StatusDot({ status }: { status: 'active' | 'pending' | 'completed' }) {
   const colors = {
     active: 'bg-[#4ade80]',
     pending: 'bg-[#fbbf24]',
     completed: 'bg-[var(--marketing-cyan)]',
   };
   return <span className={`h-2 w-2 rounded-full ${colors[status]}`} />;
-}
+});
 
 // ============================================================================
 // ATHLETE DASHBOARD PREVIEW
 // ============================================================================
 
-function AthleteDashboardMockup() {
+const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
   return (
     <div className="space-y-4">
       {/* Profile Card */}
@@ -230,13 +230,13 @@ function AthleteDashboardMockup() {
       </div>
     </div>
   );
-}
+});
 
 // ============================================================================
 // BRAND DASHBOARD PREVIEW
 // ============================================================================
 
-function BrandDashboardMockup() {
+const BrandDashboardMockup = memo(function BrandDashboardMockup() {
   return (
     <div className="space-y-4">
       {/* Search & Filters */}
@@ -342,7 +342,7 @@ function BrandDashboardMockup() {
       </div>
     </div>
   );
-}
+});
 
 // ============================================================================
 // MAIN COMPONENT
@@ -359,24 +359,25 @@ export function DashboardPreview({
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Stable callback for intersection observer
+  const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
+    const [entry] = entries;
+    if (entry.isIntersecting) {
+      setIsVisible(true);
+    }
+  }, []);
+
   // Intersection Observer for fade-in animation
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
+    const observer = new IntersectionObserver(handleIntersection, { threshold: 0.1 });
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    const currentRef = containerRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [handleIntersection]);
 
   return (
     <div
