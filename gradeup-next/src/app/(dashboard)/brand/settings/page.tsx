@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Building,
   Bell,
@@ -12,6 +12,7 @@ import {
   Key,
   Monitor,
   Receipt,
+  Loader2,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,16 @@ import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/modal';
 import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
+
+// Session type from API
+interface UserSession {
+  id: string;
+  device: string;
+  browser: string;
+  location: string;
+  lastActive: string;
+  current: boolean;
+}
 
 function SettingsSection({
   icon: Icon,
@@ -82,13 +93,6 @@ const mockBillingHistory = [
   { id: '4', date: '2023-11-01', description: 'Enterprise Plan - Monthly', amount: 499.00, status: 'Paid' },
 ];
 
-// Mock active sessions data
-const mockSessions = [
-  { id: '1', device: 'MacBook Pro', browser: 'Chrome', location: 'New York, USA', lastActive: '2024-02-10T10:30:00Z', current: true },
-  { id: '2', device: 'iPhone 15', browser: 'Safari', location: 'New York, USA', lastActive: '2024-02-09T18:45:00Z', current: false },
-  { id: '3', device: 'Windows PC', browser: 'Firefox', location: 'Los Angeles, USA', lastActive: '2024-02-05T14:20:00Z', current: false },
-];
-
 export default function BrandSettingsPage() {
   const toast = useToastActions();
   const [notifications, setNotifications] = useState({
@@ -98,6 +102,11 @@ export default function BrandSettingsPage() {
     campaignUpdates: true,
     weeklyReport: true,
   });
+
+  // Sessions state
+  const [sessions, setSessions] = useState<UserSession[]>([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [revokingSessionId, setRevokingSessionId] = useState<string | null>(null);
 
   // Company info form state
   const [companyInfo, setCompanyInfo] = useState({
@@ -150,10 +159,52 @@ export default function BrandSettingsPage() {
     toast.success('Password Changed', 'Your password has been updated successfully.');
   };
 
-  const handleRevokeSession = (sessionId: string) => {
-    // TODO: Implement actual session revocation API call using sessionId
-    void sessionId;
-    toast.success('Session Revoked', 'The session has been terminated.');
+  // Fetch sessions from API
+  const fetchSessions = useCallback(async () => {
+    setSessionsLoading(true);
+    try {
+      const response = await fetch('/api/auth/sessions');
+      if (!response.ok) {
+        throw new Error('Failed to fetch sessions');
+      }
+      const data = await response.json();
+      setSessions(data.sessions || []);
+    } catch (error) {
+      console.error('Error fetching sessions:', error);
+      toast.error('Error', 'Failed to load active sessions');
+    } finally {
+      setSessionsLoading(false);
+    }
+  }, [toast]);
+
+  // Fetch sessions when modal opens
+  useEffect(() => {
+    if (showSessionsModal) {
+      fetchSessions();
+    }
+  }, [showSessionsModal, fetchSessions]);
+
+  const handleRevokeSession = async (sessionId: string) => {
+    setRevokingSessionId(sessionId);
+    try {
+      const response = await fetch(`/api/auth/sessions/${sessionId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to revoke session');
+      }
+
+      // Remove the session from the list
+      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+      toast.success('Session Revoked', 'The session has been terminated.');
+    } catch (error) {
+      console.error('Error revoking session:', error);
+      toast.error('Error', error instanceof Error ? error.message : 'Failed to revoke session');
+    } finally {
+      setRevokingSessionId(null);
+    }
   };
 
   const handleCloseAccount = () => {
@@ -590,40 +641,60 @@ export default function BrandSettingsPage() {
         }
       >
         <div className="space-y-3" role="list" aria-label="Active sessions">
-          {mockSessions.map((session) => (
-            <div
-              key={session.id}
-              role="listitem"
-              className="flex items-center justify-between p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]"
-            >
-              <div className="flex items-center gap-3">
-                <Monitor className="h-5 w-5 text-[var(--text-muted)]" aria-hidden="true" />
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium text-[var(--text-primary)]">
-                      {session.device} - {session.browser}
-                    </p>
-                    {session.current && (
-                      <Badge variant="primary" size="sm">Current</Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-[var(--text-muted)]">
-                    {session.location} • Last active: {new Date(session.lastActive).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-              {!session.current && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleRevokeSession(session.id)}
-                  aria-label={`Revoke session on ${session.device}`}
-                >
-                  Revoke
-                </Button>
-              )}
+          {sessionsLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" aria-hidden="true" />
+              <span className="ml-2 text-[var(--text-muted)]">Loading sessions...</span>
             </div>
-          ))}
+          ) : sessions.length === 0 ? (
+            <div className="text-center py-8 text-[var(--text-muted)]">
+              <Monitor className="h-12 w-12 mx-auto mb-3 opacity-50" aria-hidden="true" />
+              <p>No active sessions found</p>
+            </div>
+          ) : (
+            sessions.map((session) => (
+              <div
+                key={session.id}
+                role="listitem"
+                className="flex items-center justify-between p-4 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)]"
+              >
+                <div className="flex items-center gap-3">
+                  <Monitor className="h-5 w-5 text-[var(--text-muted)]" aria-hidden="true" />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-[var(--text-primary)]">
+                        {session.device} - {session.browser}
+                      </p>
+                      {session.current && (
+                        <Badge variant="primary" size="sm">Current</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-[var(--text-muted)]">
+                      {session.location} • Last active: {new Date(session.lastActive).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+                {!session.current && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleRevokeSession(session.id)}
+                    disabled={revokingSessionId === session.id}
+                    aria-label={`Revoke session on ${session.device}`}
+                  >
+                    {revokingSessionId === session.id ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-1 animate-spin" aria-hidden="true" />
+                        Revoking...
+                      </>
+                    ) : (
+                      'Revoke'
+                    )}
+                  </Button>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </Modal>
 

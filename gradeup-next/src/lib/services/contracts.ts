@@ -6,6 +6,17 @@
  */
 
 import { createClient } from '@/lib/supabase/client';
+import {
+  sendContractReadyForSignatureEmail,
+  sendContractSignedEmail,
+  sendContractFullyExecutedEmail,
+  sendContractVoidedEmail,
+} from '@/lib/services/email';
+import {
+  generateContractPDF as generatePDFFromContract,
+  generateSignedContractPDF,
+  generateDraftContractPDF,
+} from '@/lib/utils/contract-pdf';
 import type {
   ContractStatus,
   ContractTemplate,
@@ -392,9 +403,39 @@ export async function sendForSignature(contractId: string): Promise<ServiceResul
     };
   }
 
-  // TODO: Send notification emails to all parties
+  // Fetch complete contract data for email notifications
+  const contractResult = await getContractById(contractId);
+  if (contractResult.data) {
+    const contract = contractResult.data;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://gradeupnil.com';
 
-  return getContractById(contractId);
+    // Send notification emails to all parties
+    for (const party of contract.parties) {
+      // Get the other party's name for context
+      const otherParty = contract.parties.find(p => p.party_type !== party.party_type);
+      const otherPartyName = otherParty?.name ||
+        (party.party_type === 'athlete' ? contract.deal?.brand?.company_name :
+          `${contract.deal?.athlete?.first_name} ${contract.deal?.athlete?.last_name}`) ||
+        'the other party';
+
+      // Send email (fire and forget - don't block on email delivery)
+      sendContractReadyForSignatureEmail({
+        recipientName: party.name,
+        recipientEmail: party.email,
+        contractTitle: contract.title,
+        dealTitle: contract.deal?.title || 'NIL Deal',
+        otherPartyName,
+        compensationAmount: contract.compensation_amount,
+        effectiveDate: contract.effective_date || undefined,
+        expirationDate: contract.expiration_date || undefined,
+        signContractUrl: `${baseUrl}/contracts/${contractId}/sign`,
+      }).catch((err) => {
+        console.error(`[Contracts] Failed to send signature request email to ${party.email}:`, err);
+      });
+    }
+  }
+
+  return contractResult.data ? contractResult : getContractById(contractId);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -519,7 +560,64 @@ export async function signContract(input: SignContractInput): Promise<ServiceRes
     })
     .eq('id', input.contract_id);
 
-  return getContractById(input.contract_id);
+  // Send email notifications about the signature
+  const contractResult = await getContractById(input.contract_id);
+  if (contractResult.data) {
+    const contract = contractResult.data;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://gradeupnil.com';
+    const signerParty = contract.parties.find(p => p.party_type === input.party_type);
+    const signerName = signerParty?.name || 'A party';
+
+    // Count remaining unsigned parties
+    const remainingSignatures = contract.parties.filter(
+      p => p.signature_status === 'pending'
+    ).length;
+
+    // Notify all other parties that someone signed
+    for (const party of contract.parties) {
+      if (party.party_type === input.party_type) continue; // Don't notify the signer
+
+      sendContractSignedEmail({
+        recipientName: party.name,
+        recipientEmail: party.email,
+        contractTitle: contract.title,
+        dealTitle: contract.deal?.title || 'NIL Deal',
+        signerName,
+        signerRole: input.party_type,
+        remainingSignatures,
+        viewContractUrl: `${baseUrl}/contracts/${input.contract_id}`,
+      }).catch((err) => {
+        console.error(`[Contracts] Failed to send signature notification to ${party.email}:`, err);
+      });
+    }
+
+    // If contract is fully signed, send executed notification to all parties
+    if (newStatus === 'fully_signed') {
+      const athleteName = contract.deal?.athlete
+        ? `${contract.deal.athlete.first_name} ${contract.deal.athlete.last_name}`
+        : 'Athlete';
+      const brandName = contract.deal?.brand?.company_name || 'Brand';
+
+      for (const party of contract.parties) {
+        sendContractFullyExecutedEmail({
+          recipientName: party.name,
+          recipientEmail: party.email,
+          contractTitle: contract.title,
+          dealTitle: contract.deal?.title || 'NIL Deal',
+          brandName,
+          athleteName,
+          compensationAmount: contract.compensation_amount,
+          effectiveDate: contract.effective_date || new Date().toLocaleDateString(),
+          expirationDate: contract.expiration_date || undefined,
+          downloadContractUrl: `${baseUrl}/contracts/${input.contract_id}/download`,
+        }).catch((err) => {
+          console.error(`[Contracts] Failed to send fully executed notification to ${party.email}:`, err);
+        });
+      }
+    }
+  }
+
+  return contractResult;
 }
 
 /**
@@ -651,9 +749,12 @@ export async function getContractStatus(contractId: string): Promise<ServiceResu
 
 /**
  * Generate PDF for a contract
- * Returns a URL to the generated PDF
+ * Returns a URL to the generated PDF or the PDF buffer for direct download
  */
-export async function generateContractPDF(contractId: string): Promise<ServiceResult<{ pdf_url: string }>> {
+export async function generateContractPDF(
+  contractId: string,
+  options?: { returnBuffer?: boolean }
+): Promise<ServiceResult<{ pdf_url: string; pdf_buffer?: Buffer }>> {
   const supabase = createClient();
 
   // Fetch complete contract data
@@ -664,32 +765,144 @@ export async function generateContractPDF(contractId: string): Promise<ServiceRe
 
   const contract = contractResult.data!;
 
-  // In a real implementation, this would call a PDF generation service
-  // For now, we'll generate a simple HTML template and convert it
-  // This could use services like:
-  // - Puppeteer for server-side PDF generation
-  // - react-pdf for client-side
-  // - External services like DocuSign, PandaDoc, or custom PDF APIs
+  try {
+    // Generate the PDF based on contract status
+    const isDraft = contract.status === 'draft';
+    const isFullySigned = contract.status === 'fully_signed' || contract.status === 'active';
 
-  // Simulate PDF generation by creating a storage reference
-  const pdfFileName = `contracts/${contractId}/${Date.now()}_contract.pdf`;
+    let pdfBuffer: Buffer;
+    if (isFullySigned) {
+      pdfBuffer = generateSignedContractPDF(contract);
+    } else if (isDraft) {
+      pdfBuffer = generateDraftContractPDF(contract);
+    } else {
+      pdfBuffer = generatePDFFromContract(contract, {
+        includeSignatures: true,
+        isDraft: false,
+        includePageNumbers: true,
+      });
+    }
 
-  // TODO: Implement actual PDF generation
-  // const pdfBuffer = await generatePDFFromTemplate(contract);
-  // const { data: uploadData, error: uploadError } = await supabase.storage
-  //   .from('contracts')
-  //   .upload(pdfFileName, pdfBuffer, { contentType: 'application/pdf' });
+    // If caller wants the buffer directly (for API response), return it
+    if (options?.returnBuffer) {
+      return {
+        data: {
+          pdf_url: `/api/contracts/${contractId}/pdf`,
+          pdf_buffer: pdfBuffer,
+        },
+        error: null,
+      };
+    }
 
-  // For now, return a placeholder
-  const pdfUrl = `/api/contracts/${contractId}/pdf`;
+    // Upload to Supabase storage
+    const timestamp = Date.now();
+    const pdfFileName = `${contractId}/${timestamp}_contract.pdf`;
 
-  // Update contract with PDF URL
-  await supabase
-    .from('contracts')
-    .update({ pdf_url: pdfUrl, updated_at: new Date().toISOString() })
-    .eq('id', contractId);
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('contracts')
+      .upload(pdfFileName, pdfBuffer, {
+        contentType: 'application/pdf',
+        upsert: true,
+      });
 
-  return { data: { pdf_url: pdfUrl }, error: null };
+    if (uploadError) {
+      console.error('[Contracts] Failed to upload PDF to storage:', uploadError);
+      // Fall back to API endpoint if storage upload fails
+      const fallbackUrl = `/api/contracts/${contractId}/pdf`;
+      return { data: { pdf_url: fallbackUrl }, error: null };
+    }
+
+    // Get the public URL
+    const { data: urlData } = supabase.storage
+      .from('contracts')
+      .getPublicUrl(pdfFileName);
+
+    const pdfUrl = urlData?.publicUrl || `/api/contracts/${contractId}/pdf`;
+
+    // Update contract with PDF URL based on status
+    const updateField = isFullySigned ? 'signed_pdf_url' : 'pdf_url';
+    await supabase
+      .from('contracts')
+      .update({
+        [updateField]: pdfUrl,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', contractId);
+
+    return { data: { pdf_url: pdfUrl }, error: null };
+  } catch (error) {
+    console.error('[Contracts] PDF generation failed:', error);
+    return {
+      data: null,
+      error: {
+        message: `Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        code: 'PDF_GENERATION_ERROR',
+      },
+    };
+  }
+}
+
+/**
+ * Generate PDF buffer for a contract (for direct download without storage)
+ * This is useful for API endpoints that stream the PDF to the client
+ */
+export async function getContractPDFBuffer(contractId: string): Promise<ServiceResult<{
+  buffer: Buffer;
+  filename: string;
+  contract: Contract;
+}>> {
+  // Fetch complete contract data
+  const contractResult = await getContractById(contractId);
+  if (contractResult.error) {
+    return { data: null, error: contractResult.error };
+  }
+
+  const contract = contractResult.data!;
+
+  try {
+    // Generate the PDF based on contract status
+    const isDraft = contract.status === 'draft';
+    const isFullySigned = contract.status === 'fully_signed' || contract.status === 'active';
+
+    let pdfBuffer: Buffer;
+    if (isFullySigned) {
+      pdfBuffer = generateSignedContractPDF(contract);
+    } else if (isDraft) {
+      pdfBuffer = generateDraftContractPDF(contract);
+    } else {
+      pdfBuffer = generatePDFFromContract(contract, {
+        includeSignatures: true,
+        isDraft: false,
+        includePageNumbers: true,
+      });
+    }
+
+    // Generate a clean filename
+    const statusSuffix = isDraft ? 'DRAFT' : isFullySigned ? 'SIGNED' : 'CONTRACT';
+    const sanitizedTitle = contract.title
+      .replace(/[^a-zA-Z0-9\s-]/g, '')
+      .replace(/\s+/g, '_')
+      .slice(0, 50);
+    const filename = `GradeUp_${sanitizedTitle}_${statusSuffix}.pdf`;
+
+    return {
+      data: {
+        buffer: pdfBuffer,
+        filename,
+        contract,
+      },
+      error: null,
+    };
+  } catch (error) {
+    console.error('[Contracts] PDF buffer generation failed:', error);
+    return {
+      data: null,
+      error: {
+        message: `Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        code: 'PDF_GENERATION_ERROR',
+      },
+    };
+  }
 }
 
 /**
@@ -924,9 +1137,33 @@ export async function voidContract(
     };
   }
 
-  // TODO: Send notifications to all parties if notifyParties is true
+  // Send notifications to all parties if notifyParties is true
+  const contractResult = await getContractById(contractId);
+  if (notifyParties && contractResult.data) {
+    const contract = contractResult.data;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://gradeupnil.com';
+    const voidedAt = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
 
-  return getContractById(contractId);
+    for (const party of contract.parties) {
+      sendContractVoidedEmail({
+        recipientName: party.name,
+        recipientEmail: party.email,
+        contractTitle: contract.title,
+        dealTitle: contract.deal?.title || 'NIL Deal',
+        voidReason: reason,
+        voidedAt,
+        supportUrl: `${baseUrl}/support`,
+      }).catch((err) => {
+        console.error(`[Contracts] Failed to send void notification to ${party.email}:`, err);
+      });
+    }
+  }
+
+  return contractResult;
 }
 
 /**

@@ -14,6 +14,8 @@ const withBundleAnalyzer = (config: NextConfig) => {
 };
 
 // Security headers for production
+// Note: Content-Security-Policy is now handled dynamically in middleware.ts
+// with nonce-based CSP for enhanced security (no 'unsafe-inline' or 'unsafe-eval')
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -43,22 +45,8 @@ const securityHeaders = [
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=()',
   },
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https:",
-      "font-src 'self' data:",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "object-src 'none'",
-      "upgrade-insecure-requests",
-    ].join('; '),
-  },
+  // CSP is now set dynamically in middleware.ts with per-request nonces
+  // This provides better XSS protection than static 'unsafe-inline'
   {
     key: 'Cross-Origin-Opener-Policy',
     value: 'same-origin',

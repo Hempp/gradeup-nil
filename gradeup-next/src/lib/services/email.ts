@@ -18,6 +18,11 @@ import type {
   VerificationRejectedEmailData,
   PasswordResetEmailData,
   NewMessageEmailData,
+  ContractReadyForSignatureEmailData,
+  ContractSignedEmailData,
+  ContractFullyExecutedEmailData,
+  ContractVoidedEmailData,
+  DealStatusChangedEmailData,
 } from '@/types/email';
 
 // Re-export types for convenience
@@ -603,6 +608,314 @@ export async function sendNewMessageEmail(data: NewMessageEmailData): Promise<Em
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// CONTRACT EMAIL TEMPLATES
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Send contract ready for signature notification
+ */
+export async function sendContractReadyForSignatureEmail(
+  data: ContractReadyForSignatureEmailData
+): Promise<EmailResult> {
+  const content = `
+<h2 style="margin:0 0 24px;font-size:24px;color:${TEXT_PRIMARY};">
+  Contract Ready for Your Signature
+</h2>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${TEXT_SECONDARY};">
+  Hi ${data.recipientName}, a contract is ready for your signature for the deal "<strong style="color:${TEXT_PRIMARY};">${data.dealTitle}</strong>" with ${data.otherPartyName}.
+</p>
+<div style="background:#222;border-radius:8px;padding:24px;margin:0 0 24px;">
+  <h3 style="margin:0 0 16px;font-size:18px;color:${TEXT_PRIMARY};">${data.contractTitle}</h3>
+  <table role="presentation" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Compensation</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${BRAND_COLOR};font-size:18px;font-weight:700;">${formatCurrency(data.compensationAmount)}</span>
+      </td>
+    </tr>
+    ${data.effectiveDate ? `
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Effective Date</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.effectiveDate}</span>
+      </td>
+    </tr>
+    ` : ''}
+    ${data.expirationDate ? `
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Expiration Date</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.expirationDate}</span>
+      </td>
+    </tr>
+    ` : ''}
+  </table>
+</div>
+<p style="margin:0 0 24px;font-size:14px;color:${TEXT_SECONDARY};">
+  Please review the contract carefully before signing. If you have any questions, contact the other party before proceeding.
+</p>
+<div style="text-align:center;margin:32px 0;">
+  ${getButton('Review & Sign Contract', data.signContractUrl)}
+</div>
+`;
+
+  return sendEmail({
+    to: data.recipientEmail,
+    subject: `Action Required: Sign Contract for "${data.dealTitle}"`,
+    html: getEmailWrapper(content, `Contract ready for signature - ${data.dealTitle}`),
+  });
+}
+
+/**
+ * Send contract signed notification
+ */
+export async function sendContractSignedEmail(data: ContractSignedEmailData): Promise<EmailResult> {
+  const roleLabels: Record<string, string> = {
+    athlete: 'Athlete',
+    brand: 'Brand Representative',
+    guardian: 'Guardian',
+    witness: 'Witness',
+  };
+
+  const statusMessage = data.remainingSignatures > 0
+    ? `${data.remainingSignatures} signature${data.remainingSignatures > 1 ? 's' : ''} remaining`
+    : 'All signatures collected - contract is now fully executed!';
+
+  const content = `
+<h2 style="margin:0 0 24px;font-size:24px;color:${TEXT_PRIMARY};">
+  Contract Signed!
+</h2>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${TEXT_SECONDARY};">
+  Hi ${data.recipientName}, <strong style="color:${TEXT_PRIMARY};">${data.signerName}</strong> (${roleLabels[data.signerRole]}) has signed the contract for "<strong style="color:${TEXT_PRIMARY};">${data.dealTitle}</strong>".
+</p>
+<div style="background:#222;border-radius:8px;padding:24px;margin:0 0 24px;text-align:center;">
+  <div style="width:64px;height:64px;background:${BRAND_COLOR}22;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+    <span style="font-size:32px;">&#9998;</span>
+  </div>
+  <p style="margin:0 0 8px;font-size:18px;font-weight:600;color:${TEXT_PRIMARY};">${data.contractTitle}</p>
+  <p style="margin:0;font-size:14px;color:${data.remainingSignatures === 0 ? BRAND_COLOR : TEXT_SECONDARY};">${statusMessage}</p>
+</div>
+<div style="text-align:center;margin:32px 0;">
+  ${getButton('View Contract', data.viewContractUrl)}
+</div>
+`;
+
+  return sendEmail({
+    to: data.recipientEmail,
+    subject: `Contract Update: ${data.signerName} signed "${data.dealTitle}"`,
+    html: getEmailWrapper(content, `${data.signerName} signed the contract`),
+  });
+}
+
+/**
+ * Send contract fully executed notification
+ */
+export async function sendContractFullyExecutedEmail(
+  data: ContractFullyExecutedEmailData
+): Promise<EmailResult> {
+  const content = `
+<h2 style="margin:0 0 24px;font-size:24px;color:${TEXT_PRIMARY};">
+  Contract Fully Executed!
+</h2>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${TEXT_SECONDARY};">
+  Congratulations, ${data.recipientName}! All parties have signed the contract for "<strong style="color:${TEXT_PRIMARY};">${data.dealTitle}</strong>". The agreement is now legally binding.
+</p>
+<div style="background:linear-gradient(135deg, #00F0FF22 0%, #00FF8822 100%);border-radius:12px;padding:32px;margin:0 0 24px;text-align:center;">
+  <div style="width:80px;height:80px;background:${BRAND_COLOR}33;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+    <span style="font-size:40px;">&#10003;</span>
+  </div>
+  <p style="margin:0 0 8px;font-size:14px;color:${TEXT_SECONDARY};text-transform:uppercase;">Contract Value</p>
+  <p style="margin:0;font-size:36px;font-weight:700;color:${BRAND_COLOR};">${formatCurrency(data.compensationAmount)}</p>
+</div>
+<div style="background:#222;border-radius:8px;padding:24px;margin:0 0 24px;">
+  <h3 style="margin:0 0 16px;font-size:16px;color:${TEXT_PRIMARY};">Contract Details</h3>
+  <table role="presentation" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Contract</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.contractTitle}</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Brand</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.brandName}</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Athlete</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.athleteName}</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Effective Date</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.effectiveDate}</span>
+      </td>
+    </tr>
+    ${data.expirationDate ? `
+    <tr>
+      <td style="padding:8px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Expiration Date</span>
+      </td>
+      <td style="padding:8px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.expirationDate}</span>
+      </td>
+    </tr>
+    ` : ''}
+  </table>
+</div>
+<p style="margin:0 0 24px;font-size:14px;color:${TEXT_SECONDARY};">
+  You can download a copy of the fully executed contract for your records.
+</p>
+<div style="text-align:center;margin:32px 0;">
+  ${getButton('Download Contract', data.downloadContractUrl)}
+</div>
+`;
+
+  return sendEmail({
+    to: data.recipientEmail,
+    subject: `Contract Executed: "${data.dealTitle}" - All Signatures Complete`,
+    html: getEmailWrapper(content, `Contract fully executed - ${formatCurrency(data.compensationAmount)}`),
+  });
+}
+
+/**
+ * Send contract voided notification
+ */
+export async function sendContractVoidedEmail(data: ContractVoidedEmailData): Promise<EmailResult> {
+  const content = `
+<h2 style="margin:0 0 24px;font-size:24px;color:${TEXT_PRIMARY};">
+  Contract Voided
+</h2>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${TEXT_SECONDARY};">
+  Hi ${data.recipientName}, the contract for "<strong style="color:${TEXT_PRIMARY};">${data.dealTitle}</strong>" has been voided.
+</p>
+<div style="background:#DA2B5722;border-left:4px solid #DA2B57;padding:20px;margin:0 0 24px;">
+  <p style="margin:0 0 8px;font-size:12px;font-weight:600;color:#DA2B57;text-transform:uppercase;">Reason</p>
+  <p style="margin:0;font-size:14px;color:${TEXT_PRIMARY};">${data.voidReason}</p>
+</div>
+<div style="background:#222;border-radius:8px;padding:20px;margin:0 0 24px;">
+  <table role="presentation" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td style="padding:6px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Contract</span>
+      </td>
+      <td style="padding:6px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.contractTitle}</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:6px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Voided On</span>
+      </td>
+      <td style="padding:6px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.voidedAt}</span>
+      </td>
+    </tr>
+  </table>
+</div>
+<p style="margin:0 0 24px;font-size:14px;color:${TEXT_SECONDARY};">
+  If you have questions about this action or believe this was done in error, please contact our support team.
+</p>
+<div style="text-align:center;margin:32px 0;">
+  ${getButton('Contact Support', data.supportUrl)}
+</div>
+`;
+
+  return sendEmail({
+    to: data.recipientEmail,
+    subject: `Contract Voided: "${data.dealTitle}"`,
+    html: getEmailWrapper(content, `Contract voided - ${data.contractTitle}`),
+  });
+}
+
+/**
+ * Send deal status changed notification
+ */
+export async function sendDealStatusChangedEmail(
+  data: DealStatusChangedEmailData
+): Promise<EmailResult> {
+  const statusColors: Record<string, string> = {
+    pending: '#FFA500',
+    negotiating: '#00B4D8',
+    accepted: '#00F0FF',
+    active: '#00FF88',
+    completed: '#00FF88',
+    cancelled: '#DA2B57',
+    expired: '#888888',
+  };
+
+  const statusColor = statusColors[data.newStatus] || BRAND_COLOR;
+
+  const content = `
+<h2 style="margin:0 0 24px;font-size:24px;color:${TEXT_PRIMARY};">
+  Deal Status Update
+</h2>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${TEXT_SECONDARY};">
+  Hi ${data.recipientName}, the status of your deal "<strong style="color:${TEXT_PRIMARY};">${data.dealTitle}</strong>" has been updated.
+</p>
+<div style="background:#222;border-radius:8px;padding:24px;margin:0 0 24px;text-align:center;">
+  <p style="margin:0 0 16px;font-size:14px;color:${TEXT_SECONDARY};">
+    <span style="text-decoration:line-through;">${data.previousStatus.charAt(0).toUpperCase() + data.previousStatus.slice(1)}</span>
+    <span style="margin:0 12px;">&#8594;</span>
+    <span style="color:${statusColor};font-weight:700;font-size:18px;">${data.newStatus.charAt(0).toUpperCase() + data.newStatus.slice(1)}</span>
+  </p>
+</div>
+${data.statusMessage ? `
+<div style="background:#222;border-radius:8px;padding:20px;margin:0 0 24px;">
+  <p style="margin:0 0 8px;font-size:12px;font-weight:600;color:${BRAND_COLOR};text-transform:uppercase;">Details</p>
+  <p style="margin:0;font-size:14px;color:${TEXT_SECONDARY};">${data.statusMessage}</p>
+</div>
+` : ''}
+<div style="background:#1A1A1A;border-radius:8px;padding:20px;margin:0 0 24px;">
+  <table role="presentation" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td style="padding:6px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Brand</span>
+      </td>
+      <td style="padding:6px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.brandName}</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:6px 0;">
+        <span style="color:${TEXT_SECONDARY};font-size:14px;">Athlete</span>
+      </td>
+      <td style="padding:6px 0;text-align:right;">
+        <span style="color:${TEXT_PRIMARY};font-size:14px;">${data.athleteName}</span>
+      </td>
+    </tr>
+  </table>
+</div>
+<div style="text-align:center;margin:32px 0;">
+  ${getButton('View Deal', data.viewDealUrl)}
+</div>
+`;
+
+  return sendEmail({
+    to: data.recipientEmail,
+    subject: `Deal Update: "${data.dealTitle}" is now ${data.newStatus}`,
+    html: getEmailWrapper(content, `Deal status changed to ${data.newStatus}`),
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // LEGACY COMPATIBILITY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -695,6 +1008,11 @@ export class EmailService implements IEmailService {
   sendVerificationRejectedEmail = sendVerificationRejectedEmail;
   sendPasswordResetEmail = sendPasswordResetEmail;
   sendNewMessageEmail = sendNewMessageEmail;
+  sendContractReadyForSignatureEmail = sendContractReadyForSignatureEmail;
+  sendContractSignedEmail = sendContractSignedEmail;
+  sendContractFullyExecutedEmail = sendContractFullyExecutedEmail;
+  sendContractVoidedEmail = sendContractVoidedEmail;
+  sendDealStatusChangedEmail = sendDealStatusChangedEmail;
 }
 
 // Export a singleton instance

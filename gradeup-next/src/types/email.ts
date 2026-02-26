@@ -62,7 +62,12 @@ export type EmailTemplateType =
   | 'verification_approved'
   | 'verification_rejected'
   | 'password_reset'
-  | 'new_message';
+  | 'new_message'
+  | 'contract_ready_for_signature'
+  | 'contract_signed'
+  | 'contract_fully_executed'
+  | 'contract_voided'
+  | 'deal_status_changed';
 
 // ─── Welcome Email ───
 export interface WelcomeEmailData {
@@ -156,6 +161,69 @@ export interface NewMessageEmailData {
   conversationUrl: string;
 }
 
+// ─── Contract Ready for Signature Email ───
+export interface ContractReadyForSignatureEmailData {
+  recipientName: string;
+  recipientEmail: string;
+  contractTitle: string;
+  dealTitle: string;
+  otherPartyName: string;
+  compensationAmount: number;
+  effectiveDate?: string;
+  expirationDate?: string;
+  signContractUrl: string;
+}
+
+// ─── Contract Signed Email ───
+export interface ContractSignedEmailData {
+  recipientName: string;
+  recipientEmail: string;
+  contractTitle: string;
+  dealTitle: string;
+  signerName: string;
+  signerRole: 'athlete' | 'brand' | 'guardian' | 'witness';
+  remainingSignatures: number;
+  viewContractUrl: string;
+}
+
+// ─── Contract Fully Executed Email ───
+export interface ContractFullyExecutedEmailData {
+  recipientName: string;
+  recipientEmail: string;
+  contractTitle: string;
+  dealTitle: string;
+  brandName: string;
+  athleteName: string;
+  compensationAmount: number;
+  effectiveDate: string;
+  expirationDate?: string;
+  downloadContractUrl: string;
+}
+
+// ─── Contract Voided Email ───
+export interface ContractVoidedEmailData {
+  recipientName: string;
+  recipientEmail: string;
+  contractTitle: string;
+  dealTitle: string;
+  voidReason: string;
+  voidedAt: string;
+  supportUrl: string;
+}
+
+// ─── Deal Status Changed Email ───
+export interface DealStatusChangedEmailData {
+  recipientName: string;
+  recipientEmail: string;
+  dealTitle: string;
+  brandName: string;
+  athleteName: string;
+  previousStatus: string;
+  newStatus: string;
+  statusMessage?: string;
+  viewDealUrl: string;
+}
+
 // ─── Union Type for All Email Data ───
 export type EmailTemplateData =
   | { type: 'welcome'; data: WelcomeEmailData }
@@ -166,7 +234,12 @@ export type EmailTemplateData =
   | { type: 'verification_approved'; data: VerificationApprovedEmailData }
   | { type: 'verification_rejected'; data: VerificationRejectedEmailData }
   | { type: 'password_reset'; data: PasswordResetEmailData }
-  | { type: 'new_message'; data: NewMessageEmailData };
+  | { type: 'new_message'; data: NewMessageEmailData }
+  | { type: 'contract_ready_for_signature'; data: ContractReadyForSignatureEmailData }
+  | { type: 'contract_signed'; data: ContractSignedEmailData }
+  | { type: 'contract_fully_executed'; data: ContractFullyExecutedEmailData }
+  | { type: 'contract_voided'; data: ContractVoidedEmailData }
+  | { type: 'deal_status_changed'; data: DealStatusChangedEmailData };
 
 // ═══════════════════════════════════════════════════════════════════════════
 // EMAIL SERVICE INTERFACE
@@ -183,4 +256,9 @@ export interface IEmailService {
   sendVerificationRejectedEmail(data: VerificationRejectedEmailData): Promise<EmailResult>;
   sendPasswordResetEmail(data: PasswordResetEmailData): Promise<EmailResult>;
   sendNewMessageEmail(data: NewMessageEmailData): Promise<EmailResult>;
+  sendContractReadyForSignatureEmail(data: ContractReadyForSignatureEmailData): Promise<EmailResult>;
+  sendContractSignedEmail(data: ContractSignedEmailData): Promise<EmailResult>;
+  sendContractFullyExecutedEmail(data: ContractFullyExecutedEmailData): Promise<EmailResult>;
+  sendContractVoidedEmail(data: ContractVoidedEmailData): Promise<EmailResult>;
+  sendDealStatusChangedEmail(data: DealStatusChangedEmailData): Promise<EmailResult>;
 }

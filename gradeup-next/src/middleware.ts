@@ -10,6 +10,12 @@ import {
   createCsrfTokenCookie,
   createCsrfSecretCookie,
 } from '@/lib/csrf';
+import {
+  generateNonce,
+  CSP_NONCE_HEADER,
+  buildCspHeader,
+  buildDevCspHeader,
+} from '@/lib/csp-nonce';
 
 // =============================================================================
 // RATE LIMITING CONFIGURATION
@@ -154,9 +160,30 @@ async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining
 }
 
 export async function middleware(request: NextRequest) {
+  // =============================================================================
+  // CSP NONCE GENERATION
+  // =============================================================================
+  // Generate a unique nonce for each request to allow inline scripts/styles
+  // while blocking unauthorized inline code (XSS protection)
+  // =============================================================================
+  const nonce = generateNonce();
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  // Build CSP header based on environment
+  const cspHeader = isProduction
+    ? buildCspHeader(nonce)
+    : buildDevCspHeader(nonce);
+
+  // Clone request headers and add the nonce for server components to access
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(CSP_NONCE_HEADER, nonce);
+
   let response = NextResponse.next({
-    request: { headers: request.headers },
+    request: { headers: requestHeaders },
   });
+
+  // Set CSP header on the response
+  response.headers.set('Content-Security-Policy', cspHeader);
 
   const path = request.nextUrl.pathname;
   const method = request.method;

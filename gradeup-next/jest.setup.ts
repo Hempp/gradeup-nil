@@ -1,4 +1,22 @@
 import '@testing-library/jest-dom';
+import { TextEncoder, TextDecoder } from 'util';
+import { webcrypto } from 'crypto';
+
+// Polyfill TextEncoder/TextDecoder for CSRF and other Web API tests
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder as typeof global.TextDecoder;
+
+// Polyfill Web Crypto API for CSRF token signing/verification
+// Need to use Object.defineProperty because jsdom may partially define crypto
+Object.defineProperty(global, 'crypto', {
+  value: {
+    ...global.crypto,
+    subtle: webcrypto.subtle,
+    getRandomValues: webcrypto.getRandomValues.bind(webcrypto),
+  },
+  writable: true,
+  configurable: true,
+});
 
 // Polyfill Request/Response for API route tests
 // @ts-expect-error - global polyfill
