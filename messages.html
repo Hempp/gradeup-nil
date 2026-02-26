@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>Messages | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Messages | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL - Message Center. Connect and communicate with brands and athletes.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/messages.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Messages | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL - Message Center. Connect and communicate with brands and athletes.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/messages.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +38,7 @@
 
     <!-- Base Styles -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="src/styles/dashboard-shared.css">
 
     <!-- Messages Page Styles -->
     <style>
@@ -103,8 +128,8 @@
 
         .header-icon-btn {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -223,6 +248,7 @@
             justify-content: center;
             gap: 0.5rem;
             padding: 0.625rem 1rem;
+            min-height: 44px;
             background: var(--cyan);
             color: var(--black);
             font-size: 0.8125rem;
@@ -1348,8 +1374,30 @@
             background: var(--gray-700);
         }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "https://gradeup.com/messages.html#webpage",
+      "name": "Messages | GradeUp NIL",
+      "url": "https://gradeup.com/messages.html",
+      "description": "Message Center. Connect and communicate with brands and athletes.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "NIL Messaging Platform",
+        "description": "Communication platform for athletes and brands on GradeUp NIL"
+      }
+    }
+    </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <div class="messages-page">
         <!-- Header -->
         <header class="messages-header">
@@ -1371,7 +1419,7 @@
                     <span class="notification-badge">3</span>
                 </button>
                 <button class="user-avatar-btn">
-                    <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="User">
+                    <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face" alt="User" width="36" height="36">
                     <div class="user-info">
                         <div class="user-name">Marcus Johnson</div>
                         <div class="user-role">Athlete</div>
@@ -1395,11 +1443,12 @@
                         </button>
                     </div>
                     <div class="search-conversations">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <label for="searchConversations" class="sr-only">Search conversations</label>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.35-4.35"></path>
                         </svg>
-                        <input type="text" placeholder="Search conversations..." id="searchConversations">
+                        <input type="text" placeholder="Search conversations..." id="searchConversations" aria-label="Search conversations">
                     </div>
                 </div>
 
@@ -1411,10 +1460,21 @@
                 </div>
 
                 <div class="conversations-list" id="conversationsList">
+                    <!-- Empty State -->
+                    <div class="empty-state" id="conversationsEmptyState" style="display: none;">
+                        <div class="empty-state-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <h4 class="empty-state-title">No Conversations Yet</h4>
+                        <p class="empty-state-description">When brands reach out about partnerships, your conversations will appear here.</p>
+                        <a href="opportunities.html" class="btn btn-primary btn-sm">Browse Opportunities</a>
+                    </div>
                     <!-- Conversation 1 - Unread, Deal Related -->
-                    <div class="conversation-item unread active" data-conversation="1" onclick="selectConversation(1)">
+                    <div class="conversation-item unread active" data-conversation="1" onclick="selectConversation(1)" role="button" tabindex="0" aria-label="Open conversation with Nike Regional">
                         <div class="conversation-avatar">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" width="48" height="48">
                             <span class="online-indicator"></span>
                         </div>
                         <div class="conversation-content">
@@ -1436,9 +1496,9 @@
                     </div>
 
                     <!-- Conversation 2 - Deal Active -->
-                    <div class="conversation-item" data-conversation="2" onclick="selectConversation(2)">
+                    <div class="conversation-item" data-conversation="2" onclick="selectConversation(2)" role="button" tabindex="0" aria-label="Open conversation with Gatorade Sports">
                         <div class="conversation-avatar">
-                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop" alt="Gatorade">
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop" alt="Gatorade" width="48" height="48">
                         </div>
                         <div class="conversation-content">
                             <div class="conversation-header">
@@ -1459,9 +1519,9 @@
                     </div>
 
                     <!-- Conversation 3 - Unread, General -->
-                    <div class="conversation-item unread" data-conversation="3" onclick="selectConversation(3)">
+                    <div class="conversation-item unread" data-conversation="3" onclick="selectConversation(3)" role="button" tabindex="0" aria-label="Open conversation with Coach Wilson">
                         <div class="conversation-avatar">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Coach Wilson">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Coach Wilson" width="48" height="48">
                             <span class="online-indicator"></span>
                         </div>
                         <div class="conversation-content">
@@ -1477,9 +1537,9 @@
                     </div>
 
                     <!-- Conversation 4 - Deal Pending -->
-                    <div class="conversation-item" data-conversation="4" onclick="selectConversation(4)">
+                    <div class="conversation-item" data-conversation="4" onclick="selectConversation(4)" role="button" tabindex="0" aria-label="Open conversation with Under Armour">
                         <div class="conversation-avatar">
-                            <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&h=100&fit=crop" alt="Under Armour">
+                            <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&h=100&fit=crop" alt="Under Armour" width="48" height="48">
                         </div>
                         <div class="conversation-content">
                             <div class="conversation-header">
@@ -1500,9 +1560,9 @@
                     </div>
 
                     <!-- Conversation 5 - General -->
-                    <div class="conversation-item" data-conversation="5" onclick="selectConversation(5)">
+                    <div class="conversation-item" data-conversation="5" onclick="selectConversation(5)" role="button" tabindex="0" aria-label="Open conversation with Sarah Chen">
                         <div class="conversation-avatar">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Sarah Chen">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Sarah Chen" width="48" height="48">
                         </div>
                         <div class="conversation-content">
                             <div class="conversation-header">
@@ -1516,9 +1576,9 @@
                     </div>
 
                     <!-- Conversation 6 - General -->
-                    <div class="conversation-item" data-conversation="6" onclick="selectConversation(6)">
+                    <div class="conversation-item" data-conversation="6" onclick="selectConversation(6)" role="button" tabindex="0" aria-label="Open conversation with James Wilson">
                         <div class="conversation-avatar">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson" width="48" height="48">
                         </div>
                         <div class="conversation-content">
                             <div class="conversation-header">
@@ -1534,7 +1594,7 @@
             </aside>
 
             <!-- Right Panel - Active Conversation -->
-            <main class="chat-panel active" id="chatPanel">
+            <main class="chat-panel active" id="main-content">
                 <!-- Chat Header -->
                 <div class="chat-header">
                     <div class="chat-user-info">
@@ -1544,7 +1604,7 @@
                             </svg>
                         </button>
                         <div class="chat-avatar">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" id="chatAvatar">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" width="44" height="44" id="chatAvatar">
                             <span class="online-indicator"></span>
                         </div>
                         <div class="chat-user-details">
@@ -1649,7 +1709,7 @@
                     <!-- Received Message -->
                     <div class="message received">
                         <div class="message-avatar">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" width="48" height="48">
                         </div>
                         <div class="message-content">
                             <div class="message-bubble">
@@ -1664,7 +1724,7 @@
                     <!-- Received Message with Attachment -->
                     <div class="message received">
                         <div class="message-avatar">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" width="48" height="48">
                         </div>
                         <div class="message-content">
                             <div class="message-bubble">
@@ -1740,7 +1800,7 @@
                     <!-- Received Message -->
                     <div class="message received">
                         <div class="message-avatar">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" width="48" height="48">
                         </div>
                         <div class="message-content">
                             <div class="message-bubble">
@@ -1755,14 +1815,14 @@
                     <!-- Received Message with Image -->
                     <div class="message received">
                         <div class="message-avatar">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" width="48" height="48">
                         </div>
                         <div class="message-content">
                             <div class="message-bubble">
                                 Here's an example of the type of content we'd love to see:
                             </div>
                             <div class="message-image">
-                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop" alt="Nike product">
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop" alt="Nike product" width="300" height="225" loading="lazy">
                             </div>
                             <div class="message-meta">
                                 <span class="message-time">2:47 PM</span>
@@ -1773,7 +1833,7 @@
                     <!-- Most Recent Received Message -->
                     <div class="message received">
                         <div class="message-avatar">
-                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike">
+                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop" alt="Nike" width="48" height="48">
                         </div>
                         <div class="message-content">
                             <div class="message-bubble">
@@ -1803,6 +1863,7 @@
                                 </svg>
                             </button>
                         </div>
+                        <label for="messageInput" class="sr-only">Type a message</label>
                         <textarea class="message-textarea" placeholder="Type a message..." rows="1" id="messageInput" oninput="updateCharCount()"></textarea>
                         <div class="input-actions-right">
                             <span class="char-count" id="charCount">0/1000</span>
@@ -1820,10 +1881,10 @@
     </div>
 
     <!-- New Message Modal -->
-    <div class="modal-overlay" id="newMessageModal">
+    <div class="modal-overlay" id="newMessageModal" role="dialog" aria-modal="true" aria-labelledby="newMessageModalTitle">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">New Message</h3>
+                <h3 class="modal-title" id="newMessageModalTitle">New Message</h3>
                 <button class="modal-close" onclick="closeNewMessageModal()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1833,38 +1894,39 @@
             </div>
             <div class="modal-body">
                 <div class="modal-search">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <label for="modalSearchInput" class="sr-only">Search for a brand or athlete</label>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
-                    <input type="text" placeholder="Search for a brand or athlete...">
+                    <input type="text" id="modalSearchInput" placeholder="Search for a brand or athlete...">
                 </div>
 
                 <div class="recent-label">Recent Contacts</div>
                 <div class="contact-list">
-                    <div class="contact-item" onclick="startConversation('gatorade')">
-                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop" alt="Gatorade">
+                    <div class="contact-item" onclick="startConversation('gatorade')" role="button" tabindex="0" aria-label="Start conversation with Gatorade Sports">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop" alt="Gatorade" width="48" height="48">
                         <div class="contact-info">
                             <div class="contact-name">Gatorade Sports</div>
                             <div class="contact-role">Brand Partner</div>
                         </div>
                     </div>
-                    <div class="contact-item" onclick="startConversation('sarah')">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Sarah Chen">
+                    <div class="contact-item" onclick="startConversation('sarah')" role="button" tabindex="0" aria-label="Start conversation with Sarah Chen">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Sarah Chen" width="48" height="48">
                         <div class="contact-info">
                             <div class="contact-name">Sarah Chen</div>
                             <div class="contact-role">Athlete - Stanford Soccer</div>
                         </div>
                     </div>
-                    <div class="contact-item" onclick="startConversation('underarmour')">
-                        <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&h=100&fit=crop" alt="Under Armour">
+                    <div class="contact-item" onclick="startConversation('underarmour')" role="button" tabindex="0" aria-label="Start conversation with Under Armour">
+                        <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=100&h=100&fit=crop" alt="Under Armour" width="48" height="48">
                         <div class="contact-info">
                             <div class="contact-name">Under Armour</div>
                             <div class="contact-role">Brand Partner</div>
                         </div>
                     </div>
-                    <div class="contact-item" onclick="startConversation('james')">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson">
+                    <div class="contact-item" onclick="startConversation('james')" role="button" tabindex="0" aria-label="Start conversation with James Wilson">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson" width="48" height="48">
                         <div class="contact-info">
                             <div class="contact-name">James Wilson</div>
                             <div class="contact-role">Athlete - Alabama Football</div>
@@ -2028,54 +2090,65 @@
 
             if (!message) return;
 
-            const messagesArea = document.getElementById('messagesArea');
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.classList.add('btn-loading');
+            sendBtn.disabled = true;
 
-            // Create message element using safe DOM methods
-            const messageEl = document.createElement('div');
-            messageEl.className = 'message sent';
+            // Simulate async send operation
+            setTimeout(function() {
+                const messagesArea = document.getElementById('messagesArea');
 
-            const contentEl = document.createElement('div');
-            contentEl.className = 'message-content';
+                // Create message element using safe DOM methods
+                const messageEl = document.createElement('div');
+                messageEl.className = 'message sent';
 
-            const bubbleEl = document.createElement('div');
-            bubbleEl.className = 'message-bubble';
-            bubbleEl.textContent = message; // Safe: textContent prevents XSS
+                const contentEl = document.createElement('div');
+                contentEl.className = 'message-content';
 
-            const metaEl = document.createElement('div');
-            metaEl.className = 'message-meta';
+                const bubbleEl = document.createElement('div');
+                bubbleEl.className = 'message-bubble';
+                bubbleEl.textContent = message; // Safe: textContent prevents XSS
 
-            const timeEl = document.createElement('span');
-            timeEl.className = 'message-time';
-            timeEl.textContent = 'Just now';
+                const metaEl = document.createElement('div');
+                metaEl.className = 'message-meta';
 
-            const statusEl = document.createElement('span');
-            statusEl.className = 'message-status';
+                const timeEl = document.createElement('span');
+                timeEl.className = 'message-time';
+                timeEl.textContent = 'Just now';
 
-            // Create check SVG
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('viewBox', '0 0 24 24');
-            svg.setAttribute('fill', 'none');
-            svg.setAttribute('stroke', 'currentColor');
-            svg.setAttribute('stroke-width', '2');
-            const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-            polyline.setAttribute('points', '20 6 9 17 4 12');
-            svg.appendChild(polyline);
-            statusEl.appendChild(svg);
+                const statusEl = document.createElement('span');
+                statusEl.className = 'message-status';
 
-            metaEl.appendChild(timeEl);
-            metaEl.appendChild(statusEl);
-            contentEl.appendChild(bubbleEl);
-            contentEl.appendChild(metaEl);
-            messageEl.appendChild(contentEl);
+                // Create check SVG
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '2');
+                const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polyline.setAttribute('points', '20 6 9 17 4 12');
+                svg.appendChild(polyline);
+                statusEl.appendChild(svg);
 
-            messagesArea.appendChild(messageEl);
+                metaEl.appendChild(timeEl);
+                metaEl.appendChild(statusEl);
+                contentEl.appendChild(bubbleEl);
+                contentEl.appendChild(metaEl);
+                messageEl.appendChild(contentEl);
 
-            // Clear input
-            input.value = '';
-            updateCharCount();
+                messagesArea.appendChild(messageEl);
 
-            // Scroll to bottom
-            messagesArea.scrollTop = messagesArea.scrollHeight;
+                // Clear input
+                input.value = '';
+                updateCharCount();
+
+                // Scroll to bottom
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+
+                // Remove loading state
+                sendBtn.classList.remove('btn-loading');
+                sendBtn.disabled = true; // Keep disabled since input is now empty
+            }, 800);
         }
 
         // Toggle dropdown menu
@@ -2204,6 +2277,16 @@
                 document.getElementById('conversationsPanel').classList.remove('hidden');
                 document.getElementById('chatPanel').classList.add('active');
             }
+        });
+
+        // Keyboard handler for role="button" elements
+        document.querySelectorAll('[role="button"]').forEach(function(element) {
+            element.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
         });
     </script>
 

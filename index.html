@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>GradeUp NIL | Your GPA Is Worth Money</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="GradeUp NIL | Your GPA Is Worth Money">
+    <meta property="og:description" content="GradeUp NIL - The only NIL platform where your GPA unlocks better deals. Higher grades = higher value. Join 500+ scholar-athletes getting paid for excellence.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="GradeUp NIL | Your GPA Is Worth Money">
+    <meta name="twitter:description" content="GradeUp NIL - The only NIL platform where your GPA unlocks better deals. Higher grades = higher value. Join 500+ scholar-athletes getting paid for excellence.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Preload critical resources -->
     <link rel="preload" href="styles.css" as="style">
     <link rel="preload" href="app.js" as="script">
@@ -27,6 +51,41 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://gradeup.com/#website",
+          "name": "GradeUp NIL",
+          "url": "https://gradeup.com",
+          "description": "The only NIL platform where your GPA unlocks better deals. Higher grades = higher value.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://gradeup.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://gradeup.com/#organization",
+          "name": "GradeUp NIL",
+          "url": "https://gradeup.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://gradeup.com/og-image.jpg"
+          },
+          "sameAs": [
+            "https://twitter.com/GradeUpNIL"
+          ],
+          "description": "GradeUp NIL connects student-athletes with brands based on academic excellence and athletic performance."
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
     <!-- Skip Link for Keyboard Navigation (WCAG 2.4.1) -->
@@ -482,9 +541,9 @@
                 <div class="footer-links">
                     <h4>Support</h4>
                     <a href="about.html#faq">FAQ</a>
-                    <a href="#" id="helpCenterLink">Help Center</a>
-                    <a href="#" id="privacyPolicyLink">Privacy Policy</a>
-                    <a href="#" id="termsOfServiceLink">Terms of Service</a>
+                    <a href="about.html#contact">Help Center</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
                 </div>
             </div>
 
@@ -508,8 +567,8 @@
         </div>
     </div>
 
-    <!-- Supabase Client (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase Client (CDN) with SRI -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" integrity="sha384-B1p9yfaJhQSbfA/8p5x+fKhDpbKxGpjJuCqTaVRKhfVCGtnY8aLi1+c6HxGBz+OQ" crossorigin="anonymous"></script>
 
     <!-- Configuration -->
     <script>

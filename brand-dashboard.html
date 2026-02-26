@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>Brand Dashboard | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Brand Dashboard | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL - Brand Dashboard for discovering and partnering with scholar-athletes">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/brand-dashboard.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Brand Dashboard | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL - Brand Dashboard for discovering and partnering with scholar-athletes">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/brand-dashboard.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2039,6 +2063,26 @@
             .mobile-drawer { display: flex; }
         }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://gradeup.com/brand-dashboard.html#profilepage",
+      "name": "Brand Dashboard | GradeUp NIL",
+      "url": "https://gradeup.com/brand-dashboard.html",
+      "description": "GradeUp NIL - Brand Dashboard for discovering and partnering with scholar-athletes.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Brand Partner",
+        "description": "Brand partner on GradeUp NIL platform for NIL sponsorships and athlete partnerships"
+      }
+    }
+    </script>
 </head>
 <body>
     <!-- Skip Link for Keyboard Navigation (WCAG 2.4.1) -->
@@ -2334,7 +2378,7 @@
                         <input type="text" class="search-input" id="athleteSearch" placeholder="Search athletes by name, school, or sport..." aria-label="Search athletes">
                     </div>
                     <div class="filter-dropdown" id="filterDropdown">
-                        <button class="filter-btn" id="filterBtn">
+                        <button class="filter-btn" id="filterBtn" aria-expanded="false" aria-controls="filterMenu">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
                             </svg>
@@ -2343,7 +2387,7 @@
                                 <path d="M6 9l6 6 6-6"/>
                             </svg>
                         </button>
-                        <div class="filter-menu">
+                        <div class="filter-menu" id="filterMenu" role="region" aria-label="Filter options">
                             <div class="filter-group">
                                 <label class="filter-label" for="sportFilter">Sport</label>
                                 <select class="filter-select" id="sportFilter" aria-label="Filter by sport">
@@ -2436,6 +2480,20 @@
                 <div class="main-content">
                     <!-- Athletes Grid -->
                     <section class="athletes-grid" id="athletesGrid">
+                        <!-- Empty state shown when no athletes match filters -->
+                        <div class="empty-state" id="athletesEmptyState" style="display: none; grid-column: 1 / -1;">
+                            <div class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                            </div>
+                            <h4 class="empty-state-title">No Athletes Found</h4>
+                            <p class="empty-state-text">Try adjusting your filters or search criteria to find scholar-athletes that match your campaign needs.</p>
+                            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('searchAthletes').value=''; filterAthletes();">
+                                Clear Filters
+                            </button>
+                        </div>
                         <!-- Athletes will be rendered by JavaScript -->
                     </section>
 
@@ -2497,6 +2555,20 @@
                         </div>
                         <div class="card-body">
                             <div class="campaigns-list" id="campaignsList">
+                                <!-- Empty State -->
+                                <div class="empty-state" id="campaignsEmptyState" style="display: none;">
+                                    <div class="empty-state-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="empty-state-title">No Campaigns Yet</h4>
+                                    <p class="empty-state-description">Create your first campaign to start connecting with scholar-athletes.</p>
+                                    <button class="btn btn-primary btn-sm" onclick="openCreateCampaign()">Create Campaign</button>
+                                </div>
                                 <!-- Campaigns will be rendered by JavaScript -->
                             </div>
                         </div>
@@ -2507,7 +2579,167 @@
         </main>
     </div>
 
+    <!-- Brand Onboarding Modal -->
+    <div class="onboarding-overlay" id="brandOnboarding" role="dialog" aria-modal="true" aria-labelledby="brandOnboardingTitle" style="display: none;">
+        <div class="onboarding-modal">
+            <div class="onboarding-header">
+                <div class="onboarding-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                        <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+                    </svg>
+                </div>
+                <h2 class="onboarding-title" id="brandOnboardingTitle">Welcome to GradeUp!</h2>
+                <p class="onboarding-subtitle">Connect with top scholar-athletes for your brand</p>
+            </div>
+            <div class="onboarding-body">
+                <div class="onboarding-progress" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4">
+                    <div class="progress-dot active" data-step="1"></div>
+                    <div class="progress-dot" data-step="2"></div>
+                    <div class="progress-dot" data-step="3"></div>
+                    <div class="progress-dot" data-step="4"></div>
+                </div>
+                <ul class="onboarding-checklist" role="list">
+                    <li class="checklist-item" data-step="company">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Set up your brand profile</div>
+                            <div class="checklist-description">Add company info, logo, and brand story</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item" data-step="criteria">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Define athlete criteria</div>
+                            <div class="checklist-description">Set sports, GPA requirements, and follower thresholds</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item" data-step="campaign">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Create your first campaign</div>
+                            <div class="checklist-description">Launch a deal opportunity for athletes to discover</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item" data-step="payment">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Set up payment method</div>
+                            <div class="checklist-description">Add payment details for seamless athlete payments</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="onboarding-footer">
+                <button class="onboarding-skip" id="skipBrandOnboarding">Skip for now</button>
+                <button class="btn btn-primary" id="startBrandOnboarding">Get Started</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ═══════════════════════════════════════════════════════════════════════════
+        //  BRAND ONBOARDING FLOW
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        var brandOnboardingOverlay = document.getElementById('brandOnboarding');
+        var skipBrandOnboardingBtn = document.getElementById('skipBrandOnboarding');
+        var startBrandOnboardingBtn = document.getElementById('startBrandOnboarding');
+
+        function checkBrandOnboarding() {
+            var hasCompletedOnboarding = localStorage.getItem('gradeup_brand_onboarded');
+            if (!hasCompletedOnboarding) {
+                showBrandOnboarding();
+            }
+        }
+
+        function showBrandOnboarding() {
+            if (brandOnboardingOverlay) {
+                brandOnboardingOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                var firstBtn = brandOnboardingOverlay.querySelector('button');
+                if (firstBtn) setTimeout(function() { firstBtn.focus(); }, 100);
+            }
+        }
+
+        function hideBrandOnboarding() {
+            if (brandOnboardingOverlay) {
+                brandOnboardingOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function completeBrandOnboarding() {
+            localStorage.setItem('gradeup_brand_onboarded', 'true');
+            hideBrandOnboarding();
+            showBrandToast('Welcome! Start discovering talented athletes.', 'success');
+        }
+
+        if (skipBrandOnboardingBtn) {
+            skipBrandOnboardingBtn.addEventListener('click', function() {
+                localStorage.setItem('gradeup_brand_onboarded', 'skipped');
+                hideBrandOnboarding();
+            });
+        }
+
+        if (startBrandOnboardingBtn) {
+            startBrandOnboardingBtn.addEventListener('click', function() {
+                completeBrandOnboarding();
+                window.location.href = 'brand-profile.html';
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && brandOnboardingOverlay && brandOnboardingOverlay.style.display === 'flex') {
+                hideBrandOnboarding();
+                localStorage.setItem('gradeup_brand_onboarded', 'skipped');
+            }
+        });
+
+        function showBrandToast(message, type) {
+            type = type || 'success';
+            var existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+
+            var msgSpan = document.createElement('span');
+            msgSpan.className = 'toast-message';
+            msgSpan.textContent = message;
+
+            var closeBtn = document.createElement('button');
+            closeBtn.className = 'toast-close';
+            closeBtn.setAttribute('aria-label', 'Dismiss notification');
+            closeBtn.textContent = '×';
+
+            toast.appendChild(msgSpan);
+            toast.appendChild(closeBtn);
+            document.body.appendChild(toast);
+
+            closeBtn.addEventListener('click', function() { toast.remove(); });
+            setTimeout(function() { if (toast.parentNode) toast.remove(); }, 5000);
+        }
+
+        // Initialize onboarding check on page load
+        // Uncomment to enable: checkBrandOnboarding();
+
         // ─── Focus Trap Utility (WCAG 2.2 Keyboard Accessibility) ───
         var lastFocusedElement = null;
 
@@ -2793,6 +3025,9 @@
                 const img = document.createElement('img');
                 img.src = athlete.image;
                 img.alt = escapeHtml(athlete.name);
+                img.width = 300;
+                img.height = 180;
+                img.loading = 'lazy';
                 imageDiv.appendChild(img);
 
                 const badgesDiv = document.createElement('div');
@@ -2897,7 +3132,14 @@
                 contactBtn.textContent = 'Contact';
                 contactBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    openContactModal(athlete);
+                    const btn = this;
+                    btn.classList.add('btn-loading');
+                    btn.disabled = true;
+                    setTimeout(function() {
+                        btn.classList.remove('btn-loading');
+                        btn.disabled = false;
+                        openContactModal(athlete);
+                    }, 500);
                 });
                 actionsDiv.appendChild(contactBtn);
                 const profileBtn = document.createElement('button');
@@ -2938,6 +3180,9 @@
                 avatar.src = athlete.image;
                 avatar.alt = escapeHtml(athlete.name);
                 avatar.className = 'top-match-avatar';
+                avatar.width = 48;
+                avatar.height = 48;
+                avatar.loading = 'lazy';
                 item.appendChild(avatar);
 
                 const info = document.createElement('div');
@@ -2967,7 +3212,27 @@
                 const btn = document.createElement('button');
                 btn.className = 'top-match-btn';
                 btn.setAttribute('aria-label', 'Quick contact ' + athlete.name);
-                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+                // Create SVG using safe DOM methods
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '2');
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', 'M5 12h14M12 5l7 7-7 7');
+                svg.appendChild(path);
+                btn.appendChild(svg);
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const button = this;
+                    button.classList.add('btn-loading');
+                    button.disabled = true;
+                    setTimeout(function() {
+                        button.classList.remove('btn-loading');
+                        button.disabled = false;
+                        openContactModal(athlete);
+                    }, 500);
+                });
                 item.appendChild(btn);
 
                 list.appendChild(item);
@@ -3066,6 +3331,9 @@
                 const avatar = document.createElement('img');
                 avatar.src = msg.image;
                 avatar.alt = escapeHtml(msg.name);
+                avatar.width = 48;
+                avatar.height = 48;
+                avatar.loading = 'lazy';
                 avatarDiv.appendChild(avatar);
                 if (msg.unread) {
                     const badge = document.createElement('span');
@@ -3119,6 +3387,9 @@
                 avatar.src = athlete.image;
                 avatar.alt = escapeHtml(athlete.name);
                 avatar.className = 'scholar-athlete-avatar';
+                avatar.width = 40;
+                avatar.height = 40;
+                avatar.loading = 'lazy';
                 item.appendChild(avatar);
 
                 const info = document.createElement('div');
@@ -3211,13 +3482,18 @@
 
         // Event Listeners
         document.getElementById('filterBtn').addEventListener('click', function() {
-            document.getElementById('filterDropdown').classList.toggle('active');
+            const dropdown = document.getElementById('filterDropdown');
+            dropdown.classList.toggle('active');
+            const isExpanded = dropdown.classList.contains('active');
+            this.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
         });
 
         document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('filterDropdown');
+            const filterBtn = document.getElementById('filterBtn');
             if (!dropdown.contains(e.target)) {
                 dropdown.classList.remove('active');
+                filterBtn.setAttribute('aria-expanded', 'false');
             }
         });
 
@@ -3325,6 +3601,9 @@
                 avatar.src = proposal.image;
                 avatar.alt = escapeHtml(proposal.name);
                 avatar.className = 'proposal-avatar';
+                avatar.width = 48;
+                avatar.height = 48;
+                avatar.loading = 'lazy';
                 item.appendChild(avatar);
 
                 const info = document.createElement('div');
@@ -3400,6 +3679,8 @@
             const avatarImg = document.createElement('img');
             avatarImg.src = proposal.image;
             avatarImg.style.cssText = 'width: 56px; height: 56px; border-radius: 12px; object-fit: cover;';
+            avatarImg.width = 56;
+            avatarImg.height = 56;
             header.appendChild(avatarImg);
 
             const headerInfo = document.createElement('div');
@@ -3479,7 +3760,7 @@
             acceptBtn.textContent = 'Accept Proposal';
             acceptBtn.addEventListener('click', function() {
                 document.body.removeChild(modalHtml);
-                alert('Proposal accepted! A deal has been created.');
+                showAlert('Proposal accepted! A deal has been created.', null, { title: 'Proposal Accepted' });
             });
             actionsRow.appendChild(acceptBtn);
 
@@ -3585,10 +3866,10 @@
                     if (typeof showToast === 'function') {
                         showToast('Message sent to ' + athlete.name + '!', 'success');
                     } else {
-                        alert('Message sent to ' + athlete.name + '!');
+                        showAlert('Message sent to ' + athlete.name + '!', null, { title: 'Message Sent' });
                     }
                 } else {
-                    alert('Please fill in all fields');
+                    showAlert('Please fill in all fields', null, { title: 'Missing Information' });
                 }
             });
             body.appendChild(sendBtn);
@@ -3638,6 +3919,8 @@
             avatar.src = athlete.image;
             avatar.alt = athlete.name;
             avatar.style.cssText = 'width: 100px; height: 100px; border-radius: 16px; object-fit: cover;';
+            avatar.width = 100;
+            avatar.height = 100;
             profileHeader.appendChild(avatar);
 
             var info = document.createElement('div');
@@ -3856,12 +4139,13 @@
             submitBtn.addEventListener('click', function() {
                 var oppTitle = document.getElementById('oppTitle').value;
                 if (!oppTitle) {
-                    alert('Please enter an opportunity title');
+                    showAlert('Please enter an opportunity title', null, { title: 'Missing Information' });
                     return;
                 }
                 // In production, this would save to database
-                alert('Opportunity "' + oppTitle + '" has been published! Athletes will now be able to see and apply.');
-                document.body.removeChild(modalHtml);
+                showAlert('Opportunity "' + oppTitle + '" has been published! Athletes will now be able to see and apply.', function() {
+                    document.body.removeChild(modalHtml);
+                }, { title: 'Opportunity Published' });
             });
             body.appendChild(submitBtn);
 
@@ -3897,6 +4181,23 @@
             group.appendChild(input);
 
             return group;
+        }
+
+        // ─── Create Campaign Function ───
+        function openCreateCampaign() {
+            // Find the Create Campaign button that triggered this
+            var triggerBtn = event && event.target ? event.target.closest('button') : null;
+            if (triggerBtn) {
+                triggerBtn.classList.add('btn-loading');
+                triggerBtn.disabled = true;
+                setTimeout(function() {
+                    triggerBtn.classList.remove('btn-loading');
+                    triggerBtn.disabled = false;
+                    showAlert('Create Campaign modal coming soon! This feature will allow you to set up targeted campaigns to reach scholar-athletes.', null, { title: 'Coming Soon' });
+                }, 1000);
+            } else {
+                showAlert('Create Campaign modal coming soon! This feature will allow you to set up targeted campaigns to reach scholar-athletes.', null, { title: 'Coming Soon' });
+            }
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
@@ -4000,7 +4301,16 @@
             // Create Opportunity button
             var createBtn = document.getElementById('createOpportunityBtn');
             if (createBtn) {
-                createBtn.addEventListener('click', openCreateOpportunityModal);
+                createBtn.addEventListener('click', function() {
+                    var btn = this;
+                    btn.classList.add('btn-loading');
+                    btn.disabled = true;
+                    setTimeout(function() {
+                        btn.classList.remove('btn-loading');
+                        btn.disabled = false;
+                        openCreateOpportunityModal();
+                    }, 500);
+                });
             }
 
             // Filter dropdown event listeners

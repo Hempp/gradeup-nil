@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>Settings | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Settings | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL - Settings. Manage your account, privacy, notifications, and monetization preferences.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/settings.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Settings | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL - Settings. Manage your account, privacy, notifications, and monetization preferences.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/settings.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +38,7 @@
 
     <!-- Base Styles -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="src/styles/dashboard-shared.css">
 
     <!-- Settings Page Styles -->
     <style>
@@ -99,8 +124,8 @@
 
         .header-icon-btn {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1190,12 +1215,185 @@
                 overflow-x: auto;
             }
         }
+
+        /* ─── Mobile Navigation Drawer ─── */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 1px;
+            transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 1000;
+            transition: left 0.3s var(--ease);
+            overflow-y: auto;
+        }
+
+        .mobile-drawer.open {
+            left: 0;
+        }
+
+        .mobile-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .mobile-drawer-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+        }
+
+        .mobile-drawer-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-drawer-close:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .mobile-drawer-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-drawer-nav {
+            padding: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .mobile-nav-link.active {
+            color: var(--cyan);
+        }
+
+        .mobile-nav-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s var(--ease), visibility 0.3s var(--ease);
+        }
+
+        .mobile-drawer-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+        }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "https://gradeup.com/settings.html#webpage",
+      "name": "Settings | GradeUp NIL",
+      "url": "https://gradeup.com/settings.html",
+      "description": "Manage your account, privacy, notifications, and monetization preferences.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "Account Settings",
+        "description": "User account settings and preferences on GradeUp NIL"
+      }
+    }
+    </script>
 </head>
 <body class="user-athlete">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Header -->
     <header class="settings-header">
         <div class="header-left">
+            <!-- Hamburger for mobile -->
+            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
             <a href="index.html" class="logo">GRADEUP</a>
             <nav class="header-nav">
                 <a href="athlete-dashboard.html" class="nav-link">Dashboard</a>
@@ -1227,6 +1425,54 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <aside class="mobile-drawer" id="mobileDrawer" role="navigation" aria-label="Mobile navigation">
+        <div class="mobile-drawer-header">
+            <span class="mobile-drawer-logo">GRADEUP</span>
+            <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Close navigation menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-drawer-nav">
+            <a href="athlete-dashboard.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="deals.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                Deals
+            </a>
+            <a href="analytics.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 20V10M12 20V4M6 20v-6"/>
+                </svg>
+                Analytics
+            </a>
+            <a href="profile.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Profile
+            </a>
+            <a href="settings.html" class="mobile-nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+    </aside>
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
 
     <!-- Main Container -->
     <div class="settings-container">
@@ -1295,7 +1541,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="settings-main">
+        <main class="settings-main" id="main-content">
             <!-- Demo User Type Switch -->
             <div class="user-type-switch">
                 <span>Demo Mode - View as:</span>
@@ -2262,10 +2508,10 @@
                 <div class="settings-card">
                     <h3 class="card-title">Legal</h3>
                     <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">Terms of Service</a>
-                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">Privacy Policy</a>
-                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">NCAA Compliance</a>
-                        <a href="#" style="color: var(--cyan); font-size: 0.9375rem;">Cookie Policy</a>
+                        <a href="terms.html" style="color: var(--cyan); font-size: 0.9375rem;">Terms of Service</a>
+                        <a href="privacy.html" style="color: var(--cyan); font-size: 0.9375rem;">Privacy Policy</a>
+                        <a href="about.html#faq" style="color: var(--cyan); font-size: 0.9375rem;">NCAA Compliance</a>
+                        <a href="privacy.html" style="color: var(--cyan); font-size: 0.9375rem;">Cookie Policy</a>
                     </div>
                 </div>
 
@@ -2357,12 +2603,38 @@
 
         // Save Settings
         function saveSettings(section) {
-            const toast = document.getElementById('saveToast');
-            toast.classList.add('show', 'success');
+            // Find the button that triggered this save
+            var buttons = document.querySelectorAll('button[onclick*="saveSettings"]');
+            var activeBtn = null;
+            buttons.forEach(function(btn) {
+                if (btn.getAttribute('onclick').indexOf(section) !== -1) {
+                    activeBtn = btn;
+                }
+            });
 
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            // Add loading state
+            if (activeBtn) {
+                var originalText = activeBtn.textContent;
+                activeBtn.classList.add('btn-loading');
+                activeBtn.disabled = true;
+            }
+
+            // Simulate async save operation
+            setTimeout(function() {
+                // Remove loading state
+                if (activeBtn) {
+                    activeBtn.classList.remove('btn-loading');
+                    activeBtn.disabled = false;
+                }
+
+                // Show success toast
+                var toast = document.getElementById('saveToast');
+                toast.classList.add('show', 'success');
+
+                setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 3000);
+            }, 1000);
         }
 
         // Avatar Upload Preview
@@ -2410,8 +2682,46 @@
             });
         });
 
-        // Mobile sidebar toggle (for future enhancement)
-        // Could add hamburger menu functionality here
+        // Mobile Navigation Drawer
+        (function() {
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var mobileDrawer = document.getElementById('mobileDrawer');
+            var mobileDrawerClose = document.getElementById('mobileDrawerClose');
+            var mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+
+            function openDrawer() {
+                mobileDrawer.classList.add('open');
+                mobileDrawerOverlay.classList.add('visible');
+                hamburgerBtn.classList.add('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDrawer() {
+                mobileDrawer.classList.remove('open');
+                mobileDrawerOverlay.classList.remove('visible');
+                hamburgerBtn.classList.remove('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            hamburgerBtn.addEventListener('click', function() {
+                if (mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                } else {
+                    openDrawer();
+                }
+            });
+
+            mobileDrawerClose.addEventListener('click', closeDrawer);
+            mobileDrawerOverlay.addEventListener('click', closeDrawer);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                }
+            });
+        })();
     </script>
 
     <!-- Services Integration -->

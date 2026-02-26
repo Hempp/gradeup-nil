@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>Apex Sports Co. | Brand Profile | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Apex Sports Co. | Brand Profile | GradeUp NIL">
+    <meta property="og:description" content="Apex Sports Co. - Gold Scholar Sponsor on GradeUp NIL. View partnership opportunities and connect with verified scholar-athletes.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/brand-profile.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Apex Sports Co. | Brand Profile | GradeUp NIL">
+    <meta name="twitter:description" content="Apex Sports Co. - Gold Scholar Sponsor on GradeUp NIL. View partnership opportunities and connect with verified scholar-athletes.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/brand-profile.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1023,8 +1047,34 @@
             }
         }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://gradeup.com/brand-profile.html#profilepage",
+      "name": "Apex Sports Co. | Brand Profile | GradeUp NIL",
+      "url": "https://gradeup.com/brand-profile.html",
+      "description": "Apex Sports Co. - Gold Scholar Sponsor on GradeUp NIL. View partnership opportunities and connect with verified scholar-athletes.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Apex Sports Co.",
+        "description": "Gold Scholar Sponsor on GradeUp NIL",
+        "memberOf": {
+          "@type": "Organization",
+          "name": "GradeUp NIL"
+        }
+      }
+    }
+    </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Navigation -->
     <nav class="nav scrolled" id="nav">
         <a href="index.html" class="nav-logo">GRADEUP</a>
@@ -1038,8 +1088,8 @@
         </div>
 
         <div class="nav-actions">
-            <button class="btn btn-ghost" onclick="openModal('login')">Log In</button>
-            <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            <button class="btn btn-ghost" id="navLoginBtn">Log In</button>
+            <button class="btn btn-primary" id="navSignupBtn">Get Started</button>
         </div>
 
         <button class="nav-toggle" id="navToggle" aria-label="Menu">
@@ -1052,20 +1102,20 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
-            <a href="index.html#athletes" onclick="closeMobileMenu()">Athletes</a>
-            <a href="index.html#brands" onclick="closeMobileMenu()">Brands</a>
-            <a href="index.html#how-it-works" onclick="closeMobileMenu()">How It Works</a>
-            <a href="athlete-dashboard.html" onclick="closeMobileMenu()">Athlete Dashboard</a>
-            <a href="brand-dashboard.html" onclick="closeMobileMenu()">Brand Dashboard</a>
+            <a href="index.html#athletes" class="mobile-nav-link">Athletes</a>
+            <a href="index.html#brands" class="mobile-nav-link">Brands</a>
+            <a href="index.html#how-it-works" class="mobile-nav-link">How It Works</a>
+            <a href="athlete-dashboard.html" class="mobile-nav-link">Athlete Dashboard</a>
+            <a href="brand-dashboard.html" class="mobile-nav-link">Brand Dashboard</a>
             <div class="mobile-menu-buttons">
-                <button class="btn btn-outline btn-block" onclick="openModal('login'); closeMobileMenu()">Log In</button>
-                <button class="btn btn-primary btn-block" onclick="openModal('signup'); closeMobileMenu()">Get Started</button>
+                <button class="btn btn-outline btn-block" id="mobileLoginBtn">Log In</button>
+                <button class="btn btn-primary btn-block" id="mobileSignupBtn">Get Started</button>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main class="brand-profile-page">
+    <main class="brand-profile-page" id="main-content">
         <div class="profile-container">
             <!-- Brand Hero Section -->
             <section class="brand-hero glass-card">
@@ -1105,10 +1155,10 @@
                             </div>
                         </div>
                         <div class="brand-actions">
-                            <button class="btn-view-opportunities" onclick="scrollToSection('opportunities')">
+                            <button class="btn-view-opportunities" id="viewOpportunitiesBtn">
                                 View Opportunities
                             </button>
-                            <button class="btn-contact-brand" onclick="openContactModal()">
+                            <button class="btn-contact-brand" id="contactBrandBtn">
                                 Contact Brand
                             </button>
                         </div>
@@ -1256,7 +1306,7 @@
                                     <div class="opportunity-compensation">
                                         <div class="compensation-label">Compensation</div>
                                         <div class="compensation-value">$3,000 - $5,000</div>
-                                        <button class="btn-apply" onclick="openContactModal()">Apply Now</button>
+                                        <button class="btn-apply apply-now-btn">Apply Now</button>
                                     </div>
                                 </div>
 
@@ -1292,7 +1342,7 @@
                                     <div class="opportunity-compensation">
                                         <div class="compensation-label">Compensation</div>
                                         <div class="compensation-value">$8,000 - $12,000</div>
-                                        <button class="btn-apply" onclick="openContactModal()">Apply Now</button>
+                                        <button class="btn-apply apply-now-btn">Apply Now</button>
                                     </div>
                                 </div>
 
@@ -1328,7 +1378,7 @@
                                     <div class="opportunity-compensation">
                                         <div class="compensation-label">Compensation</div>
                                         <div class="compensation-value">$1,500 + Product</div>
-                                        <button class="btn-apply" onclick="openContactModal()">Apply Now</button>
+                                        <button class="btn-apply apply-now-btn">Apply Now</button>
                                     </div>
                                 </div>
                             </div>
@@ -1390,7 +1440,7 @@
                         </div>
                         <div class="card-body">
                             <div class="matches-grid">
-                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                <div class="match-card" data-href="athlete-dashboard.html">
                                     <img class="match-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson">
                                     <div class="match-info">
                                         <div class="match-name">James Wilson</div>
@@ -1409,7 +1459,7 @@
                                     </div>
                                 </div>
 
-                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                <div class="match-card" data-href="athlete-dashboard.html">
                                     <img class="match-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Maya Rodriguez">
                                     <div class="match-info">
                                         <div class="match-name">Maya Rodriguez</div>
@@ -1428,7 +1478,7 @@
                                     </div>
                                 </div>
 
-                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                <div class="match-card" data-href="athlete-dashboard.html">
                                     <img class="match-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" alt="Emily Park">
                                     <div class="match-info">
                                         <div class="match-name">Emily Park</div>
@@ -1447,7 +1497,7 @@
                                     </div>
                                 </div>
 
-                                <div class="match-card" onclick="window.location.href='athlete-dashboard.html'">
+                                <div class="match-card" data-href="athlete-dashboard.html">
                                     <img class="match-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Michael Torres">
                                     <div class="match-info">
                                         <div class="match-name">Michael Torres</div>
@@ -1587,7 +1637,7 @@
                         <div class="card-body" style="text-align: center;">
                             <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem;">Ready to Partner?</h3>
                             <p style="font-size: 0.875rem; color: var(--gray-400); margin-bottom: 1.5rem;">Express your interest and share your pitch with Apex Sports Co.</p>
-                            <button class="btn-view-opportunities" style="width: 100%;" onclick="openContactModal()">
+                            <button class="btn-view-opportunities contact-cta-btn" style="width: 100%;">
                                 Contact Brand
                             </button>
                         </div>
@@ -1605,13 +1655,13 @@
                     <a href="index.html" class="footer-logo">GRADEUP</a>
                     <p>The premier NIL platform for scholar-athletes. Where academic excellence meets athletic greatness.</p>
                     <div class="footer-social">
-                        <a href="#" aria-label="Twitter">
+                        <a href="https://twitter.com/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                         </a>
-                        <a href="#" aria-label="Instagram">
+                        <a href="https://instagram.com/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                         </a>
-                        <a href="#" aria-label="LinkedIn">
+                        <a href="https://linkedin.com/company/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                         </a>
                     </div>
@@ -1627,18 +1677,14 @@
 
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="#">About Us</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Press</a>
+                    <a href="about.html">About Us</a>
+                    <a href="about.html#contact">Contact</a>
                 </div>
 
                 <div class="footer-links">
-                    <h4>Support</h4>
-                    <a href="#">Help Center</a>
-                    <a href="#">Contact</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <h4>Legal</h4>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
                 </div>
             </div>
 
@@ -1651,7 +1697,7 @@
     <!-- Contact Modal -->
     <div class="modal-overlay" id="contactModalOverlay">
         <div class="modal" id="contactModal">
-            <button class="modal-close" onclick="closeContactModal()" aria-label="Close">
+            <button class="modal-close" id="contactModalCloseBtn" aria-label="Close">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
@@ -1665,7 +1711,7 @@
     <!-- Login/Signup Modals -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modal">
-            <button class="modal-close" onclick="closeModal()" aria-label="Close">
+            <button class="modal-close" id="modalCloseBtn" aria-label="Close">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
@@ -1691,6 +1737,55 @@
             const contactModalOverlay = document.getElementById('contactModalOverlay');
             const contactModal = document.getElementById('contactModal');
             const contactModalContent = document.getElementById('contactModalContent');
+
+            // ─── Focus Trap Utility (WCAG 2.2 Keyboard Accessibility) ───
+            let lastFocusedElement = null;
+            let activeFocusTrapHandler = null;
+
+            function setupFocusTrap(modalElement, closeCallback) {
+                const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+                const focusableElements = modalElement.querySelectorAll(focusableSelectors);
+                if (focusableElements.length === 0) return;
+
+                const firstFocusable = focusableElements[0];
+                const lastFocusable = focusableElements[focusableElements.length - 1];
+
+                // Focus first element
+                setTimeout(() => firstFocusable.focus(), 50);
+
+                function handleKeydown(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                e.preventDefault();
+                                lastFocusable.focus();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                e.preventDefault();
+                                firstFocusable.focus();
+                            }
+                        }
+                    }
+                    if (e.key === 'Escape') {
+                        closeCallback();
+                    }
+                }
+
+                modalElement.addEventListener('keydown', handleKeydown);
+                activeFocusTrapHandler = { modal: modalElement, handler: handleKeydown };
+            }
+
+            function removeFocusTrap() {
+                if (activeFocusTrapHandler) {
+                    activeFocusTrapHandler.modal.removeEventListener('keydown', activeFocusTrapHandler.handler);
+                    activeFocusTrapHandler = null;
+                }
+                if (lastFocusedElement) {
+                    lastFocusedElement.focus();
+                    lastFocusedElement = null;
+                }
+            }
 
             // ─── Navigation ───
             function initNav() {
@@ -1921,6 +2016,9 @@
 
             // ─── Contact Modal ───
             window.openContactModal = function() {
+                // Store trigger element for focus restoration
+                lastFocusedElement = document.activeElement;
+
                 // Clear and build content
                 while (contactModalContent.firstChild) {
                     contactModalContent.removeChild(contactModalContent.firstChild);
@@ -1931,14 +2029,12 @@
                 contactModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
 
-                // Focus first input
-                const firstInput = contactModal.querySelector('input');
-                if (firstInput) {
-                    setTimeout(() => firstInput.focus(), 100);
-                }
+                // Set up focus trap
+                setupFocusTrap(contactModalOverlay, closeContactModal);
             };
 
             window.closeContactModal = function() {
+                removeFocusTrap();
                 contactModalOverlay.classList.remove('active');
                 contactModal.classList.remove('active');
                 document.body.style.overflow = '';
@@ -2282,6 +2378,9 @@
             window.openModal = function(type) {
                 const builder = modalBuilders[type];
                 if (builder) {
+                    // Store trigger element for focus restoration
+                    lastFocusedElement = document.activeElement;
+
                     // Clear existing content
                     while (modalContent.firstChild) {
                         modalContent.removeChild(modalContent.firstChild);
@@ -2295,15 +2394,13 @@
                     modal.classList.add('active');
                     document.body.style.overflow = 'hidden';
 
-                    // Focus first input
-                    const firstInput = modal.querySelector('input');
-                    if (firstInput) {
-                        setTimeout(() => firstInput.focus(), 100);
-                    }
+                    // Set up focus trap
+                    setupFocusTrap(modalOverlay, closeModal);
                 }
             };
 
             window.closeModal = function() {
+                removeFocusTrap();
                 modalOverlay.classList.remove('active');
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
@@ -2316,17 +2413,7 @@
                 }
             });
 
-            // Close modal on escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    if (modalOverlay.classList.contains('active')) {
-                        closeModal();
-                    }
-                    if (contactModalOverlay.classList.contains('active')) {
-                        closeContactModal();
-                    }
-                }
-            });
+            // Note: Escape key handling is now managed by the focus trap
 
             // ─── Form Handlers ───
             function handleLogin(e) {
@@ -2347,9 +2434,94 @@
                 window.location.href = 'brand-dashboard.html';
             }
 
+            // ─── Event Listener Bindings (replacing inline onclick handlers) ───
+            function initEventListeners() {
+                // Navigation buttons
+                const navLoginBtn = document.getElementById('navLoginBtn');
+                const navSignupBtn = document.getElementById('navSignupBtn');
+                const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+                const mobileSignupBtn = document.getElementById('mobileSignupBtn');
+
+                if (navLoginBtn) {
+                    navLoginBtn.addEventListener('click', () => openModal('login'));
+                }
+
+                if (navSignupBtn) {
+                    navSignupBtn.addEventListener('click', () => openModal('signup'));
+                }
+
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.addEventListener('click', () => {
+                        openModal('login');
+                        closeMobileMenu();
+                    });
+                }
+
+                if (mobileSignupBtn) {
+                    mobileSignupBtn.addEventListener('click', () => {
+                        openModal('signup');
+                        closeMobileMenu();
+                    });
+                }
+
+                // Mobile navigation links - event delegation
+                if (mobileMenu) {
+                    mobileMenu.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('mobile-nav-link')) {
+                            closeMobileMenu();
+                        }
+                    });
+                }
+
+                // Modal close buttons
+                const modalCloseBtn = document.getElementById('modalCloseBtn');
+                const contactModalCloseBtn = document.getElementById('contactModalCloseBtn');
+
+                if (modalCloseBtn) {
+                    modalCloseBtn.addEventListener('click', () => closeModal());
+                }
+
+                if (contactModalCloseBtn) {
+                    contactModalCloseBtn.addEventListener('click', () => closeContactModal());
+                }
+
+                // Brand hero action buttons
+                const viewOpportunitiesBtn = document.getElementById('viewOpportunitiesBtn');
+                const contactBrandBtn = document.getElementById('contactBrandBtn');
+
+                if (viewOpportunitiesBtn) {
+                    viewOpportunitiesBtn.addEventListener('click', () => scrollToSection('opportunities'));
+                }
+
+                if (contactBrandBtn) {
+                    contactBrandBtn.addEventListener('click', () => openContactModal());
+                }
+
+                // Apply Now buttons - event delegation
+                document.querySelectorAll('.apply-now-btn').forEach(btn => {
+                    btn.addEventListener('click', () => openContactModal());
+                });
+
+                // Contact CTA button
+                const contactCtaBtn = document.querySelector('.contact-cta-btn');
+                if (contactCtaBtn) {
+                    contactCtaBtn.addEventListener('click', () => openContactModal());
+                }
+
+                // Match cards - event delegation
+                document.querySelectorAll('.match-card[data-href]').forEach(card => {
+                    card.addEventListener('click', () => {
+                        window.location.href = card.dataset.href;
+                    });
+                    // Add pointer cursor for clickable cards
+                    card.style.cursor = 'pointer';
+                });
+            }
+
             // ─── Initialize ───
             function init() {
                 initNav();
+                initEventListeners();
             }
 
             // Run on DOM ready

@@ -7,47 +7,126 @@
 (function() {
     'use strict';
 
+    // ─── Focus Trap Utility (WCAG 2.2 Keyboard Accessibility) ───
+    let lastFocusedElement = null;
+    let activeFocusTrapHandler = null;
+
+    /**
+     * Sets up a focus trap within a modal element for WCAG 2.2 keyboard accessibility.
+     * Traps Tab/Shift+Tab navigation within the modal and handles Escape key to close.
+     * @param {HTMLElement} modalElement - The modal container element to trap focus within
+     * @param {Function} closeCallback - Callback function to execute when Escape is pressed
+     * @returns {void}
+     * @example
+     * setupFocusTrap(document.getElementById('myModal'), closeModal);
+     */
+    function setupFocusTrap(modalElement, closeCallback) {
+        const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const focusableElements = modalElement.querySelectorAll(focusableSelectors);
+        if (focusableElements.length === 0) return;
+
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        // Focus first element
+        setTimeout(function() { firstFocusable.focus(); }, 50);
+
+        function handleKeydown(e) {
+            if (e.key === 'Tab') {
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusable) {
+                        e.preventDefault();
+                        lastFocusable.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusable) {
+                        e.preventDefault();
+                        firstFocusable.focus();
+                    }
+                }
+            }
+            if (e.key === 'Escape') {
+                closeCallback();
+            }
+        }
+
+        modalElement.addEventListener('keydown', handleKeydown);
+        activeFocusTrapHandler = { modal: modalElement, handler: handleKeydown };
+    }
+
+    /**
+     * Removes the active focus trap and restores focus to the previously focused element.
+     * Should be called when closing a modal to clean up event listeners and restore user context.
+     * @returns {void}
+     */
+    function removeFocusTrap() {
+        if (activeFocusTrapHandler) {
+            activeFocusTrapHandler.modal.removeEventListener('keydown', activeFocusTrapHandler.handler);
+            activeFocusTrapHandler = null;
+        }
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
+        }
+    }
+
     // ─── Safe DOM Helpers (XSS Prevention) ───
     // Creates SVG icon elements safely without innerHTML
+
+    /**
+     * Creates a clock SVG icon element using safe DOM methods (XSS prevention).
+     * Used to display time-related information like deadlines.
+     * @returns {SVGElement} SVG element representing a clock icon
+     */
     function createClockIcon() {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
         svg.setAttribute('stroke-width', '2');
-        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', '12');
         circle.setAttribute('cy', '12');
         circle.setAttribute('r', '10');
-        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', 'M12 6v6l4 2');
         svg.appendChild(circle);
         svg.appendChild(path);
         return svg;
     }
 
+    /**
+     * Creates a check/success SVG icon element using safe DOM methods (XSS prevention).
+     * Used to display completion status or match scores.
+     * @returns {SVGElement} SVG element representing a checkmark in a circle
+     */
     function createCheckIcon() {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
         svg.setAttribute('stroke-width', '2');
-        var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path1.setAttribute('d', 'M22 11.08V12a10 10 0 11-5.93-9.14');
-        var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         poly.setAttribute('points', '22 4 12 14.01 9 11.01');
         svg.appendChild(path1);
         svg.appendChild(poly);
         return svg;
     }
 
+    /**
+     * Creates a simple circle SVG icon element using safe DOM methods (XSS prevention).
+     * Used as a generic bullet or placeholder icon.
+     * @returns {SVGElement} SVG element representing an empty circle
+     */
     function createCircleIcon() {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
         svg.setAttribute('stroke-width', '2');
-        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', '12');
         circle.setAttribute('cy', '12');
         circle.setAttribute('r', '10');
@@ -55,33 +134,43 @@
         return svg;
     }
 
+    /**
+     * Creates a simple checkmark SVG icon element using safe DOM methods (XSS prevention).
+     * Used for deliverable lists and completed items.
+     * @returns {SVGElement} SVG element representing a checkmark (polyline)
+     */
     function createCheckmarkIcon() {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
         svg.setAttribute('stroke-width', '2');
-        var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         poly.setAttribute('points', '20 6 9 17 4 12');
         svg.appendChild(poly);
         return svg;
     }
 
+    /**
+     * Creates a users/people SVG icon element using safe DOM methods (XSS prevention).
+     * Used to display follower count requirements.
+     * @returns {SVGElement} SVG element representing multiple users
+     */
     function createUsersIcon() {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
         svg.setAttribute('stroke-width', '2');
-        var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path1.setAttribute('d', 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2');
-        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', '9');
         circle.setAttribute('cy', '7');
         circle.setAttribute('r', '4');
-        var path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path2.setAttribute('d', 'M23 21v-2a4 4 0 00-3-3.87');
-        var path3 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const path3 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path3.setAttribute('d', 'M16 3.13a4 4 0 010 7.75');
         svg.appendChild(path1);
         svg.appendChild(circle);
@@ -90,15 +179,20 @@
         return svg;
     }
 
+    /**
+     * Creates an education/graduation cap SVG icon element using safe DOM methods (XSS prevention).
+     * Used to display GPA requirements.
+     * @returns {SVGElement} SVG element representing a graduation cap
+     */
     function createEducationIcon() {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
         svg.setAttribute('stroke-width', '2');
-        var path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path1.setAttribute('d', 'M22 10v6M2 10l10-5 10 5-10 5z');
-        var path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path2.setAttribute('d', 'M6 12v5c3 3 9 3 12 0v-5');
         svg.appendChild(path1);
         svg.appendChild(path2);
@@ -517,6 +611,13 @@
     const resultsCount = document.getElementById('resultsCount');
 
     // ─── Navigation ───
+
+    /**
+     * Initializes navigation behavior including scroll effects and mobile menu toggle.
+     * Adds 'scrolled' class to nav when page scrolls past 50px for visual styling.
+     * Handles mobile hamburger menu toggle with body overflow control.
+     * @returns {void}
+     */
     function initNav() {
         let lastScroll = 0;
 
@@ -539,6 +640,12 @@
         });
     }
 
+    /**
+     * Closes the mobile navigation menu and restores body scroll.
+     * Removes 'active' class from toggle button and menu, re-enables body overflow.
+     * @returns {void}
+     * @global
+     */
     window.closeMobileMenu = function() {
         navToggle.classList.remove('active');
         mobileMenu.classList.remove('active');
@@ -546,9 +653,15 @@
     };
 
     // ─── Render Opportunities ───
+
+    /**
+     * Renders all opportunity cards to the page, separating featured and regular opportunities.
+     * Clears existing grids and populates with new cards, updates results count.
+     * @returns {void}
+     */
     function renderOpportunities() {
-        var featured = opportunitiesData.filter(function(opp) { return opp.featured; });
-        var regular = opportunitiesData.filter(function(opp) { return !opp.featured; });
+        const featured = opportunitiesData.filter(function(opp) { return opp.featured; });
+        const regular = opportunitiesData.filter(function(opp) { return !opp.featured; });
 
         // Render featured
         featuredGrid.innerHTML = '';
@@ -566,52 +679,72 @@
         resultsCount.textContent = opportunitiesData.length;
     }
 
+    /**
+     * Creates an opportunity card DOM element with all required sections.
+     * Builds header with brand info, body with compensation and requirements,
+     * footer with deadline and match score. Includes keyboard accessibility.
+     * @param {Object} opp - Opportunity data object
+     * @param {number} opp.id - Unique opportunity identifier
+     * @param {string} opp.brand - Brand name
+     * @param {string} opp.brandLogo - Brand logo text (initials)
+     * @param {string} opp.title - Opportunity title
+     * @param {string} opp.typeLabel - Display label for deal type
+     * @param {string} opp.compensation - Compensation display string
+     * @param {string} opp.description - Opportunity description
+     * @param {Object} opp.requirements - Requirements object with sport, gpa, followers, location
+     * @param {string} opp.deadline - Deadline date string (YYYY-MM-DD)
+     * @param {string} opp.duration - Duration label (e.g., 'Season-long', 'One-time')
+     * @param {number} opp.matchScore - Match percentage score (0-100)
+     * @param {boolean} [opp.urgent] - Whether opportunity is marked as urgent
+     * @param {boolean} isFeatured - Whether to apply featured styling
+     * @returns {HTMLDivElement} The constructed opportunity card element
+     */
     function createOpportunityCard(opp, isFeatured) {
-        var daysLeft = getDaysLeft(opp.deadline);
-        var isUrgent = daysLeft <= 7 || opp.urgent;
+        const daysLeft = getDaysLeft(opp.deadline);
+        const isUrgent = daysLeft <= 7 || opp.urgent;
 
-        var card = document.createElement('div');
+        const card = document.createElement('div');
         card.className = 'opportunity-card' + (isFeatured ? ' featured' : '');
         card.setAttribute('role', 'button');
         card.setAttribute('tabindex', '0');
         card.setAttribute('aria-label', 'View ' + opp.title + ' opportunity from ' + opp.brand);
 
         // Build card header
-        var header = document.createElement('div');
+        const header = document.createElement('div');
         header.className = 'card-header';
 
-        var logo = document.createElement('div');
+        const logo = document.createElement('div');
         logo.className = 'brand-logo';
         logo.textContent = opp.brandLogo;
 
-        var headerInfo = document.createElement('div');
+        const headerInfo = document.createElement('div');
         headerInfo.className = 'card-header-info';
 
-        var brandName = document.createElement('div');
+        const brandName = document.createElement('div');
         brandName.className = 'brand-name';
         brandName.textContent = opp.brand;
 
-        var title = document.createElement('div');
+        const title = document.createElement('div');
         title.className = 'opportunity-title';
         title.textContent = opp.title;
 
-        var badges = document.createElement('div');
+        const badges = document.createElement('div');
         badges.className = 'card-badges';
 
-        var typeBadge = document.createElement('span');
+        const typeBadge = document.createElement('span');
         typeBadge.className = 'badge badge-type';
         typeBadge.textContent = opp.typeLabel;
         badges.appendChild(typeBadge);
 
         if (isFeatured) {
-            var featuredBadge = document.createElement('span');
+            const featuredBadge = document.createElement('span');
             featuredBadge.className = 'badge badge-featured';
             featuredBadge.textContent = 'Featured';
             badges.appendChild(featuredBadge);
         }
 
         if (isUrgent) {
-            var urgentBadge = document.createElement('span');
+            const urgentBadge = document.createElement('span');
             urgentBadge.className = 'badge badge-urgent';
             urgentBadge.textContent = 'Closing Soon';
             badges.appendChild(urgentBadge);
@@ -624,40 +757,40 @@
         header.appendChild(headerInfo);
 
         // Build card body
-        var body = document.createElement('div');
+        const body = document.createElement('div');
         body.className = 'card-body';
 
-        var compensation = document.createElement('div');
+        const compensation = document.createElement('div');
         compensation.className = 'compensation';
 
-        var compValue = document.createElement('span');
+        const compValue = document.createElement('span');
         compValue.className = 'compensation-value';
         compValue.textContent = opp.compensation;
 
-        var compType = document.createElement('span');
+        const compType = document.createElement('span');
         compType.className = 'compensation-type';
         compType.textContent = opp.duration;
 
         compensation.appendChild(compValue);
         compensation.appendChild(compType);
 
-        var desc = document.createElement('p');
+        const desc = document.createElement('p');
         desc.className = 'opportunity-desc';
         desc.textContent = opp.description;
 
-        var requirements = document.createElement('div');
+        const requirements = document.createElement('div');
         requirements.className = 'requirements';
 
         // Sport requirement
-        var sportReq = createRequirement('sport', opp.requirements.sport);
+        const sportReq = createRequirement('sport', opp.requirements.sport);
         requirements.appendChild(sportReq);
 
         // GPA requirement
-        var gpaReq = createRequirement('gpa', opp.requirements.gpa + ' GPA');
+        const gpaReq = createRequirement('gpa', opp.requirements.gpa + ' GPA');
         requirements.appendChild(gpaReq);
 
         // Followers requirement
-        var followersReq = createRequirement('followers', opp.requirements.followers);
+        const followersReq = createRequirement('followers', opp.requirements.followers);
         requirements.appendChild(followersReq);
 
         body.appendChild(compensation);
@@ -665,15 +798,15 @@
         body.appendChild(requirements);
 
         // Build card footer
-        var footer = document.createElement('div');
+        const footer = document.createElement('div');
         footer.className = 'card-footer';
 
-        var deadline = document.createElement('span');
+        const deadline = document.createElement('span');
         deadline.className = 'deadline' + (isUrgent ? ' urgent' : '');
         deadline.appendChild(createClockIcon());
         deadline.appendChild(document.createTextNode(' ' + daysLeft + ' days left'));
 
-        var matchScore = document.createElement('span');
+        const matchScore = document.createElement('span');
         matchScore.className = 'match-score';
         matchScore.appendChild(createCheckIcon());
         matchScore.appendChild(document.createTextNode(' ' + opp.matchScore + '% Match'));
@@ -701,12 +834,19 @@
         return card;
     }
 
+    /**
+     * Creates a requirement badge element with appropriate icon based on type.
+     * Uses safe DOM methods instead of innerHTML for XSS prevention.
+     * @param {string} type - Requirement type: 'sport', 'gpa', 'followers', or other
+     * @param {string} text - Text to display alongside the icon
+     * @returns {HTMLSpanElement} Span element containing icon and text
+     */
     function createRequirement(type, text) {
-        var req = document.createElement('span');
+        const req = document.createElement('span');
         req.className = 'requirement';
 
         // Use safe DOM methods instead of innerHTML (XSS prevention)
-        var icon;
+        let icon;
         if (type === 'sport') {
             icon = createClockIcon();
         } else if (type === 'gpa') {
@@ -722,40 +862,59 @@
         return req;
     }
 
+    /**
+     * Calculates the number of days remaining until a deadline.
+     * Returns 0 if deadline has passed.
+     * @param {string} deadline - Deadline date string (YYYY-MM-DD format)
+     * @returns {number} Number of days until deadline (minimum 0)
+     * @example
+     * getDaysLeft('2025-03-15'); // Returns days between now and March 15, 2025
+     */
     function getDaysLeft(deadline) {
-        var now = new Date();
-        var end = new Date(deadline);
-        var diff = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+        const now = new Date();
+        const end = new Date(deadline);
+        const diff = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
         return diff > 0 ? diff : 0;
     }
 
     // ─── Modal Functions ───
+
+    /**
+     * Opens a detailed modal view for a specific opportunity.
+     * Displays full opportunity details including brand info, compensation,
+     * requirements, deliverables, timeline, pitch textarea, and similar opportunities.
+     * Sets up focus trap for keyboard accessibility.
+     * @param {number} id - The opportunity ID to display
+     * @returns {void}
+     * @global
+     */
     window.openOpportunityModal = function(id) {
-        var opp = opportunitiesData.find(function(o) { return o.id === id; });
+        const opp = opportunitiesData.find(function(o) { return o.id === id; });
         if (!opp) return;
 
-        var daysLeft = getDaysLeft(opp.deadline);
-        var deadlineDate = new Date(opp.deadline);
-        var formattedDate = deadlineDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const daysLeft = getDaysLeft(opp.deadline);
+        const deadlineDate = new Date(opp.deadline);
+        const formattedDate = deadlineDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
         // Build modal content using DOM methods
-        var content = document.createElement('div');
+        const content = document.createElement('div');
 
         // Brand header
-        var brandHeader = document.createElement('div');
+        const brandHeader = document.createElement('div');
         brandHeader.className = 'modal-brand-header';
 
-        var brandLogo = document.createElement('div');
+        const brandLogo = document.createElement('div');
         brandLogo.className = 'modal-brand-logo';
         brandLogo.textContent = opp.brandLogo;
 
-        var brandInfo = document.createElement('div');
+        const brandInfo = document.createElement('div');
         brandInfo.className = 'modal-brand-info';
 
-        var brandTitle = document.createElement('h3');
+        const brandTitle = document.createElement('h3');
+        brandTitle.id = 'modalTitle';
         brandTitle.textContent = opp.title;
 
-        var brandSubtitle = document.createElement('p');
+        const brandSubtitle = document.createElement('p');
         brandSubtitle.textContent = opp.brand + ' - ' + opp.typeLabel;
 
         brandInfo.appendChild(brandTitle);
@@ -764,14 +923,14 @@
         brandHeader.appendChild(brandInfo);
 
         // Compensation
-        var compSection = document.createElement('div');
+        const compSection = document.createElement('div');
         compSection.className = 'modal-compensation';
 
-        var compValue = document.createElement('div');
+        const compValue = document.createElement('div');
         compValue.className = 'modal-compensation-value';
         compValue.textContent = opp.compensation;
 
-        var compLabel = document.createElement('div');
+        const compLabel = document.createElement('div');
         compLabel.className = 'modal-compensation-label';
         compLabel.textContent = opp.duration + ' commitment';
 
@@ -779,31 +938,31 @@
         compSection.appendChild(compLabel);
 
         // About section
-        var aboutSection = document.createElement('div');
+        const aboutSection = document.createElement('div');
         aboutSection.className = 'modal-section';
 
-        var aboutTitle = document.createElement('h4');
+        const aboutTitle = document.createElement('h4');
         aboutTitle.className = 'modal-section-title';
         aboutTitle.textContent = 'About This Opportunity';
 
-        var aboutText = document.createElement('p');
+        const aboutText = document.createElement('p');
         aboutText.textContent = opp.description;
 
         aboutSection.appendChild(aboutTitle);
         aboutSection.appendChild(aboutText);
 
         // Requirements section
-        var reqSection = document.createElement('div');
+        const reqSection = document.createElement('div');
         reqSection.className = 'modal-section';
 
-        var reqTitle = document.createElement('h4');
+        const reqTitle = document.createElement('h4');
         reqTitle.className = 'modal-section-title';
         reqTitle.textContent = 'Requirements';
 
-        var reqGrid = document.createElement('div');
+        const reqGrid = document.createElement('div');
         reqGrid.className = 'modal-requirements-grid';
 
-        var reqs = [
+        const reqs = [
             { icon: 'circle', label: 'Sport: ' + opp.requirements.sport },
             { icon: 'gpa', label: 'GPA: ' + opp.requirements.gpa },
             { icon: 'followers', label: 'Followers: ' + opp.requirements.followers },
@@ -811,7 +970,7 @@
         ];
 
         reqs.forEach(function(r) {
-            var reqItem = document.createElement('div');
+            const reqItem = document.createElement('div');
             reqItem.className = 'modal-requirement';
             // Safe DOM methods instead of innerHTML (XSS prevention)
             reqItem.appendChild(createCircleIcon());
@@ -823,16 +982,16 @@
         reqSection.appendChild(reqGrid);
 
         // Deliverables section
-        var delSection = document.createElement('div');
+        const delSection = document.createElement('div');
         delSection.className = 'modal-section';
 
-        var delTitle = document.createElement('h4');
+        const delTitle = document.createElement('h4');
         delTitle.className = 'modal-section-title';
         delTitle.textContent = 'Deliverables';
 
-        var delList = document.createElement('ul');
+        const delList = document.createElement('ul');
         opp.deliverables.forEach(function(d) {
-            var li = document.createElement('li');
+            const li = document.createElement('li');
             // Safe DOM methods instead of innerHTML (XSS prevention)
             li.appendChild(createCheckmarkIcon());
             li.appendChild(document.createTextNode(' ' + d));
@@ -843,17 +1002,17 @@
         delSection.appendChild(delList);
 
         // Timeline section
-        var timeSection = document.createElement('div');
+        const timeSection = document.createElement('div');
         timeSection.className = 'modal-section';
 
-        var timeTitle = document.createElement('h4');
+        const timeTitle = document.createElement('h4');
         timeTitle.className = 'modal-section-title';
         timeTitle.textContent = 'Timeline';
 
-        var timeline = document.createElement('div');
+        const timeline = document.createElement('div');
         timeline.className = 'modal-timeline';
 
-        var timeItems = [
+        const timeItems = [
             { label: 'Deadline', value: formattedDate },
             { label: 'Days Left', value: daysLeft.toString() },
             { label: 'Duration', value: opp.duration },
@@ -861,13 +1020,13 @@
         ];
 
         timeItems.forEach(function(item) {
-            var timeItem = document.createElement('div');
+            const timeItem = document.createElement('div');
             timeItem.className = 'timeline-item';
 
-            var span1 = document.createElement('span');
+            const span1 = document.createElement('span');
             span1.textContent = item.label;
 
-            var span2 = document.createElement('span');
+            const span2 = document.createElement('span');
             span2.textContent = item.value;
 
             timeItem.appendChild(span1);
@@ -879,29 +1038,29 @@
         timeSection.appendChild(timeline);
 
         // Apply section
-        var applySection = document.createElement('div');
+        const applySection = document.createElement('div');
         applySection.className = 'modal-apply';
 
-        var applyTitle = document.createElement('h4');
+        const applyTitle = document.createElement('h4');
         applyTitle.className = 'modal-section-title';
         applyTitle.textContent = 'Your Pitch';
 
-        var textarea = document.createElement('textarea');
+        const textarea = document.createElement('textarea');
         textarea.className = 'pitch-textarea';
         textarea.placeholder = 'Tell ' + opp.brand + ' why you\'re the perfect fit for this opportunity. Highlight your academic achievements, athletic performance, and content creation experience...';
 
-        var actions = document.createElement('div');
+        const actions = document.createElement('div');
         actions.className = 'modal-actions';
 
-        var saveBtn = document.createElement('button');
+        const saveBtn = document.createElement('button');
         saveBtn.className = 'btn btn-outline';
         saveBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg> Save';
         saveBtn.onclick = function() { saveOpportunity(opp.id); };
 
-        var applyBtn = document.createElement('button');
+        const applyBtn = document.createElement('button');
         applyBtn.className = 'btn btn-primary';
         applyBtn.textContent = 'Apply Now';
-        applyBtn.onclick = function() { applyToOpportunity(opp.id); };
+        applyBtn.onclick = function() { applyToOpportunity(opp.id, this); };
 
         actions.appendChild(saveBtn);
         actions.appendChild(applyBtn);
@@ -911,27 +1070,27 @@
         applySection.appendChild(actions);
 
         // Similar opportunities
-        var similarSection = document.createElement('div');
+        const similarSection = document.createElement('div');
         similarSection.className = 'similar-opportunities';
 
-        var similarTitle = document.createElement('h4');
+        const similarTitle = document.createElement('h4');
         similarTitle.className = 'similar-title';
         similarTitle.textContent = 'Similar Opportunities';
 
-        var similarGrid = document.createElement('div');
+        const similarGrid = document.createElement('div');
         similarGrid.className = 'similar-grid';
 
-        var similar = getSimilarOpportunities(opp);
+        const similar = getSimilarOpportunities(opp);
         similar.forEach(function(s) {
-            var card = document.createElement('div');
+            const card = document.createElement('div');
             card.className = 'similar-card';
             card.onclick = function() { openOpportunityModal(s.id); };
 
-            var cardTitle = document.createElement('div');
+            const cardTitle = document.createElement('div');
             cardTitle.className = 'similar-card-title';
             cardTitle.textContent = s.title;
 
-            var cardBrand = document.createElement('div');
+            const cardBrand = document.createElement('div');
             cardBrand.className = 'similar-card-brand';
             cardBrand.textContent = s.brand + ' - ' + s.compensation;
 
@@ -953,50 +1112,84 @@
         content.appendChild(applySection);
         content.appendChild(similarSection);
 
-        modalContent.innerHTML = '';
+        // Clear modal content safely
+        while (modalContent.firstChild) {
+            modalContent.removeChild(modalContent.firstChild);
+        }
         modalContent.appendChild(content);
+
+        // Store trigger element for focus restoration
+        lastFocusedElement = document.activeElement;
 
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+
+        // Set up focus trap
+        setupFocusTrap(modalOverlay, closeModal);
     };
 
+    /**
+     * Finds similar opportunities based on deal type.
+     * Returns up to 2 opportunities that match the same type but exclude the current one.
+     * @param {Object} opp - The current opportunity to find similar ones for
+     * @param {number} opp.id - Opportunity ID to exclude from results
+     * @param {string} opp.type - Deal type to match against
+     * @returns {Array<Object>} Array of up to 2 similar opportunity objects
+     */
     function getSimilarOpportunities(opp) {
         return opportunitiesData
             .filter(function(o) { return o.id !== opp.id && o.type === opp.type; })
             .slice(0, 2);
     }
 
+    /**
+     * Closes the currently open modal overlay.
+     * Removes focus trap, hides overlay, and restores body scroll.
+     * @returns {void}
+     * @global
+     */
     window.closeModal = function() {
+        removeFocusTrap();
         modalOverlay.classList.remove('active');
         document.body.style.overflow = '';
     };
 
+    /**
+     * Opens a login or signup modal form.
+     * Dynamically creates form content based on type, sets up focus trap for accessibility.
+     * @param {string} type - Modal type: 'login' or 'signup'
+     * @returns {void}
+     * @global
+     * @example
+     * openModal('login'); // Opens login form
+     * openModal('signup'); // Opens signup form
+     */
     window.openModal = function(type) {
-        var content = document.createElement('div');
+        const content = document.createElement('div');
 
-        var header = document.createElement('div');
+        const header = document.createElement('div');
         header.className = 'modal-header';
 
-        var h2 = document.createElement('h2');
+        const h2 = document.createElement('h2');
         h2.textContent = type === 'login' ? 'Welcome Back' : 'Get Started';
 
-        var p = document.createElement('p');
+        const p = document.createElement('p');
         p.textContent = type === 'login' ? 'Log in to your account' : 'Create your GradeUp account';
 
         header.appendChild(h2);
         header.appendChild(p);
 
-        var form = document.createElement('form');
+        const form = document.createElement('form');
         form.className = 'modal-form';
         form.onsubmit = function(e) { e.preventDefault(); };
 
-        var emailGroup = document.createElement('div');
+        const emailGroup = document.createElement('div');
         emailGroup.className = 'form-group';
 
-        var emailLabel = document.createElement('label');
+        const emailLabel = document.createElement('label');
         emailLabel.textContent = 'Email';
 
-        var emailInput = document.createElement('input');
+        const emailInput = document.createElement('input');
         emailInput.type = 'email';
         emailInput.placeholder = 'Enter your email';
         emailInput.required = true;
@@ -1004,13 +1197,13 @@
         emailGroup.appendChild(emailLabel);
         emailGroup.appendChild(emailInput);
 
-        var passGroup = document.createElement('div');
+        const passGroup = document.createElement('div');
         passGroup.className = 'form-group';
 
-        var passLabel = document.createElement('label');
+        const passLabel = document.createElement('label');
         passLabel.textContent = 'Password';
 
-        var passInput = document.createElement('input');
+        const passInput = document.createElement('input');
         passInput.type = 'password';
         passInput.placeholder = 'Enter your password';
         passInput.required = true;
@@ -1018,7 +1211,7 @@
         passGroup.appendChild(passLabel);
         passGroup.appendChild(passInput);
 
-        var submitBtn = document.createElement('button');
+        const submitBtn = document.createElement('button');
         submitBtn.type = 'submit';
         submitBtn.className = 'btn btn-primary btn-block';
         submitBtn.textContent = type === 'login' ? 'Log In' : 'Sign Up';
@@ -1027,24 +1220,52 @@
         form.appendChild(passGroup);
         form.appendChild(submitBtn);
 
-        var footer = document.createElement('div');
+        const footer = document.createElement('div');
         footer.className = 'modal-footer';
 
+        // Build footer content safely (XSS prevention - no innerHTML with onclick)
         if (type === 'login') {
-            footer.innerHTML = 'Don\'t have an account? <a href="#" onclick="openModal(\'signup\')">Sign up</a>';
+            const footerText = document.createTextNode("Don't have an account? ");
+            const signupLink = document.createElement('a');
+            signupLink.href = '#';
+            signupLink.textContent = 'Sign up';
+            signupLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal('signup');
+            });
+            footer.appendChild(footerText);
+            footer.appendChild(signupLink);
         } else {
-            footer.innerHTML = 'Already have an account? <a href="#" onclick="openModal(\'login\')">Log in</a>';
+            const footerText = document.createTextNode('Already have an account? ');
+            const loginLink = document.createElement('a');
+            loginLink.href = '#';
+            loginLink.textContent = 'Log in';
+            loginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal('login');
+            });
+            footer.appendChild(footerText);
+            footer.appendChild(loginLink);
         }
 
         content.appendChild(header);
         content.appendChild(form);
         content.appendChild(footer);
 
-        modalContent.innerHTML = '';
+        // Clear modal content safely
+        while (modalContent.firstChild) {
+            modalContent.removeChild(modalContent.firstChild);
+        }
         modalContent.appendChild(content);
+
+        // Store trigger element for focus restoration
+        lastFocusedElement = document.activeElement;
 
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+
+        // Set up focus trap
+        setupFocusTrap(modalOverlay, closeModal);
     };
 
     // Close modal on overlay click
@@ -1054,14 +1275,16 @@
         }
     });
 
-    // Close modal on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
-    });
+    // Note: Escape key handling is now managed by the focus trap
 
     // ─── Filter Functions ───
+
+    /**
+     * Clears all active filters and search input, then re-renders opportunities.
+     * Resets all select elements to empty value and hides active filters container.
+     * @returns {void}
+     * @global
+     */
     window.clearAllFilters = function() {
         document.querySelectorAll('.filter-select select').forEach(function(select) {
             select.value = '';
@@ -1071,33 +1294,83 @@
         renderOpportunities();
     };
 
+    /**
+     * Filters opportunities based on a profile type preset.
+     * Placeholder for profile-based filtering logic.
+     * @param {string} type - Profile filter type identifier
+     * @returns {void}
+     * @global
+     */
     window.filterByProfile = function(type) {
-        console.log('Filtering by:', type);
         // Filter logic would go here
     };
 
+    /**
+     * Displays saved opportunities for the current user.
+     * Placeholder for saved opportunities view logic.
+     * @returns {void}
+     * @global
+     */
     window.viewSaved = function() {
-        console.log('Viewing saved opportunities');
+        // View saved opportunities logic would go here
     };
 
+    /**
+     * Creates a job alert subscription for the current user's profile.
+     * Shows confirmation alert on success.
+     * @returns {void}
+     * @global
+     */
     window.createAlert = function() {
-        alert('Job alert created! You\'ll be notified when new opportunities match your profile.');
+        showAlert('Job alert created! You\'ll be notified when new opportunities match your profile.', null, { title: 'Alert Created' });
     };
 
+    /**
+     * Saves an opportunity to the user's profile for later viewing.
+     * Shows confirmation alert on success.
+     * @param {number} id - The opportunity ID to save
+     * @returns {void}
+     * @global
+     */
     window.saveOpportunity = function(id) {
-        alert('Opportunity saved to your profile!');
+        showAlert('Opportunity saved to your profile!', null, { title: 'Saved' });
     };
 
-    window.applyToOpportunity = function(id) {
-        var opp = opportunitiesData.find(function(o) { return o.id === id; });
-        alert('Application submitted to ' + opp.brand + '! You\'ll hear back within 5-7 business days.');
-        closeModal();
+    /**
+     * Submits an application to an opportunity.
+     * Shows loading state on button, simulates async submission with timeout,
+     * then displays success state and confirmation alert.
+     * @param {number} id - The opportunity ID to apply to
+     * @param {HTMLButtonElement} btn - The apply button element for UI state updates
+     * @returns {void}
+     * @global
+     */
+    window.applyToOpportunity = function(id, btn) {
+        const opp = opportunitiesData.find(function(o) { return o.id === id; });
+
+        // Add loading state
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+
+        // Simulate async application submission
+        setTimeout(function() {
+            btn.classList.remove('btn-loading');
+            btn.disabled = false;
+            btn.textContent = 'Applied!';
+            btn.style.background = 'var(--success, #22c55e)';
+
+            setTimeout(function() {
+                showAlert('Application submitted to ' + opp.brand + '! You\'ll hear back within 5-7 business days.', function() {
+                    closeModal();
+                }, { title: 'Application Submitted' });
+            }, 500);
+        }, 1000);
     };
 
     // ─── Search ───
     searchInput.addEventListener('input', function(e) {
-        var query = e.target.value.toLowerCase();
-        var filtered = opportunitiesData.filter(function(opp) {
+        const query = e.target.value.toLowerCase();
+        const filtered = opportunitiesData.filter(function(opp) {
             return opp.title.toLowerCase().indexOf(query) !== -1 ||
                    opp.brand.toLowerCase().indexOf(query) !== -1 ||
                    opp.description.toLowerCase().indexOf(query) !== -1;
@@ -1122,9 +1395,128 @@
         });
     });
 
+    // ─── Event Listener Bindings ───
+
+    /**
+     * Initializes all event listeners for the page.
+     * Sets up handlers for navigation buttons, modal controls, filter buttons,
+     * widget interactions, and delegated event handling.
+     * @returns {void}
+     */
+    function initEventListeners() {
+        // Navigation buttons
+        const navLoginBtn = document.getElementById('navLoginBtn');
+        const navSignupBtn = document.getElementById('navSignupBtn');
+        const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+        const mobileSignupBtn = document.getElementById('mobileSignupBtn');
+
+        if (navLoginBtn) {
+            navLoginBtn.addEventListener('click', function() {
+                openModal('login');
+            });
+        }
+
+        if (navSignupBtn) {
+            navSignupBtn.addEventListener('click', function() {
+                openModal('signup');
+            });
+        }
+
+        if (mobileLoginBtn) {
+            mobileLoginBtn.addEventListener('click', function() {
+                openModal('login');
+                closeMobileMenu();
+            });
+        }
+
+        if (mobileSignupBtn) {
+            mobileSignupBtn.addEventListener('click', function() {
+                openModal('signup');
+                closeMobileMenu();
+            });
+        }
+
+        // Mobile navigation links - use event delegation
+        const mobileMenuLocal = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target.classList.contains('mobile-nav-link')) {
+                    closeMobileMenu();
+                }
+            });
+        }
+
+        // Modal close button
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        if (modalCloseBtn) {
+            modalCloseBtn.addEventListener('click', function() {
+                closeModal();
+            });
+        }
+
+        // Clear filters button
+        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', function() {
+                clearAllFilters();
+            });
+        }
+
+        // For You widget - event delegation for quick filters
+        const forYouWidget = document.getElementById('forYouWidget');
+        if (forYouWidget) {
+            forYouWidget.addEventListener('click', function(e) {
+                if (e.target.classList.contains('quick-filter')) {
+                    const filterType = e.target.dataset.filter;
+                    if (filterType) {
+                        filterByProfile(filterType);
+                    }
+                }
+            });
+        }
+
+        // Recently Viewed widget - event delegation
+        const recentlyViewedWidget = document.getElementById('recentlyViewedWidget');
+        if (recentlyViewedWidget) {
+            recentlyViewedWidget.addEventListener('click', function(e) {
+                const recentItem = e.target.closest('.recent-item');
+                if (recentItem) {
+                    const opportunityId = parseInt(recentItem.dataset.opportunityId, 10);
+                    if (opportunityId) {
+                        openOpportunityModal(opportunityId);
+                    }
+                }
+            });
+        }
+
+        // View Saved button
+        const viewSavedBtn = document.getElementById('viewSavedBtn');
+        if (viewSavedBtn) {
+            viewSavedBtn.addEventListener('click', function() {
+                viewSaved();
+            });
+        }
+
+        // Create Alert button
+        const createAlertBtn = document.getElementById('createAlertBtn');
+        if (createAlertBtn) {
+            createAlertBtn.addEventListener('click', function() {
+                createAlert();
+            });
+        }
+    }
+
     // ─── Initialize ───
+
+    /**
+     * Main initialization function for the opportunities page.
+     * Initializes navigation, event listeners, and renders opportunities.
+     * Called on DOMContentLoaded or immediately if DOM is ready.
+     * @returns {void}
+     */
     function init() {
         initNav();
+        initEventListeners();
         renderOpportunities();
     }
 

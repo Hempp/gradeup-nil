@@ -8,6 +8,10 @@
 import { getSupabaseClient, getCurrentUser, subscribeToTable } from './supabase.js';
 import { getMyAthleteId, ensureAthleteId } from './helpers.js';
 
+/**
+ * Enum of all possible deal status values
+ * @constant {Object.<string, string>}
+ */
 export const DEAL_STATUS = {
   DRAFT: 'draft',
   PENDING: 'pending',
@@ -19,6 +23,10 @@ export const DEAL_STATUS = {
   EXPIRED: 'expired',
 };
 
+/**
+ * Enum of all possible deal type values
+ * @constant {Object.<string, string>}
+ */
 export const DEAL_TYPES = {
   SOCIAL_POST: 'social_post',
   APPEARANCE: 'appearance',
@@ -51,6 +59,19 @@ const OPPORTUNITY_SELECT_FULL = `
   brand:brands!inner(id, company_name, logo_url, industry, is_verified, website_url, city, state)
 `;
 
+/**
+ * Fetches active opportunities with optional filtering and pagination
+ * @param {Object} [filters={}] - Filter options
+ * @param {string[]} [filters.deal_types] - Filter by deal types
+ * @param {number} [filters.min_compensation] - Minimum compensation amount
+ * @param {number} [filters.max_compensation] - Maximum compensation amount
+ * @param {boolean} [filters.featured_only] - Only return featured opportunities
+ * @param {string} [filters.sort_by='created_at'] - Field to sort by
+ * @param {string} [filters.sort_order='desc'] - Sort order ('asc' or 'desc')
+ * @param {number} [filters.page=1] - Page number for pagination
+ * @param {number} [filters.page_size=20] - Number of results per page
+ * @returns {Promise<{opportunities: Object[]|null, pagination: Object, error: Error|null}>}
+ */
 export async function getOpportunities(filters = {}) {
   const supabase = await getSupabaseClient();
 
@@ -94,6 +115,11 @@ export async function getOpportunities(filters = {}) {
   };
 }
 
+/**
+ * Fetches a single active opportunity by ID with full brand details
+ * @param {string} opportunityId - The opportunity UUID
+ * @returns {Promise<{opportunity: Object|null, error: Error|null}>}
+ */
 export async function getOpportunityById(opportunityId) {
   const supabase = await getSupabaseClient();
 
@@ -107,6 +133,14 @@ export async function getOpportunityById(opportunityId) {
   return { opportunity: data, error };
 }
 
+/**
+ * Applies to an opportunity by creating a new pending deal
+ * @param {string} opportunityId - The opportunity UUID to apply to
+ * @param {Object} [application={}] - Application data
+ * @param {number} [application.proposed_amount] - Counter-proposed compensation amount
+ * @param {string} [application.message] - Application message to brand
+ * @returns {Promise<{deal: Object|null, error: Error|null}>}
+ */
 export async function applyToOpportunity(opportunityId, application = {}) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -169,6 +203,15 @@ export async function applyToOpportunity(opportunityId, application = {}) {
   return { deal, error };
 }
 
+/**
+ * Fetches all deals for the current athlete with optional filtering
+ * @param {Object} [filters={}] - Filter options
+ * @param {string[]} [filters.status] - Filter by deal status(es)
+ * @param {string[]} [filters.deal_types] - Filter by deal type(s)
+ * @param {string} [filters.sort_by='created_at'] - Field to sort by
+ * @param {string} [filters.sort_order='desc'] - Sort order ('asc' or 'desc')
+ * @returns {Promise<{deals: Object[]|null, error: Error|null}>}
+ */
 export async function getMyDeals(filters = {}) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -190,6 +233,10 @@ export async function getMyDeals(filters = {}) {
   return { deals: data, error };
 }
 
+/**
+ * Organizes deals into categories: active, pending, and completed
+ * @returns {Promise<{active: Object[], pending: Object[], completed: Object[], error: Error|null}>}
+ */
 export async function getDealsByCategory() {
   const { deals, error } = await getMyDeals();
 
@@ -208,6 +255,11 @@ export async function getDealsByCategory() {
   };
 }
 
+/**
+ * Fetches a single deal by ID with full details
+ * @param {string} dealId - The deal UUID
+ * @returns {Promise<{deal: Object|null, error: Error|null}>}
+ */
 export async function getDealById(dealId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -227,6 +279,11 @@ export async function getDealById(dealId) {
   return { deal: data, error };
 }
 
+/**
+ * Accepts a pending or negotiating deal
+ * @param {string} dealId - The deal UUID to accept
+ * @returns {Promise<{deal: Object|null, error: Error|null}>}
+ */
 export async function acceptDeal(dealId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -263,6 +320,12 @@ export async function acceptDeal(dealId) {
   return { deal: data, error };
 }
 
+/**
+ * Rejects a pending or negotiating deal
+ * @param {string} dealId - The deal UUID to reject
+ * @param {string} [reason] - Optional reason for rejection (sent as message)
+ * @returns {Promise<{error: Error|null}>}
+ */
 export async function rejectDeal(dealId, reason) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -291,6 +354,14 @@ export async function rejectDeal(dealId, reason) {
   return { error };
 }
 
+/**
+ * Submits a counter-offer for a pending or negotiating deal
+ * @param {string} dealId - The deal UUID
+ * @param {Object} counterOffer - Counter-offer details
+ * @param {number} counterOffer.amount - Proposed new amount
+ * @param {string} [counterOffer.message] - Optional message with the counter-offer
+ * @returns {Promise<{deal: Object|null, error: Error|null}>}
+ */
 export async function counterOfferDeal(dealId, counterOffer) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -323,6 +394,11 @@ export async function counterOfferDeal(dealId, counterOffer) {
   return { deal: data, error: null };
 }
 
+/**
+ * Signs the contract for an accepted deal, making it active
+ * @param {string} dealId - The deal UUID
+ * @returns {Promise<{deal: Object|null, error: Error|null}>}
+ */
 export async function signContract(dealId) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -412,6 +488,14 @@ export async function checkDealPayment(dealId) {
   };
 }
 
+/**
+ * Submits a review for a completed deal
+ * @param {string} dealId - The deal UUID
+ * @param {Object} review - Review data
+ * @param {number} review.rating - Rating from 1-5
+ * @param {string} [review.text] - Optional review text
+ * @returns {Promise<{deal: Object|null, error: Error|null}>}
+ */
 export async function submitDealReview(dealId, review) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -442,6 +526,14 @@ const MESSAGE_SELECT = `
   sender:profiles!sender_id(id, first_name, last_name, avatar_url, role)
 `;
 
+/**
+ * Fetches messages for a deal conversation
+ * @param {string} dealId - The deal UUID
+ * @param {Object} [options={}] - Query options
+ * @param {number} [options.limit] - Maximum messages to return
+ * @param {string} [options.before] - Get messages before this timestamp
+ * @returns {Promise<{messages: Object[]|null, error: Error|null}>}
+ */
 export async function getDealMessages(dealId, options = {}) {
   const supabase = await getSupabaseClient();
   const athleteId = await getMyAthleteId();
@@ -475,6 +567,13 @@ export async function getDealMessages(dealId, options = {}) {
   return { messages: data, error };
 }
 
+/**
+ * Sends a message in a deal conversation
+ * @param {string} dealId - The deal UUID
+ * @param {string} message - Message content
+ * @param {string[]} [attachments=[]] - Array of attachment URLs
+ * @returns {Promise<{message: Object|null, error: Error|null}>}
+ */
 export async function sendDealMessage(dealId, message, attachments = []) {
   const supabase = await getSupabaseClient();
   const { user, error: userError } = await getCurrentUser();
@@ -510,6 +609,11 @@ export async function sendDealMessage(dealId, message, attachments = []) {
   return { message: data, error };
 }
 
+/**
+ * Marks all unread messages in a deal as read
+ * @param {string} dealId - The deal UUID
+ * @returns {Promise<{error: Error|null}>}
+ */
 export async function markMessagesAsRead(dealId) {
   const supabase = await getSupabaseClient();
   const { user, error: userError } = await getCurrentUser();
@@ -528,6 +632,12 @@ export async function markMessagesAsRead(dealId) {
   return { error };
 }
 
+/**
+ * Subscribes to real-time message updates for a deal
+ * @param {string} dealId - The deal UUID
+ * @param {Function} callback - Callback function for new messages
+ * @returns {Object} Supabase subscription object
+ */
 export function subscribeToDealMessages(dealId, callback) {
   return subscribeToTable('deal_messages', callback, {
     event: 'INSERT',
@@ -535,6 +645,12 @@ export function subscribeToDealMessages(dealId, callback) {
   });
 }
 
+/**
+ * Subscribes to real-time updates for all athlete's deals
+ * @param {Function} callback - Callback function for deal updates
+ * @returns {Promise<Object>} Supabase subscription object
+ * @throws {Error} If athlete ID cannot be determined
+ */
 export async function subscribeToMyDeals(callback) {
   const athleteId = await getMyAthleteId();
 
@@ -549,6 +665,14 @@ export async function subscribeToMyDeals(callback) {
   });
 }
 
+/**
+ * Calculates deal statistics for the current athlete
+ * @returns {Promise<{stats: Object|null, error: Error|null}>}
+ * @example
+ * // Returns stats object with:
+ * // { total_deals, completed_deals, active_deals, pending_deals,
+ * //   total_earnings, average_deal_value, average_rating, deals_by_type }
+ */
 export async function getDealStats() {
   const { deals, error } = await getMyDeals();
 
@@ -590,6 +714,10 @@ export async function getDealStats() {
 // ATHLETE-INITIATED PROPOSALS (Bidirectional Deal System)
 // ============================================================================
 
+/**
+ * Enum of all possible proposal status values
+ * @constant {Object.<string, string>}
+ */
 export const PROPOSAL_STATUS = {
   DRAFT: 'draft',
   SENT: 'sent',

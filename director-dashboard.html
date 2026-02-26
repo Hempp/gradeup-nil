@@ -6,6 +6,31 @@
     <meta name="description" content="GradeUp NIL - Athletic Director Dashboard for managing athletes, compliance, and NIL activities">
     <meta name="theme-color" content="#000000">
     <title>Athletic Director Dashboard | GradeUp NIL</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Athletic Director Dashboard | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL - Athletic Director Dashboard for managing athletes, compliance, and NIL activities">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/director-dashboard.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Athletic Director Dashboard | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL - Athletic Director Dashboard for managing athletes, compliance, and NIL activities">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/director-dashboard.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://images.unsplash.com">
@@ -15,6 +40,31 @@
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" fetchpriority="high">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="src/styles/dashboard-shared.css">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://gradeup.com/director-dashboard.html#profilepage",
+      "name": "Athletic Director Dashboard | GradeUp NIL",
+      "url": "https://gradeup.com/director-dashboard.html",
+      "description": "GradeUp NIL - Athletic Director Dashboard for managing athletes, compliance, and NIL activities.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Athletic Director",
+        "description": "Athletic Director managing NIL compliance and athlete activities on GradeUp NIL",
+        "jobTitle": "Athletic Director",
+        "memberOf": {
+          "@type": "Organization",
+          "name": "GradeUp NIL"
+        }
+      }
+    }
+    </script>
 </head>
 <body>
     <!-- Skip Link for Keyboard Navigation (WCAG 2.4.1) -->
@@ -23,12 +73,17 @@
     <!-- Dashboard Navigation (Unified Header Style) -->
     <nav class="dashboard-nav">
         <div class="dashboard-nav-left">
+            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
             <a href="index.html" class="dashboard-logo">GRADEUP</a>
             <div class="dashboard-nav-tabs" role="tablist">
                 <a href="director-dashboard.html" class="nav-tab active" role="tab" aria-selected="true" data-tab="dashboard">Dashboard</a>
-                <button class="nav-tab" role="tab" aria-selected="false" data-tab="athletes" onclick="alert('Athletes section coming soon')">Athletes</button>
-                <button class="nav-tab" role="tab" aria-selected="false" data-tab="compliance" onclick="alert('Compliance section coming soon')">Compliance</button>
-                <button class="nav-tab" role="tab" aria-selected="false" data-tab="reports" onclick="alert('Reports section coming soon')">Reports</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="athletes" onclick="showAlert('Athletes section coming soon', null, { title: 'Coming Soon' })">Athletes</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="compliance" onclick="showAlert('Compliance section coming soon', null, { title: 'Coming Soon' })">Compliance</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="reports" onclick="showAlert('Reports section coming soon', null, { title: 'Coming Soon' })">Reports</button>
                 <button class="nav-tab highlighted" role="tab" aria-selected="false" data-tab="settings" id="settingsNavBtn">Settings</button>
             </div>
         </div>
@@ -59,6 +114,58 @@
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <aside class="mobile-drawer" id="mobileDrawer" role="navigation" aria-label="Mobile navigation">
+        <div class="mobile-drawer-header">
+            <span class="mobile-drawer-logo">GRADEUP</span>
+            <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Close navigation menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-drawer-nav">
+            <a href="director-dashboard.html" class="mobile-nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="#athletesSection" class="mobile-nav-link" onclick="closeMobileDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Athletes
+            </a>
+            <a href="#complianceSection" class="mobile-nav-link" onclick="closeMobileDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Compliance
+            </a>
+            <a href="#reportsSection" class="mobile-nav-link" onclick="closeMobileDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Reports
+            </a>
+            <a href="settings.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+    </aside>
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
 
     <main id="main-content" class="director-dashboard">
         <div class="dashboard-container">
@@ -226,30 +333,30 @@
                                     <span class="doc-athlete">Emily Rodriguez</span>
                                 </div>
                                 <div class="doc-actions">
-                                    <button class="btn-icon approve"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></button>
-                                    <button class="btn-icon reject"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                                    <button class="btn-icon approve" aria-label="Approve document"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
+                                    <button class="btn-icon reject" aria-label="Reject document"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                                 </div>
                             </div>
                             <div class="doc-item">
-                                <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>
+                                <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>
                                 <div class="doc-info">
                                     <span class="doc-name">NIL_Contract_Nike.pdf</span>
                                     <span class="doc-athlete">Jordan Mitchell</span>
                                 </div>
                                 <div class="doc-actions">
-                                    <button class="btn-icon approve"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></button>
-                                    <button class="btn-icon reject"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                                    <button class="btn-icon approve" aria-label="Approve document"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
+                                    <button class="btn-icon reject" aria-label="Reject document"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                                 </div>
                             </div>
                             <div class="doc-item">
-                                <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>
+                                <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>
                                 <div class="doc-info">
                                     <span class="doc-name">Enrollment_Verification.pdf</span>
                                     <span class="doc-athlete">Tyler Brooks</span>
                                 </div>
                                 <div class="doc-actions">
-                                    <button class="btn-icon approve"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></button>
-                                    <button class="btn-icon reject"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                                    <button class="btn-icon approve" aria-label="Approve document"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
+                                    <button class="btn-icon reject" aria-label="Reject document"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                                 </div>
                             </div>
                             <button class="btn btn-outline btn-block">View All Documents</button>
@@ -767,7 +874,7 @@
         <aside class="notifications-sidebar" id="notificationsSidebar">
             <div class="sidebar-header">
                 <h3>Notifications</h3>
-                <button class="btn-icon close-sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                <button class="btn-icon close-sidebar" aria-label="Close notifications sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             </div>
             <div class="notification-filters">
                 <button class="notif-filter active">All</button>
@@ -992,19 +1099,19 @@
                                 <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop" alt="Dr. Kevin White - Athletic Director" width="40" height="40" loading="lazy" decoding="async">
                                 <div class="staff-info"><span class="staff-name">Dr. Kevin White</span><span class="staff-role">Athletic Director</span></div>
                                 <span class="staff-access admin">Admin</span>
-                                <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+                                <button class="btn-icon" aria-label="More options for Dr. Kevin White"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
                             </div>
                             <div class="staff-item">
                                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop" alt="Sarah Johnson - Compliance Officer" width="40" height="40" loading="lazy" decoding="async">
                                 <div class="staff-info"><span class="staff-name">Sarah Johnson</span><span class="staff-role">Compliance Officer</span></div>
                                 <span class="staff-access editor">Editor</span>
-                                <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+                                <button class="btn-icon" aria-label="More options for Sarah Johnson"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
                             </div>
                             <div class="staff-item">
                                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="Michael Chen - Assistant Athletic Director" width="40" height="40" loading="lazy" decoding="async">
                                 <div class="staff-info"><span class="staff-name">Michael Chen</span><span class="staff-role">Assistant AD</span></div>
                                 <span class="staff-access editor">Editor</span>
-                                <button class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+                                <button class="btn-icon" aria-label="More options for Michael Chen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
                             </div>
                         </div>
                         <button class="btn btn-outline btn-block">+ Invite Staff Member</button>
@@ -3163,7 +3270,151 @@
             }
         }
 
+        /* ─── Mobile Navigation Drawer ─── */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 1px;
+            transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 1000;
+            transition: left 0.3s var(--ease);
+            overflow-y: auto;
+        }
+
+        .mobile-drawer.open {
+            left: 0;
+        }
+
+        .mobile-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .mobile-drawer-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+        }
+
+        .mobile-drawer-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-drawer-close:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .mobile-drawer-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-drawer-nav {
+            padding: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .mobile-nav-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .mobile-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s var(--ease), visibility 0.3s var(--ease);
+        }
+
+        .mobile-drawer-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
         @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .dashboard-nav-tabs {
+                display: none;
+            }
+
             /* Nav responsive handled by dashboard-shared.css */
 
             .dashboard-container {
@@ -3468,11 +3719,72 @@
                     '<td><span style="color: var(--cyan); font-weight: 700;">' + athlete.score + '</span></td>' +
                     '<td><span class="status-badge ' + athlete.status + '">' + statusIcon + ' ' + athlete.status.charAt(0).toUpperCase() + athlete.status.slice(1) + '</span></td>' +
                     '<td><div class="action-buttons">' +
-                        '<button class="btn-icon" title="View Profile" data-action="viewAthlete" data-id="' + athlete.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>' +
-                        '<button class="btn-icon" title="Send Message" data-action="messageAthlete" data-id="' + athlete.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>' +
-                        '<button class="btn-icon" title="Flag Athlete" data-action="flagAthlete" data-id="' + athlete.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button>' +
+                        '<button class="btn-icon" title="View Profile" aria-label="View profile for ' + athlete.name + '" data-action="viewAthlete" data-id="' + athlete.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>' +
+                        '<button class="btn-icon" title="Send Message" aria-label="Send message to ' + athlete.name + '" data-action="messageAthlete" data-id="' + athlete.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>' +
+                        '<button class="btn-icon" title="Flag Athlete" aria-label="Flag ' + athlete.name + '" data-action="flagAthlete" data-id="' + athlete.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button>' +
                     '</div></td></tr>';
             }).join('');
+        }
+
+        // Create empty state element using safe DOM methods
+        function createEmptyState() {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            td.setAttribute('colspan', '10');
+            td.style.cssText = 'text-align: center; padding: 3rem;';
+
+            var container = document.createElement('div');
+            container.className = 'empty-state';
+            container.style.padding = '0';
+
+            var iconDiv = document.createElement('div');
+            iconDiv.style.cssText = 'width: 64px; height: 64px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; background: var(--gray-900); border-radius: 50%; color: var(--gray-600);';
+
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '1.5');
+            svg.style.cssText = 'width: 32px; height: 32px;';
+
+            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', '11');
+            circle.setAttribute('cy', '11');
+            circle.setAttribute('r', '8');
+
+            var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M21 21l-4.35-4.35');
+
+            svg.appendChild(circle);
+            svg.appendChild(path);
+            iconDiv.appendChild(svg);
+
+            var title = document.createElement('h4');
+            title.style.cssText = 'font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;';
+            title.textContent = 'No Athletes Found';
+
+            var desc = document.createElement('p');
+            desc.style.cssText = 'font-size: 0.875rem; color: var(--gray-500); margin-bottom: 1rem;';
+            desc.textContent = 'Try adjusting your search or filter criteria.';
+
+            var btn = document.createElement('button');
+            btn.className = 'btn btn-secondary btn-sm';
+            btn.textContent = 'Clear Filters';
+            btn.addEventListener('click', function() {
+                athleteSearch.value = '';
+                sportFilter.value = '';
+                statusFilter.value = '';
+                filterAthletes();
+            });
+
+            container.appendChild(iconDiv);
+            container.appendChild(title);
+            container.appendChild(desc);
+            container.appendChild(btn);
+            td.appendChild(container);
+            tr.appendChild(td);
+
+            return tr;
         }
 
         // Filter Athletes
@@ -3489,7 +3801,15 @@
                 return matchesSearch && matchesSport && matchesStatus;
             });
 
-            renderAthletesTable(filtered);
+            // Show empty state if no results
+            if (filtered.length === 0) {
+                while (athletesTableBody.firstChild) {
+                    athletesTableBody.removeChild(athletesTableBody.firstChild);
+                }
+                athletesTableBody.appendChild(createEmptyState());
+            } else {
+                renderAthletesTable(filtered);
+            }
         }
 
         // Event Listeners for Filters
@@ -3500,20 +3820,20 @@
         // Action Functions
         function viewAthlete(id) {
             const athlete = athletesData.find(function(a) { return a.id === id; });
-            alert('Viewing profile for ' + athlete.name);
+            showAlert('Viewing profile for ' + athlete.name, null, { title: 'Athlete Profile' });
         }
 
         function messageAthlete(id) {
             const athlete = athletesData.find(function(a) { return a.id === id; });
-            alert('Opening message dialog for ' + athlete.name);
+            showAlert('Opening message dialog for ' + athlete.name, null, { title: 'Message' });
         }
 
         function flagAthlete(id) {
             const athlete = athletesData.find(function(a) { return a.id === id; });
-            if (confirm('Flag ' + athlete.name + ' for review?')) {
+            showConfirm('Flag ' + athlete.name + ' for review?', function() {
                 athlete.status = 'flagged';
                 filterAthletes();
-            }
+            }, null, { title: 'Flag Athlete', danger: true, confirmText: 'Flag', cancelText: 'Cancel' });
         }
 
         // Notifications Sidebar Toggle
@@ -3641,29 +3961,30 @@
 
             // Confirm action
             var actionText = action === 'approve' ? 'approve' : (action === 'reject' ? 'reject' : 'request additional documents for');
-            if (!confirm('Are you sure you want to ' + actionText + ' ' + typeLabels[verificationType] + ' verification for ' + athleteName + '?')) {
-                return;
-            }
+            var confirmTitle = action === 'approve' ? 'Approve Verification' : (action === 'reject' ? 'Reject Verification' : 'Request Documents');
+            var isDanger = action === 'reject';
 
-            // Add to history
-            addToVerificationHistory(
-                typeLabels[verificationType] + ' ' + actionLabels[action],
-                athleteName + ' - ' + athleteSport,
-                historyClasses[action],
-                action
-            );
+            showConfirm('Are you sure you want to ' + actionText + ' ' + typeLabels[verificationType] + ' verification for ' + athleteName + '?', function() {
+                // Add to history
+                addToVerificationHistory(
+                    typeLabels[verificationType] + ' ' + actionLabels[action],
+                    athleteName + ' - ' + athleteSport,
+                    historyClasses[action],
+                    action
+                );
 
-            // Remove item from list (if approved or rejected)
-            if (action === 'approve' || action === 'reject') {
-                item.style.animation = 'fadeOut 0.3s ease forwards';
-                setTimeout(function() {
-                    item.remove();
-                    updateVerificationCounts();
-                }, 300);
-            }
+                // Remove item from list (if approved or rejected)
+                if (action === 'approve' || action === 'reject') {
+                    item.style.animation = 'fadeOut 0.3s ease forwards';
+                    setTimeout(function() {
+                        item.remove();
+                        updateVerificationCounts();
+                    }, 300);
+                }
 
-            // Show toast notification
-            showVerificationToast(athleteName, action, verificationType);
+                // Show toast notification
+                showVerificationToast(athleteName, action, verificationType);
+            }, null, { title: confirmTitle, danger: isDanger, confirmText: 'Confirm', cancelText: 'Cancel' });
         }
 
         // Add entry to verification history (using safe DOM methods)
@@ -4017,7 +4338,7 @@
                     'gpa': 'Official_Transcript',
                     'identity': 'Student_ID'
                 };
-                alert('Downloading: ' + athleteName + '_' + docNames[currentPreviewType] + '.pdf\n\n(In production, this would download the actual document)');
+                showAlert('Downloading: ' + athleteName + '_' + docNames[currentPreviewType] + '.pdf\n\n(In production, this would download the actual document)', null, { title: 'Download Started' });
             }
         }
 
@@ -4096,7 +4417,7 @@
         // Quick Actions Tooltips
         document.querySelectorAll('.quick-action-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                alert('Action: ' + btn.title);
+                showAlert('Action: ' + btn.title, null, { title: 'Quick Action' });
             });
         });
 
@@ -4537,6 +4858,52 @@
                 showSettingsToast(message, 'success');
             });
         });
+
+        // ========================================
+        // Mobile Navigation
+        // ========================================
+        (function() {
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var mobileDrawer = document.getElementById('mobileDrawer');
+            var mobileDrawerClose = document.getElementById('mobileDrawerClose');
+            var mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+
+            function openDrawer() {
+                mobileDrawer.classList.add('open');
+                mobileDrawerOverlay.classList.add('visible');
+                hamburgerBtn.classList.add('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDrawer() {
+                mobileDrawer.classList.remove('open');
+                mobileDrawerOverlay.classList.remove('visible');
+                hamburgerBtn.classList.remove('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            // Expose closeDrawer globally for onclick handlers
+            window.closeMobileDrawer = closeDrawer;
+
+            hamburgerBtn.addEventListener('click', function() {
+                if (mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                } else {
+                    openDrawer();
+                }
+            });
+
+            mobileDrawerClose.addEventListener('click', closeDrawer);
+            mobileDrawerOverlay.addEventListener('click', closeDrawer);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                }
+            });
+        })();
     </script>
 
     <!-- Shared DOM Helpers -->

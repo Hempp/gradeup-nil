@@ -669,13 +669,13 @@ function showErrorState(message) {
 // ============================================================================
 
 function animateNumber(el, start, end, duration) {
-  var startTime = performance.now();
+  const startTime = performance.now();
 
   function update(currentTime) {
-    var elapsed = currentTime - startTime;
-    var progress = Math.min(elapsed / duration, 1);
-    var eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-    var value = Math.round(start + (end - start) * eased);
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+    const value = Math.round(start + (end - start) * eased);
 
     el.textContent = value;
 
@@ -688,7 +688,7 @@ function animateNumber(el, start, end, duration) {
 }
 
 function getNotificationIcon(type) {
-  var icons = {
+  const icons = {
     deal: '\uD83D\uDCBC',
     achievement: '\uD83C\uDFC6',
     score: '\uD83D\uDCC8',

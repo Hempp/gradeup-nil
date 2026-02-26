@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>Marcus Johnson - Duke Basketball | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Marcus Johnson - Duke Basketball | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL - Public Athlete Profile. View athlete stats, achievements, and connect for brand partnerships.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/athlete-profile.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Marcus Johnson - Duke Basketball | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL - Public Athlete Profile. View athlete stats, achievements, and connect for brand partnerships.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/athlete-profile.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1254,7 +1278,147 @@
             }
         }
 
+        /* ─── Mobile Navigation Drawer ─── */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 1px;
+            transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 1000;
+            transition: left 0.3s var(--ease);
+            overflow-y: auto;
+        }
+
+        .mobile-drawer.open {
+            left: 0;
+        }
+
+        .mobile-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .mobile-drawer-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+        }
+
+        .mobile-drawer-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-drawer-close:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .mobile-drawer-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-drawer-nav {
+            padding: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .mobile-nav-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .mobile-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s var(--ease), visibility 0.3s var(--ease);
+        }
+
+        .mobile-drawer-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
         @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+
             .profile-nav {
                 padding: 1rem;
             }
@@ -1588,16 +1752,52 @@
             font-size: 0.875rem;
         }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://gradeup.com/athlete-profile.html#profilepage",
+      "name": "Marcus Johnson - Duke Basketball | GradeUp NIL",
+      "url": "https://gradeup.com/athlete-profile.html",
+      "description": "Public Athlete Profile. View athlete stats, achievements, and connect for brand partnerships.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Marcus Johnson",
+        "description": "Duke Basketball - Student-athlete on GradeUp NIL",
+        "affiliation": {
+          "@type": "SportsTeam",
+          "name": "Duke Basketball",
+          "sport": "Basketball"
+        },
+        "memberOf": {
+          "@type": "Organization",
+          "name": "GradeUp NIL"
+        }
+      }
+    }
+    </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Navigation -->
     <nav class="profile-nav">
         <div class="profile-nav-left">
+            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
             <a href="index.html" class="profile-logo">GRADEUP</a>
             <div class="profile-nav-links">
-                <a href="#">Athletes</a>
-                <a href="#">Brands</a>
-                <a href="#">How it Works</a>
+                <a href="index.html#athletes">Athletes</a>
+                <a href="index.html#brands">Brands</a>
+                <a href="about.html">How it Works</a>
                 <a href="athlete-dashboard.html">Dashboard</a>
             </div>
         </div>
@@ -1607,12 +1807,57 @@
         </div>
     </nav>
 
+    <!-- Mobile Navigation Drawer -->
+    <aside class="mobile-drawer" id="mobileDrawer" role="navigation" aria-label="Mobile navigation">
+        <div class="mobile-drawer-header">
+            <span class="mobile-drawer-logo">GRADEUP</span>
+            <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Close navigation menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-drawer-nav">
+            <a href="index.html#athletes" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Athletes
+            </a>
+            <a href="index.html#brands" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                </svg>
+                Brands
+            </a>
+            <a href="about.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                How it Works
+            </a>
+            <a href="athlete-dashboard.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </a>
+        </nav>
+    </aside>
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+
     <!-- Profile Page -->
-    <main class="profile-page">
+    <main class="profile-page" id="main-content">
         <!-- Hero Section -->
         <section class="profile-hero">
             <div class="hero-image-container">
-                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1920&h=1080&fit=crop" alt="Marcus Johnson - Duke Basketball" class="hero-image">
+                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1920&h=1080&fit=crop" alt="Marcus Johnson - Duke Basketball" class="hero-image" width="1920" height="1080">
                 <div class="hero-gradient-overlay"></div>
             </div>
 
@@ -1670,19 +1915,19 @@
                     </div>
 
                     <div class="hero-social">
-                        <a href="#" class="social-link" aria-label="Instagram">
+                        <a href="https://instagram.com/marcusjohnson_duke" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                                 <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
                                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                             </svg>
                         </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
+                        <a href="https://twitter.com/marcusjohnson_duke" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
                             </svg>
                         </a>
-                        <a href="#" class="social-link" aria-label="TikTok">
+                        <a href="https://tiktok.com/@marcusjohnson_duke" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="TikTok">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
                             </svg>
@@ -2101,7 +2346,7 @@
                         <div class="video-grid">
                             <div class="video-card" onclick="openVideoModal('video1')">
                                 <div class="video-thumbnail">
-                                    <img src="https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=600&h=340&fit=crop" alt="Season Highlights">
+                                    <img src="https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=600&h=340&fit=crop" alt="Season Highlights" width="600" height="340" loading="lazy">
                                     <div class="video-play-btn">
                                         <svg viewBox="0 0 24 24" fill="currentColor">
                                             <polygon points="5 3 19 12 5 21 5 3"/>
@@ -2126,7 +2371,7 @@
 
                             <div class="video-card" onclick="openVideoModal('video2')">
                                 <div class="video-thumbnail">
-                                    <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600&h=340&fit=crop" alt="Career High Game">
+                                    <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600&h=340&fit=crop" alt="Career High Game" width="600" height="340" loading="lazy">
                                     <div class="video-play-btn">
                                         <svg viewBox="0 0 24 24" fill="currentColor">
                                             <polygon points="5 3 19 12 5 21 5 3"/>
@@ -2151,7 +2396,7 @@
 
                             <div class="video-card" onclick="openVideoModal('video3')">
                                 <div class="video-thumbnail">
-                                    <img src="https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=600&h=340&fit=crop" alt="Top 10 Assists">
+                                    <img src="https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=600&h=340&fit=crop" alt="Top 10 Assists" width="600" height="340" loading="lazy">
                                     <div class="video-play-btn">
                                         <svg viewBox="0 0 24 24" fill="currentColor">
                                             <polygon points="5 3 19 12 5 21 5 3"/>
@@ -2456,6 +2701,56 @@
             }, 300);
         }
 
+        // ─── Focus Trap Utility ───
+        var lastFocusedElement = null;
+        var activeFocusTrapHandler = null;
+
+        function trapFocus(modal, closeCallback) {
+            var focusableElements = modal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length === 0) return;
+
+            var firstFocusable = focusableElements[0];
+            var lastFocusable = focusableElements[focusableElements.length - 1];
+
+            // Focus first element
+            firstFocusable.focus();
+
+            function handleKeydown(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable.focus();
+                        }
+                    }
+                }
+                if (e.key === 'Escape') {
+                    closeCallback();
+                }
+            }
+
+            modal.addEventListener('keydown', handleKeydown);
+            activeFocusTrapHandler = handleKeydown;
+        }
+
+        function removeFocusTrap(modal) {
+            if (activeFocusTrapHandler) {
+                modal.removeEventListener('keydown', activeFocusTrapHandler);
+                activeFocusTrapHandler = null;
+            }
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
+        }
+
         // ─── Set Up Event Listeners ───
         function setupEventListeners() {
             // Contact Modal
@@ -2463,20 +2758,24 @@
             var contactModal = document.getElementById('contactModal');
             var closeContactModal = document.getElementById('closeContactModal');
 
-            contactBtn.addEventListener('click', function() {
-                contactModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-
-            closeContactModal.addEventListener('click', function() {
+            function closeContactModalFn() {
+                removeFocusTrap(contactModal);
                 contactModal.classList.remove('active');
                 document.body.style.overflow = '';
+            }
+
+            contactBtn.addEventListener('click', function() {
+                lastFocusedElement = document.activeElement;
+                contactModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                trapFocus(contactModal, closeContactModalFn);
             });
+
+            closeContactModal.addEventListener('click', closeContactModalFn);
 
             contactModal.addEventListener('click', function(e) {
                 if (e.target === contactModal) {
-                    contactModal.classList.remove('active');
-                    document.body.style.overflow = '';
+                    closeContactModalFn();
                 }
             });
 
@@ -2484,15 +2783,17 @@
             var videoModal = document.getElementById('videoModal');
             var closeVideoModal = document.getElementById('closeVideoModal');
 
-            closeVideoModal.addEventListener('click', function() {
+            function closeVideoModalFn() {
+                removeFocusTrap(videoModal);
                 videoModal.classList.remove('active');
                 document.body.style.overflow = '';
-            });
+            }
+
+            closeVideoModal.addEventListener('click', closeVideoModalFn);
 
             videoModal.addEventListener('click', function(e) {
                 if (e.target === videoModal) {
-                    videoModal.classList.remove('active');
-                    document.body.style.overflow = '';
+                    closeVideoModalFn();
                 }
             });
 
@@ -2519,21 +2820,27 @@
             var contactForm = document.getElementById('contactForm');
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                // In production, this would send the form data to a backend
-                alert('Message sent! Marcus will get back to you within 48 hours.');
-                contactModal.classList.remove('active');
-                document.body.style.overflow = '';
-                contactForm.reset();
+
+                // Get submit button and add loading state
+                var submitBtn = contactForm.querySelector('.btn-submit');
+                submitBtn.classList.add('btn-loading');
+                submitBtn.disabled = true;
+
+                // Simulate async submission
+                setTimeout(function() {
+                    submitBtn.classList.remove('btn-loading');
+                    submitBtn.disabled = false;
+
+                    // In production, this would send the form data to a backend
+                    showAlert('Message sent! Marcus will get back to you within 48 hours.', function() {
+                        contactModal.classList.remove('active');
+                        document.body.style.overflow = '';
+                        contactForm.reset();
+                    }, { title: 'Message Sent' });
+                }, 1000);
             });
 
-            // Keyboard navigation
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    contactModal.classList.remove('active');
-                    videoModal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
+            // Note: Escape key handling is now managed by the focus trap
 
             // Share Buttons
             setupShareButtons();
@@ -2734,9 +3041,6 @@
             closeSvg.appendChild(line2);
 
             closeBtn.appendChild(closeSvg);
-            closeBtn.addEventListener('click', function() {
-                overlay.remove();
-            });
 
             var modalWrapper = document.createElement('div');
             modalWrapper.style.cssText = 'position: relative;';
@@ -2745,23 +3049,57 @@
 
             overlay.appendChild(modalWrapper);
 
+            // Store last focused element for restoration
+            var viewAllTrigger = document.activeElement;
+
+            // Close function that restores focus
+            function closeViewAllModal() {
+                overlay.remove();
+                if (viewAllTrigger) {
+                    viewAllTrigger.focus();
+                }
+            }
+
+            closeBtn.addEventListener('click', closeViewAllModal);
+
             // Close on overlay click
             overlay.addEventListener('click', function(e) {
                 if (e.target === overlay) {
-                    overlay.remove();
+                    closeViewAllModal();
                 }
             });
 
-            // Close on Escape key
-            var escHandler = function(e) {
-                if (e.key === 'Escape') {
-                    overlay.remove();
-                    document.removeEventListener('keydown', escHandler);
-                }
-            };
-            document.addEventListener('keydown', escHandler);
-
             document.body.appendChild(overlay);
+
+            // Set up focus trap for this dynamically created modal
+            var focusableElements = overlay.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusableElements.length > 0) {
+                var firstFocusable = focusableElements[0];
+                var lastFocusable = focusableElements[focusableElements.length - 1];
+
+                firstFocusable.focus();
+
+                overlay.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                e.preventDefault();
+                                lastFocusable.focus();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                e.preventDefault();
+                                firstFocusable.focus();
+                            }
+                        }
+                    }
+                    if (e.key === 'Escape') {
+                        closeViewAllModal();
+                    }
+                });
+            }
         }
 
         // ─── Auth Buttons (Login/Signup) ───
@@ -2891,9 +3229,59 @@
             container.appendChild(titleBar);
 
             videoPlayer.appendChild(container);
+            lastFocusedElement = document.activeElement;
             videoModal.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Set up focus trap for video modal
+            function closeVideoModalFn() {
+                removeFocusTrap(videoModal);
+                videoModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            trapFocus(videoModal, closeVideoModalFn);
         }
+
+        // Mobile Navigation
+        (function() {
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var mobileDrawer = document.getElementById('mobileDrawer');
+            var mobileDrawerClose = document.getElementById('mobileDrawerClose');
+            var mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+
+            function openDrawer() {
+                mobileDrawer.classList.add('open');
+                mobileDrawerOverlay.classList.add('visible');
+                hamburgerBtn.classList.add('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDrawer() {
+                mobileDrawer.classList.remove('open');
+                mobileDrawerOverlay.classList.remove('visible');
+                hamburgerBtn.classList.remove('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            hamburgerBtn.addEventListener('click', function() {
+                if (mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                } else {
+                    openDrawer();
+                }
+            });
+
+            mobileDrawerClose.addEventListener('click', closeDrawer);
+            mobileDrawerOverlay.addEventListener('click', closeDrawer);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                }
+            });
+        })();
     </script>
 
     <!-- Shared DOM Helpers -->

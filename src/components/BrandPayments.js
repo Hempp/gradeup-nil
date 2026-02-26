@@ -1912,46 +1912,76 @@ class BrandPayments {
       }
     } catch (error) {
       console.error('Upgrade failed:', error);
-      alert('Failed to start checkout. Please try again.');
+      if (typeof showAlert === 'function') {
+        showAlert('Failed to start checkout. Please try again.', null, { title: 'Checkout Error' });
+      } else {
+        alert('Failed to start checkout. Please try again.');
+      }
       btn.disabled = false;
       btn.textContent = 'Upgrade';
     }
   }
 
   async handleCancel() {
-    const confirmed = confirm(
-      'Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your current billing period.'
-    );
+    const self = this;
 
-    if (!confirmed) return;
-
-    const btn = this.container.querySelector('#cancelSubscriptionBtn');
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Canceling...';
-    }
-
-    try {
-      const { success, error } = await cancelSubscription();
-
-      if (error) {
-        throw error;
+    const performCancellation = async () => {
+      const btn = self.container.querySelector('#cancelSubscriptionBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Canceling...';
       }
 
-      if (success) {
-        alert('Your subscription has been canceled. You will have access until the end of your billing period.');
-        await this.loadData();
+      try {
+        const { success, error } = await cancelSubscription();
 
-        if (this.options.onSubscriptionChange) {
-          this.options.onSubscriptionChange(this.subscription);
+        if (error) {
+          throw error;
+        }
+
+        if (success) {
+          if (typeof showAlert === 'function') {
+            showAlert('Your subscription has been canceled. You will have access until the end of your billing period.', async function() {
+              await self.loadData();
+              if (self.options.onSubscriptionChange) {
+                self.options.onSubscriptionChange(self.subscription);
+              }
+            }, { title: 'Subscription Canceled' });
+          } else {
+            alert('Your subscription has been canceled. You will have access until the end of your billing period.');
+            await self.loadData();
+            if (self.options.onSubscriptionChange) {
+              self.options.onSubscriptionChange(self.subscription);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Cancellation failed:', error);
+        if (typeof showAlert === 'function') {
+          showAlert('Failed to cancel subscription. Please try again.', null, { title: 'Cancellation Error' });
+        } else {
+          alert('Failed to cancel subscription. Please try again.');
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Cancel Subscription';
         }
       }
-    } catch (error) {
-      console.error('Cancellation failed:', error);
-      alert('Failed to cancel subscription. Please try again.');
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = 'Cancel Subscription';
+    };
+
+    if (typeof showConfirm === 'function') {
+      showConfirm(
+        'Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your current billing period.',
+        performCancellation,
+        null,
+        { title: 'Cancel Subscription', danger: true, confirmText: 'Yes, Cancel', cancelText: 'Keep Subscription' }
+      );
+    } else {
+      const confirmed = confirm(
+        'Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your current billing period.'
+      );
+      if (confirmed) {
+        await performCancellation();
       }
     }
   }
@@ -1974,7 +2004,11 @@ class BrandPayments {
       }
     } catch (error) {
       console.error('Failed to open billing portal:', error);
-      alert('Failed to open billing portal. Please try again.');
+      if (typeof showAlert === 'function') {
+        showAlert('Failed to open billing portal. Please try again.', null, { title: 'Billing Portal Error' });
+      } else {
+        alert('Failed to open billing portal. Please try again.');
+      }
     } finally {
       if (btn) {
         btn.disabled = false;

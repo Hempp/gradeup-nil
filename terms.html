@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GradeUp NIL Terms of Service - Read our terms and conditions for using the GradeUp NIL platform.">
+    <meta name="theme-color" content="#000000">
+    <title>Terms of Service | GradeUp NIL</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ─── Legal Page Styles ─── */
+        .legal-page {
+            min-height: 100vh;
+            background: var(--black);
+            padding-top: 80px;
+        }
+
+        .legal-hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legal-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 240, 255, 0.08) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .legal-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .legal-hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .legal-hero p {
+            font-size: 1rem;
+            color: var(--gray-400);
+        }
+
+        .legal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .legal-section {
+            margin-bottom: 3rem;
+        }
+
+        .legal-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .legal-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--cyan);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .legal-section p {
+            font-size: 1rem;
+            color: var(--gray-300);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .legal-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .legal-section li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--gray-300);
+            line-height: 1.6;
+        }
+
+        .legal-section li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 6px;
+            height: 6px;
+            background: var(--cyan);
+            border-radius: 50%;
+        }
+
+        .legal-section a {
+            color: var(--cyan);
+            text-decoration: underline;
+        }
+
+        .legal-section a:hover {
+            color: var(--white);
+        }
+
+        .effective-date {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--gray-400);
+            margin-top: 1rem;
+        }
+
+        .highlight-box {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-left: 3px solid var(--cyan);
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .legal-content {
+                padding: 1rem;
+            }
+
+            .legal-hero {
+                padding: 3rem 1rem;
+            }
+        }
+    </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "https://gradeup.com/terms.html#webpage",
+      "name": "Terms of Service | GradeUp NIL",
+      "url": "https://gradeup.com/terms.html",
+      "description": "Read our terms and conditions for using the GradeUp NIL platform.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "mainEntity": {
+        "@type": "WebContent",
+        "about": {
+          "@type": "Thing",
+          "name": "Terms of Service",
+          "description": "GradeUp NIL Terms of Service and conditions for platform usage"
+        }
+      },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".legal-content"]
+      }
+    }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <a href="index.html" class="nav-logo">GRADEUP</a>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#athletes">Athletes</a>
+            <a href="index.html#brands">Brands</a>
+            <a href="opportunities.html">Opportunities</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="about.html">How It Works</a>
+        </div>
+
+        <div class="nav-actions">
+            <button class="btn btn-ghost" id="loginBtn">Log In</button>
+            <button class="btn btn-primary" id="signupBtn">Get Started</button>
+        </div>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="index.html#athletes">Athletes</a>
+            <a href="index.html#brands">Brands</a>
+            <a href="opportunities.html">Opportunities</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="about.html">How It Works</a>
+            <div class="mobile-menu-buttons">
+                <button class="btn btn-outline btn-block" id="mobileLoginBtn">Log In</button>
+                <button class="btn btn-primary btn-block" id="mobileSignupBtn">Get Started</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="legal-page">
+        <!-- Hero Section -->
+        <section class="legal-hero">
+            <div class="legal-hero-content">
+                <h1>Terms of Service</h1>
+                <p>Please read these terms carefully before using GradeUp NIL. By using our platform, you agree to these terms.</p>
+                <span class="effective-date">Effective Date: January 1, 2025</span>
+            </div>
+        </section>
+
+        <!-- Legal Content -->
+        <div class="legal-content">
+            <section class="legal-section">
+                <h2>1. Acceptance of Terms</h2>
+                <p>By accessing or using the GradeUp NIL platform ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, you may not access or use the Service.</p>
+                <p>These Terms apply to all visitors, users, and others who access or use the Service, including athletes, brands, athletic directors, and any other users.</p>
+                <div class="highlight-box">
+                    <p><strong>Important:</strong> If you are under 18 years of age, you must have your parent or legal guardian review and agree to these Terms on your behalf before using the Service.</p>
+                </div>
+            </section>
+
+            <section class="legal-section">
+                <h2>2. User Accounts</h2>
+                <p>To access certain features of the Service, you must register for an account. When you register, you agree to:</p>
+                <ul>
+                    <li>Provide accurate, current, and complete information</li>
+                    <li>Maintain and promptly update your account information</li>
+                    <li>Maintain the security of your account credentials</li>
+                    <li>Accept responsibility for all activities under your account</li>
+                    <li>Notify us immediately of any unauthorized use of your account</li>
+                </ul>
+
+                <h3>Account Types</h3>
+                <p><strong>Athlete Accounts:</strong> For verified student-athletes seeking NIL opportunities. Requires verification of enrollment, athletic participation, and academic standing.</p>
+                <p><strong>Brand Accounts:</strong> For businesses and organizations seeking to partner with student-athletes for marketing and sponsorship opportunities.</p>
+                <p><strong>Athletic Director Accounts:</strong> For athletic department staff to manage athlete rosters and ensure compliance.</p>
+
+                <h3>Account Termination</h3>
+                <p>We may suspend or terminate your account if you violate these Terms, engage in fraudulent activity, or for any other reason at our sole discretion. You may also delete your account at any time through your account settings.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>3. NIL Compliance</h2>
+                <p>GradeUp NIL is committed to operating in full compliance with NCAA regulations regarding Name, Image, and Likeness (NIL) activities.</p>
+
+                <h3>Athlete Responsibilities</h3>
+                <ul>
+                    <li>Comply with your school's NIL policies and disclosure requirements</li>
+                    <li>Report all NIL activities to your athletic compliance office as required</li>
+                    <li>Not use institutional marks or logos without proper authorization</li>
+                    <li>Not engage in pay-for-play arrangements or quid pro quo deals based on athletic performance</li>
+                    <li>Maintain amateur status in accordance with NCAA rules</li>
+                </ul>
+
+                <h3>Brand Responsibilities</h3>
+                <ul>
+                    <li>Ensure all deals are for legitimate marketing purposes based on an athlete's NIL</li>
+                    <li>Not offer compensation contingent on athletic performance or enrollment decisions</li>
+                    <li>Provide accurate information about compensation and deal terms</li>
+                    <li>Comply with FTC disclosure requirements for sponsored content</li>
+                </ul>
+
+                <h3>Platform Role</h3>
+                <p>GradeUp NIL facilitates connections between athletes and brands but does not guarantee compliance with all applicable rules. Users are responsible for ensuring their own compliance with NCAA, state, and institutional regulations.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>4. Payments</h2>
+                <p>GradeUp NIL facilitates payments between brands and athletes for completed NIL activities.</p>
+
+                <h3>Payment Processing</h3>
+                <ul>
+                    <li>All payments are processed through our secure third-party payment provider</li>
+                    <li>Athletes must provide valid payment information to receive earnings</li>
+                    <li>Payment processing times may vary; typically 3-5 business days</li>
+                    <li>Minimum withdrawal amounts may apply</li>
+                </ul>
+
+                <h3>Platform Fees</h3>
+                <p>GradeUp NIL charges a service fee on completed transactions. Current fee structures are displayed in your account dashboard and may be updated from time to time with advance notice.</p>
+
+                <h3>Taxes</h3>
+                <p>Athletes are responsible for reporting and paying applicable taxes on their NIL earnings. GradeUp NIL will provide necessary tax documentation (1099 forms) as required by law.</p>
+
+                <h3>Disputes</h3>
+                <p>Payment disputes must be reported within 30 days of the transaction. We will investigate and work to resolve disputes in good faith.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>5. Intellectual Property</h2>
+                <h3>Platform Content</h3>
+                <p>The Service and its original content, features, and functionality are owned by GradeUp NIL and are protected by copyright, trademark, and other intellectual property laws.</p>
+
+                <h3>User Content</h3>
+                <p>You retain ownership of content you submit to the Service. By submitting content, you grant us a non-exclusive, worldwide, royalty-free license to use, display, and distribute your content in connection with the Service.</p>
+
+                <h3>Athlete NIL Rights</h3>
+                <p>Athletes retain full ownership of their name, image, and likeness rights. Any licenses granted to brands through the platform are specific to the agreed-upon deal terms.</p>
+
+                <h3>Brand Content</h3>
+                <p>Brands must have proper rights to any content, trademarks, or materials they submit or request athletes to use in connection with NIL activities.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>6. Prohibited Conduct</h2>
+                <p>You agree not to:</p>
+                <ul>
+                    <li>Use the Service for any unlawful purpose or in violation of these Terms</li>
+                    <li>Provide false or misleading information</li>
+                    <li>Impersonate another person or entity</li>
+                    <li>Harass, abuse, or harm other users</li>
+                    <li>Interfere with or disrupt the Service or servers</li>
+                    <li>Attempt to gain unauthorized access to any part of the Service</li>
+                    <li>Use automated systems to access the Service without permission</li>
+                    <li>Engage in any activity that violates NCAA rules or athletic eligibility</li>
+                    <li>Circumvent the platform to avoid fees or reporting requirements</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>7. Termination</h2>
+                <p>We may terminate or suspend your access to the Service immediately, without prior notice or liability, for any reason, including:</p>
+                <ul>
+                    <li>Breach of these Terms</li>
+                    <li>Fraudulent or illegal activity</li>
+                    <li>Providing false information during verification</li>
+                    <li>Violation of NCAA or institutional rules</li>
+                    <li>At the request of your athletic program</li>
+                </ul>
+                <p>Upon termination, your right to use the Service will immediately cease. Provisions that by their nature should survive termination will survive, including ownership provisions, warranty disclaimers, and limitations of liability.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>8. Disclaimer</h2>
+                <div class="highlight-box">
+                    <p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+                </div>
+                <p>We do not warrant that:</p>
+                <ul>
+                    <li>The Service will be uninterrupted, timely, secure, or error-free</li>
+                    <li>The results obtained from the Service will be accurate or reliable</li>
+                    <li>Any specific NIL opportunities will be available</li>
+                    <li>Deals facilitated through the platform will be successfully completed</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>9. Limitation of Liability</h2>
+                <p>To the maximum extent permitted by law, GradeUp NIL and its officers, directors, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or goodwill, arising from:</p>
+                <ul>
+                    <li>Your use or inability to use the Service</li>
+                    <li>Any conduct or content of any third party on the Service</li>
+                    <li>Unauthorized access, use, or alteration of your content</li>
+                    <li>Failed or disputed transactions between users</li>
+                </ul>
+                <p>Our total liability shall not exceed the amount you paid to us in the twelve months preceding the claim.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>10. Governing Law</h2>
+                <p>These Terms shall be governed by and construed in accordance with the laws of the State of North Carolina, without regard to its conflict of law provisions.</p>
+                <p>Any disputes arising from these Terms or the Service shall be resolved through binding arbitration in Durham, North Carolina, except that either party may seek injunctive relief in any court of competent jurisdiction.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>11. Changes to Terms</h2>
+                <p>We reserve the right to modify these Terms at any time. We will provide notice of material changes by posting the updated Terms on the Service and updating the "Effective Date" above.</p>
+                <p>Your continued use of the Service after changes become effective constitutes acceptance of the revised Terms. If you do not agree to the new Terms, you must stop using the Service.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>12. Contact Us</h2>
+                <p>If you have questions about these Terms, please contact us:</p>
+                <ul>
+                    <li>Email: <a href="mailto:legal@gradeupnil.com">legal@gradeupnil.com</a></li>
+                    <li>Address: GradeUp NIL, Inc., 123 Scholar Way, Durham, NC 27701</li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">GRADEUP</a>
+                    <p>The premier NIL platform for scholar-athletes. Where academic excellence meets athletic greatness.</p>
+                    <div class="footer-social">
+                        <a href="https://twitter.com/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="https://instagram.com/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://linkedin.com/company/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Platform</h4>
+                    <a href="index.html#athletes">For Athletes</a>
+                    <a href="index.html#brands">For Brands</a>
+                    <a href="opportunities.html">Opportunities</a>
+                    <a href="leaderboard.html">Leaderboard</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="about.html#contact">Contact</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 GradeUp NIL. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile menu toggle
+        var navToggle = document.getElementById('navToggle');
+        var mobileMenu = document.getElementById('mobileMenu');
+        var nav = document.getElementById('nav');
+
+        if (navToggle) {
+            navToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                navToggle.classList.toggle('active');
+            });
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            navToggle.classList.remove('active');
+        }
+
+        // Close mobile menu when clicking links
+        var mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(function(link) {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Scroll behavior for nav
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Button handlers - redirect to main page with modal
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            window.location.href = 'index.html?modal=login';
+        });
+        document.getElementById('signupBtn').addEventListener('click', function() {
+            window.location.href = 'index.html?modal=signup';
+        });
+        document.getElementById('mobileLoginBtn').addEventListener('click', function() {
+            window.location.href = 'index.html?modal=login';
+        });
+        document.getElementById('mobileSignupBtn').addEventListener('click', function() {
+            window.location.href = 'index.html?modal=signup';
+        });
+    </script>
+</body>
+</html>

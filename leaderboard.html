@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>Leaderboards | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Leaderboards | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL Leaderboards - See top athletes by GradeUp Score, earnings, deals, GPA, and social reach. Compete. Excel. Rise.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/leaderboard.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Leaderboards | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL Leaderboards - See top athletes by GradeUp Score, earnings, deals, GPA, and social reach. Compete. Excel. Rise.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/leaderboard.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,6 +166,7 @@
         .tab-btn {
             flex-shrink: 0;
             padding: 0.875rem 1.5rem;
+            min-height: 44px;
             font-size: 0.875rem;
             font-weight: 600;
             color: var(--gray-400);
@@ -1427,8 +1452,34 @@
         .podium-card.first { animation-delay: 0.2s; }
         .podium-card.third { animation-delay: 0.3s; }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "@id": "https://gradeup.com/leaderboard.html#itemlist",
+      "name": "Leaderboards | GradeUp NIL",
+      "url": "https://gradeup.com/leaderboard.html",
+      "description": "See top athletes by GradeUp Score, earnings, deals, GPA, and social reach. Compete. Excel. Rise.",
+      "itemListOrder": "https://schema.org/ItemListOrderDescending",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Top Athletes by GradeUp Score",
+          "description": "Ranking of student-athletes by their GradeUp Score combining academics and athletic performance"
+        }
+      ],
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      }
+    }
+    </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Navigation -->
     <nav class="nav" id="nav">
         <a href="/" class="nav-logo">GRADEUP</a>
@@ -1469,7 +1520,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="leaderboard-page">
+    <main class="leaderboard-page" id="main-content">
         <!-- Hero Section -->
         <section class="leaderboard-hero">
             <div class="leaderboard-hero-bg"></div>
@@ -1510,7 +1561,7 @@
                                     +12
                                 </div>
                             </div>
-                            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&h=200&fit=crop&crop=face" alt="Your Avatar" class="current-user-avatar">
+                            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&h=200&fit=crop&crop=face" alt="Your Avatar" class="current-user-avatar" width="56" height="56">
                             <div class="current-user-info">
                                 <h3 class="current-user-name">
                                     Marcus Johnson
@@ -1603,7 +1654,7 @@
                                     <div class="medal-icon silver">2</div>
                                 </div>
                                 <div class="podium-avatar-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Sarah Chen" class="podium-avatar">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Sarah Chen" class="podium-avatar" width="100" height="100">
                                     <span class="podium-verified">&#10003;</span>
                                 </div>
                                 <h3 class="podium-name">Sarah Chen</h3>
@@ -1619,7 +1670,7 @@
                                     <div class="medal-icon gold">1</div>
                                 </div>
                                 <div class="podium-avatar-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" alt="Darius Thompson" class="podium-avatar">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" alt="Darius Thompson" class="podium-avatar" width="120" height="120">
                                     <span class="podium-verified">&#10003;</span>
                                 </div>
                                 <h3 class="podium-name">Darius Thompson</h3>
@@ -1635,7 +1686,7 @@
                                     <div class="medal-icon bronze">3</div>
                                 </div>
                                 <div class="podium-avatar-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face" alt="Emily Park" class="podium-avatar">
+                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face" alt="Emily Park" class="podium-avatar" width="100" height="100">
                                     <span class="podium-verified">&#10003;</span>
                                 </div>
                                 <h3 class="podium-name">Emily Park</h3>
@@ -1664,10 +1715,30 @@
                                 <!-- Rows will be inserted by JavaScript -->
                             </tbody>
                         </table>
+                        <!-- Empty State -->
+                        <div class="empty-state" id="leaderboardEmptyState" style="display: none;">
+                            <div class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                    <path d="M8 21h8M12 17v4M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <h4 class="empty-state-title">No Athletes Found</h4>
+                            <p class="empty-state-description">Try adjusting your filters to see more athletes on the leaderboard.</p>
+                        </div>
                     </div>
 
                     <!-- Leaderboard Cards (Mobile) -->
                     <div class="leaderboard-cards-mobile" id="leaderboardCardsMobile">
+                        <!-- Empty State (Mobile) -->
+                        <div class="empty-state" id="leaderboardMobileEmptyState" style="display: none;">
+                            <div class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                    <path d="M8 21h8M12 17v4M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <h4 class="empty-state-title">No Athletes Found</h4>
+                            <p class="empty-state-description">Try adjusting your filters to see more athletes on the leaderboard.</p>
+                        </div>
                         <!-- Cards will be inserted by JavaScript -->
                     </div>
 
@@ -1703,7 +1774,7 @@
                             <div class="friends-list">
                                 <div class="friend-item">
                                     <span class="friend-rank">#23</span>
-                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson" class="friend-avatar">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="James Wilson" class="friend-avatar" width="40" height="40" loading="lazy">
                                     <div class="friend-info">
                                         <p class="friend-name">James Wilson</p>
                                         <p class="friend-score">892 pts</p>
@@ -1714,7 +1785,7 @@
                                 </div>
                                 <div class="friend-item">
                                     <span class="friend-rank">#56</span>
-                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Maya Rodriguez" class="friend-avatar">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Maya Rodriguez" class="friend-avatar" width="40" height="40" loading="lazy">
                                     <div class="friend-info">
                                         <p class="friend-name">Maya Rodriguez</p>
                                         <p class="friend-score">834 pts</p>
@@ -1725,7 +1796,7 @@
                                 </div>
                                 <div class="friend-item">
                                     <span class="friend-rank">#89</span>
-                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Tyler Brooks" class="friend-avatar">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Tyler Brooks" class="friend-avatar" width="40" height="40" loading="lazy">
                                     <div class="friend-info">
                                         <p class="friend-name">Tyler Brooks</p>
                                         <p class="friend-score">781 pts</p>
@@ -1835,13 +1906,13 @@
                     <a href="/" class="footer-logo">GRADEUP</a>
                     <p>The premier NIL platform for scholar-athletes. Where academic excellence meets athletic greatness.</p>
                     <div class="footer-social">
-                        <a href="#" aria-label="Twitter">
+                        <a href="https://twitter.com/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                         </a>
-                        <a href="#" aria-label="Instagram">
+                        <a href="https://instagram.com/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                         </a>
-                        <a href="#" aria-label="LinkedIn">
+                        <a href="https://linkedin.com/company/gradeupnil" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                         </a>
                     </div>
@@ -1857,18 +1928,14 @@
 
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="#about">About Us</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Press</a>
+                    <a href="about.html">About Us</a>
+                    <a href="about.html#contact">Contact</a>
                 </div>
 
                 <div class="footer-links">
-                    <h4>Support</h4>
-                    <a href="#">Help Center</a>
-                    <a href="#">Contact</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <h4>Legal</h4>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
                 </div>
             </div>
 
@@ -1879,9 +1946,9 @@
     </footer>
 
     <!-- Modals (from main site) -->
-    <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal" id="modal">
-            <button class="modal-close" onclick="closeModal()" aria-label="Close">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>

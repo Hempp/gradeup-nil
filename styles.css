@@ -1206,6 +1206,88 @@ img {
     transform: scale(1) translateY(0);
 }
 
+/* ─── Custom Alert/Confirm Modals ─── */
+.custom-alert-overlay {
+    z-index: 100001;
+}
+
+.custom-alert-dialog {
+    background: var(--gray-900);
+    border: 1px solid var(--gray-800);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    text-align: center;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.3s var(--ease-spring);
+}
+
+.custom-alert-overlay.active .custom-alert-dialog {
+    transform: scale(1) translateY(0);
+}
+
+.custom-alert-dialog .modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--white);
+}
+
+.custom-alert-dialog .modal-message {
+    font-size: 0.9375rem;
+    color: var(--gray-400);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.custom-alert-dialog .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.custom-alert-dialog .modal-actions .btn {
+    min-width: 100px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.custom-alert-dialog .modal-actions .btn-primary {
+    background: var(--cyan, #00f0ff);
+    color: var(--black);
+}
+
+.custom-alert-dialog .modal-actions .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);
+}
+
+.custom-alert-dialog .modal-actions .btn-secondary {
+    background: var(--gray-800);
+    color: var(--white);
+    border: 1px solid var(--gray-700);
+}
+
+.custom-alert-dialog .modal-actions .btn-secondary:hover {
+    background: var(--gray-700);
+}
+
+.custom-alert-dialog .modal-actions .btn-danger {
+    background: var(--error, #ef4444);
+    color: var(--white);
+}
+
+.custom-alert-dialog .modal-actions .btn-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
 .modal-close {
     position: absolute;
     top: 1rem;

@@ -48,10 +48,10 @@
     window.formatDate = function(date) {
         if (!date) return '';
 
-        var d = date instanceof Date ? date : new Date(date);
+        const d = date instanceof Date ? date : new Date(date);
         if (isNaN(d.getTime())) return '';
 
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         return months[d.getMonth()] + ' ' + d.getDate();
     };
@@ -64,10 +64,10 @@
     window.formatFullDate = function(date) {
         if (!date) return '';
 
-        var d = date instanceof Date ? date : new Date(date);
+        const d = date instanceof Date ? date : new Date(date);
         if (isNaN(d.getTime())) return '';
 
-        var months = ['January', 'February', 'March', 'April', 'May', 'June',
+        const months = ['January', 'February', 'March', 'April', 'May', 'June',
                       'July', 'August', 'September', 'October', 'November', 'December'];
         return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
     };

@@ -46,6 +46,12 @@
     const modalContent = document.getElementById('modalContent');
 
     // ─── Loader ───
+
+    /**
+     * Hides the initial page loader with a delay and initializes animations.
+     * Removes overflow restriction from body after hiding.
+     * @returns {void}
+     */
     function hideLoader() {
         setTimeout(() => {
             if (loader) {
@@ -57,6 +63,13 @@
     }
 
     // ─── Navigation ───
+
+    /**
+     * Initializes navigation behavior including scroll-based styling and mobile menu toggle.
+     * Uses requestAnimationFrame throttling for smooth scroll performance.
+     * Handles escape key for accessibility to close mobile menu.
+     * @returns {void}
+     */
     function initNav() {
         if (!nav) return; // Guard clause for missing nav element
 
@@ -128,6 +141,12 @@
     }
 
     // ─── Close Mobile Menu ───
+
+    /**
+     * Closes the mobile navigation menu and restores body scroll.
+     * @returns {void}
+     * @global
+     */
     window.closeMobileMenu = function() {
         navToggle.classList.remove('active');
         mobileMenu.classList.remove('active');
@@ -136,6 +155,13 @@
 
     // ─── Athletes Grid ───
     // Uses hardcoded demo data - safe for innerHTML since data is controlled
+
+    /**
+     * Renders the athletes grid from athletesData array.
+     * Creates DOM elements safely using createElement to prevent XSS.
+     * Each card includes image, badges, name, school, sport, GPA, and followers.
+     * @returns {void}
+     */
     function renderAthletes() {
         if (!athletesGrid) return;
 
@@ -242,6 +268,13 @@
     }
 
     // ─── Stat Counter Animation ───
+
+    /**
+     * Animates hero stat counters from 0 to target value on scroll into view.
+     * Uses IntersectionObserver to trigger animation when elements become visible.
+     * Applies ease-out cubic easing for smooth number transitions.
+     * @returns {void}
+     */
     function animateStats() {
         const stats = document.querySelectorAll('.hero-stat-value[data-value]');
 
@@ -284,6 +317,13 @@
     }
 
     // ─── Init Animations ───
+
+    /**
+     * Initializes all page animations including stat counters and fade-in effects.
+     * Sets up IntersectionObserver for scroll-triggered fade-in animations on steps,
+     * testimonials, and athlete cards.
+     * @returns {void}
+     */
     function initAnimations() {
         animateStats();
 
@@ -365,6 +405,13 @@
     }
 
     // Modal content builders using safe DOM methods
+
+    /**
+     * Builds the login modal content using safe DOM methods (XSS prevention).
+     * Includes email/password form, remember me checkbox, forgot password link,
+     * demo access buttons, and signup link.
+     * @returns {HTMLDivElement} The constructed login modal container element
+     */
     function buildLoginModal() {
         const container = document.createElement('div');
 
@@ -474,6 +521,14 @@
     }
 
     // ─── Password Reset Form ───
+
+    /**
+     * Shows the password reset form by replacing the login form content.
+     * Hides login form, demo section, and footer, then displays reset email input.
+     * @param {HTMLElement} container - The modal container element
+     * @param {HTMLFormElement} loginForm - The login form element to hide
+     * @returns {void}
+     */
     function showPasswordResetForm(container, loginForm) {
         // Hide the login form
         loginForm.style.display = 'none';
@@ -567,6 +622,11 @@
         }, 100);
     }
 
+    /**
+     * Builds the signup modal with athlete/brand options using safe DOM methods.
+     * Displays two options for user type selection with descriptions.
+     * @returns {HTMLDivElement} The constructed signup modal container element
+     */
     function buildSignupModal() {
         const container = document.createElement('div');
 
@@ -622,6 +682,11 @@
         return container;
     }
 
+    /**
+     * Builds the athlete signup modal form using safe DOM methods.
+     * Includes fields for name, email, password, university, sport, and GPA.
+     * @returns {HTMLDivElement} The constructed athlete signup modal container element
+     */
     function buildAthleteSignupModal() {
         const container = document.createElement('div');
 
@@ -715,6 +780,11 @@
         return container;
     }
 
+    /**
+     * Builds the brand signup modal form using safe DOM methods.
+     * Includes fields for company name, contact info, email, industry, and password.
+     * @returns {HTMLDivElement} The constructed brand signup modal container element
+     */
     function buildBrandSignupModal() {
         const container = document.createElement('div');
 
@@ -799,6 +869,16 @@
     }
 
     // Helper functions for building forms
+
+    /**
+     * Creates a form group with label and input field.
+     * @param {string} id - The ID and name attribute for the input
+     * @param {string} labelText - Text content for the label
+     * @param {string} type - Input type (text, email, password, etc.)
+     * @param {string} placeholder - Placeholder text for the input
+     * @param {boolean} required - Whether the field is required
+     * @returns {HTMLDivElement} The constructed form group element
+     */
     function createFormGroup(id, labelText, type, placeholder, required) {
         const group = document.createElement('div');
         group.className = 'form-group';
@@ -820,6 +900,13 @@
         return group;
     }
 
+    /**
+     * Creates a form group with label and select dropdown.
+     * @param {string} id - The ID and name attribute for the select
+     * @param {string} labelText - Text content for the label
+     * @param {Array<{value: string, label: string}>} options - Array of option objects
+     * @returns {HTMLDivElement} The constructed form group element with select
+     */
     function createSelectGroup(id, labelText, options) {
         const group = document.createElement('div');
         group.className = 'form-group';
@@ -846,6 +933,11 @@
         return group;
     }
 
+    /**
+     * Creates a terms and privacy policy checkbox group.
+     * Includes links to Terms of Service and Privacy Policy.
+     * @returns {HTMLDivElement} The constructed terms checkbox element
+     */
     function createTermsCheckbox() {
         const terms = document.createElement('div');
         terms.className = 'form-terms';
@@ -881,6 +973,14 @@
         return terms;
     }
 
+    /**
+     * Creates a signup option button with icon, title, and description.
+     * @param {string} type - The option type ('athlete' or 'brand')
+     * @param {string} title - The option title text
+     * @param {string} description - The option description text
+     * @param {string} modalType - The modal type to open on click
+     * @returns {HTMLButtonElement} The constructed signup option button
+     */
     function createSignupOption(type, title, description, modalType) {
         const btn = document.createElement('button');
         btn.className = 'signup-option';
@@ -939,6 +1039,14 @@
         'brand-signup': buildBrandSignupModal
     };
 
+    /**
+     * Opens a modal by type using pre-defined builders.
+     * Saves focus state for WCAG 2.2 compliance, sets up focus trap,
+     * and focuses the first input element.
+     * @param {string} type - Modal type: 'login', 'signup', 'athlete-signup', or 'brand-signup'
+     * @returns {void}
+     * @global
+     */
     window.openModal = function(type) {
         const builder = modalBuilders[type];
         if (builder) {
@@ -975,6 +1083,12 @@
         }
     };
 
+    /**
+     * Closes the currently open modal and restores focus to trigger element.
+     * Removes active classes, restores body scroll, and resets focus state.
+     * @returns {void}
+     * @global
+     */
     window.closeModal = function() {
         modalOverlay.classList.remove('active');
         modal.classList.remove('active');
@@ -1002,6 +1116,16 @@
     });
 
     // ─── Contact Athlete Modal ───
+
+    /**
+     * Shows a contact modal for reaching out to a specific athlete.
+     * Creates a full modal with subject, message textarea, and send button.
+     * Includes WCAG 2.2 focus management and keyboard accessibility.
+     * @param {Object} athlete - The athlete object to contact
+     * @param {string} athlete.name - The athlete's name
+     * @returns {void}
+     * @global
+     */
     window.showContactModal = function(athlete) {
         // WCAG 2.2: Save the element that triggered the modal for focus restoration
         const contactModalTrigger = document.activeElement;
@@ -1105,6 +1229,15 @@
     };
 
     // ─── Athlete Modal ───
+
+    /**
+     * Opens a detailed athlete profile modal by ID.
+     * Displays full profile including photo, school, name, sport, education info,
+     * stats (GPA, followers, verification), tags, and action buttons.
+     * @param {string} id - The athlete ID to display
+     * @returns {void}
+     * @global
+     */
     window.openAthleteModal = function(id) {
         const athlete = athletesData.find(a => a.id === id);
         if (!athlete) return;
@@ -1254,6 +1387,14 @@
     };
 
     // ─── Form Handlers ───
+
+    /**
+     * Handles login form submission with validation and rate limiting.
+     * Validates email format, checks rate limits, saves login state to localStorage,
+     * and redirects to appropriate dashboard based on email hints.
+     * @param {Event} e - The form submit event
+     * @returns {void}
+     */
     function handleLogin(e) {
         e.preventDefault();
         const emailInput = document.getElementById('email');
@@ -1326,6 +1467,13 @@
         }, 1000);
     }
 
+    /**
+     * Handles athlete signup form submission with validation.
+     * Validates CSRF token, email format, password strength, and required fields.
+     * Saves athlete data to localStorage and redirects to athlete dashboard.
+     * @param {Event} e - The form submit event
+     * @returns {void}
+     */
     function handleAthleteSignup(e) {
         e.preventDefault();
 
@@ -1403,6 +1551,13 @@
         }, 1500);
     }
 
+    /**
+     * Handles brand signup form submission with validation.
+     * Validates CSRF token, email format, password strength, and required fields.
+     * Saves brand data to localStorage and redirects to brand dashboard.
+     * @param {Event} e - The form submit event
+     * @returns {void}
+     */
     function handleBrandSignup(e) {
         e.preventDefault();
 
@@ -1489,6 +1644,14 @@
     // 2. GDPR-compliant consent mechanism
     // 3. Encryption at rest
     // 4. Audit logging
+
+    /**
+     * Placeholder for email collection - currently disabled for security.
+     * Clears any previously stored email data and performs no-op.
+     * @param {string} email - The email address (not stored)
+     * @param {string} source - The source of the email (login, signup, etc.)
+     * @returns {void}
+     */
     function saveEmailToList(email, source) {
         // Clear any previously stored email data (security cleanup)
         if (localStorage.getItem('gradeup_emails')) {
@@ -1560,11 +1723,25 @@
     }
 
     // Keep backward compatibility
+
+    /**
+     * Shows an authentication-related toast notification.
+     * Wrapper for showToast with 'info' as default type.
+     * @param {string} message - The message to display
+     * @param {string} [type='info'] - Toast type: 'success', 'error', 'warning', 'info'
+     * @returns {void}
+     */
     function showAuthToast(message, type) {
         showToast(message, type || 'info');
     }
 
     // ─── Footer Support Links ───
+
+    /**
+     * Sets up click handlers for footer support links.
+     * Opens modals for Help Center, Privacy Policy, and Terms of Service.
+     * @returns {void}
+     */
     function setupFooterLinks() {
         var helpCenterLink = document.getElementById('helpCenterLink');
         var privacyPolicyLink = document.getElementById('privacyPolicyLink');
@@ -1592,6 +1769,14 @@
         }
     }
 
+    /**
+     * Shows an informational modal with title and content.
+     * Used for Help Center, Privacy Policy, Terms of Service.
+     * Includes WCAG 2.2 focus management and keyboard accessibility.
+     * @param {string} title - The modal title
+     * @param {HTMLElement} content - The content element to display
+     * @returns {void}
+     */
     function showInfoModal(title, content) {
         // WCAG 2.2: Save the element that triggered the modal for focus restoration
         var infoModalTrigger = document.activeElement;
@@ -1673,6 +1858,11 @@
         setTimeout(function() { closeBtn.focus(); }, 100);
     }
 
+    /**
+     * Generates the Help Center content as a DOM element.
+     * Includes sections for Getting Started, Athletes, Brands, and Support.
+     * @returns {HTMLDivElement} Container element with Help Center content
+     */
     function getHelpCenterContent() {
         var container = document.createElement('div');
 
@@ -1734,6 +1924,11 @@
         return container;
     }
 
+    /**
+     * Generates the Privacy Policy content as a DOM element.
+     * Includes sections for data collection, usage, sharing, security, and user rights.
+     * @returns {HTMLDivElement} Container element with Privacy Policy content
+     */
     function getPrivacyPolicyContent() {
         var container = document.createElement('div');
 
@@ -1784,6 +1979,11 @@
         return container;
     }
 
+    /**
+     * Generates the Terms of Service content as a DOM element.
+     * Includes sections for eligibility, user conduct, IP, liability, and more.
+     * @returns {HTMLDivElement} Container element with Terms of Service content
+     */
     function getTermsOfServiceContent() {
         var container = document.createElement('div');
 
@@ -1840,6 +2040,13 @@
 
     // ─── Event Delegation for data-action Buttons ───
     // Handles all buttons with data-action attributes instead of inline onclick handlers
+
+    /**
+     * Sets up event delegation for buttons with data-action attributes.
+     * Handles various action types including openModalAndClose, handleVerification,
+     * previewDocument, and generic function calls with id/param parameters.
+     * @returns {void}
+     */
     function setupEventDelegation() {
         document.addEventListener('click', function(e) {
             const target = e.target.closest('[data-action]');
@@ -1891,6 +2098,13 @@
     }
 
     // ─── Initialize ───
+
+    /**
+     * Main initialization function for the application.
+     * Sets up loader, navigation, renders athletes, configures footer links,
+     * and initializes event delegation.
+     * @returns {void}
+     */
     function init() {
         document.body.style.overflow = 'hidden';
         hideLoader();

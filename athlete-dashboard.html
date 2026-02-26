@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>Athlete Dashboard | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="Athlete Dashboard | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL - Athlete Dashboard. Track your GradeUp Score, earnings, deals, and achievements.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/athlete-dashboard.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="Athlete Dashboard | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL - Athlete Dashboard. Track your GradeUp Score, earnings, deals, and achievements.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/athlete-dashboard.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2715,6 +2739,30 @@
             }
         }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://gradeup.com/athlete-dashboard.html#profilepage",
+      "name": "Athlete Dashboard | GradeUp NIL",
+      "url": "https://gradeup.com/athlete-dashboard.html",
+      "description": "GradeUp NIL - Athlete Dashboard. Track your GradeUp Score, earnings, deals, and achievements.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Athlete Profile",
+        "description": "Student-athlete profile on GradeUp NIL platform",
+        "memberOf": {
+          "@type": "Organization",
+          "name": "GradeUp NIL"
+        }
+      }
+    }
+    </script>
 </head>
 <body>
     <!-- Skip Link for Keyboard Navigation (WCAG 2.4.1) -->
@@ -3131,6 +3179,22 @@
                                 Proactively pitch yourself to brands you want to work with. Create proposals and track their status.
                             </p>
                             <div id="myProposals" class="my-proposals">
+                                <!-- Empty state shown when no proposals -->
+                                <div class="empty-state" id="proposalsEmptyState">
+                                    <div class="empty-state-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                            <line x1="12" y1="18" x2="12" y2="12"/>
+                                            <line x1="9" y1="15" x2="15" y2="15"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="empty-state-title">No Proposals Yet</h4>
+                                    <p class="empty-state-text">Create your first proposal to pitch directly to brands you want to work with.</p>
+                                    <button class="btn btn-primary btn-sm" onclick="document.getElementById('newProposalBtn').click()">
+                                        Create Your First Proposal
+                                    </button>
+                                </div>
                                 <!-- Proposals will be inserted by JS -->
                             </div>
                         </div>
@@ -3165,6 +3229,17 @@
                         </div>
                         <div class="card-body">
                             <div class="achievements-grid" id="achievementsGrid">
+                                <!-- Empty State -->
+                                <div class="empty-state" id="achievementsEmptyState" style="display: none;">
+                                    <div class="empty-state-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <circle cx="12" cy="8" r="7"/>
+                                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="empty-state-title">No Achievements Yet</h4>
+                                    <p class="empty-state-description">Complete deals and hit milestones to unlock achievements.</p>
+                                </div>
                                 <!-- Achievements will be inserted by JS -->
                             </div>
                         </div>
@@ -3177,6 +3252,19 @@
                         </div>
                         <div class="card-body">
                             <div class="calendar-widget" id="calendarWidget">
+                                <!-- Empty State -->
+                                <div class="empty-state" id="calendarEmptyState" style="display: none;">
+                                    <div class="empty-state-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="empty-state-title">No Upcoming Events</h4>
+                                    <p class="empty-state-description">Your scheduled deals and appearances will show here.</p>
+                                </div>
                                 <!-- Calendar items will be inserted by JS -->
                             </div>
                         </div>
@@ -3189,6 +3277,20 @@
                         </div>
                         <div class="card-body">
                             <div class="brand-matches" id="brandMatches">
+                                <!-- Empty State -->
+                                <div class="empty-state" id="brandMatchesEmptyState" style="display: none;">
+                                    <div class="empty-state-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                            <circle cx="8.5" cy="7" r="4"/>
+                                            <line x1="20" y1="8" x2="20" y2="14"/>
+                                            <line x1="23" y1="11" x2="17" y2="11"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="empty-state-title">No Brand Matches Yet</h4>
+                                    <p class="empty-state-description">Complete your profile to get matched with brands looking for athletes like you.</p>
+                                    <a href="profile.html" class="btn btn-primary btn-sm">Complete Profile</a>
+                                </div>
                                 <!-- Brand matches will be inserted by JS -->
                             </div>
                         </div>
@@ -3230,6 +3332,80 @@
         </div>
     </main>
 
+    <!-- Athlete Onboarding Modal -->
+    <div class="onboarding-overlay" id="athleteOnboarding" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle" style="display: none;">
+        <div class="onboarding-modal">
+            <div class="onboarding-header">
+                <div class="onboarding-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <h2 class="onboarding-title" id="onboardingTitle">Welcome to GradeUp!</h2>
+                <p class="onboarding-subtitle">Let's get your profile set up to start earning</p>
+            </div>
+            <div class="onboarding-body">
+                <div class="onboarding-progress" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4">
+                    <div class="progress-dot active" data-step="1"></div>
+                    <div class="progress-dot" data-step="2"></div>
+                    <div class="progress-dot" data-step="3"></div>
+                    <div class="progress-dot" data-step="4"></div>
+                </div>
+                <ul class="onboarding-checklist" role="list">
+                    <li class="checklist-item" data-step="profile">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Complete your profile</div>
+                            <div class="checklist-description">Add your photo, bio, and athletic information</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item" data-step="social">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Connect social accounts</div>
+                            <div class="checklist-description">Link Instagram, Twitter, and TikTok for higher valuations</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item" data-step="stattaq">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Sync StatTaq data</div>
+                            <div class="checklist-description">Own your performance data and increase your value</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item" data-step="preferences">
+                        <div class="checklist-checkbox" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="checklist-content">
+                            <div class="checklist-title">Set deal preferences</div>
+                            <div class="checklist-description">Choose minimum deal values and preferred industries</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="onboarding-footer">
+                <button class="onboarding-skip" id="skipOnboarding">Skip for now</button>
+                <button class="btn btn-primary" id="startOnboarding">Let's Go!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Container -->
     <div class="dashboard-modal" id="dashboardModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
@@ -3253,6 +3429,117 @@
         //  Note: All data is mock/hardcoded for demo purposes. No user input is
         //  used in dynamic HTML generation, eliminating XSS concerns.
         // ═══════════════════════════════════════════════════════════════════════════
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        //  ONBOARDING FLOW
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        const onboardingOverlay = document.getElementById('athleteOnboarding');
+        const skipOnboardingBtn = document.getElementById('skipOnboarding');
+        const startOnboardingBtn = document.getElementById('startOnboarding');
+
+        // Check if user has completed onboarding
+        function checkOnboarding() {
+            const hasCompletedOnboarding = localStorage.getItem('gradeup_athlete_onboarded');
+            if (!hasCompletedOnboarding) {
+                showOnboarding();
+            }
+        }
+
+        function showOnboarding() {
+            if (onboardingOverlay) {
+                onboardingOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                // Focus first focusable element
+                const firstBtn = onboardingOverlay.querySelector('button');
+                if (firstBtn) setTimeout(function() { firstBtn.focus(); }, 100);
+            }
+        }
+
+        function hideOnboarding() {
+            if (onboardingOverlay) {
+                onboardingOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function completeOnboarding() {
+            localStorage.setItem('gradeup_athlete_onboarded', 'true');
+            hideOnboarding();
+            showToast('Welcome to GradeUp! Start exploring opportunities.', 'success');
+        }
+
+        if (skipOnboardingBtn) {
+            skipOnboardingBtn.addEventListener('click', function() {
+                localStorage.setItem('gradeup_athlete_onboarded', 'skipped');
+                hideOnboarding();
+            });
+        }
+
+        if (startOnboardingBtn) {
+            startOnboardingBtn.addEventListener('click', function() {
+                completeOnboarding();
+                // Navigate to profile setup
+                window.location.href = 'profile.html';
+            });
+        }
+
+        // Handle Escape key for onboarding
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && onboardingOverlay && onboardingOverlay.style.display === 'flex') {
+                hideOnboarding();
+                localStorage.setItem('gradeup_athlete_onboarded', 'skipped');
+            }
+        });
+
+        // Toast notification function (safe DOM construction)
+        function showToast(message, type) {
+            type = type || 'success';
+            var existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+
+            var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            icon.setAttribute('class', 'toast-icon');
+            icon.setAttribute('viewBox', '0 0 24 24');
+            icon.setAttribute('fill', 'none');
+            icon.setAttribute('stroke', 'currentColor');
+            icon.setAttribute('stroke-width', '2');
+
+            var iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            if (type === 'success') {
+                iconPath.setAttribute('d', 'M22 11.08V12a10 10 0 11-5.93-9.14');
+                var iconPath2 = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                iconPath2.setAttribute('points', '22 4 12 14.01 9 11.01');
+                icon.appendChild(iconPath);
+                icon.appendChild(iconPath2);
+            } else {
+                iconPath.setAttribute('d', 'M12 2a10 10 0 100 20 10 10 0 000-20z');
+                icon.appendChild(iconPath);
+            }
+
+            var msgSpan = document.createElement('span');
+            msgSpan.className = 'toast-message';
+            msgSpan.textContent = message;
+
+            var closeBtn = document.createElement('button');
+            closeBtn.className = 'toast-close';
+            closeBtn.setAttribute('aria-label', 'Dismiss notification');
+            closeBtn.textContent = '×';
+
+            toast.appendChild(icon);
+            toast.appendChild(msgSpan);
+            toast.appendChild(closeBtn);
+            document.body.appendChild(toast);
+
+            closeBtn.addEventListener('click', function() { toast.remove(); });
+            setTimeout(function() { if (toast.parentNode) toast.remove(); }, 5000);
+        }
+
+        // Initialize onboarding check on page load
+        // Uncomment to enable: checkOnboarding();
 
         // ─── Focus Trap Utility (WCAG 2.2 Keyboard Accessibility) ───
         let lastFocusedElement = null;
@@ -4730,6 +5017,8 @@
                     itemDiv.addEventListener('click', function() {
                         if (typeof showToast === 'function') {
                             showToast(item + ' settings coming soon!', 'info');
+                        } else if (typeof showAlert === 'function') {
+                            showAlert(item + ' settings coming soon!', null, { title: 'Coming Soon' });
                         } else {
                             alert(item + ' settings coming soon!');
                         }

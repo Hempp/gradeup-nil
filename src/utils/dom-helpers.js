@@ -18,24 +18,24 @@
      * @returns {HTMLElement} Form group element
      */
     window.createFormGroup = function(options) {
-        var opts = options || {};
-        var id = opts.id || 'input-' + Date.now();
-        var labelText = opts.label || '';
-        var type = opts.type || 'text';
-        var placeholder = opts.placeholder || '';
-        var required = opts.required || false;
-        var value = opts.value || '';
+        const opts = options || {};
+        const id = opts.id || 'input-' + Date.now();
+        const labelText = opts.label || '';
+        const type = opts.type || 'text';
+        const placeholder = opts.placeholder || '';
+        const required = opts.required || false;
+        const value = opts.value || '';
 
-        var group = document.createElement('div');
+        const group = document.createElement('div');
         group.className = 'form-group';
 
-        var label = document.createElement('label');
+        const label = document.createElement('label');
         label.className = 'form-label';
         label.htmlFor = id;
         label.textContent = labelText;
         group.appendChild(label);
 
-        var input = document.createElement('input');
+        const input = document.createElement('input');
         input.type = type;
         input.id = id;
         input.name = id;
@@ -61,23 +61,23 @@
      * @returns {HTMLElement} Form group element
      */
     window.createSelectGroup = function(options) {
-        var opts = options || {};
-        var id = opts.id || 'select-' + Date.now();
-        var labelText = opts.label || '';
-        var selectOptions = opts.options || [];
-        var required = opts.required || false;
-        var value = opts.value || '';
+        const opts = options || {};
+        const id = opts.id || 'select-' + Date.now();
+        const labelText = opts.label || '';
+        const selectOptions = opts.options || [];
+        const required = opts.required || false;
+        const value = opts.value || '';
 
-        var group = document.createElement('div');
+        const group = document.createElement('div');
         group.className = 'form-group';
 
-        var label = document.createElement('label');
+        const label = document.createElement('label');
         label.className = 'form-label';
         label.htmlFor = id;
         label.textContent = labelText;
         group.appendChild(label);
 
-        var select = document.createElement('select');
+        const select = document.createElement('select');
         select.id = id;
         select.name = id;
         select.className = 'form-select';
@@ -85,7 +85,7 @@
         if (required) select.required = true;
 
         selectOptions.forEach(function(opt) {
-            var option = document.createElement('option');
+            const option = document.createElement('option');
             option.value = opt.value;
             option.textContent = opt.label;
             if (opt.value === value) option.selected = true;
@@ -108,23 +108,23 @@
      * @returns {HTMLElement} Form group element
      */
     window.createTextareaGroup = function(options) {
-        var opts = options || {};
-        var id = opts.id || 'textarea-' + Date.now();
-        var labelText = opts.label || '';
-        var placeholder = opts.placeholder || '';
-        var required = opts.required || false;
-        var rows = opts.rows || 4;
+        const opts = options || {};
+        const id = opts.id || 'textarea-' + Date.now();
+        const labelText = opts.label || '';
+        const placeholder = opts.placeholder || '';
+        const required = opts.required || false;
+        const rows = opts.rows || 4;
 
-        var group = document.createElement('div');
+        const group = document.createElement('div');
         group.className = 'form-group';
 
-        var label = document.createElement('label');
+        const label = document.createElement('label');
         label.className = 'form-label';
         label.htmlFor = id;
         label.textContent = labelText;
         group.appendChild(label);
 
-        var textarea = document.createElement('textarea');
+        const textarea = document.createElement('textarea');
         textarea.id = id;
         textarea.name = id;
         textarea.className = 'form-textarea';
@@ -150,15 +150,15 @@
      * @returns {HTMLElement} Button element
      */
     window.createButton = function(options) {
-        var opts = options || {};
-        var text = opts.text || 'Button';
-        var type = opts.type || 'button';
-        var variant = opts.variant || 'primary';
-        var size = opts.size || '';
-        var block = opts.block || false;
-        var onClick = opts.onClick || null;
+        const opts = options || {};
+        const text = opts.text || 'Button';
+        const type = opts.type || 'button';
+        const variant = opts.variant || 'primary';
+        const size = opts.size || '';
+        const block = opts.block || false;
+        const onClick = opts.onClick || null;
 
-        var btn = document.createElement('button');
+        const btn = document.createElement('button');
         btn.type = type;
         btn.className = 'btn btn-' + variant;
         if (size) btn.className += ' btn-' + size;
@@ -182,30 +182,30 @@
      * @returns {Object} { backdrop, modal, close }
      */
     window.createModal = function(options) {
-        var opts = options || {};
-        var title = opts.title || 'Modal';
-        var content = opts.content || '';
-        var showFooter = opts.showFooter !== false;
-        var onClose = opts.onClose || null;
+        const opts = options || {};
+        const title = opts.title || 'Modal';
+        const content = opts.content || '';
+        const showFooter = opts.showFooter !== false;
+        const onClose = opts.onClose || null;
 
         // Backdrop
-        var backdrop = document.createElement('div');
+        const backdrop = document.createElement('div');
         backdrop.className = 'modal-backdrop';
 
         // Modal container
-        var modal = document.createElement('div');
+        const modal = document.createElement('div');
         modal.className = 'modal-container';
 
         // Header
-        var header = document.createElement('div');
+        const header = document.createElement('div');
         header.className = 'modal-header';
 
-        var titleEl = document.createElement('h3');
+        const titleEl = document.createElement('h3');
         titleEl.className = 'modal-title';
         titleEl.textContent = title;
         header.appendChild(titleEl);
 
-        var closeBtn = document.createElement('button');
+        const closeBtn = document.createElement('button');
         closeBtn.className = 'modal-close';
         closeBtn.setAttribute('aria-label', 'Close modal');
         closeBtn.textContent = '✕';
@@ -214,7 +214,7 @@
         modal.appendChild(header);
 
         // Body
-        var body = document.createElement('div');
+        const body = document.createElement('div');
         body.className = 'modal-body';
         if (typeof content === 'string') {
             body.textContent = content;
@@ -225,10 +225,10 @@
 
         // Footer (optional)
         if (showFooter) {
-            var footer = document.createElement('div');
+            const footer = document.createElement('div');
             footer.className = 'modal-footer';
 
-            var closeFooterBtn = createButton({
+            const closeFooterBtn = createButton({
                 text: 'Close',
                 variant: 'secondary'
             });
@@ -285,28 +285,28 @@
      * @returns {HTMLElement} Card element
      */
     window.createCard = function(options) {
-        var opts = options || {};
-        var title = opts.title || '';
-        var actionText = opts.actionText || '';
-        var onAction = opts.onAction || null;
-        var content = opts.content || '';
+        const opts = options || {};
+        const title = opts.title || '';
+        const actionText = opts.actionText || '';
+        const onAction = opts.onAction || null;
+        const content = opts.content || '';
 
-        var card = document.createElement('div');
+        const card = document.createElement('div');
         card.className = 'glass-card';
 
         if (title || actionText) {
-            var header = document.createElement('div');
+            const header = document.createElement('div');
             header.className = 'card-header';
 
             if (title) {
-                var titleEl = document.createElement('h3');
+                const titleEl = document.createElement('h3');
                 titleEl.className = 'card-title';
                 titleEl.textContent = title;
                 header.appendChild(titleEl);
             }
 
             if (actionText) {
-                var actionBtn = document.createElement('button');
+                const actionBtn = document.createElement('button');
                 actionBtn.className = 'card-action';
                 actionBtn.textContent = actionText;
                 if (onAction) {
@@ -318,7 +318,7 @@
             card.appendChild(header);
         }
 
-        var body = document.createElement('div');
+        const body = document.createElement('div');
         body.className = 'card-body';
         if (typeof content === 'string') {
             body.textContent = content;
@@ -337,7 +337,7 @@
      * @returns {HTMLElement} Badge element
      */
     window.createStatusBadge = function(status, text) {
-        var badge = document.createElement('span');
+        const badge = document.createElement('span');
         badge.className = 'status-badge ' + (status || 'pending');
         badge.textContent = text || status || 'pending';
         return badge;
@@ -352,8 +352,8 @@
      * @returns {HTMLElement} Skeleton element
      */
     window.createSkeleton = function(options) {
-        var opts = options || {};
-        var skeleton = document.createElement('div');
+        const opts = options || {};
+        const skeleton = document.createElement('div');
         skeleton.className = 'skeleton';
         skeleton.style.width = opts.width || '100%';
         skeleton.style.height = opts.height || '20px';
@@ -362,6 +362,188 @@
         skeleton.style.backgroundSize = '200% 100%';
         skeleton.style.animation = 'shimmer 1.5s infinite';
         return skeleton;
+    };
+
+    /**
+     * Show a custom alert modal (replacement for browser alert())
+     * @param {string} message - Alert message
+     * @param {Function} callback - Optional callback after OK is clicked
+     * @param {Object} options - Optional configuration
+     * @param {string} options.title - Modal title (default: 'Notice')
+     * @param {string} options.buttonText - OK button text (default: 'OK')
+     */
+    window.showAlert = function(message, callback, options) {
+        const opts = options || {};
+        const title = opts.title || 'Notice';
+        const buttonText = opts.buttonText || 'OK';
+
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay custom-alert-overlay active';
+        overlay.setAttribute('role', 'alertdialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-labelledby', 'alertTitle');
+        overlay.setAttribute('aria-describedby', 'alertMessage');
+
+        const dialog = document.createElement('div');
+        dialog.className = 'modal-dialog custom-alert-dialog';
+
+        const titleEl = document.createElement('h3');
+        titleEl.id = 'alertTitle';
+        titleEl.className = 'modal-title';
+        titleEl.textContent = title;
+
+        const messageEl = document.createElement('p');
+        messageEl.id = 'alertMessage';
+        messageEl.className = 'modal-message';
+        messageEl.textContent = message;
+
+        const actions = document.createElement('div');
+        actions.className = 'modal-actions';
+
+        const okBtn = document.createElement('button');
+        okBtn.className = 'btn btn-primary';
+        okBtn.textContent = buttonText;
+        okBtn.addEventListener('click', function() {
+            overlay.classList.remove('active');
+            setTimeout(function() {
+                if (overlay.parentNode) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            }, 300);
+        });
+
+        actions.appendChild(okBtn);
+        dialog.appendChild(titleEl);
+        dialog.appendChild(messageEl);
+        dialog.appendChild(actions);
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        // Focus the OK button for accessibility
+        setTimeout(function() {
+            okBtn.focus();
+        }, 50);
+
+        // Handle Escape key
+        function handleEsc(e) {
+            if (e.key === 'Escape') {
+                okBtn.click();
+                document.removeEventListener('keydown', handleEsc);
+            }
+        }
+        document.addEventListener('keydown', handleEsc);
+
+        // Handle click outside
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                okBtn.click();
+            }
+        });
+    };
+
+    /**
+     * Show a custom confirm modal (replacement for browser confirm())
+     * @param {string} message - Confirm message
+     * @param {Function} onConfirm - Callback when confirmed (Yes clicked)
+     * @param {Function} onCancel - Optional callback when cancelled (No clicked)
+     * @param {Object} options - Optional configuration
+     * @param {string} options.title - Modal title (default: 'Confirm')
+     * @param {string} options.confirmText - Confirm button text (default: 'Yes')
+     * @param {string} options.cancelText - Cancel button text (default: 'No')
+     * @param {boolean} options.danger - Use danger styling for confirm button
+     */
+    window.showConfirm = function(message, onConfirm, onCancel, options) {
+        const opts = options || {};
+        const title = opts.title || 'Confirm';
+        const confirmText = opts.confirmText || 'Yes';
+        const cancelText = opts.cancelText || 'No';
+        const danger = opts.danger || false;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay custom-alert-overlay active';
+        overlay.setAttribute('role', 'alertdialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-labelledby', 'confirmTitle');
+        overlay.setAttribute('aria-describedby', 'confirmMessage');
+
+        const dialog = document.createElement('div');
+        dialog.className = 'modal-dialog custom-alert-dialog';
+
+        const titleEl = document.createElement('h3');
+        titleEl.id = 'confirmTitle';
+        titleEl.className = 'modal-title';
+        titleEl.textContent = title;
+
+        const messageEl = document.createElement('p');
+        messageEl.id = 'confirmMessage';
+        messageEl.className = 'modal-message';
+        messageEl.textContent = message;
+
+        const actions = document.createElement('div');
+        actions.className = 'modal-actions';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'btn btn-secondary';
+        cancelBtn.textContent = cancelText;
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.className = danger ? 'btn btn-danger' : 'btn btn-primary';
+        confirmBtn.textContent = confirmText;
+
+        function closeOverlay() {
+            overlay.classList.remove('active');
+            setTimeout(function() {
+                if (overlay.parentNode) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+            }, 300);
+        }
+
+        cancelBtn.addEventListener('click', function() {
+            closeOverlay();
+            if (onCancel && typeof onCancel === 'function') {
+                onCancel();
+            }
+        });
+
+        confirmBtn.addEventListener('click', function() {
+            closeOverlay();
+            if (onConfirm && typeof onConfirm === 'function') {
+                onConfirm();
+            }
+        });
+
+        actions.appendChild(cancelBtn);
+        actions.appendChild(confirmBtn);
+        dialog.appendChild(titleEl);
+        dialog.appendChild(messageEl);
+        dialog.appendChild(actions);
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        // Focus the cancel button for accessibility (safer default)
+        setTimeout(function() {
+            cancelBtn.focus();
+        }, 50);
+
+        // Handle Escape key (cancel)
+        function handleEsc(e) {
+            if (e.key === 'Escape') {
+                cancelBtn.click();
+                document.removeEventListener('keydown', handleEsc);
+            }
+        }
+        document.addEventListener('keydown', handleEsc);
+
+        // Handle click outside (cancel)
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                cancelBtn.click();
+            }
+        });
     };
 
     /**
@@ -375,14 +557,14 @@
         duration = duration || 3000;
 
         // Remove existing toast
-        var existing = document.querySelector('.toast-notification');
+        const existing = document.querySelector('.toast-notification');
         if (existing) existing.remove();
 
-        var toast = document.createElement('div');
+        const toast = document.createElement('div');
         toast.className = 'toast-notification toast-' + type;
         toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); padding: 1rem 2rem; border-radius: 8px; font-weight: 600; opacity: 0; transition: all 0.3s ease; z-index: 10000;';
 
-        var colors = {
+        const colors = {
             success: 'background: var(--success); color: white;',
             error: 'background: var(--error); color: white;',
             warning: 'background: var(--warning); color: black;',

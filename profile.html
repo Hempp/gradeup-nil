@@ -7,6 +7,30 @@
     <meta name="theme-color" content="#000000">
     <title>My Profile | GradeUp NIL</title>
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GradeUp NIL">
+    <meta property="og:title" content="My Profile | GradeUp NIL">
+    <meta property="og:description" content="GradeUp NIL - My Profile. Manage your athlete profile, social links, and public visibility.">
+    <meta property="og:image" content="https://gradeup.com/og-image.jpg">
+    <meta property="og:url" content="https://gradeup.com/profile.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@GradeUpNIL">
+    <meta name="twitter:title" content="My Profile | GradeUp NIL">
+    <meta name="twitter:description" content="GradeUp NIL - My Profile. Manage your athlete profile, social links, and public visibility.">
+    <meta name="twitter:image" content="https://gradeup.com/og-image.jpg">
+
+    <link rel="canonical" href="https://gradeup.com/profile.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +39,7 @@
 
     <!-- Base Styles -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="src/styles/dashboard-shared.css">
 
     <!-- Profile Page Styles -->
     <style>
@@ -837,7 +862,147 @@
             }
         }
 
+        /* ─── Mobile Navigation Drawer ─── */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 1px;
+            transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--gray-950);
+            border-right: 1px solid var(--gray-800);
+            z-index: 1000;
+            transition: left 0.3s var(--ease);
+            overflow-y: auto;
+        }
+
+        .mobile-drawer.open {
+            left: 0;
+        }
+
+        .mobile-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .mobile-drawer-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white);
+        }
+
+        .mobile-drawer-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-drawer-close:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .mobile-drawer-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-drawer-nav {
+            padding: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: var(--gray-900);
+            color: var(--white);
+        }
+
+        .mobile-nav-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .mobile-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s var(--ease), visibility 0.3s var(--ease);
+        }
+
+        .mobile-drawer-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
         @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+
             .profile-header {
                 padding: 1rem;
             }
@@ -873,11 +1038,42 @@
             }
         }
     </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://gradeup.com/profile.html#profilepage",
+      "name": "My Profile | GradeUp NIL",
+      "url": "https://gradeup.com/profile.html",
+      "description": "Manage your athlete profile, social links, and public visibility.",
+      "isPartOf": {
+        "@id": "https://gradeup.com/#website"
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "name": "User Profile",
+        "description": "Student-athlete profile management on GradeUp NIL",
+        "memberOf": {
+          "@type": "Organization",
+          "name": "GradeUp NIL"
+        }
+      }
+    }
+    </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Header -->
     <header class="profile-header">
         <div class="header-left">
+            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open navigation menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
             <a href="index.html" class="logo">GRADEUP</a>
             <nav class="header-nav">
                 <a href="athlete-dashboard.html" class="nav-link">Dashboard</a>
@@ -896,8 +1092,56 @@
         </div>
     </header>
 
+    <!-- Mobile Navigation Drawer -->
+    <aside class="mobile-drawer" id="mobileDrawer" role="navigation" aria-label="Mobile navigation">
+        <div class="mobile-drawer-header">
+            <span class="mobile-drawer-logo">GRADEUP</span>
+            <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Close navigation menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-drawer-nav">
+            <a href="athlete-dashboard.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="deals.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                Deals
+            </a>
+            <a href="analytics.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 20V10M12 20V4M6 20v-6"/>
+                </svg>
+                Analytics
+            </a>
+            <a href="profile.html" class="mobile-nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Profile
+            </a>
+            <a href="settings.html" class="mobile-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+    </aside>
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+
     <!-- Main Content -->
-    <main class="profile-page">
+    <main class="profile-page" id="main-content">
         <div class="profile-container">
             <!-- Page Header -->
             <div class="page-header">
@@ -981,15 +1225,15 @@
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label class="form-label">First Name</label>
+                                <label class="form-label" for="firstName">First Name</label>
                                 <input type="text" class="form-input" value="Marcus" id="firstName">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Last Name</label>
+                                <label class="form-label" for="lastName">Last Name</label>
                                 <input type="text" class="form-input" value="Johnson" id="lastName">
                             </div>
                             <div class="form-group full-width">
-                                <label class="form-label">Bio</label>
+                                <label class="form-label" for="bio">Bio</label>
                                 <textarea class="form-input" id="bio" placeholder="Tell brands about yourself...">Point guard for Duke Basketball. Dean's List student. Business Administration major with a passion for entrepreneurship and community service.</textarea>
                             </div>
                         </div>
@@ -1002,7 +1246,7 @@
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label class="form-label">School</label>
+                                <label class="form-label" for="school">School</label>
                                 <select class="form-select" id="school">
                                     <option value="duke" selected>Duke University</option>
                                     <option value="unc">UNC Chapel Hill</option>
@@ -1010,7 +1254,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Sport</label>
+                                <label class="form-label" for="sport">Sport</label>
                                 <select class="form-select" id="sport">
                                     <option value="basketball" selected>Basketball</option>
                                     <option value="football">Football</option>
@@ -1018,11 +1262,11 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Position</label>
+                                <label class="form-label" for="position">Position</label>
                                 <input type="text" class="form-input" value="Point Guard" id="position">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Year</label>
+                                <label class="form-label" for="year">Year</label>
                                 <select class="form-select" id="year">
                                     <option value="freshman">Freshman</option>
                                     <option value="sophomore">Sophomore</option>
@@ -1031,11 +1275,11 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Major</label>
+                                <label class="form-label" for="major">Major</label>
                                 <input type="text" class="form-input" value="Business Administration" id="major">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">GPA</label>
+                                <label class="form-label" for="gpa">GPA</label>
                                 <input type="text" class="form-input" value="3.87" id="gpa" readonly>
                             </div>
                         </div>
@@ -1070,20 +1314,24 @@
                         </div>
                         <div class="social-grid">
                             <div class="social-input-group">
-                                <span class="social-prefix">instagram.com/</span>
-                                <input type="text" class="social-input" value="marcusj" id="instagram">
+                                <label for="instagram" class="sr-only">Instagram username</label>
+                                <span class="social-prefix" aria-hidden="true">instagram.com/</span>
+                                <input type="text" class="social-input" value="marcusj" id="instagram" aria-label="Instagram username">
                             </div>
                             <div class="social-input-group">
-                                <span class="social-prefix">twitter.com/</span>
-                                <input type="text" class="social-input" value="marcusjohnson" id="twitter">
+                                <label for="twitter" class="sr-only">Twitter/X username</label>
+                                <span class="social-prefix" aria-hidden="true">twitter.com/</span>
+                                <input type="text" class="social-input" value="marcusjohnson" id="twitter" aria-label="Twitter/X username">
                             </div>
                             <div class="social-input-group">
-                                <span class="social-prefix">tiktok.com/@</span>
-                                <input type="text" class="social-input" value="marcusj" id="tiktok">
+                                <label for="tiktok" class="sr-only">TikTok username</label>
+                                <span class="social-prefix" aria-hidden="true">tiktok.com/@</span>
+                                <input type="text" class="social-input" value="marcusj" id="tiktok" aria-label="TikTok username">
                             </div>
                             <div class="social-input-group">
-                                <span class="social-prefix">youtube.com/</span>
-                                <input type="text" class="social-input" placeholder="channel" id="youtube">
+                                <label for="youtube" class="sr-only">YouTube channel</label>
+                                <span class="social-prefix" aria-hidden="true">youtube.com/</span>
+                                <input type="text" class="social-input" placeholder="channel" id="youtube" aria-label="YouTube channel">
                             </div>
                         </div>
                     </section>
@@ -1143,6 +1391,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="src/utils/dom-helpers.js"></script>
     <script>
         // Demo video data
         const videosData = [
@@ -1296,43 +1545,63 @@
         document.getElementById('saveChangesBtn').addEventListener('click', saveProfile);
 
         function saveProfile() {
-            // Collect form data
-            const profileData = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                bio: document.getElementById('bio').value,
-                school: document.getElementById('school').value,
-                sport: document.getElementById('sport').value,
-                position: document.getElementById('position').value,
-                year: document.getElementById('year').value,
-                major: document.getElementById('major').value,
-                instagram: document.getElementById('instagram').value,
-                twitter: document.getElementById('twitter').value,
-                tiktok: document.getElementById('tiktok').value,
-                youtube: document.getElementById('youtube').value,
-                minDeal: document.getElementById('minDeal').value,
-                dealTypes: document.getElementById('dealTypes').value,
-                industries: document.getElementById('industries').value
-            };
-
-            console.log('Saving profile:', profileData);
-
-            // Show success feedback
+            // Add loading state to both save buttons
             const saveBtn = document.getElementById('saveBtn');
+            const saveChangesBtn = document.getElementById('saveChangesBtn');
             const originalText = saveBtn.textContent;
-            saveBtn.textContent = 'Saved!';
-            setTimeout(function() {
-                saveBtn.textContent = originalText;
-            }, 2000);
+            const originalChangesText = saveChangesBtn.textContent;
 
-            hideSaveBar();
+            saveBtn.classList.add('btn-loading');
+            saveBtn.disabled = true;
+            saveChangesBtn.classList.add('btn-loading');
+            saveChangesBtn.disabled = true;
+
+            // Simulate async save operation
+            setTimeout(function() {
+                // Collect form data
+                const profileData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    bio: document.getElementById('bio').value,
+                    school: document.getElementById('school').value,
+                    sport: document.getElementById('sport').value,
+                    position: document.getElementById('position').value,
+                    year: document.getElementById('year').value,
+                    major: document.getElementById('major').value,
+                    instagram: document.getElementById('instagram').value,
+                    twitter: document.getElementById('twitter').value,
+                    tiktok: document.getElementById('tiktok').value,
+                    youtube: document.getElementById('youtube').value,
+                    minDeal: document.getElementById('minDeal').value,
+                    dealTypes: document.getElementById('dealTypes').value,
+                    industries: document.getElementById('industries').value
+                };
+
+                console.log('Saving profile:', profileData);
+
+                // Remove loading state
+                saveBtn.classList.remove('btn-loading');
+                saveBtn.disabled = false;
+                saveChangesBtn.classList.remove('btn-loading');
+                saveChangesBtn.disabled = false;
+
+                // Show success feedback
+                saveBtn.textContent = 'Saved!';
+                saveChangesBtn.textContent = 'Saved!';
+                setTimeout(function() {
+                    saveBtn.textContent = originalText;
+                    saveChangesBtn.textContent = originalChangesText;
+                }, 2000);
+
+                hideSaveBar();
+            }, 1000);
         }
 
         // Discard button
         document.getElementById('discardBtn').addEventListener('click', function() {
-            if (confirm('Discard all changes?')) {
+            showConfirm('Discard all changes?', function() {
                 location.reload();
-            }
+            }, null, { title: 'Discard Changes', danger: true, confirmText: 'Discard', cancelText: 'Keep Editing' });
         });
 
         // StatTaq sync button
@@ -1340,7 +1609,7 @@
 
         // StatTaq settings button
         document.getElementById('stattaqSettingsBtn').addEventListener('click', function() {
-            alert('StatTaq settings would open here. Configure your sport, sync frequency, and connected accounts.');
+            showAlert('StatTaq settings would open here. Configure your sport, sync frequency, and connected accounts.', null, { title: 'StatTaq Settings' });
         });
 
         // Initialize
@@ -1348,6 +1617,47 @@
             renderHighlights();
             renderStattaqStats();
         });
+
+        // Mobile Navigation
+        (function() {
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var mobileDrawer = document.getElementById('mobileDrawer');
+            var mobileDrawerClose = document.getElementById('mobileDrawerClose');
+            var mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+
+            function openDrawer() {
+                mobileDrawer.classList.add('open');
+                mobileDrawerOverlay.classList.add('visible');
+                hamburgerBtn.classList.add('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDrawer() {
+                mobileDrawer.classList.remove('open');
+                mobileDrawerOverlay.classList.remove('visible');
+                hamburgerBtn.classList.remove('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            hamburgerBtn.addEventListener('click', function() {
+                if (mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                } else {
+                    openDrawer();
+                }
+            });
+
+            mobileDrawerClose.addEventListener('click', closeDrawer);
+            mobileDrawerOverlay.addEventListener('click', closeDrawer);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+                    closeDrawer();
+                }
+            });
+        })();
     </script>
 
     <!-- Services Integration -->
