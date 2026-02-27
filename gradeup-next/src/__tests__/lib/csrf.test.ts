@@ -811,7 +811,7 @@ describe('Security Properties', () => {
 
   it('signature prevents token forgery', async () => {
     const { signedToken, secret } = await createCsrfToken();
-    const [token] = signedToken.split('.');
+    const [_token] = signedToken.split('.');
 
     // Attacker tries to forge a token with their own value
     const forgedToken = 'a'.repeat(64);

@@ -19,6 +19,7 @@ import {
   MinusSquare,
   AlertTriangle,
   RefreshCw,
+  Upload,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,6 +31,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, cn } from '@/lib/utils';
 import { useDirectorAthletes, type DirectorAthlete } from '@/lib/hooks/use-director-athletes';
+import { BulkImportModal } from '@/components/director/BulkImportModal';
 
 const statusFilters = ['All', 'Verified', 'Pending', 'Issues'];
 const verificationFilters = ['All Verifications', 'Enrollment Pending', 'Grades Pending', 'Stats Pending'];
@@ -218,6 +220,7 @@ export default function DirectorAthletesPage() {
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
   const [showBulkVerifyConfirm, setShowBulkVerifyConfirm] = useState(false);
   const [showBulkEmailModal, setShowBulkEmailModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Memoize callback to prevent AthleteRow re-renders
   const handleViewAthlete = useCallback((athleteId: string) => {
@@ -352,6 +355,10 @@ export default function DirectorAthletesPage() {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={() => refetch()} aria-label="Refresh data">
             <RefreshCw className="h-4 w-4" />
+          </Button>
+          <Button variant="primary" onClick={() => setShowImportModal(true)}>
+            <Upload className="h-4 w-4 mr-2" />
+            Import Athletes
           </Button>
           <Button variant="outline" onClick={() => setShowBulkActions(!showBulkActions)}>
             {showBulkActions ? 'Cancel Selection' : 'Bulk Actions'}
@@ -735,6 +742,28 @@ export default function DirectorAthletesPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Bulk Import Modal */}
+      <BulkImportModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onImportComplete={(results) => {
+          if (results.successful > 0) {
+            toast.success(
+              'Import Complete',
+              `Successfully imported ${results.successful} athlete${results.successful > 1 ? 's' : ''}.${
+                results.failed > 0 ? ` ${results.failed} failed.` : ''
+              }`
+            );
+            refetch();
+          } else if (results.failed > 0) {
+            toast.error(
+              'Import Failed',
+              `Failed to import ${results.failed} athlete${results.failed > 1 ? 's' : ''}.`
+            );
+          }
+        }}
+      />
     </div>
   );
 }

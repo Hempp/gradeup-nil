@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { StatusBadge } from '@/components/ui/status-badge';
 import type { Contract, ContractSignature } from '@/lib/services/contracts';
 import type { ContractStatus, SignatureStatus } from '@/lib/validations/contract.schema';
 

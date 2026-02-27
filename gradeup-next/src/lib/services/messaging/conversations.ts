@@ -4,7 +4,6 @@ import { createClient } from '@/lib/supabase/client';
 import type {
   Conversation,
   ConversationParticipant,
-  Message,
   MessageAttachment,
   ServiceResult,
 } from './types';

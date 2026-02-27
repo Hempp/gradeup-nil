@@ -7,7 +7,7 @@
  */
 
 import { jsPDF } from 'jspdf';
-import type { Contract, ContractSignature } from '@/lib/services/contracts';
+import type { Contract } from '@/lib/services/contracts';
 import type { ContractClause } from '@/lib/validations/contract.schema';
 
 // ============================================================================
@@ -176,7 +176,7 @@ export function generateContractPDF(
   });
 
   let currentY = MARGINS.top;
-  let currentPage = 1;
+  let _currentPage = 1;
 
   // ============================================================================
   // HELPER: Check if we need a new page
@@ -184,7 +184,7 @@ export function generateContractPDF(
   const checkNewPage = (requiredHeight: number): void => {
     if (currentY + requiredHeight > PAGE_HEIGHT - MARGINS.bottom) {
       doc.addPage();
-      currentPage++;
+      _currentPage++;
       currentY = MARGINS.top;
 
       // Add draft watermark to new page if needed

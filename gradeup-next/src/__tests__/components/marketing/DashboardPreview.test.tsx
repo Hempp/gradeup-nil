@@ -4,8 +4,7 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { DashboardPreview } from '@/components/marketing/DashboardPreview';
 
 // Mock next/link
@@ -24,7 +23,7 @@ class MockIntersectionObserver {
     this.callback = callback;
   }
 
-  observe(element: Element) {
+  observe(_element: Element) {
     // Delay the callback slightly to allow the observer variable to be assigned
     setTimeout(() => {
       this.callback([{ isIntersecting: true } as IntersectionObserverEntry], this as unknown as IntersectionObserver);

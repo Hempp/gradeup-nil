@@ -245,6 +245,7 @@ export function usePushNotifications(
     if (autoRequest && isSupported && permission === 'default' && !loading) {
       requestPermission();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- requestPermission is defined after this hook but is stable
   }, [autoRequest, isSupported, permission, loading]);
 
   /**

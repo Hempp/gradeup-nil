@@ -9,7 +9,7 @@ import {
   Ban,
   XCircle,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/utils';
@@ -271,9 +271,11 @@ export function DealStatusBanner({ deal, daysUntilExpiration }: DealStatusBanner
   return null;
 }
 
-export default {
+const DealStates = {
   LoadingState,
   ErrorState,
   NotFoundState,
   DealStatusBanner,
 };
+
+export default DealStates;

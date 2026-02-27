@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, type ReactNode } from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { formatCurrency, formatCompactNumber } from '@/lib/utils/format';
 import { useAnalytics, type DateRangePreset, formatDateRangeLabel } from '@/hooks/useAnalytics';
@@ -101,9 +102,11 @@ function TopPerformerItem({ rank, name, subtitle, value, avatarUrl }: TopPerform
       </div>
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {avatarUrl ? (
-          <img
+          <Image
             src={avatarUrl}
             alt=""
+            width={40}
+            height={40}
             className="w-10 h-10 rounded-full object-cover"
           />
         ) : (

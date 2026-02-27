@@ -4,20 +4,20 @@
  */
 
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { WebVitalsReporter } from '@/components/analytics/web-vitals-reporter';
 
 // Mock the performance utilities
-const mockOnWebVital = jest.fn((callback) => {
+const mockOnWebVital = jest.fn((_callback) => {
   // Return unsubscribe function
   return jest.fn();
 });
 
-const mockOnLongTask = jest.fn((callback) => {
+const mockOnLongTask = jest.fn((_callback) => {
   return jest.fn();
 });
 
-const mockOnMemoryUsage = jest.fn((callback) => {
+const mockOnMemoryUsage = jest.fn((_callback) => {
   return jest.fn();
 });
 

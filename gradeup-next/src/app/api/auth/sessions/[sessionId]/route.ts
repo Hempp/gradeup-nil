@@ -175,7 +175,7 @@ export async function PATCH(
     }
 
     // Parse request body
-    let updates: { last_active_at?: string; location_display?: string } = {};
+    const updates: { last_active_at?: string; location_display?: string } = {};
     try {
       const body = await request.json();
       if (body.refreshActivity) {

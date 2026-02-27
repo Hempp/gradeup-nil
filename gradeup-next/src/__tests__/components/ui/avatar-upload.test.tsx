@@ -12,7 +12,7 @@ import { AvatarUpload, DocumentUpload } from '@/components/ui/avatar-upload';
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props: { src: string; alt: string; fill?: boolean; sizes?: string; priority?: boolean; className?: string }) => {
-    const { fill, sizes, priority, ...imgProps } = props;
+    const { fill: _fill, sizes: _sizes, priority: _priority, ...imgProps } = props;
     // eslint-disable-next-line @next/next/no-img-element
     return <img {...imgProps} alt={props.alt} />;
   },

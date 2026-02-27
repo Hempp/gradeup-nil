@@ -12,6 +12,7 @@ import {
   mockComplianceScore,
   mockMetrics,
 } from './components';
+import { ReportGenerator } from '@/components/director/ReportGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN PAGE
@@ -45,6 +46,9 @@ export default function DirectorCompliancePage() {
           <ComplianceScoreCard scoreData={mockComplianceScore} metrics={mockMetrics} />
         </div>
       </div>
+
+      {/* Reports Section */}
+      <ReportGenerator />
 
       {/* Rules Panel and Audit Log */}
       <div className="grid lg:grid-cols-2 gap-6">

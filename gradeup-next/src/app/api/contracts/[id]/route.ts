@@ -576,7 +576,7 @@ async function handleDecline(
 async function handleSendForSignature(
   supabase: Awaited<ReturnType<typeof createClient>>,
   contractId: string,
-  userId: string
+  _userId: string
 ) {
   const { data: contract, error: fetchError } = await supabase
     .from('contracts')
@@ -652,7 +652,7 @@ async function handleVoid(
   userId: string,
   body: { reason: string; notify_parties?: boolean }
 ) {
-  const { reason, notify_parties = true } = body;
+  const { reason, notify_parties: _notify_parties = true } = body;
 
   if (!reason) {
     return NextResponse.json(

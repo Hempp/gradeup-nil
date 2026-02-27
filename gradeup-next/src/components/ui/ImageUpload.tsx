@@ -16,7 +16,6 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from './button';
 import {
-  uploadImage,
   uploadImageWithProgress,
   validateForUpload,
   compressImage,
@@ -116,7 +115,7 @@ interface CropperProps {
 }
 
 function ImageCropper({ imageUrl, aspectRatio, onCrop, onCancel }: CropperProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const _canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
   const [scale, setScale] = useState(1);

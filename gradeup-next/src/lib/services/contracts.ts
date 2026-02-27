@@ -22,7 +22,6 @@ import type {
   ContractTemplate,
   SignatureStatus,
   ContractClause,
-  SignatureParty,
   CreateContractInput,
   UpdateContractInput,
   SignContractInput,
@@ -124,7 +123,7 @@ export async function generateContract(
   const supabase = createClient();
 
   // First, fetch the deal to get athlete and brand info
-  const { data: deal, error: dealError } = await supabase
+  const { data: _deal, error: dealError } = await supabase
     .from('deals')
     .select(`
       id,
@@ -342,7 +341,7 @@ export async function updateContract(
     };
   }
 
-  const { data, error } = await supabase
+  const { data: _data, error } = await supabase
     .from('contracts')
     .update({
       ...updates,
@@ -798,7 +797,7 @@ export async function generateContractPDF(
     const timestamp = Date.now();
     const pdfFileName = `${contractId}/${timestamp}_contract.pdf`;
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { data: _uploadData, error: uploadError } = await supabase.storage
       .from('contracts')
       .upload(pdfFileName, pdfBuffer, {
         contentType: 'application/pdf',

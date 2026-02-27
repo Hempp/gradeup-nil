@@ -58,8 +58,8 @@ let inCalls: [string, unknown[]][] = [];
 let gteCalls: [string, unknown][] = [];
 let lteCalls: [string, unknown][] = [];
 let updateCalled = false;
-let insertCalled = false;
-let deleteCalled = false;
+const _insertCalled = false;
+const _deleteCalled = false;
 
 const resetMockState = () => {
   mockQueryChain = {

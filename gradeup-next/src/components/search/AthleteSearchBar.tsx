@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import Image from 'next/image';
 import { Search, X, Loader2, User, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -278,6 +279,7 @@ export function AthleteSearchBar({
         <input
           ref={inputRef}
           type="text"
+          role="combobox"
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -286,6 +288,7 @@ export function AthleteSearchBar({
           aria-label="Search athletes"
           aria-expanded={showSuggestions}
           aria-haspopup="listbox"
+          aria-autocomplete="list"
           aria-controls={showSuggestions ? 'search-suggestions' : undefined}
           aria-activedescendant={
             highlightedIndex >= 0 ? `suggestion-${highlightedIndex}` : undefined
@@ -349,9 +352,11 @@ export function AthleteSearchBar({
               >
                 {/* Icon or Image */}
                 {suggestion.imageUrl ? (
-                  <img
+                  <Image
                     src={suggestion.imageUrl}
                     alt=""
+                    width={32}
+                    height={32}
                     className="h-8 w-8 rounded-full object-cover"
                   />
                 ) : (

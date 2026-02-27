@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import type { Athlete, Sport, School } from '@/types';
+import type { Athlete } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types

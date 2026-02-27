@@ -157,7 +157,6 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
 
       if (!tableExistsRef.current) {
         // Fall back to mock data
-        console.info('[useNotifications] Notifications table not available, using mock data');
         await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network delay
         setNotifications(MOCK_NOTIFICATIONS);
         setIsUsingMockData(true);

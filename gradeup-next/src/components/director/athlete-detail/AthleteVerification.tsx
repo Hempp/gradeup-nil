@@ -32,7 +32,7 @@ interface VerificationItemProps {
   isVerified: boolean;
   icon: React.ReactNode;
   title: string;
-  description: string;
+  description: React.ReactNode;
   onVerify: () => void;
   onRevoke: () => void;
   verifyLabel: string;

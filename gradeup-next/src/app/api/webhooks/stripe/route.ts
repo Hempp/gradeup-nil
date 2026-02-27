@@ -152,7 +152,7 @@ async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
   supabase: Awaited<ReturnType<typeof createClient>>
 ) {
-  const { dealId, athleteId, brandId } = session.metadata || {};
+  const { dealId, athleteId: _athleteId, brandId: _brandId } = session.metadata || {};
 
   logWebhookEvent('info', 'checkout.session.completed', 'Checkout session completed', {
     sessionId: session.id,

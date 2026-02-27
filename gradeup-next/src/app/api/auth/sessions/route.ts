@@ -90,7 +90,7 @@ function hashToken(token: string): string {
  * Returns a list of active sessions for the current user.
  * The current session is identified by matching the refresh token hash.
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = await createClient();
 

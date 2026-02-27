@@ -118,7 +118,7 @@ async function processImageWithSharp(
   const sharp = (await import('sharp')).default;
 
   let image = sharp(buffer);
-  const metadata = await image.metadata();
+  const _metadata = await image.metadata();
 
   // Resize if needed (maintain aspect ratio)
   if (config.maxWidth || config.maxHeight) {

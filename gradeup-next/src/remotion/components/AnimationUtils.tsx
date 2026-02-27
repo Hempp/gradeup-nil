@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/purity */
 // Remotion video rendering uses intentional randomness for particle effects
-import { useCurrentFrame, interpolate, spring, Easing } from 'remotion';
+import { useCurrentFrame, interpolate, Easing } from 'remotion';
 import React, { useMemo } from 'react';
 
 /**

@@ -278,7 +278,6 @@ export function useRealtimeNotifications(
 
       if (!tableExistsRef.current) {
         // Fall back to mock data
-        console.info('[useRealtimeNotifications] Notifications table not available, using mock data');
         await new Promise((resolve) => setTimeout(resolve, 300));
         if (mountedRef.current) {
           setNotifications(MOCK_NOTIFICATIONS);

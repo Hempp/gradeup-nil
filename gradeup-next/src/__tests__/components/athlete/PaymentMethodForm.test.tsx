@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PaymentMethodForm } from '@/components/athlete/PaymentMethodForm';
 import type { PaymentAccount } from '@/lib/services/payments';
