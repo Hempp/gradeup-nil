@@ -20,6 +20,7 @@ import { useRequireAuth } from '@/context';
 import { useBrandAnalytics, useBrandCampaigns, useBrandShortlist, useBrandDeals } from '@/lib/hooks/use-data';
 import type { Campaign } from '@/lib/services/brand';
 import type { Athlete } from '@/types';
+import { AthleteRecommendations } from '@/components/ai';
 
 function StatsCard({
   title,
@@ -320,6 +321,19 @@ export default function BrandDashboardPage() {
           icon={TrendingUp}
         />
       </div>
+
+      {/* AI Athlete Recommendations */}
+      <AthleteRecommendations
+        brandProfile={{
+          industry: 'Sports & Fitness',
+          targetAudience: ['college_students', 'sports_fans'],
+          budgetRange: { min: 1000, max: 10000 },
+          preferredSports: ['Football', 'Basketball'],
+          preferredDivisions: ['D1'],
+        }}
+        limit={6}
+        showFilters={true}
+      />
 
       {/* Main Content */}
       <div className="grid lg:grid-cols-2 gap-6">

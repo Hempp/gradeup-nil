@@ -24,6 +24,7 @@ import { useRequireAuth } from '@/context';
 import { useAthleteDeals } from '@/lib/hooks/use-data';
 import type { Deal, DealStatus } from '@/lib/services/deals';
 import { DEAL_STATUS_CONFIG, KANBAN_COLUMNS } from '@/lib/constants/deal-status';
+import { PricingSuggestion } from '@/components/ai';
 
 type ViewMode = 'table' | 'kanban';
 
@@ -399,6 +400,19 @@ export default function AthleteDealsPage() {
           <p className="text-2xl font-bold text-[var(--color-info)]">{dealCounts.completed}</p>
         </Card>
       </div>
+
+      {/* AI Pricing Suggestions */}
+      <PricingSuggestion
+        input={{
+          dealType: 'social_post',
+          athleteFollowers: 50000,
+          athleteGpa: 3.8,
+          athleteSport: 'Football',
+          athleteDivision: 'D1',
+        }}
+        showFactors={true}
+        className="max-w-2xl"
+      />
 
       {/* Filter Bar */}
       <Card className="p-4">
