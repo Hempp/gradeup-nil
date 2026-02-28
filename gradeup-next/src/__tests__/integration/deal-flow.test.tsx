@@ -9,7 +9,7 @@
  * - Navigation between deal views
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AthleteDealsPage from '@/app/(dashboard)/athlete/deals/page';
 import { ToastProvider } from '@/components/ui/toast';
@@ -559,8 +559,10 @@ describe('Deal Management Flow Integration Tests', () => {
           expect(screen.getByText('Nike Social Campaign')).toBeInTheDocument();
         });
 
-        // Find and click the View button for the first deal
-        const viewButtons = screen.getAllByRole('button', { name: /view/i });
+        // Find and click the View button for the first deal (in the data table)
+        // Use a more specific selector to avoid matching "View pricing factors" button
+        const dataTable = screen.getByRole('table');
+        const viewButtons = within(dataTable).getAllByRole('button', { name: /view/i });
         await user.click(viewButtons[0]);
 
         await waitFor(() => {

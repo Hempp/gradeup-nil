@@ -287,7 +287,7 @@ export function AthleteRecommendations({
   const [filterScore, setFilterScore] = useState<number>(0);
 
   const fetchRecommendations = useCallback(async () => {
-    if (athletes.length === 0) {
+    if (!athletes || athletes.length === 0) {
       setError('No athletes available to search');
       return;
     }
@@ -451,7 +451,7 @@ export function AthleteRecommendations({
               Ready to Find Your Perfect Athletes
             </h4>
             <p className="text-[var(--text-muted)] max-w-md mx-auto mb-4">
-              Our AI will analyze {athletes.length} athletes and match them to your campaign goals,
+              Our AI will analyze {athletes?.length || 'available'} athletes and match them to your campaign goals,
               budget, and preferences.
             </p>
             <Button variant="primary" onClick={fetchRecommendations} className="gap-2">
