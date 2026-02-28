@@ -7,6 +7,27 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ErrorBoundary, ErrorFallback, InlineError, PageError } from '@/components/ui/error-boundary';
 
+// Mock ThemeContext
+jest.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'system',
+    setTheme: jest.fn(),
+    resolvedTheme: 'light',
+  }),
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+// Mock KeyboardShortcuts
+jest.mock('@/components/ui/keyboard-shortcuts', () => ({
+  useKeyboardShortcuts: () => ({
+    isEnabled: true,
+    registerShortcut: jest.fn(),
+    unregisterShortcut: jest.fn(),
+  }),
+  KeyboardShortcutsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  KeyboardShortcutsHint: () => null,
+}));
+
 // Component that throws an error for testing
 function ThrowingComponent({ shouldThrow }: { shouldThrow: boolean }) {
   if (shouldThrow) {
@@ -43,7 +64,8 @@ describe('ErrorBoundary', () => {
     );
 
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-    expect(screen.getByText('Test error message')).toBeInTheDocument();
+    // The error message is transformed to be user-friendly
+    expect(screen.getByText(/unexpected error occurred/i)).toBeInTheDocument();
   });
 
   it('renders custom fallback when provided', () => {
@@ -89,14 +111,17 @@ describe('ErrorFallback', () => {
     render(<ErrorFallback />);
 
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-    expect(screen.getByText('An unexpected error occurred. Please try again.')).toBeInTheDocument();
+    expect(screen.getByText('An unexpected error occurred.')).toBeInTheDocument();
   });
 
   it('renders error message', () => {
     const error = new Error('Custom error message');
     render(<ErrorFallback error={error} />);
 
-    expect(screen.getByText('Custom error message')).toBeInTheDocument();
+    // The component now uses user-friendly error parsing
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    // The error message is transformed to be user-friendly
+    expect(screen.getByText(/unexpected error occurred/i)).toBeInTheDocument();
   });
 
   it('renders retry button when resetError provided', () => {

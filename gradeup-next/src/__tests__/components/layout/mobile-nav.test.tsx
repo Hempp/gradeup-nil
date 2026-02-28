@@ -12,6 +12,16 @@ jest.mock('next/navigation', () => ({
   usePathname: () => '/athlete/dashboard',
 }));
 
+// Mock ThemeContext
+jest.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'system',
+    setTheme: jest.fn(),
+    resolvedTheme: 'light',
+  }),
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
 describe('MobileNav', () => {
   const navItems = [
     { label: 'Dashboard', href: '/athlete/dashboard', icon: 'LayoutDashboard' },

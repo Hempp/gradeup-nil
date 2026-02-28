@@ -1,5 +1,16 @@
+import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Topbar, type TopbarProps } from '@/components/layout/topbar';
+
+// Mock ThemeContext
+jest.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'system',
+    setTheme: jest.fn(),
+    resolvedTheme: 'light',
+  }),
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
 
 // Mock the notifications hook
 jest.mock('@/lib/hooks/use-notifications', () => ({

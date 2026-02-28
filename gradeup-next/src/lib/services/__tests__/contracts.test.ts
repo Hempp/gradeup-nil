@@ -58,8 +58,12 @@ let inCalls: [string, unknown[]][] = [];
 let gteCalls: [string, unknown][] = [];
 let lteCalls: [string, unknown][] = [];
 let updateCalled = false;
-const _insertCalled = false;
-const _deleteCalled = false;
+let insertCalled = false;
+let deleteCalled = false;
+// Track if we're in a "list query" context (where range() was called)
+let pendingOrderResult: MockQueryResult | null = null;
+// Track if this is an update chain (for awaiting updates directly)
+let isUpdateChain = false;
 
 const resetMockState = () => {
   mockQueryChain = {
@@ -78,11 +82,6 @@ const resetMockState = () => {
   pendingOrderResult = null;
   isUpdateChain = false;
 };
-
-// Track if we're in a "list query" context (where range() was called)
-let pendingOrderResult: MockQueryResult | null = null;
-// Track if this is an update chain (for awaiting updates directly)
-let isUpdateChain = false;
 
 // Create chainable mock
 const createChainMock = () => {

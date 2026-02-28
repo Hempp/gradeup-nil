@@ -17,6 +17,27 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
+// Mock ThemeContext
+jest.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'system',
+    setTheme: jest.fn(),
+    resolvedTheme: 'light',
+  }),
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+// Mock KeyboardShortcuts
+jest.mock('@/components/ui/keyboard-shortcuts', () => ({
+  useKeyboardShortcuts: () => ({
+    isEnabled: true,
+    registerShortcut: jest.fn(),
+    unregisterShortcut: jest.fn(),
+  }),
+  KeyboardShortcutsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  KeyboardShortcutsHint: () => null,
+}));
+
 // Mock child components
 jest.mock('@/components/layout/sidebar', () => ({
   Sidebar: ({ className }: { className?: string }) => (
