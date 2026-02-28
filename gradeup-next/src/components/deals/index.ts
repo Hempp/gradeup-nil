@@ -4,7 +4,7 @@ export { DealTimeline } from './DealTimeline';
 export { ContractSection } from './ContractSection';
 export { MessagesPanel } from './MessagesPanel';
 export { DeliverablesList } from './DeliverablesList';
-export { CounterOfferModal } from './CounterOfferModal';
+export { CounterOfferModal, type AthleteInfo } from './CounterOfferModal';
 export {
   LoadingState,
   ErrorState,

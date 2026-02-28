@@ -19,8 +19,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const mountedRef = useRef(false);
 
-  // Load saved theme on mount
+  // Load saved theme on mount and prevent transition flash
   useEffect(() => {
+    const root = document.documentElement;
+
+    // Add no-transitions class to prevent flash on initial load
+    root.classList.add('no-transitions');
+
     mountedRef.current = true;
     const saved = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     if (saved && ['light', 'dark', 'system'].includes(saved)) {
@@ -28,6 +33,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setThemeState(saved);
     }
+
+    // Remove no-transitions class after a short delay to enable smooth transitions
+    const timeoutId = setTimeout(() => {
+      root.classList.remove('no-transitions');
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // Apply theme changes

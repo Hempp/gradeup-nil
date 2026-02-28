@@ -14,7 +14,8 @@ import {
   submitCounterOffer,
   type CounterOfferInput,
 } from '@/lib/services/deals';
-import type { DealStatus, CompensationType } from '@/types';
+import type { DealStatus, CompensationType, Athlete } from '@/types';
+import { useRequireAuth } from '@/context';
 
 // Import extracted components
 import {
@@ -158,6 +159,8 @@ export default function DealDetailPage() {
   const params = useParams();
   const router = useRouter();
   const toast = useToastActions();
+  const { roleData } = useRequireAuth({ allowedRoles: ['athlete'] });
+  const athleteData = roleData as Athlete | null;
 
   // State
   const [activeTab, setActiveTab] = useState<Tab>('overview');
@@ -464,6 +467,12 @@ export default function DealDetailPage() {
         deal={deal}
         onSubmit={handleSubmitCounterOffer}
         isSubmitting={isSubmittingCounterOffer}
+        athleteInfo={athleteData ? {
+          totalFollowers: athleteData.total_followers || 0,
+          gpa: athleteData.gpa || 0,
+          sport: athleteData.sport?.name,
+          division: athleteData.school?.division,
+        } : undefined}
       />
     </div>
   );

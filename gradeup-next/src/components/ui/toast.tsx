@@ -35,13 +35,34 @@ export interface Toast {
   description?: string;
   /** Visual style variant */
   variant: ToastVariant;
-  /** Auto-dismiss duration in ms (default: 5000) */
+  /** Auto-dismiss duration in ms (default: 5000, 0 for no auto-dismiss) */
   duration?: number;
-  /** Optional action button */
+  /** Optional primary action button */
   action?: {
     label: string;
     onClick: () => void;
   };
+  /** Optional secondary action (e.g., "Dismiss") */
+  secondaryAction?: {
+    label: string;
+    onClick: () => void;
+  };
+  /** Whether this toast is dismissible by clicking X (default: true) */
+  dismissible?: boolean;
+  /** Whether to show the progress bar (default: true) */
+  showProgress?: boolean;
+  /** Optional icon override */
+  icon?: React.ReactNode;
+}
+
+/**
+ * Options for creating a toast with retry functionality
+ */
+export interface ToastWithRetryOptions {
+  title: string;
+  description?: string;
+  onRetry: () => void | Promise<void>;
+  retryLabel?: string;
 }
 
 interface ToastContextValue {
@@ -146,8 +167,11 @@ interface ToastItemProps {
 function ToastItem({ toast, onRemove }: ToastItemProps) {
   const [isExiting, setIsExiting] = useState(false);
   const [progress, setProgress] = useState(100);
+  const [isPaused, setIsPaused] = useState(false);
   const duration = toast.duration ?? 5000;
   const config = variantConfig[toast.variant];
+  const dismissible = toast.dismissible ?? true;
+  const showProgress = toast.showProgress ?? true;
 
   const handleClose = useCallback(() => {
     setIsExiting(true);
@@ -155,9 +179,25 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
   }, [onRemove, toast.id]);
 
   useEffect(() => {
+    // Don't auto-dismiss if duration is 0 or negative
+    if (duration <= 0) return;
+
     const startTime = Date.now();
+    let pausedTime = 0;
+    let pauseStart = 0;
+
     const timer = setInterval(() => {
-      const elapsed = Date.now() - startTime;
+      if (isPaused) {
+        if (pauseStart === 0) pauseStart = Date.now();
+        return;
+      }
+
+      if (pauseStart > 0) {
+        pausedTime += Date.now() - pauseStart;
+        pauseStart = 0;
+      }
+
+      const elapsed = Date.now() - startTime - pausedTime;
       const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
       setProgress(remaining);
 
@@ -168,12 +208,17 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
     }, 50);
 
     return () => clearInterval(timer);
-  }, [duration, handleClose]);
+  }, [duration, handleClose, isPaused]);
+
+  // Determine if we have any actions
+  const hasActions = toast.action || toast.secondaryAction;
 
   return (
     <div
       role="alert"
       aria-live="polite"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
       className={cn(
         `
         relative overflow-hidden
@@ -193,7 +238,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       <div className="flex items-start gap-3 p-4 pl-5">
         {/* Icon */}
         <div className={cn('flex-shrink-0 mt-0.5', config.iconColor)}>
-          {config.icon}
+          {toast.icon || config.icon}
         </div>
 
         {/* Content */}
@@ -206,41 +251,72 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
               {toast.description}
             </p>
           )}
-          {toast.action && (
-            <button
-              type="button"
-              onClick={() => {
-                toast.action?.onClick();
-                handleClose();
-              }}
-              className={cn(
-                'mt-2 text-sm font-medium underline underline-offset-2 hover:no-underline',
-                config.iconColor
+
+          {/* Action buttons */}
+          {hasActions && (
+            <div className="mt-3 flex items-center gap-3">
+              {toast.action && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    toast.action?.onClick();
+                    handleClose();
+                  }}
+                  className={cn(
+                    'px-3 py-1.5 text-xs font-medium rounded-[var(--radius-sm)]',
+                    'transition-colors duration-200',
+                    'bg-[var(--bg-tertiary)] hover:bg-[var(--bg-secondary)]',
+                    'text-[var(--text-primary)] border border-[var(--border-color)]'
+                  )}
+                >
+                  {toast.action.label}
+                </button>
               )}
-            >
-              {toast.action.label}
-            </button>
+              {toast.secondaryAction && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    toast.secondaryAction?.onClick();
+                    handleClose();
+                  }}
+                  className={cn(
+                    'text-xs font-medium text-[var(--text-muted)]',
+                    'hover:text-[var(--text-secondary)] transition-colors'
+                  )}
+                >
+                  {toast.secondaryAction.label}
+                </button>
+              )}
+            </div>
           )}
         </div>
 
         {/* Close button */}
-        <button
-          type="button"
-          onClick={handleClose}
-          className="flex-shrink-0 p-1 rounded-[var(--radius-sm)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
-          aria-label="Dismiss notification"
-        >
-          <CloseIcon />
-        </button>
+        {dismissible && (
+          <button
+            type="button"
+            onClick={handleClose}
+            className="flex-shrink-0 p-1 rounded-[var(--radius-sm)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
+            aria-label="Dismiss notification"
+          >
+            <CloseIcon />
+          </button>
+        )}
       </div>
 
       {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--bg-tertiary)]">
-        <div
-          className={cn('h-full transition-all duration-50', config.stripe)}
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      {showProgress && duration > 0 && (
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--bg-tertiary)]">
+          <div
+            className={cn(
+              'h-full transition-all',
+              isPaused ? 'transition-none' : 'duration-50',
+              config.stripe
+            )}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -320,20 +396,99 @@ export function ToastProvider({ children }: ToastProviderProps) {
  *       toast.error('Save failed', 'Please try again.');
  *     }
  *   };
+ *
+ *   // With retry action
+ *   const handleUpload = async () => {
+ *     try {
+ *       await uploadFile();
+ *     } catch (e) {
+ *       toast.errorWithRetry({
+ *         title: 'Upload failed',
+ *         description: 'Could not upload your file.',
+ *         onRetry: handleUpload,
+ *       });
+ *     }
+ *   };
  * }
  */
 export function useToastActions() {
   const { addToast } = useToast();
 
   return {
+    /**
+     * Show a success toast
+     */
     success: (title: string, description?: string) =>
       addToast({ title, description, variant: 'success' }),
+
+    /**
+     * Show an error toast
+     */
     error: (title: string, description?: string) =>
       addToast({ title, description, variant: 'error' }),
+
+    /**
+     * Show a warning toast
+     */
     warning: (title: string, description?: string) =>
       addToast({ title, description, variant: 'warning' }),
+
+    /**
+     * Show an info toast
+     */
     info: (title: string, description?: string) =>
       addToast({ title, description, variant: 'info' }),
+
+    /**
+     * Show an error toast with a retry action button
+     */
+    errorWithRetry: (options: ToastWithRetryOptions) =>
+      addToast({
+        title: options.title,
+        description: options.description,
+        variant: 'error',
+        duration: 8000, // Longer duration for errors with actions
+        action: {
+          label: options.retryLabel || 'Retry',
+          onClick: options.onRetry,
+        },
+      }),
+
+    /**
+     * Show a persistent error toast (no auto-dismiss)
+     */
+    errorPersistent: (title: string, description?: string, action?: Toast['action']) =>
+      addToast({
+        title,
+        description,
+        variant: 'error',
+        duration: 0, // No auto-dismiss
+        action,
+        showProgress: false,
+      }),
+
+    /**
+     * Show a toast with custom action buttons
+     */
+    withAction: (
+      title: string,
+      description: string | undefined,
+      variant: ToastVariant,
+      action: Toast['action'],
+      secondaryAction?: Toast['secondaryAction']
+    ) =>
+      addToast({
+        title,
+        description,
+        variant,
+        action,
+        secondaryAction,
+        duration: 8000,
+      }),
+
+    /**
+     * Show a fully customized toast
+     */
     custom: addToast,
   };
 }
@@ -376,22 +531,144 @@ export function setGlobalToastHandler(handler: (toast: Omit<Toast, 'id'>) => voi
  *     throw e;
  *   }
  * }
+ *
+ * // With retry action
+ * export async function uploadFile(file: File) {
+ *   try {
+ *     await api.upload(file);
+ *     toast.success('Uploaded!');
+ *   } catch (e) {
+ *     toast.errorWithRetry({
+ *       title: 'Upload failed',
+ *       onRetry: () => uploadFile(file),
+ *     });
+ *     throw e;
+ *   }
+ * }
  */
 export const toast = {
+  /**
+   * Show a success toast
+   */
   success: (title: string, description?: string) => {
     globalAddToast?.({ title, description, variant: 'success' });
   },
+
+  /**
+   * Show an error toast
+   */
   error: (title: string, description?: string) => {
     globalAddToast?.({ title, description, variant: 'error' });
   },
+
+  /**
+   * Show a warning toast
+   */
   warning: (title: string, description?: string) => {
     globalAddToast?.({ title, description, variant: 'warning' });
   },
+
+  /**
+   * Show an info toast
+   */
   info: (title: string, description?: string) => {
     globalAddToast?.({ title, description, variant: 'info' });
   },
+
+  /**
+   * Show an error toast with a retry action button
+   */
+  errorWithRetry: (options: ToastWithRetryOptions) => {
+    globalAddToast?.({
+      title: options.title,
+      description: options.description,
+      variant: 'error',
+      duration: 8000,
+      action: {
+        label: options.retryLabel || 'Retry',
+        onClick: options.onRetry,
+      },
+    });
+  },
+
+  /**
+   * Show a persistent error toast (no auto-dismiss)
+   */
+  errorPersistent: (title: string, description?: string, action?: Toast['action']) => {
+    globalAddToast?.({
+      title,
+      description,
+      variant: 'error',
+      duration: 0,
+      action,
+      showProgress: false,
+    });
+  },
+
+  /**
+   * Show a toast with custom action buttons
+   */
+  withAction: (
+    title: string,
+    description: string | undefined,
+    variant: ToastVariant,
+    action: Toast['action'],
+    secondaryAction?: Toast['secondaryAction']
+  ) => {
+    globalAddToast?.({
+      title,
+      description,
+      variant,
+      action,
+      secondaryAction,
+      duration: 8000,
+    });
+  },
+
+  /**
+   * Show a fully customized toast
+   */
   custom: (options: Omit<Toast, 'id'>) => {
     globalAddToast?.(options);
+  },
+
+  /**
+   * Promise-based toast for async operations
+   * Shows loading state, then success or error
+   */
+  promise: async <T,>(
+    promise: Promise<T>,
+    options: {
+      loading: string;
+      success: string | ((data: T) => string);
+      error: string | ((err: unknown) => string);
+    }
+  ): Promise<T> => {
+    // Show loading toast
+    globalAddToast?.({
+      title: options.loading,
+      variant: 'info',
+      duration: 0,
+      dismissible: false,
+      showProgress: false,
+    });
+
+    try {
+      const data = await promise;
+      // Remove loading toast and show success
+      const successMsg = typeof options.success === 'function'
+        ? options.success(data)
+        : options.success;
+      globalAddToast?.({ title: successMsg, variant: 'success' });
+      return data;
+    } catch (err) {
+      // Remove loading toast and show error
+      const errorMsg = typeof options.error === 'function'
+        ? options.error(err)
+        : options.error;
+      globalAddToast?.({ title: errorMsg, variant: 'error' });
+      throw err;
+    }
   },
 };
 

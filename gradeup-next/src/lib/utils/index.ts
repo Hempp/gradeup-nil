@@ -5,6 +5,7 @@ export * from './validation';
 // NOTE: Export utilities (exportToCSV, exportToPDF) should be imported directly
 //       from '@/lib/utils/export' since they require DOMPurify
 export * from './error-handler';
+export * from './error-messages';
 export * from './analytics';
 export * from './performance';
 export * from './bundle-analyzer';

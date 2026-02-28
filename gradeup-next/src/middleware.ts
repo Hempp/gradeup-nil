@@ -359,7 +359,7 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   // Protected dashboard routes
-  if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director')) {
+  if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director') || path.startsWith('/admin')) {
     if (!user) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', path);
@@ -377,12 +377,14 @@ export async function middleware(request: NextRequest) {
       athlete: '/athlete',
       brand: '/brand',
       athletic_director: '/director',
+      admin: '/admin',
     };
 
     const expectedPath = rolePathMap[profile?.role || ''];
 
     // Redirect user to their correct dashboard if they're accessing wrong one
-    if (expectedPath && !path.startsWith(expectedPath)) {
+    // Note: Admins can access all dashboards for administrative purposes
+    if (expectedPath && !path.startsWith(expectedPath) && profile?.role !== 'admin') {
       return NextResponse.redirect(new URL(`${expectedPath}/dashboard`, request.url));
     }
   }
@@ -399,6 +401,7 @@ export async function middleware(request: NextRequest) {
       athlete: '/athlete/dashboard',
       brand: '/brand/dashboard',
       athletic_director: '/director/dashboard',
+      admin: '/admin',
     };
 
     const redirectPath = redirectMap[profile?.role || ''] || '/';

@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Sidebar, type SidebarProps } from './sidebar';
 import { Topbar, type TopbarUser } from './topbar';
 import { type BreadcrumbItem } from './breadcrumb';
+import { KeyboardShortcutsHint } from '@/components/ui/keyboard-shortcuts';
 import type { NavItem } from '@/types';
 
 // Mobile sidebar overlay component
@@ -153,6 +154,9 @@ export function DashboardShell({
       >
         {children}
       </main>
+
+      {/* Keyboard Shortcuts Hint - positioned at bottom-right */}
+      <KeyboardShortcutsHint position="bottom-right" />
     </div>
   );
 }

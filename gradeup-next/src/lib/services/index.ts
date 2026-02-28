@@ -21,3 +21,5 @@ export * as storage from './storage';
 export * as contracts from './contracts';
 export * as pushNotifications from './push-notifications';
 export * as reports from './reports';
+export * as aiSuggestions from './ai-suggestions';
+export * as admin from './admin';

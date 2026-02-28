@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Breadcrumb, type BreadcrumbItem } from './breadcrumb';
 import { NotificationDropdown, type Notification } from '@/components/notifications';
 import { useNotifications } from '@/lib/hooks/use-notifications';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export interface TopbarUser {
   name: string;
@@ -167,8 +168,15 @@ export function Topbar({
         )}
       </div>
 
-      {/* Right side: Notifications + User dropdown */}
+      {/* Right side: Theme toggle + Notifications + User dropdown */}
       <div className="flex items-center gap-2">
+        {/* Theme toggle */}
+        <ThemeToggle
+          mode="dropdown"
+          size="lg"
+          className="text-white/60 hover:text-white hover:bg-white/10"
+        />
+
         {/* Notification dropdown */}
         <NotificationDropdown
           notifications={notifications}

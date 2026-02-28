@@ -29,6 +29,7 @@ import { useRequireAuth } from '@/context';
 import { updateAthleteProfile, uploadAthleteMedia } from '@/lib/services/athlete';
 import { HighlightTapeSection } from '@/components/athlete/HighlightTapeSection';
 import { VerificationStatusCard } from '@/components/athlete/VerificationStatusCard';
+import { ProfileTips } from '@/components/ai/ProfileTips';
 import type { Athlete } from '@/types';
 
 
@@ -506,6 +507,15 @@ export default function AthleteProfilePage() {
       />
       {athleteData?.id && (
         <VerificationStatusCard athleteId={athleteData.id} />
+      )}
+
+      {/* AI Profile Optimization Tips */}
+      {athleteData && (
+        <ProfileTips
+          athlete={athleteData}
+          showProgress
+          showStrengths
+        />
       )}
       <div className="grid lg:grid-cols-2 gap-6">
         <PersonalInfoForm initialValues={initialFormValues} onSave={handleSaveProfile} />

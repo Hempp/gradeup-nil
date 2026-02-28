@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { FormField, TextAreaField } from '@/components/ui/form-field';
 import { formatCurrency } from '@/lib/utils';
+import { CompactPricingSuggestion } from '@/components/ai/PricingSuggestion';
 import type { CounterOfferInput } from '@/lib/services/deals';
 import type { DealDetail, CounterOfferFormData, CounterOfferFormErrors } from './types';
 import { validateCounterOffer } from './types';
@@ -14,11 +15,19 @@ import { validateCounterOffer } from './types';
 // COUNTER OFFER MODAL CONTENT
 // ═══════════════════════════════════════════════════════════════════════════
 
+interface AthleteInfo {
+  totalFollowers?: number;
+  gpa?: number;
+  sport?: string;
+  division?: string;
+}
+
 interface CounterOfferModalContentProps {
   deal: DealDetail;
   onClose: () => void;
   onSubmit: (data: CounterOfferInput) => Promise<void>;
   isSubmitting: boolean;
+  athleteInfo?: AthleteInfo;
 }
 
 function CounterOfferModalContent({
@@ -26,6 +35,7 @@ function CounterOfferModalContent({
   onClose,
   onSubmit,
   isSubmitting,
+  athleteInfo,
 }: CounterOfferModalContentProps) {
   const [formData, setFormData] = useState<CounterOfferFormData>({
     amount: deal.amount.toString(),
@@ -103,6 +113,21 @@ function CounterOfferModalContent({
           </p>
         </div>
 
+        {/* AI Pricing Suggestion */}
+        {athleteInfo && (
+          <CompactPricingSuggestion
+            input={{
+              dealType: deal.dealType || 'other',
+              athleteFollowers: athleteInfo.totalFollowers || 0,
+              athleteGpa: athleteInfo.gpa || 0,
+              athleteSport: athleteInfo.sport || 'other',
+              athleteDivision: athleteInfo.division,
+            }}
+            onApplyPrice={(price) => handleChange('amount', price.toString())}
+            className="mb-2"
+          />
+        )}
+
         {/* Counter Offer Form */}
         <FormField
           label="Your Proposed Amount"
@@ -177,6 +202,7 @@ interface CounterOfferModalProps {
   deal: DealDetail;
   onSubmit: (data: CounterOfferInput) => Promise<void>;
   isSubmitting: boolean;
+  athleteInfo?: AthleteInfo;
 }
 
 /**
@@ -189,6 +215,7 @@ export function CounterOfferModal({
   deal,
   onSubmit,
   isSubmitting,
+  athleteInfo,
 }: CounterOfferModalProps) {
   // Use a key that changes when modal opens to reset the form state
   const [modalKey, setModalKey] = useState(0);
@@ -209,8 +236,10 @@ export function CounterOfferModal({
       onClose={handleClose}
       onSubmit={onSubmit}
       isSubmitting={isSubmitting}
+      athleteInfo={athleteInfo}
     />
   );
 }
 
+export type { AthleteInfo };
 export default CounterOfferModal;

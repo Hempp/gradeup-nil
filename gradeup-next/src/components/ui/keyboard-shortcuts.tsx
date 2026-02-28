@@ -388,6 +388,73 @@ export function KeyboardShortcutsDialog({
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENT: KeyboardShortcutsHint
+   Visual indicator to help users discover keyboard shortcuts
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+interface KeyboardShortcutsHintProps {
+  /** Position of the hint */
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'inline';
+  /** Whether to show the hint (can be controlled externally) */
+  show?: boolean;
+  /** Custom className for additional styling */
+  className?: string;
+}
+
+/**
+ * A subtle hint component that shows users how to access keyboard shortcuts
+ * Can be positioned in corners or used inline within other components
+ */
+export function KeyboardShortcutsHint({
+  position = 'bottom-right',
+  show = true,
+  className,
+}: KeyboardShortcutsHintProps) {
+  const { openDialog } = useKeyboardShortcuts();
+
+  if (!show) return null;
+
+  const positionClasses = {
+    'bottom-right': 'fixed bottom-4 right-4 z-40',
+    'bottom-left': 'fixed bottom-4 left-4 z-40',
+    'top-right': 'fixed top-4 right-4 z-40',
+    'top-left': 'fixed top-4 left-4 z-40',
+    'inline': '',
+  };
+
+  return (
+    <button
+      onClick={openDialog}
+      className={cn(
+        // Position
+        positionClasses[position],
+        // Base styles
+        'inline-flex items-center gap-2 px-3 py-2',
+        // Visual styling
+        'bg-[var(--bg-card)] border border-[var(--border-color)]',
+        'rounded-lg shadow-sm',
+        // Text
+        'text-xs text-[var(--text-muted)]',
+        // Hover state
+        'hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-secondary)]',
+        'hover:border-[var(--border-hover)]',
+        // Transition
+        'transition-all duration-200',
+        // Focus
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
+        className
+      )}
+      aria-label="Show keyboard shortcuts"
+      type="button"
+    >
+      <span className="hidden sm:inline">Press</span>
+      <KeyCombo keys="?" />
+      <span className="hidden sm:inline">for shortcuts</span>
+    </button>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    COMPONENT: KeyboardShortcutsProvider
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -479,6 +546,40 @@ export function KeyboardShortcutsProvider({ children }: KeyboardShortcutsProvide
           }
         },
       },
+      // Go to messages
+      {
+        id: 'go-messages',
+        label: 'Go to messages',
+        keys: 'g m',
+        category: 'navigation',
+        handler: () => {
+          if (pathname.includes('/athlete')) {
+            router.push('/athlete/messages');
+          } else if (pathname.includes('/brand')) {
+            router.push('/brand/messages');
+          } else {
+            router.push('/athlete/messages');
+          }
+        },
+      },
+      // Go to settings
+      {
+        id: 'go-settings',
+        label: 'Go to settings',
+        keys: 'g s',
+        category: 'navigation',
+        handler: () => {
+          if (pathname.includes('/athlete')) {
+            router.push('/athlete/settings');
+          } else if (pathname.includes('/brand')) {
+            router.push('/brand/settings');
+          } else if (pathname.includes('/director')) {
+            router.push('/director/settings');
+          } else {
+            router.push('/athlete/settings');
+          }
+        },
+      },
       // Search
       {
         id: 'focus-search',
@@ -493,6 +594,91 @@ export function KeyboardShortcutsProvider({ children }: KeyboardShortcutsProvide
           if (searchInput) {
             searchInput.focus();
             searchInput.select();
+          }
+        },
+      },
+      // Actions - New (context-dependent)
+      {
+        id: 'new-item',
+        label: 'New item (context-dependent)',
+        description: 'Create new deal, message, or campaign based on current page',
+        keys: 'n',
+        category: 'actions',
+        handler: () => {
+          // Find and click the primary "New" or "Create" button on the page
+          const newButton = document.querySelector<HTMLButtonElement>(
+            '[data-action="new"], [data-action="create"], button[aria-label*="New"], button[aria-label*="Create"], a[href*="/new"]'
+          );
+          if (newButton) {
+            newButton.click();
+          }
+        },
+      },
+      // List navigation - Move down
+      {
+        id: 'list-down',
+        label: 'Move down in list',
+        keys: 'j',
+        category: 'navigation',
+        handler: () => {
+          // Find the focused list item or first item
+          const focusedItem = document.querySelector<HTMLElement>(
+            '[data-list-item][data-focused="true"], [role="listitem"][data-focused="true"]'
+          );
+          const listItems = Array.from(
+            document.querySelectorAll<HTMLElement>('[data-list-item], [role="listitem"]')
+          );
+
+          if (listItems.length === 0) return;
+
+          if (focusedItem) {
+            const currentIndex = listItems.indexOf(focusedItem);
+            const nextItem = listItems[currentIndex + 1];
+            if (nextItem) {
+              focusedItem.setAttribute('data-focused', 'false');
+              nextItem.setAttribute('data-focused', 'true');
+              nextItem.focus();
+              nextItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          } else {
+            // Focus first item
+            const firstItem = listItems[0];
+            firstItem.setAttribute('data-focused', 'true');
+            firstItem.focus();
+          }
+        },
+      },
+      // List navigation - Move up
+      {
+        id: 'list-up',
+        label: 'Move up in list',
+        keys: 'k',
+        category: 'navigation',
+        handler: () => {
+          // Find the focused list item
+          const focusedItem = document.querySelector<HTMLElement>(
+            '[data-list-item][data-focused="true"], [role="listitem"][data-focused="true"]'
+          );
+          const listItems = Array.from(
+            document.querySelectorAll<HTMLElement>('[data-list-item], [role="listitem"]')
+          );
+
+          if (listItems.length === 0) return;
+
+          if (focusedItem) {
+            const currentIndex = listItems.indexOf(focusedItem);
+            const prevItem = listItems[currentIndex - 1];
+            if (prevItem) {
+              focusedItem.setAttribute('data-focused', 'false');
+              prevItem.setAttribute('data-focused', 'true');
+              prevItem.focus();
+              prevItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          } else {
+            // Focus last item
+            const lastItem = listItems[listItems.length - 1];
+            lastItem.setAttribute('data-focused', 'true');
+            lastItem.focus();
           }
         },
       },

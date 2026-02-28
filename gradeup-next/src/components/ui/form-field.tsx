@@ -9,22 +9,40 @@ import {
   type TextareaHTMLAttributes,
   type ReactNode,
 } from 'react';
-import { Eye, EyeOff, AlertCircle, Check } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, Check, Info, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPasswordStrength, type PasswordStrength } from '@/lib/utils/validation';
+import { validationHints } from '@/lib/utils/error-messages';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface FormFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  /** Label text displayed above the input */
   label?: string;
+  /** Error message to display */
   error?: string | null;
+  /** Hint text shown below the input (when no error) */
   hint?: string;
+  /** Success message shown when validation passes */
+  successMessage?: string;
+  /** Left icon element */
   icon?: ReactNode;
+  /** Right icon element */
   rightIcon?: ReactNode;
+  /** Input size variant */
   size?: 'sm' | 'md' | 'lg';
+  /** Make input full width */
   fullWidth?: boolean;
+  /** Show success checkmark when valid (requires successMessage or explicit isValid) */
+  showSuccess?: boolean;
+  /** Whether the field is currently valid */
+  isValid?: boolean;
+  /** Show help tooltip with additional context */
+  helpText?: string;
+  /** Field type for auto-generating hints (email, password, phone, etc.) */
+  fieldType?: keyof typeof validationHints;
 }
 
 export interface TextAreaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -66,32 +84,65 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
       label,
       error,
       hint,
+      successMessage,
       icon,
       rightIcon,
       size = 'md',
       fullWidth = true,
+      showSuccess = false,
+      isValid,
+      helpText,
+      fieldType,
       id,
       disabled,
       ...props
     },
     ref
   ) {
+    const [showHelp, setShowHelp] = useState(false);
     const generatedId = useId();
     const inputId = id || `field-${props.name || generatedId}`;
     const hasError = !!error;
+    const hasSuccess = showSuccess && (isValid || successMessage);
+
+    // Generate auto-hint based on field type if not provided
+    const displayHint = hint || (fieldType && !hasError ? getAutoHint(fieldType) : undefined);
 
     return (
       <div className={cn('space-y-1.5', fullWidth && 'w-full')}>
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="block text-sm font-medium text-[var(--text-primary)]"
-          >
-            {label}
-            {props.required && (
-              <span className="text-[var(--color-error)] ml-0.5">*</span>
+        {/* Label row */}
+        {(label || helpText) && (
+          <div className="flex items-center justify-between">
+            {label && (
+              <label
+                htmlFor={inputId}
+                className="block text-sm font-medium text-[var(--text-primary)]"
+              >
+                {label}
+                {props.required && (
+                  <span className="text-[var(--color-error)] ml-0.5">*</span>
+                )}
+              </label>
             )}
-          </label>
+            {helpText && (
+              <button
+                type="button"
+                onClick={() => setShowHelp(!showHelp)}
+                className="text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+                aria-label="Show help"
+              >
+                <HelpCircle className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Help text tooltip */}
+        {showHelp && helpText && (
+          <div className="flex items-start gap-2 p-2.5 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)] text-xs text-[var(--text-secondary)]">
+            <Info className="h-3.5 w-3.5 flex-shrink-0 mt-0.5 text-[var(--color-primary)]" />
+            <span>{helpText}</span>
+          </div>
         )}
 
         <div className="relative">
@@ -107,62 +158,106 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
             disabled={disabled}
             aria-invalid={hasError}
             aria-describedby={
-              hasError ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined
+              hasError
+                ? `${inputId}-error`
+                : hasSuccess
+                ? `${inputId}-success`
+                : displayHint
+                ? `${inputId}-hint`
+                : undefined
             }
             className={cn(
               'w-full rounded-[var(--radius-md)]',
               'bg-[var(--bg-secondary)] border',
               'text-[var(--text-primary)] placeholder:text-[var(--text-muted)]',
               'transition-colors duration-[var(--transition-fast)]',
-              'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent',
+              'focus:outline-none focus:ring-2 focus:border-transparent',
               sizeClasses[size],
               icon && 'pl-10',
-              rightIcon && 'pr-10',
+              (rightIcon || hasError || hasSuccess) && 'pr-10',
               hasError
                 ? 'border-[var(--color-error)] focus:ring-[var(--color-error)]'
-                : 'border-[var(--border-color)]',
+                : hasSuccess
+                ? 'border-[var(--color-success)] focus:ring-[var(--color-success)]'
+                : 'border-[var(--border-color)] focus:ring-[var(--color-primary)]',
               disabled && 'opacity-50 cursor-not-allowed bg-[var(--bg-tertiary)]',
               className
             )}
             {...props}
           />
 
-          {rightIcon && (
+          {/* Right icon priority: custom > success > error */}
+          {rightIcon ? (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" aria-hidden="true">
               <span className={iconSizes[size]}>{rightIcon}</span>
             </div>
-          )}
-
-          {hasError && !rightIcon && (
+          ) : hasSuccess ? (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-success)]" aria-hidden="true">
+              <Check className={iconSizes[size]} />
+            </div>
+          ) : hasError ? (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-error)]" aria-hidden="true">
               <AlertCircle className={iconSizes[size]} />
             </div>
-          )}
+          ) : null}
         </div>
 
-        {hasError && (
+        {/* Error message with animation */}
+        <div
+          className={cn(
+            'overflow-hidden transition-all duration-200 ease-out',
+            hasError ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'
+          )}
+        >
           <p
             id={`${inputId}-error`}
-            className="text-sm text-[var(--color-error)] flex items-center gap-1"
+            className="text-sm text-[var(--color-error)] flex items-start gap-1.5 pt-0.5"
             role="alert"
             aria-live="assertive"
           >
-            {error}
+            <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+            <span>{error}</span>
+          </p>
+        </div>
+
+        {/* Success message */}
+        {hasSuccess && successMessage && !hasError && (
+          <p
+            id={`${inputId}-success`}
+            className="text-sm text-[var(--color-success)] flex items-center gap-1.5"
+          >
+            <Check className="h-3.5 w-3.5 flex-shrink-0" />
+            {successMessage}
           </p>
         )}
 
-        {hint && !hasError && (
+        {/* Hint text */}
+        {displayHint && !hasError && !hasSuccess && (
           <p
             id={`${inputId}-hint`}
             className="text-sm text-[var(--text-muted)]"
           >
-            {hint}
+            {displayHint}
           </p>
         )}
       </div>
     );
   }
 );
+
+/**
+ * Get auto-generated hint text based on field type
+ */
+function getAutoHint(fieldType: keyof typeof validationHints): string | undefined {
+  const hints: Record<string, string> = {
+    email: 'Enter the email address associated with your account.',
+    password: 'Use at least 8 characters with a mix of letters, numbers, and symbols.',
+    phone: 'Include country code for international numbers.',
+    url: 'Include the full URL starting with https://',
+    gpa: 'Enter your GPA on a 4.0 scale.',
+  };
+  return hints[fieldType];
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TextArea Field Component

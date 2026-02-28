@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   LayoutDashboard,
@@ -176,6 +177,12 @@ export function MobileNav({ navItems, variant = 'athlete', className }: MobileNa
 
         {/* Footer */}
         <div className="p-3 border-t border-[var(--border-color)]">
+          {/* Theme Toggle */}
+          <div className="flex items-center justify-between px-3 py-3 mb-2">
+            <span className="text-base font-medium text-[var(--text-secondary)]">Theme</span>
+            <ThemeToggle mode="dropdown" size="md" />
+          </div>
+
           <button
             className={cn(
               'w-full flex items-center gap-3 px-3 py-3 rounded-[var(--radius-md)]',
