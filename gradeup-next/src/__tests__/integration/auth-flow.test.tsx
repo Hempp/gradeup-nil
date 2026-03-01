@@ -132,9 +132,10 @@ describe('Authentication Flow Integration Tests', () => {
       it('renders demo mode links', () => {
         renderWithProviders(<LoginPage />);
 
-        expect(screen.getByRole('link', { name: /athlete demo/i })).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: /brand demo/i })).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: /director demo/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /^athlete$/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /^brand$/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /^director$/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /^admin$/i })).toBeInTheDocument();
       });
     });
 
@@ -353,25 +354,32 @@ describe('Authentication Flow Integration Tests', () => {
     });
 
     describe('Demo Mode', () => {
-      it('has athlete demo link pointing to athlete dashboard', () => {
+      it('has athlete demo link pointing to demo login API', () => {
         renderWithProviders(<LoginPage />);
 
-        const athleteLink = screen.getByRole('link', { name: /athlete demo/i });
-        expect(athleteLink).toHaveAttribute('href', '/athlete/dashboard');
+        const athleteLink = screen.getByRole('link', { name: /^athlete$/i });
+        expect(athleteLink).toHaveAttribute('href', '/api/demo/login?role=athlete');
       });
 
-      it('has brand demo link pointing to brand dashboard', () => {
+      it('has brand demo link pointing to demo login API', () => {
         renderWithProviders(<LoginPage />);
 
-        const brandLink = screen.getByRole('link', { name: /brand demo/i });
-        expect(brandLink).toHaveAttribute('href', '/brand/dashboard');
+        const brandLink = screen.getByRole('link', { name: /^brand$/i });
+        expect(brandLink).toHaveAttribute('href', '/api/demo/login?role=brand');
       });
 
-      it('has director demo link pointing to director dashboard', () => {
+      it('has director demo link pointing to demo login API', () => {
         renderWithProviders(<LoginPage />);
 
-        const directorLink = screen.getByRole('link', { name: /director demo/i });
-        expect(directorLink).toHaveAttribute('href', '/director/dashboard');
+        const directorLink = screen.getByRole('link', { name: /^director$/i });
+        expect(directorLink).toHaveAttribute('href', '/api/demo/login?role=director');
+      });
+
+      it('has admin demo link pointing to demo login API', () => {
+        renderWithProviders(<LoginPage />);
+
+        const adminLink = screen.getByRole('link', { name: /^admin$/i });
+        expect(adminLink).toHaveAttribute('href', '/api/demo/login?role=admin');
       });
     });
 
