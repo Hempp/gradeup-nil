@@ -324,15 +324,16 @@ export default function BrandDashboardPage() {
 
       {/* AI Athlete Recommendations */}
       <AthleteRecommendations
-        brandProfile={{
-          industry: 'Sports & Fitness',
-          targetAudience: ['college_students', 'sports_fans'],
-          budgetRange: { min: 1000, max: 10000 },
+        athletes={[]}
+        criteria={{
+          campaignGoals: ['brand_awareness', 'social_engagement'],
+          budget: 10000,
+          dealType: 'social_post',
           preferredSports: ['Football', 'Basketball'],
-          preferredDivisions: ['D1'],
+          minGpa: 3.0,
         }}
-        limit={6}
-        showFilters={true}
+        maxResults={6}
+        showBudgetAnalysis={true}
       />
 
       {/* Main Content */}

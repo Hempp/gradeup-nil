@@ -410,7 +410,7 @@ export default function AthleteDealsPage() {
           athleteSport: 'Football',
           athleteDivision: 'D1',
         }}
-        showFactors={true}
+        showDetails={true}
         className="max-w-2xl"
       />
 
