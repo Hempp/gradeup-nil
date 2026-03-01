@@ -331,7 +331,8 @@ export function useRequireAuth(options: UseRequireAuthOptions = {}) {
   const router = useRouter();
 
   // Check if demo mode is enabled (SKIP_AUTH_CHECK env var)
-  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+  // SECURITY: Only allow demo mode in non-production environments
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && process.env.NODE_ENV !== 'production';
 
   useEffect(() => {
     // Skip auth redirects in demo mode
