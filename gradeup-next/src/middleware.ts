@@ -313,6 +313,7 @@ export async function middleware(request: NextRequest) {
         athlete: '/athlete',
         brand: '/brand',
         director: '/director',
+        admin: '/admin',
       };
       const allowedPath = demoRolePaths[demoRole];
 
@@ -327,9 +328,10 @@ export async function middleware(request: NextRequest) {
       }
 
       // Redirect to correct demo dashboard if accessing wrong one
-      if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director')) {
+      if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director') || path.startsWith('/admin')) {
         if (allowedPath && !path.startsWith(allowedPath)) {
-          return NextResponse.redirect(new URL(`${allowedPath}/dashboard`, request.url));
+          const redirectPath = allowedPath === '/admin' ? '/admin' : `${allowedPath}/dashboard`;
+          return NextResponse.redirect(new URL(redirectPath, request.url));
         }
       }
     }

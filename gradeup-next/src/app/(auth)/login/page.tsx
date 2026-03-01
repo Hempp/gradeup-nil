@@ -366,21 +366,26 @@ export default function LoginPage() {
           {/* Demo Mode Access */}
           {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
             <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-center text-xs text-white/40 mb-3">Demo Mode</p>
+              <p className="text-center text-xs text-white/40 mb-3">Demo Mode - Click to explore</p>
               <div className="flex gap-2">
-                <Link href="/athlete/dashboard" className="flex-1">
+                <Link href="/api/demo/login?role=athlete" className="flex-1">
                   <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
-                    Athlete Demo
+                    Athlete
                   </Button>
                 </Link>
-                <Link href="/brand/dashboard" className="flex-1">
+                <Link href="/api/demo/login?role=brand" className="flex-1">
                   <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
-                    Brand Demo
+                    Brand
                   </Button>
                 </Link>
-                <Link href="/director/dashboard" className="flex-1">
+                <Link href="/api/demo/login?role=director" className="flex-1">
                   <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
-                    Director Demo
+                    Director
+                  </Button>
+                </Link>
+                <Link href="/api/demo/login?role=admin" className="flex-1">
+                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
+                    Admin
                   </Button>
                 </Link>
               </div>
