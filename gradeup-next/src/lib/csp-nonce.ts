@@ -66,14 +66,16 @@ export function buildCspHeader(
     "default-src 'self'",
 
     // Script policy: self + nonce for inline scripts + strict-dynamic for trusted script loading
-    // Note: 'strict-dynamic' allows scripts loaded by trusted scripts (with nonce)
-    // This enables libraries like Google Analytics to load additional scripts
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    // Note: Next.js 16 with Turbopack doesn't yet support nonce injection in script tags
+    // We use 'unsafe-inline' as a fallback for compatibility, but nonces are still generated
+    // for future use when Next.js adds proper nonce support
+    // TODO: Remove 'unsafe-inline' when Next.js properly injects nonces into script tags
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline'`,
 
-    // Style policy: self + nonce for any inline styles that need to be added dynamically
+    // Style policy: self + nonce + unsafe-inline for Tailwind and React inline styles
     // Note: Tailwind CSS is compiled at build time and served as external stylesheets
     // React inline styles (style={}) don't require CSP permissions as they use DOM API
-    `style-src 'self' 'nonce-${nonce}'`,
+    `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
 
     // Image policy: allow same-origin, data URIs, and HTTPS images
     "img-src 'self' data: https:",
