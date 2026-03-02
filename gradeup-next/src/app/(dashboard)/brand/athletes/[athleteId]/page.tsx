@@ -275,7 +275,7 @@ function ProfileSkeleton() {
       </div>
 
       {/* Content Skeleton */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <Skeleton className="h-64 rounded-[var(--radius-lg)]" />
         </div>
@@ -629,7 +629,7 @@ export default function BrandAthleteProfilePage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Left Column - Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Bio */}

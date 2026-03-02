@@ -31,7 +31,7 @@ export default function DashboardLoading() {
       </div>
 
       {/* Content Cards Skeleton */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <Skeleton className="h-5 w-32" />

@@ -717,11 +717,13 @@ function HowItWorksSection() {
                     Your browser does not support the video tag.
                   </video>
 
-                  {/* Play/Pause overlay */}
+                  {/* Play/Pause overlay - always visible on mobile, hover-reveal on desktop when playing */}
                   <button
                     onClick={toggleVideo}
                     className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                      isPlaying ? 'opacity-0 hover:opacity-100' : 'opacity-100'
+                      isPlaying
+                        ? 'opacity-100 md:opacity-0 md:hover:opacity-100'
+                        : 'opacity-100'
                     }`}
                     aria-label={isPlaying ? 'Pause video' : 'Play video'}
                   >

@@ -58,9 +58,9 @@ function AlertsPanelCard({ alerts, loading, onViewAlert }: AlertsPanelCardProps)
       badge: 'warning' as const,
     },
     low: {
-      bg: 'bg-[var(--color-primary-muted)]',
-      border: 'border-[var(--color-primary)]',
-      badge: 'primary' as const,
+      bg: 'bg-[var(--info-100)]',
+      border: 'border-[var(--color-info)]',
+      badge: 'info' as const,
     },
   };
 

@@ -244,7 +244,7 @@ function OverviewTab({ campaign }: { campaign: CampaignData }) {
       </div>
 
       {/* Campaign Details */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Main Details */}
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -674,7 +674,7 @@ function AnalyticsTab({ campaign }: { campaign: CampaignData }) {
       </div>
 
       {/* Campaign Analytics Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Reach Over Time</CardTitle>
@@ -826,7 +826,7 @@ function CampaignDetailSkeleton() {
       </div>
 
       {/* Content Cards Skeleton */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
           <CardHeader>
             <Skeleton className="h-6 w-32" />

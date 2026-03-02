@@ -463,7 +463,7 @@ export default function AthleteDashboardPage() {
       </div>
 
       {/* Stats Grid - 4 cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-tour="earnings-dashboard">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" data-tour="earnings-dashboard">
         <StatCard
           title="Total Earnings"
           value={statsLoading ? '...' : formatCurrency(stats?.total_earnings || 0)}

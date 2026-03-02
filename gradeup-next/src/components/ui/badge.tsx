@@ -12,10 +12,11 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
    * - 'success': Green for positive states
    * - 'warning': Yellow/orange for attention
    * - 'error': Red for errors or negative states
+   * - 'info': Blue for informational states
    * - 'outline': Bordered with transparent background
    * @default 'default'
    */
-  variant?: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'outline';
+  variant?: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info' | 'outline';
   /**
    * Size of the badge
    * - 'sm': 20px height, extra small text
@@ -54,6 +55,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       success: 'bg-[var(--color-success-muted)] text-[var(--color-success)] border border-[var(--color-success)]',
       warning: 'bg-[var(--color-warning-muted)] text-[var(--color-warning)] border border-[var(--color-warning)]',
       error: 'bg-[var(--color-error-muted)] text-[var(--color-error)] border border-[var(--color-error)]',
+      info: 'bg-[var(--info-100)] text-[var(--color-info)] border border-[var(--color-info)]',
       outline: 'bg-transparent text-[var(--text-secondary)] border border-[var(--border-color)]',
     };
 
