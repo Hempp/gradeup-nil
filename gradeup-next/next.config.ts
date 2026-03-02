@@ -47,18 +47,11 @@ const securityHeaders = [
   },
   // CSP is now set dynamically in middleware.ts with per-request nonces
   // This provides better XSS protection than static 'unsafe-inline'
-  {
-    key: 'Cross-Origin-Opener-Policy',
-    value: 'same-origin',
-  },
-  {
-    key: 'Cross-Origin-Resource-Policy',
-    value: 'same-origin',
-  },
-  {
-    key: 'Cross-Origin-Embedder-Policy',
-    value: 'credentialless',
-  },
+  //
+  // Note: Cross-Origin-Embedder-Policy and Cross-Origin-Resource-Policy are
+  // intentionally omitted because they block external resources (images from
+  // Unsplash, etc.) which crashes React during hydration. These headers are
+  // only needed for SharedArrayBuffer/high-resolution timers use cases.
 ];
 
 const nextConfig: NextConfig = {
