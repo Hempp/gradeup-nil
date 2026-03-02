@@ -180,6 +180,81 @@ function processImageFallback(
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Magic Byte Signatures for File Validation
+// ═══════════════════════════════════════════════════════════════════════════
+
+const MAGIC_BYTES: Record<string, { bytes: number[]; mimeType: string }[]> = {
+  // JPEG: FFD8FF
+  'image/jpeg': [{ bytes: [0xFF, 0xD8, 0xFF], mimeType: 'image/jpeg' }],
+  'image/jpg': [{ bytes: [0xFF, 0xD8, 0xFF], mimeType: 'image/jpeg' }],
+  // PNG: 89504E47
+  'image/png': [{ bytes: [0x89, 0x50, 0x4E, 0x47], mimeType: 'image/png' }],
+  // GIF: 47494638
+  'image/gif': [{ bytes: [0x47, 0x49, 0x46, 0x38], mimeType: 'image/gif' }],
+  // WebP: 52494646 + WEBP
+  'image/webp': [{ bytes: [0x52, 0x49, 0x46, 0x46], mimeType: 'image/webp' }],
+  // PDF: 25504446
+  'application/pdf': [{ bytes: [0x25, 0x50, 0x44, 0x46], mimeType: 'application/pdf' }],
+  // DOC: D0CF11E0
+  'application/msword': [{ bytes: [0xD0, 0xCF, 0x11, 0xE0], mimeType: 'application/msword' }],
+  // DOCX (ZIP-based): 504B0304
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [
+    { bytes: [0x50, 0x4B, 0x03, 0x04], mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+  ],
+  // Plain text - no magic bytes (validate content)
+  'text/plain': [],
+};
+
+/**
+ * Validate file content against magic bytes (file signature)
+ * This prevents malicious files disguised with wrong MIME types
+ */
+function validateMagicBytes(buffer: Buffer, claimedType: string): { valid: boolean; detectedType?: string; error?: string } {
+  // Skip validation for text files (no magic bytes)
+  if (claimedType === 'text/plain') {
+    // Basic check: ensure it's valid UTF-8 text without binary content
+    const sample = buffer.slice(0, 1024);
+    const hasNullBytes = sample.includes(0x00);
+    if (hasNullBytes) {
+      return { valid: false, error: 'File appears to be binary, not text' };
+    }
+    return { valid: true };
+  }
+
+  const signatures = MAGIC_BYTES[claimedType];
+  if (!signatures || signatures.length === 0) {
+    // Unknown type - allow through but log warning
+    console.warn(`[Upload] No magic byte signature defined for: ${claimedType}`);
+    return { valid: true };
+  }
+
+  for (const sig of signatures) {
+    let matches = true;
+    for (let i = 0; i < sig.bytes.length; i++) {
+      if (buffer[i] !== sig.bytes[i]) {
+        matches = false;
+        break;
+      }
+    }
+    if (matches) {
+      // WebP requires additional check for 'WEBP' at offset 8
+      if (claimedType === 'image/webp') {
+        const webpSignature = buffer.slice(8, 12).toString('ascii');
+        if (webpSignature !== 'WEBP') {
+          return { valid: false, error: 'Invalid WebP file structure' };
+        }
+      }
+      return { valid: true, detectedType: sig.mimeType };
+    }
+  }
+
+  return {
+    valid: false,
+    error: `File content does not match claimed type "${claimedType}". File may be corrupted or disguised.`,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Validation Functions
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -279,6 +354,16 @@ export async function POST(request: NextRequest) {
     // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+
+    // SECURITY: Validate file content against magic bytes
+    // This prevents malicious files disguised with wrong MIME types
+    const magicValidation = validateMagicBytes(buffer, file.type);
+    if (!magicValidation.valid) {
+      return NextResponse.json(
+        { error: magicValidation.error || 'Invalid file content' },
+        { status: 400 }
+      );
+    }
 
     // Check if we can use sharp for processing
     const useSharp = await isSharpAvailable();

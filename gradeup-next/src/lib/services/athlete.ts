@@ -465,33 +465,47 @@ export async function uploadAthleteMedia(
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
+ * OPTIMIZATION: Shared helper to get authenticated user and athlete highlights in one flow
+ * Reduces N+1 queries by consolidating auth check and data fetch
+ */
+async function getAuthenticatedAthleteHighlights(supabase: ReturnType<typeof createClient>) {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return { user: null, highlights: null, error: userError || new Error('Not authenticated') };
+  }
+
+  const { data: athlete, error: athleteError } = await supabase
+    .from('athletes')
+    .select('highlight_urls')
+    .eq('profile_id', user.id)
+    .single();
+
+  if (athleteError) {
+    return { user, highlights: null, error: new Error(`Failed to fetch athlete: ${athleteError.message}`) };
+  }
+
+  const highlights = (athlete?.highlight_urls as HighlightUrl[]) || [];
+  return { user, highlights, error: null };
+}
+
+/**
  * Get highlight URLs for the current user's athlete profile
  */
 export async function getHighlightUrls(): Promise<ServiceResult<HighlightUrl[]>> {
   const supabase = createClient();
 
   try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const { highlights, error } = await getAuthenticatedAthleteHighlights(supabase);
 
-    if (userError || !user) {
-      return { data: null, error: userError || new Error('Not authenticated') };
+    if (error) {
+      return { data: null, error };
     }
 
-    const { data: athlete, error: athleteError } = await supabase
-      .from('athletes')
-      .select('highlight_urls')
-      .eq('profile_id', user.id)
-      .single();
-
-    if (athleteError) {
-      return { data: null, error: new Error(`Failed to fetch highlight URLs: ${athleteError.message}`) };
-    }
-
-    const highlightUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
-    return { data: highlightUrls, error: null };
+    return { data: highlights || [], error: null };
   } catch (error) {
     return {
       data: null,
@@ -502,6 +516,7 @@ export async function getHighlightUrls(): Promise<ServiceResult<HighlightUrl[]>>
 
 /**
  * Add a highlight URL to the current user's athlete profile
+ * OPTIMIZED: Uses shared helper to reduce queries from 3 to 2
  */
 export async function addHighlightUrl(
   url: string,
@@ -511,27 +526,13 @@ export async function addHighlightUrl(
   const supabase = createClient();
 
   try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const { user, highlights, error } = await getAuthenticatedAthleteHighlights(supabase);
 
-    if (userError || !user) {
-      return { data: null, error: userError || new Error('Not authenticated') };
+    if (error || !user) {
+      return { data: null, error: error || new Error('Not authenticated') };
     }
 
-    // Get current highlight URLs
-    const { data: athlete, error: fetchError } = await supabase
-      .from('athletes')
-      .select('highlight_urls')
-      .eq('profile_id', user.id)
-      .single();
-
-    if (fetchError) {
-      return { data: null, error: new Error(`Failed to fetch athlete: ${fetchError.message}`) };
-    }
-
-    const currentUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
+    const currentUrls = highlights || [];
 
     // Check for duplicates
     if (currentUrls.some(h => h.url === url)) {
@@ -568,32 +569,19 @@ export async function addHighlightUrl(
 
 /**
  * Remove a highlight URL from the current user's athlete profile
+ * OPTIMIZED: Uses shared helper to reduce queries from 3 to 2
  */
 export async function removeHighlightUrl(highlightId: string): Promise<ServiceResult<null>> {
   const supabase = createClient();
 
   try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const { user, highlights, error } = await getAuthenticatedAthleteHighlights(supabase);
 
-    if (userError || !user) {
-      return { data: null, error: userError || new Error('Not authenticated') };
+    if (error || !user) {
+      return { data: null, error: error || new Error('Not authenticated') };
     }
 
-    // Get current highlight URLs
-    const { data: athlete, error: fetchError } = await supabase
-      .from('athletes')
-      .select('highlight_urls')
-      .eq('profile_id', user.id)
-      .single();
-
-    if (fetchError) {
-      return { data: null, error: new Error(`Failed to fetch athlete: ${fetchError.message}`) };
-    }
-
-    const currentUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
+    const currentUrls = highlights || [];
     const updatedUrls = currentUrls.filter(h => h.id !== highlightId);
 
     if (updatedUrls.length === currentUrls.length) {
@@ -621,6 +609,7 @@ export async function removeHighlightUrl(highlightId: string): Promise<ServiceRe
 
 /**
  * Update a highlight URL's title
+ * OPTIMIZED: Uses shared helper to reduce queries from 3 to 2
  */
 export async function updateHighlightTitle(
   highlightId: string,
@@ -629,27 +618,13 @@ export async function updateHighlightTitle(
   const supabase = createClient();
 
   try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const { user, highlights, error } = await getAuthenticatedAthleteHighlights(supabase);
 
-    if (userError || !user) {
-      return { data: null, error: userError || new Error('Not authenticated') };
+    if (error || !user) {
+      return { data: null, error: error || new Error('Not authenticated') };
     }
 
-    // Get current highlight URLs
-    const { data: athlete, error: fetchError } = await supabase
-      .from('athletes')
-      .select('highlight_urls')
-      .eq('profile_id', user.id)
-      .single();
-
-    if (fetchError) {
-      return { data: null, error: new Error(`Failed to fetch athlete: ${fetchError.message}`) };
-    }
-
-    const currentUrls = (athlete?.highlight_urls as HighlightUrl[]) || [];
+    const currentUrls = highlights || [];
     const highlightIndex = currentUrls.findIndex(h => h.id === highlightId);
 
     if (highlightIndex === -1) {

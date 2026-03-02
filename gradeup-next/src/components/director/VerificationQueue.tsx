@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import {
   Card,
   CardContent,
@@ -75,13 +75,14 @@ function getTypeBadgeColor(type: VerificationType): string {
 interface RequestCardProps {
   request: VerificationRequestWithAthlete;
   isSelected: boolean;
-  onToggleSelect: () => void;
-  onApprove: () => void;
-  onReject: () => void;
+  onToggleSelect: (requestId: string) => void;
+  onApprove: (request: VerificationRequestWithAthlete) => void;
+  onReject: (request: VerificationRequestWithAthlete) => void;
   isProcessing: boolean;
 }
 
-function RequestCard({
+// Memoized RequestCard to prevent unnecessary re-renders in lists
+const RequestCard = memo(function RequestCard({
   request,
   isSelected,
   onToggleSelect,
@@ -90,6 +91,19 @@ function RequestCard({
   isProcessing,
 }: RequestCardProps) {
   const athlete = request.athlete;
+
+  // Stable callbacks using request data
+  const handleToggle = useCallback(() => {
+    onToggleSelect(request.id);
+  }, [onToggleSelect, request.id]);
+
+  const handleApprove = useCallback(() => {
+    onApprove(request);
+  }, [onApprove, request]);
+
+  const handleReject = useCallback(() => {
+    onReject(request);
+  }, [onReject, request]);
   const athleteName = `${athlete.first_name} ${athlete.last_name}`;
   const submittedAgo = formatDistanceToNow(new Date(request.submitted_at), { addSuffix: true });
 
@@ -104,7 +118,7 @@ function RequestCard({
       <input
         type="checkbox"
         checked={isSelected}
-        onChange={onToggleSelect}
+        onChange={handleToggle}
         disabled={isProcessing}
         className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
       />
@@ -145,7 +159,7 @@ function RequestCard({
         <Button
           size="sm"
           variant="outline"
-          onClick={onReject}
+          onClick={handleReject}
           disabled={isProcessing}
           className="gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
         >
@@ -154,7 +168,7 @@ function RequestCard({
         </Button>
         <Button
           size="sm"
-          onClick={onApprove}
+          onClick={handleApprove}
           disabled={isProcessing}
           className="gap-1"
         >
@@ -168,7 +182,9 @@ function RequestCard({
       </div>
     </div>
   );
-}
+});
+
+RequestCard.displayName = 'RequestCard';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Reject Modal
@@ -286,7 +302,7 @@ export function VerificationQueue({ schoolId, className }: VerificationQueueProp
   }>({ open: false, request: null });
   const [bulkProcessing, setBulkProcessing] = useState(false);
 
-  const handleApprove = async (request: VerificationRequestWithAthlete) => {
+  const handleApprove = useCallback(async (request: VerificationRequestWithAthlete) => {
     setProcessingIds(prev => new Set(prev).add(request.id));
 
     const result = await approve(request.id, request.athlete_id, request.type);
@@ -302,11 +318,11 @@ export function VerificationQueue({ schoolId, className }: VerificationQueueProp
     } else {
       toast.error('Approval Failed', result.error || 'Unable to approve verification.');
     }
-  };
+  }, [approve, toast]);
 
-  const handleRejectClick = (request: VerificationRequestWithAthlete) => {
+  const handleRejectClick = useCallback((request: VerificationRequestWithAthlete) => {
     setRejectModal({ open: true, request });
-  };
+  }, []);
 
   const handleRejectConfirm = async (reason: string) => {
     const request = rejectModal.request;
@@ -442,9 +458,9 @@ export function VerificationQueue({ schoolId, className }: VerificationQueueProp
                   key={request.id}
                   request={request}
                   isSelected={selectedIds.includes(request.id)}
-                  onToggleSelect={() => toggleSelect(request.id)}
-                  onApprove={() => handleApprove(request)}
-                  onReject={() => handleRejectClick(request)}
+                  onToggleSelect={toggleSelect}
+                  onApprove={handleApprove}
+                  onReject={handleRejectClick}
                   isProcessing={processingIds.has(request.id)}
                 />
               ))}

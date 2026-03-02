@@ -708,7 +708,7 @@ describe('athlete service', () => {
       const result = await getHighlightUrls();
 
       expect(result.data).toBeNull();
-      expect(result.error?.message).toContain('Failed to fetch highlight URLs');
+      expect(result.error?.message).toContain('Failed to fetch athlete');
     });
   });
 

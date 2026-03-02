@@ -44,10 +44,11 @@ export async function GET(request: NextRequest) {
   const response = NextResponse.redirect(new URL(redirectPath, request.url));
 
   // Set the demo_role cookie (expires in 24 hours)
+  // SECURITY: HttpOnly prevents XSS theft, strict sameSite prevents CSRF
   response.cookies.set('demo_role', role, {
-    httpOnly: false,
+    httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     maxAge: 60 * 60 * 24, // 24 hours
     path: '/',
   });
