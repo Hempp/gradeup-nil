@@ -87,7 +87,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       danger: `
         btn-shine ripple-effect
         bg-[var(--color-error)] text-white
-        hover:bg-[#dc2626] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(239,68,68,0.4)]
+        hover:bg-[var(--error-600)] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(239,68,68,0.4)]
         active:scale-[0.98] active:translate-y-0
       `,
     };

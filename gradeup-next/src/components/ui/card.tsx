@@ -108,11 +108,12 @@ const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 CardHeader.displayName = 'CardHeader';
 
 /**
- * Title element for Card, renders as h3 with appropriate styling
+ * Title element for Card with configurable heading level for proper document outline.
+ * Defaults to h3 which works when Card follows a section with h2.
  */
-const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3
+const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement> & { as?: 'h2' | 'h3' | 'h4' }>(
+  ({ className, as: Tag = 'h3', ...props }, ref) => (
+    <Tag
       ref={ref}
       className={cn('text-lg font-semibold text-[var(--text-primary)]', className)}
       {...props}

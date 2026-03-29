@@ -156,6 +156,27 @@
   --radius-2xl: 1.5rem;    /* 24px - Hero elements */
   --radius-full: 9999px;   /* Badges, avatars, pills */
 
+  /* ─── Marketing Dark Theme Colors (Nike-inspired) ─── */
+  --marketing-black: #000000;
+  --marketing-gray-950: #0a0a0a;
+  --marketing-gray-900: #171717;
+  --marketing-gray-800: #262626;
+  --marketing-gray-700: #404040;
+  --marketing-gray-600: #525252;
+  --marketing-gray-500: #737373;
+  --marketing-gray-400: #a3a3a3;
+  --marketing-gray-300: #d4d4d4;
+
+  /* ─── Marketing Accent Colors ─── */
+  --marketing-cyan: #00f0ff;
+  --marketing-cyan-dark: #00c4cc;
+  --marketing-cyan-glow: rgba(0, 240, 255, 0.4);
+  --marketing-lime: #adff2f;
+  --marketing-lime-glow: rgba(173, 255, 47, 0.3);
+  --marketing-gold: #ffd700;
+  --marketing-gold-glow: rgba(255, 215, 0, 0.3);
+  --marketing-magenta: #ff00ff;
+  --marketing-magenta-glow: rgba(255, 0, 255, 0.3);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -493,33 +514,7 @@ html.no-transitions *::after {
   background: rgba(0, 240, 255, 0.05);
 }
 
-:root {
-  /* ═══════════════════════════════════════════════════════════════════════════
-     MARKETING PAGES - Dark Theme (Nike-inspired)
-     ═══════════════════════════════════════════════════════════════════════════ */
-
-  /* ─── Marketing Dark Theme Colors ─── */
-  --marketing-black: #000000;
-  --marketing-gray-950: #0a0a0a;
-  --marketing-gray-900: #171717;
-  --marketing-gray-800: #262626;
-  --marketing-gray-700: #404040;
-  --marketing-gray-600: #525252;
-  --marketing-gray-500: #737373;
-  --marketing-gray-400: #a3a3a3;
-  --marketing-gray-300: #d4d4d4;
-
-  /* ─── Marketing Accent Colors ─── */
-  --marketing-cyan: #00f0ff;
-  --marketing-cyan-dark: #00c4cc;
-  --marketing-cyan-glow: rgba(0, 240, 255, 0.4);
-  --marketing-lime: #adff2f;
-  --marketing-lime-glow: rgba(173, 255, 47, 0.3);
-  --marketing-gold: #ffd700;
-  --marketing-gold-glow: rgba(255, 215, 0, 0.3);
-  --marketing-magenta: #ff00ff;
-  --marketing-magenta-glow: rgba(255, 0, 255, 0.3);
-}
+/* Marketing tokens consolidated into main :root block above */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MARKETING PAGE ANIMATIONS

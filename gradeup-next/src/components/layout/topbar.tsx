@@ -4,12 +4,13 @@ import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, Menu, Settings, LogOut } from 'lucide-react';
+import { ChevronDown, Menu, Settings, LogOut, Search, Command } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb, type BreadcrumbItem } from './breadcrumb';
 import { NotificationDropdown, type Notification } from '@/components/notifications';
 import { useNotifications } from '@/lib/hooks/use-notifications';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { CommandPalette } from '@/components/ui/command-palette';
 
 export interface TopbarUser {
   name: string;
@@ -35,6 +36,7 @@ export function Topbar({
 }: TopbarProps) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [_focusedMenuIndex, setFocusedMenuIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -143,7 +145,7 @@ export function Topbar({
     <header
       className={cn(
         'fixed top-0 left-0 right-0 h-16 z-30',
-        'bg-[var(--marketing-gray-900)] border-b border-white/10',
+        'bg-[var(--bg-sidebar)] border-b border-[var(--border-inverse-10)]',
         'flex items-center justify-between px-4 lg:px-6',
         'lg:left-64',
         className
@@ -168,8 +170,31 @@ export function Topbar({
         )}
       </div>
 
-      {/* Right side: Theme toggle + Notifications + User dropdown */}
+      {/* Right side: Search + Theme toggle + Notifications + User dropdown */}
       <div className="flex items-center gap-2">
+        {/* Command palette trigger — mobile compact */}
+        <button
+          type="button"
+          onClick={() => setShowCommandPalette(true)}
+          className="sm:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 active:bg-white/20 transition-colors touch-manipulation"
+          aria-label="Search"
+        >
+          <Search className="h-5 w-5" />
+        </button>
+        {/* Command palette trigger — desktop expanded */}
+        <button
+          type="button"
+          onClick={() => setShowCommandPalette(true)}
+          className="hidden sm:flex items-center gap-2 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          aria-label="Open command palette"
+        >
+          <Search className="h-4 w-4" />
+          <span className="text-sm">Search</span>
+          <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-white/10 rounded text-[10px] font-medium ml-2">
+            <Command className="h-2.5 w-2.5" />K
+          </kbd>
+        </button>
+
         {/* Theme toggle */}
         <ThemeToggle
           mode="dropdown"
@@ -286,6 +311,13 @@ export function Topbar({
           )}
         </div>
       </div>
+
+      {/* Command Palette */}
+      <CommandPalette
+        role={displayUser.role.toLowerCase() as 'athlete' | 'brand' | 'director'}
+        isOpen={showCommandPalette}
+        onClose={() => setShowCommandPalette(false)}
+      />
     </header>
   );
 }
