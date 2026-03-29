@@ -272,7 +272,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       case 'athletic_director':
         return '/director/dashboard';
       case 'admin':
-        return '/admin/dashboard';
+        return '/admin';
       default:
         return '/login';
     }

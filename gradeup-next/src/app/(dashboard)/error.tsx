@@ -47,9 +47,9 @@ export default function DashboardError({ error, reset }: ErrorProps) {
               <RefreshCw className="h-4 w-4 mr-2" />
               Retry
             </Button>
-            <Button variant="primary" size="sm" onClick={() => window.location.href = '/athlete/dashboard'}>
+            <Button variant="primary" size="sm" onClick={() => window.location.href = '/'}>
               <LayoutDashboard className="h-4 w-4 mr-2" />
-              Dashboard
+              Go Home
             </Button>
           </div>
         </CardContent>

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
 
     const page = parseInt(searchParams.get('page') || '1', 10);
-    const pageSize = parseInt(searchParams.get('page_size') || '10', 10);
+    const pageSize = Math.min(parseInt(searchParams.get('page_size') || '10', 10), 100);
     const offset = (page - 1) * pageSize;
 
     const statuses = searchParams.get('status')?.split(',').filter(Boolean);
@@ -96,6 +96,29 @@ export async function POST(request: NextRequest) {
     }
 
     const validatedData = validation.data;
+
+    // Authorization: verify the authenticated user owns the brand creating the deal
+    const { data: brand } = await supabase
+      .from('brands')
+      .select('id, user_id')
+      .eq('id', validatedData.brand_id)
+      .single();
+
+    if (!brand || brand.user_id !== user.id) {
+      // Also check if user is the athlete (athletes can accept deals proposed to them)
+      const { data: athlete } = await supabase
+        .from('athletes')
+        .select('id, user_id')
+        .eq('id', validatedData.athlete_id)
+        .single();
+
+      if (!athlete || athlete.user_id !== user.id) {
+        return NextResponse.json(
+          { error: 'You are not authorized to create deals for this brand or athlete' },
+          { status: 403 }
+        );
+      }
+    }
 
     const { data: deal, error } = await supabase
       .from('deals')

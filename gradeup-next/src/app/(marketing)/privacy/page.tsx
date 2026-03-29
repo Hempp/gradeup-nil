@@ -13,7 +13,7 @@ export default function PrivacyPage() {
 
         <div className="prose prose-invert prose-lg max-w-none">
           <p className="text-[var(--marketing-gray-300)] text-lg mb-6">
-            Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            Last updated: March 29, 2026
           </p>
 
           <section className="mb-8">
