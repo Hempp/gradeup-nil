@@ -104,7 +104,7 @@
     </noscript>
 
     <!-- Loader -->
-    <div class="loader" id="loader">
+    <div class="loader" id="loader" role="status" aria-live="polite" aria-label="Loading GradeUp">
         <div class="loader-inner">
             <div class="loader-text">GRADEUP</div>
             <div class="loader-bar"><span></span></div>
@@ -112,7 +112,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="nav" id="nav">
+    <nav class="nav" id="nav" aria-label="Primary navigation">
         <a href="/" class="nav-logo">GRADEUP</a>
 
         <div class="nav-links" id="navLinks">
@@ -128,7 +128,7 @@
             <button class="btn btn-primary" data-action="openModal" data-param="signup">Get Started</button>
         </div>
 
-        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
             <span></span>
             <span></span>
             <span></span>
@@ -136,7 +136,7 @@
     </nav>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
         <div class="mobile-menu-content">
             <a href="#athletes" data-action="closeMobileMenu">Athletes</a>
             <a href="#brands" data-action="closeMobileMenu">Brands</a>
@@ -152,7 +152,7 @@
                 <button class="btn btn-primary btn-block" data-action="openModalAndClose" data-param="signup">Get Started</button>
             </div>
         </div>
-    </div>
+    </nav>
 
     <!-- Main Content -->
     <main id="main-content">
@@ -436,7 +436,7 @@
                              srcset="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face&fm=webp 50w,
                                      https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face&fm=webp 100w,
                                      https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face&fm=webp 200w"
-                             sizes="50px" width="50" height="50" loading="lazy" alt="Sarah Chen">
+                             sizes="50px" width="50" height="50" loading="lazy" alt="Sarah Chen, Stanford Soccer athlete">
                         <div>
                             <strong>Sarah Chen</strong>
                             <span>Stanford Soccer • 3.8 GPA</span>
@@ -453,7 +453,7 @@
                              srcset="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face&fm=webp 50w,
                                      https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&fm=webp 100w,
                                      https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face&fm=webp 200w"
-                             sizes="50px" width="50" height="50" loading="lazy" alt="Mike Roberts">
+                             sizes="50px" width="50" height="50" loading="lazy" alt="Mike Roberts, Marketing Director at Nike Regional">
                         <div>
                             <strong>Mike Roberts</strong>
                             <span>Marketing Director, Nike Regional</span>
@@ -470,7 +470,7 @@
                              srcset="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face&fm=webp 50w,
                                      https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face&fm=webp 100w,
                                      https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&fm=webp 200w"
-                             sizes="50px" width="50" height="50" loading="lazy" alt="James Wilson">
+                             sizes="50px" width="50" height="50" loading="lazy" alt="James Wilson, Alabama Football athlete">
                         <div>
                             <strong>James Wilson</strong>
                             <span>Alabama Football • 3.5 GPA</span>
@@ -523,7 +523,7 @@
                 </div>
 
                 <div class="footer-links">
-                    <h4>Platform</h4>
+                    <h3 class="footer-heading">Platform</h3>
                     <a href="opportunities.html">Opportunities</a>
                     <a href="leaderboard.html">Leaderboard</a>
                     <a href="messages.html">Messages</a>
@@ -531,7 +531,7 @@
                 </div>
 
                 <div class="footer-links">
-                    <h4>Dashboards</h4>
+                    <h3 class="footer-heading">Dashboards</h3>
                     <a href="athlete-dashboard.html">Athletes</a>
                     <a href="brand-dashboard.html">Brands</a>
                     <a href="director-dashboard.html">Athletic Directors</a>
@@ -539,7 +539,7 @@
                 </div>
 
                 <div class="footer-links">
-                    <h4>Support</h4>
+                    <h3 class="footer-heading">Support</h3>
                     <a href="about.html#faq">FAQ</a>
                     <a href="about.html#contact">Help Center</a>
                     <a href="privacy.html">Privacy Policy</a>
@@ -555,7 +555,7 @@
 
     <!-- Modals -->
     <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modal">
+        <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
             <button class="modal-close" data-action="closeModal" aria-label="Close">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6L6 18M6 6l12 12"/>

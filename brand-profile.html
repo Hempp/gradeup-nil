@@ -1792,7 +1792,7 @@
                 let lastScroll = 0;
 
                 window.addEventListener('scroll', () => {
-                    const currentScroll = window.pageYOffset;
+                    const currentScroll = window.scrollY;
 
                     // Hide/show on scroll direction
                     if (currentScroll > lastScroll && currentScroll > 100) {

@@ -82,7 +82,7 @@
             if (!scrollThrottled) {
                 scrollThrottled = true;
                 requestAnimationFrame(() => {
-                    const currentScroll = window.pageYOffset;
+                    const currentScroll = window.scrollY;
 
                     // Add scrolled class for background
                     if (currentScroll > 50) {

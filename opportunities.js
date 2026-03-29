@@ -620,17 +620,25 @@
      */
     function initNav() {
         let lastScroll = 0;
+        let scrollThrottled = false;
 
+        // PERFORMANCE: Use RAF throttling to prevent scroll jank
         window.addEventListener('scroll', function() {
-            const currentScroll = window.pageYOffset;
+            if (!scrollThrottled) {
+                scrollThrottled = true;
+                requestAnimationFrame(function() {
+                    const currentScroll = window.scrollY;
 
-            if (currentScroll > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
+                    if (currentScroll > 50) {
+                        nav.classList.add('scrolled');
+                    } else {
+                        nav.classList.remove('scrolled');
+                    }
+
+                    lastScroll = currentScroll;
+                    scrollThrottled = false;
+                });
             }
-
-            lastScroll = currentScroll;
         });
 
         navToggle.addEventListener('click', function() {
