@@ -157,10 +157,18 @@ FUNCTIONS=(
     "send-notification"
 )
 
+# Functions that need public access (webhooks from external services)
+PUBLIC_FUNCTIONS=("stripe-webhook")
+
 for func in "${FUNCTIONS[@]}"; do
     if [ -d "supabase/functions/$func" ]; then
         echo "  Deploying $func..."
-        npx supabase functions deploy "$func" --no-verify-jwt 2>/dev/null || echo "    (skipped - may not exist)"
+        # Only disable JWT verification for webhook endpoints
+        if [[ " ${PUBLIC_FUNCTIONS[*]} " =~ " ${func} " ]]; then
+            npx supabase functions deploy "$func" --no-verify-jwt 2>/dev/null || echo "    (skipped - may not exist)"
+        else
+            npx supabase functions deploy "$func" 2>/dev/null || echo "    (skipped - may not exist)"
+        fi
     fi
 done
 

@@ -240,15 +240,14 @@ class BrandPayments {
     svg.setAttribute('stroke', 'currentColor');
     svg.setAttribute('stroke-width', '2');
 
-    const paths = {
-      free: '<circle cx="12" cy="12" r="10"/>',
-      starter: '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>',
-      growth: '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>',
-      enterprise: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+    const NS = 'http://www.w3.org/2000/svg';
+    const builders = {
+      free: () => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx','12'); c.setAttribute('cy','12'); c.setAttribute('r','10'); return [c]; },
+      starter: () => ['M12 2L2 7l10 5 10-5-10-5z','M2 17l10 5 10-5','M2 12l10 5 10-5'].map(d => { const p = document.createElementNS(NS,'path'); p.setAttribute('d',d); return p; }),
+      growth: () => ['M18 20V10','M12 20V4','M6 20v-6'].map(d => { const p = document.createElementNS(NS,'path'); p.setAttribute('d',d); return p; }),
+      enterprise: () => { const p = document.createElementNS(NS,'polygon'); p.setAttribute('points','12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'); return [p]; },
     };
-
-    // Safe: paths are static strings from internal code
-    svg.innerHTML = paths[tier] || paths.free;
+    (builders[tier] || builders.free)().forEach(el => svg.appendChild(el));
     return svg;
   }
 
@@ -272,8 +271,12 @@ class BrandPayments {
       'file-text': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>',
     };
 
-    // Safe: icons are static strings from internal code
-    svg.innerHTML = icons[name] || '';
+    const svgContent = icons[name] || '';
+    if (svgContent) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<svg xmlns="http://www.w3.org/2000/svg">${svgContent}</svg>`, 'image/svg+xml');
+      Array.from(doc.documentElement.childNodes).forEach(node => svg.appendChild(document.importNode(node, true)));
+    }
     return svg;
   }
 

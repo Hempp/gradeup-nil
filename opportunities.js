@@ -1062,7 +1062,15 @@
 
         const saveBtn = document.createElement('button');
         saveBtn.className = 'btn btn-outline';
-        saveBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg> Save';
+        const saveSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        saveSvg.setAttribute('viewBox', '0 0 24 24'); saveSvg.setAttribute('fill', 'none');
+        saveSvg.setAttribute('stroke', 'currentColor'); saveSvg.setAttribute('stroke-width', '2');
+        saveSvg.style.width = '18px'; saveSvg.style.height = '18px';
+        const savePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        savePath.setAttribute('d', 'M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z');
+        saveSvg.appendChild(savePath);
+        saveBtn.appendChild(saveSvg);
+        saveBtn.appendChild(document.createTextNode(' Save'));
         saveBtn.onclick = function() { saveOpportunity(opp.id); };
 
         const applyBtn = document.createElement('button');

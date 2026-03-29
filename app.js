@@ -617,7 +617,7 @@
 
         // Focus the email input
         setTimeout(function() {
-            var resetEmailInput = document.getElementById('resetEmail');
+            const resetEmailInput = document.getElementById('resetEmail');
             if (resetEmailInput) resetEmailInput.focus();
         }, 100);
     }
@@ -1486,12 +1486,12 @@
         }
 
         // Capture form data using correct field IDs
-        var firstName = document.getElementById('firstName')?.value?.trim() || '';
-        var lastName = document.getElementById('lastName')?.value?.trim() || '';
-        var email = document.getElementById('athleteEmail')?.value?.trim() || '';
-        var school = document.getElementById('school')?.value || '';
-        var sport = document.getElementById('sport')?.value || '';
-        var password = document.getElementById('athletePassword')?.value || '';
+        const firstName = document.getElementById('firstName')?.value?.trim() || '';
+        const lastName = document.getElementById('lastName')?.value?.trim() || '';
+        const email = document.getElementById('athleteEmail')?.value?.trim() || '';
+        const school = document.getElementById('school')?.value || '';
+        const sport = document.getElementById('sport')?.value || '';
+        const password = document.getElementById('athletePassword')?.value || '';
 
         // Validate required fields
         if (!firstName || !lastName) {
@@ -1508,7 +1508,7 @@
 
         // Validate password strength
         if (typeof validatePassword === 'function') {
-            var passResult = validatePassword(password);
+            const passResult = validatePassword(password);
             if (!passResult.valid) {
                 showAuthToast(passResult.errors[0]);
                 document.getElementById('athletePassword')?.focus();
@@ -1570,12 +1570,12 @@
         }
 
         // Capture form data using correct field IDs
-        var companyName = document.getElementById('companyName')?.value?.trim() || '';
-        var firstName = document.getElementById('brandFirstName')?.value?.trim() || '';
-        var lastName = document.getElementById('brandLastName')?.value?.trim() || '';
-        var email = document.getElementById('brandEmail')?.value?.trim() || '';
-        var industry = document.getElementById('industry')?.value || '';
-        var password = document.getElementById('brandPassword')?.value || '';
+        const companyName = document.getElementById('companyName')?.value?.trim() || '';
+        const firstName = document.getElementById('brandFirstName')?.value?.trim() || '';
+        const lastName = document.getElementById('brandLastName')?.value?.trim() || '';
+        const email = document.getElementById('brandEmail')?.value?.trim() || '';
+        const industry = document.getElementById('industry')?.value || '';
+        const password = document.getElementById('brandPassword')?.value || '';
 
         // Validate required fields
         if (!companyName) {
@@ -1598,7 +1598,7 @@
 
         // Validate password strength
         if (typeof validatePassword === 'function') {
-            var passResult = validatePassword(password);
+            const passResult = validatePassword(password);
             if (!passResult.valid) {
                 showAuthToast(passResult.errors[0]);
                 document.getElementById('brandPassword')?.focus();
@@ -1667,7 +1667,7 @@
     // Inject toast animation keyframes if not already present
     (function injectToastStyles() {
         if (document.getElementById('toast-keyframes')) return;
-        var style = document.createElement('style');
+        const style = document.createElement('style');
         style.id = 'toast-keyframes';
         style.textContent = '@keyframes toastSlideIn { from { transform: translateX(-50%) translateY(100%); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } } @keyframes toastSlideOut { from { transform: translateX(-50%) translateY(0); opacity: 1; } to { transform: translateX(-50%) translateY(100%); opacity: 0; } }';
         document.head.appendChild(style);
@@ -1682,32 +1682,32 @@
         if (type === undefined) type = 'info';
 
         // Remove existing toast
-        var existingToast = document.querySelector('.toast-notification');
+        const existingToast = document.querySelector('.toast-notification');
         if (existingToast) {
             existingToast.remove();
         }
 
         // Type-based colors
-        var colors = {
+        const colors = {
             success: { bg: 'linear-gradient(135deg, #0B875E, #10B981)', icon: '\u2713' },
             error: { bg: 'linear-gradient(135deg, #DA2B57, #EF4444)', icon: '\u2715' },
             warning: { bg: 'linear-gradient(135deg, #D97706, #F59E0B)', icon: '\u26A0' },
             info: { bg: 'linear-gradient(135deg, #00a8b5, #00f0ff)', icon: '\u2139' }
         };
 
-        var config = colors[type] || colors.info;
+        const config = colors[type] || colors.info;
 
-        var toast = document.createElement('div');
+        const toast = document.createElement('div');
         toast.className = 'toast-notification';
         toast.setAttribute('role', 'alert');
         toast.setAttribute('aria-live', 'assertive');
         toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: ' + config.bg + '; color: white; padding: 1rem 1.5rem; border-radius: 8px; font-size: 0.95rem; font-weight: 500; z-index: 10000; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); animation: toastSlideIn 0.3s ease;';
 
-        var iconSpan = document.createElement('span');
+        const iconSpan = document.createElement('span');
         iconSpan.style.fontSize = '1.1em';
         iconSpan.textContent = config.icon;
 
-        var messageSpan = document.createElement('span');
+        const messageSpan = document.createElement('span');
         messageSpan.textContent = message;
 
         toast.appendChild(iconSpan);
