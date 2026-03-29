@@ -1743,9 +1743,9 @@
      * @returns {void}
      */
     function setupFooterLinks() {
-        var helpCenterLink = document.getElementById('helpCenterLink');
-        var privacyPolicyLink = document.getElementById('privacyPolicyLink');
-        var termsOfServiceLink = document.getElementById('termsOfServiceLink');
+        const helpCenterLink = document.getElementById('helpCenterLink');
+        const privacyPolicyLink = document.getElementById('privacyPolicyLink');
+        const termsOfServiceLink = document.getElementById('termsOfServiceLink');
 
         if (helpCenterLink) {
             helpCenterLink.addEventListener('click', function(e) {
@@ -1779,7 +1779,7 @@
      */
     function showInfoModal(title, content) {
         // WCAG 2.2: Save the element that triggered the modal for focus restoration
-        var infoModalTrigger = document.activeElement;
+        const infoModalTrigger = document.activeElement;
 
         // WCAG 2.2: Helper to close modal and restore focus
         function closeInfoModal() {
@@ -1792,25 +1792,25 @@
         }
 
         // Create backdrop
-        var backdrop = document.createElement('div');
+        const backdrop = document.createElement('div');
         backdrop.className = 'info-modal-backdrop';
         backdrop.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1001; display: flex; align-items: center; justify-content: center; padding: 2rem; overflow-y: auto;';
 
         // Create modal
-        var modalEl = document.createElement('div');
+        const modalEl = document.createElement('div');
         modalEl.className = 'info-modal';
         modalEl.style.cssText = 'background: #171717; border: 1px solid #262626; border-radius: 20px; width: 100%; max-width: 700px; max-height: 80vh; display: flex; flex-direction: column;';
 
         // Header
-        var header = document.createElement('div');
+        const header = document.createElement('div');
         header.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-bottom: 1px solid #262626; flex-shrink: 0;';
 
-        var titleEl = document.createElement('h2');
+        const titleEl = document.createElement('h2');
         titleEl.style.cssText = 'font-size: 1.5rem; font-weight: 800; color: white; margin: 0;';
         titleEl.textContent = title;
         header.appendChild(titleEl);
 
-        var closeBtn = document.createElement('button');
+        const closeBtn = document.createElement('button');
         closeBtn.style.cssText = 'width: 40px; height: 40px; background: #262626; border: none; border-radius: 10px; color: #a3a3a3; cursor: pointer; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s;';
         closeBtn.textContent = '\u00D7';
         closeBtn.setAttribute('aria-label', 'Close');
@@ -1827,7 +1827,7 @@
         modalEl.appendChild(header);
 
         // Body
-        var body = document.createElement('div');
+        const body = document.createElement('div');
         body.style.cssText = 'padding: 2rem; overflow-y: auto; flex: 1; color: #d4d4d4; line-height: 1.7;';
         body.appendChild(content);
         modalEl.appendChild(body);
@@ -1844,7 +1844,7 @@
         });
 
         // Close on escape
-        var escHandler = function(e) {
+        const escHandler = function(e) {
             if (e.key === 'Escape') {
                 closeInfoModal();
             }
@@ -1864,9 +1864,9 @@
      * @returns {HTMLDivElement} Container element with Help Center content
      */
     function getHelpCenterContent() {
-        var container = document.createElement('div');
+        const container = document.createElement('div');
 
-        var sections = [
+        const sections = [
             {
                 title: 'Getting Started',
                 items: [
@@ -1905,15 +1905,15 @@
         ];
 
         sections.forEach(function(section) {
-            var sectionTitle = document.createElement('h3');
+            const sectionTitle = document.createElement('h3');
             sectionTitle.style.cssText = 'color: #00f0ff; font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.75rem 0;';
             sectionTitle.textContent = section.title;
             container.appendChild(sectionTitle);
 
-            var list = document.createElement('ul');
+            const list = document.createElement('ul');
             list.style.cssText = 'margin: 0; padding-left: 1.5rem;';
             section.items.forEach(function(item) {
-                var li = document.createElement('li');
+                const li = document.createElement('li');
                 li.style.cssText = 'margin-bottom: 0.5rem;';
                 li.textContent = item;
                 list.appendChild(li);
@@ -1930,14 +1930,14 @@
      * @returns {HTMLDivElement} Container element with Privacy Policy content
      */
     function getPrivacyPolicyContent() {
-        var container = document.createElement('div');
+        const container = document.createElement('div');
 
-        var intro = document.createElement('p');
+        const intro = document.createElement('p');
         intro.style.cssText = 'margin-bottom: 1.5rem;';
         intro.textContent = 'Last updated: January 2025. Your privacy is important to us. This Privacy Policy explains how GradeUp NIL collects, uses, and protects your information.';
         container.appendChild(intro);
 
-        var sections = [
+        const sections = [
             {
                 title: 'Information We Collect',
                 content: 'We collect information you provide directly, including name, email, school affiliation, sport, GPA, and profile photos. For brands, we collect company information and payment details.'
@@ -1965,12 +1965,12 @@
         ];
 
         sections.forEach(function(section) {
-            var sectionTitle = document.createElement('h3');
+            const sectionTitle = document.createElement('h3');
             sectionTitle.style.cssText = 'color: #00f0ff; font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.5rem 0;';
             sectionTitle.textContent = section.title;
             container.appendChild(sectionTitle);
 
-            var para = document.createElement('p');
+            const para = document.createElement('p');
             para.style.cssText = 'margin: 0;';
             para.textContent = section.content;
             container.appendChild(para);
@@ -1985,14 +1985,14 @@
      * @returns {HTMLDivElement} Container element with Terms of Service content
      */
     function getTermsOfServiceContent() {
-        var container = document.createElement('div');
+        const container = document.createElement('div');
 
-        var intro = document.createElement('p');
+        const intro = document.createElement('p');
         intro.style.cssText = 'margin-bottom: 1.5rem;';
         intro.textContent = 'Last updated: January 2025. By using GradeUp NIL, you agree to these Terms of Service. Please read them carefully.';
         container.appendChild(intro);
 
-        var sections = [
+        const sections = [
             {
                 title: 'Eligibility',
                 content: 'Athletes must be currently enrolled student-athletes at an NCAA-member institution. Brands must be legitimate businesses with valid contact information. All users must be 18 years or older.'
@@ -2024,12 +2024,12 @@
         ];
 
         sections.forEach(function(section) {
-            var sectionTitle = document.createElement('h3');
+            const sectionTitle = document.createElement('h3');
             sectionTitle.style.cssText = 'color: #00f0ff; font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.5rem 0;';
             sectionTitle.textContent = section.title;
             container.appendChild(sectionTitle);
 
-            var para = document.createElement('p');
+            const para = document.createElement('p');
             para.style.cssText = 'margin: 0;';
             para.textContent = section.content;
             container.appendChild(para);
