@@ -80,10 +80,10 @@
             </button>
             <a href="index.html" class="dashboard-logo">GRADEUP</a>
             <div class="dashboard-nav-tabs" role="tablist">
-                <a href="director-dashboard.html" class="nav-tab active" role="tab" aria-selected="true" data-tab="dashboard">Dashboard</a>
-                <button class="nav-tab" role="tab" aria-selected="false" data-tab="athletes" onclick="showAlert('Athletes section coming soon', null, { title: 'Coming Soon' })">Athletes</button>
-                <button class="nav-tab" role="tab" aria-selected="false" data-tab="compliance" onclick="showAlert('Compliance section coming soon', null, { title: 'Coming Soon' })">Compliance</button>
-                <button class="nav-tab" role="tab" aria-selected="false" data-tab="reports" onclick="showAlert('Reports section coming soon', null, { title: 'Coming Soon' })">Reports</button>
+                <button class="nav-tab active" role="tab" aria-selected="true" data-tab="dashboard">Dashboard</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="athletes" data-action="showAlert" data-alert-message="Athletes section coming soon" data-alert-title="Coming Soon">Athletes</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="compliance" data-action="showAlert" data-alert-message="Compliance section coming soon" data-alert-title="Coming Soon">Compliance</button>
+                <button class="nav-tab" role="tab" aria-selected="false" data-tab="reports" data-action="showAlert" data-alert-message="Reports section coming soon" data-alert-title="Coming Soon">Reports</button>
                 <button class="nav-tab highlighted" role="tab" aria-selected="false" data-tab="settings" id="settingsNavBtn">Settings</button>
             </div>
         </div>
@@ -4910,6 +4910,10 @@
     <!-- Shared DOM Helpers -->
     <script src="src/utils/dom-helpers.js"></script>
     <script src="src/utils/formatters.js"></script>
+
+    <footer class="dashboard-footer" role="contentinfo">
+        <p>&copy; 2025 GradeUp NIL. All rights reserved.</p>
+    </footer>
 
     <!-- Dashboard Services Integration -->
     <script type="module" src="src/dashboard-init.js"></script>
