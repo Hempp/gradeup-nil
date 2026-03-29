@@ -54,7 +54,7 @@ function Navbar() {
           : 'bg-transparent'
       )}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105">
@@ -176,7 +176,7 @@ function Footer() {
 
           {/* For Athletes */}
           <div>
-            <h4 className="font-semibold mb-4 text-[var(--marketing-cyan)]">For Athletes</h4>
+            <h3 className="font-semibold mb-4 text-[var(--marketing-cyan)]">For Athletes</h3>
             <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
               <li>
                 <Link href="/signup/athlete" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm transition-colors">
@@ -198,7 +198,7 @@ function Footer() {
 
           {/* For Brands */}
           <div>
-            <h4 className="font-semibold mb-4 text-[var(--marketing-gold)]">For Brands</h4>
+            <h3 className="font-semibold mb-4 text-[var(--marketing-gold)]">For Brands</h3>
             <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
               <li>
                 <Link href="/signup/brand" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
@@ -220,7 +220,7 @@ function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="font-semibold mb-4">Company</h4>
+            <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
               <li>
                 <Link href="/#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">

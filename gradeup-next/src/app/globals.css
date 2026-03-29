@@ -1,5 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FONT LOADING NOTE: Fonts are now loaded via next/font/google in layout.tsx
+   for automatic optimization, zero layout shift, and better LCP scores.
+
+   CSS Variables available:
+   - --font-bebas-neue: Display font for headings
+   - --font-dm-sans: Body font for readable text
+   - --font-geist-sans: UI font (default)
+   - --font-geist-mono: Monospace font
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GRADEUP NIL - Design System v2.0
@@ -102,7 +112,6 @@
   --overlay-glass-95: rgba(255, 255, 255, 0.95);
 
   /* ─── Inverse Text (on dark backgrounds) ─── */
-  --text-inverse: var(--surface-white);
   --text-inverse-secondary: rgba(255, 255, 255, 0.85);
   --text-inverse-muted: rgba(255, 255, 255, 0.65);
   --text-inverse-subtle: rgba(255, 255, 255, 0.5);
@@ -140,12 +149,12 @@
   --shadow-glow: 0 0 40px var(--color-primary-glow);
 
   /* ─── Border Radius ─── */
-  --radius-sm: 0.375rem;   /* 6px */
+  --radius-sm: 0.375rem;   /* 6px - Small elements, badges */
   --radius-md: 0.5rem;     /* 8px - Buttons, inputs */
-  --radius-lg: 0.5rem;     /* 8px - Buttons, inputs */
-  --radius-xl: 0.75rem;    /* 12px - Cards, modals */
-  --radius-2xl: 1rem;      /* 16px */
-  --radius-full: 9999px;   /* Badges, avatars */
+  --radius-lg: 0.75rem;    /* 12px - Cards */
+  --radius-xl: 1rem;       /* 16px - Modals, large cards */
+  --radius-2xl: 1.5rem;    /* 24px - Hero elements */
+  --radius-full: 9999px;   /* Badges, avatars, pills */
 
 }
 
@@ -262,9 +271,10 @@ html {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-html *,
-html *::before,
-html *::after {
+/* Theme transitions scoped to key properties only */
+html [data-theme-transition],
+html [data-theme-transition]::before,
+html [data-theme-transition]::after {
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.15s ease, box-shadow 0.3s ease;
 }
 
@@ -733,6 +743,215 @@ html.no-transitions *::after {
   animation: button-glow-pulse 1.5s ease-in-out infinite;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   PHASE 3 - MICRO-INTERACTIONS & ANIMATION UTILITIES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Input Focus Ring Animation ─── */
+@keyframes focus-ring-expand {
+  from {
+    box-shadow: 0 0 0 0 var(--color-primary);
+    border-color: var(--border-color);
+  }
+  to {
+    box-shadow: 0 0 0 3px var(--color-primary-muted);
+    border-color: var(--color-primary);
+  }
+}
+
+.input-focus-ring {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-focus-ring:focus {
+  animation: focus-ring-expand 0.2s ease forwards;
+  outline: none;
+}
+
+/* ─── Success Check Animation ─── */
+@keyframes success-check-in {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes success-circle-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-success-check {
+  animation: success-check-in 0.4s var(--ease-spring) forwards;
+}
+
+.animate-success-circle {
+  stroke-dasharray: 100;
+  animation: success-circle-draw 0.6s ease forwards;
+}
+
+/* ─── Card Subtle Lift (lighter than hover-lift) ─── */
+.card-lift-subtle {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-lift-subtle:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ─── Button Scale Hover ─── */
+.btn-scale {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-scale:hover {
+  transform: scale(1.02);
+}
+
+.btn-scale:active {
+  transform: scale(0.98);
+}
+
+/* ─── Toast Slide Animations ─── */
+@keyframes toast-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate-toast-in {
+  animation: toast-slide-in-right 0.3s var(--ease-spring) forwards;
+}
+
+.animate-toast-out {
+  animation: toast-slide-out-right 0.2s ease forwards;
+}
+
+/* ─── Celebration/Confetti Animation ─── */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confetti-fall 2s ease-out forwards;
+}
+
+/* ─── Progress Ring Animation ─── */
+@keyframes progress-ring-fill {
+  from {
+    stroke-dashoffset: var(--circumference);
+  }
+  to {
+    stroke-dashoffset: var(--progress-offset);
+  }
+}
+
+.animate-progress-ring {
+  animation: progress-ring-fill 1s var(--ease-spring) forwards;
+}
+
+/* ─── Notification Dot Pulse ─── */
+@keyframes notification-dot-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+.animate-notification-dot {
+  animation: notification-dot-pulse 2s ease-in-out infinite;
+}
+
+/* ─── Skeleton Shimmer (improved) ─── */
+@keyframes skeleton-shimmer-wave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    var(--bg-secondary) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer-wave 1.5s ease-in-out infinite;
+}
+
+/* ─── Stagger Animation Delays ─── */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.4s; }
+
+/* ─── Reduced Motion Preference ─── */
+@media (prefers-reduced-motion: reduce) {
+  .card-lift-subtle,
+  .btn-scale,
+  .btn-interactive,
+  .hover-lift,
+  .input-focus-ring {
+    transition: none;
+  }
+
+  .animate-success-check,
+  .animate-toast-in,
+  .animate-toast-out,
+  .animate-confetti,
+  .animate-notification-dot,
+  .skeleton-shimmer {
+    animation: none;
+  }
+}
+
 /* ─── Count-Up Animation for Stats ─── */
 @keyframes count-reveal {
   from {
@@ -1095,8 +1314,9 @@ html.no-transitions *::after {
   --color-sidebar: var(--primary-900);
 
   /* ─── Typography ─── */
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display: 'Bebas Neue', sans-serif;
+  /* Note: Font CSS variables (--font-dm-sans, --font-bebas-neue, etc.) are set by next/font in layout.tsx */
+  --font-sans: var(--font-dm-sans), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: var(--font-bebas-neue), 'Impact', sans-serif;
 
   /* ─── Border Radius ─── */
   --radius-sm: 0.375rem;   /* 6px */
@@ -1352,6 +1572,20 @@ h3.card-title {
   100% {
     background-position: 200% 0;
   }
+}
+
+/* Horizontal bounce animation for mobile scroll hints */
+@keyframes bounce-x {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-bounce-x {
+  animation: bounce-x 1s ease-in-out infinite;
 }
 
 @keyframes spin {
