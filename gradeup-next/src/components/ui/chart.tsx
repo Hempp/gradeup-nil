@@ -177,10 +177,10 @@ export const ChartWrapper = forwardRef<HTMLDivElement, ChartWrapperProps>(
             </div>
           </CardHeader>
         )}
-        <CardContent className={cn(!title && 'pt-6')}>
+        <CardContent className={cn(!title && 'pt-6', 'px-2 sm:px-6')}>
           <div
             style={{ height: `${height}px` }}
-            className="w-full"
+            className="w-full max-sm:[height:220px!important]"
             role="img"
             aria-label={ariaLabel || title || 'Chart visualization'}
             aria-describedby={ariaDescription ? `chart-desc-${title?.replace(/\s+/g, '-').toLowerCase() || 'default'}` : undefined}

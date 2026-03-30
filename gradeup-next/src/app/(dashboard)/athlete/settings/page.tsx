@@ -24,7 +24,8 @@ import { Modal } from '@/components/ui/modal';
 import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
 import { PaymentMethodsSection } from '@/components/athlete/PaymentMethodsSection';
-import { useTheme } from '@/context';
+import { useTheme, useAuth } from '@/context';
+import { updatePassword } from '@/lib/services/auth';
 
 function SettingsSection({
   icon: Icon,
@@ -84,6 +85,7 @@ function SettingsRow({
 export default function AthleteSettingsPage() {
   const toast = useToastActions();
   const { theme, setTheme } = useTheme();
+  const { user: authUser, signOut } = useAuth();
 
   const [notifications, setNotifications] = useState({
     email: true,
@@ -108,7 +110,7 @@ export default function AthleteSettingsPage() {
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
   // Handlers
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       toast.error('Password Mismatch', 'New passwords do not match.');
       return;
@@ -117,7 +119,11 @@ export default function AthleteSettingsPage() {
       toast.error('Weak Password', 'Password must be at least 8 characters.');
       return;
     }
-    // Simulate API call
+    const result = await updatePassword(passwordForm.newPassword);
+    if (result.error) {
+      toast.error('Update Failed', result.error.message);
+      return;
+    }
     toast.success('Password Changed', 'Your password has been updated successfully.');
     setChangePasswordModalOpen(false);
     setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
@@ -167,7 +173,7 @@ export default function AthleteSettingsPage() {
             <label className="block text-sm text-[var(--text-muted)] mb-1.5">
               Email Address
             </label>
-            <Input defaultValue="marcus.johnson@duke.edu" disabled />
+            <Input defaultValue={authUser?.email || ''} disabled />
           </div>
           <div>
             <label className="block text-sm text-[var(--text-muted)] mb-1.5">

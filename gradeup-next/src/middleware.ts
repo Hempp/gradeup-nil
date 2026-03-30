@@ -246,8 +246,9 @@ export async function middleware(request: NextRequest) {
   // =============================================================================
   // RATE LIMITING FOR AUTH ENDPOINTS
   // =============================================================================
-  // Apply rate limiting to auth endpoints to prevent brute force attacks
-  if (isAuthEndpoint(path)) {
+  // Apply rate limiting to auth endpoints to prevent brute force attacks.
+  // Disabled in development to avoid blocking E2E tests and local workflows.
+  if (isProduction && isAuthEndpoint(path)) {
     const ip = getClientIP(request);
     const { allowed, remaining, resetTime } = await checkRateLimit(ip);
 

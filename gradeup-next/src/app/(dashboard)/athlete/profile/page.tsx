@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Modal } from '@/components/ui/modal';
 import { useToastActions } from '@/components/ui/toast';
+import { GPARing } from '@/components/ui/gpa-ring';
 import { useFormValidation, validators } from '@/lib/utils/validation';
 import { useRequireAuth } from '@/context';
 import { updateAthleteProfile, uploadAthleteMedia } from '@/lib/services/athlete';
@@ -70,7 +71,8 @@ function ProfileHeader({ profile, athlete, onAvatarUpload }: ProfileHeaderProps)
             />
             <button
               onClick={onAvatarUpload}
-              className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)] flex items-center justify-center hover:bg-[var(--color-primary-hover)] transition-colors"
+              className="absolute -bottom-1 -right-1 h-10 w-10 min-h-[44px] min-w-[44px] rounded-full bg-[var(--color-primary)] text-[var(--text-inverse)] flex items-center justify-center hover:bg-[var(--color-primary-hover)] transition-colors shadow-md touch-manipulation"
+              aria-label="Upload profile picture"
             >
               <Camera className="h-4 w-4" />
             </button>
@@ -103,19 +105,14 @@ function ProfileHeader({ profile, athlete, onAvatarUpload }: ProfileHeaderProps)
             </div>
           </div>
 
-          {/* GPA Badge */}
+          {/* GPA Ring */}
           {gpa > 0 && (
-            <div className="flex flex-col items-center p-4 rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--gpa-gold)]/20 to-[var(--gpa-gold)]/5 border border-[var(--gpa-gold)]/30">
-              <span className="text-xs text-[var(--text-muted)] uppercase tracking-wider">GPA</span>
-              <span className="text-3xl font-bold text-[var(--gpa-gold)]">
-                {gpa.toFixed(2)}
-              </span>
-              {gpa >= 3.5 && (
-                <Badge className="mt-1 bg-[var(--gpa-gold)] text-[var(--text-inverse)]">
-                  Dean&apos;s List
-                </Badge>
-              )}
-            </div>
+            <GPARing
+              gpa={gpa}
+              size={100}
+              strokeWidth={8}
+              showLabel={true}
+            />
           )}
         </div>
       </CardContent>

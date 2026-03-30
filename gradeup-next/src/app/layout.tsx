@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Bebas_Neue, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
 import { KeyboardShortcutsProvider } from "@/components/ui/keyboard-shortcuts";
@@ -11,14 +11,37 @@ import { GoogleAnalytics } from "@/components/providers/google-analytics";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ServiceWorkerProvider } from "@/components/providers/service-worker-provider";
 
+// ═══════════════════════════════════════════════════════════════════════════
+// OPTIMIZED FONT LOADING
+// Using next/font/google for automatic font optimization and zero layout shift
+// ═══════════════════════════════════════════════════════════════════════════
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+// Display font for headings and hero text
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+// Body font for readable text
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -97,7 +120,7 @@ export default function RootLayout({
         <GoogleAnalytics />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} antialiased`}
         suppressHydrationWarning
       >
         <AuthProvider>

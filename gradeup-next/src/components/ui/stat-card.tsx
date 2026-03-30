@@ -45,7 +45,7 @@ const StatCard = memo(forwardRef<HTMLDivElement, StatCardProps>(
       : 'text-[var(--color-error)]';
 
     const baseStyles = `
-      bg-[var(--bg-card)] rounded-[var(--radius-xl)] p-6
+      bg-[var(--bg-card)] rounded-[var(--radius-xl)] p-4 sm:p-6
       border border-[var(--border-color)]
       shadow-[var(--shadow-sm)]
       transition-all duration-[var(--transition-normal)]
@@ -81,7 +81,7 @@ const StatCard = memo(forwardRef<HTMLDivElement, StatCardProps>(
 
         {/* Center: Large stat value */}
         <div className={cn(
-          "text-3xl font-bold text-[var(--text-primary)] mb-1",
+          "text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-1 truncate",
           premium && "gradient-text-cyan"
         )}>
           {value}

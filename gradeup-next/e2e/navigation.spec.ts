@@ -15,9 +15,9 @@ test.describe('Basic Navigation', () => {
     await expect(page.locator('h1').filter({ hasText: /is worth/i })).toBeVisible();
     await expect(page.locator('h1').filter({ hasText: /money/i })).toBeVisible();
 
-    // Check for main CTA buttons
-    await expect(page.getByRole('link', { name: /join as athlete/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /partner as brand/i })).toBeVisible();
+    // Check for main CTA buttons (Link wraps Button, so match first visible instance)
+    await expect(page.getByText(/join as athlete/i).first()).toBeVisible();
+    await expect(page.getByText(/partner as brand/i).first()).toBeVisible();
   });
 
   test('can navigate to login page', async ({ page }) => {
@@ -113,8 +113,8 @@ test.describe('Basic Navigation', () => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    // Click "Join as Athlete" CTA
-    const athleteCta = page.getByRole('link', { name: /join as athlete/i }).first();
+    // Click "Join as Athlete" CTA (Link wraps Button)
+    const athleteCta = page.getByText(/join as athlete/i).first();
     await expect(athleteCta).toBeVisible({ timeout: 20000 });
     await athleteCta.click();
 

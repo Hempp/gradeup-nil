@@ -90,7 +90,6 @@ export interface DashboardShellProps {
   variant?: 'athlete' | 'brand' | 'director';
   breadcrumbs?: BreadcrumbItem[];
   user?: TopbarUser;
-  notificationCount?: number;
   className?: string;
 }
 
@@ -100,10 +99,13 @@ export function DashboardShell({
   variant = 'athlete',
   breadcrumbs = [],
   user,
-  notificationCount = 0,
   className,
 }: DashboardShellProps) {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('sidebar-collapsed') === 'true';
+  });
 
   return (
     <div className="dashboard-dark min-h-screen">
@@ -120,6 +122,8 @@ export function DashboardShell({
         navItems={navItems}
         variant={variant}
         user={user}
+        collapsed={isSidebarCollapsed}
+        onCollapsedChange={setIsSidebarCollapsed}
         className="hidden lg:flex"
       />
 
@@ -132,21 +136,21 @@ export function DashboardShell({
         user={user}
       />
 
-      {/* Topbar - fixed top, full width, z-30 */}
+      {/* Topbar - fixed top, full width, z-30. Adjusts left position based on sidebar collapse. */}
       <Topbar
         breadcrumbs={breadcrumbs}
         user={user}
-        notificationCount={notificationCount}
         onMenuClick={() => setIsMobileSidebarOpen(true)}
+        sidebarCollapsed={isSidebarCollapsed}
       />
 
-      {/* Main Content Area */}
-      {/* ml-64 on desktop (sidebar width), mt-16 always (topbar height), p-6 padding */}
+      {/* Main Content Area - margin adjusts with sidebar collapse */}
       <main
         id="main-content"
         tabIndex={-1}
         className={cn(
-          'lg:ml-64 mt-16 p-6',
+          'mt-16 p-4 sm:p-6 transition-[margin-left] duration-300 ease-in-out',
+          isSidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64',
           'min-h-[calc(100vh-4rem)]',
           'focus:outline-none',
           className

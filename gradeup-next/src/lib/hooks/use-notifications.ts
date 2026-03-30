@@ -34,8 +34,8 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Enrollment Verified',
     message: 'Your enrollment verification has been approved by the athletic director.',
     read: false,
-    created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
-    url: '/dashboard/verifications',
+    created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+    url: '/athlete/profile',
     metadata: { verification_type: 'enrollment' },
   },
   {
@@ -44,8 +44,8 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'New Deal Offer',
     message: 'Nike has sent you a new endorsement offer worth $5,000.',
     read: false,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
-    url: '/dashboard/deals/new-offer-123',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+    url: '/athlete/deals',
     metadata: { brand_name: 'Nike', amount: 5000 },
   },
   {
@@ -54,8 +54,8 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'New Message',
     message: 'You have a new message from Gatorade regarding your partnership.',
     read: true,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-    url: '/dashboard/messages/conv-456',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+    url: '/athlete/messages',
     metadata: { sender_name: 'Gatorade', conversation_id: 'conv-456' },
   },
   {
@@ -64,8 +64,8 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'GPA Verification Needs Update',
     message: 'Your GPA verification was rejected. Please submit an updated transcript.',
     read: true,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(), // 2 days ago
-    url: '/dashboard/verifications',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+    url: '/athlete/profile',
     metadata: { verification_type: 'grades', reason: 'Transcript outdated' },
   },
   {
@@ -74,8 +74,8 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Verification Request Submitted',
     message: 'Your sport verification request has been submitted and is pending review.',
     read: true,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(), // 3 days ago
-    url: '/dashboard/verifications',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+    url: '/athlete/profile',
     metadata: { verification_type: 'sport' },
   },
 ];

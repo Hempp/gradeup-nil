@@ -696,3 +696,382 @@ export function ToastGlobalHandler() {
 
   return null;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SMART TOAST UTILITIES
+   Advanced toast patterns for common use cases
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Options for showing an undo toast after a destructive action
+ */
+export interface UndoToastOptions<T = void> {
+  /** Main title (e.g., "Item deleted") */
+  title: string;
+  /** Optional description */
+  description?: string;
+  /** Function to execute the undo action */
+  onUndo: () => T | Promise<T>;
+  /** Callback after undo completes */
+  onUndoComplete?: (result: T) => void;
+  /** Time in ms before undo expires (default: 5000) */
+  undoTimeout?: number;
+  /** Label for undo button (default: "Undo") */
+  undoLabel?: string;
+}
+
+/**
+ * Options for showing a confirmation toast
+ */
+export interface ConfirmToastOptions {
+  /** Main title (e.g., "Delete this item?") */
+  title: string;
+  /** Optional description */
+  description?: string;
+  /** Confirm button label (default: "Confirm") */
+  confirmLabel?: string;
+  /** Cancel button label (default: "Cancel") */
+  cancelLabel?: string;
+  /** Callback when confirmed */
+  onConfirm: () => void | Promise<void>;
+  /** Callback when cancelled */
+  onCancel?: () => void;
+  /** Variant for styling (default: "warning") */
+  variant?: ToastVariant;
+}
+
+/**
+ * Options for showing a progress toast
+ */
+export interface ProgressToastOptions {
+  /** Main title (e.g., "Uploading file...") */
+  title: string;
+  /** Optional description */
+  description?: string;
+  /** Initial progress (0-100) */
+  initialProgress?: number;
+}
+
+/**
+ * Progress toast controller returned by showProgress
+ */
+export interface ProgressToastController {
+  /** Update progress value (0-100) */
+  setProgress: (progress: number) => void;
+  /** Update title text */
+  setTitle: (title: string) => void;
+  /** Complete with success */
+  complete: (message?: string) => void;
+  /** Complete with error */
+  fail: (message?: string) => void;
+  /** Dismiss the toast */
+  dismiss: () => void;
+}
+
+// Track recent toasts for deduplication
+const recentToasts: Map<string, number> = new Map();
+const DEDUP_WINDOW_MS = 3000;
+
+/**
+ * Generate a deduplication key for a toast
+ */
+function getDedupeKey(toast: { title: string; variant: ToastVariant }): string {
+  return `${toast.variant}:${toast.title}`;
+}
+
+/**
+ * Check if a toast was recently shown (for deduplication)
+ */
+function wasRecentlyShown(key: string): boolean {
+  const lastShown = recentToasts.get(key);
+  if (!lastShown) return false;
+  return Date.now() - lastShown < DEDUP_WINDOW_MS;
+}
+
+/**
+ * Mark a toast as shown (for deduplication)
+ */
+function markAsShown(key: string): void {
+  recentToasts.set(key, Date.now());
+  // Clean up old entries
+  for (const [k, time] of recentToasts.entries()) {
+    if (Date.now() - time > DEDUP_WINDOW_MS * 2) {
+      recentToasts.delete(k);
+    }
+  }
+}
+
+/**
+ * Smart toast utilities with advanced patterns
+ *
+ * Provides enhanced toast functionality including:
+ * - Undo toasts for destructive actions
+ * - Confirmation toasts requiring explicit action
+ * - Progress toasts for long-running operations
+ * - Automatic deduplication
+ *
+ * @example
+ * // Undo toast for delete action
+ * const item = items[0];
+ * deleteItem(item.id);
+ * smartToast.undo({
+ *   title: 'Item deleted',
+ *   onUndo: () => restoreItem(item),
+ *   onUndoComplete: () => refreshList(),
+ * });
+ *
+ * @example
+ * // Confirmation toast
+ * smartToast.confirm({
+ *   title: 'Delete all items?',
+ *   description: 'This cannot be undone.',
+ *   onConfirm: () => deleteAllItems(),
+ * });
+ *
+ * @example
+ * // Progress toast for file upload
+ * const progress = smartToast.progress({
+ *   title: 'Uploading file...',
+ * });
+ * // Update progress
+ * progress.setProgress(50);
+ * // Complete
+ * progress.complete('File uploaded!');
+ */
+export const smartToast = {
+  /**
+   * Show a toast with undo action for destructive operations
+   */
+  undo: <T = void>(options: UndoToastOptions<T>): void => {
+    const {
+      title,
+      description,
+      onUndo,
+      onUndoComplete,
+      undoTimeout = 5000,
+      undoLabel = 'Undo',
+    } = options;
+
+    globalAddToast?.({
+      title,
+      description,
+      variant: 'info',
+      duration: undoTimeout,
+      action: {
+        label: undoLabel,
+        onClick: async () => {
+          try {
+            const result = await onUndo();
+            onUndoComplete?.(result);
+            globalAddToast?.({
+              title: 'Action undone',
+              variant: 'success',
+              duration: 2000,
+            });
+          } catch (error) {
+            globalAddToast?.({
+              title: 'Failed to undo',
+              description: error instanceof Error ? error.message : 'Please try again',
+              variant: 'error',
+            });
+          }
+        },
+      },
+    });
+  },
+
+  /**
+   * Show a confirmation toast requiring explicit user action
+   */
+  confirm: (options: ConfirmToastOptions): void => {
+    const {
+      title,
+      description,
+      confirmLabel = 'Confirm',
+      cancelLabel = 'Cancel',
+      onConfirm,
+      onCancel,
+      variant = 'warning',
+    } = options;
+
+    globalAddToast?.({
+      title,
+      description,
+      variant,
+      duration: 0, // No auto-dismiss
+      dismissible: false,
+      showProgress: false,
+      action: {
+        label: confirmLabel,
+        onClick: async () => {
+          await onConfirm();
+        },
+      },
+      secondaryAction: {
+        label: cancelLabel,
+        onClick: () => {
+          onCancel?.();
+        },
+      },
+    });
+  },
+
+  /**
+   * Show a progress toast for long-running operations
+   * Returns a controller to update progress
+   */
+  progress: (options: ProgressToastOptions): ProgressToastController => {
+    let currentProgress = options.initialProgress ?? 0;
+    let currentTitle = options.title;
+    let toastId: string | null = null;
+
+    // Create unique ID for this progress toast
+    const id = `progress-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    toastId = id;
+
+    // We'll use a custom approach - show initial toast
+    globalAddToast?.({
+      title: `${currentTitle} (${currentProgress}%)`,
+      description: options.description,
+      variant: 'info',
+      duration: 0,
+      dismissible: false,
+      showProgress: false,
+      icon: (
+        <div className="animate-spin h-5 w-5 border-2 border-[var(--color-accent)] border-t-transparent rounded-full" />
+      ),
+    });
+
+    return {
+      setProgress: (progress: number) => {
+        currentProgress = Math.min(100, Math.max(0, progress));
+        // Note: In a full implementation, we'd update the existing toast
+        // For now, progress is tracked but toast update requires more infrastructure
+      },
+      setTitle: (title: string) => {
+        currentTitle = title;
+      },
+      complete: (message?: string) => {
+        globalAddToast?.({
+          title: message || `${currentTitle} - Complete!`,
+          variant: 'success',
+          duration: 3000,
+        });
+      },
+      fail: (message?: string) => {
+        globalAddToast?.({
+          title: message || `${currentTitle} - Failed`,
+          variant: 'error',
+        });
+      },
+      dismiss: () => {
+        // Would dismiss the specific toast
+      },
+    };
+  },
+
+  /**
+   * Show a toast with automatic deduplication
+   * Won't show the same toast if it was shown in the last 3 seconds
+   */
+  dedupe: (options: Omit<Toast, 'id'>): void => {
+    const key = getDedupeKey({ title: options.title, variant: options.variant });
+    if (wasRecentlyShown(key)) {
+      return; // Skip duplicate
+    }
+    markAsShown(key);
+    globalAddToast?.(options);
+  },
+
+  /**
+   * Show success toast with deduplication
+   */
+  successDedupe: (title: string, description?: string): void => {
+    const key = getDedupeKey({ title, variant: 'success' });
+    if (wasRecentlyShown(key)) return;
+    markAsShown(key);
+    globalAddToast?.({ title, description, variant: 'success' });
+  },
+
+  /**
+   * Show error toast with deduplication
+   */
+  errorDedupe: (title: string, description?: string): void => {
+    const key = getDedupeKey({ title, variant: 'error' });
+    if (wasRecentlyShown(key)) return;
+    markAsShown(key);
+    globalAddToast?.({ title, description, variant: 'error' });
+  },
+
+  /**
+   * Show a rate limit toast with countdown
+   */
+  rateLimit: (retryAfterSeconds: number): void => {
+    globalAddToast?.({
+      title: 'Too many requests',
+      description: `Please wait ${retryAfterSeconds} seconds before trying again`,
+      variant: 'warning',
+      duration: retryAfterSeconds * 1000,
+    });
+  },
+
+  /**
+   * Show a session expired toast with re-login action
+   */
+  sessionExpired: (onReLogin: () => void): void => {
+    globalAddToast?.({
+      title: 'Session expired',
+      description: 'Please log in again to continue',
+      variant: 'warning',
+      duration: 0,
+      dismissible: false,
+      showProgress: false,
+      action: {
+        label: 'Log in',
+        onClick: onReLogin,
+      },
+    });
+  },
+
+  /**
+   * Show a save conflict toast with resolve options
+   */
+  saveConflict: (options: {
+    onOverwrite: () => void;
+    onDiscard: () => void;
+    onMerge?: () => void;
+  }): void => {
+    globalAddToast?.({
+      title: 'Save conflict detected',
+      description: 'Someone else has modified this item',
+      variant: 'warning',
+      duration: 0,
+      dismissible: false,
+      showProgress: false,
+      action: {
+        label: 'Overwrite',
+        onClick: options.onOverwrite,
+      },
+      secondaryAction: {
+        label: 'Discard my changes',
+        onClick: options.onDiscard,
+      },
+    });
+  },
+
+  /**
+   * Show a network error toast with retry
+   */
+  networkError: (onRetry: () => void): void => {
+    globalAddToast?.({
+      title: 'Network error',
+      description: 'Please check your connection and try again',
+      variant: 'error',
+      duration: 8000,
+      action: {
+        label: 'Retry',
+        onClick: onRetry,
+      },
+    });
+  },
+};

@@ -14,6 +14,12 @@ import {
   Bell,
   FileX,
   Briefcase,
+  Trophy,
+  Calendar,
+  TrendingUp,
+  ClipboardCheck,
+  Target,
+  Sparkles,
 } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -239,6 +245,108 @@ export function NoContent({ title = 'Nothing here', description }: { title?: str
       icon={FileX}
       title={title}
       description={description || 'This section is empty. Content will appear here when available.'}
+    />
+  );
+}
+
+/**
+ * Empty state for when there's no recent activity
+ */
+export function NoActivity({ onExplore }: { onExplore?: () => void }) {
+  return (
+    <EmptyState
+      icon={TrendingUp}
+      title="No recent activity"
+      description="Your activity feed will show deal updates, messages, and important notifications as they happen."
+      action={
+        onExplore
+          ? {
+              label: 'Explore Opportunities',
+              onClick: onExplore,
+            }
+          : undefined
+      }
+    />
+  );
+}
+
+/**
+ * Empty state for when there are no upcoming deadlines
+ */
+export function NoDeadlines() {
+  return (
+    <EmptyState
+      icon={Calendar}
+      title="No upcoming deadlines"
+      description="You're all clear! Deadlines for active deals and campaigns will appear here."
+    />
+  );
+}
+
+/**
+ * Empty state for when there are no verification requests (for directors)
+ */
+export function NoVerificationRequests() {
+  return (
+    <EmptyState
+      icon={ClipboardCheck}
+      title="All caught up!"
+      description="No pending verification requests. New requests from athletes will appear here for review."
+    />
+  );
+}
+
+/**
+ * Empty state for incomplete profile prompting completion
+ */
+export function IncompleteProfile({ completionPercent, onComplete }: { completionPercent: number; onComplete?: () => void }) {
+  return (
+    <EmptyState
+      icon={Target}
+      title={`Your profile is ${completionPercent}% complete`}
+      description="Complete your profile to attract more brand partnerships. A complete profile increases deal opportunities by up to 3x."
+      action={
+        onComplete
+          ? {
+              label: 'Complete Profile',
+              onClick: onComplete,
+            }
+          : undefined
+      }
+    />
+  );
+}
+
+/**
+ * Empty state for AI recommendations when no data available
+ */
+export function NoRecommendations({ onSetup }: { onSetup?: () => void }) {
+  return (
+    <EmptyState
+      icon={Sparkles}
+      title="No recommendations yet"
+      description="Complete your preferences to receive personalized AI-powered recommendations for athletes or opportunities."
+      action={
+        onSetup
+          ? {
+              label: 'Set Preferences',
+              onClick: onSetup,
+            }
+          : undefined
+      }
+    />
+  );
+}
+
+/**
+ * Empty state celebrating achievement (e.g., all tasks done)
+ */
+export function AllCaughtUp({ title = "You're all caught up!", description }: { title?: string; description?: string }) {
+  return (
+    <EmptyState
+      icon={Trophy}
+      title={title}
+      description={description || "Great work! Check back later for new items."}
     />
   );
 }

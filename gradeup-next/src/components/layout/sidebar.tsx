@@ -44,19 +44,24 @@ export interface SidebarProps {
     role: string;
     avatar?: string;
   };
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
-export function Sidebar({ navItems, variant = 'athlete', className, user }: SidebarProps) {
+export function Sidebar({ navItems, variant = 'athlete', className, user, collapsed: controlledCollapsed, onCollapsedChange }: SidebarProps) {
   const pathname = usePathname();
-  // Initialize from localStorage on client, default to false for SSR
-  const [collapsed, setCollapsed] = useState(() => {
+  // Use controlled state if provided, otherwise manage internally
+  const [internalCollapsed, setInternalCollapsed] = useState(() => {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem('sidebar-collapsed') === 'true';
   });
 
+  const collapsed = controlledCollapsed ?? internalCollapsed;
+
   const toggleCollapsed = () => {
     const newState = !collapsed;
-    setCollapsed(newState);
+    setInternalCollapsed(newState);
+    onCollapsedChange?.(newState);
     localStorage.setItem('sidebar-collapsed', String(newState));
   };
 
@@ -185,18 +190,18 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
             collapsed && 'justify-center px-0'
           )}
         >
-          {/* Avatar */}
-          <div className="relative h-8 w-8">
+          {/* Avatar — 40px with 44px min touch target */}
+          <div className="relative h-10 w-10 min-h-[44px] min-w-[44px] flex items-center justify-center">
             {displayUser.avatar ? (
               <Image
                 src={displayUser.avatar}
                 alt={displayUser.name}
                 fill
-                sizes="32px"
+                sizes="40px"
                 className="rounded-full object-cover"
               />
             ) : (
-              <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-sm font-medium">
+              <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-white text-sm font-medium">
                 {displayUser.name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -214,7 +219,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user }: Side
               </div>
               <Link
                 href={`/${variant}/settings`}
-                className="h-8 w-8 flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+                className="h-10 w-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors touch-manipulation"
                 aria-label="Settings"
               >
                 <Settings className="h-4 w-4" />

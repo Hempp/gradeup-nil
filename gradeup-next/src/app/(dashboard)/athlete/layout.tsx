@@ -65,7 +65,6 @@ export default function AthleteLayout({
         variant="athlete"
         breadcrumbs={breadcrumbs}
         user={user}
-        notificationCount={3}
       >
         <div className="max-w-[var(--container-max)] mx-auto">
           {children}

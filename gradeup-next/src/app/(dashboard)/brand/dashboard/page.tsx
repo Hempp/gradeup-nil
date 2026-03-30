@@ -15,6 +15,10 @@ import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Avatar } from '@/components/ui/avatar';
 import { ErrorState } from '@/components/ui/error-state';
+import { NoCampaigns, NoAthletes, NoRecommendations } from '@/components/ui/empty-state';
+import { SkeletonList, SkeletonStatCard } from '@/components/ui/skeleton';
+import { GPABadge } from '@/components/ui/gpa-ring';
+import { PageHeader, StatsGrid, ContentGrid } from '@/components/ui/section-header';
 import { formatCurrency } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useBrandAnalytics, useBrandCampaigns, useBrandShortlist, useBrandDeals } from '@/lib/hooks/use-data';
@@ -71,9 +75,7 @@ function RecentMatchesCard({ athletes, loading }: RecentMatchesCardProps) {
           <CardTitle>Recommended Athletes</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
-          </div>
+          <SkeletonList items={5} />
         </CardContent>
       </Card>
     );
@@ -96,9 +98,7 @@ function RecentMatchesCard({ athletes, loading }: RecentMatchesCardProps) {
       </CardHeader>
       <CardContent>
         {displayAthletes.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)] text-center py-4">
-            No athletes in your shortlist yet
-          </p>
+          <NoAthletes onInvite={() => window.location.href = '/brand/discover'} />
         ) : (
           <div className="space-y-4">
             {displayAthletes.map((athlete) => {
@@ -125,9 +125,7 @@ function RecentMatchesCard({ athletes, loading }: RecentMatchesCardProps) {
                   </div>
                   <div className="text-right">
                     {athlete.gpa && (
-                      <Badge variant="success" size="sm">
-                        {athlete.gpa.toFixed(2)} GPA
-                      </Badge>
+                      <GPABadge gpa={athlete.gpa} size="sm" />
                     )}
                   </div>
                 </div>
@@ -153,9 +151,7 @@ function ActiveCampaignsCard({ campaigns, loading }: ActiveCampaignsCardProps) {
           <CardTitle>Active Campaigns</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
-          </div>
+          <SkeletonList items={3} />
         </CardContent>
       </Card>
     );
@@ -178,9 +174,7 @@ function ActiveCampaignsCard({ campaigns, loading }: ActiveCampaignsCardProps) {
       </CardHeader>
       <CardContent>
         {activeCampaigns.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)] text-center py-4">
-            No active campaigns yet
-          </p>
+          <NoCampaigns onCreate={() => window.location.href = '/brand/campaigns/new'} />
         ) : (
           <div className="space-y-4">
             {activeCampaigns.map((campaign) => {
@@ -257,8 +251,20 @@ export default function BrandDashboardPage() {
   // Show loading state while auth is checking
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+      <div className="space-y-6 animate-fade-in">
+        {/* Header skeleton */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-8 w-72 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)] animate-shimmer" />
+            <div className="h-4 w-56 bg-[var(--bg-tertiary)] rounded-[var(--radius-sm)] animate-shimmer" />
+          </div>
+        </div>
+        {/* Stats skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <SkeletonStatCard key={i} />
+          ))}
+        </div>
       </div>
     );
   }
@@ -286,20 +292,14 @@ export default function BrandDashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-            Welcome back, {companyName}!
-          </h1>
-          <p className="text-[var(--text-muted)]">
-            Here&apos;s an overview of your NIL partnerships
-          </p>
-        </div>
-        {isVerified && <Badge variant="success">Verified Brand</Badge>}
-      </div>
+      <PageHeader
+        title={`Welcome back, ${companyName}!`}
+        description="Here's an overview of your NIL partnerships"
+        badge={isVerified && <Badge variant="success">Verified Brand</Badge>}
+      />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <StatsGrid cols={4}>
         <StatsCard
           title="Total Spent"
           value={analyticsLoading ? '...' : formatCurrency(analytics?.total_spent || 0)}
@@ -320,7 +320,7 @@ export default function BrandDashboardPage() {
           value={analyticsLoading ? '...' : `${(analytics?.avg_roi || 0).toFixed(1)}x`}
           icon={TrendingUp}
         />
-      </div>
+      </StatsGrid>
 
       {/* AI Athlete Recommendations */}
       <AthleteRecommendations
@@ -337,10 +337,10 @@ export default function BrandDashboardPage() {
       />
 
       {/* Main Content */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <ContentGrid ratio="1:1">
         <RecentMatchesCard athletes={shortlist} loading={shortlistLoading} />
         <ActiveCampaignsCard campaigns={campaigns} loading={campaignsLoading} />
-      </div>
+      </ContentGrid>
     </div>
   );
 }

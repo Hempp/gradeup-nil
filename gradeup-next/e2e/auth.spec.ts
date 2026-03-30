@@ -49,7 +49,7 @@ test.describe('Authentication - Login Page', () => {
     await emailInput.focus();
     await emailInput.blur();
 
-    await expect(page.getByText(/required|email/i)).toBeVisible();
+    await expect(page.locator('#email-error')).toBeVisible();
   });
 
   test('shows validation error for invalid email format', async ({ page }) => {
@@ -125,8 +125,8 @@ test.describe('Authentication - Login Page', () => {
     await page.waitForTimeout(2000);
 
     // Should show error message (either inline or toast)
-    const hasErrorMessage = await page.locator('[role="alert"]').isVisible()
-      || await page.getByText(/invalid|failed|error/i).isVisible();
+    const hasErrorMessage = await page.locator('[role="alert"]').first().isVisible()
+      || await page.getByText(/invalid|failed|error/i).first().isVisible();
     expect(hasErrorMessage).toBe(true);
   });
 });
@@ -136,28 +136,26 @@ test.describe('Authentication - Demo Mode', () => {
     await page.goto('/login', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    // Demo buttons are now links - look for link containing "athlete"
-    const athleteLink = page.getByRole('link', { name: /athlete demo/i });
+    // Demo buttons are Link wrapping Button — match by link href
+    const athleteLink = page.locator('a[href*="demo/login?role=athlete"]');
     await expect(athleteLink).toBeVisible({ timeout: 15000 });
-    await expect(athleteLink).toHaveAttribute('href', '/athlete/dashboard');
   });
 
   test('brand demo link navigates to dashboard', async ({ page }) => {
     await page.goto('/login', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    const brandLink = page.getByRole('link', { name: /brand demo/i });
+    const brandLink = page.locator('a[href*="demo/login?role=brand"]');
     await expect(brandLink).toBeVisible({ timeout: 15000 });
-    await expect(brandLink).toHaveAttribute('href', '/brand/dashboard');
   });
 
   test('director demo link navigates to dashboard', async ({ page }) => {
     await page.goto('/login', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    const directorLink = page.getByRole('link', { name: /director demo/i });
+    const directorLink = page.locator('a[href*="demo/login?role=director"]');
     await expect(directorLink).toBeVisible({ timeout: 15000 });
-    await expect(directorLink).toHaveAttribute('href', '/director/dashboard');
+    await expect(directorLink).toHaveAttribute('href', '/api/demo/login?role=director');
   });
 });
 
@@ -229,28 +227,29 @@ test.describe('Authentication - Athlete Signup Form', () => {
   test('sport dropdown has options', async ({ page }) => {
     const sportSelect = page.locator('select[name="sport"]');
     await expect(sportSelect).toBeVisible({ timeout: 15000 });
-    await sportSelect.click();
 
-    await expect(page.locator('option', { hasText: 'Football' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Basketball' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Soccer' })).toBeVisible();
+    // Native select options aren't visible DOM elements — verify by selecting
+    await sportSelect.selectOption({ label: 'Football' });
+    await expect(sportSelect).toHaveValue(/football/i);
+    await sportSelect.selectOption({ label: 'Basketball' });
+    await expect(sportSelect).toHaveValue(/basketball/i);
   });
 
   test('year dropdown has options', async ({ page }) => {
     const yearSelect = page.locator('select[name="year"]');
     await expect(yearSelect).toBeVisible({ timeout: 15000 });
-    await yearSelect.click();
 
-    await expect(page.locator('option', { hasText: 'Freshman' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Sophomore' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Senior' })).toBeVisible();
+    await yearSelect.selectOption({ label: 'Freshman' });
+    await expect(yearSelect).toHaveValue(/freshman/i);
+    await yearSelect.selectOption({ label: 'Senior' });
+    await expect(yearSelect).toHaveValue(/senior/i);
   });
 
   test('has terms and conditions checkbox', async ({ page }) => {
     const termsCheckbox = page.locator('input[name="agreeToTerms"]');
     await expect(termsCheckbox).toBeVisible({ timeout: 15000 });
-    await expect(page.getByRole('link', { name: /terms of service/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /privacy policy/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /terms of service/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /privacy policy/i }).first()).toBeVisible();
   });
 
   test('can fill out the signup form', async ({ page }) => {
@@ -323,7 +322,7 @@ test.describe('Authentication - Forgot Password Flow', () => {
 
     // Should show either success message or error (depends on Supabase config)
     await page.waitForTimeout(2000);
-    const hasResponse = await page.getByText(/check your email|error|sent/i).isVisible();
+    const hasResponse = await page.getByText(/check your email|error|sent/i).first().isVisible();
     expect(hasResponse).toBe(true);
   });
 
@@ -368,12 +367,9 @@ test.describe('Authentication - Protected Routes', () => {
 
     await page.waitForTimeout(2000);
 
-    // Should either redirect to login or show auth-required message
+    // Should either redirect to login or stay on dashboard (demo mode)
     const url = page.url();
-    const hasRedirected = url.includes('/login');
-    const hasAuthMessage = await page.getByText(/sign in|log in|unauthorized/i).isVisible();
-
-    expect(hasRedirected || hasAuthMessage || url.includes('/athlete/dashboard')).toBe(true);
+    expect(url.includes('/login') || url.includes('/athlete/dashboard')).toBe(true);
   });
 
   test('unauthenticated users cannot access brand dashboard', async ({ page, context }) => {
@@ -383,10 +379,7 @@ test.describe('Authentication - Protected Routes', () => {
     await page.waitForTimeout(2000);
 
     const url = page.url();
-    const hasRedirected = url.includes('/login');
-    const hasAuthMessage = await page.getByText(/sign in|log in|unauthorized/i).isVisible();
-
-    expect(hasRedirected || hasAuthMessage || url.includes('/brand/dashboard')).toBe(true);
+    expect(url.includes('/login') || url.includes('/brand/dashboard')).toBe(true);
   });
 
   test('unauthenticated users cannot access director dashboard', async ({ page, context }) => {
@@ -396,10 +389,7 @@ test.describe('Authentication - Protected Routes', () => {
     await page.waitForTimeout(2000);
 
     const url = page.url();
-    const hasRedirected = url.includes('/login');
-    const hasAuthMessage = await page.getByText(/sign in|log in|unauthorized/i).isVisible();
-
-    expect(hasRedirected || hasAuthMessage || url.includes('/director/dashboard')).toBe(true);
+    expect(url.includes('/login') || url.includes('/director/dashboard')).toBe(true);
   });
 });
 

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Breadcrumb, type BreadcrumbItem } from './breadcrumb';
 import { NotificationDropdown, type Notification } from '@/components/notifications';
 import { useNotifications } from '@/lib/hooks/use-notifications';
+import { useAuth } from '@/context';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { CommandPalette } from '@/components/ui/command-palette';
 
@@ -22,8 +23,8 @@ export interface TopbarProps {
   breadcrumbs?: BreadcrumbItem[];
   user?: TopbarUser;
   userId?: string;
-  notificationCount?: number;
   onMenuClick?: () => void;
+  sidebarCollapsed?: boolean;
   className?: string;
 }
 
@@ -32,14 +33,16 @@ export function Topbar({
   user,
   userId = 'mock-user-id',
   onMenuClick,
+  sidebarCollapsed = false,
   className,
 }: TopbarProps) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [_focusedMenuIndex, setFocusedMenuIndex] = useState(-1);
+  const [focusedMenuIndex, setFocusedMenuIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLElement | null)[]>([]);
+  const { signOut, getDashboardPath, user: authUser } = useAuth();
 
   // Notifications hook
   const {
@@ -147,7 +150,8 @@ export function Topbar({
         'fixed top-0 left-0 right-0 h-16 z-30',
         'bg-[var(--bg-sidebar)] border-b border-[var(--border-inverse-10)]',
         'flex items-center justify-between px-4 lg:px-6',
-        'lg:left-64',
+        'transition-[left] duration-300 ease-in-out',
+        sidebarCollapsed ? 'lg:left-20' : 'lg:left-64',
         className
       )}
     >
@@ -259,7 +263,7 @@ export function Topbar({
           {isDropdownOpen && (
             <div
               className={cn(
-                'absolute right-0 top-full mt-2 w-56',
+                'absolute right-0 top-full mt-2 w-56 max-w-[calc(100vw-1rem)]',
                 'bg-[var(--marketing-gray-900)] rounded-lg shadow-lg border border-white/10',
                 'py-2 animate-in fade-in-0 zoom-in-95 duration-200'
               )}
@@ -279,7 +283,7 @@ export function Topbar({
               {/* Menu items */}
               <div className="py-1">
                 <Link
-                  href="/athlete/settings"
+                  href={`${getDashboardPath().replace('/dashboard', '')}/settings`}
                   ref={(el) => { menuItemsRef.current[0] = el; }}
                   className="flex items-center gap-3 px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--marketing-cyan)] transition-colors"
                   role="menuitem"
@@ -298,9 +302,9 @@ export function Topbar({
                   className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 transition-colors"
                   role="menuitem"
                   tabIndex={isDropdownOpen ? 0 : -1}
-                  onClick={() => {
+                  onClick={async () => {
                     setIsDropdownOpen(false);
-                    // Handle logout logic here
+                    await signOut();
                   }}
                 >
                   <LogOut className="h-4 w-4" aria-hidden="true" />

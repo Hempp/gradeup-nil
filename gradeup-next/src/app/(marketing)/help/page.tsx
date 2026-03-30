@@ -369,7 +369,7 @@ function FAQCategorySection({
   if (visibleFAQs.length === 0) return null;
 
   return (
-    <div className="card-marketing p-6 sm:p-8">
+    <div id={category.id} className="card-marketing p-6 sm:p-8 scroll-mt-24">
       {/* Category Header */}
       <div className="flex items-start gap-4 mb-6 pb-6 border-b border-[var(--marketing-gray-800)]">
         <div
@@ -573,28 +573,28 @@ function QuickHelpSection() {
       icon: FileText,
       title: 'Documentation',
       description: 'Detailed guides on using GradeUp',
-      link: '#',
+      link: '/help#getting-started',
       color: 'cyan' as const,
     },
     {
       icon: CreditCard,
       title: 'Payment Support',
       description: 'Help with payments and payouts',
-      link: '#',
+      link: '/help#for-athletes',
       color: 'lime' as const,
     },
     {
       icon: BadgeCheck,
       title: 'Verification',
       description: 'Questions about the verification process',
-      link: '#',
+      link: '/help#getting-started',
       color: 'gold' as const,
     },
     {
       icon: Lock,
       title: 'Account Security',
       description: 'Protect your account and data',
-      link: '#',
+      link: '/help#account-security',
       color: 'magenta' as const,
     },
   ];

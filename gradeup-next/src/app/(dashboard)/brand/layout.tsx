@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { DashboardShell, type BreadcrumbItem } from '@/components/layout';
+import { useAuth } from '@/context';
 import type { NavItem } from '@/types';
 
 const brandNavItems: NavItem[] = [
@@ -49,12 +50,15 @@ export default function BrandLayout({
 }) {
   const pathname = usePathname();
   const breadcrumbs = getBreadcrumbs(pathname);
+  const { profile, roleData } = useAuth();
 
-  // Mock user data - in production, this would come from auth context
+  const brandData = roleData as { company_name?: string; logo_url?: string } | null;
   const user = {
-    name: 'Nike Marketing',
+    name: brandData?.company_name || profile?.first_name
+      ? `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim()
+      : 'Brand Partner',
     role: 'Brand Partner',
-    avatar: undefined,
+    avatar: brandData?.logo_url || profile?.avatar_url || undefined,
   };
 
   return (
@@ -63,7 +67,6 @@ export default function BrandLayout({
       variant="brand"
       breadcrumbs={breadcrumbs}
       user={user}
-      notificationCount={5}
     >
       <div className="max-w-[var(--container-max)] mx-auto">
         {children}

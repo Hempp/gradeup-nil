@@ -33,6 +33,9 @@ import { StatCard } from '@/components/ui/stat-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ErrorState } from '@/components/ui/error-state';
+import { NoActivity, NoDeadlines, NoDeals } from '@/components/ui/empty-state';
+import { SkeletonActivityFeed, SkeletonList, SkeletonChart, SkeletonStatCard } from '@/components/ui/skeleton';
+import { PageHeader, StatsGrid, ContentGrid, GridColumn } from '@/components/ui/section-header';
 import { formatCurrency, formatCompactNumber, formatRelativeTime, formatDate } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useAthleteStats, useAthleteDeals, useActivity, useAthleteEarnings } from '@/lib/hooks/use-data';
@@ -139,9 +142,7 @@ function ActivityFeed({ activities, loading }: { activities: Activity[] | null; 
           <CardTitle>Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
-          </div>
+          <SkeletonActivityFeed items={5} />
         </CardContent>
       </Card>
     );
@@ -164,9 +165,7 @@ function ActivityFeed({ activities, loading }: { activities: Activity[] | null; 
       </CardHeader>
       <CardContent>
         {displayActivities.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)] text-center py-4">
-            No recent activity yet
-          </p>
+          <NoActivity onExplore={() => window.location.href = '/opportunities'} />
         ) : (
           <div className="space-y-4">
             {displayActivities.map((activity) => {
@@ -229,9 +228,7 @@ function UpcomingDeadlines({ deals, loading }: { deals: Deal[] | null; loading: 
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
-          </div>
+          <SkeletonList items={4} />
         </CardContent>
       </Card>
     );
@@ -247,9 +244,7 @@ function UpcomingDeadlines({ deals, loading }: { deals: Deal[] | null; loading: 
       </CardHeader>
       <CardContent>
         {upcomingDeals.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)] text-center py-4">
-            No upcoming deadlines
-          </p>
+          <NoDeadlines />
         ) : (
           <div className="space-y-3">
             {upcomingDeals.map((deal) => {
@@ -294,17 +289,7 @@ interface EarningsChartProps {
 
 function EarningsChart({ earningsData, loading, trend }: EarningsChartProps) {
   if (loading) {
-    return (
-      <ChartWrapper
-        title="Earnings Overview"
-        description="Your earnings over the last 6 months"
-        height={300}
-      >
-        <div className="flex items-center justify-center h-[300px]">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--text-muted)]" />
-        </div>
-      </ChartWrapper>
-    );
+    return <SkeletonChart />;
   }
 
   const displayData = earningsData.length > 0 ? earningsData : [];
@@ -418,8 +403,20 @@ export default function AthleteDashboardPage() {
   // Show loading state while auth is checking
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+      <div className="space-y-6 animate-fade-in">
+        {/* Header skeleton */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-8 w-64 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)] animate-shimmer" />
+            <div className="h-4 w-48 bg-[var(--bg-tertiary)] rounded-[var(--radius-sm)] animate-shimmer" />
+          </div>
+        </div>
+        {/* Stats skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <SkeletonStatCard key={i} />
+          ))}
+        </div>
       </div>
     );
   }
@@ -445,25 +442,21 @@ export default function AthleteDashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-            Welcome back, {athleteName}
-          </h1>
-          <p className="text-[var(--text-muted)]">
-            Here&apos;s what&apos;s happening with your NIL deals
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <StartTourButton />
-          <div data-tour="profile-completion">
-            <QuickActionsDropdown />
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title={`Welcome back, ${athleteName}`}
+        description="Here's what's happening with your NIL deals"
+        actions={
+          <>
+            <StartTourButton />
+            <div data-tour="profile-completion">
+              <QuickActionsDropdown />
+            </div>
+          </>
+        }
+      />
 
       {/* Stats Grid - 4 cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" data-tour="earnings-dashboard">
+      <StatsGrid cols={4} data-tour="earnings-dashboard">
         <StatCard
           title="Total Earnings"
           value={statsLoading ? '...' : formatCurrency(stats?.total_earnings || 0)}
@@ -498,17 +491,17 @@ export default function AthleteDashboardPage() {
             </span>
           }
         />
-      </div>
+      </StatsGrid>
 
       {/* Two-column section: Activity Feed + Deadlines */}
-      <div className="grid lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-3" data-tour="deal-notifications">
+      <ContentGrid ratio="3:2">
+        <GridColumn span={3} data-tour="deal-notifications">
           <ActivityFeed activities={activities} loading={activitiesLoading} />
-        </div>
-        <div className="lg:col-span-2" data-tour="browse-opportunities">
+        </GridColumn>
+        <GridColumn span={2} data-tour="browse-opportunities">
           <UpcomingDeadlines deals={deals} loading={dealsLoading} />
-        </div>
-      </div>
+        </GridColumn>
+      </ContentGrid>
 
       {/* Full-width Earnings Chart */}
       <EarningsChart

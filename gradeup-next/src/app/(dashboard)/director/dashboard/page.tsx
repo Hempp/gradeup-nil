@@ -20,6 +20,10 @@ import { Button } from '@/components/ui/button';
 import { StatCard } from '@/components/ui/stat-card';
 import { Modal } from '@/components/ui/modal';
 import { ErrorState } from '@/components/ui/error-state';
+import { AllCaughtUp, NoAthletes } from '@/components/ui/empty-state';
+import { SkeletonList, SkeletonStatCard, SkeletonActivityFeed } from '@/components/ui/skeleton';
+import { GPABadge } from '@/components/ui/gpa-ring';
+import { PageHeader, StatsGrid } from '@/components/ui/section-header';
 import { formatCurrency, formatRelativeTime, formatDateTime } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
 import { useDirectorStats, useSchoolAthletes, useComplianceAlerts } from '@/lib/hooks/use-data';
@@ -74,9 +78,7 @@ function AlertsPanelCard({ alerts, loading, onViewAlert }: AlertsPanelCardProps)
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
-          </div>
+          <SkeletonActivityFeed items={3} />
         </CardContent>
       </Card>
     );
@@ -99,9 +101,10 @@ function AlertsPanelCard({ alerts, loading, onViewAlert }: AlertsPanelCardProps)
       </CardHeader>
       <CardContent>
         {displayAlerts.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)] text-center py-4">
-            No compliance alerts
-          </p>
+          <AllCaughtUp
+            title="No compliance alerts"
+            description="Your program is in good standing. Any compliance issues will appear here."
+          />
         ) : (
           <div className="space-y-3">
             {displayAlerts.map((alert) => {
@@ -200,8 +203,20 @@ export default function DirectorDashboardPage() {
   // Show loading state while auth is checking
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+      <div className="space-y-6 animate-fade-in">
+        {/* Header skeleton */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-8 w-56 bg-[var(--bg-tertiary)] rounded-[var(--radius-md)] animate-shimmer" />
+            <div className="h-4 w-64 bg-[var(--bg-tertiary)] rounded-[var(--radius-sm)] animate-shimmer" />
+          </div>
+        </div>
+        {/* Stats skeleton - 2x3 grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <SkeletonStatCard key={i} />
+          ))}
+        </div>
       </div>
     );
   }
@@ -226,20 +241,14 @@ export default function DirectorDashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-            Program Overview
-          </h1>
-          <p className="text-[var(--text-muted)]">
-            {schoolName} Athletics NIL Program
-          </p>
-        </div>
-        <Badge variant="primary">Athletic Director</Badge>
-      </div>
+      <PageHeader
+        title="Program Overview"
+        description={`${schoolName} Athletics NIL Program`}
+        badge={<Badge variant="primary">Athletic Director</Badge>}
+      />
 
       {/* Stats Grid - 2x3 layout */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <StatsGrid cols={3}>
         <StatCard
           title="Total Athletes"
           value={statsLoading ? '...' : (stats?.total_athletes || 0).toString()}
@@ -270,7 +279,7 @@ export default function DirectorDashboardPage() {
           value={statsLoading ? '...' : (stats?.pending_verifications || 0).toString()}
           icon={<TrendingUp className="h-5 w-5" />}
         />
-      </div>
+      </StatsGrid>
 
       {/* Athletes Overview Card */}
       <Card>
@@ -287,13 +296,9 @@ export default function DirectorDashboardPage() {
         </CardHeader>
         <CardContent>
           {athletesLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-[var(--text-muted)]" />
-            </div>
+            <SkeletonList items={5} />
           ) : athletesData?.athletes.length === 0 ? (
-            <p className="text-sm text-[var(--text-muted)] text-center py-4">
-              No athletes registered yet
-            </p>
+            <NoAthletes onInvite={() => window.location.href = '/director/athletes'} />
           ) : (
             <div className="space-y-3">
               {athletesData?.athletes.slice(0, 5).map((athlete) => {
@@ -310,9 +315,7 @@ export default function DirectorDashboardPage() {
                       </p>
                     </div>
                     {athlete.gpa && (
-                      <Badge variant="success" size="sm">
-                        {athlete.gpa.toFixed(2)} GPA
-                      </Badge>
+                      <GPABadge gpa={athlete.gpa} size="sm" />
                     )}
                   </div>
                 );
@@ -376,7 +379,7 @@ export default function DirectorDashboardPage() {
               <p className="text-[var(--text-primary)]">{selectedAlert.message}</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-[var(--text-muted)]">Created</p>
                 <p className="font-medium text-[var(--text-primary)]">

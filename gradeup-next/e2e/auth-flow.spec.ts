@@ -14,7 +14,7 @@ test.describe('Login Form Validation', () => {
     await emailInput.blur();
 
     // Check for validation error
-    await expect(page.getByText(/required|email/i)).toBeVisible();
+    await expect(page.locator('#email-error')).toBeVisible();
   });
 
   test('shows validation error for invalid email format', async ({ page }) => {
@@ -123,23 +123,25 @@ test.describe('Athlete Signup Form Validation', () => {
   test('sport dropdown has options', async ({ page }) => {
     const sportSelect = page.locator('select[name="sport"]');
     await expect(sportSelect).toBeVisible({ timeout: 15000 });
-    await sportSelect.click();
-
-    // Check that sport options are available
-    await expect(page.locator('option', { hasText: 'Football' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Basketball' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Soccer' })).toBeVisible();
+    // Native select options aren't visible DOM elements in Chromium — verify by selecting
+    await sportSelect.selectOption({ label: 'Football' });
+    await expect(sportSelect).toHaveValue(/football/i);
+    await sportSelect.selectOption({ label: 'Basketball' });
+    await expect(sportSelect).toHaveValue(/basketball/i);
+    await sportSelect.selectOption({ label: 'Soccer' });
+    await expect(sportSelect).toHaveValue(/soccer/i);
   });
 
   test('year dropdown has options', async ({ page }) => {
     const yearSelect = page.locator('select[name="year"]');
     await expect(yearSelect).toBeVisible({ timeout: 15000 });
-    await yearSelect.click();
-
-    // Check that year options are available
-    await expect(page.locator('option', { hasText: 'Freshman' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Sophomore' })).toBeVisible();
-    await expect(page.locator('option', { hasText: 'Senior' })).toBeVisible();
+    // Native select options aren't visible DOM elements in Chromium — verify by selecting
+    await yearSelect.selectOption({ label: 'Freshman' });
+    await expect(yearSelect).toHaveValue(/freshman/i);
+    await yearSelect.selectOption({ label: 'Sophomore' });
+    await expect(yearSelect).toHaveValue(/sophomore/i);
+    await yearSelect.selectOption({ label: 'Senior' });
+    await expect(yearSelect).toHaveValue(/senior/i);
   });
 
   test('terms checkbox exists and is required', async ({ page }) => {
@@ -147,9 +149,9 @@ test.describe('Athlete Signup Form Validation', () => {
     const termsCheckbox = page.locator('input[name="agreeToTerms"]');
     await expect(termsCheckbox).toBeVisible({ timeout: 15000 });
 
-    // Should have links to Terms and Privacy Policy
-    await expect(page.getByRole('link', { name: /terms of service/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /privacy policy/i })).toBeVisible();
+    // Should have links to Terms and Privacy Policy (use .first() to avoid footer duplicates)
+    await expect(page.getByRole('link', { name: /terms of service/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /privacy policy/i }).first()).toBeVisible();
   });
 
   test('can fill out the form', async ({ page }) => {

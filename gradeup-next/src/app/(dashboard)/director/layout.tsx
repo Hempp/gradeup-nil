@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { DashboardShell, type BreadcrumbItem } from '@/components/layout';
+import { useAuth } from '@/context';
 import type { NavItem } from '@/types';
 
 const directorNavItems: NavItem[] = [
@@ -51,12 +52,14 @@ export default function DirectorLayout({
 }) {
   const pathname = usePathname();
   const breadcrumbs = getBreadcrumbs(pathname);
+  const { profile } = useAuth();
 
-  // Mock user data - in production, this would come from auth context
   const user = {
-    name: 'Sarah Williams',
+    name: profile
+      ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Director'
+      : 'Loading...',
     role: 'Athletic Director',
-    avatar: undefined,
+    avatar: profile?.avatar_url || undefined,
   };
 
   return (
@@ -65,7 +68,6 @@ export default function DirectorLayout({
       variant="director"
       breadcrumbs={breadcrumbs}
       user={user}
-      notificationCount={2}
     >
       <div className="max-w-[var(--container-max)] mx-auto">
         {children}

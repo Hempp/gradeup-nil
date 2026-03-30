@@ -360,6 +360,31 @@ export async function signOut(): Promise<AuthResult> {
 }
 
 /**
+ * Update the authenticated user's password
+ *
+ * @param newPassword - The new password (must be at least 8 characters)
+ * @returns Promise resolving to AuthResult indicating success or error
+ */
+export async function updatePassword(newPassword: string): Promise<AuthResult> {
+  const supabase = createBrowserClient();
+
+  try {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: null, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('An unexpected error occurred'),
+    };
+  }
+}
+
+/**
  * Request a password reset email for the given email address
  *
  * Sends a password reset link to the user's email. The link redirects

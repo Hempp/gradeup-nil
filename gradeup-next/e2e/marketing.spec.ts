@@ -28,9 +28,9 @@ test.describe('Marketing Pages', () => {
     await expect(page.locator('h1').filter({ hasText: /is worth/i })).toBeVisible();
     await expect(page.locator('h1').filter({ hasText: /money/i })).toBeVisible();
 
-    // Check for athlete and brand CTAs
-    await expect(page.getByRole('link', { name: /join as athlete/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /partner as brand/i })).toBeVisible();
+    // Check for athlete and brand CTAs (use .first() to avoid footer duplicates)
+    await expect(page.getByRole('link', { name: /join as athlete/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /partner as brand/i }).first()).toBeVisible();
   });
 
   test('opportunities page loads', async ({ page }) => {

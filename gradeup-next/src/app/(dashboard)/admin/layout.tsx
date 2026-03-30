@@ -123,7 +123,6 @@ export default function AdminLayout({
       variant="director" // Using director variant for similar dark styling
       breadcrumbs={breadcrumbs}
       user={adminUser}
-      notificationCount={0}
     >
       <div className="max-w-[var(--container-max)] mx-auto">
         {children}

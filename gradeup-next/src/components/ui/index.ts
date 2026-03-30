@@ -135,3 +135,23 @@ export {
 
 // Theme Toggle
 export { ThemeToggle } from './theme-toggle';
+
+// Interactive Components
+export { CommandPalette, CommandPaletteTrigger, type CommandItem } from './command-palette';
+export { ConnectivityIndicator, useConnectivity, type ConnectionQuality } from './connectivity-indicator';
+export { DateRangePicker, CompactDateSelector, type DateRange, type DatePreset } from './date-range-picker';
+export { FileUploadDropzone, formatFileSize, type FileUploadDropzoneProps, type UploadedFile, type FileUploadStatus, type FileValidation } from './file-upload-dropzone';
+export { GPARing, GPABadge, GPAStat } from './gpa-ring';
+export { InfiniteScroll, useInfiniteScroll, type InfiniteScrollProps, type UseInfiniteScrollOptions } from './infinite-scroll';
+export { LiveRegionProvider, useLiveRegion, type Announcement, type LiveRegionPoliteness } from './live-region';
+export { ProgressStepper, ProgressBar, StepIndicator, type Step } from './progress-stepper';
+export { SectionHeader, PageHeader, StatsGrid, ContentGrid, GridColumn } from './section-header';
+export { VirtualizedList, VirtualizedGrid, useScrollToItem, type VirtualizedListProps, type VirtualizedGridProps } from './virtualized-list';
+export { NavigationProgress, NavigationProgressBar } from './navigation-progress';
+export { LazyModal } from './lazy-modal';
+export { LoadingState, type LoadingStateProps } from './loading-state';
+export { ExportButton } from './export-button';
+export { VerifiedBadge } from './verified-badge';
+export { InstagramIcon, TikTokIcon, TwitterIcon, YoutubeIcon, SOCIAL_BRAND_COLORS } from './social-icons';
+export { FormInput, FormSelect, FormCheckbox } from './form-input';
+export { LazyFilterPanel, LazyConfirmDialog, LazyOnboardingTourProvider } from './lazy-components';
