@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { calculateFees } from './pricing';
 
 // Lazy initialization to avoid build-time errors when env vars aren't set
 let stripeClient: Stripe | null = null;
@@ -31,13 +32,19 @@ export async function createPaymentIntent(input: CreatePaymentIntentInput) {
 
   try {
     const stripe = getStripe();
+    // Calculate platform fee (12%) — brand pays deal + fee, athlete gets full deal amount
+    const fees = calculateFees(input.amount);
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: input.amount,
+      amount: fees.brandTotal,
       currency: input.currency || 'usd',
       metadata: {
         dealId: input.dealId,
         athleteId: input.athleteId,
         brandId: input.brandId,
+        dealAmount: String(fees.dealAmount),
+        platformFee: String(fees.platformFee),
+        athletePayout: String(fees.athletePayout),
       },
       description: input.description,
     });
