@@ -100,6 +100,91 @@ export interface Sport {
   icon_name?: string;
 }
 
+// ─── Athletic Stats (StatsTaq Integration) ───
+export interface AthleteStats {
+  id: string;
+  athlete_id: string;
+  season: string;
+  sport: string;
+  source: 'statstaq' | 'ncaa' | 'self_reported' | 'coach_verified';
+  verified: boolean;
+  stats: Record<string, number | string>;
+  highlights: StatHighlight[];
+  last_synced_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StatHighlight {
+  label: string;
+  value: string | number;
+  unit?: string;
+  rank?: number;
+  percentile?: number;
+  trend?: 'up' | 'down' | 'stable';
+}
+
+export interface StatsTaqProfile {
+  athlete_id: string;
+  statstaq_id?: string;
+  connected: boolean;
+  profile_url?: string;
+  valuation?: number;
+  performance_score?: number;
+  seasons: AthleteStats[];
+}
+
+// Sport-specific stat templates
+export type BasketballStats = {
+  ppg: number;       // Points per game
+  rpg: number;       // Rebounds per game
+  apg: number;       // Assists per game
+  spg: number;       // Steals per game
+  bpg: number;       // Blocks per game
+  fg_pct: number;    // Field goal %
+  three_pct: number; // 3-point %
+  ft_pct: number;    // Free throw %
+  mpg: number;       // Minutes per game
+  gp: number;        // Games played
+};
+
+export type FootballStats = {
+  passing_yards?: number;
+  passing_tds?: number;
+  rushing_yards?: number;
+  rushing_tds?: number;
+  receiving_yards?: number;
+  receiving_tds?: number;
+  receptions?: number;
+  tackles?: number;
+  sacks?: number;
+  interceptions?: number;
+  gp: number;
+};
+
+export type SoccerStats = {
+  goals: number;
+  assists: number;
+  shots: number;
+  shots_on_target: number;
+  minutes_played: number;
+  clean_sheets?: number;
+  saves?: number;
+  gp: number;
+};
+
+export type BaseballStats = {
+  avg: number;        // Batting average
+  hr: number;         // Home runs
+  rbi: number;        // Runs batted in
+  sb: number;         // Stolen bases
+  obp: number;        // On-base %
+  slg: number;        // Slugging %
+  era?: number;       // Earned run average (pitchers)
+  strikeouts?: number;
+  gp: number;
+};
+
 // ─── Brand ───
 export interface Brand {
   id: string;

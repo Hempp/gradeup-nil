@@ -29,6 +29,7 @@ import { useFormValidation, validators } from '@/lib/utils/validation';
 import { useRequireAuth } from '@/context';
 import { updateAthleteProfile, uploadAthleteMedia } from '@/lib/services/athlete';
 import { HighlightTapeSection } from '@/components/athlete/HighlightTapeSection';
+import { AthleteStatsCard } from '@/components/athlete/AthleteStatsCard';
 import { VerificationStatusCard } from '@/components/athlete/VerificationStatusCard';
 import { ProfileTips } from '@/components/ai/ProfileTips';
 import type { Athlete } from '@/types';
@@ -523,6 +524,14 @@ export default function AthleteProfilePage() {
           onManage={() => setSocialAccountsModalOpen(true)}
         />
       </div>
+
+      {/* Athletic Stats — StatsTaq Integration */}
+      <AthleteStatsCard
+        athleteId={athleteData?.id || 'demo-athlete-id'}
+        sport={athleteData?.sport?.name}
+        variant="full"
+        showConnectButton
+      />
 
       {/* Highlight Tape */}
       <HighlightTapeSection />
