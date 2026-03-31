@@ -42,6 +42,7 @@ import { useAthleteStats, useAthleteDeals, useActivity, useAthleteEarnings } fro
 import { useOnboardingTour } from '@/components/ui/onboarding-tour';
 import { GradeUpScoreCard } from '@/components/athlete/GradeUpScoreCard';
 import { ReferralCard } from '@/components/athlete/ReferralCard';
+import { Leaderboard } from '@/components/athlete/Leaderboard';
 import type { Activity } from '@/lib/services/activity';
 import type { Deal } from '@/lib/services/deals';
 
@@ -531,6 +532,9 @@ export default function AthleteDashboardPage() {
           />
         </GridColumn>
       </ContentGrid>
+
+      {/* Weekly Leaderboard */}
+      <Leaderboard currentUserName={profile?.first_name || undefined} />
     </div>
   );
 }

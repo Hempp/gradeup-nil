@@ -43,9 +43,10 @@ const FILTER_DEFAULTS = {
 // SORT OPTIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-type SortOption = 'relevance' | 'followers' | 'engagement' | 'nilValue';
+type SortOption = 'gradeUpScore' | 'relevance' | 'followers' | 'engagement' | 'nilValue';
 
 const sortOptions: { value: SortOption; label: string }[] = [
+  { value: 'gradeUpScore', label: 'GradeUp Score' },
   { value: 'relevance', label: 'Relevance' },
   { value: 'followers', label: 'Followers (High to Low)' },
   { value: 'engagement', label: 'Engagement Rate' },
@@ -411,6 +412,12 @@ export default function BrandDiscoverPage() {
     // Apply sorting
     return filtered.sort((a, b) => {
       switch (sortBy) {
+        case 'gradeUpScore': {
+          // GPA-weighted scoring — our core differentiator
+          const gsA = a.gpa * 10 + a.engagementRate * 2 + (a.verified ? 10 : 0);
+          const gsB = b.gpa * 10 + b.engagementRate * 2 + (b.verified ? 10 : 0);
+          return gsB - gsA;
+        }
         case 'followers':
           return (b.instagramFollowers + b.tiktokFollowers) - (a.instagramFollowers + a.tiktokFollowers);
         case 'engagement':
@@ -418,11 +425,12 @@ export default function BrandDiscoverPage() {
         case 'nilValue':
           return b.nilValue - a.nilValue;
         case 'relevance':
-        default:
+        default: {
           // For relevance, prioritize verified athletes with higher engagement
           const scoreA = (a.verified ? 1000 : 0) + a.engagementRate * 100 + a.nilValue / 1000;
           const scoreB = (b.verified ? 1000 : 0) + b.engagementRate * 100 + b.nilValue / 1000;
           return scoreB - scoreA;
+        }
       }
     });
   }, [displayAthletes, filters, sortBy]);

@@ -1,7 +1,7 @@
 'use client';
 
-import { memo, useCallback } from 'react';
-import { Heart, MapPin, TrendingUp } from 'lucide-react';
+import { memo, useCallback, useMemo } from 'react';
+import { Heart, MapPin, TrendingUp, Trophy } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +10,7 @@ import { VerifiedBadge } from '@/components/ui/verified-badge';
 import { InstagramIcon, TikTokIcon, SOCIAL_BRAND_COLORS } from '@/components/ui/social-icons';
 import { getSportGradient } from '@/lib/utils/sport-theme';
 import { formatCompactNumber, formatCurrency, formatPercentage } from '@/lib/utils';
+import { calculateNILValuation, getTierDisplay } from '@/lib/services/pricing';
 import type { HighlightUrl } from '@/types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -72,6 +73,16 @@ export const AthleteDiscoveryCard = memo(function AthleteDiscoveryCard({
   onViewProfile,
 }: AthleteDiscoveryCardProps) {
   const totalFollowers = athlete.instagramFollowers + athlete.tiktokFollowers;
+
+  // Calculate GradeUp Score
+  const valuation = useMemo(() => calculateNILValuation({
+    gpa: athlete.gpa,
+    sport: athlete.sport,
+    totalFollowers,
+    engagementRate: athlete.engagementRate,
+  }), [athlete.gpa, athlete.sport, totalFollowers, athlete.engagementRate]);
+
+  const tierDisplay = getTierDisplay(valuation.tier);
 
   // Memoized handlers to prevent child re-renders
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -225,8 +236,12 @@ export const AthleteDiscoveryCard = memo(function AthleteDiscoveryCard({
                   </p>
                 </div>
                 <div className="flex flex-col items-end text-right">
-                  <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">GPA</span>
-                  <span className="font-semibold text-[var(--text-primary)]">{athlete.gpa.toFixed(2)}</span>
+                  <div className="flex items-center gap-1.5">
+                    <Trophy className="h-3.5 w-3.5 text-[var(--marketing-gold)]" aria-hidden="true" />
+                    <span className="font-bold text-lg text-[var(--text-primary)]">{valuation.gradeUpScore}</span>
+                  </div>
+                  <span className={`text-[10px] font-medium ${tierDisplay.color}`}>{tierDisplay.label}</span>
+                  <span className="text-[10px] text-[var(--text-muted)]">{athlete.gpa.toFixed(1)} GPA</span>
                 </div>
               </div>
             </div>

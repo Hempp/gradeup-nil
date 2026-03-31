@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormSelect, FormCheckbox } from '@/components/ui/form-input';
@@ -10,6 +10,7 @@ import { ValidatedInput, PasswordInput, validators } from '@/components/ui/valid
 import { useToastActions } from '@/components/ui/toast';
 import { useFormValidation } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import { trackReferralSignup } from '@/lib/services/referrals';
 
 const SPORTS = [
   'Football',
@@ -52,6 +53,7 @@ interface AthleteSignupFormValues {
 
 export default function AthleteSignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const toast = useToastActions();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -195,8 +197,15 @@ export default function AthleteSignupPage() {
         }
       }
 
+      // Track referral if code present in URL
+      const refCode = searchParams.get('ref');
+      if (refCode && authData.user) {
+        trackReferralSignup(refCode, authData.user.id).catch(() => {
+          // Non-critical — don't block signup if referral tracking fails
+        });
+      }
+
       toast.success('Account Created', 'Welcome to GradeUp! Your athlete account has been created.');
-      // Redirect to dashboard or verification page
       router.push('/athlete/dashboard');
     } catch {
       setError('An unexpected error occurred. Please try again.');
