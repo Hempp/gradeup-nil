@@ -42,6 +42,7 @@ function Navbar() {
     { href: '/#athletes', label: 'Athletes' },
     { href: '/#brands', label: 'Brands' },
     { href: '/#how-it-works', label: 'How It Works' },
+    { href: '/discover', label: 'Discover' },
     { href: '/opportunities', label: 'Opportunities' },
   ];
 

@@ -40,6 +40,8 @@ import { formatCurrency, formatCompactNumber, formatRelativeTime, formatDate } f
 import { useRequireAuth } from '@/context';
 import { useAthleteStats, useAthleteDeals, useActivity, useAthleteEarnings } from '@/lib/hooks/use-data';
 import { useOnboardingTour } from '@/components/ui/onboarding-tour';
+import { GradeUpScoreCard } from '@/components/athlete/GradeUpScoreCard';
+import { ReferralCard } from '@/components/athlete/ReferralCard';
 import type { Activity } from '@/lib/services/activity';
 import type { Deal } from '@/lib/services/deals';
 
@@ -349,8 +351,9 @@ export default function AthleteDashboardPage() {
   const [isRetrying, setIsRetrying] = useState(false);
 
   // Require auth and get athlete data
-  const { profile, roleData, isLoading: authLoading } = useRequireAuth({ allowedRoles: ['athlete'] });
+  const { profile, roleData, isLoading: authLoading, getAthleteData } = useRequireAuth({ allowedRoles: ['athlete'] });
   const athleteData = roleData as { id: string; nil_valuation: number | null } | null;
+  const fullAthleteData = getAthleteData();
 
   // Fetch dashboard data
   const { data: stats, loading: statsLoading, error: statsError, refetch: refetchStats } = useAthleteStats(athleteData?.id);
@@ -509,6 +512,25 @@ export default function AthleteDashboardPage() {
         loading={earningsLoading}
         trend={earningsTrend > 0 ? earningsTrend : undefined}
       />
+
+      {/* GradeUp Score + Referral */}
+      <ContentGrid ratio="1:1">
+        <GridColumn span={1}>
+          <GradeUpScoreCard
+            gpa={fullAthleteData?.gpa || 3.5}
+            sport={fullAthleteData?.sport?.name || 'Basketball'}
+            totalFollowers={fullAthleteData?.total_followers || 5000}
+            division={fullAthleteData?.school?.division}
+            isVerified={fullAthleteData?.enrollment_verified && fullAthleteData?.sport_verified && fullAthleteData?.grades_verified}
+          />
+        </GridColumn>
+        <GridColumn span={1}>
+          <ReferralCard
+            athleteId={athleteData?.id || 'demo'}
+            firstName={fullAthleteData?.first_name || profile?.first_name || 'Athlete'}
+          />
+        </GridColumn>
+      </ContentGrid>
     </div>
   );
 }

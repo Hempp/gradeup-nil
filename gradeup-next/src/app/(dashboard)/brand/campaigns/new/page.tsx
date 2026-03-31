@@ -673,6 +673,11 @@ function ReviewStep({ data }: { data: CampaignFormData }) {
             <div>
               <dt className="text-sm text-[var(--text-muted)]">Budget</dt>
               <dd className="font-medium text-[var(--color-primary)]">{formatCurrency(data.budget)}</dd>
+              {data.budget > 0 && (
+                <dd className="text-xs text-[var(--text-muted)] mt-1">
+                  + {formatCurrency(data.budget * 0.12)} platform fee (12%) · Athletes receive 100%
+                </dd>
+              )}
             </div>
             <div>
               <dt className="text-sm text-[var(--text-muted)]">Duration</dt>
