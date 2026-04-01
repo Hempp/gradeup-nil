@@ -237,7 +237,7 @@ export default function AthleteSignupPage() {
               <path d="m5 12 7 4 7-4" />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold text-[var(--primary-900)]">
+          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
             Create Athlete Account
           </CardTitle>
           <CardDescription className="text-[var(--neutral-600)]">

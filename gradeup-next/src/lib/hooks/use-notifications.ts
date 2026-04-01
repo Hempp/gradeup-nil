@@ -146,6 +146,15 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
       return;
     }
 
+    // Use mock data for demo/mock user IDs (not valid UUIDs)
+    const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
+    if (!isValidUUID) {
+      setNotifications(MOCK_NOTIFICATIONS);
+      setIsUsingMockData(true);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -157,7 +166,7 @@ export function useNotifications(userId: string | null): UseNotificationsResult 
 
       if (!tableExistsRef.current) {
         // Fall back to mock data
-        await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 300));
         setNotifications(MOCK_NOTIFICATIONS);
         setIsUsingMockData(true);
         return;

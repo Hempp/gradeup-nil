@@ -111,7 +111,7 @@ CardHeader.displayName = 'CardHeader';
  * Title element for Card with configurable heading level for proper document outline.
  * Defaults to h3 which works when Card follows a section with h2.
  */
-const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement> & { as?: 'h2' | 'h3' | 'h4' }>(
+const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement> & { as?: 'h1' | 'h2' | 'h3' | 'h4' }>(
   ({ className, as: Tag = 'h3', ...props }, ref) => (
     <Tag
       ref={ref}

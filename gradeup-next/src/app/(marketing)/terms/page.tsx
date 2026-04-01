@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | GradeUp NIL',
+  title: 'Terms of Service',
   description: 'Terms of service for the GradeUp NIL platform',
 };
 

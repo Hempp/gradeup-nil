@@ -62,7 +62,7 @@ export default function SignupPage() {
     <div className="animate-fade-in">
       <Card className="shadow-lg">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-2xl font-bold text-[var(--primary-900)]">
+          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
             Join GradeUp
           </CardTitle>
           <CardDescription className="text-[var(--neutral-600)]">

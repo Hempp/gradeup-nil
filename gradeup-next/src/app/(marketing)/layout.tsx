@@ -68,7 +68,7 @@ function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors"
+                className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
               >
                 {link.label}
               </Link>

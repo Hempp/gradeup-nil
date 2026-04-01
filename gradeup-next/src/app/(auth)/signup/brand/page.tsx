@@ -204,7 +204,7 @@ export default function BrandSignupPage() {
               <path d="M12 3v6" />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold text-[var(--primary-900)]">
+          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
             Create Brand Account
           </CardTitle>
           <CardDescription className="text-[var(--neutral-600)]">

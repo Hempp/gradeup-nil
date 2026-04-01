@@ -150,7 +150,7 @@ export default function ForgotPasswordPage() {
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold text-[var(--primary-900)]">
+          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
             Forgot Password?
           </CardTitle>
           <CardDescription className="text-[var(--neutral-600)]">

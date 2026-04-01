@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | GradeUp NIL',
+  title: 'Privacy Policy',
   description: 'Privacy policy for the GradeUp NIL platform',
 };
 

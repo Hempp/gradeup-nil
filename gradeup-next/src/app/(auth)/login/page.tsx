@@ -139,7 +139,7 @@ export default function LoginPage() {
   return (
     <Card className="animate-fade-in bg-[var(--marketing-gray-900)]/80 backdrop-blur-xl border border-white/10 shadow-2xl">
       <CardHeader className="text-center pb-2">
-        <CardTitle className="text-2xl font-bold text-white">
+        <CardTitle as="h1" className="text-2xl font-bold text-white">
           Welcome Back
         </CardTitle>
         <CardDescription className="text-white/60">

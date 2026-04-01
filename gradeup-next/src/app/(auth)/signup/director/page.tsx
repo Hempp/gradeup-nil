@@ -208,7 +208,7 @@ export default function DirectorSignupPage() {
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold text-[var(--primary-900)]">
+          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
             Create Director Account
           </CardTitle>
           <CardDescription className="text-[var(--neutral-600)]">

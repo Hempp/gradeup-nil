@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Help Center & FAQ | GradeUp NIL',
+  title: 'Help Center & FAQ',
   description:
     'Find answers to frequently asked questions about GradeUp NIL. Learn about signing up, verification, NIL deals, payments, NCAA compliance, and more.',
   keywords: [
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     'NIL support',
   ],
   openGraph: {
-    title: 'Help Center & FAQ | GradeUp NIL',
+    title: 'Help Center & FAQ',
     description:
       'Find answers to frequently asked questions about GradeUp NIL. Learn about signing up, verification, NIL deals, payments, and NCAA compliance.',
     type: 'website',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Help Center & FAQ | GradeUp NIL',
+    title: 'Help Center & FAQ',
     description:
       'Find answers to frequently asked questions about GradeUp NIL. Learn about NIL deals, payments, and NCAA compliance.',
   },

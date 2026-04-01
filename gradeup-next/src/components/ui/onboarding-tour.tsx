@@ -750,8 +750,15 @@ export function OnboardingTourProvider({ children, config }: OnboardingTourProvi
   const [currentStep, setCurrentStep] = useState(0);
   const [tourComplete, setTourComplete] = useState(() => isComplete(storageKey));
 
-  // Show tour on first visit if configured
+  // Show tour on first visit if configured (skip in demo mode)
   useEffect(() => {
+    // Skip onboarding tour entirely in demo mode
+    const isDemoMode = typeof document !== 'undefined' && document.cookie.includes('demo_role');
+    if (isDemoMode) {
+      setTourComplete(true);
+      return;
+    }
+
     if (showOnFirstVisit && !tourComplete && steps.length > 0) {
       // Small delay to ensure page is rendered
       const timer = setTimeout(() => {
