@@ -52,8 +52,12 @@ export default function AthleteLayout({
   const breadcrumbs = getBreadcrumbs(pathname);
   const { user: authUser, profile } = useAuth();
 
+  // In demo mode (no real auth session), use demo names instead of "Loading..."
+  const isDemoMode = typeof document !== 'undefined' && document.cookie.includes('demo_role');
   const user = {
-    name: profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Athlete' : 'Loading...',
+    name: profile
+      ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Athlete'
+      : isDemoMode ? 'Marcus Johnson' : 'Loading...',
     role: 'Student Athlete',
     avatar: profile?.avatar_url || undefined,
   };

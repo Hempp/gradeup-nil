@@ -53,10 +53,11 @@ export default function BrandLayout({
   const { profile, roleData } = useAuth();
 
   const brandData = roleData as { company_name?: string; logo_url?: string } | null;
+  const isDemoMode = typeof document !== 'undefined' && document.cookie.includes('demo_role');
   const user = {
-    name: brandData?.company_name || profile?.first_name
-      ? `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim()
-      : 'Brand Partner',
+    name: brandData?.company_name || (profile?.first_name
+      ? `${profile.first_name} ${profile.last_name || ''}`.trim()
+      : isDemoMode ? 'SportsFuel Athletics' : 'Brand Partner'),
     role: 'Brand Partner',
     avatar: brandData?.logo_url || profile?.avatar_url || undefined,
   };

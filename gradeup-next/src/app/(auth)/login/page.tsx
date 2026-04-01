@@ -366,29 +366,35 @@ export default function LoginPage() {
           {/* Demo Mode Access */}
           {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
             <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-center text-xs text-white/40 mb-3">Demo Mode - Click to explore</p>
-              <div className="flex gap-2">
-                <Link href="/api/demo/login?role=athlete" className="flex-1">
-                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
-                    Athlete
+              <div className="flex items-center gap-2 justify-center mb-4">
+                <div className="h-2 w-2 rounded-full bg-[var(--marketing-lime)] animate-pulse" />
+                <p className="text-sm font-medium text-white/80">Quick Demo Access</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Link href="/api/demo/login?role=athlete">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-cyan)]/30 text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10">
+                    Athlete Demo
                   </Button>
                 </Link>
-                <Link href="/api/demo/login?role=brand" className="flex-1">
-                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
-                    Brand
+                <Link href="/api/demo/login?role=brand">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-lime)]/30 text-[var(--marketing-lime)] hover:bg-[var(--marketing-lime)]/10">
+                    Brand Demo
                   </Button>
                 </Link>
-                <Link href="/api/demo/login?role=director" className="flex-1">
-                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
-                    Director
+                <Link href="/api/demo/login?role=director">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-gold)]/30 text-[var(--marketing-gold)] hover:bg-[var(--marketing-gold)]/10">
+                    Director Demo
                   </Button>
                 </Link>
-                <Link href="/api/demo/login?role=admin" className="flex-1">
-                  <Button variant="ghost" size="sm" className="w-full text-xs text-white/60 hover:text-white hover:bg-white/10">
-                    Admin
+                <Link href="/api/demo/login?role=admin">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-magenta)]/30 text-[var(--marketing-magenta)] hover:bg-[var(--marketing-magenta)]/10">
+                    Admin Demo
                   </Button>
                 </Link>
               </div>
+              <p className="text-center text-[10px] text-white/30 mt-3">
+                No account needed. Click any role to explore the dashboard.
+              </p>
             </div>
           )}
         </form>

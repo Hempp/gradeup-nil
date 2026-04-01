@@ -185,9 +185,9 @@ test.describe('Brand Discover Athletes Page', () => {
       await sportButton.click();
       await page.waitForTimeout(300);
 
-      // Select a sport
-      const basketballOption = page.getByText(/basketball/i);
-      if (await basketballOption.isVisible()) {
+      // Select a sport from the dropdown options
+      const basketballOption = page.getByRole('option', { name: /basketball/i }).or(page.getByText(/basketball/i).first());
+      if (await basketballOption.isVisible({ timeout: 2000 }).catch(() => false)) {
         await basketballOption.click();
       }
     } else if (await sportFilter.isVisible()) {

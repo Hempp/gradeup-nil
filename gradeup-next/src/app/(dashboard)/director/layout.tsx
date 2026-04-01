@@ -54,10 +54,11 @@ export default function DirectorLayout({
   const breadcrumbs = getBreadcrumbs(pathname);
   const { profile } = useAuth();
 
+  const isDemoMode = typeof document !== 'undefined' && document.cookie.includes('demo_role');
   const user = {
     name: profile
       ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Director'
-      : 'Loading...',
+      : isDemoMode ? 'Sarah Williams' : 'Loading...',
     role: 'Athletic Director',
     avatar: profile?.avatar_url || undefined,
   };
