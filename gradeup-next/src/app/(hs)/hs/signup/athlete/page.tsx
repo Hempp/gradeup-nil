@@ -186,6 +186,28 @@ export default function HSAthleteSignupPage() {
           setError('Account created, but we could not save your profile. Please contact support.');
           return;
         }
+
+        // Make this HS user a first-class athlete row so they can be
+        // party to deals. The call is best-effort — if it fails we log
+        // a warn and continue. The 20260418_008 backfill migration is
+        // the safety net for any misses.
+        try {
+          const res = await fetch('/api/hs/signup/ensure-athlete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firstName, lastName }),
+          });
+          if (!res.ok) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              '[hs-athlete-signup] ensure-athlete returned non-OK',
+              res.status
+            );
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-athlete-signup] ensure-athlete call failed', err);
+        }
       }
 
       // TODO: /hs/onboarding/next-steps does not yet exist. Landing the
