@@ -65,14 +65,18 @@ export function buildCspHeader(
     // Default policy: only allow same-origin resources
     "default-src 'self'",
 
-    // Script policy: self + unsafe-inline for Next.js compatibility
-    // Note: Next.js 16 with Turbopack doesn't inject nonce attributes into script tags
-    // 'strict-dynamic' is intentionally omitted because it overrides 'unsafe-inline' in
-    // modern browsers, causing all scripts to be blocked when nonces aren't injected
-    // TODO: Add nonce and strict-dynamic when Next.js properly injects nonces
-    `script-src 'self' 'unsafe-inline'`,
+    // Script policy: nonce + strict-dynamic. Modern browsers supporting CSP3 will
+    // use strict-dynamic and ignore any 'unsafe-inline' fallback (which remains for
+    // CSP1/2 browsers only). This closes the XSS gap where 'unsafe-inline' alone
+    // silently defeated the nonce plumbing. Next.js scripts that need to execute
+    // inline must carry the nonce attribute; any dependent/loaded scripts are
+    // allowed transitively via strict-dynamic without needing self/host allowlists.
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' https:`,
 
-    // Style policy: self + unsafe-inline for Tailwind and dynamic styles
+    // Style policy: inline styles retained. Tailwind + Next.js emit inline style
+    // attributes/tags that are impractical to nonce today, and the XSS-via-style
+    // attack surface (CSS exfiltration) is materially lower than script XSS.
+    // Revisit if CSP Level 3 style nonce coverage in Next.js improves.
     `style-src 'self' 'unsafe-inline'`,
 
     // Image policy: allow same-origin, data URIs, and HTTPS images

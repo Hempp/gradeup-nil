@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
@@ -311,6 +312,9 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    const rateLimited = await enforceRateLimit(request, 'upload', user.id);
+    if (rateLimited) return rateLimited;
 
     // Parse form data
     const formData = await request.formData();

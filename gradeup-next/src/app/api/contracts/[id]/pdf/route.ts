@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getContractPDFBuffer } from '@/lib/services/contracts';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/contracts/[id]/pdf
@@ -120,6 +121,9 @@ export async function POST(
     if (userError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const rateLimited = await enforceRateLimit(request, 'mutation', user.id);
+    if (rateLimited) return rateLimited;
 
     // Verify the user has access to this contract
     const { data: contract, error: accessError } = await supabase

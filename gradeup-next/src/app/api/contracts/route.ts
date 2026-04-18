@@ -7,6 +7,7 @@ import {
   formatValidationError,
 } from '@/lib/validations';
 import type { ContractStatus, SignatureStatus } from '@/lib/validations/contract.schema';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/contracts
@@ -127,6 +128,9 @@ export async function POST(request: NextRequest) {
     if (userError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const rateLimited = await enforceRateLimit(request, 'mutation', user.id);
+    if (rateLimited) return rateLimited;
 
     const body = await request.json();
 

@@ -7,6 +7,7 @@ import {
   formatValidationError,
 } from '@/lib/validations';
 import type { ContractStatus, SignatureStatus } from '@/lib/validations/contract.schema';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 /**
  * Verify contract ownership/access
@@ -136,6 +137,9 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const rateLimited = await enforceRateLimit(request, 'mutation', user.id);
+    if (rateLimited) return rateLimited;
+
     // Verify access
     const access = await verifyContractAccess(supabase, id, user.id);
     if (!access.authorized || !access.contract) {
@@ -234,6 +238,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const rateLimited = await enforceRateLimit(request, 'mutation', user.id);
+    if (rateLimited) return rateLimited;
+
     // Verify access
     const access = await verifyContractAccess(supabase, id, user.id);
     if (!access.authorized || !access.contract) {
@@ -295,6 +302,9 @@ export async function POST(
     if (userError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const rateLimited = await enforceRateLimit(request, 'mutation', user.id);
+    if (rateLimited) return rateLimited;
 
     const body = await request.json();
 

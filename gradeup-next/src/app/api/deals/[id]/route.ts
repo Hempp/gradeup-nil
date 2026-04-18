@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { updateDealSchema, validateInput, formatValidationError } from '@/lib/validations';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 /**
  * Verify that the authenticated user is either the athlete or brand owner on a deal
@@ -112,6 +113,9 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const rateLimited = await enforceRateLimit(request, 'mutation', user.id);
+    if (rateLimited) return rateLimited;
+
     // Verify user is either the athlete or brand on this deal
     const ownership = await verifyDealOwnership(supabase, id, user.id);
     if (!ownership.authorized) {
@@ -205,6 +209,9 @@ export async function DELETE(
     if (userError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const rateLimited = await enforceRateLimit(request, 'mutation', user.id);
+    if (rateLimited) return rateLimited;
 
     // Verify user is either the athlete or brand on this deal
     const ownership = await verifyDealOwnership(supabase, id, user.id);
