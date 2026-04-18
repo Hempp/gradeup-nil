@@ -48,7 +48,7 @@ function EmptyIllustration({ variant }: { variant: EmptyStateVariant }) {
       <div
         className="absolute inset-0 rounded-full blur-2xl opacity-30"
         style={{
-          background: 'radial-gradient(circle, var(--marketing-cyan) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--accent-primary) 0%, transparent 70%)',
           transform: 'scale(1.5)',
         }}
         aria-hidden="true"
@@ -63,7 +63,7 @@ function EmptyIllustration({ variant }: { variant: EmptyStateVariant }) {
         />
 
         {/* Decorative dots */}
-        <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[var(--marketing-cyan)]/30" aria-hidden="true" />
+        <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[var(--accent-primary)]/30" aria-hidden="true" />
         <div className="absolute -bottom-2 -left-2 w-2 h-2 rounded-full bg-[var(--marketing-magenta)]/30" aria-hidden="true" />
       </div>
     </div>
@@ -137,7 +137,7 @@ export function MarketingEmptyState({
           <Button
             onClick={onClearFilters}
             variant="outline"
-            className="border-[var(--marketing-cyan)] text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10"
+            className="border-[var(--accent-primary)] text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10"
           >
             <Filter className="h-4 w-4 mr-2" />
             Clear Filters
@@ -174,15 +174,15 @@ export function MarketingEmptyState({
           </p>
           <ul className="text-sm text-[var(--marketing-gray-400)] text-left space-y-1">
             <li className="flex items-start gap-2">
-              <span className="text-[var(--marketing-cyan)]">•</span>
+              <span className="text-[var(--accent-primary)]">•</span>
               Try broader search terms
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[var(--marketing-cyan)]">•</span>
+              <span className="text-[var(--accent-primary)]">•</span>
               Remove some filters to see more results
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[var(--marketing-cyan)]">•</span>
+              <span className="text-[var(--accent-primary)]">•</span>
               Check back regularly for new opportunities
             </li>
           </ul>

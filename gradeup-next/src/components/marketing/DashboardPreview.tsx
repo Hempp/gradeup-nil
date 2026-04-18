@@ -81,7 +81,7 @@ const PreviewBadge = memo(function PreviewBadge({ children, variant = 'default' 
     default: 'bg-[var(--marketing-gray-800)] text-[var(--marketing-gray-300)] border-[var(--marketing-gray-700)]',
     success: 'bg-[rgba(34,197,94,0.15)] text-[#4ade80] border-[rgba(34,197,94,0.3)]',
     warning: 'bg-[rgba(245,158,11,0.15)] text-[#fbbf24] border-[rgba(245,158,11,0.3)]',
-    gold: 'bg-[rgba(255,215,0,0.15)] text-[var(--marketing-gold)] border-[rgba(255,215,0,0.3)]',
+    gold: 'bg-[rgba(255,215,0,0.15)] text-[var(--accent-gold)] border-[rgba(255,215,0,0.3)]',
   };
 
   return (
@@ -106,7 +106,7 @@ const PreviewStatCard = memo(function PreviewStatCard({
     <div className="bg-[var(--marketing-gray-900)] rounded-xl p-4 border border-[var(--marketing-gray-800)] hover:border-[var(--marketing-gray-700)] transition-colors">
       <div className="flex items-center justify-between mb-3">
         <div className="h-9 w-9 flex items-center justify-center rounded-lg bg-[rgba(0,240,255,0.1)]">
-          <Icon className="h-4 w-4 text-[var(--marketing-cyan)]" />
+          <Icon className="h-4 w-4 text-[var(--accent-primary)]" />
         </div>
         {trend && (
           <span className="text-xs text-[#4ade80] font-medium">+{trend}</span>
@@ -122,7 +122,7 @@ const StatusDot = memo(function StatusDot({ status }: { status: 'active' | 'pend
   const colors = {
     active: 'bg-[#4ade80]',
     pending: 'bg-[#fbbf24]',
-    completed: 'bg-[var(--marketing-cyan)]',
+    completed: 'bg-[var(--accent-primary)]',
   };
   return <span className={`h-2 w-2 rounded-full ${colors[status]}`} />;
 });
@@ -138,13 +138,13 @@ const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
       <div className="bg-[var(--marketing-gray-900)] rounded-xl p-4 border border-[var(--marketing-gray-800)]">
         <div className="flex items-center gap-4">
           {/* Avatar placeholder */}
-          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[var(--marketing-cyan)] to-[var(--marketing-lime)] flex items-center justify-center text-black font-bold text-xl">
+          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--marketing-lime)] flex items-center justify-center text-black font-bold text-xl">
             JD
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg font-semibold text-white">Jordan Davis</span>
-              <CheckCircle className="h-4 w-4 text-[var(--marketing-cyan)]" />
+              <CheckCircle className="h-4 w-4 text-[var(--accent-primary)]" />
             </div>
             <p className="text-sm text-[var(--marketing-gray-400)]">Ohio State University - Football</p>
             <div className="flex items-center gap-3 mt-2">
@@ -173,7 +173,7 @@ const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
       <div className="bg-[var(--marketing-gray-900)] rounded-xl p-4 border border-[var(--marketing-gray-800)]">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-white">Active Deals</h3>
-          <span className="text-xs text-[var(--marketing-cyan)] cursor-pointer hover:underline">View all</span>
+          <span className="text-xs text-[var(--accent-primary)] cursor-pointer hover:underline">View all</span>
         </div>
         <div className="space-y-3">
           {mockDeals.map((deal) => (
@@ -189,7 +189,7 @@ const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
                 <p className="text-xs text-[var(--marketing-gray-400)]">{deal.type}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-semibold text-[var(--marketing-gold)]">
+                <p className="text-sm font-semibold text-[var(--accent-gold)]">
                   ${deal.amount.toLocaleString()}
                 </p>
                 <div className="flex items-center gap-1.5 justify-end mt-0.5">
@@ -223,7 +223,7 @@ const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
                 <span className="text-sm text-white">{opp.brand}</span>
                 <span className="text-xs text-[var(--marketing-gray-500)]">- {opp.type}</span>
               </div>
-              <span className="text-sm font-medium text-[var(--marketing-gold)]">{opp.amount}</span>
+              <span className="text-sm font-medium text-[var(--accent-gold)]">{opp.amount}</span>
             </div>
           ))}
         </div>
@@ -259,7 +259,7 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
           {['GPA 3.5+', 'Football', 'Basketball', '10K+ Followers', 'Verified'].map((filter) => (
             <span
               key={filter}
-              className="px-3 py-1.5 text-xs rounded-full bg-[var(--marketing-gray-800)] text-[var(--marketing-gray-300)] border border-[var(--marketing-gray-700)] hover:border-[var(--marketing-cyan)] hover:text-[var(--marketing-cyan)] cursor-pointer transition-colors"
+              className="px-3 py-1.5 text-xs rounded-full bg-[var(--marketing-gray-800)] text-[var(--marketing-gray-300)] border border-[var(--marketing-gray-700)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] cursor-pointer transition-colors"
             >
               {filter}
             </span>
@@ -279,7 +279,7 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
       <div className="bg-[var(--marketing-gray-900)] rounded-xl p-4 border border-[var(--marketing-gray-800)]">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-white">Recommended Athletes</h3>
-          <span className="text-xs text-[var(--marketing-cyan)] cursor-pointer hover:underline">View all matches</span>
+          <span className="text-xs text-[var(--accent-primary)] cursor-pointer hover:underline">View all matches</span>
         </div>
         <div className="space-y-3">
           {mockAthletes.map((athlete) => (
@@ -287,13 +287,13 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
               key={athlete.id}
               className="flex items-center gap-3 p-3 rounded-lg bg-[var(--marketing-gray-800)]/50 hover:bg-[var(--marketing-gray-800)] transition-colors group cursor-pointer"
             >
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[var(--marketing-cyan)] to-[var(--marketing-magenta)] flex items-center justify-center text-black font-semibold text-sm">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--marketing-magenta)] flex items-center justify-center text-black font-semibold text-sm">
                 {athlete.initials}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
                   <p className="text-sm font-medium text-white truncate">{athlete.name}</p>
-                  <CheckCircle className="h-3.5 w-3.5 text-[var(--marketing-cyan)]" />
+                  <CheckCircle className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
                 </div>
                 <p className="text-xs text-[var(--marketing-gray-400)]">
                   {athlete.school} - {athlete.sport}
@@ -308,12 +308,12 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-1 mb-1">
-                  <Star className="h-4 w-4 text-[var(--marketing-gold)] fill-[var(--marketing-gold)]" />
+                  <Star className="h-4 w-4 text-[var(--accent-gold)] fill-[var(--accent-gold)]" />
                   <span className="text-sm font-semibold text-white">{athlete.matchScore}%</span>
                 </div>
                 <span className="text-xs text-[var(--marketing-gray-500)]">Match Score</span>
               </div>
-              <ChevronRight className="h-5 w-5 text-[var(--marketing-gray-600)] group-hover:text-[var(--marketing-cyan)] transition-colors" />
+              <ChevronRight className="h-5 w-5 text-[var(--marketing-gray-600)] group-hover:text-[var(--accent-primary)] transition-colors" />
             </div>
           ))}
         </div>
@@ -327,7 +327,7 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
-            <p className="text-2xl font-bold text-[var(--marketing-cyan)]">$47.2K</p>
+            <p className="text-2xl font-bold text-[var(--accent-primary)]">$47.2K</p>
             <p className="text-xs text-[var(--marketing-gray-400)] mt-1">Total Invested</p>
           </div>
           <div className="text-center border-x border-[var(--marketing-gray-700)]">
@@ -335,7 +335,7 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
             <p className="text-xs text-[var(--marketing-gray-400)] mt-1">Estimated Value</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-[var(--marketing-gold)]">3.2x</p>
+            <p className="text-2xl font-bold text-[var(--accent-gold)]">3.2x</p>
             <p className="text-xs text-[var(--marketing-gray-400)] mt-1">Average ROI</p>
           </div>
         </div>
@@ -397,7 +397,7 @@ export function DashboardPreview({
             onClick={() => setActiveTab('athlete')}
             className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium transition-all ${
               activeTab === 'athlete'
-                ? 'text-[var(--marketing-cyan)] border-b-2 border-[var(--marketing-cyan)] bg-[rgba(0,240,255,0.05)]'
+                ? 'text-[var(--accent-primary)] border-b-2 border-[var(--accent-primary)] bg-[rgba(0,240,255,0.05)]'
                 : 'text-[var(--marketing-gray-400)] hover:text-white'
             }`}
           >
@@ -408,7 +408,7 @@ export function DashboardPreview({
             onClick={() => setActiveTab('brand')}
             className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium transition-all ${
               activeTab === 'brand'
-                ? 'text-[var(--marketing-cyan)] border-b-2 border-[var(--marketing-cyan)] bg-[rgba(0,240,255,0.05)]'
+                ? 'text-[var(--accent-primary)] border-b-2 border-[var(--accent-primary)] bg-[rgba(0,240,255,0.05)]'
                 : 'text-[var(--marketing-gray-400)] hover:text-white'
             }`}
           >
@@ -442,7 +442,7 @@ export function DashboardPreview({
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none">
             <div className="text-center pointer-events-auto">
               <div className="mb-4">
-                <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-[var(--marketing-cyan)] mb-4">
+                <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-[var(--accent-primary)] mb-4">
                   {activeTab === 'athlete' ? (
                     <Trophy className="h-8 w-8 text-black" />
                   ) : (
@@ -461,7 +461,7 @@ export function DashboardPreview({
               </p>
               <Link
                 href={ctaHref}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--marketing-cyan)] text-black font-semibold hover:bg-[var(--marketing-lime)] transition-all hover:scale-105 hover:shadow-[0_0_30px_var(--marketing-cyan-glow)]"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-primary)] text-black font-semibold hover:bg-[var(--marketing-lime)] transition-all hover:scale-105 hover:shadow-[0_0_30px_var(--marketing-cyan-glow)]"
               >
                 {ctaText}
                 <ArrowRight className="h-5 w-5" />

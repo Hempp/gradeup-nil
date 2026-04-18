@@ -37,8 +37,8 @@ function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
   const offset = circumference - (score / 100) * circumference;
 
   const color = score >= 90 ? 'var(--marketing-magenta)'
-    : score >= 75 ? 'var(--marketing-gold)'
-    : score >= 60 ? 'var(--marketing-cyan)'
+    : score >= 75 ? 'var(--accent-gold)'
+    : score >= 60 ? 'var(--accent-primary)'
     : score >= 40 ? 'var(--marketing-lime)'
     : 'var(--text-muted)';
 
@@ -108,7 +108,7 @@ function ComponentBar({
             style={{
               width: `${percentage}%`,
               backgroundColor: percentage >= 80 ? 'var(--color-success)'
-                : percentage >= 60 ? 'var(--marketing-cyan)'
+                : percentage >= 60 ? 'var(--accent-primary)'
                 : percentage >= 40 ? 'var(--color-warning)'
                 : 'var(--color-error)',
             }}
@@ -168,7 +168,7 @@ export function GradeUpScoreCard({
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-[var(--marketing-gold)]" />
+            <Trophy className="h-5 w-5 text-[var(--accent-gold)]" />
             GradeUp Score
           </CardTitle>
           <Badge variant="outline" className={cn('font-semibold', tierDisplay.color)}>
@@ -213,14 +213,14 @@ export function GradeUpScoreCard({
             label="Social Reach"
             score={valuation.components.social}
             maxScore={25}
-            color="bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)]"
+            color="bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]"
           />
           <ComponentBar
             icon={Dumbbell}
             label="Athletic"
             score={valuation.components.athletic}
             maxScore={25}
-            color="bg-[var(--marketing-gold)]/10 text-[var(--marketing-gold)]"
+            color="bg-[var(--accent-gold)]/10 text-[var(--accent-gold)]"
           />
           <ComponentBar
             icon={Star}

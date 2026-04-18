@@ -68,7 +68,7 @@ function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-white/70 hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
+                className="text-sm font-medium text-white/70 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
               >
                 {link.label}
               </Link>
@@ -80,7 +80,7 @@ function Navbar() {
             <Link href="/login">
               <Button
                 variant="ghost"
-                className="text-white hover:bg-white/10 hover:text-[var(--marketing-cyan)]"
+                className="text-white hover:bg-white/10 hover:text-[var(--accent-primary)]"
               >
                 Log In
               </Button>
@@ -94,7 +94,7 @@ function Navbar() {
 
           {/* Mobile Menu Button - 44px min touch target for WCAG */}
           <button
-            className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/80 hover:text-white hover:bg-white/10 active:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-colors touch-manipulation"
+            className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/80 hover:text-white hover:bg-white/10 active:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-colors touch-manipulation"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
@@ -128,7 +128,7 @@ function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="block py-3 px-2 text-lg text-white/80 font-medium hover:text-[var(--marketing-cyan)] focus:text-[var(--marketing-cyan)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors"
+              className="block py-3 px-2 text-lg text-white/80 font-medium hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors"
               onClick={() => setMobileMenuOpen(false)}
               tabIndex={mobileMenuOpen ? 0 : -1}
             >
@@ -177,20 +177,20 @@ function Footer() {
 
           {/* For Athletes */}
           <div>
-            <h3 className="font-semibold mb-4 text-[var(--marketing-cyan)]">For Athletes</h3>
+            <h3 className="font-semibold mb-4 text-[var(--accent-primary)]">For Athletes</h3>
             <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
               <li>
-                <Link href="/signup/athlete" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm transition-colors">
+                <Link href="/signup/athlete" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Join as Athlete
                 </Link>
               </li>
               <li>
-                <Link href="/#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm transition-colors">
+                <Link href="/#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   How It Works
                 </Link>
               </li>
               <li>
-                <Link href="/opportunities" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm transition-colors">
+                <Link href="/opportunities" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Browse Opportunities
                 </Link>
               </li>
@@ -199,20 +199,20 @@ function Footer() {
 
           {/* For Brands */}
           <div>
-            <h3 className="font-semibold mb-4 text-[var(--marketing-gold)]">For Brands</h3>
+            <h3 className="font-semibold mb-4 text-[var(--accent-gold)]">For Brands</h3>
             <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
               <li>
-                <Link href="/signup/brand" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
+                <Link href="/signup/brand" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Partner With Us
                 </Link>
               </li>
               <li>
-                <Link href="/#athletes" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
+                <Link href="/#athletes" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Browse Athletes
                 </Link>
               </li>
               <li>
-                <Link href="/#brands" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-gold)] rounded-sm transition-colors">
+                <Link href="/#brands" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Why GradeUp
                 </Link>
               </li>
@@ -268,7 +268,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       {/* Skip Link for Accessibility - WCAG 2.4.1 */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--marketing-cyan)] focus:text-black focus:rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--marketing-cyan)]"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--accent-primary)] focus:text-black focus:rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]"
       >
         Skip to main content
       </a>

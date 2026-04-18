@@ -32,7 +32,7 @@ interface LeaderboardProps {
 
 // Rank badge with medal icons
 function RankBadge({ rank }: { rank: number }) {
-  if (rank === 1) return <Crown className="h-5 w-5 text-[var(--marketing-gold)]" />;
+  if (rank === 1) return <Crown className="h-5 w-5 text-[var(--accent-gold)]" />;
   if (rank === 2) return <Medal className="h-5 w-5 text-[var(--text-muted)]" />;
   if (rank === 3) return <Award className="h-5 w-5 text-[#CD7F32]" />;
   return (
@@ -66,12 +66,12 @@ export function Leaderboard({ currentUserName, className }: LeaderboardProps) {
   return (
     <Card className={cn('overflow-hidden', className)}>
       {/* Gradient header */}
-      <div className="h-1 bg-gradient-to-r from-[var(--marketing-gold)] via-[var(--marketing-cyan)] to-[var(--marketing-lime)]" />
+      <div className="h-1 bg-gradient-to-r from-[var(--accent-gold)] via-[var(--accent-primary)] to-[var(--marketing-lime)]" />
 
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-[var(--marketing-gold)]" />
+            <Trophy className="h-5 w-5 text-[var(--accent-gold)]" />
             Weekly Leaderboard
           </CardTitle>
           <Badge variant="outline" className="text-xs">
@@ -126,7 +126,7 @@ export function Leaderboard({ currentUserName, className }: LeaderboardProps) {
               {/* Score + GPA */}
               <div className="text-right flex-shrink-0 hidden sm:block">
                 <div className="flex items-center gap-1 justify-end">
-                  <TrendingUp className="h-3 w-3 text-[var(--marketing-cyan)]" />
+                  <TrendingUp className="h-3 w-3 text-[var(--accent-primary)]" />
                   <span className="text-sm font-bold text-[var(--text-primary)]">{entry.gradeUpScore}</span>
                 </div>
                 <span className="text-[10px] text-[var(--text-muted)]">{entry.gpa.toFixed(2)} GPA</span>

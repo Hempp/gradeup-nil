@@ -41,7 +41,7 @@ interface PublicAthlete {
 function AthletePublicCard({ athlete }: { athlete: PublicAthlete }) {
   const totalFollowers = athlete.instagramFollowers + athlete.tiktokFollowers;
   const gpaColor = athlete.gpa >= 3.5 ? 'text-[var(--marketing-lime)]'
-    : athlete.gpa >= 3.0 ? 'text-[var(--marketing-cyan)]'
+    : athlete.gpa >= 3.0 ? 'text-[var(--accent-primary)]'
     : 'text-[var(--text-muted)]';
 
   return (
@@ -58,7 +58,7 @@ function AthletePublicCard({ athlete }: { athlete: PublicAthlete }) {
           <div className="flex items-center gap-2">
             <h3 className="font-semibold text-white truncate">{athlete.name}</h3>
             {athlete.verified && (
-              <Shield className="h-4 w-4 text-[var(--marketing-cyan)] flex-shrink-0" />
+              <Shield className="h-4 w-4 text-[var(--accent-primary)] flex-shrink-0" />
             )}
           </div>
           <p className="text-sm text-[var(--marketing-gray-400)] truncate">
@@ -100,7 +100,7 @@ function AthletePublicCard({ athlete }: { athlete: PublicAthlete }) {
         <Button
           variant="outline"
           size="sm"
-          className="w-full gap-2 border-[var(--marketing-cyan)]/30 text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10 group-hover:border-[var(--marketing-cyan)]"
+          className="w-full gap-2 border-[var(--accent-primary)]/30 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 group-hover:border-[var(--accent-primary)]"
         >
           Sign Up to Connect
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -159,7 +159,7 @@ export default function PublicDiscoverPage() {
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-8">
-            <Users className="h-4 w-4 text-[var(--marketing-cyan)]" />
+            <Users className="h-4 w-4 text-[var(--accent-primary)]" />
             <span className="text-sm font-medium text-white/90">
               {stats.totalAthletes}+ Verified Athletes
             </span>
@@ -177,7 +177,7 @@ export default function PublicDiscoverPage() {
           {/* Quick Stats */}
           <div className="flex justify-center gap-8 mb-10">
             <div className="text-center">
-              <p className="text-2xl font-bold text-[var(--marketing-cyan)]">{stats.avgGpa}</p>
+              <p className="text-2xl font-bold text-[var(--accent-primary)]">{stats.avgGpa}</p>
               <p className="text-sm text-[var(--marketing-gray-500)]">Avg GPA</p>
             </div>
             <div className="text-center">
@@ -185,7 +185,7 @@ export default function PublicDiscoverPage() {
               <p className="text-sm text-[var(--marketing-gray-500)]">Verified</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-[var(--marketing-gold)]">15+</p>
+              <p className="text-2xl font-bold text-[var(--accent-gold)]">15+</p>
               <p className="text-sm text-[var(--marketing-gray-500)]">Sports</p>
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function PublicDiscoverPage() {
               placeholder="Search athletes by name, school, or sport..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--marketing-cyan)] focus:ring-2 focus:ring-[var(--marketing-cyan)]/20 transition-all"
+              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
               aria-label="Search athletes"
             />
           </div>
@@ -216,7 +216,7 @@ export default function PublicDiscoverPage() {
             <select
               value={selectedSport}
               onChange={(e) => setSelectedSport(e.target.value)}
-              className="h-10 px-3 rounded-lg bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white text-sm focus:outline-none focus:border-[var(--marketing-cyan)]"
+              className="h-10 px-3 rounded-lg bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white text-sm focus:outline-none focus:border-[var(--accent-primary)]"
               aria-label="Filter by sport"
             >
               <option value="">All Sports</option>
@@ -229,7 +229,7 @@ export default function PublicDiscoverPage() {
             <select
               value={minGpa}
               onChange={(e) => setMinGpa(Number(e.target.value))}
-              className="h-10 px-3 rounded-lg bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white text-sm focus:outline-none focus:border-[var(--marketing-cyan)]"
+              className="h-10 px-3 rounded-lg bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white text-sm focus:outline-none focus:border-[var(--accent-primary)]"
               aria-label="Minimum GPA"
             >
               <option value={0}>Any GPA</option>
@@ -261,7 +261,7 @@ export default function PublicDiscoverPage() {
           {/* Bottom CTA */}
           <div className="mt-12 text-center">
             <div className="card-marketing inline-block p-8 max-w-lg">
-              <TrendingUp className="h-8 w-8 text-[var(--marketing-cyan)] mx-auto mb-4" />
+              <TrendingUp className="h-8 w-8 text-[var(--accent-primary)] mx-auto mb-4" />
               <h3 className="text-xl font-bold text-white mb-2">
                 Ready to Partner?
               </h3>

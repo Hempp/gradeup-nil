@@ -85,7 +85,7 @@ function HeroSection() {
       <div
         className="absolute w-[300px] h-[300px] rounded-full opacity-30 blur-[100px] pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, var(--marketing-cyan) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--accent-primary) 0%, transparent 70%)',
           top: '-100px',
           left: '-100px',
         }}
@@ -104,7 +104,7 @@ function HeroSection() {
       <div className="relative max-w-4xl mx-auto text-center">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
           Find Your Perfect{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--marketing-cyan)] to-[var(--marketing-lime)]">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-primary)] to-[var(--marketing-lime)]">
             NIL Opportunity
           </span>
         </h1>
@@ -120,7 +120,7 @@ function HeroSection() {
           <Link href="/signup/brand">
             <Button
               variant="outline"
-              className="border-[var(--marketing-cyan)] text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10 px-6 py-2.5"
+              className="border-[var(--accent-primary)] text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 px-6 py-2.5"
             >
               Post an Opportunity
             </Button>
@@ -178,7 +178,7 @@ function FilterBar({
               placeholder="Search opportunities..."
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 bg-[var(--marketing-gray-900)] border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:border-[var(--marketing-cyan)]"
+              className="pl-10 bg-[var(--marketing-gray-900)] border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:border-[var(--accent-primary)]"
             />
           </div>
 
@@ -189,7 +189,7 @@ function FilterBar({
               <select
                 value={category}
                 onChange={(e) => onCategoryChange(e.target.value)}
-                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--marketing-cyan)] focus:outline-none cursor-pointer"
+                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--accent-primary)] focus:outline-none cursor-pointer"
               >
                 <option value="all">All Categories</option>
                 {categories.slice(1).map((cat) => (
@@ -206,7 +206,7 @@ function FilterBar({
               <select
                 value={compensationType}
                 onChange={(e) => onCompensationTypeChange(e.target.value as CompensationType)}
-                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--marketing-cyan)] focus:outline-none cursor-pointer"
+                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--accent-primary)] focus:outline-none cursor-pointer"
               >
                 {compensationTypes.map((type) => (
                   <option key={type.value} value={type.value}>
@@ -224,7 +224,7 @@ function FilterBar({
                 className={cn(
                   'p-2 rounded transition-colors',
                   viewMode === 'grid'
-                    ? 'bg-[var(--marketing-cyan)] text-black'
+                    ? 'bg-[var(--accent-primary)] text-black'
                     : 'text-[var(--marketing-gray-400)] hover:text-white'
                 )}
                 aria-label="Grid view"
@@ -236,7 +236,7 @@ function FilterBar({
                 className={cn(
                   'p-2 rounded transition-colors',
                   viewMode === 'list'
-                    ? 'bg-[var(--marketing-cyan)] text-black'
+                    ? 'bg-[var(--accent-primary)] text-black'
                     : 'text-[var(--marketing-gray-400)] hover:text-white'
                 )}
                 aria-label="List view"
@@ -249,7 +249,7 @@ function FilterBar({
 
         {/* Results count */}
         <p className="mt-4 text-sm text-[var(--marketing-gray-400)]">
-          Showing <span className="text-[var(--marketing-cyan)] font-semibold">{resultCount}</span>{' '}
+          Showing <span className="text-[var(--accent-primary)] font-semibold">{resultCount}</span>{' '}
           {resultCount === 1 ? 'opportunity' : 'opportunities'}
         </p>
       </div>
@@ -276,17 +276,17 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
 
   const compensationBadgeColor = {
     cash: 'bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)] border-[var(--marketing-lime)]/30',
-    product: 'bg-[var(--marketing-cyan)]/20 text-[var(--marketing-cyan)] border-[var(--marketing-cyan)]/30',
-    hybrid: 'bg-[var(--marketing-gold)]/20 text-[var(--marketing-gold)] border-[var(--marketing-gold)]/30',
+    product: 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border-[var(--accent-primary)]/30',
+    hybrid: 'bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] border-[var(--accent-gold)]/30',
   };
 
   if (viewMode === 'list') {
     return (
-      <div className="card-marketing p-4 hover:border-[var(--marketing-cyan)]/50 transition-all group hover-lift animate-reveal-up">
+      <div className="card-marketing p-4 hover:border-[var(--accent-primary)]/50 transition-all group hover-lift animate-reveal-up">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
           {/* Brand logo placeholder */}
           <div className="w-16 h-16 bg-[var(--marketing-gray-800)] rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-2xl font-bold text-[var(--marketing-cyan)]">
+            <span className="text-2xl font-bold text-[var(--accent-primary)]">
               {opportunity.brandName.charAt(0)}
             </span>
           </div>
@@ -295,13 +295,13 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-lg font-semibold text-white group-hover:text-[var(--marketing-cyan)] transition-colors">
+                <h3 className="text-lg font-semibold text-white group-hover:text-[var(--accent-primary)] transition-colors">
                   {opportunity.title}
                 </h3>
                 <p className="text-sm text-[var(--marketing-gray-400)]">{opportunity.brandName}</p>
               </div>
               {opportunity.featured && (
-                <span className="px-2 py-1 text-xs font-medium bg-[var(--marketing-gold)]/20 text-[var(--marketing-gold)] rounded border border-[var(--marketing-gold)]/30">
+                <span className="px-2 py-1 text-xs font-medium bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] rounded border border-[var(--accent-gold)]/30">
                   Featured
                 </span>
               )}
@@ -316,7 +316,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
                 <GraduationCap className="h-4 w-4" />
                 Min GPA: {opportunity.minGpa}
               </span>
-              <span className={cn('flex items-center gap-1', isExpiringSoon && 'text-[var(--marketing-gold)]')}>
+              <span className={cn('flex items-center gap-1', isExpiringSoon && 'text-[var(--accent-gold)]')}>
                 <Calendar className="h-4 w-4" />
                 {deadlineDate.toLocaleDateString()}
               </span>
@@ -334,26 +334,26 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
 
   // Grid view
   return (
-    <div className="card-marketing overflow-hidden hover:border-[var(--marketing-cyan)]/50 transition-all group flex flex-col hover-lift animate-reveal-up">
+    <div className="card-marketing overflow-hidden hover:border-[var(--accent-primary)]/50 transition-all group flex flex-col hover-lift animate-reveal-up">
       {/* Header */}
       <div className="p-4 border-b border-[var(--marketing-gray-800)]">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             {/* Brand logo placeholder */}
             <div className="w-12 h-12 bg-[var(--marketing-gray-800)] rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-xl font-bold text-[var(--marketing-cyan)]">
+              <span className="text-xl font-bold text-[var(--accent-primary)]">
                 {opportunity.brandName.charAt(0)}
               </span>
             </div>
             <div>
-              <h3 className="font-semibold text-white group-hover:text-[var(--marketing-cyan)] transition-colors line-clamp-1">
+              <h3 className="font-semibold text-white group-hover:text-[var(--accent-primary)] transition-colors line-clamp-1">
                 {opportunity.title}
               </h3>
               <p className="text-sm text-[var(--marketing-gray-400)]">{opportunity.brandName}</p>
             </div>
           </div>
           {opportunity.featured && (
-            <span className="px-2 py-1 text-xs font-medium bg-[var(--marketing-gold)]/20 text-[var(--marketing-gold)] rounded border border-[var(--marketing-gold)]/30 flex-shrink-0">
+            <span className="px-2 py-1 text-xs font-medium bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] rounded border border-[var(--accent-gold)]/30 flex-shrink-0">
               Featured
             </span>
           )}
@@ -402,7 +402,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
               <Calendar className="h-4 w-4" />
               Deadline
             </span>
-            <span className={cn('font-medium', isExpiringSoon ? 'text-[var(--marketing-gold)]' : 'text-white')}>
+            <span className={cn('font-medium', isExpiringSoon ? 'text-[var(--accent-gold)]' : 'text-white')}>
               {deadlineDate.toLocaleDateString()}
             </span>
           </div>
@@ -447,7 +447,7 @@ function CTASection() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 px-4 bg-gradient-to-r from-[var(--marketing-cyan)]/10 via-[var(--marketing-magenta)]/5 to-[var(--marketing-cyan)]/10 border-t border-[var(--marketing-gray-800)] overflow-hidden"
+      className="py-20 px-4 bg-gradient-to-r from-[var(--accent-primary)]/10 via-[var(--marketing-magenta)]/5 to-[var(--accent-primary)]/10 border-t border-[var(--marketing-gray-800)] overflow-hidden"
     >
       <div className="max-w-4xl mx-auto text-center">
         {/* Stats row */}
@@ -457,7 +457,7 @@ function CTASection() {
           }`}
         >
           <div className="text-center">
-            <div className="text-3xl font-bold text-[var(--marketing-cyan)]">$127K+</div>
+            <div className="text-3xl font-bold text-[var(--accent-primary)]">$127K+</div>
             <div className="text-sm text-[var(--marketing-gray-500)]">Paid to Athletes</div>
           </div>
           <div className="text-center">
@@ -465,7 +465,7 @@ function CTASection() {
             <div className="text-sm text-[var(--marketing-gray-500)]">Active Athletes</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-[var(--marketing-gold)]">68%</div>
+            <div className="text-3xl font-bold text-[var(--accent-gold)]">68%</div>
             <div className="text-sm text-[var(--marketing-gray-500)]">Match Rate</div>
           </div>
         </div>
@@ -476,7 +476,7 @@ function CTASection() {
           }`}
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
-            <Sparkles className="h-4 w-4 text-[var(--marketing-gold)]" />
+            <Sparkles className="h-4 w-4 text-[var(--accent-gold)]" />
             <span className="text-sm text-white/80">Join 847 athletes already earning</span>
           </div>
 

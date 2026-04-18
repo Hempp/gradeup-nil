@@ -241,11 +241,11 @@ export function Topbar({
                   alt={displayUser.name}
                   fill
                   sizes="32px"
-                  className="rounded-full object-cover ring-2 ring-[var(--marketing-cyan)]/30"
+                  className="rounded-full object-cover ring-2 ring-[var(--accent-primary)]/30"
                 />
               </div>
             ) : (
-              <div className="h-8 w-8 rounded-full bg-[var(--marketing-cyan)]/20 flex items-center justify-center text-[var(--marketing-cyan)] text-sm font-medium">
+              <div className="h-8 w-8 rounded-full bg-[var(--accent-primary)]/20 flex items-center justify-center text-[var(--accent-primary)] text-sm font-medium">
                 {displayUser.name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -285,7 +285,7 @@ export function Topbar({
                 <Link
                   href={`${getDashboardPath().replace('/dashboard', '')}/settings`}
                   ref={(el) => { menuItemsRef.current[0] = el; }}
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--marketing-cyan)] transition-colors"
+                  className="flex items-center gap-3 px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--accent-primary)] transition-colors"
                   role="menuitem"
                   tabIndex={isDropdownOpen ? 0 : -1}
                   onClick={() => setIsDropdownOpen(false)}

@@ -52,7 +52,7 @@ function PercentileBar({ value, className }: { value: number; className?: string
         className={cn(
           'h-full rounded-full transition-all duration-500',
           value >= 80 ? 'bg-[var(--color-success)]'
-            : value >= 60 ? 'bg-[var(--marketing-cyan)]'
+            : value >= 60 ? 'bg-[var(--accent-primary)]'
             : value >= 40 ? 'bg-[var(--color-warning)]'
             : 'bg-[var(--color-error)]'
         )}
@@ -151,8 +151,8 @@ function FullStatsCard({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-[var(--radius-lg)] bg-[var(--marketing-cyan)]/10 flex items-center justify-center">
-              <BarChart3 className="h-5 w-5 text-[var(--marketing-cyan)]" />
+            <div className="h-10 w-10 rounded-[var(--radius-lg)] bg-[var(--accent-primary)]/10 flex items-center justify-center">
+              <BarChart3 className="h-5 w-5 text-[var(--accent-primary)]" />
             </div>
             <div>
               <CardTitle className="text-base flex items-center gap-2">
@@ -164,7 +164,7 @@ function FullStatsCard({
               <p className="text-sm text-[var(--text-muted)]">
                 {currentSeason?.season || '2025-26'} Season
                 {currentSeason?.source === 'statstaq' && (
-                  <span className="ml-1 text-[var(--marketing-cyan)]">via StatsTaq</span>
+                  <span className="ml-1 text-[var(--accent-primary)]">via StatsTaq</span>
                 )}
               </p>
             </div>
@@ -227,7 +227,7 @@ function FullStatsCard({
             <Button
               variant="outline"
               size="sm"
-              className="w-full gap-2 text-[var(--marketing-cyan)] border-[var(--marketing-cyan)]/30 hover:bg-[var(--marketing-cyan)]/10"
+              className="w-full gap-2 text-[var(--accent-primary)] border-[var(--accent-primary)]/30 hover:bg-[var(--accent-primary)]/10"
               onClick={() => window.open('https://statstaq.com', '_blank')}
             >
               <ExternalLink className="h-4 w-4" />
@@ -242,7 +242,7 @@ function FullStatsCard({
               href={profile.profile_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 text-sm text-[var(--marketing-cyan)] hover:underline"
+              className="flex items-center justify-center gap-2 text-sm text-[var(--accent-primary)] hover:underline"
             >
               <ExternalLink className="h-3.5 w-3.5" />
               View Full Stats on StatsTaq
@@ -309,7 +309,7 @@ function InlineStatsCard({
 
   return (
     <div className={cn('flex items-center gap-3 text-sm', className)}>
-      <BarChart3 className="h-4 w-4 text-[var(--marketing-cyan)] flex-shrink-0" />
+      <BarChart3 className="h-4 w-4 text-[var(--accent-primary)] flex-shrink-0" />
       {keyStats.map((key, i) => {
         const value = stats[key];
         if (value === undefined) return null;

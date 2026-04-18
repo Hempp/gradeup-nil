@@ -238,7 +238,7 @@ export const AthleteDiscoveryCard = memo(function AthleteDiscoveryCard({
                 </div>
                 <div className="flex flex-col items-end text-right">
                   <div className="flex items-center gap-1.5">
-                    <Trophy className="h-3.5 w-3.5 text-[var(--marketing-gold)]" aria-hidden="true" />
+                    <Trophy className="h-3.5 w-3.5 text-[var(--accent-gold)]" aria-hidden="true" />
                     <span className="font-bold text-lg text-[var(--text-primary)]">{valuation.gradeUpScore}</span>
                   </div>
                   <span className={`text-[10px] font-medium ${tierDisplay.color}`}>{tierDisplay.label}</span>

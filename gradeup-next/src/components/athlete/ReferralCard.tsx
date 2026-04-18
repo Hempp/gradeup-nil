@@ -79,12 +79,12 @@ export function ReferralCard({
   return (
     <Card className={cn('overflow-hidden', className)}>
       {/* Gradient top border */}
-      <div className="h-1 bg-gradient-to-r from-[var(--marketing-cyan)] via-[var(--marketing-lime)] to-[var(--marketing-gold)]" />
+      <div className="h-1 bg-gradient-to-r from-[var(--accent-primary)] via-[var(--marketing-lime)] to-[var(--accent-gold)]" />
 
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2">
-            <Gift className="h-5 w-5 text-[var(--marketing-cyan)]" />
+            <Gift className="h-5 w-5 text-[var(--accent-primary)]" />
             Invite Athletes, Earn Cash
           </CardTitle>
           <Badge variant="success" className="text-xs">
@@ -141,7 +141,7 @@ export function ReferralCard({
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[var(--border-color)]">
           <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-[var(--bg-tertiary)]">
-            <Users className="h-4 w-4 text-[var(--marketing-cyan)]" />
+            <Users className="h-4 w-4 text-[var(--accent-primary)]" />
             <div>
               <p className="text-lg font-bold text-[var(--text-primary)]">{totalReferrals}</p>
               <p className="text-[10px] text-[var(--text-muted)] uppercase">Referrals</p>

@@ -151,7 +151,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user, collap
                     'text-sm transition-all duration-200',
                     // Active state
                     isActive
-                      ? 'bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)] font-medium border-l-2 border-[var(--marketing-cyan)]'
+                      ? 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] font-medium border-l-2 border-[var(--accent-primary)]'
                       : 'text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10',
                     // Collapsed state
                     collapsed && 'justify-center px-0',
@@ -165,7 +165,7 @@ export function Sidebar({ navItems, variant = 'athlete', className, user, collap
                     <>
                       <span className="flex-1">{item.label}</span>
                       {item.badge && item.badge > 0 && (
-                        <span className="h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-[var(--marketing-cyan)] text-black text-xs font-semibold">
+                        <span className="h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-[var(--accent-primary)] text-black text-xs font-semibold">
                           {item.badge > 99 ? '99+' : item.badge}
                         </span>
                       )}

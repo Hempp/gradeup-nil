@@ -73,7 +73,7 @@ export default function TermsPage() {
               If you have questions about these Terms of Service, please contact us at{' '}
               <a
                 href="mailto:legal@gradeupnil.com"
-                className="text-[var(--marketing-cyan)] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm"
+                className="text-[var(--accent-primary)] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm"
               >
                 legal@gradeupnil.com
               </a>

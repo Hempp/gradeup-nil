@@ -158,7 +158,7 @@ export default function LoginPage() {
               error={!!(touched.email && fieldErrors.email)}
               aria-invalid={!!(touched.email && fieldErrors.email)}
               aria-describedby={touched.email && fieldErrors.email ? 'email-error' : undefined}
-              className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)]/20"
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/20"
               icon={
                 <svg
                   width="16"
@@ -202,7 +202,7 @@ export default function LoginPage() {
               error={!!(touched.password && fieldErrors.password)}
               aria-invalid={!!(touched.password && fieldErrors.password)}
               aria-describedby={touched.password && fieldErrors.password ? 'password-error' : undefined}
-              className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)]/20"
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/20"
               icon={
                 <svg
                   width="16"
@@ -234,7 +234,7 @@ export default function LoginPage() {
                 checked={rememberMe}
                 onChange={handleInputChange}
                 disabled={isLoading}
-                className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--marketing-cyan)] focus:ring-[var(--marketing-cyan)] focus:ring-offset-0 focus:ring-offset-black"
+                className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--accent-primary)] focus:ring-[var(--accent-primary)] focus:ring-offset-0 focus:ring-offset-black"
               />
               <span className="text-sm text-white/60">
                 Remember me
@@ -242,7 +242,7 @@ export default function LoginPage() {
             </label>
             <Link
               href="/forgot-password"
-              className="text-sm font-medium text-[var(--marketing-cyan)] hover:text-[var(--marketing-lime)] transition-colors"
+              className="text-sm font-medium text-[var(--accent-primary)] hover:text-[var(--marketing-lime)] transition-colors"
             >
               Forgot password?
             </Link>
@@ -255,7 +255,7 @@ export default function LoginPage() {
             size="lg"
             isLoading={isLoading}
             disabled={isLoading}
-            className="w-full bg-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/90 text-black font-semibold"
+            className="w-full bg-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/90 text-black font-semibold"
           >
             Sign In
           </Button>
@@ -265,7 +265,7 @@ export default function LoginPage() {
             Don&apos;t have an account?{' '}
             <Link
               href="/signup"
-              className="font-semibold text-[var(--marketing-cyan)] hover:text-[var(--marketing-lime)] transition-colors"
+              className="font-semibold text-[var(--accent-primary)] hover:text-[var(--marketing-lime)] transition-colors"
             >
               Sign up
             </Link>
@@ -280,7 +280,7 @@ export default function LoginPage() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <Link href="/api/demo/login?role=athlete">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-cyan)]/30 text-[var(--marketing-cyan)] hover:bg-[var(--marketing-cyan)]/10">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-primary)]/30 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10">
                     Athlete Demo
                   </Button>
                 </Link>
@@ -290,7 +290,7 @@ export default function LoginPage() {
                   </Button>
                 </Link>
                 <Link href="/api/demo/login?role=director">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-gold)]/30 text-[var(--marketing-gold)] hover:bg-[var(--marketing-gold)]/10">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-gold)]/30 text-[var(--accent-gold)] hover:bg-[var(--accent-gold)]/10">
                     Director Demo
                   </Button>
                 </Link>

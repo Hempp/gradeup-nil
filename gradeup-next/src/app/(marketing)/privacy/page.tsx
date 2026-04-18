@@ -57,7 +57,7 @@ export default function PrivacyPage() {
               If you have questions about this Privacy Policy, please contact us at{' '}
               <a
                 href="mailto:privacy@gradeupnil.com"
-                className="text-[var(--marketing-cyan)] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] rounded-sm"
+                className="text-[var(--accent-primary)] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm"
               >
                 privacy@gradeupnil.com
               </a>

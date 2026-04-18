@@ -183,7 +183,7 @@ function HeroSection() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white mb-6">
               <span className="block animate-float-slow">Your GPA</span>
               <span className="block gradient-text-cyan text-glow-animated">Is Worth</span>
-              <span className="block bg-gradient-to-r from-[var(--marketing-gold)] to-[var(--marketing-lime)] bg-clip-text text-transparent text-glow-gold">
+              <span className="block bg-gradient-to-r from-[var(--accent-gold)] to-[var(--marketing-lime)] bg-clip-text text-transparent text-glow-gold">
                 Money.
               </span>
             </h1>
@@ -220,11 +220,11 @@ function HeroSection() {
             {/* Trust Indicators */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 mt-6 text-sm text-[var(--marketing-gray-500)]">
               <div className="flex items-center gap-1.5">
-                <Shield className="h-4 w-4 text-[var(--marketing-cyan)]" aria-hidden="true" />
+                <Shield className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
                 <span>NCAA Compliant</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[var(--marketing-cyan)]" aria-hidden="true" />
+                <CheckCircle2 className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
                 <span>No credit card</span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -254,7 +254,7 @@ function HeroSection() {
               </div>
               <div className="w-px h-12 bg-white/10 hidden sm:block" aria-hidden="true" />
               <div className="text-center" role="listitem">
-                <div className="text-3xl sm:text-4xl font-bold text-[var(--marketing-gold)]" aria-live="polite">
+                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-gold)]" aria-live="polite">
                   <AnimatedCounter target={stats.avgGpa} skipAnimation={prefersReducedMotion} />
                 </div>
                 <div className="text-sm text-[var(--marketing-gray-500)] mt-1">Avg Athlete GPA</div>
@@ -266,7 +266,7 @@ function HeroSection() {
           <div className="relative flex justify-center lg:justify-end">
             <div className="relative">
               {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--marketing-cyan)]/20 to-[var(--marketing-magenta)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
+              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--marketing-magenta)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
 
               {/* Athlete Card */}
               <div className="relative card-marketing p-1 shadow-2xl">
@@ -293,7 +293,7 @@ function HeroSection() {
 
                   {/* Details */}
                   <div className="p-5 bg-gradient-to-t from-[var(--marketing-gray-900)] to-transparent -mt-16 relative">
-                    <div className="text-xs font-semibold text-[var(--marketing-cyan)] tracking-wider mb-1">
+                    <div className="text-xs font-semibold text-[var(--accent-primary)] tracking-wider mb-1">
                       STANFORD UNIVERSITY
                     </div>
                     <h3 className="text-xl font-bold text-white mb-1">Jasmine Taylor</h3>
@@ -505,7 +505,7 @@ const AthleteCard = memo(function AthleteCard({ athlete }: { athlete: FeaturedAt
 
       {/* Content */}
       <div className="p-4">
-        <div className="text-xs font-semibold text-[var(--marketing-cyan)] tracking-wider mb-1">
+        <div className="text-xs font-semibold text-[var(--accent-primary)] tracking-wider mb-1">
           {athlete.school.toUpperCase()}
         </div>
         <h3 className="text-lg font-bold text-white mb-1">{athlete.name}</h3>
@@ -541,11 +541,11 @@ function FeaturedAthletesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="inline-block px-3 py-1 rounded-full bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)] text-sm font-medium mb-4 border border-[var(--marketing-cyan)]/20">
+          <span className="inline-block px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] text-sm font-medium mb-4 border border-[var(--accent-primary)]/20">
             Real Athletes, Real Earnings
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Scholar-Athletes <span className="text-[var(--marketing-gold)]">Getting Paid</span>
+            Scholar-Athletes <span className="text-[var(--accent-gold)]">Getting Paid</span>
           </h2>
           <p className="text-[var(--marketing-gray-400)] max-w-2xl mx-auto">
             Meet verified athletes earning through GradeUp. Their GPA is their competitive advantage.
@@ -602,11 +602,11 @@ function FeaturedAthletesSection() {
           {/* Trust Reinforcement */}
           <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-sm text-[var(--marketing-gray-500)]">
             <div className="flex items-center gap-1.5">
-              <BadgeCheck className="h-4 w-4 text-[var(--marketing-cyan)]" aria-hidden="true" />
+              <BadgeCheck className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
               <span>All athletes verified</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Shield className="h-4 w-4 text-[var(--marketing-cyan)]" aria-hidden="true" />
+              <Shield className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
               <span>NCAA compliant</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -685,8 +685,8 @@ function HowItWorksSection() {
             See It In Action
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            From <span className="text-[var(--marketing-cyan)]">Signup</span> to{' '}
-            <span className="text-[var(--marketing-gold)]">Payday</span>
+            From <span className="text-[var(--accent-primary)]">Signup</span> to{' '}
+            <span className="text-[var(--accent-gold)]">Payday</span>
           </h2>
           <p className="text-[var(--marketing-gray-400)] max-w-2xl mx-auto text-lg">
             Watch how GradeUp works, then follow the simple steps to start earning.
@@ -699,7 +699,7 @@ function HowItWorksSection() {
           <div className="lg:col-span-3">
             <div className="relative">
               {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--marketing-cyan)]/20 via-[var(--marketing-magenta)]/20 to-[var(--marketing-lime)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
+              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 via-[var(--marketing-magenta)]/20 to-[var(--marketing-lime)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
 
               <div className="relative card-marketing overflow-hidden gradient-border gradient-border-subtle">
                 {/* Video container */}
@@ -728,7 +728,7 @@ function HowItWorksSection() {
                     aria-label={isPlaying ? 'Pause video' : 'Play video'}
                   >
                     <div className="absolute inset-0 bg-black/40" />
-                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[var(--marketing-cyan)] flex items-center justify-center shadow-lg shadow-[var(--marketing-cyan)]/40 hover:scale-110 transition-transform">
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[var(--accent-primary)] flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/40 hover:scale-110 transition-transform">
                       {isPlaying ? (
                         <div className="flex gap-1">
                           <div className="w-1.5 sm:w-2 h-6 sm:h-8 bg-black rounded-sm" />
@@ -756,7 +756,7 @@ function HowItWorksSection() {
               {/* Video stats below */}
               <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-4 sm:mt-6">
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--marketing-cyan)]">$127K</div>
+                  <div className="text-base sm:text-xl font-bold text-[var(--accent-primary)]">$127K</div>
                   <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Paid Out</div>
                 </div>
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
@@ -764,7 +764,7 @@ function HowItWorksSection() {
                   <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Match Rate</div>
                 </div>
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--marketing-gold)]">48hrs</div>
+                  <div className="text-base sm:text-xl font-bold text-[var(--accent-gold)]">48hrs</div>
                   <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">First Deal</div>
                 </div>
               </div>
@@ -783,10 +783,10 @@ function HowItWorksSection() {
             {steps.map((step, index) => {
               const colorClasses = {
                 cyan: {
-                  bg: 'bg-[var(--marketing-cyan)]/10',
-                  border: 'border-[var(--marketing-cyan)]/30',
-                  text: 'text-[var(--marketing-cyan)]',
-                  stat: 'bg-[var(--marketing-cyan)]/20 text-[var(--marketing-cyan)]',
+                  bg: 'bg-[var(--accent-primary)]/10',
+                  border: 'border-[var(--accent-primary)]/30',
+                  text: 'text-[var(--accent-primary)]',
+                  stat: 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]',
                 },
                 lime: {
                   bg: 'bg-[var(--marketing-lime)]/10',
@@ -795,10 +795,10 @@ function HowItWorksSection() {
                   stat: 'bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)]',
                 },
                 gold: {
-                  bg: 'bg-[var(--marketing-gold)]/10',
-                  border: 'border-[var(--marketing-gold)]/30',
-                  text: 'text-[var(--marketing-gold)]',
-                  stat: 'bg-[var(--marketing-gold)]/20 text-[var(--marketing-gold)]',
+                  bg: 'bg-[var(--accent-gold)]/10',
+                  border: 'border-[var(--accent-gold)]/30',
+                  text: 'text-[var(--accent-gold)]',
+                  stat: 'bg-[var(--accent-gold)]/20 text-[var(--accent-gold)]',
                 },
               };
               const colors = colorClasses[step.color];
@@ -868,19 +868,19 @@ function PlatformPreviewSection() {
     >
       {/* Background accent */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--marketing-cyan)]/10 rounded-full blur-[100px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--marketing-magenta)]/10 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--marketing-cyan)]/10 text-[var(--marketing-cyan)] text-sm font-medium mb-6 border border-[var(--marketing-cyan)]/20">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] text-sm font-medium mb-6 border border-[var(--accent-primary)]/20">
             <Sparkles className="h-4 w-4" />
             Sneak Peek
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Your Dashboard <span className="text-[var(--marketing-cyan)]">Awaits</span>
+            Your Dashboard <span className="text-[var(--accent-primary)]">Awaits</span>
           </h2>
           <p className="text-[var(--marketing-gray-400)] max-w-2xl mx-auto text-lg">
             See what you&apos;ll get access to. Track earnings, manage deals, and discover opportunities
@@ -946,11 +946,11 @@ function ForBrandsSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div>
-            <span className="inline-block px-3 py-1 rounded-full bg-[var(--marketing-gold)]/10 text-[var(--marketing-gold)] text-sm font-medium mb-4 border border-[var(--marketing-gold)]/20">
+            <span className="inline-block px-3 py-1 rounded-full bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] text-sm font-medium mb-4 border border-[var(--accent-gold)]/20">
               For Brands
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Partner with <span className="text-[var(--marketing-gold)]">Tomorrow&apos;s Leaders</span>
+              Partner with <span className="text-[var(--accent-gold)]">Tomorrow&apos;s Leaders</span>
             </h2>
             <p className="text-[var(--marketing-gray-400)] text-lg mb-8">
               Access a curated network of verified student-athletes who excel academically.
@@ -970,7 +970,7 @@ function ForBrandsSection() {
             {/* Brand stats */}
             <div className="grid grid-cols-3 gap-4 mb-8 p-4 rounded-xl bg-white/5 border border-white/10">
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--marketing-cyan)]">340%</div>
+                <div className="text-2xl font-bold text-[var(--accent-primary)]">340%</div>
                 <div className="text-xs text-[var(--marketing-gray-500)]">Avg ROI increase</div>
               </div>
               <div className="text-center">
@@ -978,7 +978,7 @@ function ForBrandsSection() {
                 <div className="text-xs text-[var(--marketing-gray-500)]">Match-to-deal rate</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--marketing-gold)]">63</div>
+                <div className="text-2xl font-bold text-[var(--accent-gold)]">63</div>
                 <div className="text-xs text-[var(--marketing-gray-500)]">Active brands</div>
               </div>
             </div>
@@ -993,7 +993,7 @@ function ForBrandsSection() {
 
           {/* Dashboard Preview */}
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-[var(--marketing-cyan)]/10 to-[var(--marketing-magenta)]/10 rounded-3xl blur-2xl" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/10 to-[var(--marketing-magenta)]/10 rounded-3xl blur-2xl" />
             <div className="relative card-marketing shadow-xl overflow-hidden">
               {/* Browser chrome */}
               <div className="flex items-center gap-2 px-4 py-3 bg-[var(--marketing-gray-800)] border-b border-[var(--marketing-gray-700)]">
@@ -1008,16 +1008,16 @@ function ForBrandsSection() {
               {/* Dashboard content */}
               <div className="p-6">
                 <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-[var(--marketing-cyan)]/10 rounded-xl p-4 text-center border border-[var(--marketing-cyan)]/20">
-                    <div className="text-3xl font-bold text-[var(--marketing-cyan)]">847</div>
+                  <div className="bg-[var(--accent-primary)]/10 rounded-xl p-4 text-center border border-[var(--accent-primary)]/20">
+                    <div className="text-3xl font-bold text-[var(--accent-primary)]">847</div>
                     <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Athletes Found</div>
                   </div>
                   <div className="bg-[var(--marketing-lime)]/10 rounded-xl p-4 text-center border border-[var(--marketing-lime)]/20">
                     <div className="text-3xl font-bold text-[var(--marketing-lime)]">23</div>
                     <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Active Deals</div>
                   </div>
-                  <div className="bg-[var(--marketing-gold)]/10 rounded-xl p-4 text-center border border-[var(--marketing-gold)]/20">
-                    <div className="text-3xl font-bold text-[var(--marketing-gold)]">3.2M</div>
+                  <div className="bg-[var(--accent-gold)]/10 rounded-xl p-4 text-center border border-[var(--accent-gold)]/20">
+                    <div className="text-3xl font-bold text-[var(--accent-gold)]">3.2M</div>
                     <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Total Reach</div>
                   </div>
                 </div>
@@ -1026,9 +1026,9 @@ function ForBrandsSection() {
                 <div className="bg-[var(--marketing-gray-800)]/50 rounded-lg p-4">
                   <div className="text-xs text-[var(--marketing-gray-500)] mb-3">Active Filters</div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-1 bg-[var(--marketing-cyan)]/20 text-[var(--marketing-cyan)] text-xs rounded-full">GPA ≥ 3.5</span>
+                    <span className="px-2 py-1 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs rounded-full">GPA ≥ 3.5</span>
                     <span className="px-2 py-1 bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)] text-xs rounded-full">Division I</span>
-                    <span className="px-2 py-1 bg-[var(--marketing-gold)]/20 text-[var(--marketing-gold)] text-xs rounded-full">10K+ followers</span>
+                    <span className="px-2 py-1 bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] text-xs rounded-full">10K+ followers</span>
                   </div>
                 </div>
               </div>
@@ -1060,7 +1060,7 @@ function TestimonialsSection() {
             Real Stories
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            Don&apos;t Take Our <span className="text-[var(--marketing-cyan)]">Word For It</span>
+            Don&apos;t Take Our <span className="text-[var(--accent-primary)]">Word For It</span>
           </h2>
         </div>
 
@@ -1074,14 +1074,14 @@ function TestimonialsSection() {
               {/* Verified badge */}
               {(testimonial as typeof testimonial & { verified?: boolean }).verified && (
                 <div className="absolute top-4 right-4">
-                  <BadgeCheck className="h-5 w-5 text-[var(--marketing-cyan)]" />
+                  <BadgeCheck className="h-5 w-5 text-[var(--accent-primary)]" />
                 </div>
               )}
 
               {/* Stars */}
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-[var(--marketing-gold)] text-[var(--marketing-gold)]" />
+                  <Star key={i} className="h-4 w-4 fill-[var(--accent-gold)] text-[var(--accent-gold)]" />
                 ))}
               </div>
 

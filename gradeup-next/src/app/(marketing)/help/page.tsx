@@ -226,7 +226,7 @@ function HelpHeroSection({
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-8">
-          <HelpCircle className="h-4 w-4 text-[var(--marketing-cyan)]" />
+          <HelpCircle className="h-4 w-4 text-[var(--accent-primary)]" />
           <span className="text-sm font-medium text-white/90">Help Center</span>
         </div>
 
@@ -243,7 +243,7 @@ function HelpHeroSection({
 
         {/* Search Bar */}
         <div className="relative max-w-xl mx-auto">
-          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--marketing-cyan)]/20 to-[var(--marketing-magenta)]/20 rounded-2xl blur-lg" />
+          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--marketing-magenta)]/20 rounded-2xl blur-lg" />
           <div className="relative">
             <Search
               className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--marketing-gray-500)]"
@@ -254,7 +254,7 @@ function HelpHeroSection({
               placeholder="Search for answers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--marketing-cyan)] focus:ring-2 focus:ring-[var(--marketing-cyan)]/20 transition-all"
+              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
               aria-label="Search help articles"
             />
           </div>
@@ -294,15 +294,15 @@ function FAQAccordionItem({
     <div className="border-b border-[var(--marketing-gray-800)] last:border-b-0">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-4 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--marketing-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--marketing-gray-900)] rounded-sm group"
+        className="w-full flex items-center justify-between gap-4 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--marketing-gray-900)] rounded-sm group"
         aria-expanded={isOpen}
       >
-        <span className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--marketing-cyan)] transition-colors">
+        <span className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--accent-primary)] transition-colors">
           {faq.question}
         </span>
         <ChevronDown
           className={`h-5 w-5 text-[var(--marketing-gray-500)] transition-transform duration-200 flex-shrink-0 ${
-            isOpen ? 'rotate-180 text-[var(--marketing-cyan)]' : ''
+            isOpen ? 'rotate-180 text-[var(--accent-primary)]' : ''
           }`}
           aria-hidden="true"
         />
@@ -333,10 +333,10 @@ function FAQCategorySection({
 }) {
   const colorClasses = {
     cyan: {
-      bg: 'bg-[var(--marketing-cyan)]/10',
-      border: 'border-[var(--marketing-cyan)]/30',
-      text: 'text-[var(--marketing-cyan)]',
-      icon: 'text-[var(--marketing-cyan)]',
+      bg: 'bg-[var(--accent-primary)]/10',
+      border: 'border-[var(--accent-primary)]/30',
+      text: 'text-[var(--accent-primary)]',
+      icon: 'text-[var(--accent-primary)]',
     },
     lime: {
       bg: 'bg-[var(--marketing-lime)]/10',
@@ -345,10 +345,10 @@ function FAQCategorySection({
       icon: 'text-[var(--marketing-lime)]',
     },
     gold: {
-      bg: 'bg-[var(--marketing-gold)]/10',
-      border: 'border-[var(--marketing-gold)]/30',
-      text: 'text-[var(--marketing-gold)]',
-      icon: 'text-[var(--marketing-gold)]',
+      bg: 'bg-[var(--accent-gold)]/10',
+      border: 'border-[var(--accent-gold)]/30',
+      text: 'text-[var(--accent-gold)]',
+      icon: 'text-[var(--accent-gold)]',
     },
     magenta: {
       bg: 'bg-[var(--marketing-magenta)]/10',
@@ -415,7 +415,7 @@ function CategoryNav({
         onClick={() => setActiveCategory(null)}
         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
           activeCategory === null
-            ? 'bg-[var(--marketing-cyan)] text-black'
+            ? 'bg-[var(--accent-primary)] text-black'
             : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
         }`}
       >
@@ -429,7 +429,7 @@ function CategoryNav({
             onClick={() => setActiveCategory(category.id)}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
               activeCategory === category.id
-                ? 'bg-[var(--marketing-cyan)] text-black'
+                ? 'bg-[var(--accent-primary)] text-black'
                 : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
             }`}
           >
@@ -520,8 +520,8 @@ function FAQSection({
 
         {/* Search Results Info */}
         {searchQuery && highlightedFAQs.size > 0 && (
-          <div className="mb-8 p-4 rounded-xl bg-[var(--marketing-cyan)]/10 border border-[var(--marketing-cyan)]/20">
-            <p className="text-[var(--marketing-cyan)] text-sm">
+          <div className="mb-8 p-4 rounded-xl bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20">
+            <p className="text-[var(--accent-primary)] text-sm">
               Found {highlightedFAQs.size} result{highlightedFAQs.size !== 1 ? 's' : ''} for &quot;{searchQuery}&quot;
             </p>
           </div>
@@ -600,9 +600,9 @@ function QuickHelpSection() {
   ];
 
   const colorClasses = {
-    cyan: 'text-[var(--marketing-cyan)] border-[var(--marketing-cyan)]/20 hover:border-[var(--marketing-cyan)]',
+    cyan: 'text-[var(--accent-primary)] border-[var(--accent-primary)]/20 hover:border-[var(--accent-primary)]',
     lime: 'text-[var(--marketing-lime)] border-[var(--marketing-lime)]/20 hover:border-[var(--marketing-lime)]',
-    gold: 'text-[var(--marketing-gold)] border-[var(--marketing-gold)]/20 hover:border-[var(--marketing-gold)]',
+    gold: 'text-[var(--accent-gold)] border-[var(--accent-gold)]/20 hover:border-[var(--accent-gold)]',
     magenta: 'text-[var(--marketing-magenta)] border-[var(--marketing-magenta)]/20 hover:border-[var(--marketing-magenta)]',
   };
 
