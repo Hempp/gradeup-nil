@@ -30,6 +30,10 @@ import {
 } from '@/lib/hs-nil/state-rules';
 import { DealAcceptPanel } from '@/components/hs/DealAcceptPanel';
 import { ConsentScopeGap } from '@/components/hs/ConsentScopeGap';
+import {
+  getLatestSubmission,
+  summarizeSubmission,
+} from '@/lib/hs-nil/deliverables';
 
 export const metadata: Metadata = {
   title: 'Deal details — GradeUp HS',
@@ -255,6 +259,17 @@ export default async function HSDealDetailPage({
   const brandName = deal.brand?.company_name ?? 'A brand';
   const deliverableLines = parseDeliverables(deal.deliverables);
 
+  // Phase 7: post-signing deliverable surfaces. Branch on the deal's
+  // new lifecycle values (fully_signed / in_delivery / in_review) so
+  // the athlete gets a direct path into the submit page from here.
+  const isPostSigning =
+    deal.status === 'fully_signed' ||
+    deal.status === 'in_delivery' ||
+    deal.status === 'in_review';
+  const latestSubmission = isPostSigning
+    ? await getLatestSubmission(deal.id).catch(() => null)
+    : null;
+
   const disclosureRecipient = rules?.disclosureRecipient ?? null;
   const disclosureWindow = rules?.disclosureWindowHours ?? null;
 
@@ -267,6 +282,20 @@ export default async function HSDealDetailPage({
     isPendingDecision &&
     'reason' in scopeStatus &&
     scopeStatus.covered === false;
+
+  // Phase 7: subtle "Report a problem" footer link. Only visible when the
+  // deal is signed or further along — disputes should be a last resort,
+  // not the first click on a brand-new offer.
+  const DISPUTE_VISIBLE_STATUSES = new Set([
+    'accepted',
+    'active',
+    'in_progress',
+    'fully_signed',
+    'in_delivery',
+    'in_review',
+    'completed',
+  ]);
+  const showDisputeLink = DISPUTE_VISIBLE_STATUSES.has(deal.status);
 
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
@@ -375,6 +404,66 @@ export default async function HSDealDetailPage({
         </div>
       </section>
 
+      {isPostSigning && (
+        <section className="mx-auto max-w-4xl px-6 pb-10">
+          <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/5 p-6 backdrop-blur-sm md:p-8">
+            {deal.status === 'in_review' ? (
+              <>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center rounded-full border border-yellow-400/30 bg-yellow-400/15 px-2.5 py-1 text-xs font-medium text-yellow-200">
+                    Awaiting brand review
+                  </span>
+                </div>
+                <h2 className="mt-3 font-display text-2xl text-white">
+                  Your submission is with the brand
+                </h2>
+                {latestSubmission ? (
+                  <p className="mt-2 text-sm text-white/80">
+                    Most recent: {summarizeSubmission(latestSubmission)}.
+                    The brand will review and release payout or send notes.
+                  </p>
+                ) : (
+                  <p className="mt-2 text-sm text-white/80">
+                    The brand will review your submission and release payout
+                    or send notes.
+                  </p>
+                )}
+                <div className="mt-5">
+                  <Link
+                    href={`/hs/deals/${deal.id}/deliver`}
+                    className="inline-flex min-h-[44px] items-center rounded-lg border border-white/20 bg-white/5 px-5 text-sm font-medium text-white hover:bg-white/10"
+                  >
+                    Add another submission
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                  Ready to deliver
+                </p>
+                <h2 className="mt-2 font-display text-2xl text-white">
+                  Post, perform, or submit the proof
+                </h2>
+                <p className="mt-2 text-sm text-white/80">
+                  The contract is fully signed. When you finish the
+                  deliverable — posting, appearing, signing memorabilia —
+                  upload the proof and the brand can release payout.
+                </p>
+                <div className="mt-5">
+                  <Link
+                    href={`/hs/deals/${deal.id}/deliver`}
+                    className="inline-flex min-h-[44px] items-center rounded-lg bg-[var(--accent-primary)] px-6 text-sm font-semibold text-black hover:opacity-90"
+                  >
+                    Submit deliverables
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      )}
+
       <section className="mx-auto max-w-4xl px-6 pb-24">
         {showScopeGap && 'reason' in scopeStatus ? (
           <ConsentScopeGap
@@ -414,6 +503,19 @@ export default async function HSDealDetailPage({
                     : 'This deal is not currently waiting on your action.'}
             </p>
           </div>
+        )}
+
+        {showDisputeLink && (
+          <p className="mt-8 text-center text-xs text-white/40">
+            Something wrong with this deal?{' '}
+            <Link
+              href={`/hs/deals/${deal.id}/dispute`}
+              className="underline decoration-white/30 underline-offset-2 hover:text-white/70"
+            >
+              Report a problem
+            </Link>
+            . Disputes pause the deal while a GradeUp admin reviews both sides.
+          </p>
         )}
       </section>
     </main>

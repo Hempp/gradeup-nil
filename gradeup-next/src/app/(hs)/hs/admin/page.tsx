@@ -31,6 +31,7 @@ import {
   type AdminQueuePreview,
 } from '@/components/hs/AdminQueueCard';
 import { AdminSignalBadge } from '@/components/hs/AdminSignalBadge';
+import { listOpenDisputes } from '@/lib/hs-nil/disputes';
 
 export const metadata: Metadata = {
   title: 'Ops dashboard — GradeUp HS',
@@ -237,6 +238,27 @@ async function loadPayouts(): Promise<QueueShape> {
   };
 }
 
+async function loadOpenDisputes(): Promise<QueueShape> {
+  // Service-role driven list — deal_disputes doesn't expose all rows to
+  // the auth client. See src/lib/hs-nil/disputes.ts.
+  const rows = await listOpenDisputes();
+  return {
+    count: rows.length,
+    previews: rows.slice(0, 3).map((row) => ({
+      id: row.id,
+      summary: `${row.deal_title} — ${row.reason_category.replace(/_/g, ' ')}`,
+      detail: `${row.priority} · raised by ${row.raised_by_role}${
+        row.athlete_name || row.brand_name
+          ? ` · ${[row.athlete_name, row.brand_name]
+              .filter((s): s is string => Boolean(s && s.trim()))
+              .join(' × ')}`
+          : ''
+      }`,
+      timestamp: row.created_at,
+    })),
+  };
+}
+
 async function loadExpiringConsents(): Promise<QueueShape> {
   const supabase = await createClient();
   const now = new Date();
@@ -348,13 +370,14 @@ function fmtFeedTime(iso: string): string {
 export default async function HsAdminLandingPage() {
   await requireAdminOr404();
 
-  const [transcripts, disclosures, links, payouts, consents, feed] =
+  const [transcripts, disclosures, links, payouts, consents, disputes, feed] =
     await Promise.all([
       safeLoad('transcripts', loadTranscripts),
       safeLoad('disclosures', loadDisclosures),
       safeLoad('pending_links', loadPendingLinks),
       safeLoad('payouts', loadPayouts),
       safeLoad('expiring_consents', loadExpiringConsents),
+      safeLoad('open_disputes', loadOpenDisputes),
       loadRecentActivity(),
     ]);
 
@@ -405,6 +428,11 @@ export default async function HsAdminLandingPage() {
             label="parent links > 3d unverified"
             count={links.count}
             href="/hs/admin/links"
+          />
+          <AdminSignalBadge
+            label="disputes open"
+            count={disputes.count}
+            href="/hs/admin/disputes"
           />
         </div>
 
@@ -477,6 +505,19 @@ export default async function HsAdminLandingPage() {
             emptyMessage="No expirations on the horizon."
             thresholds={{ warn: 1, urgent: 10 }}
             footnote="Renewals go through the existing athlete consent flow; nudge via email."
+          />
+
+          <AdminQueueCard
+            id="disputes"
+            title="Deal disputes"
+            subtitle="Open + under-review disputes needing mediation."
+            count={disputes.count}
+            href="/hs/admin/disputes"
+            linkLabel="Open mediation queue"
+            previews={disputes.previews}
+            emptyMessage="No disputes open."
+            thresholds={{ warn: 1, urgent: 3 }}
+            footnote="Disputes pause the deal until resolved; resolution transitions the deal automatically."
           />
         </div>
 
