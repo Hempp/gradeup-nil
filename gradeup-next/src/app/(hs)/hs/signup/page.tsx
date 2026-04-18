@@ -107,7 +107,7 @@ export default function HSSignupPage() {
           />
 
           <HSRoleCard
-            href="/hs/waitlist?role=brand"
+            href="/hs/signup/brand"
             title="Local Brand"
             description="I represent a local business interested in sponsoring HS scholar-athletes."
             icon={

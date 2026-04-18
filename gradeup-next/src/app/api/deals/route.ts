@@ -102,22 +102,23 @@ export async function POST(request: NextRequest) {
 
     const validatedData = validation.data;
 
-    // Authorization: verify the authenticated user owns the brand creating the deal
+    // Authorization: verify the authenticated user owns the brand creating the deal.
+    // brands/athletes link to auth users via profile_id (profiles.id === auth.users.id).
     const { data: brand } = await supabase
       .from('brands')
-      .select('id, user_id')
+      .select('id, profile_id')
       .eq('id', validatedData.brand_id)
       .single();
 
-    if (!brand || brand.user_id !== user.id) {
+    if (!brand || brand.profile_id !== user.id) {
       // Also check if user is the athlete (athletes can accept deals proposed to them)
       const { data: athlete } = await supabase
         .from('athletes')
-        .select('id, user_id')
+        .select('id, profile_id')
         .eq('id', validatedData.athlete_id)
         .single();
 
-      if (!athlete || athlete.user_id !== user.id) {
+      if (!athlete || athlete.profile_id !== user.id) {
         return NextResponse.json(
           { error: 'You are not authorized to create deals for this brand or athlete' },
           { status: 403 }
