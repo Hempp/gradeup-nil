@@ -457,6 +457,15 @@ async function handleSign(
     })
     .eq('id', contractId);
 
+  // TODO(hs-nil disclosure pipeline): when newStatus === 'fully_signed' and
+  // the athlete on this deal is an HS athlete (hs_athlete_profiles row
+  // exists), call `enqueueDisclosure(dealId)` from '@/lib/hs-nil/disclosures'
+  // to kick off the state-mandated post-signature disclosure. The
+  // enqueue function is a no-op for non-HS athletes / prohibited states,
+  // so the only reason it is not called here yet is that the HS deal-
+  // signing flow is not wired end-to-end. Do NOT block contract sign on
+  // the enqueue result — log and continue.
+
   // Fetch and return updated contract
   const { data: contract, error: fetchError } = await supabase
     .from('contracts')
