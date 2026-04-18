@@ -33,6 +33,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import BrandDashboardShell from '@/components/hs/BrandDashboardShell';
+import { getNewMatchesForBrand } from '@/lib/hs-nil/matching';
 
 export const metadata: Metadata = {
   title: 'Brand dashboard — GradeUp HS',
@@ -50,6 +51,7 @@ interface BrandRow {
   is_hs_enabled: boolean | null;
   hs_target_states: string[] | null;
   hs_deal_categories: string[] | null;
+  last_match_alert_sent_at: string | null;
 }
 
 interface DealRow {
@@ -83,7 +85,7 @@ export default async function HSBrandDashboardPage() {
     const { data } = await supabase
       .from('brands')
       .select(
-        'id, company_name, contact_name, is_hs_enabled, hs_target_states, hs_deal_categories'
+        'id, company_name, contact_name, is_hs_enabled, hs_target_states, hs_deal_categories, last_match_alert_sent_at'
       )
       .eq('profile_id', user.id)
       .maybeSingle();
@@ -149,6 +151,27 @@ export default async function HSBrandDashboardPage() {
     }
   }
 
+  // Suggested-athletes preview. We fetch the ranked list once to get a
+  // quick total + "new since last alert" count for the nav card. The
+  // full grid renders on /hs/brand/suggested. Any failure here just
+  // hides the count — the nav card still links out.
+  let suggestedTotal: number | null = null;
+  let suggestedNew: number | null = null;
+  try {
+    const sinceTs = brand.last_match_alert_sent_at
+      ? new Date(brand.last_match_alert_sent_at)
+      : null;
+    const res = await getNewMatchesForBrand(supabase, brand.id, sinceTs, {
+      minGpa: 3.0,
+      limit: 25,
+    });
+    suggestedTotal = res.total;
+    suggestedNew = res.newSince;
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-brand-dashboard] suggested preview failed', err);
+  }
+
   // Onboarding checklist state.
   const hasCategories = dealCategories.length > 0;
   const hasDeal = deals.length > 0;
@@ -190,6 +213,38 @@ export default async function HSBrandDashboardPage() {
             value={active.length.toString()}
             hint="Accepted and in progress."
           />
+        </div>
+      </section>
+
+      {/* Suggested athletes nav */}
+      <section aria-labelledby="suggested-nav-heading" className="mt-10">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/5 p-5 md:p-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+              New tool
+            </p>
+            <h2
+              id="suggested-nav-heading"
+              className="mt-1 font-display text-xl md:text-2xl"
+            >
+              Suggested athletes for your brand.
+            </h2>
+            <p className="mt-1 text-sm text-white/70">
+              {suggestedTotal !== null
+                ? suggestedTotal === 0
+                  ? 'No matches yet — try broadening your filters.'
+                  : suggestedNew && suggestedNew > 0
+                    ? `${suggestedTotal} match${suggestedTotal === 1 ? '' : 'es'}, including ${suggestedNew} new since your last alert.`
+                    : `${suggestedTotal} match${suggestedTotal === 1 ? '' : 'es'} ranked by fit.`
+                : 'Browse ranked matches by GPA, state, and category fit.'}
+            </p>
+          </div>
+          <Link
+            href="/hs/brand/suggested"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-[var(--accent-primary)] bg-transparent px-5 py-3 text-sm font-semibold text-[var(--accent-primary)] transition-colors hover:bg-[var(--accent-primary)] hover:text-black"
+          >
+            View suggested athletes →
+          </Link>
         </div>
       </section>
 
