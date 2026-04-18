@@ -9,6 +9,7 @@ import {
   formatValidationError,
   safeText,
 } from '@/lib/validations';
+import { sendWaitlistConfirmation } from '@/lib/services/hs-nil/emails';
 
 /**
  * HS-NIL waitlist capture.
@@ -143,9 +144,32 @@ export async function POST(request: NextRequest) {
       .from('hs_waitlist')
       .select('id', { count: 'exact', head: true });
 
-    // TODO(phase-1): trigger Resend confirmation email with the
-    // per-state copy pack and (if role=athlete) the parental-consent
-    // pre-brief. Deferred until the email templates land.
+    // Fire confirmation email. Fail-closed: the DB row is the source of
+    // truth for waitlist membership; if Resend is down we still return
+    // success to the caller and log the failure for out-of-band retry.
+    // We intentionally skip the send on duplicate signups so re-submitters
+    // don't get spammed with "welcome" mails every time they click.
+    if (!isDuplicate) {
+      try {
+        await sendWaitlistConfirmation({
+          email: input.email,
+          role: input.role,
+          stateCode: input.state_code,
+          position: count ?? null,
+        });
+      } catch (err) {
+        // Defensive — sendWaitlistConfirmation already returns a result
+        // object rather than throwing, but belt-and-suspenders here so
+        // an unexpected error never breaks the signup.
+        // eslint-disable-next-line no-console
+        console.warn('[hs-nil waitlist] confirmation email threw', {
+          email: input.email,
+          role: input.role,
+          stateCode: input.state_code,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
 
     return NextResponse.json({
       ok: true,

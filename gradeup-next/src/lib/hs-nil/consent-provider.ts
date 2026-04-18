@@ -27,6 +27,10 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { randomBytes } from 'node:crypto';
+import {
+  sendParentConsentRequest,
+  sendParentConsentSigned,
+} from '@/lib/services/hs-nil/emails';
 
 // ----------------------------------------------------------------------------
 // Public types
@@ -137,6 +141,11 @@ function getServiceRoleClient(): SupabaseClient {
   });
 }
 
+function buildSigningUrl(token: string): string {
+  const base = (process.env.NEXT_PUBLIC_APP_URL || 'https://gradeupnil.com').replace(/\/$/, '');
+  return `${base}/hs/consent/${token}`;
+}
+
 // ----------------------------------------------------------------------------
 // Supabase-backed stub provider
 // ----------------------------------------------------------------------------
@@ -166,9 +175,46 @@ class SupabaseConsentProvider implements ConsentProvider {
       throw new Error(`Failed to create signing token: ${error.message}`);
     }
 
-    // TODO(hs-nil): send email via Resend. Template needs legal copy review.
-    //   const { Resend } = await import('resend');
-    //   await new Resend(process.env.RESEND_API_KEY!).emails.send({...});
+    // Resolve athlete display name for the email. Fail soft: if the lookup
+    // fails we still send, using a neutral fallback. We deliberately don't
+    // expose the athlete's email to the parent — just the name.
+    let athleteName = 'A student-athlete';
+    try {
+      const { data: athlete } = await sb
+        .from('athletes')
+        .select('first_name, last_name')
+        .eq('profile_id', input.athleteUserId)
+        .maybeSingle();
+      if (athlete?.first_name || athlete?.last_name) {
+        athleteName = [athlete.first_name, athlete.last_name]
+          .filter(Boolean)
+          .join(' ')
+          .trim();
+      }
+    } catch {
+      // swallow — name is a nice-to-have, not a gate
+    }
+
+    // Fire the parent-facing email. Fail-closed: the pending_consents row
+    // is the source of truth; if Resend is down the athlete can re-initiate
+    // and we (ops) can resend by token out-of-band. We never throw here —
+    // that would roll back the athlete's UX for an outage they can't fix.
+    try {
+      await sendParentConsentRequest({
+        parentEmail: input.parentEmail,
+        parentFullName: input.parentFullName,
+        athleteName,
+        signingUrl: buildSigningUrl(token),
+        expiresAt,
+      });
+    } catch (emailErr) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil consent] parent email send threw', {
+        athleteUserId: input.athleteUserId,
+        parentEmail: input.parentEmail,
+        error: emailErr instanceof Error ? emailErr.message : String(emailErr),
+      });
+    }
 
     return { token, expiresAt };
   }
@@ -270,6 +316,34 @@ class SupabaseConsentProvider implements ConsentProvider {
     if (consumeErr) {
       // eslint-disable-next-line no-console
       console.warn('[hs-nil consent] failed to mark pending token consumed', consumeErr);
+    }
+
+    // Notify the athlete that their consent is signed. Strictly best-effort:
+    // the consent is already recorded by this point, so any failure here is
+    // an ops problem, not a user-facing one.
+    try {
+      const { data: athlete } = await sb
+        .from('athletes')
+        .select('first_name, last_name, email')
+        .eq('profile_id', pending.athlete_user_id)
+        .maybeSingle();
+      if (athlete?.email) {
+        const athleteName =
+          [athlete.first_name, athlete.last_name].filter(Boolean).join(' ').trim() ||
+          'there';
+        await sendParentConsentSigned({
+          athleteEmail: athlete.email,
+          athleteName,
+          parentFullName: input.parentFullName,
+          signedAt,
+        });
+      }
+    } catch (notifyErr) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil consent] athlete notification send failed', {
+        athleteUserId: pending.athlete_user_id,
+        error: notifyErr instanceof Error ? notifyErr.message : String(notifyErr),
+      });
     }
 
     return { consentId: consent.id };
