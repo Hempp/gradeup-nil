@@ -8,13 +8,16 @@
 
 ## The Bet
 
-GradeUp wins by becoming the high-school NIL platform first, then flowing the pipeline upward into NCAA.
+GradeUp is the scholar-athlete platform from 8th grade through senior year of college. NCAA NIL is the existing product; HS-NIL is net-new TAM that extends — not replaces — it. The wedge ("verified GPA + NIL") carries through both.
 
-The NCAA NIL market (~500K athletes) is already contested by Opendorse, INFLCR, Altius, and Teamworks. "GPA + NIL" is cosmetic differentiation there — any incumbent can clone the badge in a sprint. In high school, the same wedge is structural: parents are the buyers, grades are already central to the conversation, and no national platform owns the category.
+The HS market is ~16x larger than NCAA by athlete count (~8M vs ~500K). Grades are already central to the HS conversation. Parents are the decision-makers, which means retail-like behavior, emotional pull, and organic virality that a pure AD-centric NCAA tool will never generate. And no national platform currently owns the HS NIL category — it is structural whitespace.
 
-HS-NIL is ~16x larger than NCAA by athlete count (~8M vs ~500K) and has parents as the purchasing decision-maker — which means retail-like behavior, emotional pull, and organic virality that an AD-centric NCAA tool will never generate.
+The strategic significance is two-fold:
 
-The AD compliance SaaS (original Track 1) becomes the enterprise upsell *after* we own the pipeline, not the wedge.
+1. **Near-term:** HS expands who GradeUp serves without cannibalizing the existing college side. NCAA features (discover, deals, dashboards, GradeUp Score, referrals) continue shipping on their current trajectory. HS gets its own flows where the rules demand it (parental consent, per-state compliance, minor-appropriate UX) and shares infrastructure where it can (identity, payouts, brand onboarding, design system).
+2. **Long-term:** HS athletes who matriculate into college flow naturally into the NCAA product with GPA history preserved. GradeUp becomes the only platform that carries the athlete's verified academic narrative across the full 8-year arc. That's the pipeline lock-in Opendorse / INFLCR / Altius cannot replicate without starting over.
+
+The AD compliance SaaS (original Track 1) becomes the enterprise upsell *after* we own the pipeline at both ends, not the wedge.
 
 ---
 
@@ -91,11 +94,14 @@ Every permitting state shares roughly these guardrails:
 - **Post-signature disclosure pipeline:** auto-generate state-athletic-association compliance report within each state's window. Per-state JSON contract.
 - **Parent dashboard** as the primary UX surface. Athlete dashboard is secondary — parents approve, monitor earnings, track grade-linked bonus structures.
 
-### Phase 3 — Pipeline to NCAA (quarter 2+)
+### Phase 3 — Bridge to College (quarter 2+)
 
-- Athletes who matriculate from HS to a GradeUp NIL NCAA school get auto-migrated to the college product.
-- GPA history carries over — becomes the retention hook for the NCAA side.
-- Relationships with D1 recruiting offices to highlight GradeUp HS athletes = GPA-pre-verified recruits.
+This is the unique lock-in HS expansion unlocks. Every other platform starts an NCAA athlete from scratch on signup. GradeUp's HS athletes arrive at college with a full academic narrative already under management.
+
+- **Auto-migration:** HS athletes who matriculate get a one-tap transition to the college product, preserving GPA history, verified deals, brand relationships, and audience.
+- **Carry-over GPA:** 4 years of verified HS GPA history continues to display on the college profile as "Academic Trajectory," which is the kind of trust signal brands and recruiting offices actively want.
+- **D1 recruiting feedback loop:** introduce relationships with college recruiting offices where GradeUp HS athletes show up as "GPA-pre-verified" leads. Creates an outbound value flow that college programs pay attention to.
+- **Two-way traffic:** college athletes can also mentor HS athletes on the platform (verified alumni program), which drives HS-side trust and college-side engagement simultaneously.
 
 ---
 
