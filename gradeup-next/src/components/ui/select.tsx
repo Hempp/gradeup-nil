@@ -51,9 +51,11 @@ export interface MultiSelectProps extends Omit<SelectProps, 'value' | 'onChange'
 // Size Configuration
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Note: 'md' bumped from h-10 (40px) to h-11 (44px) to meet WCAG 2.5.5
+// touch-target minimum. 'sm' preserved for dense-UI contexts (tables, filter bars).
 const sizeClasses = {
   sm: 'h-9 text-sm',
-  md: 'h-10 text-sm',
+  md: 'h-11 text-sm',
   lg: 'h-12 text-base',
 };
 
@@ -474,7 +476,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           className={cn(
-            'w-full flex items-center justify-between gap-2 px-3 min-h-[40px] py-1.5',
+            'w-full flex items-center justify-between gap-2 px-3 min-h-[44px] py-1.5',
             'rounded-[var(--radius-md)] border',
             'bg-[var(--bg-secondary)] text-left',
             'transition-colors duration-[var(--transition-fast)]',

@@ -51,7 +51,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={cn(
             `
-            w-full h-10 rounded-[var(--radius-md)]
+            w-full h-11 rounded-[var(--radius-md)]
             bg-[var(--bg-secondary)] border border-[var(--border-color)]
             px-3 text-sm text-[var(--text-primary)]
             placeholder:text-[var(--text-muted)]

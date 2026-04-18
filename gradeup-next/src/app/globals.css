@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   FONT LOADING NOTE: Fonts are now loaded via next/font/google in layout.tsx
+   FONT LOADING NOTE: Fonts are loaded via next/font/google in layout.tsx
    for automatic optimization, zero layout shift, and better LCP scores.
 
    CSS Variables available:
@@ -12,8 +12,56 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   GRADEUP NIL - Design System v2.0
+   GRADEUP NIL - Design System v2.1
    Professional light-first design with deep blue primary and gold accent
+
+   ──────────────────────────────────────────────────────────────────────────
+   TOKEN ARCHITECTURE (three layers)
+   ──────────────────────────────────────────────────────────────────────────
+
+   LAYER 1 — PRIMITIVE TOKENS (raw, non-semantic values)
+     Color scales:  --primary-900..100, --secondary-700..100,
+                    --surface-white/50/100/200, --neutral-900/600/400,
+                    --success/warning/error/info-600/100
+     Marketing:     --marketing-black/gray-*, --marketing-cyan/lime/gold/magenta
+     Spacing:       --sidebar-width, --header-height, --container-max,
+                    --section-padding-sm/md/lg/hero
+     Radius:        --radius-sm/md/lg/xl/2xl/full
+     Motion:        --transition-fast/normal/slow, --ease-spring
+     Shadow:        --shadow-sm/md/lg/xl
+     Do NOT reference primitives directly in components. Always go through
+     a semantic token so contextual overrides work automatically.
+
+   LAYER 2 — SEMANTIC TOKENS (stable names consumed by components)
+     Surface:   --bg-primary, --bg-secondary, --bg-tertiary, --bg-card,
+                --bg-card-hover, --bg-sidebar, --surface-elevated
+     Text:      --text-primary, --text-secondary, --text-muted, --text-inverse
+     Border:    --border-color, --border-color-hover, --border-color-focus
+     Accent:    --color-primary (+ hover/muted/glow), --color-secondary,
+                --accent-primary, --accent-secondary, --accent-gold
+     Status:    --color-success/warning/error/info (+ muted variants)
+     All component code (ui/*, layout/*, features/*) reads ONLY these
+     semantic tokens, never primitives.
+
+   LAYER 3 — CONTEXTUAL OVERRIDES (theme scopes)
+     :root           → dashboard-light defaults (professional blue + gold)
+     .dark           → global dark mode (cyan-on-black)
+     .marketing-dark → marketing surfaces (Nike-bold cyan/gold on pure black)
+     .auth-theme     → auth pages (glass-over-dark, cyan accent)
+     .dashboard-dark → authenticated dashboards in dark mode (opt-in)
+
+     Each context re-binds the SAME semantic tokens to different primitives.
+     Example: --color-primary = deep blue in dashboard context, cyan in
+     marketing context, but a component always references --color-primary.
+
+   ──────────────────────────────────────────────────────────────────────────
+   RULES
+   ──────────────────────────────────────────────────────────────────────────
+   1. New components reference semantic tokens only.
+   2. Do not add new --marketing-* references outside this file or marketing
+      pages; prefer --accent-primary / --color-primary in the marketing
+      context scope.
+   3. Touch targets: all interactive primitives enforce min 44x44 (WCAG 2.5.5).
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
@@ -88,6 +136,16 @@
   --bg-card: var(--surface-white);
   --bg-card-hover: var(--surface-50);
   --bg-sidebar: var(--primary-900);
+  /* Elevated surface (modals, popovers, dropdowns — above --bg-card). */
+  --surface-elevated: var(--surface-white);
+
+  /* ─── Semantic Accent Aliases (unified marketing + dashboard) ─── */
+  /* Prefer these over --marketing-* or --color-gold in new component code.
+     Each contextual theme (:root, .dark, .marketing-dark, .auth-theme,
+     .dashboard-dark) re-binds them to the correct primitive. */
+  --accent-primary: var(--primary-500);       /* Dashboard blue / Marketing cyan */
+  --accent-secondary: var(--secondary-700);   /* Gold accent across all themes */
+  --accent-gold: var(--secondary-700);
 
   /* ─── Border Colors ─── */
   --border-color: var(--surface-200);
@@ -246,6 +304,12 @@
   --bg-card: #171717;
   --bg-card-hover: #262626;
   --bg-sidebar: #000000;
+  --surface-elevated: #1f1f1f;
+
+  /* ─── Override Semantic Accent Aliases ─── */
+  --accent-primary: #00f0ff;
+  --accent-secondary: #ffd700;
+  --accent-gold: #ffd700;
 
   /* ─── Override Border Colors ─── */
   --border-color: #262626;
@@ -1106,6 +1170,19 @@ html.no-transitions *::after {
 .marketing-dark {
   background: var(--marketing-black);
   color: white;
+
+  /* ─── Semantic Accent Aliases (marketing context) ─── */
+  --accent-primary: var(--marketing-cyan);
+  --accent-secondary: var(--marketing-gold);
+  --accent-gold: var(--marketing-gold);
+  --surface-elevated: var(--marketing-gray-900);
+  --bg-primary: var(--marketing-black);
+  --bg-secondary: var(--marketing-gray-950);
+  --bg-card: var(--marketing-gray-900);
+  --text-primary: #ffffff;
+  --text-secondary: var(--marketing-gray-300);
+  --text-muted: var(--marketing-gray-500);
+  --border-color: var(--marketing-gray-800);
 }
 
 /* Hero Orbs (floating gradient spheres) */
@@ -1307,6 +1384,12 @@ html.no-transitions *::after {
   --color-border: var(--surface-200);
   --color-muted: var(--neutral-400);
   --color-sidebar: var(--primary-900);
+
+  /* ─── Semantic Accent Aliases (exposed to Tailwind) ─── */
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-gold: var(--accent-gold);
+  --color-surface-elevated: var(--surface-elevated);
 
   /* ─── Typography ─── */
   /* Note: Font CSS variables (--font-dm-sans, --font-bebas-neue, etc.) are set by next/font in layout.tsx */
@@ -1867,6 +1950,12 @@ a:hover {
   --color-secondary-hover: #ffed4a;
   --color-gold: var(--marketing-gold);
 
+  /* ─── Semantic Accent Aliases (dashboard-dark context) ─── */
+  --accent-primary: var(--marketing-cyan);
+  --accent-secondary: var(--marketing-gold);
+  --accent-gold: var(--marketing-gold);
+  --surface-elevated: var(--marketing-gray-800);
+
   /* ─── Override Status Colors (vibrant) ─── */
   --color-success: #22c55e;
   --color-success-muted: rgba(34, 197, 94, 0.15);
@@ -2071,6 +2160,12 @@ a:hover {
   --primary-100: rgba(0, 240, 255, 0.1);
   --error-600: #f87171;
   --error-100: rgba(239, 68, 68, 0.2);
+
+  /* ─── Semantic Accent Aliases (auth context) ─── */
+  --accent-primary: var(--marketing-cyan);
+  --accent-secondary: var(--marketing-gold);
+  --accent-gold: var(--marketing-gold);
+  --surface-elevated: var(--marketing-gray-800);
 }
 
 /* Auth - Card Styling */

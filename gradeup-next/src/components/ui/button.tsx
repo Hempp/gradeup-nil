@@ -93,8 +93,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizes = {
+      // Note: min-h-[44px] enforces WCAG 2.5.5 touch-target minimum across all sizes.
+      // The h-* class sets the preferred height; min-h ensures compliance even when
+      // 'sm' is used in dense UI contexts.
       sm: 'h-9 min-h-[44px] px-3 text-sm',
-      md: 'h-10 min-h-[44px] px-4 text-sm',
+      md: 'h-11 min-h-[44px] px-4 text-sm',
       lg: 'h-12 min-h-[44px] px-6 text-base',
     };
 

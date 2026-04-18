@@ -57,9 +57,11 @@ export interface PasswordInputProps extends Omit<ValidatedInputProps, 'type'> {
 // Size Configuration
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Note: 'md' bumped from h-10 (40px) to h-11 (44px) to meet WCAG 2.5.5
+// touch-target minimum. 'sm' preserved for dense-UI contexts.
 const sizeClasses = {
   sm: 'h-9 text-sm px-3',
-  md: 'h-10 text-sm px-3',
+  md: 'h-11 text-sm px-3',
   lg: 'h-12 text-base px-4',
 };
 
