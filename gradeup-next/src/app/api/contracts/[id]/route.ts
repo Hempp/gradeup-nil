@@ -502,6 +502,133 @@ async function handleSign(
           });
         }
 
+        // 1b) Share-the-win celebration email to athlete + parent.
+        //     Best-effort — a Resend outage must NOT block the sign response.
+        //     The underlying transport no-ops when RESEND_API_KEY is missing.
+        try {
+          const { sendDealCelebration } = await import(
+            '@/lib/services/hs-nil/share-emails'
+          );
+
+          // Resolve athlete + brand + amount + parent(s).
+          const { data: celebrateRow } = await supabase
+            .from('deals')
+            .select(
+              `compensation_amount,
+               brand:brands(company_name),
+               athlete:athletes(profile_id, first_name, last_name, email,
+                 profile:profiles(email))`,
+            )
+            .eq('id', dealId)
+            .maybeSingle();
+
+          const row = celebrateRow as unknown as {
+            compensation_amount: number | null;
+            brand: { company_name: string | null } | { company_name: string | null }[] | null;
+            athlete: {
+              profile_id: string;
+              first_name: string | null;
+              last_name: string | null;
+              email: string | null;
+              profile: { email: string | null } | { email: string | null }[] | null;
+            } | {
+              profile_id: string;
+              first_name: string | null;
+              last_name: string | null;
+              email: string | null;
+              profile: { email: string | null } | { email: string | null }[] | null;
+            }[] | null;
+          } | null;
+
+          const brand = Array.isArray(row?.brand) ? row?.brand[0] : row?.brand;
+          const athlete = Array.isArray(row?.athlete) ? row?.athlete[0] : row?.athlete;
+          const athleteProfile = athlete
+            ? Array.isArray(athlete.profile)
+              ? athlete.profile[0]
+              : athlete.profile
+            : null;
+
+          const brandName = brand?.company_name ?? 'your brand partner';
+          const firstName = (athlete?.first_name ?? '').trim();
+          const lastName = (athlete?.last_name ?? '').trim();
+          const athleteName = `${firstName} ${lastName}`.trim() || 'Your athlete';
+          const amount = row?.compensation_amount ?? 0;
+
+          const appUrl =
+            process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ||
+            'https://gradeupnil.com';
+          const shareUrl = `${appUrl}/hs/deals/${dealId}/celebrate`;
+
+          const recipientEmails = new Set<string>();
+          const athleteEmail =
+            (athlete?.email ?? '').trim() ||
+            (athleteProfile?.email ?? '').trim();
+          if (athleteEmail) recipientEmails.add(athleteEmail);
+
+          // Look up linked (verified) parents via the athlete's user id.
+          if (athlete?.profile_id) {
+            const { data: parentRows } = await supabase
+              .from('hs_parent_athlete_links')
+              .select(
+                'parent_profile_id, verified_at, hs_parent_profiles!inner(user_id)',
+              )
+              .eq('athlete_user_id', athlete.profile_id)
+              .not('verified_at', 'is', null);
+
+            const parentUserIds: string[] = [];
+            for (const raw of (parentRows ?? []) as unknown[]) {
+              const rec = raw as {
+                hs_parent_profiles:
+                  | { user_id: string }
+                  | { user_id: string }[]
+                  | null;
+              };
+              const pp = Array.isArray(rec.hs_parent_profiles)
+                ? rec.hs_parent_profiles[0]
+                : rec.hs_parent_profiles;
+              if (pp?.user_id) parentUserIds.push(pp.user_id);
+            }
+
+            if (parentUserIds.length > 0) {
+              const { data: parentProfiles } = await supabase
+                .from('profiles')
+                .select('id, email')
+                .in('id', parentUserIds);
+              for (const pRaw of (parentProfiles ?? []) as unknown[]) {
+                const p = pRaw as { email: string | null };
+                const em = (p.email ?? '').trim();
+                if (em) recipientEmails.add(em);
+              }
+            }
+          }
+
+          await Promise.all(
+            Array.from(recipientEmails).map((em) =>
+              sendDealCelebration({
+                recipientEmail: em,
+                athleteName,
+                brandName,
+                amount,
+                shareUrl,
+              }).catch((err) => {
+                // eslint-disable-next-line no-console
+                console.warn('[hs-nil] sendDealCelebration failed', {
+                  dealId,
+                  recipient: em,
+                  error: err instanceof Error ? err.message : String(err),
+                });
+                return null;
+              }),
+            ),
+          );
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-nil] celebration email path threw — continuing', {
+            dealId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+
         // 2) Seed the parent-custodial payout row if this is a minor's deal.
         //    We look up signers to discover the parent profile; if the
         //    athlete is 18+, getHsDealSigners reports requiresParentSignature
@@ -561,8 +688,10 @@ async function handleSign(
         title,
         athlete_id,
         brand_id,
+        target_bracket,
         athlete:athletes(
           id,
+          profile_id,
           profile:profiles(first_name, last_name, email)
         ),
         brand:brands(id, company_name, contact_email)
@@ -576,7 +705,35 @@ async function handleSign(
     return NextResponse.json({ error: fetchError.message }, { status: 500 });
   }
 
-  return NextResponse.json(contract);
+  // Celebration redirect hint for the UI — only when we just transitioned
+  // into fully_signed on an HS deal AND the signer is the athlete or a
+  // linked parent (brands go to their own deal detail).
+  let redirectTo: string | null = null;
+  if (newStatus === 'fully_signed') {
+    const contractWithDeal = contract as unknown as {
+      deal_id?: string;
+      deal?: {
+        id?: string;
+        target_bracket?: string | null;
+        athlete?: { profile_id?: string } | null;
+      } | null;
+    };
+    const dealSnapshot = contractWithDeal.deal ?? null;
+    const isHsDeal =
+      dealSnapshot?.target_bracket !== undefined &&
+      dealSnapshot?.target_bracket !== null &&
+      dealSnapshot.target_bracket !== 'college';
+    const resolvedDealId = dealSnapshot?.id ?? contractWithDeal.deal_id ?? null;
+    if (isHsDeal && resolvedDealId) {
+      // Athlete side gets the celebration page. Parents hit the same page
+      // when they sign last. Brands sign before here in the HS flow only
+      // in edge cases — we still send them the path; their access check
+      // will bounce them to 404 in the page itself.
+      redirectTo = `/hs/deals/${resolvedDealId}/celebrate`;
+    }
+  }
+
+  return NextResponse.json({ ...contract, redirect_to: redirectTo });
 }
 
 /**

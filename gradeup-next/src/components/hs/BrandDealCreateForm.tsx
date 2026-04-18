@@ -38,6 +38,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { HS_DEAL_CATEGORIES } from '@/components/hs/BrandHSSignupForm';
+import {
+  DEFAULT_TEMPLATES,
+  SUPPORTED_SHARE_PLATFORMS,
+  type SharePlatform,
+} from '@/lib/hs-nil/share';
 
 interface Form {
   athleteEmail: string;
@@ -84,6 +89,26 @@ interface PreflightResult {
   error?: string;
 }
 
+type ShareTemplateDraft = {
+  platform: SharePlatform;
+  copy: string;
+};
+
+const INITIAL_SHARE_TEMPLATES: ShareTemplateDraft[] = SUPPORTED_SHARE_PLATFORMS.map(
+  (platform) => ({
+    platform,
+    copy: DEFAULT_TEMPLATES[platform].copy,
+  }),
+);
+
+const SHARE_PLATFORM_LABEL: Record<SharePlatform, string> = {
+  instagram: 'Instagram',
+  linkedin: 'LinkedIn',
+  x: 'X',
+  tiktok: 'TikTok',
+  generic: 'Generic',
+};
+
 export interface BrandDealCreateFormProps {
   brandId: string;
   brandCategories: string[];
@@ -101,6 +126,43 @@ export default function BrandDealCreateForm({
   const [preflight, setPreflight] = useState<PreflightResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [busy, setBusy] = useState<'idle' | 'preflight' | 'submit'>('idle');
+  const [shareTemplates, setShareTemplates] = useState<ShareTemplateDraft[]>(
+    INITIAL_SHARE_TEMPLATES,
+  );
+  const [shareOpen, setShareOpen] = useState<boolean>(false);
+
+  const updateShareTemplate = (platform: SharePlatform, copy: string) => {
+    setShareTemplates((prev) =>
+      prev.map((t) => (t.platform === platform ? { ...t, copy } : t)),
+    );
+  };
+
+  async function persistShareTemplates(dealId: string) {
+    // Fire-and-forget the customized templates. If one fails, log and move
+    // on — the celebration page will fall back to defaults for whichever
+    // platform didn't make it.
+    const customized = shareTemplates.filter((t) => {
+      const base = DEFAULT_TEMPLATES[t.platform].copy;
+      return t.copy.trim() && t.copy.trim() !== base.trim();
+    });
+    if (customized.length === 0) return;
+    await Promise.all(
+      customized.map(async (t) => {
+        try {
+          await fetch(`/api/hs/deals/${dealId}/share-templates`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              platform: t.platform,
+              copy_template: t.copy,
+            }),
+          }).catch(() => null);
+        } catch {
+          // swallow — defaults will be used at render time
+        }
+      }),
+    );
+  }
 
   // Filter the category picker to the ones the brand opted into at
   // signup, falling back to the full list if the brand hasn't locked
@@ -261,6 +323,10 @@ export default function BrandDealCreateForm({
         return;
       }
 
+      if (data.id) {
+        await persistShareTemplates(data.id);
+      }
+
       router.push('/hs/brand?posted=1');
     } catch {
       setSubmitError('Unexpected error posting the deal.');
@@ -404,6 +470,56 @@ export default function BrandDealCreateForm({
           placeholder={"One Instagram post\nOne in-store appearance"}
         />
       </Field>
+
+      {/* Share templates (collapsible) */}
+      <section className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+        <button
+          type="button"
+          onClick={() => setShareOpen((o) => !o)}
+          className="flex w-full items-center justify-between text-left"
+          aria-expanded={shareOpen}
+          aria-controls="share-templates-body"
+        >
+          <span>
+            <span className="block text-sm font-semibold text-white">
+              Share templates (optional)
+            </span>
+            <span className="mt-1 block text-xs text-white/60">
+              Pre-approve the copy the athlete and parent share on signing.
+              Placeholders: &#123;athleteFirstName&#125;, &#123;brandName&#125;,
+              &#123;schoolName&#125;. Defaults are used if you leave these.
+            </span>
+          </span>
+          <span aria-hidden="true" className="text-white/60">
+            {shareOpen ? '\u2212' : '+'}
+          </span>
+        </button>
+
+        {shareOpen && (
+          <div id="share-templates-body" className="mt-4 space-y-4">
+            {shareTemplates.map((t) => (
+              <div key={t.platform}>
+                <label
+                  htmlFor={`share-tpl-${t.platform}`}
+                  className="block text-xs font-semibold uppercase tracking-widest text-white/50"
+                >
+                  {SHARE_PLATFORM_LABEL[t.platform]}
+                </label>
+                <textarea
+                  id={`share-tpl-${t.platform}`}
+                  rows={3}
+                  value={t.copy}
+                  onChange={(e) =>
+                    updateShareTemplate(t.platform, e.target.value)
+                  }
+                  className={`${inputCls} min-h-[80px] py-2`}
+                  placeholder={DEFAULT_TEMPLATES[t.platform].copy}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* Preflight result panel */}
       <div
