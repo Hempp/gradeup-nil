@@ -508,6 +508,14 @@ export async function authorizePayout(dealId: string): Promise<{
  *
  * NOTE: amount is pulled from the existing row (whole USD) and converted to
  * cents for Stripe. Currency propagates from the row.
+ *
+ * TODO(completion-metrics): once a caller here needs "fire celebration
+ * emails immediately in dev/stub" semantics, import `afterDealPaid` from
+ * `@/lib/hs-nil/completion-hooks` and invoke it when
+ * `result.status === 'paid'`. In production the Stripe Connect webhook
+ * already fires `afterDealPaid` on `transfer.paid`, so a second call here
+ * would only matter when using the stub provider (no real webhook). The
+ * helper is idempotent — safe to call again.
  */
 export async function releasePayout(
   dealId: string,

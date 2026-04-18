@@ -45,6 +45,8 @@ import { ConsentStatusCard } from '@/components/hs/ConsentStatusCard';
 import { StateRulesCard } from '@/components/hs/StateRulesCard';
 import { HSDealCard, type DealCardStatus } from '@/components/hs/HSDealCard';
 import type { StatusPill } from '@/components/hs/AthleteDashboardHeader';
+import { AthleteDashboardEarningsCard } from '@/components/hs/AthleteDashboardEarningsCard';
+import { getAthleteEarningsSummary } from '@/lib/hs-nil/earnings';
 
 export const metadata: Metadata = {
   title: 'Your dashboard — GradeUp HS',
@@ -200,6 +202,24 @@ export default async function HSAthleteDashboardPage() {
 
   const activeConsent = activeRes.data ?? null;
   const pendingConsents: PendingConsentRow[] = pendingRes.data ?? [];
+
+  // Earnings summary — best-effort. Falls back to zeros if anything errors,
+  // so the card still renders its "your first payout lands here" state.
+  const earningsSummary = await getAthleteEarningsSummary(
+    supabase,
+    user.id,
+  ).catch((err) => {
+    console.error('[hs/athlete] earnings summary failed', err);
+    return {
+      totalEarnedCents: 0,
+      totalDeals: 0,
+      averageDealCents: 0,
+      highestDealCents: 0,
+      firstDealAt: null,
+      mostRecentDealAt: null,
+      deltaThisMonthCents: 0,
+    };
+  });
 
   // Deals preview — keep it best-effort. We want to surface the newest three
   // HS-facing deals to the dashboard; if anything in the chain fails (no
@@ -503,6 +523,8 @@ export default async function HSAthleteDashboardPage() {
           )}
 
           <StateRulesCard stateCode={stateCode} />
+
+          <AthleteDashboardEarningsCard summary={earningsSummary} />
 
           <OnboardingCard
             eyebrow="Your first deal"

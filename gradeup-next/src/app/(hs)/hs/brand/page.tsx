@@ -34,6 +34,12 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import BrandDashboardShell from '@/components/hs/BrandDashboardShell';
 import { getNewMatchesForBrand } from '@/lib/hs-nil/matching';
+import {
+  listPendingReviewsForBrand,
+  type PendingReviewRow,
+} from '@/lib/hs-nil/approvals';
+import { BrandDashboardPerformanceCard } from '@/components/hs/BrandDashboardPerformanceCard';
+import { getBrandPerformanceSummary } from '@/lib/hs-nil/earnings';
 
 export const metadata: Metadata = {
   title: 'Brand dashboard — GradeUp HS',
@@ -172,6 +178,38 @@ export default async function HSBrandDashboardPage() {
     console.warn('[hs-brand-dashboard] suggested preview failed', err);
   }
 
+  // Deals awaiting this brand's review (status='in_review'). Phase 7
+  // BRAND-REVIEW surface — shows above the existing sections so it's
+  // the first thing the brand sees when they sign in with a deal
+  // queued on them. Best-effort; any failure degrades to an empty
+  // array and the section renders its empty state.
+  let pendingReviews: PendingReviewRow[] = [];
+  try {
+    pendingReviews = await listPendingReviewsForBrand(supabase, brand.id, 5);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-brand-dashboard] pending reviews fetch failed', err);
+  }
+
+  // Performance summary for the compact dashboard card. Best-effort; the
+  // card itself degrades gracefully to its zero-state.
+  const performanceSummary = await getBrandPerformanceSummary(
+    supabase,
+    brand.id,
+  ).catch((err) => {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-brand-dashboard] performance summary failed', err);
+    return {
+      totalSpendCents: 0,
+      totalDeals: 0,
+      averageCompletionDays: null,
+      totalShareEvents: 0,
+      avgSharesPerDeal: 0,
+      firstDealAt: null,
+      mostRecentDealAt: null,
+    };
+  });
+
   // Onboarding checklist state.
   const hasCategories = dealCategories.length > 0;
   const hasDeal = deals.length > 0;
@@ -188,8 +226,11 @@ export default async function HSBrandDashboardPage() {
       operatingStates={operatingStates}
       dealCategories={dealCategories}
     >
+      {/* Deals awaiting this brand's review (Phase 7 BRAND-REVIEW) */}
+      <PendingReviewsSection reviews={pendingReviews} />
+
       {/* Aggregate signal */}
-      <section aria-labelledby="match-heading" className="mt-2">
+      <section aria-labelledby="match-heading" className="mt-10">
         <h2 id="match-heading" className="font-display text-2xl md:text-3xl">
           Athletes in your footprint.
         </h2>
@@ -215,6 +256,11 @@ export default async function HSBrandDashboardPage() {
           />
         </div>
       </section>
+
+      {/* Performance summary card (links to /hs/brand/performance) */}
+      <div className="mt-10 grid gap-4 md:grid-cols-2">
+        <BrandDashboardPerformanceCard summary={performanceSummary} />
+      </div>
 
       {/* Suggested athletes nav */}
       <section aria-labelledby="suggested-nav-heading" className="mt-10">
@@ -314,6 +360,81 @@ export default async function HSBrandDashboardPage() {
         </ul>
       </section>
     </BrandDashboardShell>
+  );
+}
+
+function PendingReviewsSection({ reviews }: { reviews: PendingReviewRow[] }) {
+  return (
+    <section aria-labelledby="pending-review-heading" className="mt-2">
+      <div className="flex items-baseline justify-between">
+        <h2
+          id="pending-review-heading"
+          className="font-display text-2xl md:text-3xl"
+        >
+          Deals awaiting your review.
+        </h2>
+        {reviews.length > 0 && (
+          /* TODO: build /hs/brand/deals/review index page */
+          <Link
+            href="/hs/brand/deals/review"
+            className="text-sm font-semibold text-[var(--accent-primary)] hover:underline"
+          >
+            See all →
+          </Link>
+        )}
+      </div>
+      {reviews.length === 0 ? (
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <p className="text-sm font-medium text-white">
+            No deals awaiting review.
+          </p>
+          <p className="mt-1 text-sm text-white/60">
+            Post a new deal to keep your pipeline active.
+          </p>
+          <Link
+            href="/hs/brand/deals/new"
+            className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-5 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+          >
+            Post a new deal
+          </Link>
+        </div>
+      ) : (
+        <ul className="mt-4 space-y-3">
+          {reviews.map((r) => {
+            const name =
+              [r.athlete_first_name, r.athlete_last_name]
+                .filter(Boolean)
+                .join(' ') || 'An athlete';
+            return (
+              <li key={r.id}>
+                <Link
+                  href={`/hs/brand/deals/${r.id}`}
+                  className="flex min-h-[44px] items-center justify-between gap-3 rounded-2xl border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/5 p-5 transition hover:border-[var(--accent-primary)]/60 hover:bg-[var(--accent-primary)]/10"
+                >
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                      Awaiting your review
+                    </p>
+                    <p className="mt-1 truncate font-display text-xl text-white">
+                      {r.title}
+                    </p>
+                    <p className="mt-0.5 truncate text-sm text-white/70">
+                      {name} · ${Math.round(r.compensation_amount).toLocaleString()}
+                    </p>
+                  </div>
+                  <span
+                    aria-hidden="true"
+                    className="shrink-0 text-lg text-[var(--accent-primary)]"
+                  >
+                    →
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
   );
 }
 

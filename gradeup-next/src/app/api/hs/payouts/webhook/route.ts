@@ -33,6 +33,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { afterDealPaid } from '@/lib/hs-nil/completion-hooks';
 
 // ----------------------------------------------------------------------------
 // Infrastructure
@@ -236,6 +237,39 @@ async function handleTransferPaid(
       transferId: transfer.id,
       error: error.message,
     });
+  }
+
+  // COMPLETION-METRICS hook: fire the deal-completed side effects
+  // (status promotion to 'paid', celebration emails, share-count log).
+  // Wrapped in try/catch — email/analytics failures must NEVER propagate
+  // into Stripe's 5xx retry loop. `afterDealPaid` is idempotent: if the
+  // deal is already 'paid' with completed_at set, it still sends best-
+  // effort mail but does not regress state.
+  try {
+    const result = await afterDealPaid(dealId, sb);
+    logEvent(
+      'info',
+      'transfer.paid',
+      'afterDealPaid completed',
+      {
+        dealId,
+        transferId: transfer.id,
+        emailsAttempted: result.emailsAttempted,
+        emailsSucceeded: result.emailsSucceeded,
+        totalShares: result.totalShares,
+      },
+    );
+  } catch (err) {
+    logEvent(
+      'warn',
+      'transfer.paid',
+      'afterDealPaid threw — swallowed to avoid Stripe retry loop',
+      {
+        dealId,
+        transferId: transfer.id,
+        error: err instanceof Error ? err.message : String(err),
+      },
+    );
   }
 }
 
