@@ -448,7 +448,7 @@ async function handleSign(
     newStatus = 'pending_signature';
   }
 
-  await supabase
+  const { error: statusUpdateErr } = await supabase
     .from('contracts')
     .update({
       status: newStatus,
@@ -457,14 +457,99 @@ async function handleSign(
     })
     .eq('id', contractId);
 
-  // TODO(hs-nil disclosure pipeline): when newStatus === 'fully_signed' and
-  // the athlete on this deal is an HS athlete (hs_athlete_profiles row
-  // exists), call `enqueueDisclosure(dealId)` from '@/lib/hs-nil/disclosures'
-  // to kick off the state-mandated post-signature disclosure. The
-  // enqueue function is a no-op for non-HS athletes / prohibited states,
-  // so the only reason it is not called here yet is that the HS deal-
-  // signing flow is not wired end-to-end. Do NOT block contract sign on
-  // the enqueue result — log and continue.
+  // HS-NIL post-signature hooks.
+  // Fire only on the clean transition into 'fully_signed'. Both hooks are
+  // fail-soft: a disclosure or payout scaffolding failure must NOT block
+  // the contract-signed response. Ops reviews failures via logs + the
+  // `hs_deal_disclosures` / `hs_deal_parent_payouts` tables directly.
+  if (!statusUpdateErr && newStatus === 'fully_signed') {
+    // Resolve the deal id from the contract row (ignore client-side state).
+    const { data: contractRow } = await supabase
+      .from('contracts')
+      .select('deal_id')
+      .eq('id', contractId)
+      .maybeSingle();
+
+    const dealId = contractRow?.deal_id as string | undefined;
+    if (dealId) {
+      const { data: dealRow } = await supabase
+        .from('deals')
+        .select('target_bracket')
+        .eq('id', dealId)
+        .maybeSingle();
+
+      const isHs =
+        dealRow?.target_bracket !== undefined &&
+        dealRow.target_bracket !== 'college';
+
+      if (isHs) {
+        // 1) Enqueue the state disclosure.
+        try {
+          const { enqueueDisclosure } = await import('@/lib/hs-nil/disclosures');
+          const result = await enqueueDisclosure(dealId);
+          if (!result.enqueued) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              '[hs-nil] enqueueDisclosure skipped or failed',
+              { dealId, reason: result.reason },
+            );
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-nil] enqueueDisclosure threw — continuing', {
+            dealId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+
+        // 2) Seed the parent-custodial payout row if this is a minor's deal.
+        //    We look up signers to discover the parent profile; if the
+        //    athlete is 18+, getHsDealSigners reports requiresParentSignature
+        //    = false and we skip the payout seed.
+        try {
+          const { getHsDealSigners } = await import('@/lib/hs-nil/contracts');
+          const { createPendingPayout } = await import('@/lib/hs-nil/payouts');
+          const signers = await getHsDealSigners(dealId);
+
+          if (signers.requiresParentSignature && signers.parentProfileId) {
+            const { data: dealAmountRow } = await supabase
+              .from('deals')
+              .select('compensation_amount')
+              .eq('id', dealId)
+              .maybeSingle();
+
+            const amount = (dealAmountRow?.compensation_amount as number) ?? 0;
+            const result = await createPendingPayout({
+              dealId,
+              parentProfileId: signers.parentProfileId,
+              amount,
+            });
+            if (!result.ok) {
+              // eslint-disable-next-line no-console
+              console.warn('[hs-nil] createPendingPayout failed', {
+                dealId,
+                reason: result.reason,
+              });
+            }
+          } else if (signers.requiresParentSignature) {
+            // Minor's deal but we couldn't resolve the parent profile.
+            // eslint-disable-next-line no-console
+            console.warn(
+              '[hs-nil] parent profile unresolved for minor deal — ' +
+                'payout row NOT seeded',
+              { dealId },
+            );
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-nil] payout seeding threw — continuing', {
+            dealId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }
+    }
+  }
 
   // Fetch and return updated contract
   const { data: contract, error: fetchError } = await supabase

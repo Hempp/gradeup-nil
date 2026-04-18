@@ -177,6 +177,66 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // --- HS-NIL branch: augment signer set + guardian flag for HS deals ----
+    // For HS deals with a minor athlete, we MUST require the parent/guardian
+    // as a second signer. This mirrors contract engines like SignWell /
+    // HelloSign's multi-signer shape via `parties[]` + the guardian flag.
+    // For adult HS athletes (18+) only the athlete signs. College deals
+    // flow through unchanged.
+    let parties = [...validatedData.parties];
+    let requiresGuardianSignature = validatedData.requires_guardian_signature;
+
+    try {
+      const { isHsDeal, getHsDealSigners } = await import(
+        '@/lib/hs-nil/contracts'
+      );
+      const hsDeal = await isHsDeal(validatedData.deal_id);
+      if (hsDeal) {
+        const signers = await getHsDealSigners(validatedData.deal_id);
+        if (signers.requiresParentSignature) {
+          requiresGuardianSignature = true;
+
+          // Add guardian party if the caller didn't already supply one.
+          const hasGuardian = parties.some((p) => p.party_type === 'guardian');
+          if (!hasGuardian) {
+            if (signers.parentEmail && signers.parentFullName) {
+              parties.push({
+                party_type: 'guardian',
+                name: signers.parentFullName,
+                email: signers.parentEmail,
+                signature_status: 'pending',
+              });
+            } else {
+              // TODO(hs-nil): Minor's deal but no active parental_consents
+              // row was found. The simple contract engine here only supports
+              // the party types in signaturePartySchema (athlete/brand/
+              // guardian/witness). We set the guardian flag so the contract
+              // cannot be fully_signed without a guardian signature, but
+              // the guardian party row itself is NOT inserted automatically —
+              // ops / the athlete must add one manually. Clearly flagged so
+              // this path fails loudly instead of silently shipping a
+              // single-signer minor contract.
+              // eslint-disable-next-line no-console
+              console.warn(
+                '[hs-nil] HS minor contract created WITHOUT guardian party — ' +
+                  'parent consent unresolved. Manual guardian addition required.',
+                { dealId: validatedData.deal_id },
+              );
+            }
+          }
+        }
+      }
+    } catch (err) {
+      // HS augmentation is best-effort — failures here must not block
+      // contract creation. The underlying deal validation step owns the
+      // real gate (parental consent required to accept the deal at all).
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil] contract signer augmentation failed', {
+        dealId: validatedData.deal_id,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+
     // Create the contract
     const { data: contract, error: contractError } = await supabase
       .from('contracts')
@@ -192,7 +252,7 @@ export async function POST(request: NextRequest) {
         deliverables_summary: validatedData.deliverables_summary,
         clauses: validatedData.clauses || [],
         custom_terms: validatedData.custom_terms,
-        requires_guardian_signature: validatedData.requires_guardian_signature,
+        requires_guardian_signature: requiresGuardianSignature,
         requires_witness: validatedData.requires_witness,
         status: 'draft' as ContractStatus,
         created_by: user.id,
@@ -207,8 +267,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create signature records for each party
-    const signatureRecords = validatedData.parties.map((party) => ({
+    // Create signature records for each party (post-HS augmentation).
+    const signatureRecords = parties.map((party) => ({
       contract_id: contract.id,
       party_type: party.party_type,
       user_id: party.user_id || null,
