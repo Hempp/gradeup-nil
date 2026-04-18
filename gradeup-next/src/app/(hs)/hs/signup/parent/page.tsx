@@ -160,6 +160,19 @@ export default function HSParentSignupPage() {
         }
       }
 
+      // Waitlist activation reconciliation — best-effort; never
+      // blocks the parent's onboarding continuation.
+      try {
+        await fetch('/api/hs/invite/reconcile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'parent' }),
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[hs-parent-signup] waitlist reconcile failed', err);
+      }
+
       router.push('/hs/onboarding/parent-next');
     } catch {
       setError('Something went wrong. Please try again.');

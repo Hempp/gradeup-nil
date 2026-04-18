@@ -242,6 +242,20 @@ export default function BrandHSSignupForm() {
         return;
       }
 
+      // Waitlist activation reconciliation — best-effort. If this
+      // brand joined via a /hs/invite/[token] click-through, the
+      // matching waitlist row flips to 'converted'.
+      try {
+        await fetch('/api/hs/invite/reconcile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'brand' }),
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[hs-brand-signup] waitlist reconcile failed', err);
+      }
+
       router.push('/hs/brand');
     } catch {
       setError('Something went wrong. Please try again.');

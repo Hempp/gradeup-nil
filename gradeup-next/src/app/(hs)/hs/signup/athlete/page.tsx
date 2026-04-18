@@ -208,6 +208,21 @@ export default function HSAthleteSignupPage() {
           // eslint-disable-next-line no-console
           console.warn('[hs-athlete-signup] ensure-athlete call failed', err);
         }
+
+        // Waitlist activation reconciliation — best-effort, never
+        // blocks onboarding. If this user came in via /hs/invite/[token]
+        // the server side has a cookie; reconcile flips the waitlist
+        // row to 'converted' and clears the cookie.
+        try {
+          await fetch('/api/hs/invite/reconcile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: 'athlete' }),
+          });
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-athlete-signup] waitlist reconcile failed', err);
+        }
       }
 
       // TODO: /hs/onboarding/next-steps does not yet exist. Landing the
