@@ -59,6 +59,28 @@ export type LinkAthleteStatus = 'pending_verification' | 'pending_invitation';
 export interface LinkAthleteResult {
   linkId: string | null;
   status: LinkAthleteStatus;
+  /**
+   * Populated only when the RPC resolved an athlete (status
+   * 'pending_verification'). Lets the caller render
+   * "Pending link to Maya Chen (Lincoln High)" rather than just
+   * echoing the email the parent typed.
+   */
+  athleteFirstName?: string;
+  athleteSchool?: string;
+}
+
+/**
+ * Shape of a single row returned by the
+ * `find_hs_athlete_by_email` SECURITY DEFINER RPC. Mirrors the
+ * SQL `RETURNS TABLE (...)` declaration in
+ * `supabase/migrations/20260418_006_athlete_lookup_rpc.sql`.
+ */
+interface FindHsAthleteByEmailRow {
+  user_id: string;
+  first_name: string | null;
+  school_name: string | null;
+  state_code: string | null;
+  requires_parental_consent: boolean | null;
 }
 
 export interface ParentAthleteSummary {
@@ -127,10 +149,14 @@ export async function createParentProfile(
  *   3. If no athlete is found, return status 'pending_invitation'.
  *      Caller is responsible for dispatching an invite email.
  *
- * TODO: add a server-side RPC `find_hs_athlete_by_email(email)` that
- *       runs with security definer so parents can link athletes that
- *       are not yet in their visible scope. Until then, the UI must be
- *       clear that the linkage is best-effort at signup.
+ * Rate-limiting: the `find_hs_athlete_by_email` RPC does NOT enforce
+ * its own rate limit. This function is currently called only from the
+ * parent signup route, which is gated by the shared `enforceRateLimit`
+ * middleware — that's sufficient today. If `linkAthlete` is ever
+ * exposed to a post-signup "link another athlete" search box, add a
+ * tighter per-user rate limit at that route to prevent email
+ * enumeration, and consider also locking the RPC behind an additional
+ * grant check.
  */
 export async function linkAthlete(
   input: LinkAthleteInput
@@ -142,16 +168,13 @@ export async function linkAthlete(
     throw new Error('linkAthlete: athleteEmail is required');
   }
 
-  // Resolve athlete auth user. We query via the v_hs_athletes_by_email
-  // view if it exists; for now, fall through to "pending_invitation"
-  // on any non-result because the browser client cannot inspect
-  // auth.users directly.
-  //
-  // NOTE: this block uses a narrow, typed RPC-ish pattern that returns
-  // `null` when the athlete cannot be resolved. It does NOT throw.
-  const athleteUserId = await resolveAthleteByEmail(email);
+  // Resolve athlete auth user via the SECURITY DEFINER RPC. The RPC
+  // only returns rows for users with an `hs_athlete_profiles` record,
+  // so non-athlete and college-only emails safely degrade to the
+  // invitation path (same observable as "no account yet").
+  const resolved = await resolveAthleteByEmail(email);
 
-  if (!athleteUserId) {
+  if (!resolved) {
     // Parent signed up before athlete — stash the intent on the
     // profile-side and surface the status so the caller can trigger
     // an invitation email. Row is NOT created in the link table
@@ -169,7 +192,7 @@ export async function linkAthlete(
     .from('hs_parent_athlete_links')
     .insert({
       parent_profile_id: input.parentProfileId,
-      athlete_user_id: athleteUserId,
+      athlete_user_id: resolved.userId,
       relationship,
       // verified_at intentionally omitted — RLS enforces null on INSERT
     })
@@ -180,7 +203,12 @@ export async function linkAthlete(
     // Unique-violation means the link already exists — treat as
     // already-pending rather than an error.
     if (error.code === '23505') {
-      return { linkId: null, status: 'pending_verification' };
+      return {
+        linkId: null,
+        status: 'pending_verification',
+        athleteFirstName: resolved.firstName ?? undefined,
+        athleteSchool: resolved.schoolName ?? undefined,
+      };
     }
     throw new Error(`linkAthlete failed: ${error.message}`);
   }
@@ -188,6 +216,8 @@ export async function linkAthlete(
   return {
     linkId: data?.id ?? null,
     status: 'pending_verification',
+    athleteFirstName: resolved.firstName ?? undefined,
+    athleteSchool: resolved.schoolName ?? undefined,
   };
 }
 
@@ -248,24 +278,58 @@ export async function getAthletesForParent(
 // Helpers
 // ----------------------------------------------------------------------------
 
+interface ResolvedAthlete {
+  userId: string;
+  firstName: string | null;
+  schoolName: string | null;
+  stateCode: string | null;
+  requiresParentalConsent: boolean | null;
+}
+
 /**
- * Resolve an athlete's auth user id by email. Returns null if the
- * athlete has no account yet, or if the caller cannot see the row.
+ * Resolve an HS athlete by email via the `find_hs_athlete_by_email`
+ * SECURITY DEFINER RPC (see migration 20260418_006_athlete_lookup_rpc).
  *
- * Implementation note: the browser client cannot query auth.users.
- * This helper currently returns null for all inputs (degrading to
- * 'pending_invitation'), and will be replaced by a server-side RPC in
- * a follow-up. The shape of this function is stable — callers should
- * not inline the lookup.
+ * Returns null when:
+ *   * no row matches the email,
+ *   * the match is a college-only athlete (no `hs_athlete_profiles` row),
+ *   * the RPC errors — callers treat this the same as "not found" and
+ *     fall through to the invitation path rather than leaking server-side
+ *     failure to the UI.
  */
 async function resolveAthleteByEmail(
   email: string
-): Promise<string | null> {
-  // TODO: implement via a security-definer RPC once the athlete-side
-  // profile has a canonical email column. Until then, every email
-  // degrades to the invitation path.
-  void email;
-  return null;
+): Promise<ResolvedAthlete | null> {
+  const supabase = getSupabaseClient();
+
+  const { data, error } = await supabase.rpc('find_hs_athlete_by_email', {
+    lookup_email: email,
+  });
+
+  if (error) {
+    // Surface in console for debugging; do NOT throw. A failing RPC
+    // should degrade to the invitation path, matching the UX for
+    // "athlete hasn't signed up yet".
+    console.warn('resolveAthleteByEmail: RPC failed', error.message);
+    return null;
+  }
+
+  // The RPC is declared as RETURNS TABLE (...), so supabase-js
+  // surfaces it as an array. LIMIT 1 in the SQL keeps it at most
+  // one row.
+  const rows = (data ?? []) as FindHsAthleteByEmailRow[];
+  const row = rows[0];
+  if (!row?.user_id) {
+    return null;
+  }
+
+  return {
+    userId: row.user_id,
+    firstName: row.first_name ?? null,
+    schoolName: row.school_name ?? null,
+    stateCode: row.state_code ?? null,
+    requiresParentalConsent: row.requires_parental_consent ?? null,
+  };
 }
 
 /**
