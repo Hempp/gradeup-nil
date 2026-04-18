@@ -146,6 +146,15 @@
   --accent-primary: var(--primary-500);       /* Dashboard blue / Marketing cyan */
   --accent-secondary: var(--secondary-700);   /* Gold accent across all themes */
   --accent-gold: var(--secondary-700);
+  --accent-success: var(--success-600);       /* Marketing lime maps here in dark/marketing scopes */
+  --accent-tertiary: var(--primary-500);      /* Marketing magenta maps here in dark/marketing scopes; falls back to primary in light */
+
+  /* Glow variants (soft halo shadows). Unset in light themes; re-bound
+     under dark/marketing/auth/dashboard-dark scopes to --marketing-*-glow. */
+  --accent-primary-glow: rgba(0, 0, 0, 0.1);
+  --accent-gold-glow: rgba(0, 0, 0, 0.1);
+  --accent-success-glow: rgba(0, 0, 0, 0.1);
+  --accent-tertiary-glow: rgba(0, 0, 0, 0.1);
 
   /* ─── Border Colors ─── */
   --border-color: var(--surface-200);
@@ -310,6 +319,12 @@
   --accent-primary: #00f0ff;
   --accent-secondary: #ffd700;
   --accent-gold: #ffd700;
+  --accent-success: var(--marketing-lime);
+  --accent-tertiary: var(--marketing-magenta);
+  --accent-primary-glow: var(--marketing-cyan-glow);
+  --accent-gold-glow: var(--marketing-gold-glow);
+  --accent-success-glow: var(--marketing-lime-glow);
+  --accent-tertiary-glow: var(--marketing-magenta-glow);
 
   /* ─── Override Border Colors ─── */
   --border-color: #262626;
@@ -1175,6 +1190,12 @@ html.no-transitions *::after {
   --accent-primary: var(--marketing-cyan);
   --accent-secondary: var(--marketing-gold);
   --accent-gold: var(--marketing-gold);
+  --accent-success: var(--marketing-lime);
+  --accent-tertiary: var(--marketing-magenta);
+  --accent-primary-glow: var(--marketing-cyan-glow);
+  --accent-gold-glow: var(--marketing-gold-glow);
+  --accent-success-glow: var(--marketing-lime-glow);
+  --accent-tertiary-glow: var(--marketing-magenta-glow);
   --surface-elevated: var(--marketing-gray-900);
   --bg-primary: var(--marketing-black);
   --bg-secondary: var(--marketing-gray-950);
@@ -1389,6 +1410,12 @@ html.no-transitions *::after {
   --color-accent-primary: var(--accent-primary);
   --color-accent-secondary: var(--accent-secondary);
   --color-accent-gold: var(--accent-gold);
+  --color-accent-success: var(--accent-success);
+  --color-accent-tertiary: var(--accent-tertiary);
+  --color-accent-primary-glow: var(--accent-primary-glow);
+  --color-accent-gold-glow: var(--accent-gold-glow);
+  --color-accent-success-glow: var(--accent-success-glow);
+  --color-accent-tertiary-glow: var(--accent-tertiary-glow);
   --color-surface-elevated: var(--surface-elevated);
 
   /* ─── Typography ─── */
@@ -1954,6 +1981,12 @@ a:hover {
   --accent-primary: var(--marketing-cyan);
   --accent-secondary: var(--marketing-gold);
   --accent-gold: var(--marketing-gold);
+  --accent-success: var(--marketing-lime);
+  --accent-tertiary: var(--marketing-magenta);
+  --accent-primary-glow: var(--marketing-cyan-glow);
+  --accent-gold-glow: var(--marketing-gold-glow);
+  --accent-success-glow: var(--marketing-lime-glow);
+  --accent-tertiary-glow: var(--marketing-magenta-glow);
   --surface-elevated: var(--marketing-gray-800);
 
   /* ─── Override Status Colors (vibrant) ─── */
@@ -2165,6 +2198,12 @@ a:hover {
   --accent-primary: var(--marketing-cyan);
   --accent-secondary: var(--marketing-gold);
   --accent-gold: var(--marketing-gold);
+  --accent-success: var(--marketing-lime);
+  --accent-tertiary: var(--marketing-magenta);
+  --accent-primary-glow: var(--marketing-cyan-glow);
+  --accent-gold-glow: var(--marketing-gold-glow);
+  --accent-success-glow: var(--marketing-lime-glow);
+  --accent-tertiary-glow: var(--marketing-magenta-glow);
   --surface-elevated: var(--marketing-gray-800);
 }
 

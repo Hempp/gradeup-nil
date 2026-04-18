@@ -40,7 +40,7 @@ interface PublicAthlete {
 
 function AthletePublicCard({ athlete }: { athlete: PublicAthlete }) {
   const totalFollowers = athlete.instagramFollowers + athlete.tiktokFollowers;
-  const gpaColor = athlete.gpa >= 3.5 ? 'text-[var(--marketing-lime)]'
+  const gpaColor = athlete.gpa >= 3.5 ? 'text-[var(--accent-success)]'
     : athlete.gpa >= 3.0 ? 'text-[var(--accent-primary)]'
     : 'text-[var(--text-muted)]';
 
@@ -87,9 +87,9 @@ function AthletePublicCard({ athlete }: { athlete: PublicAthlete }) {
 
       {/* GPA Badge */}
       {athlete.gpa >= 3.5 && (
-        <div className="flex items-center gap-1.5 mb-3 px-2.5 py-1.5 rounded-full bg-[var(--marketing-lime)]/10 border border-[var(--marketing-lime)]/20 w-fit">
-          <GraduationCap className="h-3.5 w-3.5 text-[var(--marketing-lime)]" />
-          <span className="text-xs font-medium text-[var(--marketing-lime)]">
+        <div className="flex items-center gap-1.5 mb-3 px-2.5 py-1.5 rounded-full bg-[var(--accent-success)]/10 border border-[var(--accent-success)]/20 w-fit">
+          <GraduationCap className="h-3.5 w-3.5 text-[var(--accent-success)]" />
+          <span className="text-xs font-medium text-[var(--accent-success)]">
             Dean&apos;s List Scholar-Athlete
           </span>
         </div>
@@ -181,7 +181,7 @@ export default function PublicDiscoverPage() {
               <p className="text-sm text-[var(--marketing-gray-500)]">Avg GPA</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-[var(--marketing-lime)]">{stats.verified}</p>
+              <p className="text-2xl font-bold text-[var(--accent-success)]">{stats.verified}</p>
               <p className="text-sm text-[var(--marketing-gray-500)]">Verified</p>
             </div>
             <div className="text-center">

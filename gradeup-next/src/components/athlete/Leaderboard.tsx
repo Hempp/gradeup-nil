@@ -66,7 +66,7 @@ export function Leaderboard({ currentUserName, className }: LeaderboardProps) {
   return (
     <Card className={cn('overflow-hidden', className)}>
       {/* Gradient header */}
-      <div className="h-1 bg-gradient-to-r from-[var(--accent-gold)] via-[var(--accent-primary)] to-[var(--marketing-lime)]" />
+      <div className="h-1 bg-gradient-to-r from-[var(--accent-gold)] via-[var(--accent-primary)] to-[var(--accent-success)]" />
 
       <CardHeader>
         <div className="flex items-center justify-between">

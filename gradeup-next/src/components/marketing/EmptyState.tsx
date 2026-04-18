@@ -64,7 +64,7 @@ function EmptyIllustration({ variant }: { variant: EmptyStateVariant }) {
 
         {/* Decorative dots */}
         <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[var(--accent-primary)]/30" aria-hidden="true" />
-        <div className="absolute -bottom-2 -left-2 w-2 h-2 rounded-full bg-[var(--marketing-magenta)]/30" aria-hidden="true" />
+        <div className="absolute -bottom-2 -left-2 w-2 h-2 rounded-full bg-[var(--accent-tertiary)]/30" aria-hidden="true" />
       </div>
     </div>
   );

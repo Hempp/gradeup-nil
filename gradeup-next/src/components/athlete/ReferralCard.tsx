@@ -79,7 +79,7 @@ export function ReferralCard({
   return (
     <Card className={cn('overflow-hidden', className)}>
       {/* Gradient top border */}
-      <div className="h-1 bg-gradient-to-r from-[var(--accent-primary)] via-[var(--marketing-lime)] to-[var(--accent-gold)]" />
+      <div className="h-1 bg-gradient-to-r from-[var(--accent-primary)] via-[var(--accent-success)] to-[var(--accent-gold)]" />
 
       <CardHeader>
         <div className="flex items-center justify-between">
@@ -148,7 +148,7 @@ export function ReferralCard({
             </div>
           </div>
           <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-[var(--bg-tertiary)]">
-            <DollarSign className="h-4 w-4 text-[var(--marketing-lime)]" />
+            <DollarSign className="h-4 w-4 text-[var(--accent-success)]" />
             <div>
               <p className="text-lg font-bold text-[var(--text-primary)]">
                 ${(totalEarned / 100).toFixed(0)}

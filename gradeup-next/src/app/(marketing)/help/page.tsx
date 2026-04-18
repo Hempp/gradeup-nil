@@ -243,7 +243,7 @@ function HelpHeroSection({
 
         {/* Search Bar */}
         <div className="relative max-w-xl mx-auto">
-          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--marketing-magenta)]/20 rounded-2xl blur-lg" />
+          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--accent-tertiary)]/20 rounded-2xl blur-lg" />
           <div className="relative">
             <Search
               className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--marketing-gray-500)]"
@@ -339,10 +339,10 @@ function FAQCategorySection({
       icon: 'text-[var(--accent-primary)]',
     },
     lime: {
-      bg: 'bg-[var(--marketing-lime)]/10',
-      border: 'border-[var(--marketing-lime)]/30',
-      text: 'text-[var(--marketing-lime)]',
-      icon: 'text-[var(--marketing-lime)]',
+      bg: 'bg-[var(--accent-success)]/10',
+      border: 'border-[var(--accent-success)]/30',
+      text: 'text-[var(--accent-success)]',
+      icon: 'text-[var(--accent-success)]',
     },
     gold: {
       bg: 'bg-[var(--accent-gold)]/10',
@@ -351,10 +351,10 @@ function FAQCategorySection({
       icon: 'text-[var(--accent-gold)]',
     },
     magenta: {
-      bg: 'bg-[var(--marketing-magenta)]/10',
-      border: 'border-[var(--marketing-magenta)]/30',
-      text: 'text-[var(--marketing-magenta)]',
-      icon: 'text-[var(--marketing-magenta)]',
+      bg: 'bg-[var(--accent-tertiary)]/10',
+      border: 'border-[var(--accent-tertiary)]/30',
+      text: 'text-[var(--accent-tertiary)]',
+      icon: 'text-[var(--accent-tertiary)]',
     },
   };
 
@@ -601,9 +601,9 @@ function QuickHelpSection() {
 
   const colorClasses = {
     cyan: 'text-[var(--accent-primary)] border-[var(--accent-primary)]/20 hover:border-[var(--accent-primary)]',
-    lime: 'text-[var(--marketing-lime)] border-[var(--marketing-lime)]/20 hover:border-[var(--marketing-lime)]',
+    lime: 'text-[var(--accent-success)] border-[var(--accent-success)]/20 hover:border-[var(--accent-success)]',
     gold: 'text-[var(--accent-gold)] border-[var(--accent-gold)]/20 hover:border-[var(--accent-gold)]',
-    magenta: 'text-[var(--marketing-magenta)] border-[var(--marketing-magenta)]/20 hover:border-[var(--marketing-magenta)]',
+    magenta: 'text-[var(--accent-tertiary)] border-[var(--accent-tertiary)]/20 hover:border-[var(--accent-tertiary)]',
   };
 
   return (

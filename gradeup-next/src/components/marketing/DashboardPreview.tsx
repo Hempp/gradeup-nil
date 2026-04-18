@@ -138,7 +138,7 @@ const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
       <div className="bg-[var(--marketing-gray-900)] rounded-xl p-4 border border-[var(--marketing-gray-800)]">
         <div className="flex items-center gap-4">
           {/* Avatar placeholder */}
-          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--marketing-lime)] flex items-center justify-center text-black font-bold text-xl">
+          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-success)] flex items-center justify-center text-black font-bold text-xl">
             JD
           </div>
           <div className="flex-1">
@@ -287,7 +287,7 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
               key={athlete.id}
               className="flex items-center gap-3 p-3 rounded-lg bg-[var(--marketing-gray-800)]/50 hover:bg-[var(--marketing-gray-800)] transition-colors group cursor-pointer"
             >
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--marketing-magenta)] flex items-center justify-center text-black font-semibold text-sm">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-tertiary)] flex items-center justify-center text-black font-semibold text-sm">
                 {athlete.initials}
               </div>
               <div className="flex-1 min-w-0">
@@ -331,7 +331,7 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
             <p className="text-xs text-[var(--marketing-gray-400)] mt-1">Total Invested</p>
           </div>
           <div className="text-center border-x border-[var(--marketing-gray-700)]">
-            <p className="text-2xl font-bold text-[var(--marketing-lime)]">$152K</p>
+            <p className="text-2xl font-bold text-[var(--accent-success)]">$152K</p>
             <p className="text-xs text-[var(--marketing-gray-400)] mt-1">Estimated Value</p>
           </div>
           <div className="text-center">
@@ -461,7 +461,7 @@ export function DashboardPreview({
               </p>
               <Link
                 href={ctaHref}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-primary)] text-black font-semibold hover:bg-[var(--marketing-lime)] transition-all hover:scale-105 hover:shadow-[0_0_30px_var(--marketing-cyan-glow)]"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-primary)] text-black font-semibold hover:bg-[var(--accent-success)] transition-all hover:scale-105 hover:shadow-[0_0_30px_var(--accent-primary-glow)]"
               >
                 {ctaText}
                 <ArrowRight className="h-5 w-5" />
@@ -475,7 +475,7 @@ export function DashboardPreview({
       <div
         className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse, var(--marketing-cyan-glow) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, var(--accent-primary-glow) 0%, transparent 70%)',
           opacity: 0.3,
           filter: 'blur(40px)',
         }}

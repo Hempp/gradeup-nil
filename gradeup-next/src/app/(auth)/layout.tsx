@@ -35,7 +35,7 @@ export default function AuthLayout({
         <div
           className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full opacity-30"
           style={{
-            background: 'radial-gradient(circle, var(--marketing-magenta) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, var(--accent-tertiary) 0%, transparent 70%)',
             filter: 'blur(80px)',
             animation: 'marketing-float 8s ease-in-out infinite',
             animationDelay: '-4s',

@@ -242,7 +242,7 @@ export default function LoginPage() {
             </label>
             <Link
               href="/forgot-password"
-              className="text-sm font-medium text-[var(--accent-primary)] hover:text-[var(--marketing-lime)] transition-colors"
+              className="text-sm font-medium text-[var(--accent-primary)] hover:text-[var(--accent-success)] transition-colors"
             >
               Forgot password?
             </Link>
@@ -265,7 +265,7 @@ export default function LoginPage() {
             Don&apos;t have an account?{' '}
             <Link
               href="/signup"
-              className="font-semibold text-[var(--accent-primary)] hover:text-[var(--marketing-lime)] transition-colors"
+              className="font-semibold text-[var(--accent-primary)] hover:text-[var(--accent-success)] transition-colors"
             >
               Sign up
             </Link>
@@ -275,7 +275,7 @@ export default function LoginPage() {
           {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
             <div className="mt-6 pt-6 border-t border-white/10">
               <div className="flex items-center gap-2 justify-center mb-4">
-                <div className="h-2 w-2 rounded-full bg-[var(--marketing-lime)] animate-pulse" />
+                <div className="h-2 w-2 rounded-full bg-[var(--accent-success)] animate-pulse" />
                 <p className="text-sm font-medium text-white/80">Quick Demo Access</p>
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -285,7 +285,7 @@ export default function LoginPage() {
                   </Button>
                 </Link>
                 <Link href="/api/demo/login?role=brand">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-lime)]/30 text-[var(--marketing-lime)] hover:bg-[var(--marketing-lime)]/10">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-success)]/30 text-[var(--accent-success)] hover:bg-[var(--accent-success)]/10">
                     Brand Demo
                   </Button>
                 </Link>
@@ -295,7 +295,7 @@ export default function LoginPage() {
                   </Button>
                 </Link>
                 <Link href="/api/demo/login?role=admin">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--marketing-magenta)]/30 text-[var(--marketing-magenta)] hover:bg-[var(--marketing-magenta)]/10">
+                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-tertiary)]/30 text-[var(--accent-tertiary)] hover:bg-[var(--accent-tertiary)]/10">
                     Admin Demo
                   </Button>
                 </Link>

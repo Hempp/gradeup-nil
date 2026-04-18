@@ -36,10 +36,10 @@ function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
 
-  const color = score >= 90 ? 'var(--marketing-magenta)'
+  const color = score >= 90 ? 'var(--accent-tertiary)'
     : score >= 75 ? 'var(--accent-gold)'
     : score >= 60 ? 'var(--accent-primary)'
-    : score >= 40 ? 'var(--marketing-lime)'
+    : score >= 40 ? 'var(--accent-success)'
     : 'var(--text-muted)';
 
   return (
@@ -206,7 +206,7 @@ export function GradeUpScoreCard({
             label="Academic"
             score={valuation.components.academic}
             maxScore={30}
-            color="bg-[var(--marketing-lime)]/10 text-[var(--marketing-lime)]"
+            color="bg-[var(--accent-success)]/10 text-[var(--accent-success)]"
           />
           <ComponentBar
             icon={Users}
@@ -227,7 +227,7 @@ export function GradeUpScoreCard({
             label="Reputation"
             score={valuation.components.reputation}
             maxScore={20}
-            color="bg-[var(--marketing-magenta)]/10 text-[var(--marketing-magenta)]"
+            color="bg-[var(--accent-tertiary)]/10 text-[var(--accent-tertiary)]"
           />
         </div>
       </CardContent>

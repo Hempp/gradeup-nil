@@ -94,7 +94,7 @@ function HeroSection() {
       <div
         className="absolute w-[250px] h-[250px] rounded-full opacity-25 blur-[80px] pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, var(--marketing-magenta) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--accent-tertiary) 0%, transparent 70%)',
           bottom: '-50px',
           right: '-50px',
         }}
@@ -104,7 +104,7 @@ function HeroSection() {
       <div className="relative max-w-4xl mx-auto text-center">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
           Find Your Perfect{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-primary)] to-[var(--marketing-lime)]">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-success)]">
             NIL Opportunity
           </span>
         </h1>
@@ -275,7 +275,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
   const isExpiringSoon = deadlineDate.getTime() - mountTime < 7 * 24 * 60 * 60 * 1000;
 
   const compensationBadgeColor = {
-    cash: 'bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)] border-[var(--marketing-lime)]/30',
+    cash: 'bg-[var(--accent-success)]/20 text-[var(--accent-success)] border-[var(--accent-success)]/30',
     product: 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border-[var(--accent-primary)]/30',
     hybrid: 'bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] border-[var(--accent-gold)]/30',
   };
@@ -447,7 +447,7 @@ function CTASection() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 px-4 bg-gradient-to-r from-[var(--accent-primary)]/10 via-[var(--marketing-magenta)]/5 to-[var(--accent-primary)]/10 border-t border-[var(--marketing-gray-800)] overflow-hidden"
+      className="py-20 px-4 bg-gradient-to-r from-[var(--accent-primary)]/10 via-[var(--accent-tertiary)]/5 to-[var(--accent-primary)]/10 border-t border-[var(--marketing-gray-800)] overflow-hidden"
     >
       <div className="max-w-4xl mx-auto text-center">
         {/* Stats row */}
@@ -461,7 +461,7 @@ function CTASection() {
             <div className="text-sm text-[var(--marketing-gray-500)]">Paid to Athletes</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-[var(--marketing-lime)]">847</div>
+            <div className="text-3xl font-bold text-[var(--accent-success)]">847</div>
             <div className="text-sm text-[var(--marketing-gray-500)]">Active Athletes</div>
           </div>
           <div className="text-center">
