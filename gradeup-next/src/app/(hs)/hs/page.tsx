@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { WaitlistForm } from '@/components/hs/WaitlistForm';
 
 export const metadata: Metadata = {
   title: 'GradeUp HS — Name, Image, Likeness for High School Athletes',
@@ -26,12 +27,16 @@ export default function HSLandingPage() {
         </p>
       </section>
 
-      <section className="mx-auto max-w-4xl px-6 pb-24">
+      <section className="mx-auto max-w-4xl px-6 pb-16">
         <div className="grid gap-6 md:grid-cols-3">
           <Card title="Verified GPA" body="Self-reported today. Institution-verified tomorrow. Every claim is labeled." />
           <Card title="Parents First" body="Dual signature. Custodial payouts. A real dashboard for the people writing the permission slip." />
           <Card title="State Compliant" body="Per-state rules engine handles disclosure windows, category bans, and agent requirements automatically." />
         </div>
+      </section>
+
+      <section className="px-6 pb-24">
+        <WaitlistForm />
       </section>
     </main>
   );
