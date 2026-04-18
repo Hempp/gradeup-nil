@@ -173,8 +173,8 @@ function HeroSection() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-8">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--marketing-lime)] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--marketing-lime)]"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-success)] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent-success)]"></span>
               </span>
               <span className="text-sm font-medium text-white/90">NCAA Compliant Platform</span>
             </div>
@@ -183,7 +183,7 @@ function HeroSection() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white mb-6">
               <span className="block animate-float-slow">Your GPA</span>
               <span className="block gradient-text-cyan text-glow-animated">Is Worth</span>
-              <span className="block bg-gradient-to-r from-[var(--accent-gold)] to-[var(--marketing-lime)] bg-clip-text text-transparent text-glow-gold">
+              <span className="block bg-gradient-to-r from-[var(--accent-gold)] to-[var(--accent-success)] bg-clip-text text-transparent text-glow-gold">
                 Money.
               </span>
             </h1>
@@ -192,6 +192,11 @@ function HeroSection() {
             <p className="text-lg sm:text-xl text-[var(--marketing-gray-400)] max-w-xl mx-auto lg:mx-0 mb-8">
               The only NIL platform where grades unlock better deals. Higher GPA = higher value.
               Get paid for your excellence.
+            </p>
+
+            {/* Dual-audience acknowledgment */}
+            <p className="text-sm text-[var(--marketing-gray-500)] max-w-xl mx-auto lg:mx-0 mb-8">
+              Built for scholar-athletes from 8th grade through senior year of college, with the parents, coaches, and athletic directors who support them.
             </p>
 
             {/* CTAs */}
@@ -228,7 +233,7 @@ function HeroSection() {
                 <span>No credit card</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Zap className="h-4 w-4 text-[var(--marketing-lime)]" aria-hidden="true" />
+                <Zap className="h-4 w-4 text-[var(--accent-success)]" aria-hidden="true" />
                 <span>2-min signup</span>
               </div>
             </div>
@@ -240,7 +245,7 @@ function HeroSection() {
               aria-label="Platform statistics"
             >
               <div className="text-center" role="listitem">
-                <div className="text-3xl sm:text-4xl font-bold text-[var(--marketing-lime)]" aria-live="polite">
+                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-success)]" aria-live="polite">
                   <AnimatedCounter target={127450} prefix="$" skipAnimation={prefersReducedMotion} />
                 </div>
                 <div className="text-sm text-[var(--marketing-gray-500)] mt-1">Paid to Athletes</div>
@@ -266,7 +271,7 @@ function HeroSection() {
           <div className="relative flex justify-center lg:justify-end">
             <div className="relative">
               {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--marketing-magenta)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
+              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--accent-tertiary)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
 
               {/* Athlete Card */}
               <div className="relative card-marketing p-1 shadow-2xl">
@@ -286,7 +291,7 @@ function HeroSection() {
                       <BadgeCheck className="h-5 w-5" />
                     </div>
                     {/* Earnings Badge */}
-                    <div className="absolute top-3 left-3 bg-[var(--marketing-lime)]/90 text-black px-2 py-1 rounded-full text-xs font-bold">
+                    <div className="absolute top-3 left-3 bg-[var(--accent-success)]/90 text-black px-2 py-1 rounded-full text-xs font-bold">
                       $12,400 earned
                     </div>
                   </div>
@@ -492,7 +497,7 @@ const AthleteCard = memo(function AthleteCard({ athlete }: { athlete: FeaturedAt
         )}
         {/* Earnings Badge - Top left */}
         {(athlete as FeaturedAthlete & { earnings?: string }).earnings && (
-          <div className="absolute top-3 left-3 bg-[var(--marketing-lime)]/90 text-black px-2 py-1 rounded-full text-xs font-bold shadow-md">
+          <div className="absolute top-3 left-3 bg-[var(--accent-success)]/90 text-black px-2 py-1 rounded-full text-xs font-bold shadow-md">
             {(athlete as FeaturedAthlete & { earnings?: string }).earnings}
           </div>
         )}
@@ -610,7 +615,7 @@ function FeaturedAthletesSection() {
               <span>NCAA compliant</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-[var(--marketing-lime)]" aria-hidden="true" />
+              <Clock className="h-4 w-4 text-[var(--accent-success)]" aria-hidden="true" />
               <span>Deals in 48hrs</span>
             </div>
           </div>
@@ -681,7 +686,7 @@ function HowItWorksSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
-          <span className="inline-block px-3 py-1 rounded-full bg-[var(--marketing-magenta)]/10 text-[var(--marketing-magenta)] text-sm font-medium mb-4 border border-[var(--marketing-magenta)]/20">
+          <span className="inline-block px-3 py-1 rounded-full bg-[var(--accent-tertiary)]/10 text-[var(--accent-tertiary)] text-sm font-medium mb-4 border border-[var(--accent-tertiary)]/20">
             See It In Action
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
@@ -699,7 +704,7 @@ function HowItWorksSection() {
           <div className="lg:col-span-3">
             <div className="relative">
               {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 via-[var(--marketing-magenta)]/20 to-[var(--marketing-lime)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
+              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 via-[var(--accent-tertiary)]/20 to-[var(--accent-success)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
 
               <div className="relative card-marketing overflow-hidden gradient-border gradient-border-subtle">
                 {/* Video container */}
@@ -744,7 +749,7 @@ function HowItWorksSection() {
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-[var(--marketing-lime)] animate-pulse" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--accent-success)] animate-pulse" />
                         <span className="text-sm text-white/80">GradeUp Platform Demo</span>
                       </div>
                       <span className="text-xs text-white/60">30 sec</span>
@@ -760,7 +765,7 @@ function HowItWorksSection() {
                   <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Paid Out</div>
                 </div>
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--marketing-lime)]">68%</div>
+                  <div className="text-base sm:text-xl font-bold text-[var(--accent-success)]">68%</div>
                   <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Match Rate</div>
                 </div>
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
@@ -789,10 +794,10 @@ function HowItWorksSection() {
                   stat: 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]',
                 },
                 lime: {
-                  bg: 'bg-[var(--marketing-lime)]/10',
-                  border: 'border-[var(--marketing-lime)]/30',
-                  text: 'text-[var(--marketing-lime)]',
-                  stat: 'bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)]',
+                  bg: 'bg-[var(--accent-success)]/10',
+                  border: 'border-[var(--accent-success)]/30',
+                  text: 'text-[var(--accent-success)]',
+                  stat: 'bg-[var(--accent-success)]/20 text-[var(--accent-success)]',
                 },
                 gold: {
                   bg: 'bg-[var(--accent-gold)]/10',
@@ -869,7 +874,7 @@ function PlatformPreviewSection() {
       {/* Background accent */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--marketing-magenta)]/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--accent-tertiary)]/10 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -961,7 +966,7 @@ function ForBrandsSection() {
             <ul className="space-y-4 mb-8">
               {brandFeatures.map((feature) => (
                 <li key={feature.text} className="flex items-center gap-3">
-                  <feature.icon className="h-5 w-5 text-[var(--marketing-lime)] flex-shrink-0" />
+                  <feature.icon className="h-5 w-5 text-[var(--accent-success)] flex-shrink-0" />
                   <span className="text-[var(--marketing-gray-300)]">{feature.text}</span>
                 </li>
               ))}
@@ -974,7 +979,7 @@ function ForBrandsSection() {
                 <div className="text-xs text-[var(--marketing-gray-500)]">Avg ROI increase</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--marketing-lime)]">68%</div>
+                <div className="text-2xl font-bold text-[var(--accent-success)]">68%</div>
                 <div className="text-xs text-[var(--marketing-gray-500)]">Match-to-deal rate</div>
               </div>
               <div className="text-center">
@@ -993,7 +998,7 @@ function ForBrandsSection() {
 
           {/* Dashboard Preview */}
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/10 to-[var(--marketing-magenta)]/10 rounded-3xl blur-2xl" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/10 to-[var(--accent-tertiary)]/10 rounded-3xl blur-2xl" />
             <div className="relative card-marketing shadow-xl overflow-hidden">
               {/* Browser chrome */}
               <div className="flex items-center gap-2 px-4 py-3 bg-[var(--marketing-gray-800)] border-b border-[var(--marketing-gray-700)]">
@@ -1012,8 +1017,8 @@ function ForBrandsSection() {
                     <div className="text-3xl font-bold text-[var(--accent-primary)]">847</div>
                     <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Athletes Found</div>
                   </div>
-                  <div className="bg-[var(--marketing-lime)]/10 rounded-xl p-4 text-center border border-[var(--marketing-lime)]/20">
-                    <div className="text-3xl font-bold text-[var(--marketing-lime)]">23</div>
+                  <div className="bg-[var(--accent-success)]/10 rounded-xl p-4 text-center border border-[var(--accent-success)]/20">
+                    <div className="text-3xl font-bold text-[var(--accent-success)]">23</div>
                     <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Active Deals</div>
                   </div>
                   <div className="bg-[var(--accent-gold)]/10 rounded-xl p-4 text-center border border-[var(--accent-gold)]/20">
@@ -1027,7 +1032,7 @@ function ForBrandsSection() {
                   <div className="text-xs text-[var(--marketing-gray-500)] mb-3">Active Filters</div>
                   <div className="flex flex-wrap gap-2">
                     <span className="px-2 py-1 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs rounded-full">GPA ≥ 3.5</span>
-                    <span className="px-2 py-1 bg-[var(--marketing-lime)]/20 text-[var(--marketing-lime)] text-xs rounded-full">Division I</span>
+                    <span className="px-2 py-1 bg-[var(--accent-success)]/20 text-[var(--accent-success)] text-xs rounded-full">Division I</span>
                     <span className="px-2 py-1 bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] text-xs rounded-full">10K+ followers</span>
                   </div>
                 </div>
@@ -1105,7 +1110,7 @@ function TestimonialsSection() {
               {/* Earnings/date badges */}
               <div className="mt-4 pt-4 border-t border-[var(--marketing-gray-800)] flex flex-wrap gap-2">
                 {(testimonial as typeof testimonial & { earnings?: string }).earnings && (
-                  <span className="px-2 py-1 bg-[var(--marketing-lime)]/10 text-[var(--marketing-lime)] text-xs rounded-full font-medium">
+                  <span className="px-2 py-1 bg-[var(--accent-success)]/10 text-[var(--accent-success)] text-xs rounded-full font-medium">
                     {(testimonial as typeof testimonial & { earnings?: string }).earnings}
                   </span>
                 )}
