@@ -24,6 +24,7 @@
  */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import Stripe from 'stripe';
 
 // ----------------------------------------------------------------------------
 // Types
@@ -153,6 +154,248 @@ export const defaultPayoutProvider: PayoutProvider = {
 };
 
 // ----------------------------------------------------------------------------
+// Stripe Connect provider (real)
+// ----------------------------------------------------------------------------
+
+/**
+ * Lazy Stripe client — constructed once, reused across calls. We use the
+ * same pattern as `src/lib/services/stripe.ts` / the platform webhook
+ * handler (both construct Stripe with the project's pinned API version).
+ * Intentionally NOT imported from that module because we also need the
+ * Stripe type for constructEvent in the webhook.
+ */
+let stripeClient: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error(
+      '[hs-nil payouts] STRIPE_SECRET_KEY not configured — cannot use StripeConnectPayoutProvider.',
+    );
+  }
+  if (!stripeClient) {
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2026-01-28.clover',
+    });
+  }
+  return stripeClient;
+}
+
+function getAppUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ||
+    'https://gradeupnil.com'
+  );
+}
+
+/**
+ * Real Stripe Connect implementation of `PayoutProvider`. Uses Express
+ * connected accounts with the `transfers` capability — the standard
+ * marketplace / custodian flow where the platform holds the funds and
+ * transfers them to the parent's linked bank.
+ *
+ * Activation: this provider is only returned by `getPayoutProvider()`
+ * when `HS_PAYOUT_PROVIDER === 'stripe'` AND a `STRIPE_SECRET_KEY` is
+ * present. In all other configurations the stub is used, preserving
+ * fail-closed semantics in production (stub throws there too, so
+ * forgetting the env var surfaces loudly).
+ */
+export class StripeConnectPayoutProvider implements PayoutProvider {
+  async createDestination({
+    parentProfileId,
+    email,
+    countryCode = 'US',
+  }: {
+    parentProfileId: string;
+    email: string;
+    countryCode?: string;
+  }): Promise<{ accountId: string; onboardingUrl: string; complete: boolean }> {
+    const stripe = getStripe();
+
+    const account = await stripe.accounts.create({
+      type: 'express',
+      country: countryCode,
+      email,
+      business_type: 'individual',
+      capabilities: {
+        transfers: { requested: true },
+      },
+      metadata: { parentProfileId },
+    });
+
+    const appUrl = getAppUrl();
+    const accountLink = await stripe.accountLinks.create({
+      account: account.id,
+      refresh_url: `${appUrl}/hs/onboarding/payouts?refresh=1`,
+      return_url: `${appUrl}/hs/onboarding/payouts/return`,
+      type: 'account_onboarding',
+    });
+
+    // Persist the account id on hs_parent_profiles. We set onboarding
+    // _complete=false because Stripe Connect is NEVER complete at this
+    // point — the parent hasn't seen the hosted onboarding yet.
+    const sb = getServiceRoleClient();
+    const { error: updateErr } = await sb
+      .from('hs_parent_profiles')
+      .update({
+        stripe_connect_account_id: account.id,
+        stripe_connect_onboarding_complete: false,
+        stripe_connect_updated_at: new Date().toISOString(),
+      })
+      .eq('id', parentProfileId);
+
+    if (updateErr) {
+      throw new Error(
+        `[hs-nil payouts] failed to persist connect account id: ${updateErr.message}`,
+      );
+    }
+
+    return {
+      accountId: account.id,
+      onboardingUrl: accountLink.url,
+      complete: false,
+    };
+  }
+
+  /**
+   * Re-creates an onboarding account link for a Connect account that
+   * already exists. Used by the "resume onboarding" CTA and by the
+   * refresh_url round-trip when the hosted session expires.
+   */
+  async createOnboardingLink(accountId: string): Promise<string> {
+    const stripe = getStripe();
+    const appUrl = getAppUrl();
+    const link = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: `${appUrl}/hs/onboarding/payouts?refresh=1`,
+      return_url: `${appUrl}/hs/onboarding/payouts/return`,
+      type: 'account_onboarding',
+    });
+    return link.url;
+  }
+
+  async refreshDestination(
+    accountId: string,
+  ): Promise<{ complete: boolean; reason?: string }> {
+    const stripe = getStripe();
+    const account = await stripe.accounts.retrieve(accountId);
+
+    const detailsSubmitted = Boolean(account.details_submitted);
+    const payoutsEnabled = Boolean(account.payouts_enabled);
+    const complete = detailsSubmitted && payoutsEnabled;
+
+    const requirementsDue = account.requirements?.currently_due ?? [];
+
+    // Update the parent profile row identified by this account id.
+    const sb = getServiceRoleClient();
+    const { error: updateErr } = await sb
+      .from('hs_parent_profiles')
+      .update({
+        stripe_connect_onboarding_complete: complete,
+        stripe_connect_requirements_due: requirementsDue,
+        stripe_connect_updated_at: new Date().toISOString(),
+      })
+      .eq('stripe_connect_account_id', accountId);
+
+    if (updateErr) {
+      // Don't throw — the Stripe fetch itself succeeded and is the
+      // authoritative answer. Caller can decide whether the db mismatch
+      // warrants alerting.
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[hs-nil payouts] refreshDestination db update failed',
+        { accountId, error: updateErr.message },
+      );
+    }
+
+    if (complete) return { complete: true };
+
+    if (!detailsSubmitted) {
+      return { complete: false, reason: 'onboarding_incomplete' };
+    }
+    if (!payoutsEnabled) {
+      return {
+        complete: false,
+        reason:
+          requirementsDue.length > 0
+            ? `requirements_due:${requirementsDue.join(',')}`
+            : 'payouts_disabled',
+      };
+    }
+    return { complete: false, reason: 'unknown' };
+  }
+
+  async initiatePayout({
+    accountId,
+    amount,
+    currency,
+    dealId,
+  }: {
+    accountId: string;
+    amount: number;
+    currency: string;
+    dealId: string;
+  }): Promise<{
+    transferId: string;
+    status: 'pending' | 'paid' | 'failed';
+    reason?: string;
+  }> {
+    const stripe = getStripe();
+
+    // Verify the account is payout-capable before we create the transfer.
+    // Stripe would reject the transfer anyway, but this gives us a
+    // cleaner error path that doesn't leak Stripe internals.
+    const account = await stripe.accounts.retrieve(accountId);
+    if (!account.payouts_enabled) {
+      return {
+        transferId: '',
+        status: 'failed',
+        reason: 'payouts_not_enabled',
+      };
+    }
+
+    const transfer = await stripe.transfers.create({
+      amount,
+      currency: currency.toLowerCase(),
+      destination: accountId,
+      metadata: { dealId },
+    });
+
+    // Stripe transfers complete asynchronously. The final status
+    // (paid / failed) arrives via the Connect webhook.
+    return {
+      transferId: transfer.id,
+      status: 'pending',
+    };
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Provider selection
+// ----------------------------------------------------------------------------
+
+/**
+ * Resolve the payout provider from env. Fail-closed: defaults to the stub,
+ * which itself throws in production so a missing env var can never
+ * silently move fake money.
+ *
+ * Opt-in to real Stripe requires BOTH:
+ *   - `HS_PAYOUT_PROVIDER === 'stripe'`
+ *   - `STRIPE_SECRET_KEY` is set
+ *
+ * Callers that need a specific provider can pass one explicitly; this
+ * function is the default for routes/UI that just want "whatever is
+ * configured".
+ */
+export function getPayoutProvider(): PayoutProvider {
+  if (
+    process.env.HS_PAYOUT_PROVIDER === 'stripe' &&
+    process.env.STRIPE_SECRET_KEY
+  ) {
+    return new StripeConnectPayoutProvider();
+  }
+  return defaultPayoutProvider;
+}
+
+// ----------------------------------------------------------------------------
 // createPendingPayout
 // ----------------------------------------------------------------------------
 
@@ -268,7 +511,7 @@ export async function authorizePayout(dealId: string): Promise<{
  */
 export async function releasePayout(
   dealId: string,
-  provider: PayoutProvider = defaultPayoutProvider,
+  provider: PayoutProvider = getPayoutProvider(),
 ): Promise<{
   ok: boolean;
   reason?: string;
