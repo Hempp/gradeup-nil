@@ -11,6 +11,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { AdminActionButton } from '@/components/hs/AdminActionButton';
 
 export const metadata: Metadata = {
   title: 'Pending links — GradeUp HS',
@@ -132,8 +133,10 @@ export default async function AdminLinksPage() {
               account.
             </li>
             <li>
-              A dedicated &ldquo;verify&rdquo; / &ldquo;revoke&rdquo; action
-              is a <span className="text-amber-200">TODO for Phase 6</span>.
+              Use the <strong>Force verify</strong> button to stamp the
+              link as verified with method <code>manual_support</code>.
+              Neither party is emailed — the reason field captures the
+              justification for the audit log.
             </li>
           </ol>
         </aside>
@@ -196,10 +199,17 @@ export default async function AdminLinksPage() {
                         </div>
                       </dl>
                     </div>
-                    <p className="mt-3 text-xs text-white/40">
-                      Verify / revoke actions —{' '}
-                      <span className="text-amber-200">coming soon</span>.
-                    </p>
+                    <div className="mt-3">
+                      <AdminActionButton
+                        label="Force verify"
+                        confirmTitle={`Force-verify link between parent ${row.parent_profile_id.slice(0, 8)} and athlete ${row.athlete_user_id.slice(0, 8)}?`}
+                        confirmDescription="Admin override. Stamps verified_at + method='manual_support'. Neither party is emailed."
+                        endpoint="/api/hs/admin/actions/link-verify"
+                        payload={{ linkId: row.id }}
+                        submitLabel="Force verify"
+                        ariaLabel={`Force verify link ${row.id}`}
+                      />
+                    </div>
                   </li>
                 ))}
               </ul>

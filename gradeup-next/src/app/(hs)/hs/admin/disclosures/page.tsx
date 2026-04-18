@@ -11,6 +11,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { AdminActionButton } from '@/components/hs/AdminActionButton';
 
 export const metadata: Metadata = {
   title: 'Disclosure ops — GradeUp HS',
@@ -136,10 +137,10 @@ export default async function AdminDisclosuresPage() {
               redeploy.
             </li>
             <li>
-              Manual retry action is a{' '}
-              <span className="text-amber-200">TODO for Phase 6</span>. For
-              now re-run the compliance cron or flip the row to{' '}
-              <code>pending</code> via service-role SQL.
+              Use the <strong>Retry</strong> button on a failed row to
+              re-queue a new <code>pending</code> disclosure (scheduled
+              10 minutes out). The original failed row stays in place as
+              history. Every retry is captured in the admin audit log.
             </li>
           </ol>
         </NextStepsBlock>
@@ -270,9 +271,23 @@ function DisclosureRowCard({
           {row.failure_reason}
         </p>
       ) : null}
-      <p className="mt-3 text-xs text-white/40">
-        Manual retry — <span className="text-amber-200">coming soon</span>.
-      </p>
+      {tone === 'error' ? (
+        <div className="mt-3">
+          <AdminActionButton
+            label="Retry"
+            confirmTitle={`Retry disclosure for deal ${row.deal_id.slice(0, 8)}?`}
+            confirmDescription="Inserts a new pending row scheduled 10 minutes out. The old failed row stays as history."
+            endpoint="/api/hs/admin/actions/disclosure-retry"
+            payload={{ dealId: row.deal_id }}
+            submitLabel="Re-queue disclosure"
+            ariaLabel={`Retry disclosure ${row.id}`}
+          />
+        </div>
+      ) : (
+        <p className="mt-3 text-xs text-white/40">
+          Pending-overdue rows re-drain automatically on the next cron tick.
+        </p>
+      )}
     </li>
   );
 }

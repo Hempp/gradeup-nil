@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { AdminActionButton } from '@/components/hs/AdminActionButton';
 
 export const metadata: Metadata = {
   title: 'Expiring consents — GradeUp HS',
@@ -126,8 +127,11 @@ export default async function AdminConsentsPage() {
               nudge the household directly.
             </li>
             <li>
-              Automated expiry reminders are on the roadmap —{' '}
-              <span className="text-amber-200">TODO for Phase 6</span>.
+              Use <strong>Send renewal nudge</strong> to fire the canned
+              renewal email to the parent on record. This does NOT mutate
+              the consent — renewal requires parental intent through
+              the existing /hs/consent/request?renew=… flow. Every nudge
+              attempt (success and failure) lands in the admin audit log.
             </li>
           </ol>
         </aside>
@@ -192,10 +196,18 @@ export default async function AdminConsentsPage() {
                           <Fact label="Method" value={row.signature_method} />
                         </dl>
                       </div>
-                      <p className="mt-3 text-xs text-white/40">
-                        Send renewal email —{' '}
-                        <span className="text-amber-200">coming soon</span>.
-                      </p>
+                      <div className="mt-3">
+                        <AdminActionButton
+                          label="Send renewal nudge"
+                          confirmTitle={`Send consent renewal nudge to ${row.parent_email}?`}
+                          confirmDescription="Emails a reminder with a renewal link. Does not modify the consent record."
+                          endpoint="/api/hs/admin/actions/consent-renew"
+                          payload={{ consentId: row.id }}
+                          requireReason={false}
+                          submitLabel="Send email"
+                          ariaLabel={`Send renewal nudge for consent ${row.id}`}
+                        />
+                      </div>
                     </li>
                   );
                 })}

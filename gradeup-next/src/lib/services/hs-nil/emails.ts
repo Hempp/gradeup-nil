@@ -468,3 +468,109 @@ ${cta}
   });
   return result;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. Consent renewal nudge (admin-triggered)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Nudge a parent that their consent is about to expire. Triggered by an
+ * admin from /hs/admin/consents via the admin-actions service.
+ *
+ * Does NOT mutate any consent row — renewal requires explicit parental
+ * intent, signed through the existing /hs/consent/request flow. This
+ * email only reminds.
+ *
+ * Tone is utility, not marketing. Parents whose consent has already been
+ * signed once don't need a re-sell — they need a clear "heads up, expiry
+ * date, one click to renew" message.
+ */
+export interface ConsentRenewalNudgeInput {
+  parentEmail: string;
+  parentFullName?: string | null;
+  athleteName: string;
+  /** Short human-readable summary of the current scope (categories, max, duration). */
+  scopeSummary: string;
+  currentExpiresAt: Date;
+  /** Absolute URL to the renewal / manage surface. */
+  renewUrl: string;
+}
+
+function formatExpiresIn(date: Date): string {
+  const ms = date.getTime() - Date.now();
+  if (ms <= 0) return 'soon';
+  const days = Math.ceil(ms / (24 * 60 * 60 * 1000));
+  if (days <= 1) return 'in 1 day';
+  if (days < 14) return `in ${days} days`;
+  const weeks = Math.ceil(days / 7);
+  return `in ${weeks} weeks`;
+}
+
+function formatExpiryDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+export async function sendConsentRenewalNudge(
+  input: ConsentRenewalNudgeInput
+): Promise<EmailResult> {
+  const {
+    parentEmail,
+    parentFullName,
+    athleteName,
+    scopeSummary,
+    currentExpiresAt,
+    renewUrl,
+  } = input;
+  const greeting = parentFullName
+    ? `Hi ${escapeHtml(parentFullName)},`
+    : 'Hello,';
+  const safeAthlete = escapeHtml(athleteName);
+  const safeScope = escapeHtml(scopeSummary);
+  const expiresIn = formatExpiresIn(currentExpiresAt);
+  const expiresOn = formatExpiryDate(currentExpiresAt);
+
+  const subject = `Parental consent for ${athleteName} expires ${expiresIn}`;
+
+  const bodyHtml = `
+<h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#111;">${escapeHtml(subject)}</h1>
+<p style="margin:0 0 16px;">${greeting}</p>
+<p style="margin:0 0 16px;">Your parental consent for <strong>${safeAthlete}</strong> on GradeUp NIL is set to expire on <strong>${escapeHtml(expiresOn)}</strong>. To keep approving new NIL deals past that date, you'll need to renew it.</p>
+
+<h2 style="margin:24px 0 8px;font-size:16px;font-weight:600;color:#111;">Your current approved scope</h2>
+<p style="margin:0 0 16px;padding:12px 16px;background:#F4F4F5;border-left:3px solid #0070F3;border-radius:6px;">${safeScope}</p>
+
+${primaryButton('Renew consent', renewUrl)}
+
+<p style="margin:0 0 16px;font-size:13px;color:#52525B;">Or copy this link into your browser:<br><span style="word-break:break-all;">${renewUrl}</span></p>
+
+<h2 style="margin:24px 0 8px;font-size:16px;font-weight:600;color:#111;">What happens if it expires</h2>
+<ul style="margin:0 0 16px;padding-left:20px;color:#18181B;">
+  <li style="margin:0 0 6px;"><strong>Active deals remain binding.</strong> Anything already signed before the expiry stays in effect for its contract term.</li>
+  <li style="margin:0 0 6px;"><strong>New deals cannot be approved until renewed.</strong> Brands reaching out to ${safeAthlete} will be held until a fresh consent is on file.</li>
+  <li style="margin:0 0 6px;">You can renew with the same scope, or adjust categories, maximum deal amount, or duration before re-signing.</li>
+</ul>
+
+<p style="margin:24px 0 0;font-size:13px;color:#52525B;">Questions? Reply to this email — a real human from our team will get back to you.</p>
+`;
+
+  const result = await sendEmail({
+    to: parentEmail,
+    replyTo: SUPPORT_EMAIL,
+    subject,
+    html: wrapPlain({
+      title: 'Parental Consent Renewal Reminder',
+      preview: `Your consent for ${athleteName} expires ${expiresIn}.`,
+      bodyHtml,
+    }),
+  });
+
+  logSend('consent_renewal_nudge', parentEmail, result, {
+    athleteName,
+    expiresAt: currentExpiresAt.toISOString(),
+  });
+  return result;
+}

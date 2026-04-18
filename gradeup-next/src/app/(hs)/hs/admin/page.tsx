@@ -550,6 +550,13 @@ export default async function HsAdminLandingPage() {
           Non-admin users get a 404 to avoid leaking the existence of these
           routes.{' '}
           <Link
+            href="/hs/admin/audit"
+            className="underline decoration-white/30 underline-offset-2 hover:text-white/60"
+          >
+            View admin action log
+          </Link>
+          {' · '}
+          <Link
             href="/hs"
             className="underline decoration-white/30 underline-offset-2 hover:text-white/60"
           >

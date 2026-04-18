@@ -12,6 +12,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { AdminPayoutResolveDialog } from '@/components/hs/AdminPayoutResolveDialog';
 
 export const metadata: Metadata = {
   title: 'Payout ops — GradeUp HS',
@@ -138,8 +139,11 @@ export default async function AdminPayoutsPage() {
               transfer will kick in automatically on next webhook.
             </li>
             <li>
-              Manual retry / re-authorize — the action is a{' '}
-              <span className="text-amber-200">TODO for Phase 6</span>.
+              Use <strong>Mark resolved</strong> to record an out-of-band
+              resolution. Pick <code>paid</code> for a manual ACH transfer,
+              or <code>refunded</code> if the platform kept the money.
+              A reference code (ACH confirmation / Stripe refund id /
+              ticket id) and reason are required and land in the audit log.
             </li>
           </ol>
         </aside>
@@ -233,10 +237,12 @@ function PayoutRowCard({
           {row.failed_reason}
         </p>
       ) : null}
-      <p className="mt-3 text-xs text-white/40">
-        Retry / re-authorize —{' '}
-        <span className="text-amber-200">coming soon</span>.
-      </p>
+      <div className="mt-3">
+        <AdminPayoutResolveDialog
+          payoutId={row.id}
+          payoutLabel={`${row.payout_amount.toFixed(2)} ${row.payout_currency}`}
+        />
+      </div>
     </li>
   );
 }
