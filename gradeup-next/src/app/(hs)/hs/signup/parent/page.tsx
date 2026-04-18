@@ -16,20 +16,24 @@
  *   - auth.users (Supabase signUp) with role='hs_parent' metadata. The
  *     auth-only record is enough for the user to sign in and continue
  *     onboarding.
- *   - TODO (separate migration): write a row into `hs_parent_profiles` with
- *     the relationship + athlete linkage fields. That table does NOT exist
- *     yet — capturing the UX pattern first, DB follow-up is a separate task.
- *     Needed columns when the migration lands:
- *       user_id (auth.users FK, unique), full_name, relationship,
- *       athlete_user_id (nullable, auth.users FK), pending_athlete_email.
+ *   - hs_parent_profiles (migration 20260418_005): durable row with
+ *     full_name + relationship, RLS-locked to the signing user.
+ *   - hs_parent_athlete_links (same migration): when an athlete email
+ *     is provided, we attempt a pending-verification link. Misses
+ *     degrade to 'pending_invitation' — the parent has a profile but
+ *     the link waits for a future invite flow.
  *
- * On success we push to /hs/onboarding/parent-next — TODO page.
+ * On success we push to /hs/onboarding/parent-next.
  */
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import {
+  createParentProfile,
+  linkAthlete,
+} from '@/lib/services/hs-nil/parents';
 
 type Relationship = 'parent' | 'legal_guardian';
 
@@ -116,20 +120,45 @@ export default function HSParentSignupPage() {
         return;
       }
 
-      // TODO: when migration lands creating `hs_parent_profiles`, insert here:
-      //
-      //   await supabase.from('hs_parent_profiles').insert({
-      //     user_id: authData.user!.id,
-      //     full_name: form.fullName.trim(),
-      //     relationship: form.relationship,
-      //     pending_athlete_name: form.athleteName.trim(),
-      //     pending_athlete_email: form.athleteEmail.trim() || null,
-      //   });
-      //
-      // Until then the user-metadata written above is the source of truth for
-      // the parent role and pending-athlete linkage. Mentioning authData so
-      // the variable isn't unused.
-      void authData;
+      const userId = authData.user?.id;
+      if (!userId) {
+        // Edge case: Supabase is configured to require email confirmation
+        // and returns no user row until the confirmation clicks through.
+        // The parent profile needs an authenticated session, so push them
+        // to the next step and let that page finish the profile write
+        // once auth state is live.
+        router.push('/hs/onboarding/parent-next');
+        return;
+      }
+
+      // Durable parent-profile row. RLS enforces user_id = auth.uid(),
+      // so this only works once the session from signUp is active
+      // (Supabase sets the session synchronously when email confirm
+      // is disabled, which is the default for the pilot).
+      const { id: parentProfileId } = await createParentProfile({
+        userId,
+        fullName: form.fullName.trim(),
+        relationship: form.relationship,
+      });
+
+      // Best-effort link to the athlete. Failures here are
+      // non-blocking — the parent can still complete onboarding and
+      // we surface the pending link from the dashboard.
+      const athleteEmail = form.athleteEmail.trim();
+      if (athleteEmail) {
+        try {
+          await linkAthlete({
+            parentProfileId,
+            athleteEmail,
+            relationship: form.relationship,
+          });
+        } catch (linkErr) {
+          // Swallow and log — the profile already exists, and the
+          // onboarding flow can retry the link.
+          // eslint-disable-next-line no-console
+          console.warn('[hs-parent-signup] linkAthlete failed', linkErr);
+        }
+      }
 
       router.push('/hs/onboarding/parent-next');
     } catch {
