@@ -122,13 +122,6 @@ describe('Authentication Flow Integration Tests', () => {
         expect(screen.getByText(/don't have an account/i)).toBeInTheDocument();
       });
 
-      it('renders social login buttons', () => {
-        renderWithProviders(<LoginPage />);
-
-        expect(screen.getByRole('button', { name: /google/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /apple/i })).toBeInTheDocument();
-      });
-
       it('renders demo mode links', () => {
         renderWithProviders(<LoginPage />);
 

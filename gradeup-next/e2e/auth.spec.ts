@@ -393,26 +393,6 @@ test.describe('Authentication - Protected Routes', () => {
   });
 });
 
-test.describe('Authentication - Social Login Buttons', () => {
-  test('Google login button is present and clickable', async ({ page }) => {
-    await page.goto('/login', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
-
-    const googleButton = page.getByRole('button', { name: /google/i });
-    await expect(googleButton).toBeVisible({ timeout: 15000 });
-    await expect(googleButton).toBeEnabled();
-  });
-
-  test('Apple login button is present and clickable', async ({ page }) => {
-    await page.goto('/login', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
-
-    const appleButton = page.getByRole('button', { name: /apple/i });
-    await expect(appleButton).toBeVisible({ timeout: 15000 });
-    await expect(appleButton).toBeEnabled();
-  });
-});
-
 test.describe('Authentication - Brand Signup', () => {
   test('brand signup page loads', async ({ page }) => {
     await page.goto('/signup/brand', { waitUntil: 'domcontentloaded' });

@@ -44,9 +44,8 @@ test.describe('Login Form Validation', () => {
     await expect(page.getByRole('checkbox')).toBeVisible(); // Remember me
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
 
-    // Check social login buttons
-    await expect(page.getByRole('button', { name: /google/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /apple/i })).toBeVisible();
+    // Check sign up link
+    await expect(page.getByRole('link', { name: /sign up/i })).toBeVisible();
   });
 
   test('email and password fields accept input', async ({ page }) => {

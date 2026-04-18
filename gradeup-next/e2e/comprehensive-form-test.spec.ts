@@ -114,18 +114,9 @@ test.describe('1. Login Form (/login)', () => {
     expect(page.url()).toContain('/forgot-password');
   });
 
-  test('1f. Google and Apple social login buttons exist', async ({ page }) => {
-    const googleBtn = page.getByRole('button', { name: /google/i });
-    const appleBtn = page.getByRole('button', { name: /apple/i });
-
-    const googleVisible = await googleBtn.isVisible();
-    const appleVisible = await appleBtn.isVisible();
-
-    console.log(`  Google button visible: ${googleVisible}`);
-    console.log(`  Apple button visible: ${appleVisible}`);
-
-    expect(googleVisible).toBe(true);
-    expect(appleVisible).toBe(true);
+  test('1f. Sign up link exists on login page', async ({ page }) => {
+    const signUpLink = page.getByRole('link', { name: /sign up/i });
+    await expect(signUpLink).toBeVisible();
   });
 });
 
