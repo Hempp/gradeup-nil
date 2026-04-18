@@ -6,10 +6,18 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { ProgressStepper, type Step } from '@/components/ui/progress-stepper';
 import { ValidatedInput, PasswordInput, validators } from '@/components/ui/validated-input';
 import { useToastActions } from '@/components/ui/toast';
 import { useFormValidation } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
+
+const SIGNUP_STEPS: Step[] = [
+  { id: 'role', title: 'Role' },
+  { id: 'account', title: 'Account' },
+  { id: 'verify', title: 'Verify' },
+  { id: 'done', title: 'Done' },
+];
 
 const DIVISIONS = [
   'NCAA Division I',
@@ -189,31 +197,40 @@ export default function DirectorSignupPage() {
   return (
     <div className="animate-fade-in">
       <Card className="shadow-lg">
-        <CardHeader className="text-center pb-2">
-          <div className="w-12 h-12 rounded-full bg-[var(--primary-100)] flex items-center justify-center mx-auto mb-3">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-[var(--primary-700)]"
-            >
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
+        <CardHeader className="pb-2">
+          <ProgressStepper
+            steps={SIGNUP_STEPS}
+            currentStep={1}
+            size="sm"
+            allowStepClick={false}
+            className="mb-4"
+          />
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-[var(--primary-100)] flex items-center justify-center mx-auto mb-3">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-[var(--primary-700)]"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
+              Create Director Account
+            </CardTitle>
+            <CardDescription className="text-[var(--neutral-600)]">
+              Manage your athletic program&apos;s NIL activities
+            </CardDescription>
           </div>
-          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
-            Create Director Account
-          </CardTitle>
-          <CardDescription className="text-[var(--neutral-600)]">
-            Manage your athletic program&apos;s NIL activities
-          </CardDescription>
         </CardHeader>
 
         <CardContent>

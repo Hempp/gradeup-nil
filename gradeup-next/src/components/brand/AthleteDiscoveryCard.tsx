@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/ui/verified-badge';
+import { GPABadge } from '@/components/ui/gpa-ring';
 import { InstagramIcon, TikTokIcon, SOCIAL_BRAND_COLORS } from '@/components/ui/social-icons';
 import { getSportGradient } from '@/lib/utils/sport-theme';
 import { formatCompactNumber, formatCurrency, formatPercentage } from '@/lib/utils';
@@ -241,7 +242,7 @@ export const AthleteDiscoveryCard = memo(function AthleteDiscoveryCard({
                     <span className="font-bold text-lg text-[var(--text-primary)]">{valuation.gradeUpScore}</span>
                   </div>
                   <span className={`text-[10px] font-medium ${tierDisplay.color}`}>{tierDisplay.label}</span>
-                  <span className="text-[10px] text-[var(--text-muted)]">{athlete.gpa.toFixed(1)} GPA</span>
+                  <GPABadge gpa={athlete.gpa} size="sm" showIcon={false} />
                 </div>
               </div>
             </div>

@@ -6,7 +6,15 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { ProgressStepper, type Step } from '@/components/ui/progress-stepper';
 import { ValidatedInput, PasswordInput, validators } from '@/components/ui/validated-input';
+
+const SIGNUP_STEPS: Step[] = [
+  { id: 'role', title: 'Role' },
+  { id: 'account', title: 'Account' },
+  { id: 'verify', title: 'Verify' },
+  { id: 'done', title: 'Done' },
+];
 import { useToastActions } from '@/components/ui/toast';
 import { useFormValidation } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
@@ -218,31 +226,40 @@ export default function AthleteSignupPage() {
   return (
     <div className="animate-fade-in">
       <Card className="shadow-lg">
-        <CardHeader className="text-center pb-2">
-          <div className="w-12 h-12 rounded-full bg-[var(--primary-100)] flex items-center justify-center mx-auto mb-3">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-[var(--primary-700)]"
-            >
-              <circle cx="12" cy="5" r="3" />
-              <path d="M12 22V8" />
-              <path d="m5 12 7-4 7 4" />
-              <path d="m5 12 7 4 7-4" />
-            </svg>
+        <CardHeader className="pb-2">
+          <ProgressStepper
+            steps={SIGNUP_STEPS}
+            currentStep={1}
+            size="sm"
+            allowStepClick={false}
+            className="mb-4"
+          />
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-[var(--primary-100)] flex items-center justify-center mx-auto mb-3">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-[var(--primary-700)]"
+              >
+                <circle cx="12" cy="5" r="3" />
+                <path d="M12 22V8" />
+                <path d="m5 12 7-4 7 4" />
+                <path d="m5 12 7 4 7-4" />
+              </svg>
+            </div>
+            <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
+              Create Athlete Account
+            </CardTitle>
+            <CardDescription className="text-[var(--neutral-600)]">
+              Showcase your achievements and connect with sponsors
+            </CardDescription>
           </div>
-          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
-            Create Athlete Account
-          </CardTitle>
-          <CardDescription className="text-[var(--neutral-600)]">
-            Showcase your achievements and connect with sponsors
-          </CardDescription>
         </CardHeader>
 
         <CardContent>

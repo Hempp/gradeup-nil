@@ -6,10 +6,18 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormSelect, FormCheckbox } from '@/components/ui/form-input';
+import { ProgressStepper, type Step } from '@/components/ui/progress-stepper';
 import { ValidatedInput, PasswordInput, validators } from '@/components/ui/validated-input';
 import { useToastActions } from '@/components/ui/toast';
 import { useFormValidation } from '@/lib/utils/validation';
 import { getSupabaseClient } from '@/lib/supabase/client';
+
+const SIGNUP_STEPS: Step[] = [
+  { id: 'role', title: 'Role' },
+  { id: 'account', title: 'Account' },
+  { id: 'verify', title: 'Verify' },
+  { id: 'done', title: 'Done' },
+];
 
 const INDUSTRIES = [
   'Sports & Fitness',
@@ -186,30 +194,39 @@ export default function BrandSignupPage() {
   return (
     <div className="animate-fade-in">
       <Card className="shadow-lg">
-        <CardHeader className="text-center pb-2">
-          <div className="w-12 h-12 rounded-full bg-[var(--primary-100)] flex items-center justify-center mx-auto mb-3">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-[var(--primary-700)]"
-            >
-              <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
-              <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
-              <path d="M12 3v6" />
-            </svg>
+        <CardHeader className="pb-2">
+          <ProgressStepper
+            steps={SIGNUP_STEPS}
+            currentStep={1}
+            size="sm"
+            allowStepClick={false}
+            className="mb-4"
+          />
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-[var(--primary-100)] flex items-center justify-center mx-auto mb-3">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-[var(--primary-700)]"
+              >
+                <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
+                <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
+                <path d="M12 3v6" />
+              </svg>
+            </div>
+            <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
+              Create Brand Account
+            </CardTitle>
+            <CardDescription className="text-[var(--neutral-600)]">
+              Connect with scholar-athletes and build partnerships
+            </CardDescription>
           </div>
-          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
-            Create Brand Account
-          </CardTitle>
-          <CardDescription className="text-[var(--neutral-600)]">
-            Connect with scholar-athletes and build partnerships
-          </CardDescription>
         </CardHeader>
 
         <CardContent>

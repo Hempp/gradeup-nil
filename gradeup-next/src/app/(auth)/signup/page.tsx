@@ -2,6 +2,14 @@
 
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { ProgressStepper, type Step } from '@/components/ui/progress-stepper';
+
+const SIGNUP_STEPS: Step[] = [
+  { id: 'role', title: 'Role' },
+  { id: 'account', title: 'Account' },
+  { id: 'verify', title: 'Verify' },
+  { id: 'done', title: 'Done' },
+];
 
 interface RoleCardProps {
   href: string;
@@ -61,13 +69,22 @@ export default function SignupPage() {
   return (
     <div className="animate-fade-in">
       <Card className="shadow-lg">
-        <CardHeader className="text-center pb-2">
-          <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
-            Join GradeUp
-          </CardTitle>
-          <CardDescription className="text-[var(--neutral-600)]">
-            Choose your account type to get started
-          </CardDescription>
+        <CardHeader className="pb-2">
+          <ProgressStepper
+            steps={SIGNUP_STEPS}
+            currentStep={0}
+            size="sm"
+            allowStepClick={false}
+            className="mb-4"
+          />
+          <div className="text-center">
+            <CardTitle as="h1" className="text-2xl font-bold text-[var(--primary-900)]">
+              Join GradeUp
+            </CardTitle>
+            <CardDescription className="text-[var(--neutral-600)]">
+              Choose your account type to get started
+            </CardDescription>
+          </div>
         </CardHeader>
 
         <CardContent>
