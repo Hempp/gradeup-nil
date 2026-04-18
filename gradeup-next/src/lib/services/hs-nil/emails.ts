@@ -314,3 +314,107 @@ ${primaryButton('Open your dashboard', dashboardUrl)}
   });
   return result;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. Transcript verification decisions (Tier B)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface TranscriptApprovedInput {
+  athleteEmail: string;
+  athleteName?: string;
+  approvedGpa: number;
+  dashboardUrl?: string;
+}
+
+export async function sendTranscriptApproved(
+  input: TranscriptApprovedInput
+): Promise<EmailResult> {
+  const { athleteEmail, athleteName, approvedGpa } = input;
+  const dashboardUrl = input.dashboardUrl ?? `${APP_URL}/hs/dashboard`;
+  const greeting = athleteName ? `Hi ${escapeHtml(athleteName)},` : 'Hi,';
+  const gpaStr = approvedGpa.toFixed(2);
+
+  const bodyHtml = `
+<h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#111;">Your GPA is verified</h1>
+<p style="margin:0 0 16px;">${greeting}</p>
+<p style="margin:0 0 16px;">Your transcript checked out. We've bumped your profile GPA to <strong>${escapeHtml(gpaStr)}</strong> and added a <strong>Verified</strong> badge so brands can see the academic side of your story is confirmed.</p>
+${primaryButton('Open your dashboard', dashboardUrl)}
+<p style="margin:0 0 16px;font-size:13px;color:#52525B;">Transcripts are reviewed by a human on our team. If you change schools or your GPA moves, upload a fresh transcript anytime and we'll re-verify.</p>
+`;
+
+  const result = await sendEmail({
+    to: athleteEmail,
+    replyTo: SUPPORT_EMAIL,
+    subject: 'Your GPA is verified on GradeUp NIL',
+    html: wrapPlain({
+      title: 'GPA Verified',
+      preview: `Your transcript was verified. GPA: ${gpaStr}.`,
+      bodyHtml,
+    }),
+  });
+
+  logSend('transcript_approved', athleteEmail, result, { approvedGpa });
+  return result;
+}
+
+export interface TranscriptRejectedInput {
+  athleteEmail: string;
+  athleteName?: string;
+  /** Short note shown to the athlete. Ops-authored; we pass through verbatim. */
+  athleteVisibleNote?: string;
+  /** Whether ops asked for a resubmission vs a flat rejection. */
+  resubmission: boolean;
+  resubmitUrl?: string;
+}
+
+export async function sendTranscriptRejected(
+  input: TranscriptRejectedInput
+): Promise<EmailResult> {
+  const { athleteEmail, athleteName, athleteVisibleNote, resubmission } = input;
+  const resubmitUrl = input.resubmitUrl ?? `${APP_URL}/hs/onboarding/verify-gpa`;
+  const greeting = athleteName ? `Hi ${escapeHtml(athleteName)},` : 'Hi,';
+
+  const lead = resubmission
+    ? 'We took a look at your transcript and need a cleaner upload before we can verify.'
+    : 'We took a look at your transcript and were not able to verify it.';
+
+  const noteBlock = athleteVisibleNote
+    ? `<p style="margin:0 0 16px;padding:12px 16px;background:#F4F4F5;border-left:3px solid #0070F3;border-radius:6px;">${escapeHtml(athleteVisibleNote)}</p>`
+    : '';
+
+  const cta = resubmission
+    ? primaryButton('Upload a new transcript', resubmitUrl)
+    : '';
+
+  const subject = resubmission
+    ? 'Please resubmit your transcript for GradeUp NIL'
+    : 'Transcript could not be verified';
+
+  const bodyHtml = `
+<h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#111;">${escapeHtml(subject)}</h1>
+<p style="margin:0 0 16px;">${greeting}</p>
+<p style="margin:0 0 16px;">${escapeHtml(lead)}</p>
+${noteBlock}
+${cta}
+<p style="margin:24px 0 0;font-size:13px;color:#52525B;">Reply to this email with any questions — a real human from our ops team will get back to you.</p>
+`;
+
+  const result = await sendEmail({
+    to: athleteEmail,
+    replyTo: SUPPORT_EMAIL,
+    subject,
+    html: wrapPlain({
+      title: subject,
+      preview: resubmission
+        ? 'Please resubmit your transcript.'
+        : 'Your transcript could not be verified.',
+      bodyHtml,
+    }),
+  });
+
+  logSend('transcript_rejected', athleteEmail, result, {
+    resubmission,
+    hasNote: Boolean(athleteVisibleNote),
+  });
+  return result;
+}

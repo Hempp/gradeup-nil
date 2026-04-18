@@ -139,12 +139,22 @@ export default async function HSAthleteNextStepsPage() {
     {
       label: 'Verify your GPA',
       hint:
-        profileRow?.gpa_verification_tier === 'self_reported'
-          ? 'Self-reported today. Upload a transcript to earn a verified badge.'
-          : 'Upload a transcript to earn a verified badge.',
+        profileRow?.gpa_verification_tier === 'institution_verified'
+          ? 'Institution-verified — nothing more to do here.'
+          : profileRow?.gpa_verification_tier === 'user_submitted'
+            ? 'Verified from your uploaded transcript. Upload again if it changes.'
+            : profileRow?.gpa_verification_tier === 'self_reported'
+              ? 'Self-reported today. Upload a transcript to earn a verified badge.'
+              : 'Upload a transcript to earn a verified badge.',
       href: '/hs/onboarding/verify-gpa',
-      status: 'Coming soon',
-      disabled: true,
+      status:
+        profileRow?.gpa_verification_tier === 'user_submitted' ||
+        profileRow?.gpa_verification_tier === 'institution_verified'
+          ? 'Complete'
+          : 'Optional',
+      completed:
+        profileRow?.gpa_verification_tier === 'user_submitted' ||
+        profileRow?.gpa_verification_tier === 'institution_verified',
     },
     {
       label: 'Set up payouts',
