@@ -28,6 +28,7 @@
  */
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import {
@@ -42,6 +43,7 @@ import {
 } from '@/components/hs/AthleteProfileCard';
 import { ConsentStatusCard } from '@/components/hs/ConsentStatusCard';
 import { StateRulesCard } from '@/components/hs/StateRulesCard';
+import { HSDealCard, type DealCardStatus } from '@/components/hs/HSDealCard';
 import type { StatusPill } from '@/components/hs/AthleteDashboardHeader';
 
 export const metadata: Metadata = {
@@ -199,6 +201,79 @@ export default async function HSAthleteDashboardPage() {
   const activeConsent = activeRes.data ?? null;
   const pendingConsents: PendingConsentRow[] = pendingRes.data ?? [];
 
+  // Deals preview — keep it best-effort. We want to surface the newest three
+  // HS-facing deals to the dashboard; if anything in the chain fails (no
+  // athletes row yet, target_bracket column not migrated on a dev DB) we
+  // simply render the zero-deals card rather than blowing up the page.
+  interface PreviewDeal {
+    id: string;
+    title: string;
+    compensationAmount: number;
+    brandName: string;
+    brandLogoUrl: string | null;
+    eyebrow: string;
+    cardStatus: DealCardStatus;
+  }
+  let previewDeals: PreviewDeal[] = [];
+  let totalOpenDeals = 0;
+  try {
+    const { data: athleteRow } = await supabase
+      .from('athletes')
+      .select('id')
+      .eq('profile_id', user.id)
+      .maybeSingle<{ id: string }>();
+    if (athleteRow?.id) {
+      const { data: dealRows } = await supabase
+        .from('deals')
+        .select(
+          `id, title, status, deal_type, compensation_amount, parental_consent_id,
+           brand:brands(company_name, logo_url)`,
+        )
+        .eq('athlete_id', athleteRow.id)
+        .in('target_bracket', ['high_school', 'both'])
+        .in('status', [
+          'pending',
+          'negotiating',
+          'accepted',
+          'active',
+          'completed',
+        ])
+        .order('created_at', { ascending: false })
+        .limit(10);
+      const rows = (dealRows ?? []) as unknown as Array<{
+        id: string;
+        title: string;
+        status: string;
+        deal_type: string;
+        compensation_amount: number;
+        parental_consent_id: string | null;
+        brand: { company_name: string; logo_url: string | null } | null;
+      }>;
+      previewDeals = rows.slice(0, 3).map((d) => {
+        const pending = d.status === 'pending' || d.status === 'negotiating';
+        const cardStatus: DealCardStatus = pending
+          ? 'awaiting_you'
+          : d.status === 'completed'
+            ? 'completed'
+            : 'in_progress';
+        return {
+          id: d.id,
+          title: d.title,
+          compensationAmount: d.compensation_amount,
+          brandName: d.brand?.company_name ?? 'Unknown brand',
+          brandLogoUrl: d.brand?.logo_url ?? null,
+          eyebrow: d.deal_type.replace(/_/g, ' '),
+          cardStatus,
+        };
+      });
+      totalOpenDeals = rows.filter(
+        (r) => r.status === 'pending' || r.status === 'negotiating',
+      ).length;
+    }
+  } catch (dealsErr) {
+    console.error('[hs/athlete] deals preview fetch failed', dealsErr);
+  }
+
   // Identity
   const meta = (user.user_metadata ?? {}) as { first_name?: string };
   const firstName = (meta.first_name?.trim() || 'Athlete').split(/\s+/)[0];
@@ -334,6 +409,65 @@ export default async function HSAthleteDashboardPage() {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-10">
+        {previewDeals.length > 0 ? (
+          <div className="mb-10">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <h2 className="font-display text-2xl text-white md:text-3xl">
+                  Your deals
+                </h2>
+                <p className="mt-1 text-sm text-white/60">
+                  Your three most recent offers. Full history on the deals
+                  page.
+                </p>
+              </div>
+              <Link
+                href="/hs/deals"
+                className="inline-flex min-h-[44px] items-center text-sm font-semibold text-[var(--accent-primary)] hover:underline"
+              >
+                See all deals →
+              </Link>
+            </div>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              {previewDeals.map((d) => (
+                <HSDealCard
+                  key={d.id}
+                  id={d.id}
+                  brandName={d.brandName}
+                  brandLogoUrl={d.brandLogoUrl}
+                  title={d.title}
+                  compensationAmount={d.compensationAmount}
+                  status={d.cardStatus}
+                  eyebrow={d.eyebrow}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="mb-10">
+            <OnboardingCard
+              eyebrow="Your deals"
+              title={
+                totalOpenDeals > 0
+                  ? `You have ${totalOpenDeals} deal${totalOpenDeals === 1 ? '' : 's'} waiting on you.`
+                  : 'No deals yet.'
+              }
+              description={
+                totalOpenDeals > 0
+                  ? 'Review and decide on your pending offers.'
+                  : "When a brand partnership is ready, it'll show up here."
+              }
+            >
+              <Link
+                href="/hs/deals"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+              >
+                Go to your deals
+              </Link>
+            </OnboardingCard>
+          </div>
+        )}
+
         <div className="grid gap-6 md:grid-cols-2">
           <AthleteProfileCard
             gpa={profile.gpa ?? null}
