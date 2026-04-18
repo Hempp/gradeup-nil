@@ -316,7 +316,57 @@ ${primaryButton('Open your dashboard', dashboardUrl)}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. Transcript verification decisions (Tier B)
+// 4. Parent-athlete link confirmation (to parent)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface ParentLinkConfirmedInput {
+  parentEmail: string;
+  parentFullName?: string | null;
+  athleteName: string;
+  dashboardUrl?: string;
+}
+
+/**
+ * Notify a parent that the athlete confirmed the pending parent-athlete
+ * link. Utility-toned — no marketing, no "next steps" cross-sell — this
+ * is a straight receipt that symmetric trust has been established.
+ *
+ * Send is best-effort from the verify API route; failures must never
+ * block the DB write that flipped verified_at. The underlying transport
+ * no-ops cleanly when RESEND_API_KEY is missing.
+ */
+export async function sendParentLinkConfirmed(
+  input: ParentLinkConfirmedInput
+): Promise<EmailResult> {
+  const { parentEmail, parentFullName, athleteName } = input;
+  const dashboardUrl = input.dashboardUrl ?? `${APP_URL}/hs/parent`;
+  const greeting = parentFullName ? `Hi ${escapeHtml(parentFullName)},` : 'Hello,';
+
+  const bodyHtml = `
+<h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#111;">Your link to ${escapeHtml(athleteName)} is confirmed</h1>
+<p style="margin:0 0 16px;">${greeting}</p>
+<p style="margin:0 0 16px;"><strong>${escapeHtml(athleteName)}</strong> confirmed your parent link on GradeUp NIL. You can now request and sign parental consent for their NIL deals from your parent dashboard.</p>
+${primaryButton('Open your parent dashboard', dashboardUrl)}
+<p style="margin:24px 0 0;font-size:13px;color:#52525B;">If ${escapeHtml(athleteName)} later unlinks you, any consents you've already signed stay in place for the deals they cover. You'll only lose the ability to approve new deals.</p>
+`;
+
+  const result = await sendEmail({
+    to: parentEmail,
+    replyTo: SUPPORT_EMAIL,
+    subject: `${athleteName} confirmed your GradeUp NIL parent link`,
+    html: wrapPlain({
+      title: 'Parent Link Confirmed',
+      preview: `${athleteName} confirmed your parent link on GradeUp NIL.`,
+      bodyHtml,
+    }),
+  });
+
+  logSend('parent_link_confirmed', parentEmail, result, { athleteName });
+  return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. Transcript verification decisions (Tier B)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface TranscriptApprovedInput {
