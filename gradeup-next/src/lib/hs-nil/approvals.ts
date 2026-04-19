@@ -36,6 +36,7 @@
  */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { sendPushToUser } from '@/lib/push/sender';
 
 // ----------------------------------------------------------------------------
 // Types
@@ -172,11 +173,163 @@ export async function recordApproval(
     };
   }
 
+  // 4. Fan out approval pushes to athlete + verified parents. Preference
+  //    gating is handled inside sendPushToUser. Fail-soft — a push outage
+  //    must never regress an already-committed approval.
+  try {
+    await fanOutApprovedPushes(sb, input.dealId);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-nil approvals] approved push fan-out failed', {
+      dealId: input.dealId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
   return {
     ok: true,
     approvalId: approval.id as string,
     newDealStatus: 'approved',
   };
+}
+
+// ----------------------------------------------------------------------------
+// Push fan-out helpers (internal)
+// ----------------------------------------------------------------------------
+
+interface DealPartiesForPush {
+  dealId: string;
+  brandName: string;
+  athleteUserId: string | null;
+  athleteFirstName: string;
+  athleteFullName: string;
+  parentUserIds: string[];
+}
+
+/**
+ * Load just enough deal context to address push notifications to the
+ * athlete and any verified parents. Uses the service-role client to
+ * join across tables that RLS would otherwise hide.
+ */
+async function loadPushPartiesForDeal(
+  sb: SupabaseClient,
+  dealId: string,
+): Promise<DealPartiesForPush | null> {
+  const { data: dealRow } = await sb
+    .from('deals')
+    .select(
+      `id,
+       brand:brands(company_name),
+       athlete:athletes(first_name, last_name, profile_id)`,
+    )
+    .eq('id', dealId)
+    .maybeSingle();
+
+  if (!dealRow) return null;
+
+  const deal = dealRow as unknown as {
+    id: string;
+    brand: { company_name: string | null } | null;
+    athlete: {
+      first_name: string | null;
+      last_name: string | null;
+      profile_id: string | null;
+    } | null;
+  };
+
+  const athleteFirstName = (deal.athlete?.first_name ?? 'Your athlete').trim();
+  const athleteFullName =
+    [deal.athlete?.first_name, deal.athlete?.last_name]
+      .filter(Boolean)
+      .join(' ')
+      .trim() || athleteFirstName;
+
+  const parentUserIds: string[] = [];
+  if (deal.athlete?.profile_id) {
+    try {
+      const { data: links } = await sb
+        .from('hs_parent_athlete_links')
+        .select(
+          `parent:hs_parent_profiles(user_id)`,
+        )
+        .eq('athlete_user_id', deal.athlete.profile_id)
+        .not('verified_at', 'is', null);
+
+      const rows =
+        (links as unknown as Array<{ parent: { user_id: string } | null }>) ?? [];
+      for (const l of rows) {
+        if (l.parent?.user_id) parentUserIds.push(l.parent.user_id);
+      }
+    } catch {
+      // skip — push fan-out stays best-effort
+    }
+  }
+
+  return {
+    dealId,
+    brandName: deal.brand?.company_name ?? 'the brand',
+    athleteUserId: deal.athlete?.profile_id ?? null,
+    athleteFirstName,
+    athleteFullName,
+    parentUserIds,
+  };
+}
+
+async function fanOutApprovedPushes(
+  sb: SupabaseClient,
+  dealId: string,
+): Promise<void> {
+  const parties = await loadPushPartiesForDeal(sb, dealId);
+  if (!parties) return;
+
+  const url = `/hs/deals/${parties.dealId}/celebrate`;
+  const tasks: Array<Promise<unknown>> = [];
+
+  if (parties.athleteUserId) {
+    tasks.push(
+      sendPushToUser({
+        userId: parties.athleteUserId,
+        notificationType: 'deal_review_needed',
+        title: `Your deal with ${parties.brandName} was approved`,
+        body: `${parties.brandName} approved your deliverable. Payout coming next.`,
+        url,
+      }),
+    );
+  }
+
+  for (const parentUserId of parties.parentUserIds) {
+    tasks.push(
+      sendPushToUser({
+        userId: parentUserId,
+        notificationType: 'deal_review_needed',
+        title: `Your deal with ${parties.brandName} was approved`,
+        body: `${parties.athleteFullName}'s deal with ${parties.brandName} was approved.`,
+        url,
+      }),
+    );
+  }
+
+  await Promise.allSettled(tasks);
+}
+
+async function fanOutRevisionPushes(
+  sb: SupabaseClient,
+  dealId: string,
+  notes: string,
+): Promise<void> {
+  const parties = await loadPushPartiesForDeal(sb, dealId);
+  if (!parties || !parties.athleteUserId) return;
+
+  const url = `/hs/deals/${parties.dealId}/deliver`;
+  const trimmed = notes.trim().slice(0, 80);
+
+  await sendPushToUser({
+    userId: parties.athleteUserId,
+    notificationType: 'deal_review_needed',
+    title: `${parties.brandName} asked for a revision`,
+    body: trimmed,
+    url,
+  });
 }
 
 // ----------------------------------------------------------------------------
@@ -275,6 +428,18 @@ export async function requestRevision(
       approvalId: approval.id as string,
       reason: `deal status update failed: ${dealErr.message}`,
     };
+  }
+
+  // Best-effort push to the athlete — fail-soft so a push outage never
+  // regresses an already-committed revision decision.
+  try {
+    await fanOutRevisionPushes(sb, input.dealId, notes);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-nil approvals] revision push failed', {
+      dealId: input.dealId,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 
   return {

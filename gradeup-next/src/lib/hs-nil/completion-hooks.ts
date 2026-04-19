@@ -42,6 +42,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { sendDealCompleted } from '@/lib/services/hs-nil/completion-emails';
 import { getShareCountsForDeal } from '@/lib/hs-nil/share';
 import { recordFeedback } from '@/lib/hs-nil/match-feedback';
+import { sendPushToUser } from '@/lib/push/sender';
 
 // ----------------------------------------------------------------------------
 // Service-role client
@@ -167,6 +168,7 @@ export async function afterDealPaid(
   // 4. Load linked, verified parent (email + name). One-parent-per-deal
   //    is the happy path; if multiple, we send to all of them.
   interface ParentContact {
+    userId: string;
     email: string;
     fullName: string | null;
   }
@@ -196,7 +198,11 @@ export async function afterDealPaid(
           );
           const email = authData.user?.email;
           if (email) {
-            parents.push({ email, fullName: l.parent.full_name });
+            parents.push({
+              userId: l.parent.user_id,
+              email,
+              fullName: l.parent.full_name,
+            });
           }
         } catch {
           // skip
@@ -275,6 +281,50 @@ export async function afterDealPaid(
   for (const r of results) {
     if (r.status === 'fulfilled' && r.value.success) succeeded += 1;
   }
+
+  // 6b. Push fan-out — athlete + verified parents + brand. Mirrors the
+  //     email batch above. Preference gating is handled inside
+  //     sendPushToUser; Promise.allSettled keeps this fail-soft so no
+  //     push-service hiccup propagates into the Stripe retry path.
+  const pushTasks: Array<Promise<unknown>> = [];
+
+  if (deal.athlete?.profile_id) {
+    pushTasks.push(
+      sendPushToUser({
+        userId: deal.athlete.profile_id,
+        notificationType: 'deal_completed',
+        title: `Deal complete — ${brandName}.`,
+        body: "Your payout is on its way to your parent's account.",
+        url: '/hs/athlete/earnings',
+      }),
+    );
+  }
+
+  for (const p of parents) {
+    pushTasks.push(
+      sendPushToUser({
+        userId: p.userId,
+        notificationType: 'deal_completed',
+        title: `${athleteFirstName}'s deal with ${brandName} is complete.`,
+        body: 'Funds are being released to your custodian account.',
+        url: '/hs/parent',
+      }),
+    );
+  }
+
+  if (deal.brand?.profile_id) {
+    pushTasks.push(
+      sendPushToUser({
+        userId: deal.brand.profile_id,
+        notificationType: 'deal_completed',
+        title: `Deal complete with ${athleteFirstName}.`,
+        body: 'Thanks for supporting a scholar-athlete.',
+        url: '/hs/brand/performance',
+      }),
+    );
+  }
+
+  await Promise.allSettled(pushTasks);
 
   // 7. Structured analytics log.
   // eslint-disable-next-line no-console

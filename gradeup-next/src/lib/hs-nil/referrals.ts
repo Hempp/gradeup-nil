@@ -35,6 +35,7 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { randomBytes } from 'node:crypto';
+import { sendPushToUser } from '@/lib/push/sender';
 
 // ---------------------------------------------------------------------------
 // Service-role client (server-only)
@@ -378,13 +379,62 @@ export async function attributeSignup(
     metadata: { role: roleSignedUpAs },
   });
 
+  const referringUserId = update.data.referring_user_id as string;
+
+  // Notify the referrer. Preference gating + fail-soft handled by
+  // sendPushToUser — wrap in try/catch so a push outage never kills
+  // the signup attribution.
+  try {
+    const referredFirstName = await resolveFirstName(supabase, referredUserId);
+    await sendPushToUser({
+      userId: referringUserId,
+      notificationType: 'referral_milestone',
+      title: 'Your invite just joined GradeUp HS.',
+      body: `${referredFirstName} signed up — thanks for spreading the word.`,
+      url: '/hs/parent/referrals',
+    });
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-referrals] signup push failed', {
+      referringUserId,
+      referredUserId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
   return {
     attributionId,
-    referringUserId: update.data.referring_user_id as string,
+    referringUserId,
     referredUserId,
     roleSignedUpAs,
     convertedAt: now,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Best-effort first-name lookup for push body copy. Checks the
+ * `profiles` table; falls back to a neutral short string so notifications
+ * never leak empty placeholders. Never throws.
+ */
+async function resolveFirstName(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<string> {
+  try {
+    const { data } = await supabase
+      .from('profiles')
+      .select('first_name')
+      .eq('id', userId)
+      .maybeSingle();
+    const first = (data?.first_name ?? '').toString().trim();
+    return first || 'Your invite';
+  } catch {
+    return 'Your invite';
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -426,12 +476,13 @@ export async function recordFunnelEvent(args: {
 
   const attr = await supabase
     .from('referral_attributions')
-    .select('id')
+    .select('id, referring_user_id')
     .eq('referred_user_id', referredUserId)
     .maybeSingle();
 
   if (!attr.data) return false;
   const attributionId = attr.data.id as string;
+  const referringUserId = (attr.data.referring_user_id as string) ?? null;
 
   // Avoid duplicate milestones. We allow multiple `code_clicked` rows
   // (those are per-click) but not `first_*` ones.
@@ -461,6 +512,39 @@ export async function recordFunnelEvent(args: {
     console.warn('[hs-referrals] funnel event insert failed', insert.error);
     return false;
   }
+
+  // Push the referrer on milestone events. The helper short-circuits
+  // on duplicate first_* events above, so this only fires once per
+  // milestone per referred user. No-op if the signup wasn't referred
+  // (in which case we would have returned early with !attr.data).
+  if (
+    referringUserId &&
+    (eventType === 'first_consent_signed' || eventType === 'first_deal_signed')
+  ) {
+    try {
+      const referredFirstName = await resolveFirstName(supabase, referredUserId);
+      const title =
+        eventType === 'first_consent_signed'
+          ? `${referredFirstName} just signed parental consent.`
+          : `${referredFirstName} signed their first NIL deal.`;
+      await sendPushToUser({
+        userId: referringUserId,
+        notificationType: 'referral_milestone',
+        title,
+        body: 'Thanks for spreading the word — your invite is making moves.',
+        url: '/hs/parent/referrals',
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-referrals] milestone push failed', {
+        referringUserId,
+        referredUserId,
+        eventType,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
   return true;
 }
 

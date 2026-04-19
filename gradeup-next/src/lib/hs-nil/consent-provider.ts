@@ -32,6 +32,7 @@ import {
   sendParentConsentSigned,
 } from '@/lib/services/hs-nil/emails';
 import { recordFunnelEvent } from '@/lib/hs-nil/referrals';
+import { sendPushToUser } from '@/lib/push/sender';
 
 // ----------------------------------------------------------------------------
 // Public types
@@ -214,6 +215,29 @@ class SupabaseConsentProvider implements ConsentProvider {
         athleteUserId: input.athleteUserId,
         parentEmail: input.parentEmail,
         error: emailErr instanceof Error ? emailErr.message : String(emailErr),
+      });
+    }
+
+    // Fire a companion push to the ATHLETE (parents typically aren't
+    // push-subscribed — they receive the signing link by email). This
+    // reassures the athlete the email actually went out. Preference
+    // gating is handled inside sendPushToUser; fail-soft so a push
+    // outage never aborts token creation.
+    try {
+      const parentFirstName =
+        (input.parentFullName ?? '').trim().split(/\s+/)[0] || 'your parent';
+      await sendPushToUser({
+        userId: input.athleteUserId,
+        notificationType: 'consent_request',
+        title: `Consent request sent to ${parentFirstName}`,
+        body: 'We emailed your parent a link to approve your NIL deal scope.',
+        url: '/hs/consent/manage',
+      });
+    } catch (pushErr) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil consent] athlete consent push failed', {
+        athleteUserId: input.athleteUserId,
+        error: pushErr instanceof Error ? pushErr.message : String(pushErr),
       });
     }
 
