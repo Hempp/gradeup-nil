@@ -51,6 +51,12 @@ export interface MatchedAthleteRow {
   affinityScore: number;
   /** Number of feedback events behind affinityScore. 0 when no feedback. */
   signalCount: number;
+  /**
+   * Phase 11 referral-rewards contribution: 0..1 sum of linked-parent
+   * priority-boost perks, clamped by the RPC and re-clamped here.
+   * Surfaces zero when the 20260419_011 migration isn't live yet.
+   */
+  referralPriorityBoost: number;
 }
 
 export interface GetSuggestedAthletesFilters {
@@ -76,6 +82,8 @@ interface RpcRow {
   affinity_score?: number | null;
   /** Added Phase 8 — present whenever the 20260419_004 migration is live. */
   signal_count?: number | null;
+  /** Added Phase 11 — present whenever the 20260419_011 migration is live. */
+  referral_priority_boost?: number | null;
 }
 
 function isGpaTier(value: string): value is GpaTier {
@@ -106,6 +114,11 @@ function normalizeRow(row: RpcRow): MatchedAthleteRow {
     signalCount:
       row.signal_count !== null && row.signal_count !== undefined
         ? Number(row.signal_count)
+        : 0,
+    referralPriorityBoost:
+      row.referral_priority_boost !== null &&
+      row.referral_priority_boost !== undefined
+        ? Math.min(1, Math.max(0, Number(row.referral_priority_boost)))
         : 0,
   };
 }

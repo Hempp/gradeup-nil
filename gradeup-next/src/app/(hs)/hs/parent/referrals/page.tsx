@@ -18,9 +18,15 @@ import {
   getFunnelStatsForUser,
   getLeaderboard,
 } from '@/lib/hs-nil/referrals';
+import {
+  computeCurrentTier,
+  getRewardTierLadder,
+  getTopTierByUser,
+} from '@/lib/hs-nil/referral-rewards';
 import { ReferralCodeCard } from '@/components/hs/ReferralCodeCard';
 import { ReferralFunnelCard } from '@/components/hs/ReferralFunnelCard';
 import { ReferralLeaderboard } from '@/components/hs/ReferralLeaderboard';
+import { RewardTierCard } from '@/components/hs/RewardTierCard';
 
 export const metadata: Metadata = {
   title: 'Your referrals — GradeUp HS',
@@ -53,10 +59,16 @@ export default async function HSParentReferralsPage() {
     firstDealsSigned: 0,
   };
   let leaderboard: Awaited<ReturnType<typeof getLeaderboard>> = [];
+  let tierState: Awaited<ReturnType<typeof computeCurrentTier>> = {
+    tier: null,
+    nextTier: null,
+    conversionCount: 0,
+  };
   try {
-    const [s, lb] = await Promise.all([
+    const [s, lb, ts] = await Promise.all([
       getFunnelStatsForUser(user.id),
       getLeaderboard(10),
+      computeCurrentTier(user.id),
     ]);
     stats = {
       clicks: s.clicks,
@@ -65,9 +77,26 @@ export default async function HSParentReferralsPage() {
       firstDealsSigned: s.firstDealsSigned,
     };
     leaderboard = lb;
+    tierState = ts;
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn('[hs-parent-referrals] load failed', err);
+  }
+
+  const rewardLadder = getRewardTierLadder();
+
+  // Tier badges next to leaderboard rows. Best-effort — empty map on
+  // failure leaves the existing leaderboard UI unchanged.
+  let tierByUserId: Awaited<ReturnType<typeof getTopTierByUser>> = new Map();
+  if (leaderboard.length > 0) {
+    try {
+      tierByUserId = await getTopTierByUser(
+        leaderboard.map((e) => e.referringUserId)
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-parent-referrals] tier lookup failed', err);
+    }
   }
 
   // Caller's rank (if outside the top 10 we still show the row below).
@@ -124,6 +153,14 @@ export default async function HSParentReferralsPage() {
             signupsThisMonth={stats.signupsCompleted}
           />
 
+          <RewardTierCard
+            currentTier={tierState.tier}
+            nextTier={tierState.nextTier}
+            conversionCount={tierState.conversionCount}
+            ladder={rewardLadder}
+            compact
+          />
+
           <ReferralFunnelCard stats={stats} />
 
           <ReferralLeaderboard
@@ -132,6 +169,7 @@ export default async function HSParentReferralsPage() {
             highlightUserId={user.id}
             callerRank={callerRank}
             callerSignups={stats.signupsCompleted}
+            tierByUserId={tierByUserId}
           />
         </div>
       </div>

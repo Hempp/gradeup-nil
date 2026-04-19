@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getLeaderboard } from '@/lib/hs-nil/referrals';
+import { getTopTierByUser } from '@/lib/hs-nil/referral-rewards';
 import { ReferralLeaderboard } from '@/components/hs/ReferralLeaderboard';
 
 export const metadata: Metadata = {
@@ -127,6 +128,18 @@ export default async function HSAdminReferralsPage() {
     console.warn('[hs-admin-referrals] load failed', err);
   }
 
+  let tierByUserId: Awaited<ReturnType<typeof getTopTierByUser>> = new Map();
+  if (leaderboard.length > 0) {
+    try {
+      tierByUserId = await getTopTierByUser(
+        leaderboard.map((e) => e.referringUserId)
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-admin-referrals] tier lookup failed', err);
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
       <div className="mx-auto max-w-6xl px-6 py-16">
@@ -187,6 +200,7 @@ export default async function HSAdminReferralsPage() {
             masked={false}
             title="Top referrers (unmasked)"
             description="Admin-only view. Full names for ops follow-up."
+            tierByUserId={tierByUserId}
           />
         </section>
 

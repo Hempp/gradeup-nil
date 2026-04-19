@@ -9,6 +9,7 @@
 
 import type { LeaderboardEntry } from '@/lib/hs-nil/referrals';
 import { maskLastName } from '@/lib/hs-nil/referrals';
+import type { RewardTierId } from '@/lib/hs-nil/referral-rewards';
 
 interface ReferralLeaderboardProps {
   entries: LeaderboardEntry[];
@@ -19,7 +20,27 @@ interface ReferralLeaderboardProps {
   callerSignups?: number;
   title?: string;
   description?: string;
+  /**
+   * Optional map of referring_user_id → highest active tier. When
+   * present, renders a compact tier pill beside the row. Callers
+   * that don't want the badge can simply omit this prop.
+   */
+  tierByUserId?: Map<string, RewardTierId>;
 }
+
+const TIER_PILL_COLOR: Record<RewardTierId, string> = {
+  bronze: '#C68755',
+  silver: '#B4B8BD',
+  gold: '#FFD166',
+  platinum: 'var(--accent-primary)',
+};
+
+const TIER_PILL_LABEL: Record<RewardTierId, string> = {
+  bronze: 'Bronze',
+  silver: 'Silver',
+  gold: 'Gold',
+  platinum: 'Platinum',
+};
 
 export function ReferralLeaderboard({
   entries,
@@ -29,6 +50,7 @@ export function ReferralLeaderboard({
   callerSignups,
   title = 'Top referrers',
   description = 'Parents and athletes bringing the most families onto GradeUp.',
+  tierByUserId,
 }: ReferralLeaderboardProps) {
   return (
     <section
@@ -55,6 +77,7 @@ export function ReferralLeaderboard({
               ? maskLastName(entry.firstName, entry.lastName)
               : [entry.firstName, entry.lastName].filter(Boolean).join(' ').trim() ||
                 'Unknown';
+            const tier = tierByUserId?.get(entry.referringUserId) ?? null;
             return (
               <li
                 key={entry.referringUserId}
@@ -81,6 +104,19 @@ export function ReferralLeaderboard({
                     }`}
                   >
                     {display}
+                    {tier && (
+                      <span
+                        className="ml-2 inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white/80"
+                        aria-label={`${TIER_PILL_LABEL[tier]} tier`}
+                      >
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ backgroundColor: TIER_PILL_COLOR[tier] }}
+                          aria-hidden="true"
+                        />
+                        {TIER_PILL_LABEL[tier]}
+                      </span>
+                    )}
                     {isCaller && (
                       <span className="ml-2 text-xs font-normal uppercase tracking-widest text-[var(--accent-primary)]">
                         You
