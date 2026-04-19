@@ -719,6 +719,62 @@ async function handleSign(
             error: err instanceof Error ? err.message : String(err),
           });
         }
+
+        // 4) BRAND-PAYMENTS: authorize the brand's card for the deal
+        //    amount. Funds settle into GradeUp's platform balance and are
+        //    released to the parent custodian only when the brand approves
+        //    the deliverable (via the review route). Fail-soft — a
+        //    payment-setup gap must NOT block the contract sign. Ops sees
+        //    failures in hs_deal_brand_charges.status='requires_payment_method'.
+        try {
+          const { createDealPaymentIntent } = await import(
+            '@/lib/hs-nil/escrow'
+          );
+          const { data: chargeLookup } = await supabase
+            .from('deals')
+            .select(
+              'compensation_amount, brand:brands(id)',
+            )
+            .eq('id', dealId)
+            .maybeSingle();
+
+          const chargeRow = chargeLookup as unknown as {
+            compensation_amount: number | null;
+            brand: { id: string } | { id: string }[] | null;
+          } | null;
+          const brandRow = Array.isArray(chargeRow?.brand)
+            ? chargeRow?.brand[0]
+            : chargeRow?.brand ?? null;
+          const amountUsd = (chargeRow?.compensation_amount as number) ?? 0;
+
+          if (brandRow?.id && amountUsd > 0) {
+            const charge = await createDealPaymentIntent({
+              dealId,
+              brandId: brandRow.id,
+              amountCents: Math.round(amountUsd * 100),
+            });
+            if (!charge.ok) {
+              // eslint-disable-next-line no-console
+              console.warn('[hs-nil] createDealPaymentIntent did not succeed', {
+                dealId,
+                status: charge.status,
+                reason: charge.reason,
+              });
+            }
+          } else {
+            // eslint-disable-next-line no-console
+            console.warn(
+              '[hs-nil] skipping brand payment — missing brand or zero amount',
+              { dealId, brandId: brandRow?.id ?? null, amountUsd },
+            );
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-nil] brand payment intent path threw — continuing', {
+            dealId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
       }
     }
   }

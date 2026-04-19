@@ -530,26 +530,52 @@ export async function releasePayout(
   const { data: row, error: rowErr } = await sb
     .from('hs_deal_parent_payouts')
     .select(
-      'id, status, stripe_connect_account_id, payout_amount, payout_currency',
+      'id, status, stripe_connect_account_id, payout_amount, payout_currency, stripe_transfer_id',
     )
     .eq('deal_id', dealId)
     .maybeSingle();
 
   if (rowErr || !row) return { ok: false, reason: 'payout row not found' };
 
+  // Idempotency short-circuits. releasePayout may now be invoked from TWO
+  // places — the brand-review endpoint (via releaseEscrowToParent) AND the
+  // platform-payment webhook (once the inbound charge captures). Both
+  // paths must be safe to call repeatedly without double-firing the
+  // outbound Stripe transfer.
   if (row.status === 'paid') {
-    return { ok: true, reason: 'already paid' };
-  }
-
-  if (row.status !== 'authorized') {
     return {
-      ok: false,
-      reason: `payout not authorized (status=${row.status})`,
+      ok: true,
+      reason: 'already paid',
+      transferId: (row.stripe_transfer_id as string | null) ?? undefined,
     };
   }
 
   if (!row.stripe_connect_account_id) {
     return { ok: false, reason: 'missing stripe_connect_account_id' };
+  }
+
+  // 'pending' rows that DO have a connect account id are auto-promoted to
+  // 'authorized' here. Historically the transition happened via the
+  // `transfer.created` Connect webhook, but in the escrow-gated flow the
+  // inbound charge capture is the signal that funds are available — we
+  // no longer need to wait for a second webhook round-trip.
+  if (row.status === 'pending') {
+    const { error: promoteErr } = await sb
+      .from('hs_deal_parent_payouts')
+      .update({
+        status: 'authorized' as PayoutStatus,
+        authorized_at: new Date().toISOString(),
+      })
+      .eq('id', row.id)
+      .eq('status', 'pending'); // guard against concurrent promotion
+    if (promoteErr) {
+      return { ok: false, reason: promoteErr.message };
+    }
+  } else if (row.status !== 'authorized') {
+    return {
+      ok: false,
+      reason: `payout not in a releasable state (status=${row.status})`,
+    };
   }
 
   try {

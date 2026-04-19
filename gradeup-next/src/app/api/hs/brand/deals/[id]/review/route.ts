@@ -41,7 +41,7 @@ import {
   recordApproval,
   requestRevision,
 } from '@/lib/hs-nil/approvals';
-import { releasePayout } from '@/lib/hs-nil/payouts';
+import { releaseEscrowToParent } from '@/lib/hs-nil/escrow';
 import {
   sendDeliverableApproved,
   sendRevisionRequested,
@@ -182,17 +182,25 @@ export async function POST(
         );
       }
 
-      // Release payout — best-effort. Failure leaves the deal at 'approved'
-      // for OPS-WRITER's /hs/admin/payouts retry path; we do NOT revert
-      // the approval.
+      // BRAND-PAYMENTS: release the escrowed charge to the parent custodian.
+      // releaseEscrowToParent is the single entry-point: it checks the
+      // inbound charge status and, if succeeded, fires the outbound Connect
+      // transfer (releasePayout) internally. If the charge hasn't settled
+      // yet (processing / requires_*), release is DEFERRED — the platform
+      // webhook will re-trigger once `payment_intent.succeeded` fires.
+      //
+      // releasePayout was previously called here directly. That path is
+      // gone: consolidating through the escrow helper keeps the inbound
+      // side (card charge) authoritative over the outbound side (parent
+      // transfer) so we never release parent funds before the brand has
+      // actually paid. releasePayout remains idempotent — duplicate calls
+      // from the webhook vs this route are a no-op.
       let payoutStatus: 'releasing' | 'already_paid' | 'pending_retry' =
         'releasing';
       let finalDealStatus: 'approved' | 'paid' = 'approved';
       try {
-        const payout = await releasePayout(dealId);
-        if (payout.ok) {
-          // Flip to 'paid'. We do this here (not in approvals.ts) so the
-          // service doesn't need to know about payout provider.
+        const release = await releaseEscrowToParent(dealId);
+        if (release.ok) {
           const { error: flipErr } = await supabase
             .from('deals')
             .update({
@@ -211,19 +219,30 @@ export async function POST(
             finalDealStatus = 'paid';
           }
           payoutStatus =
-            payout.reason === 'already paid' ? 'already_paid' : 'releasing';
+            release.reason === 'already released' ? 'already_paid' : 'releasing';
+        } else if (release.deferred) {
+          // Brand-charge hasn't captured yet — the platform webhook will
+          // re-fire releaseEscrowToParent once `payment_intent.succeeded`
+          // arrives. Deal stays at 'approved' and the brand-side UI shows
+          // "Payment processing — release pending".
+          payoutStatus = 'pending_retry';
+          // eslint-disable-next-line no-console
+          console.warn('[brand-review] release deferred — charge not captured', {
+            dealId,
+            reason: release.reason,
+          });
         } else {
           payoutStatus = 'pending_retry';
           // eslint-disable-next-line no-console
-          console.warn('[brand-review] releasePayout did not succeed', {
+          console.warn('[brand-review] releaseEscrowToParent did not succeed', {
             dealId,
-            reason: payout.reason,
+            reason: release.reason,
           });
         }
       } catch (err) {
         payoutStatus = 'pending_retry';
         // eslint-disable-next-line no-console
-        console.warn('[brand-review] releasePayout threw', {
+        console.warn('[brand-review] releaseEscrowToParent threw', {
           dealId,
           error: err instanceof Error ? err.message : String(err),
         });
