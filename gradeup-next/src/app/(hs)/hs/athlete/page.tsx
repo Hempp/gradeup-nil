@@ -46,7 +46,9 @@ import { StateRulesCard } from '@/components/hs/StateRulesCard';
 import { HSDealCard, type DealCardStatus } from '@/components/hs/HSDealCard';
 import type { StatusPill } from '@/components/hs/AthleteDashboardHeader';
 import { AthleteDashboardEarningsCard } from '@/components/hs/AthleteDashboardEarningsCard';
+import { AthleteDashboardTrajectoryCard } from '@/components/hs/AthleteDashboardTrajectoryCard';
 import { getAthleteEarningsSummary } from '@/lib/hs-nil/earnings';
+import type { GpaSnapshot, VerificationTier } from '@/lib/hs-nil/trajectory';
 
 export const metadata: Metadata = {
   title: 'Your dashboard — GradeUp HS',
@@ -202,6 +204,56 @@ export default async function HSAthleteDashboardPage() {
 
   const activeConsent = activeRes.data ?? null;
   const pendingConsents: PendingConsentRow[] = pendingRes.data ?? [];
+
+  // Trajectory sparkline — last ~6 months of GPA snapshots. We only read
+  // what AthleteDashboardTrajectoryCard needs here; the full trajectory
+  // assembly lives on /hs/athlete/trajectory.
+  let trajectorySnapshots: GpaSnapshot[] = [];
+  try {
+    const sixMonthsAgoIso = new Date(
+      Date.now() - 6 * 30 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+    const { data: snapshotRows } = await supabase
+      .from('hs_athlete_gpa_snapshots')
+      .select(
+        'id, athlete_user_id, gpa, verification_tier, source, source_reference_id, reported_at, recorded_at, notes',
+      )
+      .eq('athlete_user_id', user.id)
+      .gte('reported_at', sixMonthsAgoIso)
+      .order('reported_at', { ascending: true });
+    trajectorySnapshots = (snapshotRows ?? []).map((r) => {
+      const row = r as {
+        id: string;
+        athlete_user_id: string;
+        gpa: number | string;
+        verification_tier: VerificationTier;
+        source:
+          | 'initial_signup'
+          | 'transcript_approval'
+          | 'manual_admin'
+          | 'trajectory_import';
+        source_reference_id: string | null;
+        reported_at: string;
+        recorded_at: string;
+        notes: string | null;
+      };
+      const gpa =
+        typeof row.gpa === 'string' ? Number(row.gpa) : row.gpa;
+      return {
+        id: row.id,
+        athleteUserId: row.athlete_user_id,
+        gpa: Number.isFinite(gpa) ? gpa : 0,
+        tier: row.verification_tier,
+        source: row.source,
+        sourceReferenceId: row.source_reference_id,
+        reportedAt: row.reported_at,
+        recordedAt: row.recorded_at,
+        notes: row.notes,
+      };
+    });
+  } catch (err) {
+    console.error('[hs/athlete] trajectory sparkline fetch failed', err);
+  }
 
   // Earnings summary — best-effort. Falls back to zeros if anything errors,
   // so the card still renders its "your first payout lands here" state.
@@ -525,6 +577,12 @@ export default async function HSAthleteDashboardPage() {
           <StateRulesCard stateCode={stateCode} />
 
           <AthleteDashboardEarningsCard summary={earningsSummary} />
+
+          <AthleteDashboardTrajectoryCard
+            currentGpa={profile.gpa ?? null}
+            currentTier={tier}
+            snapshots={trajectorySnapshots}
+          />
 
           <OnboardingCard
             eyebrow="Your first deal"
