@@ -17,6 +17,7 @@
  */
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import {
@@ -113,6 +114,29 @@ export default async function HSAthleteTransitionPage() {
                     transition.enrollment_proof_storage_path
                   )}
                 />
+              </div>
+            ) : null}
+
+            {transition.status === 'verified' ? (
+              <div className="mt-6 rounded-xl border border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/5 p-6">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                  Pay it forward
+                </p>
+                <h2 className="mt-2 font-display text-2xl text-white">
+                  Become a mentor
+                </h2>
+                <p className="mt-2 text-sm text-white/70">
+                  The next class of HS athletes needs someone who just walked
+                  your path. Share what you wish someone had told you — a few
+                  minutes of your time can save a 16-year-old a whole semester
+                  of guessing.
+                </p>
+                <Link
+                  href="/hs/alumni/setup"
+                  className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-lg bg-[var(--accent-primary)] px-6 py-2 text-sm font-semibold text-black hover:opacity-90"
+                >
+                  Become a mentor
+                </Link>
               </div>
             ) : null}
           </>
