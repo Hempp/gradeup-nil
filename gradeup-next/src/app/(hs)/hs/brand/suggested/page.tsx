@@ -26,6 +26,7 @@ import {
   getSuggestedAthletes,
   signAthleteRef,
 } from '@/lib/hs-nil/matching';
+import { getDismissedAthleteIds } from '@/lib/hs-nil/match-feedback';
 
 export const metadata: Metadata = {
   title: 'Suggested athletes — GradeUp HS',
@@ -49,6 +50,7 @@ interface PageProps {
   searchParams: Promise<{
     min_gpa?: string;
     limit?: string;
+    show_dismissed?: string;
   }>;
 }
 
@@ -71,6 +73,7 @@ export default async function HSBrandSuggestedPage({ searchParams }: PageProps) 
   const sp = await searchParams;
   const minGpa = parseMinGpa(sp.min_gpa);
   const limit = parseLimit(sp.limit);
+  const showDismissed = sp.show_dismissed === '1';
 
   const {
     data: { user },
@@ -105,10 +108,49 @@ export default async function HSBrandSuggestedPage({ searchParams }: PageProps) 
   const operatingStates = brand.hs_target_states ?? [];
   const dealCategories = brand.hs_deal_categories ?? [];
 
-  const matches = await getSuggestedAthletes(supabase, brand.id, {
+  const rawMatches = await getSuggestedAthletes(supabase, brand.id, {
     minGpa,
     limit,
   });
+
+  // Hide-dismissed filter (default ON; ?show_dismissed=1 to reveal).
+  // We fetch dismissed ids via the service-role-backed helper because
+  // the authenticated client's RLS policy on match_feedback_events
+  // also returns the brand's own rows, but going through the helper
+  // keeps the brand-resolution logic consistent with write paths.
+  let dismissedIds: Set<string> = new Set();
+  if (!showDismissed) {
+    try {
+      dismissedIds = await getDismissedAthleteIds(brand.id, 30);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-brand-suggested] dismiss filter failed', err);
+    }
+  }
+  const matches = rawMatches.filter((m) => !dismissedIds.has(m.athleteId));
+  const hiddenCount = rawMatches.length - matches.length;
+
+  // Which of these athletes has the brand already saved? Scoped by
+  // RLS to this brand's rows only.
+  const savedIds = new Set<string>();
+  if (matches.length > 0) {
+    try {
+      const { data: saves } = await supabase
+        .from('brand_athlete_shortlist')
+        .select('athlete_user_id')
+        .eq('brand_id', brand.id)
+        .in(
+          'athlete_user_id',
+          matches.map((m) => m.athleteId)
+        );
+      for (const row of (saves ?? []) as Array<{ athlete_user_id: string }>) {
+        savedIds.add(row.athlete_user_id);
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-brand-suggested] saved lookup failed', err);
+    }
+  }
 
   const firstNameMeta = (user.user_metadata as { first_name?: string } | null)
     ?.first_name;
@@ -133,6 +175,28 @@ export default async function HSBrandSuggestedPage({ searchParams }: PageProps) 
               {matches.length > 0
                 ? `${matches.length} match${matches.length === 1 ? '' : 'es'} at GPA ≥ ${minGpa.toFixed(1)}. Ranked by fit.`
                 : 'No matches yet. Try broadening your filters.'}
+              {!showDismissed && hiddenCount > 0 && (
+                <>
+                  {' '}
+                  <Link
+                    href={`/hs/brand/suggested?min_gpa=${minGpa}&limit=${limit}&show_dismissed=1`}
+                    className="text-[var(--accent-primary)] hover:underline"
+                  >
+                    ({hiddenCount} hidden — show)
+                  </Link>
+                </>
+              )}
+              {showDismissed && (
+                <>
+                  {' '}
+                  <Link
+                    href={`/hs/brand/suggested?min_gpa=${minGpa}&limit=${limit}`}
+                    className="text-[var(--accent-primary)] hover:underline"
+                  >
+                    (hide dismissed)
+                  </Link>
+                </>
+              )}
             </p>
           </div>
           <Link
@@ -205,6 +269,8 @@ export default async function HSBrandSuggestedPage({ searchParams }: PageProps) 
                   graduationYear={m.graduationYear}
                   matchScore={m.matchScore}
                   athleteRef={signAthleteRef(m.athleteId)}
+                  affinityScore={m.affinityScore}
+                  initialSaved={savedIds.has(m.athleteId)}
                 />
               </li>
             ))}

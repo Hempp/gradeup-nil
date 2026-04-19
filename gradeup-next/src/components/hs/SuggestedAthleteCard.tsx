@@ -12,6 +12,7 @@
  */
 
 import Link from 'next/link';
+import MatchFeedbackButtons from './MatchFeedbackButtons';
 
 export type GpaTier =
   | 'self_reported'
@@ -26,10 +27,18 @@ export interface SuggestedAthleteCardProps {
   gpaVerificationTier: GpaTier;
   stateCode: string;
   graduationYear: number;
-  /** 0.0 – 1.0. Rendered as a percentage. */
+  /** Raw match score. May exceed 1.0 slightly when affinity bonus saturates; clamped for display. */
   matchScore: number;
   /** Signed HMAC ref — NOT the raw UUID. */
   athleteRef: string;
+  /**
+   * Per-(brand, athlete) aggregate feedback weight. 0 when no feedback.
+   * Rendered as a compact secondary indicator — the primary score
+   * still dominates.
+   */
+  affinityScore?: number;
+  /** Has the current brand already saved this athlete? Persists button state. */
+  initialSaved?: boolean;
 }
 
 const STATE_LABELS: Record<string, string> = {
@@ -63,8 +72,15 @@ export default function SuggestedAthleteCard({
   graduationYear,
   matchScore,
   athleteRef,
+  affinityScore = 0,
+  initialSaved = false,
 }: SuggestedAthleteCardProps) {
   const scorePct = Math.round(Math.max(0, Math.min(1, matchScore)) * 100);
+  const affinitySigned = affinityScore > 0 ? 'positive' : affinityScore < 0 ? 'negative' : 'neutral';
+  const affinityLabel =
+    affinityScore === 0
+      ? null
+      : `${affinityScore > 0 ? '+' : ''}${affinityScore.toFixed(2)} affinity`;
   const gpaText = gpa !== null ? gpa.toFixed(2) : '—';
   const stateLabel = STATE_LABELS[stateCode] ?? stateCode;
   const tierLabel = TIER_LABEL[gpaVerificationTier];
@@ -128,6 +144,21 @@ export default function SuggestedAthleteCard({
         </div>
       </dl>
 
+      {affinityLabel && (
+        <p
+          className={`mt-4 text-[10px] font-semibold uppercase tracking-wider ${
+            affinitySigned === 'positive'
+              ? 'text-emerald-300'
+              : affinitySigned === 'negative'
+                ? 'text-rose-300'
+                : 'text-white/40'
+          }`}
+          aria-label={`Your brand's affinity with this athlete ${affinityLabel}`}
+        >
+          {affinityLabel}
+        </p>
+      )}
+
       <div className="mt-6">
         <Link
           href={proposeHref}
@@ -136,6 +167,12 @@ export default function SuggestedAthleteCard({
           Propose a deal
         </Link>
       </div>
+
+      <MatchFeedbackButtons
+        athleteRef={athleteRef}
+        initialSaved={initialSaved}
+        sourcePage="/hs/brand/suggested"
+      />
     </article>
   );
 }

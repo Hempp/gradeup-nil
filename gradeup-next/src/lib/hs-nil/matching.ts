@@ -47,6 +47,10 @@ export interface MatchedAthleteRow {
   stateCode: string;
   graduationYear: number;
   matchScore: number;
+  /** Per-(brand, athlete) aggregate feedback weight. 0 when no feedback. */
+  affinityScore: number;
+  /** Number of feedback events behind affinityScore. 0 when no feedback. */
+  signalCount: number;
 }
 
 export interface GetSuggestedAthletesFilters {
@@ -68,6 +72,10 @@ interface RpcRow {
   state_code: string;
   graduation_year: number;
   match_score: number;
+  /** Added Phase 8 — present whenever the 20260419_004 migration is live. */
+  affinity_score?: number | null;
+  /** Added Phase 8 — present whenever the 20260419_004 migration is live. */
+  signal_count?: number | null;
 }
 
 function isGpaTier(value: string): value is GpaTier {
@@ -91,6 +99,14 @@ function normalizeRow(row: RpcRow): MatchedAthleteRow {
     stateCode: row.state_code,
     graduationYear: row.graduation_year,
     matchScore: row.match_score,
+    affinityScore:
+      row.affinity_score !== null && row.affinity_score !== undefined
+        ? Number(row.affinity_score)
+        : 0,
+    signalCount:
+      row.signal_count !== null && row.signal_count !== undefined
+        ? Number(row.signal_count)
+        : 0,
   };
 }
 
