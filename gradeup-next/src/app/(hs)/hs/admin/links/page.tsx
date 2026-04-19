@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import { AdminActionButton } from '@/components/hs/AdminActionButton';
+import { LinkBulkPanel } from '@/components/hs/LinkBulkPanel';
 
 export const metadata: Metadata = {
   title: 'Pending links — GradeUp HS',
@@ -40,24 +40,6 @@ interface LinkRow {
   relationship: string;
   verification_method: string | null;
   created_at: string;
-}
-
-function fmt(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-function daysAgo(iso: string): number {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return 0;
-  return Math.floor((Date.now() - d.getTime()) / (24 * 60 * 60 * 1000));
 }
 
 export default async function AdminLinksPage() {
@@ -146,74 +128,7 @@ export default async function AdminLinksPage() {
             Pending ({rows.length})
           </h2>
           <div className="mt-4">
-            {rows.length === 0 ? (
-              <p className="rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/60">
-                No stale link requests right now.
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {rows.map((row) => (
-                  <li
-                    key={row.id}
-                    className="rounded-xl border border-white/10 bg-white/5 p-4"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-xs font-semibold uppercase tracking-widest text-amber-200">
-                          Unverified · {daysAgo(row.created_at)}d
-                        </p>
-                        <p className="mt-1 text-sm text-white/90">
-                          {row.relationship === 'legal_guardian'
-                            ? 'Legal guardian'
-                            : 'Parent'}{' '}
-                          claimed on athlete{' '}
-                          <span className="font-mono text-white">
-                            {row.athlete_user_id.slice(0, 8)}
-                          </span>
-                        </p>
-                      </div>
-                      <dl className="flex flex-wrap gap-4 text-xs text-white/60">
-                        <div>
-                          <dt className="text-[10px] uppercase tracking-widest text-white/40">
-                            Parent profile
-                          </dt>
-                          <dd className="font-mono text-white/80">
-                            {row.parent_profile_id.slice(0, 8)}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-[10px] uppercase tracking-widest text-white/40">
-                            Requested
-                          </dt>
-                          <dd className="text-white/80">
-                            {fmt(row.created_at)}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-[10px] uppercase tracking-widest text-white/40">
-                            Channel
-                          </dt>
-                          <dd className="text-white/80">
-                            {row.verification_method ?? '—'}
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-                    <div className="mt-3">
-                      <AdminActionButton
-                        label="Force verify"
-                        confirmTitle={`Force-verify link between parent ${row.parent_profile_id.slice(0, 8)} and athlete ${row.athlete_user_id.slice(0, 8)}?`}
-                        confirmDescription="Admin override. Stamps verified_at + method='manual_support'. Neither party is emailed."
-                        endpoint="/api/hs/admin/actions/link-verify"
-                        payload={{ linkId: row.id }}
-                        submitLabel="Force verify"
-                        ariaLabel={`Force verify link ${row.id}`}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <LinkBulkPanel rows={rows} />
           </div>
         </section>
       </section>

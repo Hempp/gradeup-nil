@@ -12,6 +12,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { AdminActionButton } from '@/components/hs/AdminActionButton';
+import { DisclosureBulkPanel } from '@/components/hs/DisclosureBulkPanel';
 
 export const metadata: Metadata = {
   title: 'Disclosure ops — GradeUp HS',
@@ -146,15 +147,7 @@ export default async function AdminDisclosuresPage() {
         </NextStepsBlock>
 
         <Section title={`Failed (${failed.length})`}>
-          {failed.length === 0 ? (
-            <EmptyState>No failed disclosures.</EmptyState>
-          ) : (
-            <ul className="space-y-3">
-              {failed.map((row) => (
-                <DisclosureRowCard key={row.id} row={row} tone="error" />
-              ))}
-            </ul>
-          )}
+          <DisclosureBulkPanel rows={failed} />
         </Section>
 
         <Section title={`Pending but overdue (${overduePending.length})`}>

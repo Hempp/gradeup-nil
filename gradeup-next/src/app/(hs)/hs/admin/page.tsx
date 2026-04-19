@@ -32,6 +32,7 @@ import {
 } from '@/components/hs/AdminQueueCard';
 import { AdminSignalBadge } from '@/components/hs/AdminSignalBadge';
 import { listOpenDisputes } from '@/lib/hs-nil/disputes';
+import { countBulkOperationsByStatus } from '@/lib/hs-nil/bulk-actions';
 
 export const metadata: Metadata = {
   title: 'Ops dashboard — GradeUp HS',
@@ -367,19 +368,55 @@ function fmtFeedTime(iso: string): string {
 // Page
 // ---------------------------------------------------------------------------
 
+async function loadWeeklyDealCount(): Promise<number> {
+  const supabase = await createClient();
+  const sevenDaysAgo = new Date(
+    Date.now() - 7 * 24 * 60 * 60 * 1000
+  ).toISOString();
+  try {
+    const { count } = await supabase
+      .from('deals')
+      .select('id', { count: 'exact', head: true })
+      .eq('target_bracket', 'high_school')
+      .gte('created_at', sevenDaysAgo);
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 export default async function HsAdminLandingPage() {
   await requireAdminOr404();
 
-  const [transcripts, disclosures, links, payouts, consents, disputes, feed] =
-    await Promise.all([
-      safeLoad('transcripts', loadTranscripts),
-      safeLoad('disclosures', loadDisclosures),
-      safeLoad('pending_links', loadPendingLinks),
-      safeLoad('payouts', loadPayouts),
-      safeLoad('expiring_consents', loadExpiringConsents),
-      safeLoad('open_disputes', loadOpenDisputes),
-      loadRecentActivity(),
-    ]);
+  const [
+    transcripts,
+    disclosures,
+    links,
+    payouts,
+    consents,
+    disputes,
+    feed,
+    weeklyDealCount,
+  ] = await Promise.all([
+    safeLoad('transcripts', loadTranscripts),
+    safeLoad('disclosures', loadDisclosures),
+    safeLoad('pending_links', loadPendingLinks),
+    safeLoad('payouts', loadPayouts),
+    safeLoad('expiring_consents', loadExpiringConsents),
+    safeLoad('open_disputes', loadOpenDisputes),
+    loadRecentActivity(),
+    loadWeeklyDealCount(),
+  ]);
+
+  // Bulk-op signal counts. Out-of-band try so a missing migration on a
+  // preview env doesn't blank the rest of the page.
+  let bulkCounts = { running: 0, partial_failure: 0 };
+  try {
+    bulkCounts = await countBulkOperationsByStatus();
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-admin] bulk op count load failed', err);
+  }
 
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
@@ -520,6 +557,89 @@ export default async function HsAdminLandingPage() {
             footnote="Disputes pause the deal until resolved; resolution transitions the deal automatically."
           />
         </div>
+
+        {/* Ops tools + bulk operations callouts */}
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <Link
+            href="/hs/admin/ops-tools"
+            className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/15 bg-white/5 p-6 transition-colors hover:bg-white/10"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                Ops tools
+              </p>
+              <h2 className="mt-1 font-display text-xl text-white">
+                Bulk actions &amp; concierge cohort
+              </h2>
+              <p className="mt-1 text-sm text-white/60">
+                Fan-out retries, retry-guard status, per-parent funnel
+                dashboard for the pilot.
+              </p>
+            </div>
+            <p className="text-xs font-semibold text-[var(--accent-primary)]">
+              Open ops tools →
+            </p>
+          </Link>
+
+          <Link
+            href="/hs/admin/ops-tools/bulk-operations"
+            className={[
+              'flex flex-wrap items-center justify-between gap-4 rounded-xl border p-6 transition-colors',
+              bulkCounts.running > 0 || bulkCounts.partial_failure > 0
+                ? 'border-amber-400/40 bg-amber-400/5 hover:bg-amber-400/10'
+                : 'border-white/15 bg-white/5 hover:bg-white/10',
+            ].join(' ')}
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                Bulk operations
+              </p>
+              <h2 className="mt-1 font-display text-xl text-white">
+                Bulk op history
+              </h2>
+              <p className="mt-1 text-sm text-white/60">
+                {bulkCounts.running > 0
+                  ? `${bulkCounts.running} running · ${bulkCounts.partial_failure} partial-failure`
+                  : bulkCounts.partial_failure > 0
+                    ? `${bulkCounts.partial_failure} partial-failure need review`
+                    : 'No runs in flight.'}
+              </p>
+            </div>
+            <p className="text-xs font-semibold text-[var(--accent-primary)]">
+              See all runs →
+            </p>
+          </Link>
+        </div>
+
+        {/* Analytics entry point */}
+        <Link
+          href="/hs/admin/analytics"
+          className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/[0.06] p-6 transition-colors hover:bg-[var(--accent-primary)]/[0.10]"
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+              Analytics
+            </p>
+            <h2 className="mt-1 font-display text-xl text-white md:text-2xl">
+              Is this thing working?
+            </h2>
+            <p className="mt-1 text-sm text-white/60">
+              Funnel, cohorts, deal volume, referral graph, ranker quality.
+              Read-only, 60-second cache.
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/50">
+              Deals signed · last 7 days
+            </p>
+            <p className="mt-1 font-display text-3xl text-white">
+              {weeklyDealCount}
+            </p>
+            <p className="mt-2 text-xs font-semibold text-[var(--accent-primary)]">
+              Open analytics →
+            </p>
+          </div>
+        </Link>
 
         {/* Recent activity */}
         <section

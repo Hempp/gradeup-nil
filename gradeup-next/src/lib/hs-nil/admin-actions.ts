@@ -36,6 +36,29 @@ import type { USPSStateCode } from './state-rules';
 import { getDisclosureRecipient } from './disclosure-recipients';
 import { STATE_RULES } from './state-rules';
 import { sendConsentRenewalNudge as sendConsentRenewalNudgeEmail } from '@/lib/services/hs-nil/emails';
+import { writeRetryGuard, type BulkTargetKind } from './retry-guards';
+
+/**
+ * Shared guard-write. Called after every successful single-row action so
+ * bulk flows see the cooldown. Non-fatal on failure.
+ */
+async function recordRetryGuard(
+  targetKind: BulkTargetKind,
+  targetId: string,
+  actorId: string,
+  action: string
+): Promise<void> {
+  try {
+    await writeRetryGuard(targetKind, targetId, actorId, action);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-nil admin-actions] retry guard write failed', {
+      targetKind,
+      targetId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
 
 // ----------------------------------------------------------------------------
 // Types
@@ -237,6 +260,10 @@ export async function retryDisclosure(
     };
   }
 
+  // Dedupe guard uses the originating deal id — bulk flows key on dealId
+  // for disclosures because retryDisclosure resolves deal → latest-failed.
+  await recordRetryGuard('disclosure', dealId, actorId, 'disclosure_retry');
+
   return {
     ok: true,
     auditLogId: audit.id,
@@ -350,6 +377,8 @@ export async function resolvePayoutManually(
     };
   }
 
+  await recordRetryGuard('payout', payoutId, actorId, 'payout_resolve');
+
   return {
     ok: true,
     auditLogId: audit.id,
@@ -426,6 +455,8 @@ export async function forceVerifyLink(
       code: 'db_error',
     };
   }
+
+  await recordRetryGuard('link', linkId, actorId, 'link_force_verify');
 
   return {
     ok: true,
@@ -577,6 +608,13 @@ export async function sendConsentRenewalNudge(
       code: 'email_failed',
     };
   }
+
+  await recordRetryGuard(
+    'consent',
+    row.id,
+    actorId,
+    'consent_renewal_nudge'
+  );
 
   return {
     ok: true,

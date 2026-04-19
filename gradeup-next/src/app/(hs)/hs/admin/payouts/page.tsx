@@ -12,7 +12,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import { AdminPayoutResolveDialog } from '@/components/hs/AdminPayoutResolveDialog';
+import { PayoutBulkPanel } from '@/components/hs/PayoutBulkPanel';
 
 export const metadata: Metadata = {
   title: 'Payout ops — GradeUp HS',
@@ -46,25 +46,6 @@ interface PayoutRow {
   created_at: string;
   authorized_at: string | null;
   paid_at: string | null;
-}
-
-function fmt(iso: string | null | undefined): string {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-function daysAgo(iso: string): number {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return 0;
-  return Math.floor((Date.now() - d.getTime()) / (24 * 60 * 60 * 1000));
 }
 
 export default async function AdminPayoutsPage() {
@@ -153,17 +134,7 @@ export default async function AdminPayoutsPage() {
             Failed ({failed.length})
           </h2>
           <div className="mt-4">
-            {failed.length === 0 ? (
-              <p className="rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/60">
-                No failed payouts.
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {failed.map((row) => (
-                  <PayoutRowCard key={row.id} row={row} tone="error" />
-                ))}
-              </ul>
-            )}
+            <PayoutBulkPanel rows={failed} tone="error" sectionKey="failed" />
           </div>
         </section>
 
@@ -172,17 +143,7 @@ export default async function AdminPayoutsPage() {
             Stuck pending ≥ 2d ({stuck.length})
           </h2>
           <div className="mt-4">
-            {stuck.length === 0 ? (
-              <p className="rounded-md border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/60">
-                No stuck pending payouts.
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {stuck.map((row) => (
-                  <PayoutRowCard key={row.id} row={row} tone="warn" />
-                ))}
-              </ul>
-            )}
+            <PayoutBulkPanel rows={stuck} tone="warn" sectionKey="stuck" />
           </div>
         </section>
       </section>
@@ -190,70 +151,3 @@ export default async function AdminPayoutsPage() {
   );
 }
 
-function PayoutRowCard({
-  row,
-  tone,
-}: {
-  row: PayoutRow;
-  tone: 'error' | 'warn';
-}) {
-  const border =
-    tone === 'error'
-      ? 'border-[var(--color-error,#DA2B57)]/40'
-      : 'border-amber-400/40';
-  const chipText =
-    tone === 'error'
-      ? 'text-[var(--color-error,#DA2B57)]'
-      : 'text-amber-200';
-  return (
-    <li className={`rounded-xl border ${border} bg-white/5 p-4`}>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className={`text-xs font-semibold uppercase tracking-widest ${chipText}`}>
-            {row.status} · {daysAgo(row.created_at)}d old
-          </p>
-          <p className="mt-1 text-lg text-white">
-            {row.payout_amount.toFixed(2)}{' '}
-            <span className="text-sm text-white/50">
-              {row.payout_currency}
-            </span>
-          </p>
-        </div>
-        <dl className="flex flex-wrap gap-4 text-xs text-white/60">
-          <Fact label="Payout" value={row.id.slice(0, 8)} />
-          <Fact label="Deal" value={row.deal_id.slice(0, 8)} />
-          <Fact label="Parent" value={row.parent_profile_id.slice(0, 8)} />
-          <Fact
-            label="Transfer"
-            value={row.stripe_transfer_id ?? '—'}
-          />
-          <Fact label="Created" value={fmt(row.created_at)} />
-          <Fact label="Authorized" value={fmt(row.authorized_at)} />
-        </dl>
-      </div>
-      {row.failed_reason ? (
-        <p className="mt-3 rounded-md border border-white/10 bg-black/30 px-3 py-2 text-xs text-white/70">
-          <span className="font-semibold text-white/80">Failure:</span>{' '}
-          {row.failed_reason}
-        </p>
-      ) : null}
-      <div className="mt-3">
-        <AdminPayoutResolveDialog
-          payoutId={row.id}
-          payoutLabel={`${row.payout_amount.toFixed(2)} ${row.payout_currency}`}
-        />
-      </div>
-    </li>
-  );
-}
-
-function Fact({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-[10px] uppercase tracking-widest text-white/40">
-        {label}
-      </dt>
-      <dd className="font-mono text-white/80">{value}</dd>
-    </div>
-  );
-}
