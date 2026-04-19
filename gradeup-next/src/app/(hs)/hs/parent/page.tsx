@@ -53,6 +53,7 @@ import LinkedAthleteCard, {
 import LinkAthleteForm from '@/components/hs/LinkAthleteForm';
 import ParentProtectionsCard from '@/components/hs/ParentProtectionsCard';
 import { OnboardingCard } from '@/components/hs/OnboardingCard';
+import { ReferralCodeCard } from '@/components/hs/ReferralCodeCard';
 import {
   STATE_RULES,
   type StateNILRules,
@@ -472,6 +473,16 @@ export default async function HSParentDashboardPage() {
               </div>
             </>
           )}
+        </section>
+
+        {/* Section: Invite code — the viral amplifier that lets a parent
+            refer another parent in one click. Measures the "5 unprompted
+            parent-to-parent referrals in 30 days" concierge MVP goal. */}
+        <section aria-labelledby="referrals-heading" className="mt-12">
+          <h2 id="referrals-heading" className="sr-only">
+            Invite other parents
+          </h2>
+          <ReferralCodeCard />
         </section>
 
         {/* Section 3: Protections (static copy) */}

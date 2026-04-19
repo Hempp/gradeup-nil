@@ -173,6 +173,20 @@ export default function HSParentSignupPage() {
         console.warn('[hs-parent-signup] waitlist reconcile failed', err);
       }
 
+      // Parent-to-parent referral attribution — reads hs_ref cookie
+      // server-side, ties this parent to whoever invited them, emails
+      // the referrer. Best-effort; must not block signup.
+      try {
+        await fetch('/api/hs/referrals/attribute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'hs_parent' }),
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[hs-parent-signup] referral attribute failed', err);
+      }
+
       router.push('/hs/onboarding/parent-next');
     } catch {
       setError('Something went wrong. Please try again.');

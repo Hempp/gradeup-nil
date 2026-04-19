@@ -256,6 +256,21 @@ export default function BrandHSSignupForm() {
         console.warn('[hs-brand-signup] waitlist reconcile failed', err);
       }
 
+      // Parent-to-parent referral attribution — a parent's invite link
+      // may also resolve to a brand signup (local business owner who
+      // heard about GradeUp from a parent). Best-effort; must not
+      // block signup.
+      try {
+        await fetch('/api/hs/referrals/attribute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'hs_brand' }),
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[hs-brand-signup] referral attribute failed', err);
+      }
+
       router.push('/hs/brand');
     } catch {
       setError('Something went wrong. Please try again.');

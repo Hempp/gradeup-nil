@@ -223,6 +223,22 @@ export default function HSAthleteSignupPage() {
           // eslint-disable-next-line no-console
           console.warn('[hs-athlete-signup] waitlist reconcile failed', err);
         }
+
+        // Parent-to-parent referral attribution — reads the hs_ref
+        // cookie (set by RefCapture on /hs?ref=CODE), ties this new
+        // user to the referring parent/athlete, writes the
+        // signup_completed funnel event, and emails the referrer.
+        // Best-effort — referral plumbing must not block signup.
+        try {
+          await fetch('/api/hs/referrals/attribute', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: 'hs_athlete' }),
+          });
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-athlete-signup] referral attribute failed', err);
+        }
       }
 
       // TODO: /hs/onboarding/next-steps does not yet exist. Landing the
