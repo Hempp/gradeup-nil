@@ -10,6 +10,8 @@ import { NavigationProgressBar } from "@/components/ui/navigation-progress";
 import { GoogleAnalytics } from "@/components/providers/google-analytics";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ServiceWorkerProvider } from "@/components/providers/service-worker-provider";
+import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // OPTIMIZED FONT LOADING
@@ -101,7 +103,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon.svg",
     apple: "/logo-icon.svg",
   },
-  manifest: "/site.webmanifest",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -128,6 +130,8 @@ export default function RootLayout({
             <ToastProvider>
               <KeyboardShortcutsProvider>
                 <ServiceWorkerProvider>
+                  <ServiceWorkerRegistration />
+                  <InstallPrompt />
                   <Suspense fallback={null}>
                     <AnalyticsProvider>
                       <ToastGlobalHandler />
