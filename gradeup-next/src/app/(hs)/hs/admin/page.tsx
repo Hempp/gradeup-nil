@@ -33,6 +33,7 @@ import {
 import { AdminSignalBadge } from '@/components/hs/AdminSignalBadge';
 import { listOpenDisputes } from '@/lib/hs-nil/disputes';
 import { countBulkOperationsByStatus } from '@/lib/hs-nil/bulk-actions';
+import { listFlaggedForOps } from '@/lib/hs-nil/moderation';
 
 export const metadata: Metadata = {
   title: 'Ops dashboard — GradeUp HS',
@@ -260,6 +261,24 @@ async function loadOpenDisputes(): Promise<QueueShape> {
   };
 }
 
+async function loadModeration(): Promise<QueueShape> {
+  // Service-role backed — admin auth client doesn't see cross-deal rows.
+  const rows = await listFlaggedForOps(10, 0);
+  return {
+    count: rows.length,
+    previews: rows.slice(0, 3).map((row) => ({
+      id: row.id,
+      summary:
+        row.auto_reasons[0] ??
+        (row.auto_categories.length
+          ? `Triggered: ${row.auto_categories.join(', ')}`
+          : 'Defaulted to human review.'),
+      detail: `${row.deal_title ?? `Deal ${row.submission.deal_id.slice(0, 8)}`} · ${row.submission.submission_type.replace(/_/g, ' ')}`,
+      timestamp: row.created_at,
+    })),
+  };
+}
+
 async function loadExpiringConsents(): Promise<QueueShape> {
   const supabase = await createClient();
   const now = new Date();
@@ -395,6 +414,7 @@ export default async function HsAdminLandingPage() {
     payouts,
     consents,
     disputes,
+    moderation,
     feed,
     weeklyDealCount,
   ] = await Promise.all([
@@ -404,6 +424,7 @@ export default async function HsAdminLandingPage() {
     safeLoad('payouts', loadPayouts),
     safeLoad('expiring_consents', loadExpiringConsents),
     safeLoad('open_disputes', loadOpenDisputes),
+    safeLoad('moderation', loadModeration),
     loadRecentActivity(),
     loadWeeklyDealCount(),
   ]);
@@ -470,6 +491,11 @@ export default async function HsAdminLandingPage() {
             label="disputes open"
             count={disputes.count}
             href="/hs/admin/disputes"
+          />
+          <AdminSignalBadge
+            label="moderation flagged"
+            count={moderation.count}
+            href="/hs/admin/moderation"
           />
         </div>
 
@@ -555,6 +581,19 @@ export default async function HsAdminLandingPage() {
             emptyMessage="No disputes open."
             thresholds={{ warn: 1, urgent: 3 }}
             footnote="Disputes pause the deal until resolved; resolution transitions the deal automatically."
+          />
+
+          <AdminQueueCard
+            id="moderation"
+            title="Content moderation"
+            subtitle="Flagged deliverables awaiting ops review."
+            count={moderation.count}
+            href="/hs/admin/moderation"
+            linkLabel="Open moderation queue"
+            previews={moderation.previews}
+            emptyMessage="All deliverables cleared automatically."
+            thresholds={{ warn: 1, urgent: 5 }}
+            footnote="Images default to human review; text content auto-approves only at ≥ 85% confidence."
           />
         </div>
 

@@ -18,6 +18,7 @@
  */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { moderateSubmission } from './moderation';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -232,6 +233,18 @@ export async function submitDeliverable(
       );
     }
   }
+
+  // Fire moderation best-effort. A classifier failure must never block the
+  // athlete's submit response — we already have the row, and the moderation
+  // service can be rerun by ops. The service layer writes a pending row if
+  // the classifier errors so the submission still shows up in the queue.
+  moderateSubmission(submissionId).catch((err) => {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-nil deliverables] moderation pass failed (non-fatal)', {
+      submissionId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  });
 
   return {
     submissionId,

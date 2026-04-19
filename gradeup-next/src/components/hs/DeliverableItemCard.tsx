@@ -19,6 +19,13 @@ import type {
   DeliverableSubmissionType,
 } from '@/lib/hs-nil/deliverables';
 import { deliverableSubmissionTypeLabel } from '@/lib/hs-nil/deliverables';
+import type { ModerationStatus } from '@/lib/hs-nil/moderation';
+import { ModerationResultBadge } from './ModerationResultBadge';
+
+export interface DeliverableItemCardModeration {
+  status: ModerationStatus;
+  confidence?: number | null;
+}
 
 export interface DeliverableItemCardSubmission {
   id: string;
@@ -32,10 +39,22 @@ export interface DeliverableItemCardSubmission {
   status: DeliverableStatus;
   review_notes: string | null;
   created_at: string;
+  /**
+   * Optional moderation result. When present the card renders a role-aware
+   * ModerationResultBadge alongside the deliverable status pill. Athletes
+   * and brands see softened copy; admins see the raw status.
+   */
+  moderation?: DeliverableItemCardModeration | null;
 }
 
 interface Props {
   submission: DeliverableItemCardSubmission;
+  /**
+   * Viewer role for moderation badge copy. Defaults to 'athlete' because
+   * the submit surface is athlete-owned; the brand review surface must
+   * pass 'brand' explicitly.
+   */
+  viewerRole?: 'athlete' | 'brand' | 'admin';
 }
 
 function formatWhen(iso: string): string {
@@ -86,7 +105,7 @@ function PlatformBadge({ platform }: { platform: DeliverablePlatform | null }) {
   );
 }
 
-export function DeliverableItemCard({ submission }: Props) {
+export function DeliverableItemCard({ submission, viewerRole = 'athlete' }: Props) {
   const s = submission;
   const typeLabel = deliverableSubmissionTypeLabel(s.submission_type);
 
@@ -104,6 +123,13 @@ export function DeliverableItemCard({ submission }: Props) {
           {formatWhen(s.created_at)}
         </span>
         <StatusPill status={s.status} />
+        {s.moderation ? (
+          <ModerationResultBadge
+            status={s.moderation.status}
+            role={viewerRole}
+            confidence={s.moderation.confidence ?? null}
+          />
+        ) : null}
       </header>
 
       <div className="space-y-3 text-sm text-white/90">
