@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createDealSchema, validateInput, formatValidationError } from '@/lib/validations';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { validateDealCreation } from '@/lib/hs-nil/deal-validation';
+import { recordFeedback } from '@/lib/hs-nil/match-feedback';
 
 export async function GET(request: NextRequest) {
   try {
@@ -220,6 +221,44 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    // HS-NIL match-feedback: record a 'proposed_deal' signal for non-college
+    // deals. Best-effort — duplicates are tolerated in the feedback model
+    // (each row is an event). We resolve the athlete user id from the
+    // athletes.profile_id join; if it's not resolvable we skip the signal.
+    try {
+      if (rawTargetBracket && rawTargetBracket !== 'college') {
+        const { data: athleteUserRow } = await supabase
+          .from('athletes')
+          .select('profile_id')
+          .eq('id', validatedData.athlete_id)
+          .maybeSingle();
+        const athleteUserId =
+          (athleteUserRow as { profile_id?: string | null } | null)?.profile_id ??
+          null;
+
+        if (athleteUserId) {
+          await recordFeedback({
+            brandId: validatedData.brand_id,
+            athleteUserId,
+            signal: 'proposed_deal',
+            sourcePage: '/hs/brand/deals/new',
+          }).catch((err: unknown) => {
+            // eslint-disable-next-line no-console
+            console.warn('[hs-nil] proposed_deal feedback failed', {
+              dealId: (deal as { id?: string } | null)?.id ?? null,
+              error: err instanceof Error ? err.message : String(err),
+            });
+            return null;
+          });
+        }
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil] proposed_deal feedback path threw — continuing', {
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
 
     return NextResponse.json(deal, { status: 201 });

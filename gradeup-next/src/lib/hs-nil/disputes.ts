@@ -38,6 +38,7 @@ import {
   type DisputeReasonCategory,
   type DisputeOutcome,
 } from '@/lib/services/hs-nil/dispute-emails';
+import { recordFeedback } from '@/lib/hs-nil/match-feedback';
 
 // ----------------------------------------------------------------------------
 // Types
@@ -742,6 +743,30 @@ export async function resolveDispute(
         // eslint-disable-next-line no-console
         console.warn('[hs-nil disputes] brand resolution email failed', err);
       }
+    }
+
+    // Match-feedback: when the dispute resolves in the brand's favor the
+    // deal transitions to 'cancelled' — record a 'deal_cancelled' signal
+    // so the affinity aggregation reflects the outcome. Best-effort;
+    // dispute resolution must not fail on a feedback-write hiccup.
+    if (
+      outcome === 'brand' &&
+      parties.brandId &&
+      parties.athleteUserId
+    ) {
+      await recordFeedback({
+        brandId: parties.brandId,
+        athleteUserId: parties.athleteUserId,
+        signal: 'deal_cancelled',
+        sourcePage: 'admin',
+      }).catch((err: unknown) => {
+        // eslint-disable-next-line no-console
+        console.warn('[hs-nil disputes] deal_cancelled feedback failed', {
+          dealId: row.deal_id,
+          error: err instanceof Error ? err.message : String(err),
+        });
+        return null;
+      });
     }
   }
 

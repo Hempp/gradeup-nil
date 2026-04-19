@@ -239,6 +239,23 @@ export default function HSAthleteSignupPage() {
           // eslint-disable-next-line no-console
           console.warn('[hs-athlete-signup] referral attribute failed', err);
         }
+
+        // Trajectory: capture the athlete's initial self-reported GPA as
+        // their first timeline snapshot. Server-side proxy because the
+        // trajectory service uses the service-role Supabase key. Best-
+        // effort — never blocks signup or the onboarding redirect.
+        if (form.gpa.trim()) {
+          try {
+            await fetch('/api/hs/athlete/signup-snapshot', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ gpa: Number(form.gpa) }),
+            });
+          } catch (err) {
+            // eslint-disable-next-line no-console
+            console.warn('[hs-athlete-signup] signup-snapshot failed', err);
+          }
+        }
       }
 
       // TODO: /hs/onboarding/next-steps does not yet exist. Landing the

@@ -41,6 +41,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { sendDealCompleted } from '@/lib/services/hs-nil/completion-emails';
 import { getShareCountsForDeal } from '@/lib/hs-nil/share';
+import { recordFeedback } from '@/lib/hs-nil/match-feedback';
 
 // ----------------------------------------------------------------------------
 // Service-role client
@@ -286,6 +287,27 @@ export async function afterDealPaid(
     emailsSucceeded: succeeded,
     timestamp: new Date().toISOString(),
   });
+
+  // 8. Match-feedback: record 'deal_completed' signal. Best-effort — any
+  //    failure here is strictly analytics and must never propagate into
+  //    the Stripe webhook retry path.
+  const brandIdForFeedback = deal.brand?.id ?? null;
+  const athleteUserIdForFeedback = deal.athlete?.profile_id ?? null;
+  if (brandIdForFeedback && athleteUserIdForFeedback) {
+    await recordFeedback({
+      brandId: brandIdForFeedback,
+      athleteUserId: athleteUserIdForFeedback,
+      signal: 'deal_completed',
+      sourcePage: 'webhook',
+    }).catch((err: unknown) => {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil/deal-completed] feedback signal failed', {
+        dealId,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      return null;
+    });
+  }
 
   return {
     ok: true,

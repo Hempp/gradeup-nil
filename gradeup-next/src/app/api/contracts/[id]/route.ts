@@ -8,6 +8,7 @@ import {
 } from '@/lib/validations';
 import type { ContractStatus, SignatureStatus } from '@/lib/validations/contract.schema';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { recordFunnelEvent } from '@/lib/hs-nil/referrals';
 
 /**
  * Verify contract ownership/access
@@ -670,6 +671,50 @@ async function handleSign(
         } catch (err) {
           // eslint-disable-next-line no-console
           console.warn('[hs-nil] payout seeding threw — continuing', {
+            dealId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+
+        // 3) Referral funnel: first_deal_signed. Fires only on the athlete's
+        //    FIRST fully-signed HS deal. recordFunnelEvent is idempotent for
+        //    'first_*' events so duplicate calls are a no-op. We look up the
+        //    athlete user id from the deal → athletes.profile_id.
+        //    Best-effort; never blocks the contract-sign response.
+        try {
+          const { data: athleteLookup } = await supabase
+            .from('deals')
+            .select('athlete:athletes(profile_id)')
+            .eq('id', dealId)
+            .maybeSingle();
+
+          const athleteRaw = (athleteLookup as unknown as {
+            athlete:
+              | { profile_id: string | null }
+              | { profile_id: string | null }[]
+              | null;
+          } | null)?.athlete ?? null;
+          const athleteRow = Array.isArray(athleteRaw)
+            ? athleteRaw[0] ?? null
+            : athleteRaw;
+          const athleteUserId = athleteRow?.profile_id ?? null;
+
+          if (athleteUserId) {
+            await recordFunnelEvent({
+              referredUserId: athleteUserId,
+              eventType: 'first_deal_signed',
+            }).catch((err: unknown) => {
+              // eslint-disable-next-line no-console
+              console.warn('[hs-nil] first_deal_signed funnel event failed', {
+                dealId,
+                error: err instanceof Error ? err.message : String(err),
+              });
+              return false;
+            });
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-nil] first_deal_signed path threw — continuing', {
             dealId,
             error: err instanceof Error ? err.message : String(err),
           });

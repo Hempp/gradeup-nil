@@ -31,6 +31,7 @@ import {
   sendParentConsentRequest,
   sendParentConsentSigned,
 } from '@/lib/services/hs-nil/emails';
+import { recordFunnelEvent } from '@/lib/hs-nil/referrals';
 
 // ----------------------------------------------------------------------------
 // Public types
@@ -303,6 +304,24 @@ class SupabaseConsentProvider implements ConsentProvider {
 
     if (insertErr || !consent) {
       throw new Error(`Failed to record consent: ${insertErr?.message ?? 'unknown error'}`);
+    }
+
+    // Best-effort referral funnel event — fires only on the athlete's FIRST
+    // signed consent. recordFunnelEvent is idempotent for 'first_*' events
+    // (it short-circuits if a prior row exists for the attribution), so we
+    // simply call it unconditionally and let the service dedupe.
+    // Never fail the consent over an event write.
+    try {
+      await recordFunnelEvent({
+        referredUserId: pending.athlete_user_id,
+        eventType: 'first_consent_signed',
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil consent] referral funnel event failed', {
+        athleteUserId: pending.athlete_user_id,
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
 
     // Mark the pending row consumed. If this fails the consent is still

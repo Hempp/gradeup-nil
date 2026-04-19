@@ -33,6 +33,7 @@ import {
   sendTranscriptApproved,
   sendTranscriptRejected,
 } from '@/lib/services/hs-nil/emails';
+import { captureGpaSnapshot } from '@/lib/hs-nil/trajectory';
 
 // ---------------------------------------------------------------------------
 // Auth helper — assert admin role. Returns `null` on success, a response on
@@ -200,6 +201,31 @@ export async function POST(request: NextRequest) {
         .maybeSingle();
 
       if (submission?.athlete_user_id) {
+        // Trajectory: capture a user_submitted GPA snapshot on the athlete's
+        // timeline as soon as the transcript review is approved. Idempotent
+        // via sourceReferenceId=submissionId so re-approvals are no-ops.
+        // Best-effort — never blocks the review response.
+        if (
+          decision.newStatus === 'approved' &&
+          submission.approved_gpa !== null &&
+          submission.approved_gpa !== undefined
+        ) {
+          await captureGpaSnapshot({
+            athleteUserId: submission.athlete_user_id,
+            gpa: Number(submission.approved_gpa),
+            tier: 'user_submitted',
+            source: 'transcript_approval',
+            sourceReferenceId: input.submissionId,
+          }).catch((err: unknown) => {
+            // eslint-disable-next-line no-console
+            console.warn('[hs-nil transcript review] trajectory snapshot failed', {
+              submissionId: input.submissionId,
+              error: err instanceof Error ? err.message : String(err),
+            });
+            return null;
+          });
+        }
+
         const athlete = await lookupAthleteEmail(submission.athlete_user_id);
         if (athlete.email) {
           if (decision.newStatus === 'approved' && submission.approved_gpa !== null) {
