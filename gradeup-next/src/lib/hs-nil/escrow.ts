@@ -48,6 +48,11 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
 import { releasePayout } from './payouts';
+import {
+  shouldDefer as shouldDeferPayout,
+  createDeferral,
+} from './deferred-payouts';
+import type { USPSStateCode } from './state-rules';
 
 // ----------------------------------------------------------------------------
 // Types
@@ -565,11 +570,24 @@ export async function markChargeFailed(
  *
  * Internally invokes `releasePayout(dealId)` — the existing Connect
  * transfer helper. That helper is itself idempotent against double-fire.
+ *
+ * Phase 11 branch: if the deal's state + athlete DOB require a
+ * paymentDeferredUntilAge18 hold (today TX only), we do NOT fire the
+ * Connect transfer. Instead we call `createDeferral()` which parks the
+ * payout in hs_deferred_payouts + flips hs_deal_parent_payouts.status
+ * to 'deferred'. The daily release cron picks these up on the
+ * 18th-birthday cutover. The brand's PaymentIntent remains 'succeeded'
+ * and we still flip the charge row to 'released_to_parent' because from
+ * the brand's perspective the deal IS completed — the parent-facing
+ * hold is a platform custody concern.
  */
 export async function releaseEscrowToParent(dealId: string): Promise<{
   ok: boolean;
   reason?: string;
   deferred?: boolean;
+  /** True when the payout was parked in hs_deferred_payouts (TX rule). */
+  heldInTrust?: boolean;
+  deferredPayoutId?: string;
   transferId?: string;
 }> {
   const sb = getServiceRoleClient();
@@ -611,6 +629,131 @@ export async function releaseEscrowToParent(dealId: string): Promise<{
     };
   }
 
+  // --------------------------------------------------------------------
+  // Phase 11 escrow-until-18 branch
+  // --------------------------------------------------------------------
+  // Look up the deal's state_code + athlete_user_id. If the state's
+  // rule set requires an age-18 deferral AND the athlete is still a
+  // minor, we re-route the outbound payout into hs_deferred_payouts.
+  // The DB query joins athletes → deals → auth.users via profile_id;
+  // the SELECT is narrow so a missing row (e.g. college-bracket deal)
+  // just short-circuits to the normal path.
+  try {
+    const { data: dealMeta } = await sb
+      .from('deals')
+      .select(
+        'id, state_code, target_bracket, athlete_id, athletes!inner(profile_id)',
+      )
+      .eq('id', dealId)
+      .maybeSingle();
+
+    const stateCode = (dealMeta?.state_code as string | null) ?? null;
+    const targetBracket =
+      (dealMeta?.target_bracket as string | null) ?? 'college';
+    const athleteUserId =
+      ((dealMeta?.athletes as unknown) as { profile_id: string } | null)
+        ?.profile_id ?? null;
+
+    if (
+      targetBracket === 'high_school' &&
+      stateCode &&
+      athleteUserId
+    ) {
+      const decision = await shouldDeferPayout({
+        dealId,
+        athleteUserId,
+        stateCode: stateCode as USPSStateCode,
+      });
+
+      if (decision.defer) {
+        // Find the parent_profile_id on the existing parent payout row
+        // (Phase 4 guaranteed one per HS deal).
+        const { data: payoutRow } = await sb
+          .from('hs_deal_parent_payouts')
+          .select('id, parent_profile_id, payout_amount')
+          .eq('deal_id', dealId)
+          .maybeSingle();
+
+        if (!payoutRow) {
+          logEvent('warn', 'releaseEscrowToParent: defer decided but no parent payout row', {
+            dealId,
+          });
+          // Fall through to the normal path — deferral can't be
+          // constructed without a parent_profile_id. Rare edge case.
+        } else {
+          const deferResult = await createDeferral({
+            dealId,
+            athleteUserId,
+            parentProfileId: payoutRow.parent_profile_id as string,
+            brandChargeId: charge.id as string,
+            amountCents: charge.amount_cents as number,
+            stateCode,
+            deferralReason: decision.reason,
+            releaseEligibleAt: decision.releaseEligibleAt,
+          });
+
+          if (!deferResult.ok) {
+            return {
+              ok: false,
+              reason: deferResult.reason ?? 'createDeferral failed',
+            };
+          }
+
+          // Stamp the charge row as released-to-parent-custody. From
+          // the brand's perspective the deal IS complete; the platform
+          // custody arrangement is invisible to them. This keeps the
+          // brand UI showing 'completed' without a long-lived
+          // 'succeeded' limbo.
+          const { error: stampErr } = await sb
+            .from('hs_deal_brand_charges')
+            .update({
+              status: 'released_to_parent' as BrandChargeStatus,
+              released_at: new Date().toISOString(),
+            })
+            .eq('id', charge.id);
+
+          if (stampErr) {
+            logEvent('warn', 'releaseEscrowToParent: charge status flip failed (deferred path)', {
+              dealId,
+              chargeId: charge.id,
+              error: stampErr.message,
+            });
+          }
+
+          // Link brand_charge_id on the parent payout row for audit.
+          await sb
+            .from('hs_deal_parent_payouts')
+            .update({ brand_charge_id: charge.id })
+            .eq('deal_id', dealId)
+            .is('brand_charge_id', null);
+
+          logEvent('info', 'releaseEscrowToParent: payout deferred', {
+            dealId,
+            stateCode,
+            deferredPayoutId: deferResult.deferredPayoutId,
+            releaseEligibleAt: decision.releaseEligibleAt.toISOString(),
+          });
+
+          return {
+            ok: true,
+            heldInTrust: true,
+            deferredPayoutId: deferResult.deferredPayoutId,
+          };
+        }
+      }
+    }
+  } catch (err) {
+    // Deferral pre-check must never block the normal release path on
+    // an unexpected error — log and fall through.
+    logEvent('warn', 'releaseEscrowToParent: defer pre-check failed', {
+      dealId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  // --------------------------------------------------------------------
+  // Normal (non-deferred) path
+  // --------------------------------------------------------------------
   // Fire the outbound Connect transfer. releasePayout is idempotent:
   // it checks the payout row's existing status before touching Stripe.
   const payoutResult = await releasePayout(dealId);

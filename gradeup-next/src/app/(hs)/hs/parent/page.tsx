@@ -59,6 +59,7 @@ import {
   type StateNILRules,
   type USPSStateCode,
 } from '@/lib/hs-nil/state-rules';
+import { listDeferralsForParent } from '@/lib/hs-nil/deferred-payouts';
 
 export const metadata: Metadata = {
   title: 'Parent dashboard — GradeUp HS',
@@ -346,6 +347,40 @@ export default async function HSParentDashboardPage() {
   // athletes. Falls back to null, which renders generic copy.
   const protectionsState = pickProtectionsState(athleteProfiles);
 
+  // --- Deferred payouts (TX escrow-until-18) ---------------------------
+  // Fetch held deferrals for the parent's linked athletes. RLS on
+  // hs_deferred_payouts already enforces parent_profile_id scope, so
+  // passing parentProfile.id is safe + sufficient. Empty when TX isn't
+  // involved or athletes have all aged out.
+  interface DeferralBannerRow {
+    id: string;
+    athlete_user_id: string;
+    amount_cents: number;
+    release_eligible_at: string;
+    status: string;
+  }
+  let heldDeferrals: DeferralBannerRow[] = [];
+  if (parentProfile?.id) {
+    try {
+      const deferrals = await listDeferralsForParent(
+        parentProfile.id,
+        supabase,
+      );
+      heldDeferrals = deferrals
+        .filter((d) => d.status === 'holding')
+        .map((d) => ({
+          id: d.id,
+          athlete_user_id: d.athlete_user_id,
+          amount_cents: d.amount_cents,
+          release_eligible_at: d.release_eligible_at,
+          status: d.status,
+        }));
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-parent-dashboard] deferrals lookup failed', err);
+    }
+  }
+
   // ---------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------
@@ -359,6 +394,53 @@ export default async function HSParentDashboardPage() {
           activeConsentCount={activeConsentCount}
           pendingRequestCount={pendingRequestCount}
         />
+
+        {/* Deferred earnings banner — TX escrow-until-18. */}
+        {heldDeferrals.length > 0 && (
+          <section className="mt-8">
+            {(() => {
+              // Pick the earliest release for the most-actionable message.
+              const sorted = [...heldDeferrals].sort(
+                (a, b) =>
+                  new Date(a.release_eligible_at).getTime() -
+                  new Date(b.release_eligible_at).getTime(),
+              );
+              const next = sorted[0];
+              const totalCents = heldDeferrals.reduce(
+                (sum, d) => sum + d.amount_cents,
+                0,
+              );
+              const nextProfile = profileByAthlete.get(next.athlete_user_id);
+              const athleteLabel = nextProfile?.school_name
+                ? `athlete at ${nextProfile.school_name}`
+                : 'your athlete';
+              const amountStr = `$${Math.round(totalCents / 100).toLocaleString()}`;
+              const dateStr = new Date(
+                next.release_eligible_at,
+              ).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'UTC',
+              });
+              return (
+                <div
+                  role="status"
+                  className="rounded-xl border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/5 px-5 py-4 text-sm text-white/80"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                    Held in trust
+                  </p>
+                  <p className="mt-2">
+                    {amountStr} in deferred earnings for {athleteLabel} —
+                    releases on <strong className="text-white">{dateStr}</strong>{' '}
+                    when they turn 18.
+                  </p>
+                </div>
+              );
+            })()}
+          </section>
+        )}
 
         {/* Renewal banner — only when something is expiring. */}
         {renewalTargets.length > 0 && (

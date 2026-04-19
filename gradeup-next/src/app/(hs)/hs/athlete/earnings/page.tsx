@@ -22,6 +22,7 @@ import {
   getAthleteEarningsSummary,
   getAthleteCompletedDeals,
 } from '@/lib/hs-nil/earnings';
+import { listDeferralsForAthlete } from '@/lib/hs-nil/deferred-payouts';
 import { EarningsHeroCard } from '@/components/hs/EarningsHeroCard';
 import { CompletedDealsTable } from '@/components/hs/CompletedDealsTable';
 
@@ -55,10 +56,17 @@ export default async function HSAthleteEarningsPage() {
     redirect('/hs/signup/athlete?notice=convert');
   }
 
-  const [summary, deals] = await Promise.all([
+  const [summary, deals, deferrals] = await Promise.all([
     getAthleteEarningsSummary(supabase, user.id),
     getAthleteCompletedDeals(supabase, user.id, { limit: 50 }),
+    listDeferralsForAthlete(user.id, supabase),
   ]);
+
+  const heldDeferrals = deferrals.filter((d) => d.status === 'holding');
+  const heldTotalCents = heldDeferrals.reduce(
+    (sum, d) => sum + d.amount_cents,
+    0,
+  );
 
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
@@ -78,6 +86,29 @@ export default async function HSAthleteEarningsPage() {
             custodian account. You earned this.
           </p>
         </div>
+
+        {heldDeferrals.length > 0 && (
+          <div className="mb-6 rounded-xl border border-amber-400/30 bg-amber-400/5 p-5 text-sm text-white/80">
+            <p className="text-xs font-semibold uppercase tracking-widest text-amber-200">
+              Earnings held in trust
+            </p>
+            <p className="mt-2">
+              You have{' '}
+              <strong className="text-white">
+                ${Math.round(heldTotalCents / 100).toLocaleString()}
+              </strong>{' '}
+              in earnings held in trust until your 18th birthday under state
+              athletic-association rules. Every penny is tracked and released
+              automatically when eligible.{' '}
+              <Link
+                href="/hs/athlete/deferred-earnings"
+                className="font-semibold text-[var(--accent-primary)] hover:underline"
+              >
+                See held earnings →
+              </Link>
+            </p>
+          </div>
+        )}
 
         <EarningsHeroCard summary={summary} />
       </section>

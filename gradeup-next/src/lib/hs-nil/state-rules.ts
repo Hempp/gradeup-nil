@@ -146,7 +146,7 @@ export const STATE_RULES: Partial<Record<USPSStateCode, StateNILRules>> = {
   },
   TX: {
     state: 'TX',
-    status: 'limited',
+    status: 'permitted',
     minimumAge: 17,
     requiresParentalConsent: true,
     disclosureWindowHours: 168,
@@ -155,7 +155,7 @@ export const STATE_RULES: Partial<Record<USPSStateCode, StateNILRules>> = {
     agentRegistrationRequired: false,
     paymentDeferredUntilAge18: true,
     notes:
-      'UIL permits HS NIL with restrictions: minimum age 17, compensation must be held in escrow until the athlete turns 18. Deferred-escrow payout flow is Phase 11+ — TX is listed as "limited" but excluded from PILOT_STATES until the escrow-until-18 UI lands.',
+      'UIL: permits HS NIL with minimum_age=17. Compensation is held in a custodial trust until the athlete turns 18. Handled automatically — parent\'s Stripe Connect account receives the release on the 18th birthday.',
     lastReviewed: '2026-04-19',
   },
   AL: { state: 'AL', status: 'prohibited', minimumAge: null, requiresParentalConsent: false, disclosureWindowHours: null, disclosureRecipient: null, bannedCategories: UNIVERSAL_BANNED, agentRegistrationRequired: false, paymentDeferredUntilAge18: false, notes: 'AHSAA prohibits HS NIL.', lastReviewed: '2026-04-18' },
@@ -168,20 +168,25 @@ export const STATE_RULES: Partial<Record<USPSStateCode, StateNILRules>> = {
 /**
  * Pilot set currently accepting signups / running the full deal flow.
  *
- * Current pilot (6 states): CA, FL, GA, IL, NJ, NY.
+ * Current pilot (7 states): CA, FL, GA, IL, NJ, NY, TX.
  *
- * TX is intentionally EXCLUDED despite being encoded in STATE_RULES with
- * status='limited'. TX requires athlete compensation to be held in escrow
- * until the athlete turns 18, and the Phase 4 deal flow does not yet
- * implement that deferred-escrow payout path on top of the standard
- * parent-custodial pattern. Phase 11+ will build the escrow-until-18 UI
- * and promote TX. Until then:
- *   - evaluateDeal() will reject TX deals via the status='limited' +
- *     minimum_age=17 gates.
- *   - UI that enumerates signup-eligible states reads PILOT_STATES and
- *     therefore will not offer TX as a choice.
+ * TX is included as of Phase 11. TX's UIL rules require two guardrails
+ * that the other pilot states do not:
+ *   1. minimum_age=17 on the deal itself — enforced by evaluateDeal().
+ *   2. Compensation held in a custodial trust until the athlete turns
+ *      18 — enforced at approve-time in
+ *      src/lib/hs-nil/deferred-payouts.ts::shouldDefer, which
+ *      intercepts releaseEscrowToParent() and re-routes the payout
+ *      into hs_deferred_payouts. A daily cron
+ *      (/api/cron/hs-deferred-releases) releases eligible holds on
+ *      the athlete's 18th birthday. The brand's inbound charge still
+ *      captures at contract sign; only the outbound transfer is held.
+ *
+ * Other states may adopt similar escrow-until-18 rules in the future —
+ * the deferred-payouts architecture is state-agnostic. Only the
+ * shouldDefer() branch keys on state_code.
  */
-export const PILOT_STATES: USPSStateCode[] = ['CA', 'FL', 'GA', 'IL', 'NJ', 'NY'];
+export const PILOT_STATES: USPSStateCode[] = ['CA', 'FL', 'GA', 'IL', 'NJ', 'NY', 'TX'];
 
 export interface DealEvaluation {
   allowed: boolean;

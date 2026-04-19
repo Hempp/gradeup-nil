@@ -29,6 +29,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import {
   evaluateDeal,
+  STATE_RULES,
   type BannedCategory,
   type USPSStateCode,
 } from '@/lib/hs-nil/state-rules';
@@ -77,6 +78,16 @@ export type ValidateDealCreationResult =
        * Null when the deal is college-bracket or category cannot be mapped.
        */
       consent_category: string | null;
+      /**
+       * True when the state's rules + athlete age imply the outbound
+       * parent payout will be deferred into a custodial trust at
+       * approval time. Purely informational — UI can surface a notice
+       * ("payout held until 18th birthday"). The actual defer decision
+       * is re-evaluated at release time by deferred-payouts.ts.
+       *
+       * Currently only TX + athlete age < 18 produces `willDefer=true`.
+       */
+      willDefer: boolean;
     }
   | {
       ok: false;
@@ -257,6 +268,7 @@ export async function validateDealCreation(
       requires_disclosure: false,
       state_code: null,
       consent_category: null,
+      willDefer: false,
     };
   }
 
@@ -285,6 +297,7 @@ export async function validateDealCreation(
       requires_disclosure: false,
       state_code: null,
       consent_category: null,
+      willDefer: false,
     };
   }
 
@@ -327,11 +340,23 @@ export async function validateDealCreation(
     };
   }
 
+  // Informational: surface whether the approval-time escrow release
+  // will defer the parent payout. Only triggers for states whose rule
+  // set has paymentDeferredUntilAge18=true AND an athlete still under
+  // 18 at deal-creation time. deferred-payouts.ts re-evaluates this
+  // at release time (an athlete might turn 18 between creation and
+  // approval, in which case no deferral is needed).
+  const stateRules = STATE_RULES[stateCode];
+  const willDefer = Boolean(
+    stateRules?.paymentDeferredUntilAge18 && age < 18,
+  );
+
   return {
     ok: true,
     requires_disclosure: evalResult.disclosureWindowHours !== null,
     state_code: stateCode,
     consent_category: consentCategory,
+    willDefer,
   };
 }
 
