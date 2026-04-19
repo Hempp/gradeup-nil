@@ -21,9 +21,11 @@
  *   joined in.
  *
  * Open Graph:
- *   Title / description pulled from the identity block. og:image
- *   is TODO — we will plug in a dynamically-rendered card when the
- *   OG generator ships.
+ *   Title / description pulled from the identity block. og:image is
+ *   rendered by /api/og/trajectory/[token] (next/og ImageResponse,
+ *   edge runtime). Expired / revoked tokens still emit an image
+ *   (neutral fallback card) so social unfurls stay intact, but the
+ *   page is noindex'd.
  */
 
 import type { Metadata } from 'next';
@@ -42,29 +44,61 @@ export async function generateMetadata(
   { params }: PageProps
 ): Promise<Metadata> {
   const { token } = await params;
+  const ogImageUrl = `/api/og/trajectory/${token}`;
   const result = await getTrajectoryByPublicToken(token).catch(() => null);
   if (!result) {
+    // Expired / revoked / invalid: still surface an OG image (the route
+    // renders a neutral fallback card) so the unfurl isn't broken, but
+    // keep the page noindex'd so crawlers don't surface dead links.
     return {
       title: 'Trajectory — GradeUp NIL',
       description: 'This trajectory is no longer available.',
       robots: { index: false, follow: false },
+      openGraph: {
+        title: 'Shareable Scholar-Athlete Trajectory — GradeUp HS',
+        description:
+          'A verified academic and athletic trajectory, shared by a GradeUp HS scholar-athlete.',
+        type: 'website',
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: 'GradeUp HS — Shareable Scholar-Athlete Trajectory',
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'Shareable Scholar-Athlete Trajectory — GradeUp HS',
+        description:
+          'A verified academic and athletic trajectory, shared by a GradeUp HS scholar-athlete.',
+        images: [ogImageUrl],
+      },
     };
   }
   const { identity } = result.trajectory;
+  const gpaLabel =
+    identity.currentGpa !== null && Number.isFinite(identity.currentGpa)
+      ? ` — ${identity.currentGpa!.toFixed(2)} GPA`
+      : '';
   const title = `${identity.firstName} ${identity.lastInitial}. — Trajectory — GradeUp NIL`;
   const description = [
-    `${identity.firstName} ${identity.lastInitial}.`,
+    `${identity.firstName} ${identity.lastInitial}.${gpaLabel}`,
     identity.graduationYear ? `Class of ${identity.graduationYear}` : null,
     identity.school,
     identity.sport,
   ]
     .filter(Boolean)
     .join(' • ');
+  const imageAlt = [
+    `${identity.firstName} ${identity.lastInitial}.`,
+    identity.sport,
+    'GradeUp HS verified scholar-athlete trajectory',
+  ]
+    .filter(Boolean)
+    .join(' — ');
 
-  // TODO(trajectory-og): generate a dynamic OG image once the image
-  //   generator ships (Satori/@vercel/og). Use PII-minimized identity
-  //   only — same fields we render on the page — and pass /api/og/hs-
-  //   trajectory?token={token} here.
   return {
     title,
     description,
@@ -72,11 +106,20 @@ export async function generateMetadata(
       title,
       description,
       type: 'profile',
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: imageAlt,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: [ogImageUrl],
     },
   };
 }
