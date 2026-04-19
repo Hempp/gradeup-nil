@@ -1,10 +1,17 @@
 /**
  * Per-state HS-NIL rules engine.
  *
- * Every permitting state has its own statute. This module encodes the three
- * pilot states (CA, FL, GA) in code for fast iteration, and defines the shape
- * for the rest. Production rules will migrate to the `state_nil_rules` DB
- * table so non-engineers (legal, ops) can update without a deploy.
+ * Every permitting state has its own statute. This module encodes the pilot
+ * states in code for fast iteration, and defines the shape for the rest.
+ * Production rules will migrate to the `state_nil_rules` DB table so
+ * non-engineers (legal, ops) can update without a deploy.
+ *
+ * MIRROR WITH SQL: The STATE_RULES entries below must stay in lockstep with
+ * the seed rows in `supabase/migrations/20260418_002_hs_nil_foundations.sql`
+ * and `supabase/migrations/20260419_009_state_expansion.sql`. Any value
+ * change in one side requires the matching change in the other. Drift is a
+ * bug — the DB is the legal source of truth at runtime, but the code copy
+ * is what unit tests and `evaluateDeal` exercise.
  *
  * Source of truth for research: docs/HS-NIL-BRIEF.md and /tmp/hs-nil-regulatory.md.
  *
@@ -94,21 +101,62 @@ export const STATE_RULES: Partial<Record<USPSStateCode, StateNILRules>> = {
     bannedCategories: UNIVERSAL_BANNED,
     agentRegistrationRequired: false,
     paymentDeferredUntilAge18: false,
-    notes: 'GHSA permissive. No age minimum. Middle school included 2025.',
-    lastReviewed: '2026-04-18',
+    notes:
+      'GHSA permissive. No age minimum. Middle-school athletes (grades 6-8) eligible under GHSA 2025 guidance, subject to the same parental-consent + school-disclosure rules as HS athletes.',
+    lastReviewed: '2026-04-19',
+  },
+  IL: {
+    state: 'IL',
+    status: 'permitted',
+    minimumAge: null,
+    requiresParentalConsent: true,
+    disclosureWindowHours: 336,
+    disclosureRecipient: 'school',
+    bannedCategories: [...UNIVERSAL_BANNED, 'vaping'],
+    agentRegistrationRequired: false,
+    paymentDeferredUntilAge18: false,
+    notes: 'IHSA permits HS NIL with 14-day school disclosure window. No age floor. Vaping added to statewide bans.',
+    lastReviewed: '2026-04-19',
+  },
+  NJ: {
+    state: 'NJ',
+    status: 'permitted',
+    minimumAge: null,
+    requiresParentalConsent: true,
+    disclosureWindowHours: 72,
+    disclosureRecipient: 'state_athletic_association',
+    bannedCategories: UNIVERSAL_BANNED,
+    agentRegistrationRequired: false,
+    paymentDeferredUntilAge18: false,
+    notes: 'NJSIAA permits HS NIL with a 72-hour state-association disclosure. Standard banned categories. No agent registry requirement.',
+    lastReviewed: '2026-04-19',
+  },
+  NY: {
+    state: 'NY',
+    status: 'permitted',
+    minimumAge: null,
+    requiresParentalConsent: true,
+    disclosureWindowHours: 168,
+    disclosureRecipient: 'both',
+    bannedCategories: UNIVERSAL_BANNED,
+    agentRegistrationRequired: false,
+    paymentDeferredUntilAge18: false,
+    notes: 'NYSPHSAA permits HS NIL. 7-day disclosure required to BOTH the state athletic association and the school. Standard banned categories.',
+    lastReviewed: '2026-04-19',
   },
   TX: {
     state: 'TX',
     status: 'limited',
     minimumAge: 17,
     requiresParentalConsent: true,
-    disclosureWindowHours: 336,
-    disclosureRecipient: 'both',
+    disclosureWindowHours: 168,
+    disclosureRecipient: 'school',
     bannedCategories: UNIVERSAL_BANNED,
     agentRegistrationRequired: false,
     paymentDeferredUntilAge18: true,
-    notes: 'UIL. 17+ minimum, escrow required until 18. Defer from pilot.',
-    lastReviewed: '2026-04-18',
+    notes:
+      'UIL permits HS NIL with restrictions: minimum age 17, compensation must be held in escrow until the athlete turns 18. Deferred-escrow payout flow is Phase 11+ — TX is listed as "limited" but excluded from PILOT_STATES until the escrow-until-18 UI lands.',
+    lastReviewed: '2026-04-19',
   },
   AL: { state: 'AL', status: 'prohibited', minimumAge: null, requiresParentalConsent: false, disclosureWindowHours: null, disclosureRecipient: null, bannedCategories: UNIVERSAL_BANNED, agentRegistrationRequired: false, paymentDeferredUntilAge18: false, notes: 'AHSAA prohibits HS NIL.', lastReviewed: '2026-04-18' },
   HI: { state: 'HI', status: 'prohibited', minimumAge: null, requiresParentalConsent: false, disclosureWindowHours: null, disclosureRecipient: null, bannedCategories: UNIVERSAL_BANNED, agentRegistrationRequired: false, paymentDeferredUntilAge18: false, notes: 'HHSAA prohibits HS NIL.', lastReviewed: '2026-04-18' },
@@ -117,7 +165,23 @@ export const STATE_RULES: Partial<Record<USPSStateCode, StateNILRules>> = {
   WY: { state: 'WY', status: 'prohibited', minimumAge: null, requiresParentalConsent: false, disclosureWindowHours: null, disclosureRecipient: null, bannedCategories: UNIVERSAL_BANNED, agentRegistrationRequired: false, paymentDeferredUntilAge18: false, notes: 'WHSAA prohibits HS NIL.', lastReviewed: '2026-04-18' },
 };
 
-export const PILOT_STATES: USPSStateCode[] = ['CA', 'FL', 'GA'];
+/**
+ * Pilot set currently accepting signups / running the full deal flow.
+ *
+ * Current pilot (6 states): CA, FL, GA, IL, NJ, NY.
+ *
+ * TX is intentionally EXCLUDED despite being encoded in STATE_RULES with
+ * status='limited'. TX requires athlete compensation to be held in escrow
+ * until the athlete turns 18, and the Phase 4 deal flow does not yet
+ * implement that deferred-escrow payout path on top of the standard
+ * parent-custodial pattern. Phase 11+ will build the escrow-until-18 UI
+ * and promote TX. Until then:
+ *   - evaluateDeal() will reject TX deals via the status='limited' +
+ *     minimum_age=17 gates.
+ *   - UI that enumerates signup-eligible states reads PILOT_STATES and
+ *     therefore will not offer TX as a choice.
+ */
+export const PILOT_STATES: USPSStateCode[] = ['CA', 'FL', 'GA', 'IL', 'NJ', 'NY'];
 
 export interface DealEvaluation {
   allowed: boolean;

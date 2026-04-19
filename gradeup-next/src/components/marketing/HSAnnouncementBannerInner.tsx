@@ -45,7 +45,7 @@ export function HSAnnouncementBannerInner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-3">
         <p className="flex-1 text-sm font-medium leading-snug">
           <span className="hidden sm:inline">We&apos;re expanding. </span>
-          GradeUp HS is launching in CA, FL, and GA — join the waitlist.
+          GradeUp HS is live in CA, FL, GA, IL, NJ, and NY — join the waitlist.
         </p>
         <Link
           href="/hs"

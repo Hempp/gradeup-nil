@@ -28,6 +28,9 @@ const STATE_NAMES: Record<string, string> = {
   CA: 'California',
   FL: 'Florida',
   GA: 'Georgia',
+  IL: 'Illinois',
+  NJ: 'New Jersey',
+  NY: 'New York',
 };
 
 function displayStateName(code: string): string {

@@ -23,7 +23,7 @@ export default function HSLandingPage() {
           by default.
         </p>
         <p className="mt-8 text-sm text-white/50">
-          Pilot launching in California, Florida, and Georgia.
+          Now live in 6 states: California, Florida, Georgia, Illinois, New Jersey, and New York.
         </p>
       </section>
 
