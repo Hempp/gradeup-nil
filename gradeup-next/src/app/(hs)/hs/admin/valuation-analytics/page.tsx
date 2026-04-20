@@ -50,12 +50,25 @@ async function requireAdminOr404(): Promise<void> {
   if (error || !profile || profile.role !== 'admin') notFound();
 }
 
+type Perspective = 'athlete' | 'brand';
+
+interface BrandContextJsonb {
+  vertical?: string;
+  deliverableType?: string;
+  athleteCount?: number;
+  campaignNotes?: string | null;
+  campaignTotalCents?: { low: number; mid: number; high: number };
+  volumeDiscountApplied?: boolean;
+}
+
 interface ValuationRequestRow {
   id: string;
   inputs: ValuationInput;
   estimate_mid_cents: number;
   converted_to_waitlist: boolean;
   created_at: string;
+  perspective: Perspective | null;
+  brand_context: BrandContextJsonb | null;
 }
 
 function bucketCounts<T extends string>(
@@ -65,6 +78,25 @@ function bucketCounts<T extends string>(
   const counts = new Map<T, number>();
   for (const r of rows) {
     const k = extractor(r.inputs);
+    counts.set(k, (counts.get(k) ?? 0) + 1);
+  }
+  const total = rows.length || 1;
+  return Array.from(counts.entries())
+    .map(([key, count]) => ({ key, count, pct: (count / total) * 100 }))
+    .sort((a, b) => b.count - a.count);
+}
+
+/**
+ * Like bucketCounts but operates directly on the row (needed for
+ * brand_context fields that aren't in the athlete-side ValuationInput).
+ */
+function countBy<TKey extends string>(
+  rows: ValuationRequestRow[],
+  extractor: (row: ValuationRequestRow) => TKey
+): Array<{ key: TKey; count: number; pct: number }> {
+  const counts = new Map<TKey, number>();
+  for (const r of rows) {
+    const k = extractor(r);
     counts.set(k, (counts.get(k) ?? 0) + 1);
   }
   const total = rows.length || 1;
@@ -84,33 +116,83 @@ export default async function ValuationAnalyticsPage() {
   const { data: rowsRaw, error } = await supabase
     .from('valuation_requests')
     .select(
-      'id, inputs, estimate_mid_cents, converted_to_waitlist, created_at'
+      'id, inputs, estimate_mid_cents, converted_to_waitlist, created_at, perspective, brand_context'
     )
     .gte('created_at', since.toISOString())
     .order('created_at', { ascending: false })
     .limit(5000);
 
-  const rows = (rowsRaw ?? []) as ValuationRequestRow[];
+  const allRows = (rowsRaw ?? []) as ValuationRequestRow[];
   const loadError = error?.message ?? null;
 
-  const total = rows.length;
-  const converted = rows.filter((r) => r.converted_to_waitlist).length;
+  // Split the funnel: athlete-side and brand-side are different
+  // customer journeys. Surface them side-by-side so the founder can
+  // follow up on brand leads while still tracking athlete-side
+  // waitlist conversion.
+  const athleteRows = allRows.filter(
+    (r) => (r.perspective ?? 'athlete') === 'athlete'
+  );
+  const brandRows = allRows.filter((r) => r.perspective === 'brand');
+
+  // Athlete funnel metrics (unchanged semantics).
+  const total = athleteRows.length;
+  const converted = athleteRows.filter((r) => r.converted_to_waitlist).length;
   const conversionRate = total > 0 ? (converted / total) * 100 : 0;
   const avgMidCents =
     total > 0
       ? Math.round(
-          rows.reduce((acc, r) => acc + (r.estimate_mid_cents ?? 0), 0) / total
+          athleteRows.reduce(
+            (acc, r) => acc + (r.estimate_mid_cents ?? 0),
+            0
+          ) / total
         )
       : 0;
 
-  const bySport = bucketCounts<ValuationSport>(rows, (i) => i.sport);
-  const byState = bucketCounts<string>(rows, (i) => i.stateCode);
-  const byGrad = bucketCounts<GradLevel>(rows, (i) => i.gradLevel);
+  const bySport = bucketCounts<ValuationSport>(athleteRows, (i) => i.sport);
+  const byState = bucketCounts<string>(athleteRows, (i) => i.stateCode);
+  const byGrad = bucketCounts<GradLevel>(athleteRows, (i) => i.gradLevel);
   const byFollower = bucketCounts<FollowerBucket>(
-    rows,
+    athleteRows,
     (i) => i.followerCountBucket
   );
-  const byGpa = bucketCounts<GpaBucket>(rows, (i) => i.gpaBucket);
+  const byGpa = bucketCounts<GpaBucket>(athleteRows, (i) => i.gpaBucket);
+
+  // Brand funnel metrics. Brand rows have no waitlist conversion yet
+  // (we capture intent, not email, unless they click "Talk to our
+  // team" — that lands in a different system).
+  const brandTotal = brandRows.length;
+  const brandAvgPerDeliverableCents =
+    brandTotal > 0
+      ? Math.round(
+          brandRows.reduce(
+            (acc, r) => acc + (r.estimate_mid_cents ?? 0),
+            0
+          ) / brandTotal
+        )
+      : 0;
+  const brandAvgCampaignTotalCents =
+    brandTotal > 0
+      ? Math.round(
+          brandRows.reduce(
+            (acc, r) =>
+              acc + (r.brand_context?.campaignTotalCents?.mid ?? 0),
+            0
+          ) / brandTotal
+        )
+      : 0;
+  const brandByVertical = countBy(
+    brandRows,
+    (r) => r.brand_context?.vertical ?? 'unknown'
+  );
+  const brandByDeliverable = countBy(
+    brandRows,
+    (r) => r.brand_context?.deliverableType ?? 'unknown'
+  );
+  const brandBySport = bucketCounts<ValuationSport>(
+    brandRows,
+    (i) => i.sport
+  );
+  const brandByState = bucketCounts<string>(brandRows, (i) => i.stateCode);
 
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
@@ -123,8 +205,9 @@ export default async function ValuationAnalyticsPage() {
             Valuation Calculator Analytics
           </h1>
           <p className="mt-3 max-w-2xl text-sm text-white/60">
-            Last 30 days of the public /hs/valuation funnel. Read-only.
-            5-minute refresh.
+            Last 30 days across both valuation funnels: athlete-side
+            (/hs/valuation) and brand-side FMV (/solutions/brands/fmv).
+            Read-only. 5-minute refresh.
           </p>
         </header>
 
@@ -134,8 +217,25 @@ export default async function ValuationAnalyticsPage() {
           </div>
         )}
 
+        {/* Perspective split banner */}
+        <div className="mt-8 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-xs text-white/60">
+          Showing <strong className="text-white">{athleteRows.length}</strong>{' '}
+          athlete-side requests &middot;{' '}
+          <strong className="text-white">{brandRows.length}</strong>{' '}
+          brand-side FMV leads (perspective=&lsquo;brand&rsquo;). Both
+          pipelines live in the same{' '}
+          <code className="rounded bg-black/30 px-1 py-0.5 text-[11px] text-white/70">
+            valuation_requests
+          </code>{' '}
+          table.
+        </div>
+
+        <h2 className="mt-8 font-display text-xl text-white/90">
+          Athlete funnel (/hs/valuation)
+        </h2>
+
         {/* Headline metrics */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             label="Total requests"
             value={total.toLocaleString()}
@@ -204,9 +304,89 @@ export default async function ValuationAnalyticsPage() {
 
         {total === 0 && !loadError && (
           <p className="mt-10 text-sm text-white/50">
-            No valuation requests in the last 30 days yet. Once the calculator
-            goes live and traffic arrives, this dashboard fills in
-            automatically.
+            No athlete-side valuation requests in the last 30 days yet.
+            Once the calculator goes live and traffic arrives, this
+            dashboard fills in automatically.
+          </p>
+        )}
+
+        {/* ───────────────────────────────────────────────────────────
+            Brand FMV funnel (/solutions/brands/fmv)
+          ─────────────────────────────────────────────────────────── */}
+        <h2 className="mt-16 font-display text-xl text-white/90">
+          Brand FMV funnel (/solutions/brands/fmv)
+        </h2>
+        <p className="mt-1 text-xs text-white/50">
+          Anonymous brand-intent leads. Follow up on high-value rows via
+          the Talk-to-team pipeline.
+        </p>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard
+            label="Brand requests"
+            value={brandTotal.toLocaleString()}
+            subtext="Last 30 days"
+          />
+          <MetricCard
+            label="Avg per-deliverable"
+            value={formatValuationCents(brandAvgPerDeliverableCents)}
+            subtext="Brand-side central"
+          />
+          <MetricCard
+            label="Avg campaign total"
+            value={formatValuationCents(brandAvgCampaignTotalCents)}
+            subtext="Multi-athlete scaled"
+          />
+          <MetricCard
+            label="Top brand vertical"
+            value={brandByVertical[0]?.key ?? '—'}
+            subtext={
+              brandByVertical[0]
+                ? `${brandByVertical[0].count} requests`
+                : 'No data'
+            }
+          />
+        </div>
+
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          <DistributionCard
+            title="By brand vertical"
+            rows={brandByVertical.map((r) => ({
+              label: r.key,
+              count: r.count,
+              pct: r.pct,
+            }))}
+          />
+          <DistributionCard
+            title="By deliverable type"
+            rows={brandByDeliverable.map((r) => ({
+              label: r.key,
+              count: r.count,
+              pct: r.pct,
+            }))}
+          />
+          <DistributionCard
+            title="Brand requests by sport"
+            rows={brandBySport.slice(0, 10).map((r) => ({
+              label: SPORT_LABELS[r.key] ?? r.key,
+              count: r.count,
+              pct: r.pct,
+            }))}
+          />
+          <DistributionCard
+            title="Brand requests by state"
+            rows={brandByState.slice(0, 10).map((r) => ({
+              label: r.key,
+              count: r.count,
+              pct: r.pct,
+            }))}
+          />
+        </div>
+
+        {brandTotal === 0 && !loadError && (
+          <p className="mt-6 text-sm text-white/50">
+            No brand-side FMV requests in the last 30 days yet. The
+            /solutions/brands/fmv tool feeds this section once live.
           </p>
         )}
       </section>

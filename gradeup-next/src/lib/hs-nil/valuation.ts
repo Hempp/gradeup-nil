@@ -599,6 +599,311 @@ export function formatValuationCents(cents: number): string {
   return `$${dollars.toLocaleString()}`;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Brand-perspective Fair-Market-Value wrapper (Phase 13 / BRAND-FMV)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// The athlete-side calculator answers "what am I worth?" The brand side asks
+// "what should I pay?" The math is the same baseline × bucket product — we
+// reuse `estimateValuation` verbatim and layer two multiplicative transforms
+// on top:
+//
+//   1. DELIVERABLE_MULTIPLIERS — bundle adjustment. Annual-athlete value is
+//      the baseline; a single post is ~1/12 of a year of activity but
+//      captures roughly the unit-price of one deliverable in the
+//      Opendorse 2024-2026 HS dataset (so multiplier = 1.0). Larger bundles
+//      apply a light bundle-discount ("2.2x instead of 3x" for a three-post
+//      series) reflecting observed list-vs-bundle pricing.
+//
+//   2. Multi-athlete scaling — linear on count. Aspirational volume-discount
+//      ribbon at ≥10 athletes is rendered by the UI, not baked into the
+//      pricing math (we don't want to promise a discount in the compute
+//      layer). The UI cue is informational only.
+//
+// Why multiplicative and not additive?
+// ─────────────────────────────────────
+// The athlete estimate already captures "how premium is this athlete?" A
+// dollar of athlete premium should scale proportionally with deliverable
+// weight and campaign breadth. Additive would flatten the premium when
+// brands scale up, which is the opposite of what happens in market.
+
+/**
+ * Deliverable-type bundle multipliers. Applied multiplicatively to the
+ * athlete-side mid estimate to produce a per-athlete campaign estimate.
+ *
+ *   single_post (1.0x)         — baseline single deliverable.
+ *   three_post_series (2.2x)   — bundle discount vs 3.0x naive; reflects
+ *                                 observed list-vs-package HS NIL pricing.
+ *   in_person_appearance (1.8x)— premium for in-person obligation, one-off.
+ *   multi_month_campaign (5.0x)— commitment + exclusivity premium, aligns
+ *                                 with HS-side multi-month deals in 2024-2026.
+ *
+ * These are v1 coefficients. Every change should come with a matching
+ * METHODOLOGY_VERSION bump below so admin analytics can segment rows
+ * computed under the old vs new coefficient set.
+ */
+export const DELIVERABLE_MULTIPLIERS = {
+  single_post: 1.0,
+  three_post_series: 2.2,
+  in_person_appearance: 1.8,
+  multi_month_campaign: 5.0,
+} as const;
+
+export type DeliverableType = keyof typeof DELIVERABLE_MULTIPLIERS;
+
+export const DELIVERABLE_LABELS: Record<DeliverableType, string> = {
+  single_post: 'Single social post',
+  three_post_series: 'Three-post series',
+  in_person_appearance: 'In-person appearance',
+  multi_month_campaign: 'Multi-month campaign',
+};
+
+/**
+ * Brand verticals that can be passed through from the top-level brand
+ * marketing pages (owned by VERTICAL-BRAND-PAGES). The set is closed so
+ * analytics can bucket without normalization; 'other' is the escape hatch.
+ *
+ * NOTE: the co-agent's vertical list is authoritative. This type stays
+ * additive-compatible: adding a vertical requires updating this union +
+ * BRAND_VERTICAL_LABELS only.
+ */
+export type BrandVertical =
+  | 'qsr'
+  | 'apparel'
+  | 'training'
+  | 'local_services'
+  | 'education'
+  | 'other';
+
+export const BRAND_VERTICAL_LABELS: Record<BrandVertical, string> = {
+  qsr: 'Quick-service restaurant',
+  apparel: 'Apparel & gear',
+  training: 'Training & performance',
+  local_services: 'Local services',
+  education: 'Education & tutoring',
+  other: 'Other',
+};
+
+/** Threshold above which the UI surfaces an aspirational volume-discount ribbon. */
+export const VOLUME_DISCOUNT_ATHLETE_THRESHOLD = 10;
+
+export interface BrandValuationContext {
+  /** Brand-chosen vertical; drives which banned-categories to surface. */
+  vertical: BrandVertical;
+  /** Deliverable type for each athlete in the campaign. */
+  deliverableType: DeliverableType;
+  /** Count of athletes the brand is planning to hire (≥1). */
+  athleteCount: number;
+  /** Optional freeform notes; surfaced on the admin lead follow-up view. */
+  campaignNotes?: string | null;
+}
+
+export interface BrandValuationInput extends ValuationInput {
+  brand: BrandValuationContext;
+}
+
+export interface BrandValuationResult {
+  /** Range the brand should expect to pay one athlete for one deliverable unit. */
+  perDeliverableCents: { low: number; mid: number; high: number };
+  /** Total campaign cost = per-athlete × athleteCount. */
+  campaignTotalCents: { low: number; mid: number; high: number };
+  /**
+   * Aspirational discount ribbon. UI-only flag; the compute layer does not
+   * apply a price reduction. Calibrated to illustrate, not to promise.
+   */
+  volumeDiscountApplied: boolean;
+  /** Human-readable caveats, reusing the athlete-side copy + brand extras. */
+  caveats: string[];
+  /** State-rules-derived compliance callouts (banned cats, disclosure window). */
+  complianceCallouts: string[];
+  /** Categories the athlete's sport + vertical context supports. */
+  topSuggestedCategories: string[];
+  /** Methodology version of the underlying athlete estimate. */
+  methodologyVersion: string;
+}
+
+/**
+ * Pure, side-effect-free brand-side valuation.
+ *
+ * Reuses `estimateValuation` as the canonical athlete-side math, then
+ * applies the deliverable multiplier + athlete-count scaling. Safe to
+ * call from server components, client components, edge functions, or
+ * workers. Zero I/O.
+ */
+export function estimateBrandCampaignValuation(
+  input: BrandValuationInput
+): BrandValuationResult {
+  const athleteResult = estimateValuation(input);
+  const deliverableMult = DELIVERABLE_MULTIPLIERS[input.brand.deliverableType];
+  const athleteCount = Math.max(1, Math.floor(input.brand.athleteCount));
+
+  // Per-athlete, per-deliverable. Scale the athlete-side low/mid/high by
+  // the deliverable multiplier; band-envelope stays intact because the
+  // multiplier is a scalar.
+  const perLow = Math.round(athleteResult.lowEstimateCents * deliverableMult);
+  const perMid = Math.round(athleteResult.midEstimateCents * deliverableMult);
+  const perHigh = Math.round(athleteResult.highEstimateCents * deliverableMult);
+
+  // Total campaign = per-athlete × N. No volume discount applied in math
+  // (the ribbon is illustrative only — see VOLUME_DISCOUNT_ATHLETE_THRESHOLD).
+  const totalLow = perLow * athleteCount;
+  const totalMid = perMid * athleteCount;
+  const totalHigh = perHigh * athleteCount;
+
+  const complianceCallouts = buildBrandComplianceCallouts(input);
+
+  // Brand-specific caveats layered on top of the athlete list.
+  const extraCaveats: string[] = [];
+  extraCaveats.push(
+    'These ranges fall below Opendorse\u2019s published college-NIL averages, consistent with the HS market. Budget accordingly.'
+  );
+  if (athleteCount >= VOLUME_DISCOUNT_ATHLETE_THRESHOLD) {
+    extraCaveats.push(
+      `At ${athleteCount}+ athletes you\u2019re in volume-discount territory. Talk to us about a campaign rate card.`
+    );
+  }
+
+  return {
+    perDeliverableCents: { low: perLow, mid: perMid, high: perHigh },
+    campaignTotalCents: { low: totalLow, mid: totalMid, high: totalHigh },
+    volumeDiscountApplied:
+      athleteCount >= VOLUME_DISCOUNT_ATHLETE_THRESHOLD,
+    caveats: [...athleteResult.caveats, ...extraCaveats],
+    complianceCallouts,
+    topSuggestedCategories: athleteResult.topSuggestedCategories,
+    methodologyVersion: athleteResult.methodologyVersion,
+  };
+}
+
+/**
+ * Compliance callouts assembled from STATE_RULES for the athlete's state
+ * plus vertical-specific flags. These are user-facing strings; the admin
+ * analytics surface also sees them via the logged brand_context.
+ */
+function buildBrandComplianceCallouts(
+  input: BrandValuationInput
+): string[] {
+  const out: string[] = [];
+  const rules = STATE_RULES[input.stateCode];
+  if (!rules) {
+    out.push(
+      `We don\u2019t track ${input.stateCode} state-association rules in detail yet. Before you post, verify HS NIL rules with your athlete\u2019s state body.`
+    );
+    return out;
+  }
+
+  if (rules.status === 'prohibited') {
+    out.push(
+      `${input.stateCode} currently prohibits HS NIL. You cannot activate deals with an HS athlete in this state until rules change.`
+    );
+  } else if (rules.status === 'limited' || rules.status === 'transitioning') {
+    out.push(
+      `${input.stateCode} is in a transitional HS NIL window. Certain deal categories may be restricted — we\u2019ll flag the exact guardrails during onboarding.`
+    );
+  }
+
+  if (rules.bannedCategories.length > 0) {
+    const banned = rules.bannedCategories.join(', ');
+    out.push(
+      `In ${input.stateCode} you cannot run deals in these categories: ${banned}. You also cannot use school logos or mascots.`
+    );
+  }
+
+  if (rules.disclosureWindowHours !== null) {
+    const recipient =
+      rules.disclosureRecipient === 'state_athletic_association'
+        ? 'the state athletic association'
+        : rules.disclosureRecipient === 'both'
+        ? 'both the school and the state athletic association'
+        : rules.disclosureRecipient ?? 'the school';
+    out.push(
+      `In ${input.stateCode} the athlete (or parent) must disclose this deal to ${recipient} within ${rules.disclosureWindowHours} hours of signing.`
+    );
+  }
+
+  if (rules.agentRegistrationRequired) {
+    out.push(
+      `${input.stateCode} requires registered agents for HS NIL. If you plan to use one, verify their registration before signing.`
+    );
+  }
+
+  if (rules.paymentDeferredUntilAge18) {
+    out.push(
+      `In ${input.stateCode} payments to a minor athlete are held in custodial trust until they turn 18. Expected, not a blocker.`
+    );
+  }
+
+  // Vertical-specific nudge: if a brand's vertical overlaps with a common
+  // banned category, call it out explicitly.
+  if (
+    input.brand.vertical === 'qsr' &&
+    rules.bannedCategories.includes('alcohol')
+  ) {
+    out.push(
+      'Quick-service menus sometimes include alcohol co-marketing. Keep this campaign non-alcoholic to stay compliant.'
+    );
+  }
+
+  return out;
+}
+
+/**
+ * Log a brand-perspective valuation row to `valuation_requests`. Mirrors
+ * `logValuationRequest` but sets perspective='brand' and serializes the
+ * brand context JSONB. Service-role client required. Returns the row id
+ * or null; callers must degrade gracefully on null.
+ */
+export interface LogBrandValuationRequestInput {
+  inputs: ValuationInput;
+  brandContext: BrandValuationContext;
+  result: BrandValuationResult;
+  ipHash: string;
+  userAgentHint: string | null;
+  referrerUrl: string | null;
+}
+
+export async function logBrandValuationRequest(
+  supabase: SupabaseClient,
+  input: LogBrandValuationRequestInput
+): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('valuation_requests')
+    .insert({
+      inputs: input.inputs,
+      // Headline numbers on a brand row = per-deliverable per-athlete range.
+      // Campaign-level totals live in brand_context so a single-column
+      // aggregation across rows of both perspectives still makes sense.
+      estimate_low_cents: input.result.perDeliverableCents.low,
+      estimate_mid_cents: input.result.perDeliverableCents.mid,
+      estimate_high_cents: input.result.perDeliverableCents.high,
+      ip_hash: input.ipHash,
+      user_agent_hint: input.userAgentHint,
+      referrer_url: input.referrerUrl,
+      methodology_version: input.result.methodologyVersion,
+      perspective: 'brand',
+      brand_context: {
+        vertical: input.brandContext.vertical,
+        deliverableType: input.brandContext.deliverableType,
+        athleteCount: input.brandContext.athleteCount,
+        campaignNotes: input.brandContext.campaignNotes ?? null,
+        campaignTotalCents: input.result.campaignTotalCents,
+        volumeDiscountApplied: input.result.volumeDiscountApplied,
+      },
+    })
+    .select('id')
+    .single();
+
+  if (error || !data) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-nil brand-fmv] log insert failed', {
+      error: error?.message ?? 'no row returned',
+    });
+    return null;
+  }
+
+  return data.id as string;
+}
+
 /** Infer a 4-digit graduation year from a grad level + current date. */
 export function gradLevelToGraduationYear(
   gradLevel: GradLevel,
