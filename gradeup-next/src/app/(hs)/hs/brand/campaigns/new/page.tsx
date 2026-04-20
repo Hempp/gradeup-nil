@@ -4,6 +4,13 @@
  * Server Component wrapper. Auth + HS-brand gate, then renders
  * CampaignCreateForm (Client) with the brand's target states preset
  * so the state-picker shows the pilot states they've opted into.
+ *
+ * Optional ?template=SLUG query: when present, we call cloneTemplate
+ * server-side and hand the prefilled draft to CampaignCreateForm as
+ * `initialTemplate`. Clone is logged in campaign_template_uses; the
+ * campaign-create POST back-fills the conversion link when the brand
+ * eventually submits. Missing / invalid / unpublished slugs fall back
+ * silently to the blank form.
  */
 
 import type { Metadata } from 'next';
@@ -11,6 +18,11 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import CampaignCreateForm from '@/components/hs/CampaignCreateForm';
+import StartFromTemplatePanel from '@/components/hs/StartFromTemplatePanel';
+import {
+  cloneTemplate,
+  type CampaignTemplateClone,
+} from '@/lib/hs-nil/campaign-templates';
 
 export const metadata: Metadata = {
   title: 'Create a campaign — GradeUp HS',
@@ -28,7 +40,11 @@ interface BrandRow {
   hs_target_states: string[] | null;
 }
 
-export default async function HSBrandCampaignCreatePage() {
+export default async function HSBrandCampaignCreatePage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ template?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -48,6 +64,25 @@ export default async function HSBrandCampaignCreatePage() {
   }
   if (brand.is_hs_enabled !== true) {
     redirect('/brand/dashboard');
+  }
+
+  // Resolve optional ?template=SLUG. Clone is logged server-side.
+  const params = searchParams ? await searchParams : undefined;
+  const templateSlug = params?.template;
+  let initialTemplate: CampaignTemplateClone | null = null;
+  if (templateSlug) {
+    try {
+      const cloneResult = await cloneTemplate({
+        templateSlug,
+        brandId: brand.id,
+      });
+      if (cloneResult.ok) {
+        initialTemplate = cloneResult.clone;
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[campaigns/new] cloneTemplate failed', err);
+    }
   }
 
   return (
@@ -71,8 +106,25 @@ export default async function HSBrandCampaignCreatePage() {
           draft saves.
         </p>
 
+        {!initialTemplate && (
+          <>
+            <p className="mt-4 text-xs text-white/60">
+              <Link
+                href="/hs/brand/campaigns/templates"
+                className="font-semibold text-[var(--accent-primary)] underline-offset-2 hover:underline"
+              >
+                Start from a template instead?
+              </Link>{' '}
+              Pre-filled briefs you can clone and customize in about two
+              minutes.
+            </p>
+            <StartFromTemplatePanel />
+          </>
+        )}
+
         <CampaignCreateForm
           brandOperatingStates={brand.hs_target_states ?? []}
+          initialTemplate={initialTemplate}
         />
       </section>
     </main>

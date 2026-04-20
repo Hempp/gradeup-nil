@@ -25,6 +25,7 @@ import {
   type CampaignCompensationType,
   type CampaignDealCategory,
 } from '@/lib/hs-nil/campaigns';
+import { linkCloneToCampaign } from '@/lib/hs-nil/campaign-templates';
 import type { USPSStateCode } from '@/lib/hs-nil/state-rules';
 
 const createSchema = z.object({
@@ -50,6 +51,15 @@ const createSchema = z.object({
   deliverables_template: z.string().trim().max(5000).optional().nullable(),
   timeline_start: z.string().optional().nullable(),
   timeline_end: z.string().optional().nullable(),
+  // Optional — when the brand seeded from a template, we close the
+  // clone→submit funnel in campaign_template_uses.
+  template_slug: z
+    .string()
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
+    .min(3)
+    .max(120)
+    .optional()
+    .nullable(),
 });
 
 export async function POST(request: NextRequest) {
@@ -117,6 +127,22 @@ export async function POST(request: NextRequest) {
       { status: result.code === 'state_rule_violation' ? 422 : 400 },
     );
   }
+
+  // Best-effort: close the clone→submit funnel when the brand seeded
+  // from a template. A failure here must not fail the campaign create.
+  if (p.template_slug) {
+    try {
+      await linkCloneToCampaign({
+        brandId: brand.id,
+        templateSlug: p.template_slug,
+        campaignId: result.campaign.id,
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[campaigns/route] linkCloneToCampaign failed', err);
+    }
+  }
+
   return NextResponse.json(
     { campaign: result.campaign },
     { status: 201 },

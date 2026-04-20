@@ -17,6 +17,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PILOT_STATES } from '@/lib/hs-nil/state-rules';
+import type { CampaignTemplateClone } from '@/lib/hs-nil/campaign-templates';
 
 const CATEGORY_OPTIONS: ReadonlyArray<{
   id:
@@ -97,6 +98,13 @@ const INITIAL: FormState = {
 
 export interface CampaignCreateFormProps {
   brandOperatingStates: string[];
+  /**
+   * When present, the form seeds from a cloned campaign template. The
+   * brand still has to submit — createCampaign() runs state-rule
+   * pre-evaluation and consent-scope mapping on save. Default behavior
+   * (blank form) is unchanged when this prop is absent.
+   */
+  initialTemplate?: CampaignTemplateClone | null;
 }
 
 const inputCls =
@@ -104,10 +112,22 @@ const inputCls =
 
 export default function CampaignCreateForm({
   brandOperatingStates,
+  initialTemplate,
 }: CampaignCreateFormProps) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>({
     ...INITIAL,
+    ...(initialTemplate
+      ? {
+          title: initialTemplate.title,
+          description: initialTemplate.description,
+          dealCategory: initialTemplate.dealCategory,
+          baseCompensationDollars: initialTemplate.suggestedCompensationDollars,
+          deliverablesTemplate: initialTemplate.deliverablesTemplate,
+          timelineStart: initialTemplate.timelineStart,
+          timelineEnd: initialTemplate.timelineEnd,
+        }
+      : {}),
     targetStates:
       brandOperatingStates.filter((s) =>
         (PILOT_STATES as readonly string[]).includes(s),
@@ -189,6 +209,7 @@ export default function CampaignCreateForm({
           deliverables_template: form.deliverablesTemplate.trim() || null,
           timeline_start: form.timelineStart || null,
           timeline_end: form.timelineEnd || null,
+          template_slug: initialTemplate?.templateSlug ?? null,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -222,6 +243,21 @@ export default function CampaignCreateForm({
       className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm md:p-8"
       noValidate
     >
+      {initialTemplate && (
+        <div
+          role="status"
+          className="mb-6 rounded-lg border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 px-4 py-3 text-sm text-white/90"
+        >
+          <p className="font-semibold text-white">
+            Seeded from template: {initialTemplate.templateTitle}
+          </p>
+          <p className="mt-1 text-xs text-white/70">
+            National baseline compensation pre-filled. CA / NY / TX typically
+            run 20-30% higher — adjust before saving.
+          </p>
+        </div>
+      )}
+
       {errors.length > 0 && (
         <div
           role="alert"
