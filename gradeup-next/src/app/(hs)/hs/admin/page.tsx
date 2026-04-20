@@ -35,6 +35,10 @@ import { listOpenDisputes } from '@/lib/hs-nil/disputes';
 import { countBulkOperationsByStatus } from '@/lib/hs-nil/bulk-actions';
 import { listFlaggedForOps } from '@/lib/hs-nil/moderation';
 import { countActiveStateAds } from '@/lib/hs-nil/state-ad-portal';
+import {
+  countUnreviewedChanges as countUnreviewedRegulatoryChanges,
+  countSourcesStale as countRegulatorySourcesStale,
+} from '@/lib/hs-nil/regulatory-monitor';
 
 export const metadata: Metadata = {
   title: 'Ops dashboard — GradeUp HS',
@@ -450,6 +454,21 @@ export default async function HsAdminLandingPage() {
     console.warn('[hs-admin] state-ad count load failed', err);
   }
 
+  // Regulatory monitor counts. Same out-of-band posture — the Phase 14
+  // migration (20260420_003_regulatory_monitoring.sql) may not be applied
+  // on every preview environment.
+  let regulatoryCounts = { unreviewed: 0, stale: 0 };
+  try {
+    const [unreviewed, stale] = await Promise.all([
+      countUnreviewedRegulatoryChanges(),
+      countRegulatorySourcesStale(14),
+    ]);
+    regulatoryCounts = { unreviewed, stale };
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-admin] regulatory-monitor count load failed', err);
+  }
+
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
       <section className="mx-auto max-w-6xl px-6 py-16">
@@ -605,6 +624,27 @@ export default async function HsAdminLandingPage() {
             emptyMessage="All deliverables cleared automatically."
             thresholds={{ warn: 1, urgent: 5 }}
             footnote="Images default to human review; text content auto-approves only at ≥ 85% confidence."
+          />
+
+          <AdminQueueCard
+            id="regulatory-monitor"
+            title="Regulatory monitor"
+            subtitle="Weekly content-hash watch of state athletic association pages."
+            count={regulatoryCounts.unreviewed}
+            href="/hs/admin/regulatory-monitor"
+            linkLabel="Open regulatory monitor"
+            previews={[]}
+            emptyMessage={
+              regulatoryCounts.stale > 0
+                ? `No unreviewed changes · ${regulatoryCounts.stale} source${regulatoryCounts.stale === 1 ? '' : 's'} stale >14d.`
+                : 'No unreviewed changes. Next poll runs Monday 9am ET.'
+            }
+            thresholds={{ warn: 1, urgent: 5 }}
+            footnote={
+              regulatoryCounts.stale > 0
+                ? `${regulatoryCounts.unreviewed} unreviewed · ${regulatoryCounts.stale} stale sources need attention`
+                : 'Detects drift so STATE_RULES does not rot. Admin reviews every detected change.'
+            }
           />
 
           <AdminQueueCard
