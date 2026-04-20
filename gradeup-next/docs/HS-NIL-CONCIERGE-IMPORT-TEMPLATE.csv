@@ -1,0 +1,2 @@
+athlete_first_name,athlete_last_name,athlete_email,athlete_dob,athlete_sport,athlete_school,athlete_grade_year,athlete_claimed_gpa,parent_first_name,parent_last_name,parent_email,parent_phone,parent_relationship,consent_scope_categories,consent_max_deal_cents,consent_duration_months,notes
+Alex,S.,alex.s.example@example.com,2009-03-14,Basketball,Lincoln High School,10,3.8,Jordan,S.,jordan.s.example@example.com,+14155551212,parent,"apparel,local_business,social_media_promo",50000,12,Referred by Coach Rivera — CA pilot intake

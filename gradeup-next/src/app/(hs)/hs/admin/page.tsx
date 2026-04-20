@@ -39,6 +39,7 @@ import {
   countUnreviewedChanges as countUnreviewedRegulatoryChanges,
   countSourcesStale as countRegulatorySourcesStale,
 } from '@/lib/hs-nil/regulatory-monitor';
+import { countPendingBatches as countPendingConciergeBatches } from '@/lib/hs-nil/concierge-import';
 
 export const metadata: Metadata = {
   title: 'Ops dashboard — GradeUp HS',
@@ -454,6 +455,17 @@ export default async function HsAdminLandingPage() {
     console.warn('[hs-admin] state-ad count load failed', err);
   }
 
+  // Concierge import queue — Phase 16. Batches pending apply or in a
+  // partial_failure state need operator attention. Out-of-band so a
+  // missing migration doesn't blank the page on a preview env.
+  let conciergePendingBatches = 0;
+  try {
+    conciergePendingBatches = await countPendingConciergeBatches();
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-admin] concierge pending batch count failed', err);
+  }
+
   // Regulatory monitor counts. Same out-of-band posture — the Phase 14
   // migration (20260420_003_regulatory_monitoring.sql) may not be applied
   // on every preview environment.
@@ -743,8 +755,35 @@ export default async function HsAdminLandingPage() {
           </Link>
 
           <Link
+            href="/hs/admin/concierge-import"
+            className={[
+              'flex flex-wrap items-center justify-between gap-4 rounded-xl border p-6 transition-colors',
+              conciergePendingBatches > 0
+                ? 'border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/5 hover:bg-[var(--accent-primary)]/10'
+                : 'border-white/15 bg-white/5 hover:bg-white/10',
+            ].join(' ')}
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                Concierge import
+              </p>
+              <h2 className="mt-1 font-display text-xl text-white">
+                Bulk parent+athlete CSV
+              </h2>
+              <p className="mt-1 text-sm text-white/60">
+                {conciergePendingBatches > 0
+                  ? `${conciergePendingBatches} batch${conciergePendingBatches === 1 ? '' : 'es'} pending review or apply.`
+                  : 'Upload a CSV to onboard a hand-sourced cohort in one go.'}
+              </p>
+            </div>
+            <p className="text-xs font-semibold text-[var(--accent-primary)]">
+              Open import queue →
+            </p>
+          </Link>
+
+          <Link
             href="/hs/admin/nurture-sequences"
-            className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/15 bg-white/5 p-6 transition-colors hover:bg-white/10 md:col-span-2"
+            className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/15 bg-white/5 p-6 transition-colors hover:bg-white/10"
           >
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
@@ -760,6 +799,27 @@ export default async function HsAdminLandingPage() {
             </div>
             <p className="text-xs font-semibold text-[var(--accent-primary)]">
               Open sequence dashboard →
+            </p>
+          </Link>
+
+          <Link
+            href="/hs/admin/state-ad-digest"
+            className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/15 bg-white/5 p-6 transition-colors hover:bg-white/10"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                State-AD digest
+              </p>
+              <h2 className="mt-1 font-display text-xl text-white">
+                Weekly compliance digest
+              </h2>
+              <p className="mt-1 text-sm text-white/60">
+                Delivery history, opt-in status, and force-send controls for
+                the per-state AD weekly summary email.
+              </p>
+            </div>
+            <p className="text-xs font-semibold text-[var(--accent-primary)]">
+              Manage digest delivery →
             </p>
           </Link>
         </div>
