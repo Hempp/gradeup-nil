@@ -34,6 +34,7 @@ import { AdminSignalBadge } from '@/components/hs/AdminSignalBadge';
 import { listOpenDisputes } from '@/lib/hs-nil/disputes';
 import { countBulkOperationsByStatus } from '@/lib/hs-nil/bulk-actions';
 import { listFlaggedForOps } from '@/lib/hs-nil/moderation';
+import { countActiveStateAds } from '@/lib/hs-nil/state-ad-portal';
 
 export const metadata: Metadata = {
   title: 'Ops dashboard — GradeUp HS',
@@ -439,6 +440,16 @@ export default async function HsAdminLandingPage() {
     console.warn('[hs-admin] bulk op count load failed', err);
   }
 
+  // State-AD portal counts. Out-of-band so a missing migration doesn't
+  // blank the page on a preview env.
+  let stateAdCounts = { assignments: 0, openInvitations: 0 };
+  try {
+    stateAdCounts = await countActiveStateAds();
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-admin] state-ad count load failed', err);
+  }
+
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
       <section className="mx-auto max-w-6xl px-6 py-16">
@@ -594,6 +605,27 @@ export default async function HsAdminLandingPage() {
             emptyMessage="All deliverables cleared automatically."
             thresholds={{ warn: 1, urgent: 5 }}
             footnote="Images default to human review; text content auto-approves only at ≥ 85% confidence."
+          />
+
+          <AdminQueueCard
+            id="state-ads"
+            title="State AD portal"
+            subtitle="Read-only compliance portal access for state athletic associations."
+            count={stateAdCounts.assignments}
+            href="/hs/admin/state-ads"
+            linkLabel="Manage state ADs"
+            previews={[]}
+            emptyMessage={
+              stateAdCounts.openInvitations > 0
+                ? `No active ADs yet · ${stateAdCounts.openInvitations} invitation${stateAdCounts.openInvitations === 1 ? '' : 's'} pending.`
+                : 'No active ADs yet. Send an invitation to get started.'
+            }
+            thresholds={{ warn: 9999, urgent: 99999 }}
+            footnote={
+              stateAdCounts.openInvitations > 0
+                ? `${stateAdCounts.assignments} active · ${stateAdCounts.openInvitations} invitation${stateAdCounts.openInvitations === 1 ? '' : 's'} pending acceptance`
+                : `${stateAdCounts.assignments} active assignments across all states.`
+            }
           />
         </div>
 
