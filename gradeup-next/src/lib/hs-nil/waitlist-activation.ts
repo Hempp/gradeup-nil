@@ -49,6 +49,10 @@ import {
   sendWaitlistInvite,
   type WaitlistInviteRole,
 } from '@/lib/services/hs-nil/waitlist-emails';
+import {
+  suppressEnrollment,
+  waitlistRef,
+} from '@/lib/hs-nil/nurture-sequences';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -321,11 +325,14 @@ export async function markInvited(
  * Mark a waitlist row as converted. Called from the signup pages when a
  * user finishes an HS signup and had the hs_invite cookie present.
  * Idempotent — if the row is already 'converted' the update is a no-op.
+ *
+ * Returns the matched waitlist id so callers (reconcileSignupToWaitlist)
+ * can pipe it through to nurture-sequence suppression.
  */
 export async function markConverted(
   token: string,
   userId: string
-): Promise<{ matched: boolean }> {
+): Promise<{ matched: boolean; waitlistId: string | null }> {
   const supabase = getWaitlistServiceClient();
   const { data, error } = await supabase
     .from('hs_waitlist')
@@ -340,7 +347,11 @@ export async function markConverted(
   if (error) {
     throw new Error(`Failed to mark token ${token.slice(0, 6)}... as converted: ${error.message}`);
   }
-  return { matched: Array.isArray(data) && data.length > 0 };
+  const matched = Array.isArray(data) && data.length > 0;
+  return {
+    matched,
+    waitlistId: matched && data ? (data[0].id as string) : null,
+  };
 }
 
 /** Hard bounce — never retry this email. */
@@ -424,9 +435,15 @@ export async function reconcileSignupToWaitlist(args: {
 }): Promise<boolean> {
   const { userId, email, role, inviteToken } = args;
   try {
+    const matchedWaitlistIds: string[] = [];
+
     if (inviteToken) {
-      const { matched } = await markConverted(inviteToken, userId);
-      if (matched) return true;
+      const { matched, waitlistId } = await markConverted(inviteToken, userId);
+      if (matched) {
+        if (waitlistId) matchedWaitlistIds.push(waitlistId);
+        await suppressNurtureForConvertedIds(matchedWaitlistIds);
+        return true;
+      }
     }
 
     // Fallback: match by (email, role). Use the functional lower(email)
@@ -452,7 +469,14 @@ export async function reconcileSignupToWaitlist(args: {
       });
       return false;
     }
-    return Array.isArray(data) && data.length > 0;
+    const fallbackMatched = Array.isArray(data) && data.length > 0;
+    if (fallbackMatched && data) {
+      for (const row of data) {
+        if (row?.id) matchedWaitlistIds.push(row.id as string);
+      }
+    }
+    await suppressNurtureForConvertedIds(matchedWaitlistIds);
+    return fallbackMatched;
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn('[waitlist-activation] reconcile threw', {
@@ -461,5 +485,29 @@ export async function reconcileSignupToWaitlist(args: {
       error: err instanceof Error ? err.message : String(err),
     });
     return false;
+  }
+}
+
+/**
+ * Best-effort: suppress all active nurture-sequence enrollments for
+ * each converted waitlist id. Never throws — any failure here is an
+ * observability issue, not a conversion-flow blocker.
+ */
+async function suppressNurtureForConvertedIds(
+  waitlistIds: string[]
+): Promise<void> {
+  for (const id of waitlistIds) {
+    try {
+      await suppressEnrollment({
+        ref: waitlistRef(id),
+        reason: 'converted',
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[waitlist-activation] nurture suppression failed', {
+        waitlistId: id,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 }

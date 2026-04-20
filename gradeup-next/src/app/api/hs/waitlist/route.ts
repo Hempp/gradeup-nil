@@ -10,6 +10,7 @@ import {
   safeText,
 } from '@/lib/validations';
 import { sendWaitlistConfirmation } from '@/lib/services/hs-nil/emails';
+import { checkAndEnroll } from '@/lib/hs-nil/nurture-sequences';
 
 /**
  * HS-NIL waitlist capture.
@@ -108,8 +109,9 @@ export async function POST(request: NextRequest) {
 
     // Insert. The unique index on (lower(email), role) gives us
     // idempotent "already on list" behavior without a race-prone
-    // pre-check.
-    const { error: insertError } = await supabase
+    // pre-check. We select the id so the nurture enrollment hook
+    // below can fire on the new row.
+    const { data: insertedRow, error: insertError } = await supabase
       .from('hs_waitlist')
       .insert({
         email: input.email,
@@ -119,7 +121,9 @@ export async function POST(request: NextRequest) {
         sport: input.sport ?? null,
         school_name: input.school_name ?? null,
         referred_by: input.referred_by ?? null,
-      });
+      })
+      .select('id')
+      .maybeSingle();
 
     // Duplicate → treat as success (the user's intent is "be on the
     // list"; they don't need to know they double-submitted).
@@ -168,6 +172,25 @@ export async function POST(request: NextRequest) {
           stateCode: input.state_code,
           error: err instanceof Error ? err.message : String(err),
         });
+      }
+
+      // Phase 15 — enroll this new waitlist row in the role-appropriate
+      // nurture sequence. Best-effort wrap: if this fails we still
+      // return success because the user IS on the list (that's the
+      // source-of-truth signal). The day-1 email fires tomorrow via
+      // the hs-nurture-sequencer cron.
+      const newWaitlistId = insertedRow?.id;
+      if (newWaitlistId) {
+        try {
+          await checkAndEnroll(newWaitlistId);
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-nil waitlist] nurture enrollment threw', {
+            waitlistId: newWaitlistId,
+            role: input.role,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
       }
     }
 
