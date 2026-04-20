@@ -28,27 +28,27 @@
  *   anywhere — referrals.ts attributeSignup, a reconciliation cron,
  *   the admin force-grant route.
  *
- * Wiring TODO (see referrals.ts)
- * ──────────────────────────────
- *   The automatic check-and-grant is NOT yet wired into
- *   attributeSignup() — that edit belongs to the next phase to
- *   avoid merge friction with PUSH-WIRING's recent changes.
+ * Wiring (closed 2026-04-20 — REWARD-WIRING / Phase 15)
+ * ─────────────────────────────────────────────────────
+ *   The automatic check-and-grant is now wired into three referral
+ *   edges via dynamic import (circular-import mitigation — the static
+ *   import from referrals.ts → referral-rewards.ts transitively pulls
+ *   matching helpers that share ancestors with referrals.ts):
  *
- *   TODO: in `src/lib/hs-nil/referrals.ts` attributeSignup(), after
- *   the `signup_completed` event insert succeeds, call:
+ *     1. referrals.ts::attributeSignup     — after signup_completed.
+ *     2. referrals.ts::recordFunnelEvent   — after first_consent_signed.
+ *     3. referrals.ts::recordFunnelEvent   — after first_deal_signed.
  *
- *       // Phase 11 referral rewards — check-and-grant tiers.
- *       try {
- *         const { grantTiersIfEarned } = await import('@/lib/hs-nil/referral-rewards');
- *         await grantTiersIfEarned(referringUserId);
- *       } catch (err) {
- *         console.warn('[hs-referrals] grantTiersIfEarned failed', err);
- *       }
+ *   Consent-provider and contract-sign paths already fire
+ *   recordFunnelEvent, so the milestone fan-out reaches them for free —
+ *   no direct edit needed at those call sites.
  *
- *   (Dynamic import + try/catch preserves the fail-closed semantics
- *   of the signup attribution path — a reward check must never break
- *   signup.)  Until the wire-up lands, the admin force-grant route
- *   and a daily reconciliation cron close the gap.
+ *   All three edges are fail-soft (.catch(console.warn)). The admin
+ *   force-grant route and daily reconciliation cron remain as
+ *   belt-and-suspenders for missed conversions.
+ *
+ *   On a successful NEW tier grant this function now also fires the
+ *   sendTierEarned email (best-effort). See below.
  *
  * Fail-closed
  * ───────────
@@ -417,12 +417,56 @@ export async function grantTiersIfEarned(
 
     // Activate the tier's default perks. Each activate is independent;
     // a partial failure of one perk doesn't roll back the grant.
+    const perksActivatedForTier: PerkName[] = [];
     for (const perk of tier.perks) {
       const activated = await activatePerk({
         grantId: grant.id,
         perkName: perk,
       });
-      if (activated) newlyActivatedPerks.push(activated);
+      if (activated) {
+        newlyActivatedPerks.push(activated);
+        perksActivatedForTier.push(perk);
+      }
+    }
+
+    // Best-effort tier-earned email. Dynamic import keeps
+    // reward-rewards.ts → reward-emails.ts out of the default
+    // module-init chain; email failures never roll back a grant.
+    try {
+      const { data: profile } = await sb
+        .from('profiles')
+        .select('email, first_name')
+        .eq('id', userId)
+        .maybeSingle<{ email: string | null; first_name: string | null }>();
+      const recipientEmail = (profile?.email ?? '').trim();
+      if (recipientEmail) {
+        const nextTierIndex =
+          TIER_LADDER.findIndex((t) => t.id === tier.id) + 1;
+        const nextTier =
+          nextTierIndex > 0 && nextTierIndex < TIER_LADDER.length
+            ? TIER_LADDER[nextTierIndex]
+            : null;
+        const { sendTierEarned } = await import(
+          '@/lib/services/hs-nil/reward-emails'
+        );
+        await sendTierEarned({
+          recipientEmail,
+          recipientFirstName: profile?.first_name ?? null,
+          tierId: tier.id,
+          tierName: tier.tierName,
+          nextTierName: nextTier?.tierName ?? null,
+          nextTierMinConversions: nextTier?.minConversions ?? null,
+          conversionCount,
+          perksGranted: perksActivatedForTier,
+        });
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[referral-rewards] sendTierEarned failed', {
+        userId,
+        tierId: tier.id,
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
   }
 

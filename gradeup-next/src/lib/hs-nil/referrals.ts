@@ -381,6 +381,24 @@ export async function attributeSignup(
 
   const referringUserId = update.data.referring_user_id as string;
 
+  // Phase 11 referral rewards — check-and-grant tiers for the REFERRER
+  // (the user whose code was used), not the referred user.
+  // Dynamic import: referral-rewards.ts transitively pulls in matching
+  // helpers that share ancestors with this module; a static import here
+  // risks a circular-dependency cycle at module init. Fire-and-forget +
+  // fail-soft so a reward failure never breaks signup attribution.
+  import('./referral-rewards')
+    .then(({ grantTiersIfEarned }) =>
+      grantTiersIfEarned(referringUserId).catch((err) => {
+        // eslint-disable-next-line no-console
+        console.warn('[hs-referrals] grantTiersIfEarned failed', err);
+      }),
+    )
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-referrals] referral-rewards import failed', err);
+    });
+
   // Notify the referrer. Preference gating + fail-soft handled by
   // sendPushToUser — wrap in try/catch so a push outage never kills
   // the signup attribution.
@@ -511,6 +529,32 @@ export async function recordFunnelEvent(args: {
     // eslint-disable-next-line no-console
     console.warn('[hs-referrals] funnel event insert failed', insert.error);
     return false;
+  }
+
+  // Phase 11 referral rewards — milestone events expand the tier math.
+  // signup_completed fans out from attributeSignup above; first_consent
+  // / first_deal fan out here. Dynamic import matches attributeSignup's
+  // circular-import mitigation (referral-rewards transitively pulls
+  // matching helpers). Fail-soft; never breaks the event insert.
+  if (
+    referringUserId &&
+    (eventType === 'first_consent_signed' || eventType === 'first_deal_signed')
+  ) {
+    import('./referral-rewards')
+      .then(({ grantTiersIfEarned }) =>
+        grantTiersIfEarned(referringUserId).catch((err) => {
+          // eslint-disable-next-line no-console
+          console.warn('[hs-referrals] grantTiersIfEarned (milestone) failed', {
+            referringUserId,
+            eventType,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }),
+      )
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.warn('[hs-referrals] referral-rewards import (milestone) failed', err);
+      });
   }
 
   // Push the referrer on milestone events. The helper short-circuits
