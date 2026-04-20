@@ -208,63 +208,265 @@ export async function sendStateAdInvitationAccepted(
 }
 
 // ---------------------------------------------------------------------------
-// 3. Weekly digest — TEMPLATE ONLY, no cron wired yet.
+// 3. Weekly compliance digest
 // ---------------------------------------------------------------------------
+// Driven by /api/cron/hs-state-ad-digest (daily 09:00 UTC). Each state AD
+// picks a preferred day-of-week on their settings page; the cron fans out
+// matching assignments. Empty-week suppression, 6-day idempotency guard,
+// and PII discipline (first name + last initial only) live in
+// src/lib/hs-nil/state-ad-digest.ts — this file is pure template rendering.
+
+export interface StateAdWeeklyDigestDeal {
+  id: string;
+  athleteAnon: string;
+  athleteSchool: string | null;
+  athleteSport: string | null;
+  brandName: string | null;
+  compensationAmount: number | null;
+}
+
+export interface StateAdWeeklyDigestTopSchool {
+  school: string;
+  dealCount: number;
+}
 
 export interface StateAdWeeklyDigestInput {
-  adEmail: string;
+  recipientEmail: string;
   stateCode: string;
+  stateName: string;
   organizationName: string;
   rangeStart: Date;
   rangeEnd: Date;
-  metrics: {
-    totalActiveDeals: number;
-    totalSignedDeals: number;
-    totalDisclosuresEmitted: number;
-    disclosureSuccessRate: number | null;
-    totalDisputes: number;
-  };
+  newDealCount: number;
+  deals: StateAdWeeklyDigestDeal[];
+  totalCompensation: number;
+  disclosuresEmitted: number;
+  disclosuresFailed: number;
+  unreviewedComplianceEvents: number;
+  complianceRate: number | null;
+  topSchools: StateAdWeeklyDigestTopSchool[];
   portalUrl?: string;
 }
 
+function formatCurrency(amount: number): string {
+  return amount.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  });
+}
+
+function formatDealAmount(amount: number | null): string {
+  if (amount === null || amount === undefined) return '—';
+  return formatCurrency(Number(amount));
+}
+
+function formatWeekEnding(d: Date): string {
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function renderTally(args: {
+  dealCount: number;
+  totalCompensation: number;
+  disclosuresEmitted: number;
+  complianceRate: number | null;
+}): string {
+  const { dealCount, totalCompensation, disclosuresEmitted, complianceRate } = args;
+  const rateLabel =
+    complianceRate === null
+      ? '—'
+      : `${Math.round(complianceRate * 100)}%`;
+
+  return `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;border-collapse:separate;border-spacing:8px 0;">
+  <tr>
+    <td style="width:25%;padding:14px;background:#F4F4F5;border-radius:8px;text-align:center;">
+      <div style="font-size:11px;letter-spacing:1px;font-weight:700;text-transform:uppercase;color:#52525B;">New deals</div>
+      <div style="margin-top:4px;font-size:22px;font-weight:700;color:#111;">${dealCount.toLocaleString()}</div>
+    </td>
+    <td style="width:25%;padding:14px;background:#F4F4F5;border-radius:8px;text-align:center;">
+      <div style="font-size:11px;letter-spacing:1px;font-weight:700;text-transform:uppercase;color:#52525B;">Compensation</div>
+      <div style="margin-top:4px;font-size:22px;font-weight:700;color:#111;">${escapeHtml(formatCurrency(totalCompensation))}</div>
+    </td>
+    <td style="width:25%;padding:14px;background:#F4F4F5;border-radius:8px;text-align:center;">
+      <div style="font-size:11px;letter-spacing:1px;font-weight:700;text-transform:uppercase;color:#52525B;">Disclosures</div>
+      <div style="margin-top:4px;font-size:22px;font-weight:700;color:#111;">${disclosuresEmitted.toLocaleString()}</div>
+    </td>
+    <td style="width:25%;padding:14px;background:#F4F4F5;border-radius:8px;text-align:center;">
+      <div style="font-size:11px;letter-spacing:1px;font-weight:700;text-transform:uppercase;color:#52525B;">Compliance</div>
+      <div style="margin-top:4px;font-size:22px;font-weight:700;color:#111;">${escapeHtml(rateLabel)}</div>
+    </td>
+  </tr>
+</table>`;
+}
+
+function renderDealRow(d: StateAdWeeklyDigestDeal): string {
+  const athleteLine = escapeHtml(d.athleteAnon);
+  const contextParts: string[] = [];
+  if (d.athleteSchool) contextParts.push(escapeHtml(d.athleteSchool));
+  if (d.athleteSport) contextParts.push(escapeHtml(d.athleteSport));
+  const contextLine =
+    contextParts.length > 0 ? `<span style="color:#52525B;">${contextParts.join(' · ')}</span>` : '';
+
+  return `
+<tr>
+  <td style="padding:8px 0;border-bottom:1px solid #E4E4E7;font-size:13px;color:#18181B;line-height:1.5;">
+    <div style="font-weight:600;">${athleteLine}</div>
+    ${contextLine ? `<div style="font-size:12px;">${contextLine}</div>` : ''}
+  </td>
+  <td style="padding:8px 0 8px 12px;border-bottom:1px solid #E4E4E7;font-size:13px;color:#18181B;line-height:1.5;">
+    ${d.brandName ? escapeHtml(d.brandName) : '<span style="color:#71717A;">—</span>'}
+  </td>
+  <td align="right" style="padding:8px 0 8px 12px;border-bottom:1px solid #E4E4E7;font-size:13px;color:#18181B;font-weight:600;white-space:nowrap;">
+    ${escapeHtml(formatDealAmount(d.compensationAmount))}
+  </td>
+</tr>`;
+}
+
+function renderTopSchools(rows: StateAdWeeklyDigestTopSchool[]): string {
+  if (rows.length === 0) return '';
+  const items = rows
+    .map(
+      (r) =>
+        `<li style="margin:0 0 6px;"><strong>${escapeHtml(r.school)}</strong> · ${r.dealCount} deal${r.dealCount === 1 ? '' : 's'}</li>`
+    )
+    .join('');
+  return `
+<h2 style="margin:24px 0 8px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#111;">Top schools this week</h2>
+<ul style="margin:0 0 16px;padding-left:20px;color:#18181B;font-size:13px;line-height:1.6;">
+  ${items}
+</ul>`;
+}
+
+function renderFlags(args: {
+  disclosuresFailed: number;
+  unreviewedComplianceEvents: number;
+}): string {
+  const { disclosuresFailed, unreviewedComplianceEvents } = args;
+  if (disclosuresFailed === 0 && unreviewedComplianceEvents === 0) return '';
+  const rows: string[] = [];
+  if (disclosuresFailed > 0) {
+    rows.push(
+      `<li style="margin:0 0 6px;"><strong>${disclosuresFailed}</strong> disclosure${disclosuresFailed === 1 ? '' : 's'} failed to send. Our ops team is retrying; the portal shows current status per deal.</li>`
+    );
+  }
+  if (unreviewedComplianceEvents > 0) {
+    rows.push(
+      `<li style="margin:0 0 6px;"><strong>${unreviewedComplianceEvents}</strong> unreviewed regulatory change event${unreviewedComplianceEvents === 1 ? '' : 's'} mentioning your state were detected this week.</li>`
+    );
+  }
+  return `
+<div style="margin:20px 0;padding:14px 16px;border-left:4px solid #D97706;background:#FFFBEB;border-radius:6px;">
+  <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:#92400E;">Needs attention</div>
+  <ul style="margin:8px 0 0;padding-left:20px;color:#78350F;font-size:13px;line-height:1.5;">
+    ${rows.join('')}
+  </ul>
+</div>`;
+}
+
 /**
- * TODO: Wire a cron at /api/cron/state-ad-digest that (a) iterates every
- * state with active assignments, (b) aggregates last-7-day metrics via
- * getPortalMetricsForState(), (c) fans out one email per assignment. The
- * template below is production-ready; only scheduling is missing.
+ * Compose and send the weekly compliance digest for a single state AD.
+ * Pure template rendering — feature-flagging, idempotency, and empty-week
+ * suppression live in the caller (the cron route).
+ *
+ * PII posture: athletes are surfaced exclusively as first-name + last-initial
+ * + school + sport. The payload must never carry email/phone/DOB/parent
+ * data — caller-side `collectWeeklyStateAdBrief` enforces that.
  */
 export async function sendWeeklyStateAdDigest(
   input: StateAdWeeklyDigestInput
 ): Promise<EmailResult> {
-  const { adEmail, stateCode, organizationName, rangeStart, rangeEnd, metrics } = input;
-  const portalUrl = input.portalUrl ?? `${APP_URL}/hs/ad-portal`;
-  const rate =
-    metrics.disclosureSuccessRate === null
-      ? 'n/a'
-      : `${Math.round(metrics.disclosureSuccessRate * 100)}%`;
+  const {
+    recipientEmail,
+    stateCode,
+    stateName,
+    organizationName,
+    rangeStart,
+    rangeEnd,
+    newDealCount,
+    deals,
+    totalCompensation,
+    disclosuresEmitted,
+    disclosuresFailed,
+    unreviewedComplianceEvents,
+    complianceRate,
+    topSchools,
+  } = input;
+
+  const portalUrl =
+    input.portalUrl ??
+    `${APP_URL}/hs/ad-portal?state=${encodeURIComponent(stateCode)}`;
+  const settingsUrl = `${APP_URL}/hs/ad-portal/settings`;
+  const weekEndingLabel = formatWeekEnding(rangeEnd);
+
+  const dealTable =
+    deals.length > 0
+      ? `
+<h2 style="margin:24px 0 8px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#111;">New deals this week (${newDealCount.toLocaleString()})</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:8px 0 0;">
+  <thead>
+    <tr>
+      <th align="left" style="padding:6px 0;border-bottom:2px solid #111;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#52525B;">Athlete</th>
+      <th align="left" style="padding:6px 0 6px 12px;border-bottom:2px solid #111;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#52525B;">Brand</th>
+      <th align="right" style="padding:6px 0 6px 12px;border-bottom:2px solid #111;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#52525B;">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${deals.map(renderDealRow).join('')}
+  </tbody>
+</table>
+${
+  newDealCount > deals.length
+    ? `<p style="margin:8px 0 0;font-size:12px;color:#52525B;">Showing ${deals.length} of ${newDealCount.toLocaleString()}. Open the portal for the full list.</p>`
+    : ''
+}`
+      : `<p style="margin:16px 0;font-size:13px;color:#52525B;">No new deals signed this week.</p>`;
 
   const bodyHtml = `
-<h1 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111;">Weekly compliance digest — ${escapeHtml(organizationName)}</h1>
-<p style="margin:0 0 16px;">Summary for ${escapeHtml(stateCode)}, ${rangeStart.toDateString()} &rarr; ${rangeEnd.toDateString()}:</p>
-<ul style="margin:0 0 16px;padding-left:20px;color:#18181B;">
-  <li style="margin:0 0 6px;"><strong>${metrics.totalActiveDeals}</strong> active deals</li>
-  <li style="margin:0 0 6px;"><strong>${metrics.totalSignedDeals}</strong> signed deals</li>
-  <li style="margin:0 0 6px;"><strong>${metrics.totalDisclosuresEmitted}</strong> disclosures emitted (${escapeHtml(rate)} success)</li>
-  <li style="margin:0 0 6px;"><strong>${metrics.totalDisputes}</strong> disputes raised</li>
-</ul>
-${primaryButton('Open portal', portalUrl)}
-<p style="margin:24px 0 0;font-size:13px;color:#52525B;">This digest is sent weekly and is fully auditable inside the portal itself.</p>
+<h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#111;">Weekly NIL compliance summary</h1>
+<p style="margin:0 0 16px;font-size:13px;color:#52525B;">${escapeHtml(stateName)} (${escapeHtml(stateCode)}) · week ending ${escapeHtml(weekEndingLabel)}</p>
+
+${renderTally({ dealCount: newDealCount, totalCompensation, disclosuresEmitted, complianceRate })}
+
+${renderFlags({ disclosuresFailed, unreviewedComplianceEvents })}
+
+${dealTable}
+
+${renderTopSchools(topSchools)}
+
+${primaryButton('Open portal dashboard', portalUrl)}
+
+<p style="margin:24px 0 12px;font-size:12px;color:#52525B;line-height:1.6;">
+  Athlete identifiers in this email are intentionally minimal (first name + last initial). The portal respects the same privacy tier.
+  Every portal page-load you make is audit-logged and visible to both GradeUp and your office.
+</p>
+<p style="margin:0;font-size:12px;color:#52525B;line-height:1.6;">
+  Manage your digest preferences (turn off, change day of week) in <a href="${settingsUrl}" style="color:#0070F3;">portal settings</a>.
+</p>
 `;
 
+  const subject = `[${organizationName}] Weekly NIL compliance summary — ${weekEndingLabel}`;
+
   const result = await sendEmail({
-    to: adEmail,
-    subject: `${stateCode} weekly compliance digest — ${organizationName}`,
+    to: recipientEmail,
+    replyTo: SUPPORT_EMAIL,
+    subject,
     html: wrapPlain({
       title: 'Weekly Compliance Digest',
-      preview: `Weekly digest for ${organizationName} (${stateCode}).`,
+      preview: `${newDealCount} new deals · ${disclosuresEmitted} disclosures emitted in ${stateCode} this week.`,
       bodyHtml,
     }),
   });
-  logSend('state_ad_weekly_digest', adEmail, result, { stateCode });
+
+  logSend('state_ad_weekly_digest', recipientEmail, result, {
+    stateCode,
+    newDealCount,
+    disclosuresEmitted,
+    disclosuresFailed,
+  });
   return result;
 }

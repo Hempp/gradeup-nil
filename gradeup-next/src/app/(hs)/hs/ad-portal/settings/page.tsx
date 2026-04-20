@@ -8,12 +8,16 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import {
   listAssignmentsForUser,
   type StateAdAssignment,
 } from '@/lib/hs-nil/state-ad-portal';
+import {
+  listAllAssignmentsForAdmin,
+  toggleDigest,
+} from '@/lib/hs-nil/state-ad-digest';
 
 export const metadata: Metadata = {
   title: 'Settings — State Compliance Portal',
@@ -23,9 +27,28 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+interface DigestPref {
+  assignmentId: string;
+  digestEnabled: boolean;
+  digestDayOfWeek: number;
+  digestLastSentAt: string | null;
+}
+
+const DOW_OPTIONS: Array<{ value: number; label: string }> = [
+  { value: 0, label: 'Sunday' },
+  { value: 1, label: 'Monday' },
+  { value: 2, label: 'Tuesday' },
+  { value: 3, label: 'Wednesday' },
+  { value: 4, label: 'Thursday' },
+  { value: 5, label: 'Friday' },
+  { value: 6, label: 'Saturday' },
+];
+
 async function requireStateAd(): Promise<{
+  userId: string;
   userEmail: string | null;
   assignments: StateAdAssignment[];
+  digestPrefs: Map<string, DigestPref>;
 }> {
   const supabase = await createClient();
   const {
@@ -34,7 +57,62 @@ async function requireStateAd(): Promise<{
   if (!user) notFound();
   const assignments = await listAssignmentsForUser(user.id);
   if (assignments.length === 0) notFound();
-  return { userEmail: user.email ?? null, assignments };
+
+  // Join digest prefs — we reuse listAllAssignmentsForAdmin and filter
+  // to this user's assignments. It's a small table so the over-fetch is
+  // fine; avoids a second targeted query path.
+  const all = await listAllAssignmentsForAdmin();
+  const prefs = new Map<string, DigestPref>();
+  for (const row of all) {
+    if (row.userId !== user.id) continue;
+    prefs.set(row.assignmentId, {
+      assignmentId: row.assignmentId,
+      digestEnabled: row.digestEnabled,
+      digestDayOfWeek: row.digestDayOfWeek,
+      digestLastSentAt: row.digestLastSentAt,
+    });
+  }
+  return {
+    userId: user.id,
+    userEmail: user.email ?? null,
+    assignments,
+    digestPrefs: prefs,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Server action — AD updates their own digest preferences. Access control is
+// self-scoped: we re-derive the user's own assignments before touching any
+// row, so a crafted assignmentId that doesn't belong to this user is ignored.
+// ---------------------------------------------------------------------------
+
+async function updateDigestPrefs(formData: FormData): Promise<void> {
+  'use server';
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const assignmentId = String(formData.get('assignmentId') ?? '');
+  if (!assignmentId) return;
+
+  const enabled = formData.get('enabled') === 'true';
+  const dowRaw = formData.get('dayOfWeek');
+  const dow = dowRaw !== null ? Number(dowRaw) : undefined;
+
+  // Self-scope check: only touch assignments that belong to this user.
+  const mine = await listAssignmentsForUser(user.id);
+  if (!mine.some((a) => a.id === assignmentId)) return;
+
+  await toggleDigest(
+    assignmentId,
+    enabled,
+    user.id,
+    Number.isFinite(dow) && dow !== undefined ? dow : undefined
+  );
+
+  redirect('/hs/ad-portal/settings');
 }
 
 function fmt(iso: string | null): string {
@@ -49,7 +127,7 @@ function fmt(iso: string | null): string {
 }
 
 export default async function AdPortalSettingsPage() {
-  const { userEmail, assignments } = await requireStateAd();
+  const { userEmail, assignments, digestPrefs } = await requireStateAd();
 
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
@@ -141,6 +219,92 @@ export default async function AdPortalSettingsPage() {
                 </dl>
               </li>
             ))}
+          </ul>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="font-display text-xl text-white">Weekly digest</h2>
+          <p className="mt-2 text-sm text-white/60">
+            Every week we email a compliance summary covering new deals,
+            disclosures, top schools, and any flagged events for your state.
+            Pick the day of the week that works for your office, or pause
+            delivery entirely. You can always revisit the portal directly for
+            live data.
+          </p>
+          <ul className="mt-4 space-y-3">
+            {assignments.map((a) => {
+              const pref = digestPrefs.get(a.id);
+              const enabled = pref?.digestEnabled ?? true;
+              const dow = pref?.digestDayOfWeek ?? 1;
+              const lastSent = pref?.digestLastSentAt ?? null;
+              return (
+                <li
+                  key={a.id}
+                  className="rounded-xl border border-white/10 bg-white/5 p-5"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {a.organizationName}
+                      </p>
+                      <p className="mt-0.5 text-xs text-white/60">
+                        {a.stateCode} ·{' '}
+                        {enabled ? 'Subscribed' : 'Paused'}
+                        {lastSent
+                          ? ` · last sent ${fmt(lastSent)}`
+                          : ' · never sent'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <form
+                    action={updateDigestPrefs}
+                    className="mt-4 flex flex-wrap items-end gap-4"
+                  >
+                    <input
+                      type="hidden"
+                      name="assignmentId"
+                      value={a.id}
+                    />
+                    <label className="flex flex-col gap-1 text-xs text-white/70">
+                      <span className="uppercase tracking-widest text-white/40">
+                        Delivery
+                      </span>
+                      <select
+                        name="enabled"
+                        defaultValue={enabled ? 'true' : 'false'}
+                        className="rounded-md border border-white/20 bg-black/40 px-3 py-1.5 text-sm text-white"
+                      >
+                        <option value="true">On</option>
+                        <option value="false">Paused</option>
+                      </select>
+                    </label>
+                    <label className="flex flex-col gap-1 text-xs text-white/70">
+                      <span className="uppercase tracking-widest text-white/40">
+                        Preferred day
+                      </span>
+                      <select
+                        name="dayOfWeek"
+                        defaultValue={String(dow)}
+                        className="rounded-md border border-white/20 bg-black/40 px-3 py-1.5 text-sm text-white"
+                      >
+                        {DOW_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <button
+                      type="submit"
+                      className="rounded-md border border-[var(--accent-primary)]/60 bg-[var(--accent-primary)]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)] transition hover:bg-[var(--accent-primary)]/20"
+                    >
+                      Save preferences
+                    </button>
+                  </form>
+                </li>
+              );
+            })}
           </ul>
         </section>
 
