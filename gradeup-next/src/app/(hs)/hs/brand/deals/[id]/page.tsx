@@ -28,6 +28,7 @@ import { createClient } from '@/lib/supabase/server';
 import { DeliverableItemCard } from '@/components/hs/DeliverableItemCard';
 import type { DeliverableItemCardSubmission } from '@/components/hs/DeliverableItemCard';
 import { BrandReviewPanel } from '@/components/hs/BrandReviewPanel';
+import { ExportPdfButton } from '@/components/hs/ExportPdfButton';
 
 export const metadata: Metadata = {
   title: 'Review deal — GradeUp HS brand',
@@ -278,20 +279,34 @@ export default async function BrandDealDetailPage({
       </section>
 
       <section className="mx-auto max-w-4xl px-6 pb-8">
-        <div className="flex flex-wrap items-center gap-3">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/50">
-            Deal review
-          </p>
-          {statusPill(deal.status)}
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/50">
+                Deal review
+              </p>
+              {statusPill(deal.status)}
+            </div>
+            <h1 className="mt-3 font-display text-4xl md:text-5xl">
+              {deal.title}
+            </h1>
+            <p className="mt-3 text-sm text-white/70 md:text-base">
+              With{' '}
+              <span className="font-semibold text-white">{athleteName}</span>
+              {snapshot?.school_name ? ` · ${snapshot.school_name}` : ''}
+              {snapshot?.sport ? ` · ${snapshot.sport}` : ''}
+              {snapshot?.state_code ? ` · ${snapshot.state_code}` : ''}
+            </p>
+          </div>
+          {['paid', 'completed'].includes(deal.status) && (
+            <ExportPdfButton
+              href={`/api/hs/brand/deals/${deal.id}/export-pdf`}
+              filename={`gradeup-deal-${deal.id.slice(0, 8)}.pdf`}
+              label="Download deal report"
+              variant="outline"
+            />
+          )}
         </div>
-        <h1 className="mt-3 font-display text-4xl md:text-5xl">{deal.title}</h1>
-        <p className="mt-3 text-sm text-white/70 md:text-base">
-          With{' '}
-          <span className="font-semibold text-white">{athleteName}</span>
-          {snapshot?.school_name ? ` · ${snapshot.school_name}` : ''}
-          {snapshot?.sport ? ` · ${snapshot.sport}` : ''}
-          {snapshot?.state_code ? ` · ${snapshot.state_code}` : ''}
-        </p>
       </section>
 
       <section className="mx-auto grid max-w-4xl gap-6 px-6 pb-10 md:grid-cols-2">

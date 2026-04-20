@@ -18,6 +18,19 @@ import {
 } from '@/lib/hs-nil/earnings';
 import { BrandROISummary } from '@/components/hs/BrandROISummary';
 import { CompletedDealsTable } from '@/components/hs/CompletedDealsTable';
+import { PdfExportOptions } from '@/components/hs/PdfExportOptions';
+
+function slugifyCompany(name: string): string {
+  return (
+    name
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 40) || 'brand'
+  );
+}
 
 export const metadata: Metadata = {
   title: 'Performance — GradeUp HS Brand',
@@ -74,22 +87,28 @@ export default async function HSBrandPerformancePage() {
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-10">
-        <div className="mb-8">
-          <Link
-            href="/hs/brand"
-            className="text-xs font-semibold uppercase tracking-widest text-white/50 hover:text-white"
-          >
-            ← Back to dashboard
-          </Link>
-          <h1 className="mt-3 font-display text-4xl text-white md:text-5xl">
-            Performance
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-white/70">
-            {brand.company_name} &middot; completed-deal metrics only.
-          </p>
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <Link
+              href="/hs/brand"
+              className="text-xs font-semibold uppercase tracking-widest text-white/50 hover:text-white"
+            >
+              ← Back to dashboard
+            </Link>
+            <h1 className="mt-3 font-display text-4xl text-white md:text-5xl">
+              Performance
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-white/70">
+              {brand.company_name} &middot; completed-deal metrics only.
+            </p>
+          </div>
         </div>
 
         <BrandROISummary summary={summary} />
+
+        <div className="mt-8">
+          <PdfExportOptions brandSlug={slugifyCompany(brand.company_name)} />
+        </div>
 
         {(mostSharedDeal || summary.totalDeals > 0) && (
           <section
