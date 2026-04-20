@@ -672,6 +672,27 @@ export default async function HsAdminLandingPage() {
         {/* Ops tools + bulk operations callouts */}
         <div className="mt-10 grid gap-6 md:grid-cols-2">
           <Link
+            href="/hs/admin/ops-brief"
+            className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/[0.04] p-6 transition-colors hover:bg-[var(--accent-primary)]/[0.10] md:col-span-2"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                Ops brief
+              </p>
+              <h2 className="mt-1 font-display text-xl text-white">
+                Today at a glance
+              </h2>
+              <p className="mt-1 text-sm text-white/60">
+                One page covering every signal on this dashboard. Same data
+                the 3:30am ET email delivers — check it live any time.
+              </p>
+            </div>
+            <p className="text-xs font-semibold text-[var(--accent-primary)]">
+              Open ops brief →
+            </p>
+          </Link>
+
+          <Link
             href="/hs/admin/ops-tools"
             className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/15 bg-white/5 p-6 transition-colors hover:bg-white/10"
           >
@@ -718,6 +739,27 @@ export default async function HsAdminLandingPage() {
             </div>
             <p className="text-xs font-semibold text-[var(--accent-primary)]">
               See all runs →
+            </p>
+          </Link>
+
+          <Link
+            href="/hs/admin/nurture-sequences"
+            className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/15 bg-white/5 p-6 transition-colors hover:bg-white/10 md:col-span-2"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                Nurture sequences
+              </p>
+              <h2 className="mt-1 font-display text-xl text-white">
+                Post-waitlist drip health
+              </h2>
+              <p className="mt-1 text-sm text-white/60">
+                Enrollment, conversion, and unsubscribe rates for the
+                per-role email nurture program.
+              </p>
+            </div>
+            <p className="text-xs font-semibold text-[var(--accent-primary)]">
+              Open sequence dashboard →
             </p>
           </Link>
         </div>
