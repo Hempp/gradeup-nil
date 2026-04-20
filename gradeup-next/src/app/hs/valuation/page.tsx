@@ -47,6 +47,11 @@ export const metadata: Metadata = {
     "Find out what your high-school scholar-athlete's NIL is worth. Free, instant estimate. Factors in sport, state, grade level, social following, and GPA.",
   alternates: {
     canonical: CANONICAL_URL,
+    languages: {
+      en: CANONICAL_URL,
+      es: `${BASE_URL}/es/hs/valuation`,
+      'x-default': CANONICAL_URL,
+    },
   },
   openGraph: {
     title: 'NIL Valuation Calculator — GradeUp HS',

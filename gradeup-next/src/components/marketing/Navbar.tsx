@@ -6,6 +6,7 @@ import { Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/brand';
+import { LocaleSwitcher } from './LocaleSwitcher';
 
 interface NavLink {
   href: string;
@@ -190,6 +191,7 @@ export function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-3">
+            <LocaleSwitcher />
             <Link href="/login">
               <Button
                 variant="ghost"
@@ -278,6 +280,7 @@ export function Navbar() {
             );
           })}
           <div className="pt-6 border-t border-[var(--marketing-gray-800)] space-y-3">
+            <LocaleSwitcher variant="compact" className="mb-2" />
             <Link href="/login" className="block" onClick={() => setMobileMenuOpen(false)}>
               <Button
                 variant="outline"

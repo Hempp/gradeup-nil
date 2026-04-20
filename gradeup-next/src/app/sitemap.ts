@@ -34,13 +34,41 @@ function siteOrigin(): string {
   return 'https://gradeupnil.com';
 }
 
+/**
+ * Canonical English paths that have a Spanish translation.
+ * Each gets an `alternates.languages` block in the sitemap entry
+ * so Google sees the English/Spanish pair and serves the right
+ * locale per user. Keep in sync with src/lib/i18n/config.ts
+ * `TRANSLATED_PATHS` and the /es/* route tree.
+ */
+const TRANSLATED_ROUTES: Array<{ en: string; es: string }> = [
+  { en: '/', es: '/es' },
+  { en: '/hs', es: '/es/hs' },
+  { en: '/hs/valuation', es: '/es/hs/valuation' },
+  { en: '/solutions/parents', es: '/es/solutions/parents' },
+  { en: '/business/case-studies', es: '/es/business/case-studies' },
+  { en: '/pricing', es: '/es/pricing' },
+];
+
+function altsFor(enPath: string, origin: string): MetadataRoute.Sitemap[number]['alternates'] {
+  const pair = TRANSLATED_ROUTES.find((r) => r.en === enPath);
+  if (!pair) return undefined;
+  return {
+    languages: {
+      en: `${origin}${pair.en}`,
+      es: `${origin}${pair.es}`,
+      'x-default': `${origin}${pair.en}`,
+    },
+  };
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const origin = siteOrigin();
   const now = new Date().toISOString();
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${origin}/`, lastModified: now, changeFrequency: 'daily', priority: 1 },
-    { url: `${origin}/pricing`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${origin}/`, lastModified: now, changeFrequency: 'daily', priority: 1, alternates: altsFor('/', origin) },
+    { url: `${origin}/pricing`, lastModified: now, changeFrequency: 'weekly', priority: 0.8, alternates: altsFor('/pricing', origin) },
     { url: `${origin}/compare`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${origin}/discover`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${origin}/opportunities`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
@@ -48,16 +76,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${origin}/privacy`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
     { url: `${origin}/terms`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
     { url: `${origin}/subscription-terms`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
-    { url: `${origin}/solutions/parents`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${origin}/solutions/parents`, lastModified: now, changeFrequency: 'weekly', priority: 0.8, alternates: altsFor('/solutions/parents', origin) },
     { url: `${origin}/solutions/athletes`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${origin}/solutions/brands`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${origin}/solutions/ads`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${origin}/solutions/state-ads`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
-    { url: `${origin}/business/case-studies`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${origin}/business/case-studies`, lastModified: now, changeFrequency: 'weekly', priority: 0.7, alternates: altsFor('/business/case-studies', origin) },
     { url: `${origin}/blog`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${origin}/blog/state-nil-rules`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${origin}/hs`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${origin}/hs/valuation`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${origin}/hs`, lastModified: now, changeFrequency: 'weekly', priority: 0.8, alternates: altsFor('/hs', origin) },
+    { url: `${origin}/hs/valuation`, lastModified: now, changeFrequency: 'weekly', priority: 0.7, alternates: altsFor('/hs/valuation', origin) },
+    // Spanish companions — listed separately so Google sees them independently.
+    // Each carries the same `languages` alternates pointing back to the English canonical.
+    { url: `${origin}/es`, lastModified: now, changeFrequency: 'daily', priority: 0.9, alternates: altsFor('/', origin) },
+    { url: `${origin}/es/hs`, lastModified: now, changeFrequency: 'weekly', priority: 0.7, alternates: altsFor('/hs', origin) },
+    { url: `${origin}/es/hs/valuation`, lastModified: now, changeFrequency: 'weekly', priority: 0.6, alternates: altsFor('/hs/valuation', origin) },
+    { url: `${origin}/es/solutions/parents`, lastModified: now, changeFrequency: 'weekly', priority: 0.7, alternates: altsFor('/solutions/parents', origin) },
+    { url: `${origin}/es/business/case-studies`, lastModified: now, changeFrequency: 'weekly', priority: 0.6, alternates: altsFor('/business/case-studies', origin) },
+    { url: `${origin}/es/pricing`, lastModified: now, changeFrequency: 'weekly', priority: 0.7, alternates: altsFor('/pricing', origin) },
   ];
 
   const stateRoutes: MetadataRoute.Sitemap = listAllStateBlogPosts().map(

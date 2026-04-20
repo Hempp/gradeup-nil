@@ -16,6 +16,15 @@ import {
   buildCspHeader,
   buildDevCspHeader,
 } from '@/lib/csp-nonce';
+import {
+  DEFAULT_LOCALE,
+  LOCALE_COOKIE,
+  LOCALES_WITH_ROUTES,
+  SUPPORTED_LOCALES,
+  TRANSLATED_PATHS,
+  isSupportedLocale,
+  type Locale,
+} from '@/lib/i18n/config';
 
 // =============================================================================
 // RATE LIMITING CONFIGURATION
@@ -159,6 +168,83 @@ async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining
   return checkInMemoryRateLimit(ip);
 }
 
+// =============================================================================
+// LOCALE HELPERS
+// =============================================================================
+
+/**
+ * Return the locale embedded in a pathname's first segment, or the default
+ * when no locale segment is present. Mirrors client-side
+ * `detectLocaleFromPath` in src/lib/i18n/client.ts — duplicated here so the
+ * middleware module stays edge-compatible (no client-only imports).
+ */
+function detectLocaleFromPath(pathname: string): Locale {
+  const seg = pathname.split('/')[1];
+  if (seg && isSupportedLocale(seg) && seg !== DEFAULT_LOCALE) {
+    return seg;
+  }
+  return DEFAULT_LOCALE;
+}
+
+/**
+ * True when the given English-canonical path has a translated counterpart
+ * we can redirect into without serving a 404. Matches both exact paths and
+ * prefixes under translated paths (e.g. /business/case-studies/:slug).
+ *
+ * We intentionally DO NOT redirect on paths we haven't translated — that
+ * would send a Spanish-preferring user into a dead end.
+ */
+function shouldConsiderLocaleRedirect(path: string): boolean {
+  for (const translated of TRANSLATED_PATHS) {
+    if (path === translated) return true;
+    // Listing-style pages get per-item pages later; don't redirect into
+    // those yet (they're not translated).
+    if (translated !== '/' && path === translated + '/') return true;
+  }
+  return false;
+}
+
+/**
+ * Build a `/<locale>` prefixed URL for the given request URL. Preserves
+ * query string and hash.
+ */
+function buildLocalizedUrl(url: URL, locale: Locale): URL {
+  const target = new URL(url.toString());
+  const currentPath = target.pathname === '/' ? '' : target.pathname;
+  target.pathname = `/${locale}${currentPath}`;
+  return target;
+}
+
+/**
+ * Parse a raw Accept-Language header and return the highest-priority
+ * locale we support (ignoring region tags). Returns `null` when nothing
+ * matches. Tiny implementation — no need to pull in a parsing library.
+ *
+ * Supported header example: "es-MX,es;q=0.9,en;q=0.8"
+ */
+function preferredLocaleFromAcceptLanguage(header: string | null): Locale | null {
+  if (!header) return null;
+  const ranges = header
+    .split(',')
+    .map((entry) => {
+      const [lang, ...params] = entry.trim().split(';');
+      const qParam = params.find((p) => p.trim().startsWith('q='));
+      const q = qParam ? Number(qParam.split('=')[1]) : 1;
+      return { lang: lang.toLowerCase(), q: Number.isFinite(q) ? q : 0 };
+    })
+    .filter((r) => r.lang.length > 0)
+    .sort((a, b) => b.q - a.q);
+
+  for (const { lang } of ranges) {
+    // Match primary subtag (e.g. "es" from "es-MX").
+    const primary = lang.split('-')[0];
+    for (const supported of SUPPORTED_LOCALES) {
+      if (primary === supported) return supported;
+    }
+  }
+  return null;
+}
+
 export async function middleware(request: NextRequest) {
   // =============================================================================
   // CSP NONCE GENERATION
@@ -187,6 +273,63 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
   const method = request.method;
+
+  // =============================================================================
+  // LOCALE DETECTION + ACCEPT-LANGUAGE REDIRECT
+  // =============================================================================
+  // URL-prefix locale routing. Default (English) lives at /*; translated
+  // locales live under /<locale>/*. The middleware does three things:
+  //
+  //   1. If the URL already carries a locale prefix, stamp a cookie so the
+  //      preference survives subsequent navigations.
+  //   2. If the URL has no prefix, the user has no cookie preference, and
+  //      their Accept-Language header prefers a supported non-default
+  //      locale that has a matching translated page, redirect them to
+  //      the localized URL. We never redirect into a 404.
+  //   3. If the user has a cookie preference that differs from the URL's
+  //      implied locale, we do nothing — URL wins. The switcher is how
+  //      they change locale explicitly.
+  //
+  // Static assets, API routes, and _next internals are already filtered
+  // out by the `matcher` config at the bottom of this file, so we don't
+  // need to re-guard them here.
+  // =============================================================================
+  const localeFromPath = detectLocaleFromPath(path);
+  if (localeFromPath && localeFromPath !== DEFAULT_LOCALE) {
+    // User is already on a localized route — remember their preference.
+    response.cookies.set(LOCALE_COOKIE, localeFromPath, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      sameSite: 'lax',
+      secure: isProduction,
+    });
+    requestHeaders.set('x-locale', localeFromPath);
+  } else {
+    requestHeaders.set('x-locale', DEFAULT_LOCALE);
+
+    // Only consider a redirect on GET requests for translated English
+    // paths. We do NOT redirect on POST/PATCH/etc. — keeping forms
+    // locale-agnostic lets co-agents reuse endpoints for both locales.
+    if (method === 'GET' && !path.startsWith('/api/') && shouldConsiderLocaleRedirect(path)) {
+      const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value;
+
+      // Cookie preference always wins over Accept-Language if we have one.
+      if (cookieLocale && isSupportedLocale(cookieLocale) && cookieLocale !== DEFAULT_LOCALE && LOCALES_WITH_ROUTES.includes(cookieLocale)) {
+        const target = buildLocalizedUrl(request.nextUrl, cookieLocale);
+        return NextResponse.redirect(target);
+      }
+
+      if (!cookieLocale) {
+        const preferred = preferredLocaleFromAcceptLanguage(
+          request.headers.get('accept-language'),
+        );
+        if (preferred && preferred !== DEFAULT_LOCALE && LOCALES_WITH_ROUTES.includes(preferred)) {
+          const target = buildLocalizedUrl(request.nextUrl, preferred);
+          return NextResponse.redirect(target);
+        }
+      }
+    }
+  }
 
   // Track if we need to set CSRF cookies (will be done at the end)
   let csrfTokens: { signedToken: string; secret: string } | null = null;

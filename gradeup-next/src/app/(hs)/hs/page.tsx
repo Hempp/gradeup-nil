@@ -5,6 +5,14 @@ export const metadata: Metadata = {
   title: 'GradeUp HS — Name, Image, Likeness for High School Athletes',
   description:
     'The first NIL platform built for high-school scholar-athletes. Verified GPA, parental consent, state-compliant deals.',
+  alternates: {
+    canonical: '/hs',
+    languages: {
+      en: '/hs',
+      es: '/es/hs',
+      'x-default': '/hs',
+    },
+  },
 };
 
 export default function HSLandingPage() {

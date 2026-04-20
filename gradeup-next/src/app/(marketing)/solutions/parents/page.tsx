@@ -33,7 +33,14 @@ export const metadata: Metadata = {
   title: 'NIL for Parents — A first deal without the risk | GradeUp',
   description:
     'The safest way for your scholar-athlete to sign their first NIL deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
-  alternates: { canonical: PAGE_URL },
+  alternates: {
+    canonical: PAGE_URL,
+    languages: {
+      en: PAGE_URL,
+      es: '/es/solutions/parents',
+      'x-default': PAGE_URL,
+    },
+  },
   openGraph: {
     title: 'GradeUp for Parents — Your scholar-athlete&rsquo;s first NIL deal, without the risk',
     description:

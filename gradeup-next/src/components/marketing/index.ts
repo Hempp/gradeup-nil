@@ -37,3 +37,5 @@ export { BlogRelatedPosts } from './BlogRelatedPosts';
 export type { BlogRelatedPostsProps } from './BlogRelatedPosts';
 export { BlogPostArticle } from './BlogPostArticle';
 export type { BlogPostArticleProps } from './BlogPostArticle';
+export { LocaleSwitcher } from './LocaleSwitcher';
+export { LocaleFallbackBanner } from './LocaleFallbackBanner';

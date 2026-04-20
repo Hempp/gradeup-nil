@@ -17,7 +17,14 @@ export const metadata: Metadata = {
       'Transparent NIL pricing for HS scholar-athletes, their parents, and local brands. No sales calls. No hidden fees. 8% take-rate on deals.',
     type: 'website',
   },
-  alternates: { canonical: '/pricing' },
+  alternates: {
+    canonical: '/pricing',
+    languages: {
+      en: '/pricing',
+      es: '/es/pricing',
+      'x-default': '/pricing',
+    },
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
