@@ -34,6 +34,12 @@ import {
   sendTranscriptRejected,
 } from '@/lib/services/hs-nil/emails';
 import { captureGpaSnapshot } from '@/lib/hs-nil/trajectory';
+import {
+  getOcrResultsForSubmissionIds,
+  OCR_AUTO_APPROVAL_CONFIDENCE,
+} from '@/lib/hs-nil/ocr';
+import { normaliseGpaTo4, GPA_MATCH_TOLERANCE } from '@/lib/hs-nil/ocr-provider';
+import { createClient as createServiceClient } from '@supabase/supabase-js';
 
 // ---------------------------------------------------------------------------
 // Auth helper — assert admin role. Returns `null` on success, a response on
@@ -100,11 +106,39 @@ export async function GET(request: NextRequest) {
     if (rateLimited) return rateLimited;
 
     const rows = await listPendingSubmissions(50);
+    const ocrMap = await getOcrResultsForSubmissionIds(rows.map((r) => r.id));
+
     const withUrls = await Promise.all(
-      rows.map(async (row: TranscriptSubmissionRow) => ({
-        ...row,
-        signed_view_url: await getSignedViewUrl(row.storage_path, 300),
-      }))
+      rows.map(async (row: TranscriptSubmissionRow) => {
+        const ocr = ocrMap.get(row.id) ?? null;
+        const normalisedExtracted = ocr
+          ? normaliseGpaTo4(ocr.extracted_gpa, ocr.extracted_gpa_scale)
+          : null;
+        const matchesClaimed =
+          normalisedExtracted !== null &&
+          Math.abs(normalisedExtracted - Number(row.claimed_gpa)) <=
+            GPA_MATCH_TOLERANCE;
+
+        return {
+          ...row,
+          signed_view_url: await getSignedViewUrl(row.storage_path, 300),
+          ocr: ocr
+            ? {
+                provider: ocr.provider,
+                extracted_gpa: ocr.extracted_gpa,
+                extracted_gpa_scale: ocr.extracted_gpa_scale,
+                extracted_gpa_normalised_4_0: normalisedExtracted,
+                extracted_term: ocr.extracted_term,
+                confidence: ocr.confidence,
+                matches_claimed: matchesClaimed,
+                meets_auto_threshold:
+                  (ocr.confidence ?? 0) >= OCR_AUTO_APPROVAL_CONFIDENCE,
+                processed_at: ocr.processed_at,
+                error: ocr.error,
+              }
+            : null,
+        };
+      })
     );
 
     return NextResponse.json({ ok: true, submissions: withUrls });
@@ -177,6 +211,71 @@ export async function POST(request: NextRequest) {
 
     const input = validation.data;
 
+    // Peek at the OCR result BEFORE recording the human decision — we want
+    // to know whether this is an override-vs-OCR so the audit log captures
+    // reviewer intent. Read-only; fail-soft.
+    let ocrAtDecision: {
+      provider: string;
+      confidence: number | null;
+      extractedGpaNorm: number | null;
+      matchesClaimed: boolean;
+    } | null = null;
+    try {
+      const ocrMap = await getOcrResultsForSubmissionIds([input.submissionId]);
+      const ocrRow = ocrMap.get(input.submissionId);
+      if (ocrRow) {
+        const norm = normaliseGpaTo4(
+          ocrRow.extracted_gpa,
+          ocrRow.extracted_gpa_scale
+        );
+        // We need claimed_gpa to compute matchesClaimed; read it quickly
+        // via the service-role client to avoid RLS surprises.
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        let matches = false;
+        if (url && key) {
+          const svc = createServiceClient(url, key, {
+            auth: { persistSession: false, autoRefreshToken: false },
+          });
+          const { data: sub } = await svc
+            .from('transcript_submissions')
+            .select('claimed_gpa')
+            .eq('id', input.submissionId)
+            .maybeSingle();
+          if (sub && norm !== null) {
+            matches =
+              Math.abs(norm - Number(sub.claimed_gpa)) <= GPA_MATCH_TOLERANCE;
+          }
+        }
+        ocrAtDecision = {
+          provider: ocrRow.provider,
+          confidence: ocrRow.confidence,
+          extractedGpaNorm: norm,
+          matchesClaimed: matches,
+        };
+      }
+    } catch {
+      ocrAtDecision = null;
+    }
+
+    // Build reviewer_notes with the human-override breadcrumb when the OCR
+    // was sub-threshold and the reviewer approves anyway. Three months
+    // later an auditor can trace exactly what OCR said + why a human
+    // decided otherwise.
+    let reviewerNotes = input.reviewerNotes;
+    if (
+      input.decision === 'approve' &&
+      ocrAtDecision &&
+      (ocrAtDecision.confidence ?? 0) < OCR_AUTO_APPROVAL_CONFIDENCE
+    ) {
+      const suffix = `[human-override over OCR ${ocrAtDecision.provider} confidence ${(
+        ocrAtDecision.confidence ?? 0
+      ).toFixed(2)}; extractedGPA=${
+        ocrAtDecision.extractedGpaNorm?.toFixed(2) ?? 'null'
+      }; matches_claimed=${ocrAtDecision.matchesClaimed}]`;
+      reviewerNotes = reviewerNotes ? `${reviewerNotes} ${suffix}` : suffix;
+    }
+
     // Fetch athlete user id via the service-role decision recorder so we can
     // address the follow-up email correctly. The recorder looks up the
     // submission under the service role to avoid RLS surprises.
@@ -185,7 +284,7 @@ export async function POST(request: NextRequest) {
       reviewerUserId: gate.userId,
       decision: input.decision,
       approvedGpa: input.approvedGpa,
-      reviewerNotes: input.reviewerNotes,
+      reviewerNotes,
       athleteVisibleNote: input.athleteVisibleNote,
     });
 

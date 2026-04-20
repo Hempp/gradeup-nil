@@ -22,6 +22,19 @@ import { Loader2 } from 'lucide-react';
 
 type Decision = 'approve' | 'reject' | 'request_resubmission';
 
+interface OcrSummary {
+  provider: string;
+  extracted_gpa: number | null;
+  extracted_gpa_scale: number | null;
+  extracted_gpa_normalised_4_0: number | null;
+  extracted_term: string | null;
+  confidence: number | null;
+  matches_claimed: boolean;
+  meets_auto_threshold: boolean;
+  processed_at: string;
+  error: string | null;
+}
+
 interface QueueRow {
   id: string;
   athlete_user_id: string;
@@ -33,6 +46,7 @@ interface QueueRow {
   status: string;
   created_at: string;
   signed_view_url: string | null;
+  ocr: OcrSummary | null;
 }
 
 export default function TranscriptReviewPage() {
@@ -164,6 +178,39 @@ function ReviewCard({
   const [athleteVisibleNote, setAthleteVisibleNote] = useState('');
   const [submitting, setSubmitting] = useState<Decision | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [reprocessing, setReprocessing] = useState(false);
+  const [reprocessError, setReprocessError] = useState<string | null>(null);
+
+  async function reprocess(
+    provider?: 'openai' | 'google' | 'stub'
+  ): Promise<void> {
+    setReprocessing(true);
+    setReprocessError(null);
+    try {
+      const res = await fetch(
+        '/api/hs/admin/actions/transcript-reprocess',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            submissionId: row.id,
+            provider,
+          }),
+        }
+      );
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(json?.error || `Reprocess failed (${res.status})`);
+      }
+      onReviewed();
+    } catch (err) {
+      setReprocessError(
+        err instanceof Error ? err.message : 'Reprocess failed.'
+      );
+    } finally {
+      setReprocessing(false);
+    }
+  }
 
   async function submit(decision: Decision) {
     setError(null);
@@ -237,6 +284,14 @@ function ReviewCard({
           </span>
         )}
       </div>
+
+      <OcrBlock
+        ocr={row.ocr}
+        claimedGpa={row.claimed_gpa}
+        onReprocess={reprocess}
+        reprocessing={reprocessing}
+        reprocessError={reprocessError}
+      />
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         <label className="block text-sm">
@@ -313,6 +368,257 @@ function ReviewCard({
         </Button>
       </div>
     </li>
+  );
+}
+
+function OcrBlock({
+  ocr,
+  claimedGpa,
+  onReprocess,
+  reprocessing,
+  reprocessError,
+}: {
+  ocr: OcrSummary | null;
+  claimedGpa: number;
+  onReprocess: (provider?: 'openai' | 'google' | 'stub') => Promise<void>;
+  reprocessing: boolean;
+  reprocessError: string | null;
+}) {
+  if (!ocr) {
+    return (
+      <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-4">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            OCR result
+          </p>
+          <ReprocessMenu
+            onReprocess={onReprocess}
+            reprocessing={reprocessing}
+          />
+        </div>
+        <p className="mt-2 text-sm text-white/60">
+          No OCR pass on file yet. Click reprocess to run one.
+        </p>
+        {reprocessError ? (
+          <p className="mt-2 text-xs text-[var(--color-error,#DA2B57)]">
+            {reprocessError}
+          </p>
+        ) : null}
+      </div>
+    );
+  }
+
+  const extracted = ocr.extracted_gpa_normalised_4_0;
+  const diff =
+    extracted !== null ? Math.abs(extracted - claimedGpa) : null;
+  let matchTone: 'match' | 'near' | 'miss' = 'miss';
+  let matchLabel = 'Mismatch';
+  if (diff !== null) {
+    if (diff <= 0.05) {
+      matchTone = 'match';
+      matchLabel = 'Match (±0.05)';
+    } else if (diff <= 0.2) {
+      matchTone = 'near';
+      matchLabel = `Near-match (±${diff.toFixed(2)})`;
+    } else {
+      matchTone = 'miss';
+      matchLabel = `Mismatch (±${diff.toFixed(2)})`;
+    }
+  }
+  const confidence = ocr.confidence ?? 0;
+  const confidencePct = Math.round(confidence * 100);
+
+  const confidenceTone =
+    confidence >= 0.9
+      ? 'rgba(11,135,94,0.9)'
+      : confidence >= 0.7
+        ? 'rgba(255,176,0,0.9)'
+        : 'rgba(218,43,87,0.9)';
+  const matchBg =
+    matchTone === 'match'
+      ? 'rgba(11,135,94,0.18)'
+      : matchTone === 'near'
+        ? 'rgba(255,176,0,0.18)'
+        : 'rgba(218,43,87,0.18)';
+
+  return (
+    <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/50">
+          OCR result
+        </p>
+        <div className="flex items-center gap-2">
+          <span
+            className="rounded-full border border-white/15 px-2 py-0.5 text-xs font-semibold text-white/80"
+            title="OCR provider that produced this result"
+          >
+            {ocr.provider}
+          </span>
+          {ocr.meets_auto_threshold && ocr.matches_claimed ? (
+            <span className="rounded-full bg-[rgba(11,135,94,0.25)] px-2 py-0.5 text-xs font-semibold text-[rgb(80,200,140)]">
+              Auto-approved
+            </span>
+          ) : (
+            <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs font-semibold text-white/70">
+              Needs review
+            </span>
+          )}
+          <ReprocessMenu
+            onReprocess={onReprocess}
+            reprocessing={reprocessing}
+          />
+        </div>
+      </div>
+
+      <dl className="mt-3 grid gap-3 md:grid-cols-4">
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            Extracted GPA (norm 4.0)
+          </dt>
+          <dd className="mt-1 text-sm text-white">
+            {extracted !== null ? extracted.toFixed(2) : '—'}
+            {ocr.extracted_gpa_scale ? (
+              <span className="ml-1 text-white/50">
+                ({ocr.extracted_gpa?.toFixed(2)} / {ocr.extracted_gpa_scale})
+              </span>
+            ) : null}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            Claimed
+          </dt>
+          <dd className="mt-1 text-sm text-white">{claimedGpa.toFixed(2)}</dd>
+        </div>
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            Match
+          </dt>
+          <dd
+            className="mt-1 inline-block rounded-md px-2 py-0.5 text-xs font-semibold text-white"
+            style={{ background: matchBg }}
+          >
+            {matchLabel}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            Term
+          </dt>
+          <dd className="mt-1 text-sm text-white">
+            {ocr.extracted_term ?? '—'}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            Confidence
+          </span>
+          <span className="text-xs font-semibold text-white">
+            {confidencePct}%
+          </span>
+        </div>
+        <div
+          className="mt-1 h-2 w-full rounded-full bg-white/10"
+          role="progressbar"
+          aria-valuenow={confidencePct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="OCR confidence"
+        >
+          <div
+            className="h-2 rounded-full"
+            style={{
+              width: `${confidencePct}%`,
+              background: confidenceTone,
+            }}
+          />
+        </div>
+        <p className="mt-1 text-xs text-white/50">
+          Auto-approval threshold is 0.90 with GPA within ±0.05.
+        </p>
+      </div>
+
+      {ocr.error ? (
+        <p className="mt-3 rounded-md border border-[var(--color-error,#DA2B57)]/50 bg-[var(--color-error,#DA2B57)]/10 p-2 text-xs text-[var(--color-error,#DA2B57)]">
+          OCR error: {ocr.error}
+        </p>
+      ) : null}
+
+      {reprocessError ? (
+        <p className="mt-2 text-xs text-[var(--color-error,#DA2B57)]">
+          {reprocessError}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function ReprocessMenu({
+  onReprocess,
+  reprocessing,
+}: {
+  onReprocess: (provider?: 'openai' | 'google' | 'stub') => Promise<void>;
+  reprocessing: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        disabled={reprocessing}
+        className="rounded-md border border-white/20 px-2 py-1 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+      >
+        {reprocessing ? 'Reprocessing…' : 'Reprocess ▾'}
+      </button>
+      {open && !reprocessing ? (
+        <div className="absolute right-0 z-10 mt-1 w-56 rounded-md border border-white/15 bg-black/90 p-1 text-sm text-white shadow-lg">
+          <button
+            type="button"
+            onClick={async () => {
+              setOpen(false);
+              await onReprocess();
+            }}
+            className="block w-full rounded px-3 py-2 text-left hover:bg-white/10"
+          >
+            Default provider (env)
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              setOpen(false);
+              await onReprocess('openai');
+            }}
+            className="block w-full rounded px-3 py-2 text-left hover:bg-white/10"
+          >
+            Force OpenAI Vision
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              setOpen(false);
+              await onReprocess('google');
+            }}
+            className="block w-full rounded px-3 py-2 text-left hover:bg-white/10"
+          >
+            Force Google Vision
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              setOpen(false);
+              await onReprocess('stub');
+            }}
+            className="block w-full rounded px-3 py-2 text-left hover:bg-white/10"
+          >
+            Force stub (dev)
+          </button>
+        </div>
+      ) : null}
+    </div>
   );
 }
 

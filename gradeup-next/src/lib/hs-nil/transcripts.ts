@@ -181,11 +181,74 @@ export async function createSubmission(
     );
   }
 
+  // OCR + confidence-gated auto-approval. Fire-and-forget from the upload
+  // path — failures (missing provider env, network blip, malformed
+  // provider response) NEVER block the athlete's response. The queue still
+  // shows the row under 'pending_review' for ops as a fallback.
+  //
+  // Dynamic import breaks the module cycle (ocr.ts imports from this
+  // module for TRANSCRIPT_BUCKET / TranscriptStatus). Also keeps the cold-
+  // start cost of the upload route minimal when OCR is disabled.
+  void (async () => {
+    try {
+      const { runOcrForSubmission, confidenceGatedAutoApproval } = await import(
+        './ocr'
+      );
+      const ocrOutcome = await runOcrForSubmission(row.id as string);
+      if (ocrOutcome.ok) {
+        await confidenceGatedAutoApproval(row.id as string);
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[hs-nil transcripts] background OCR pass failed (non-fatal)',
+        {
+          submissionId: row.id,
+          error: err instanceof Error ? err.message : String(err),
+        }
+      );
+    }
+  })();
+
   return {
     submissionId: row.id,
     status: row.status as TranscriptStatus,
     storagePath,
   };
+}
+
+/**
+ * Back-compat alias used by the OCR brief. `submitTranscript` reads more
+ * naturally at the call-site ("submit the transcript → fire OCR") while
+ * `createSubmission` reads as the raw DB-row creator. Both point at the
+ * same code path; prefer `submitTranscript` for new callers that also want
+ * the OCR side-effects fired, and `createSubmission` when only the raw
+ * row insert is needed.
+ */
+export const submitTranscript = createSubmission;
+
+/**
+ * After an approval — human or auto — propagate the approved GPA onto the
+ * athlete profile. Exposed so the OCR auto-approval path and future
+ * callers can share the same update shape. The main review path in
+ * `recordReviewDecision` already inlines this write; this helper exists
+ * so the auto-approval flow can re-use it without replicating the SQL.
+ */
+export async function updateAthleteGpaAfterApproval(
+  athleteUserId: string,
+  approvedGpa: number
+): Promise<{ ok: boolean; reason?: string }> {
+  const sb = getServiceRoleClient();
+  const { error } = await sb
+    .from('hs_athlete_profiles')
+    .update({
+      gpa: approvedGpa,
+      gpa_verification_tier: 'user_submitted',
+      verified_at: new Date().toISOString(),
+    })
+    .eq('user_id', athleteUserId);
+  if (error) return { ok: false, reason: error.message };
+  return { ok: true };
 }
 
 // ---------------------------------------------------------------------------
