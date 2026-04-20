@@ -88,6 +88,7 @@ export function Navbar() {
       ],
     },
     { href: '/business/case-studies', label: 'Case Studies' },
+    { href: '/blog', label: 'Blog' },
     { href: '/pricing', label: 'Pricing' },
     { href: '/discover', label: 'Discover' },
     { href: '/opportunities', label: 'Opportunities' },

@@ -18,6 +18,10 @@ import type { MetadataRoute } from 'next';
 import {
   listAllStateBlogPosts,
 } from '@/lib/hs-nil/state-blog-content';
+import {
+  listPublishedPosts,
+  blogPostPath,
+} from '@/lib/hs-nil/blog-content';
 
 /**
  * Absolute origin used when Next needs it. Falls back to env, then to a
@@ -50,6 +54,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${origin}/solutions/ads`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${origin}/solutions/state-ads`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${origin}/business/case-studies`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${origin}/blog`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${origin}/blog/state-nil-rules`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${origin}/hs`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${origin}/hs/valuation`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
@@ -64,5 +69,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }),
   );
 
-  return [...staticRoutes, ...stateRoutes];
+  const evergreenBlogRoutes: MetadataRoute.Sitemap = listPublishedPosts().map(
+    (p) => ({
+      url: `${origin}${blogPostPath(p.slug)}`,
+      lastModified: p.updatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    }),
+  );
+
+  return [...staticRoutes, ...stateRoutes, ...evergreenBlogRoutes];
 }
