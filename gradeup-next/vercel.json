@@ -35,6 +35,10 @@
     {
       "path": "/api/cron/hs-state-ad-digest",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/hs-sms-worker",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

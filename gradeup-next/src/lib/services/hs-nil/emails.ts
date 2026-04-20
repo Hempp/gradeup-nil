@@ -198,6 +198,25 @@ export interface ParentConsentRequestInput {
   athleteName: string;
   signingUrl: string;
   expiresAt: Date;
+  /**
+   * Phase 17: when the parent has a phone on file, we also send a
+   * companion SMS. Passing a value here adds a one-line "you may also
+   * receive this as an SMS to <last-4>" note so the SMS arrival
+   * doesn't surprise the recipient. Pass the original (non-normalised)
+   * phone — we mask to last-4 ourselves.
+   */
+  parentPhone?: string | null;
+}
+
+/**
+ * Show only the last 4 digits of a phone for a softer privacy posture
+ * in email copy. Returns null if we can't extract at least 4 digits.
+ */
+function maskPhoneForEmail(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length < 4) return null;
+  return `***-***-${digits.slice(-4)}`;
 }
 
 function formatExpiry(date: Date): string {
@@ -217,6 +236,7 @@ export async function sendParentConsentRequest(
   const expiry = formatExpiry(expiresAt);
   const safeAthlete = escapeHtml(athleteName);
   const safeSigningUrl = signingUrl; // URL not user-supplied; generated server-side
+  const maskedPhone = maskPhoneForEmail(input.parentPhone);
 
   const bodyHtml = `
 <h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#111;">${safeAthlete} needs your permission for GradeUp NIL</h1>
@@ -242,6 +262,7 @@ ${primaryButton('Review and sign', safeSigningUrl)}
 </ul>
 
 <p style="margin:24px 0 0;font-size:13px;color:#52525B;">Didn't expect this? You can ignore this email and nothing will happen — the link will expire on its own.</p>
+${maskedPhone ? `<p style="margin:8px 0 0;font-size:12px;color:#71717A;">You may also receive this as an SMS to ${escapeHtml(maskedPhone)}.</p>` : ''}
 `;
 
   const result = await sendEmail({

@@ -33,6 +33,7 @@ import {
 } from '@/lib/services/hs-nil/emails';
 import { recordFunnelEvent } from '@/lib/hs-nil/referrals';
 import { sendPushToUser } from '@/lib/push/sender';
+import { fireConsentSmsFallback } from '@/lib/hs-nil/sms';
 
 // ----------------------------------------------------------------------------
 // Public types
@@ -197,6 +198,37 @@ class SupabaseConsentProvider implements ConsentProvider {
       // swallow — name is a nice-to-have, not a gate
     }
 
+    // Look up the linked parent phone (best-effort). When present, the
+    // email template surfaces a masked "you may also receive this by
+    // SMS" note AND we fire a companion SMS further down.
+    let parentPhone: string | null = null;
+    try {
+      const { data: linkRows } = await sb
+        .from('hs_parent_athlete_links')
+        .select('parent_profile_id, verified_at, created_at')
+        .eq('athlete_user_id', input.athleteUserId)
+        .order('verified_at', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false })
+        .limit(5);
+      const ids = (linkRows ?? []).map(
+        (r) => r.parent_profile_id as string
+      );
+      if (ids.length > 0) {
+        const { data: profiles } = await sb
+          .from('hs_parent_profiles')
+          .select('id, phone')
+          .in('id', ids);
+        const firstWithPhone = (profiles ?? []).find(
+          (p) => typeof p.phone === 'string' && p.phone.trim().length > 0
+        );
+        if (firstWithPhone) {
+          parentPhone = firstWithPhone.phone as string;
+        }
+      }
+    } catch {
+      // Swallow — phone lookup is a nice-to-have.
+    }
+
     // Fire the parent-facing email. Fail-closed: the pending_consents row
     // is the source of truth; if Resend is down the athlete can re-initiate
     // and we (ops) can resend by token out-of-band. We never throw here —
@@ -208,6 +240,7 @@ class SupabaseConsentProvider implements ConsentProvider {
         athleteName,
         signingUrl: buildSigningUrl(token),
         expiresAt,
+        parentPhone,
       });
     } catch (emailErr) {
       // eslint-disable-next-line no-console
@@ -238,6 +271,50 @@ class SupabaseConsentProvider implements ConsentProvider {
       console.warn('[hs-nil consent] athlete consent push failed', {
         athleteUserId: input.athleteUserId,
         error: pushErr instanceof Error ? pushErr.message : String(pushErr),
+      });
+    }
+
+    // Phase 17: fire a companion SMS to the parent when we have a phone
+    // on file. Dual-channel delivery by default — maximises the chance
+    // the parent sees the consent request before the signing link
+    // expires. Future optimization: only fire SMS when the email
+    // bounces or isn't confirmed delivered within 30 min. That requires
+    // Resend delivery/bounce webhooks that don't exist yet.
+    //
+    // We resolve the parent phone inside the SMS service so this call
+    // stays a one-liner from here. We DO NOT let SMS failure block
+    // token creation — the email is the primary channel and the DB
+    // row is the source of truth.
+    try {
+      // fireConsentSmsFallback looks up the row we just inserted by id,
+      // but we don't have that id here (we inserted by service role and
+      // threw the insert response away). Re-fetch by token — cheap and
+      // keeps the signature symmetric.
+      const { data: pending } = await sb
+        .from('pending_consents')
+        .select('id')
+        .eq('token', token)
+        .maybeSingle();
+      if (pending?.id) {
+        const smsResult = await fireConsentSmsFallback({
+          pendingConsentId: pending.id as string,
+        });
+        if (!smsResult.ok) {
+          // Most common reason here is `no_phone` — parent hasn't filled
+          // it in yet. Log at info-level so ops can see the fallback
+          // skipped without alarm.
+          // eslint-disable-next-line no-console
+          console.log('[hs-nil consent] sms fallback skipped', {
+            athleteUserId: input.athleteUserId,
+            reason: smsResult.reason,
+          });
+        }
+      }
+    } catch (smsErr) {
+      // eslint-disable-next-line no-console
+      console.warn('[hs-nil consent] sms fallback threw', {
+        athleteUserId: input.athleteUserId,
+        error: smsErr instanceof Error ? smsErr.message : String(smsErr),
       });
     }
 

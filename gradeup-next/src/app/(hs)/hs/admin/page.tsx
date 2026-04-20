@@ -40,6 +40,7 @@ import {
   countSourcesStale as countRegulatorySourcesStale,
 } from '@/lib/hs-nil/regulatory-monitor';
 import { countPendingBatches as countPendingConciergeBatches } from '@/lib/hs-nil/concierge-import';
+import { countSmsSentToday } from '@/lib/hs-nil/sms';
 
 export const metadata: Metadata = {
   title: 'Ops dashboard — GradeUp HS',
@@ -466,6 +467,16 @@ export default async function HsAdminLandingPage() {
     console.warn('[hs-admin] concierge pending batch count failed', err);
   }
 
+  // SMS queue counts — Phase 17. Out-of-band so a missing migration on
+  // a preview env doesn't blank the page.
+  let smsCounts = { sent: 0, failed: 0, undeliverable: 0, total: 0 };
+  try {
+    smsCounts = await countSmsSentToday();
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-admin] sms count load failed', err);
+  }
+
   // Regulatory monitor counts. Same out-of-band posture — the Phase 14
   // migration (20260420_003_regulatory_monitoring.sql) may not be applied
   // on every preview environment.
@@ -799,6 +810,33 @@ export default async function HsAdminLandingPage() {
             </div>
             <p className="text-xs font-semibold text-[var(--accent-primary)]">
               Open sequence dashboard →
+            </p>
+          </Link>
+
+          <Link
+            href="/hs/admin/sms"
+            className={[
+              'flex flex-wrap items-center justify-between gap-4 rounded-xl border p-6 transition-colors',
+              smsCounts.failed > 0 || smsCounts.undeliverable > 0
+                ? 'border-amber-400/40 bg-amber-400/5 hover:bg-amber-400/10'
+                : 'border-white/15 bg-white/5 hover:bg-white/10',
+            ].join(' ')}
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                SMS fallback
+              </p>
+              <h2 className="mt-1 font-display text-xl text-white">
+                Parent consent SMS queue
+              </h2>
+              <p className="mt-1 text-sm text-white/60">
+                {smsCounts.total === 0
+                  ? 'No SMS sent today.'
+                  : `${smsCounts.sent} sent · ${smsCounts.failed} failed · ${smsCounts.undeliverable} undeliverable today.`}
+              </p>
+            </div>
+            <p className="text-xs font-semibold text-[var(--accent-primary)]">
+              Open SMS queue →
             </p>
           </Link>
 
