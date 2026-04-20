@@ -1,15 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/brand';
 
+interface NavLink {
+  href: string;
+  label: string;
+  /** Optional dropdown children. When present, href acts as the hub link
+   *  behind the dropdown trigger (clicking the label goes to /solutions). */
+  children?: Array<{ href: string; label: string; description?: string }>;
+}
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
+  const solutionsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,16 +29,20 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on Escape key press and lock body scroll (WCAG 2.2 requirement)
+  // Close mobile menu on Escape key press and lock body scroll (WCAG 2.2 requirement).
+  // Also closes the Solutions desktop dropdown on Escape.
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && mobileMenuOpen) {
-        setMobileMenuOpen(false);
+      if (e.key === 'Escape') {
+        if (mobileMenuOpen) setMobileMenuOpen(false);
+        if (solutionsOpen) setSolutionsOpen(false);
       }
     };
 
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || solutionsOpen) {
       document.addEventListener('keydown', handleEscape);
+    }
+    if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     }
 
@@ -36,17 +50,45 @@ export function Navbar() {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, solutionsOpen]);
+
+  // Close the Solutions dropdown when clicking outside of it.
+  useEffect(() => {
+    if (!solutionsOpen) return;
+    const onDocClick = (event: MouseEvent) => {
+      if (
+        solutionsRef.current &&
+        !solutionsRef.current.contains(event.target as Node)
+      ) {
+        setSolutionsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, [solutionsOpen]);
 
   // Nav order convention: VALUATION owns index 3 ("NIL Valuation"),
-  // CASE-STUDIES owns index 4 ("Case Studies"). Keep separate so
+  // SOLUTIONS-PAGES owns index 4 ("Solutions"), CASE-STUDIES owns index 5
+  // ("Case Studies"), PRICING owns index 6 ("Pricing"). Keep separate so
   // parallel agents can edit without collision.
-  const navLinks = [
+  const navLinks: NavLink[] = [
     { href: '/#athletes', label: 'Athletes' },
     { href: '/#brands', label: 'Brands' },
     { href: '/#how-it-works', label: 'How It Works' },
     { href: '/hs/valuation', label: 'NIL Valuation' },
+    {
+      href: '/solutions',
+      label: 'Solutions',
+      children: [
+        { href: '/solutions/parents', label: 'Parents', description: 'First deal without the risk' },
+        { href: '/solutions/athletes', label: 'Athletes', description: 'Your GPA is the advantage' },
+        { href: '/solutions/brands', label: 'Brands', description: 'Local, state-compliant, self-serve' },
+        { href: '/solutions/ads', label: 'Athletic Directors', description: 'Compliance you do not have to build' },
+        { href: '/solutions/state-ads', label: 'State AD Portal', description: 'Oversight across member schools' },
+      ],
+    },
     { href: '/business/case-studies', label: 'Case Studies' },
+    { href: '/pricing', label: 'Pricing' },
     { href: '/discover', label: 'Discover' },
     { href: '/opportunities', label: 'Opportunities' },
   ];
@@ -68,16 +110,81 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-white/70 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="hidden lg:flex items-center gap-6">
+            {navLinks.map((link) => {
+              if (link.children && link.children.length > 0) {
+                const isOpen = solutionsOpen;
+                return (
+                  <div
+                    key={link.href}
+                    className="relative"
+                    ref={solutionsRef}
+                  >
+                    <button
+                      type="button"
+                      className="text-sm font-medium text-white/70 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center gap-1"
+                      aria-haspopup="true"
+                      aria-expanded={isOpen}
+                      aria-controls="solutions-menu"
+                      onClick={() => setSolutionsOpen((v) => !v)}
+                    >
+                      {link.label}
+                      <ChevronDown
+                        className={cn(
+                          'h-4 w-4 transition-transform',
+                          isOpen ? 'rotate-180' : ''
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {isOpen ? (
+                      <div
+                        id="solutions-menu"
+                        role="menu"
+                        className="absolute left-1/2 top-full -translate-x-1/2 mt-2 w-[320px] rounded-xl border border-white/10 bg-[var(--marketing-gray-900)]/95 backdrop-blur-md shadow-2xl p-2"
+                      >
+                        <Link
+                          href={link.href}
+                          role="menuitem"
+                          className="block px-4 py-3 rounded-lg text-sm font-semibold text-[var(--accent-primary)] hover:bg-white/5 focus:bg-white/5 focus:outline-none"
+                          onClick={() => setSolutionsOpen(false)}
+                        >
+                          Overview — all personas
+                        </Link>
+                        <div className="my-1 h-px bg-white/10" />
+                        {link.children.map((c) => (
+                          <Link
+                            key={c.href}
+                            role="menuitem"
+                            href={c.href}
+                            className="block px-4 py-3 rounded-lg hover:bg-white/5 focus:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+                            onClick={() => setSolutionsOpen(false)}
+                          >
+                            <div className="text-sm font-semibold text-white">
+                              {c.label}
+                            </div>
+                            {c.description ? (
+                              <div className="text-xs text-white/60 mt-0.5">
+                                {c.description}
+                              </div>
+                            ) : null}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              }
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium text-white/70 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Desktop Actions */}
@@ -129,17 +236,46 @@ export function Navbar() {
         aria-hidden={!mobileMenuOpen}
       >
         <div className="px-4 py-6 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="block py-3 px-2 text-lg text-white/80 font-medium hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-              tabIndex={mobileMenuOpen ? 0 : -1}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            if (link.children && link.children.length > 0) {
+              return (
+                <div key={link.href} className="space-y-1">
+                  <Link
+                    href={link.href}
+                    className="block py-3 px-2 text-lg text-white font-semibold hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                    tabIndex={mobileMenuOpen ? 0 : -1}
+                  >
+                    {link.label}
+                  </Link>
+                  <div className="pl-4 space-y-1">
+                    {link.children.map((c) => (
+                      <Link
+                        key={c.href}
+                        href={c.href}
+                        className="block py-2 px-2 text-sm text-white/70 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-md hover:bg-white/5"
+                        onClick={() => setMobileMenuOpen(false)}
+                        tabIndex={mobileMenuOpen ? 0 : -1}
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block py-3 px-2 text-lg text-white/80 font-medium hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+                tabIndex={mobileMenuOpen ? 0 : -1}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <div className="pt-6 border-t border-[var(--marketing-gray-800)] space-y-3">
             <Link href="/login" className="block" onClick={() => setMobileMenuOpen(false)}>
               <Button
