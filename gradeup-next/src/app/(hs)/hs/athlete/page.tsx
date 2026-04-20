@@ -47,7 +47,9 @@ import { HSDealCard, type DealCardStatus } from '@/components/hs/HSDealCard';
 import type { StatusPill } from '@/components/hs/AthleteDashboardHeader';
 import { AthleteDashboardEarningsCard } from '@/components/hs/AthleteDashboardEarningsCard';
 import { AthleteDashboardTrajectoryCard } from '@/components/hs/AthleteDashboardTrajectoryCard';
+import { AthleteDashboardCampaignsCard } from '@/components/hs/AthleteDashboardCampaignsCard';
 import { getAthleteEarningsSummary } from '@/lib/hs-nil/earnings';
+import { listOpenCampaignsForAthlete } from '@/lib/hs-nil/campaigns';
 import type { GpaSnapshot, VerificationTier } from '@/lib/hs-nil/trajectory';
 
 export const metadata: Metadata = {
@@ -253,6 +255,20 @@ export default async function HSAthleteDashboardPage() {
     });
   } catch (err) {
     console.error('[hs/athlete] trajectory sparkline fetch failed', err);
+  }
+
+  // Campaigns — lightweight count for the dashboard card. Best-effort.
+  let openCampaignCount = 0;
+  let invitedCampaignCount = 0;
+  try {
+    const campaigns = await listOpenCampaignsForAthlete(user.id, {
+      restrictByState: true,
+      limit: 50,
+    });
+    openCampaignCount = campaigns.length;
+    invitedCampaignCount = campaigns.filter((c) => c.invited).length;
+  } catch (err) {
+    console.error('[hs/athlete] campaigns fetch failed', err);
   }
 
   // Earnings summary — best-effort. Falls back to zeros if anything errors,
@@ -577,6 +593,11 @@ export default async function HSAthleteDashboardPage() {
           <StateRulesCard stateCode={stateCode} />
 
           <AthleteDashboardEarningsCard summary={earningsSummary} />
+
+          <AthleteDashboardCampaignsCard
+            openCount={openCampaignCount}
+            invitedCount={invitedCampaignCount}
+          />
 
           <AthleteDashboardTrajectoryCard
             currentGpa={profile.gpa ?? null}

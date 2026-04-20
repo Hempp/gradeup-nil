@@ -210,6 +210,23 @@ export default async function HSBrandDashboardPage() {
     };
   });
 
+  // Campaigns summary — count of non-draft-cancelled campaigns for the
+  // "Your campaigns" dashboard section. Best-effort.
+  let campaignCount = 0;
+  let openCampaignCount = 0;
+  try {
+    const { data: campaignRows } = await supabase
+      .from('hs_brand_campaigns')
+      .select('id, status')
+      .eq('brand_id', brand.id);
+    const rows = (campaignRows ?? []) as Array<{ id: string; status: string }>;
+    campaignCount = rows.length;
+    openCampaignCount = rows.filter((r) => r.status === 'open').length;
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('[hs-brand-dashboard] campaign count failed', err);
+  }
+
   // Onboarding checklist state.
   const hasCategories = dealCategories.length > 0;
   const hasDeal = deals.length > 0;
@@ -261,6 +278,34 @@ export default async function HSBrandDashboardPage() {
       <div className="mt-10 grid gap-4 md:grid-cols-2">
         <BrandDashboardPerformanceCard summary={performanceSummary} />
       </div>
+
+      {/* Your campaigns section */}
+      <section aria-labelledby="campaigns-nav-heading" className="mt-10">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+              Multi-athlete
+            </p>
+            <h2
+              id="campaigns-nav-heading"
+              className="mt-1 font-display text-xl md:text-2xl"
+            >
+              Your campaigns.
+            </h2>
+            <p className="mt-1 text-sm text-white/70">
+              {campaignCount === 0
+                ? 'Deploy one brief across many athletes.'
+                : `${campaignCount} campaign${campaignCount === 1 ? '' : 's'} · ${openCampaignCount} open.`}
+            </p>
+          </div>
+          <Link
+            href="/hs/brand/campaigns"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white/20 bg-transparent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+          >
+            Manage campaigns →
+          </Link>
+        </div>
+      </section>
 
       {/* Suggested athletes nav */}
       <section aria-labelledby="suggested-nav-heading" className="mt-10">
