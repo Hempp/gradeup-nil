@@ -1220,15 +1220,119 @@ function FinalCTASection() {
 // MAIN PAGE COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════════════════
+// VALUATION CTA SECTION — Added by VALUATION agent
+// ═══════════════════════════════════════════════════════════════════════════
+// Non-destructive addition for the /hs/valuation public calculator funnel.
+// Placed after PartnerLogosSection + FeaturedAthletesSection so hero + trust
+// come first, then a clear "find out what your athlete is worth" entry point
+// for parents. Separate component so the CASE-STUDIES agent's additions can
+// coexist without a merge conflict.
+function ValuationCTASection() {
+  return (
+    <section
+      aria-label="NIL Valuation Calculator entry point"
+      className="bg-black py-12 sm:py-16"
+    >
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-[var(--accent-gold)]/10 p-6 sm:p-10">
+          <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[var(--accent-primary)]/15 blur-3xl" />
+          <div className="relative grid gap-6 md:grid-cols-[2fr_1fr] md:items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                New · Free
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-bold text-white sm:text-4xl">
+                What&rsquo;s your scholar-athlete worth?
+              </h2>
+              <p className="mt-3 max-w-xl text-white/70">
+                Sport, state, grades, followers — answer five questions and
+                get an honest NIL value range. No signup needed to see the
+                number.
+              </p>
+            </div>
+            <div className="flex md:justify-end">
+              <Link href="/hs/valuation" className="w-full md:w-auto">
+                <Button
+                  size="lg"
+                  className="btn-marketing-primary w-full gap-2 sm:w-auto"
+                  aria-label="Open the NIL Valuation Calculator"
+                >
+                  Find out what your athlete is worth
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROVEN RESULTS CTA — links to /business/case-studies (CASE-STUDIES agent)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function ProvenResultsCTASection() {
+  return (
+    <section
+      aria-label="Proven case-study results"
+      className="bg-black py-20 border-y border-white/10"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[var(--marketing-gray-950)] p-8 md:p-12">
+          <div
+            className="absolute inset-0 opacity-40 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.12) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.08) 0%, transparent 55%)',
+            }}
+          />
+          <div className="relative grid gap-6 md:grid-cols-[2fr_1fr] md:items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                Proven results
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-bold text-white sm:text-4xl">
+                Real deals. Verified earnings. Public case studies.
+              </h2>
+              <p className="mt-3 max-w-xl text-white/70">
+                Every study is tied to a completed deal, on-platform share
+                events, and a real scholar-athlete. See exactly how brand ROI
+                adds up — before you spend a dollar.
+              </p>
+            </div>
+            <div className="flex md:justify-end">
+              <Link href="/business/case-studies" className="w-full md:w-auto">
+                <Button
+                  size="lg"
+                  className="btn-marketing-outline w-full gap-2 sm:w-auto"
+                  aria-label="Browse GradeUp HS case studies"
+                >
+                  See the case studies
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function HomePage() {
   return (
     <>
       <HeroSection />
       <PartnerLogosSection />
+      <ValuationCTASection />
       <FeaturedAthletesSection />
       <HowItWorksSection />
       <PlatformPreviewSection />
       <ForBrandsSection />
+      <ProvenResultsCTASection />
       <TestimonialsSection />
       <FinalCTASection />
     </>

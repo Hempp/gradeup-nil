@@ -38,10 +38,15 @@ export function Navbar() {
     };
   }, [mobileMenuOpen]);
 
+  // Nav order convention: VALUATION owns index 3 ("NIL Valuation"),
+  // CASE-STUDIES owns index 4 ("Case Studies"). Keep separate so
+  // parallel agents can edit without collision.
   const navLinks = [
     { href: '/#athletes', label: 'Athletes' },
     { href: '/#brands', label: 'Brands' },
     { href: '/#how-it-works', label: 'How It Works' },
+    { href: '/hs/valuation', label: 'NIL Valuation' },
+    { href: '/business/case-studies', label: 'Case Studies' },
     { href: '/discover', label: 'Discover' },
     { href: '/opportunities', label: 'Opportunities' },
   ];
