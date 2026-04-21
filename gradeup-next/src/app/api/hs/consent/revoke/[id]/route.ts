@@ -1,5 +1,5 @@
 /**
- * POST /api/hs/consent/[id]/revoke
+ * POST /api/hs/consent/revoke/[id]
  *
  * Athlete revokes one of their own active parental consents.
  *
@@ -8,6 +8,10 @@
  * policy (`auth.uid() = athlete_user_id`) and an INSERT policy; there is NO
  * UPDATE policy, so the anon client cannot write. We use the service role
  * client for the update after the explicit ownership check.
+ *
+ * Path shape note: this sits under `/revoke/[id]` rather than `/[id]/revoke`
+ * so the sibling public `/[token]` magic-link route can coexist without a
+ * positional slug-name collision.
  *
  * Idempotent: revoking an already-revoked consent returns ok=true with no-op.
  */
@@ -22,8 +26,6 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
-// Accept only the exact UUID shape for the path param. Anything else is an
-// obvious client bug or probe, so 400 early rather than hit the DB.
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -67,9 +69,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
       );
     }
 
-    // Ownership check uses the authenticated (anon) client so it rides on the
-    // SELECT RLS policy — a row belonging to another athlete simply won't
-    // appear here, which is the correct "404" signal.
     const { data: consent, error: fetchErr } = await supabase
       .from('parental_consents')
       .select('id, athlete_user_id, parent_email, parent_full_name, revoked_at')
@@ -84,7 +83,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
     }
 
     if (!consent || consent.athlete_user_id !== user.id) {
-      // Don't leak which IDs exist. Uniform 404 for "missing" and "not yours".
       return NextResponse.json(
         { error: 'Consent not found.' },
         { status: 404 }
@@ -92,8 +90,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
     }
 
     if (consent.revoked_at) {
-      // Already revoked — treat as idempotent success. The UI will re-render
-      // and the row will move to history either way.
       return NextResponse.json({ ok: true, alreadyRevoked: true });
     }
 
@@ -102,9 +98,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
       .from('parental_consents')
       .update({ revoked_at: new Date().toISOString() })
       .eq('id', id)
-      // Belt-and-suspenders: re-assert ownership in the WHERE so a stolen
-      // service-role call from this handler still can't touch another
-      // athlete's row.
       .eq('athlete_user_id', user.id);
 
     if (updateErr) {
@@ -114,11 +107,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
       );
     }
 
-    // TODO(hs-nil): notify the parent that the athlete revoked the consent.
-    // The existing email service exposes sendParentConsentRequest /
-    // sendParentConsentSigned but not a revocation-notice template — add one
-    // there and wire a best-effort call here (try/catch, never throw). For
-    // now we log so ops can follow up manually if needed.
     // eslint-disable-next-line no-console
     console.log('[hs-nil consent] revoked', {
       consentId: id,

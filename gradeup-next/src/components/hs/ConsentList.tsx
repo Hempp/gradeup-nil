@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
  * `parental_consents`. The server page hands us pre-normalized shapes so this
  * component only does presentation + mutations (revoke, resend).
  *
- * Revoke opens a confirm dialog and then POSTs to /api/hs/consent/[id]/revoke.
+ * Revoke opens a confirm dialog and then POSTs to /api/hs/consent/revoke/[id].
  * Resend hits /api/hs/consent/pending/[id]/resend, which is currently a stub
  * (TODO: wire real re-issue logic).
  */
@@ -152,7 +152,7 @@ export default function ConsentList({
     setSubmitting(true);
     try {
       const res = await fetch(
-        `/api/hs/consent/${encodeURIComponent(revokeTarget.id)}/revoke`,
+        `/api/hs/consent/revoke/${encodeURIComponent(revokeTarget.id)}`,
         { method: 'POST' }
       );
       const data = (await res.json().catch(() => ({}))) as {

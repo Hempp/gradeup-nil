@@ -25,7 +25,10 @@ import {
   useTestimonials,
   type FeaturedAthlete,
 } from '@/lib/hooks/use-landing-data';
-import { LazyDashboardPreview } from '@/components/marketing';
+// Direct import (not barrel) — the marketing barrel re-exports server
+// components like CaseStudyTagStrip that pull next/headers in via supabase/server.
+// Bundling that into this client component's graph produces a runtime 500.
+import { LazyDashboardPreview } from '@/components/marketing/lazy-dashboard-preview';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HERO SECTION
