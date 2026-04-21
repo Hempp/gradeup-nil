@@ -21,6 +21,10 @@ function getDashboardPath(role: UserRole): string {
       return '/brand/dashboard';
     case 'athletic_director':
       return '/director/dashboard';
+    case 'state_ad':
+      return '/hs/ad-portal';
+    case 'hs_parent':
+      return '/hs/parent';
     case 'admin':
       return '/admin/dashboard';
     default:

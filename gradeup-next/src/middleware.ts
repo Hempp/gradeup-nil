@@ -519,19 +519,25 @@ export async function middleware(request: NextRequest) {
       .eq('id', user.id)
       .single();
 
-    const rolePathMap: Record<string, string> = {
-      athlete: '/athlete',
-      brand: '/brand',
-      athletic_director: '/director',
-      admin: '/admin',
+    // Each role maps to a path prefix it is allowed to access and a landing
+    // URL to redirect it to if it hits the wrong prefix. Adding a new role to
+    // user_role MUST be reflected here — otherwise sign-in succeeds but the
+    // redirect falls through and the user bounces back to '/' or loops.
+    const rolePathMap: Record<string, { prefix: string; landing: string }> = {
+      athlete: { prefix: '/athlete', landing: '/athlete/dashboard' },
+      brand: { prefix: '/brand', landing: '/brand/dashboard' },
+      athletic_director: { prefix: '/director', landing: '/director/dashboard' },
+      state_ad: { prefix: '/hs/ad-portal', landing: '/hs/ad-portal' },
+      hs_parent: { prefix: '/hs/parent', landing: '/hs/parent' },
+      admin: { prefix: '/admin', landing: '/admin' },
     };
 
-    const expectedPath = rolePathMap[profile?.role || ''];
+    const entry = rolePathMap[profile?.role || ''];
 
     // Redirect user to their correct dashboard if they're accessing wrong one
     // Note: Admins can access all dashboards for administrative purposes
-    if (expectedPath && !path.startsWith(expectedPath) && profile?.role !== 'admin') {
-      return NextResponse.redirect(new URL(`${expectedPath}/dashboard`, request.url));
+    if (entry && !path.startsWith(entry.prefix) && profile?.role !== 'admin') {
+      return NextResponse.redirect(new URL(entry.landing, request.url));
     }
   }
 
@@ -547,6 +553,8 @@ export async function middleware(request: NextRequest) {
       athlete: '/athlete/dashboard',
       brand: '/brand/dashboard',
       athletic_director: '/director/dashboard',
+      state_ad: '/hs/ad-portal',
+      hs_parent: '/hs/parent',
       admin: '/admin',
     };
 
