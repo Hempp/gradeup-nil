@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Script from "next/script";
 import { Geist, Geist_Mono, Bebas_Neue, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
@@ -111,6 +112,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "GradeUp NIL",
+    url: "https://gradeup-next.vercel.app",
+    logo: "https://gradeup-next.vercel.app/logo.svg",
+    description:
+      "NIL marketplace connecting college and high-school scholar-athletes with brands. Academic GPA is a first-class filter alongside sport and social reach; parent-consent depth for minors.",
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -120,6 +131,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://upload.wikimedia.org" />
         <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
         <GoogleAnalytics />
+        <Script id="org-jsonld" type="application/ld+json" strategy="afterInteractive">
+          {JSON.stringify(orgJsonLd)}
+        </Script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} antialiased`}

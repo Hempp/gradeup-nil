@@ -1,0 +1,25 @@
+# GradeUp NIL — robots.txt
+# Allow crawlers to index public surfaces; keep internal paths out of the index.
+
+User-agent: *
+Allow: /
+
+# Internal surfaces — not for public indexing
+Disallow: /api/
+Disallow: /admin/
+Disallow: /hs/admin/
+Disallow: /auth/callback
+
+# Token-authenticated surfaces — URLs are per-user, not content
+Disallow: /hs/consent/
+Disallow: /hs/invite/
+Disallow: /hs/state-ad-invite/
+Disallow: /hs/trajectory/
+Disallow: /hs/unsubscribe/
+
+# Keep dashboards out of the index
+Disallow: /athlete/dashboard
+Disallow: /brand/dashboard
+Disallow: /director/dashboard
+
+Sitemap: https://gradeup-next.vercel.app/sitemap.xml

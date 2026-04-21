@@ -95,8 +95,10 @@ export default async function AthletePublicProfilePage({
     mainEntity: {
       '@type': 'Person',
       name: `${profile.firstName} ${profile.lastInitial}.`,
+      jobTitle: 'Student-Athlete',
       affiliation: profile.school ?? undefined,
       alumniOf: profile.school ?? undefined,
+      ...(profile.sport ? { knowsAbout: profile.sport } : {}),
     },
     url: publicUrl,
   };
