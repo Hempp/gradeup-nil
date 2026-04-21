@@ -187,7 +187,15 @@ export async function listTemplates(
   filters: TemplateFilters = {},
   sbOverride?: SupabaseClient,
 ): Promise<CampaignTemplate[]> {
-  const sb = sbOverride ?? getServiceRoleClient();
+  // listTemplates is called from a PUBLIC marketing page that may be
+  // prerendered in environments without SUPABASE_SERVICE_ROLE_KEY. Degrade
+  // gracefully to [] rather than crash the build.
+  let sb: SupabaseClient;
+  try {
+    sb = sbOverride ?? getServiceRoleClient();
+  } catch {
+    return [];
+  }
 
   let query = sb
     .from('campaign_templates')
