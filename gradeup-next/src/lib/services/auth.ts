@@ -8,7 +8,13 @@ import { Brand } from '@/types';
 // Type Definitions
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type UserRole = 'athlete' | 'brand' | 'athletic_director' | 'admin';
+export type UserRole =
+  | 'athlete'
+  | 'brand'
+  | 'athletic_director'
+  | 'state_ad'
+  | 'hs_parent'
+  | 'admin';
 
 export interface AuthUser {
   id: string;
