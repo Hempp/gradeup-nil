@@ -36,7 +36,7 @@ import {
   type VerificationTier,
 } from '@/lib/hs-nil/trajectory';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 interface RouteContext {
   params: Promise<{ token: string }>;

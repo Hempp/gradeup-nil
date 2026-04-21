@@ -13,7 +13,7 @@
 
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 const BG_GRADIENT =
   'linear-gradient(135deg, #02060B 0%, #0A1420 40%, #001F28 100%)';

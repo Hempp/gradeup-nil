@@ -14,7 +14,7 @@
 
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 interface RouteContext {
   params: Promise<{ slug: string }>;
