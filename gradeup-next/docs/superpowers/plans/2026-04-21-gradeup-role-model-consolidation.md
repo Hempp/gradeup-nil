@@ -176,13 +176,453 @@ git -c commit.gpgsign=false commit -m "docs: record Phase 0 test baseline (82 fa
 
 ---
 
-## Wave 2 — Phase 1: Data Model + Backfill
+## Wave 2 — Phase 1: Unified Profile Reader (Option α, amended 2026-04-21)
+
+**Schema reality discovered during Phase 0:** HS and college are separate data products with parallel tables (`athletes` vs `hs_athlete_profiles`, `athletic_directors` vs `state_ad_assignments`, a dedicated `hs_parent_profiles`). State-AD and HS-parent are already roles in the `user_role` enum. The original "add `athlete_level` column" plan does not work because HS athletes are not in the `athletes` table at all.
+
+**Option α (chosen):** unify at the app layer only. Keep parallel tables. Build one profile reader that joins across them and returns a normalized shape. No SQL migration. Level is *derived* from which table has a row, not stored as a column.
 
 **Owner:** Solo.
-**Goal:** Add four context fields to profile tables; backfill from existing state. Zero UI change.
-**Exit criteria:** All non-admin profiles have non-null `level`; backfill idempotent; types compile.
+**Goal:** Single `getProfile()` function any server component, client hook, or API route can call to get a normalized `UserContext` regardless of which role/level the user is.
+**Exit criteria:** `getProfile()` lands; types cover all 6 roles; every future phase reads profile through this single entry point; no schema migration ships in this phase.
 
-### Task 1.1: Write the Supabase migration (additive only)
+### Tasks 1.1-1.3 (original SQL-migration tasks) — DEPRECATED
+
+The original Phase 1 was rewritten under Option α. Skip Tasks 1.1 / 1.2 / 1.3 as written below — keep them in the doc as rationale for why we did not go the SQL route. Execute the new Tasks 1.α.1 → 1.α.4 instead.
+
+---
+
+### Task 1.α.1: Expand the `UserRole` type to match schema reality
+
+**Files:**
+- Modify: `src/lib/services/auth.ts` (existing `UserRole` type export)
+- Create: `src/types/user-context.ts` (new normalized shape)
+
+- [ ] **Step 1: Expand `UserRole` in `src/lib/services/auth.ts`**
+
+```ts
+export type UserRole =
+  | 'athlete'
+  | 'brand'
+  | 'athletic_director'
+  | 'state_ad'
+  | 'hs_parent'
+  | 'admin';
+```
+
+The existing `'athlete' | 'brand' | 'athletic_director' | 'admin'` type is stale — it predates the HS rollout that added `state_ad` and `hs_parent` to the `user_role` Postgres enum. Align the TS type with the DB enum.
+
+- [ ] **Step 2: Write the normalized `UserContext` shape**
+
+```ts
+// src/types/user-context.ts
+export type AthleteLevel = 'college' | 'hs';
+export type DirectorScope = 'school' | 'state';
+
+export type UserContext =
+  | { role: 'athlete'; level: AthleteLevel; userId: string; athlete: AthleteContext }
+  | { role: 'brand'; userId: string; brand: BrandContext }
+  | { role: 'athletic_director'; scope: 'school'; userId: string; director: DirectorContext }
+  | { role: 'state_ad'; scope: 'state'; userId: string; director: StateDirectorContext }
+  | { role: 'hs_parent'; userId: string; parent: ParentContext }
+  | { role: 'admin'; userId: string };
+
+export interface AthleteContext {
+  id: string;
+  firstName: string;
+  lastName: string;
+  schoolName: string | null;   // unified: schools.name for college, hs_athlete_profiles.school_name for HS
+  sport: string | null;
+  gpa: number | null;
+  gradYear: number | null;
+}
+
+export interface BrandContext {
+  id: string;
+  companyName: string;
+  /** Which levels this brand actively targets. Derived, not stored:
+   *  'college' if any non-HS campaigns exist; 'hs' if any `hs_brand_campaigns` row exists;
+   *  both possible. */
+  targetsLevels: AthleteLevel[];
+}
+
+export interface DirectorContext {
+  id: string;
+  schoolId: string | null;
+  title: string | null;
+  department: string | null;
+}
+
+export interface StateDirectorContext {
+  assignmentId: string;
+  stateCode: string;
+  organizationName: string | null;
+}
+
+export interface ParentContext {
+  id: string;
+  athleteIds: string[];  // via hs_parent_athlete_links
+}
+```
+
+The discriminated union forces callers to narrow by role before touching role-specific fields — a small but real type-safety win.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add gradeup-next/src/lib/services/auth.ts gradeup-next/src/types/user-context.ts
+git -c commit.gpgsign=false commit -m "feat(types): UserRole + UserContext align with schema (Option α)"
+```
+
+### Task 1.α.2: Write the unified profile reader
+
+**Files:**
+- Create: `src/lib/shared/get-profile.ts`
+- Create: `src/__tests__/lib/shared/get-profile.test.ts`
+
+- [ ] **Step 1: Write failing tests**
+
+```ts
+// src/__tests__/lib/shared/get-profile.test.ts
+import { getProfile } from '@/lib/shared/get-profile';
+import { makeSupabaseMock } from '@/__tests__/helpers/supabase-mock';
+
+describe('getProfile', () => {
+  it('returns athlete (college) when athletes row exists and hs_athlete_profiles does not', async () => {
+    const supabase = makeSupabaseMock({
+      'profiles:user-1': { role: 'athlete' },
+      'athletes:user-1': { id: 'a1', first_name: 'Sam', last_name: 'Lee' },
+    });
+    const ctx = await getProfile(supabase, 'user-1');
+    expect(ctx).toMatchObject({ role: 'athlete', level: 'college' });
+  });
+
+  it('returns athlete (hs) when hs_athlete_profiles row exists', async () => {
+    const supabase = makeSupabaseMock({
+      'profiles:user-2': { role: 'athlete' },
+      'hs_athlete_profiles:user-2': { id: 'h1', school_name: 'Central HS', gpa: 3.8 },
+    });
+    const ctx = await getProfile(supabase, 'user-2');
+    expect(ctx).toMatchObject({ role: 'athlete', level: 'hs' });
+  });
+
+  it('returns state_ad with scope=state when state_ad_assignments row exists', async () => {
+    const supabase = makeSupabaseMock({
+      'profiles:user-3': { role: 'state_ad' },
+      'state_ad_assignments:user-3': { id: 's1', state_code: 'TX' },
+    });
+    const ctx = await getProfile(supabase, 'user-3');
+    expect(ctx).toMatchObject({ role: 'state_ad', scope: 'state', director: { stateCode: 'TX' } });
+  });
+
+  it('throws when profiles row is missing', async () => {
+    const supabase = makeSupabaseMock({});
+    await expect(getProfile(supabase, 'user-404')).rejects.toThrow(/profile not found/i);
+  });
+});
+```
+
+If `makeSupabaseMock` helper doesn't exist, create it in the same test file or in `src/__tests__/helpers/`. A minimal implementation returns pre-keyed rows from the provided map.
+
+- [ ] **Step 2: Implement `getProfile`**
+
+```ts
+// src/lib/shared/get-profile.ts
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { UserContext, AthleteContext } from '@/types/user-context';
+
+export async function getProfile(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserContext> {
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('id, role')
+    .eq('id', userId)
+    .maybeSingle();
+
+  if (error || !profile) {
+    throw new Error(`profile not found for user ${userId}`);
+  }
+
+  switch (profile.role) {
+    case 'athlete':
+      return buildAthleteContext(supabase, userId);
+    case 'brand':
+      return buildBrandContext(supabase, userId);
+    case 'athletic_director':
+      return buildDirectorContext(supabase, userId);
+    case 'state_ad':
+      return buildStateAdContext(supabase, userId);
+    case 'hs_parent':
+      return buildParentContext(supabase, userId);
+    case 'admin':
+      return { role: 'admin', userId };
+    default:
+      throw new Error(`unknown role: ${profile.role}`);
+  }
+}
+
+async function buildAthleteContext(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserContext> {
+  // HS first — if a row exists here, user is an HS athlete.
+  const { data: hs } = await supabase
+    .from('hs_athlete_profiles')
+    .select('id, school_name, sport, gpa, graduation_year')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (hs) {
+    return {
+      role: 'athlete',
+      level: 'hs',
+      userId,
+      athlete: {
+        id: hs.id,
+        firstName: '', // hs_athlete_profiles doesn't split name; consider extending later
+        lastName: '',
+        schoolName: hs.school_name,
+        sport: hs.sport,
+        gpa: hs.gpa,
+        gradYear: hs.graduation_year,
+      },
+    };
+  }
+
+  const { data: college } = await supabase
+    .from('athletes')
+    .select('id, first_name, last_name, sport_id, gpa, expected_graduation, school_id, schools(name)')
+    .eq('profile_id', userId)
+    .maybeSingle();
+
+  if (!college) {
+    throw new Error(`athlete profile missing for ${userId}`);
+  }
+
+  return {
+    role: 'athlete',
+    level: 'college',
+    userId,
+    athlete: {
+      id: college.id,
+      firstName: college.first_name,
+      lastName: college.last_name,
+      schoolName: (college.schools as { name: string } | null)?.name ?? null,
+      sport: null, // join sports if needed later
+      gpa: college.gpa,
+      gradYear: college.expected_graduation ? parseInt(college.expected_graduation, 10) : null,
+    },
+  };
+}
+
+async function buildBrandContext(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserContext> {
+  const { data: brand } = await supabase
+    .from('brands')
+    .select('id, company_name')
+    .eq('profile_id', userId)
+    .maybeSingle();
+
+  if (!brand) throw new Error(`brand profile missing for ${userId}`);
+
+  // Derive targetsLevels from campaign presence. Cheap scan:
+  //   - has any hs_brand_campaigns row → targets HS
+  //   - has any regular campaign row → targets college (assumption; adjust if the
+  //     college campaigns table has its own discriminator)
+  const { count: hsCount } = await supabase
+    .from('hs_brand_campaigns')
+    .select('id', { count: 'exact', head: true })
+    .eq('brand_id', brand.id);
+
+  const targetsLevels: Array<'college' | 'hs'> = ['college'];
+  if ((hsCount ?? 0) > 0) targetsLevels.push('hs');
+
+  return {
+    role: 'brand',
+    userId,
+    brand: {
+      id: brand.id,
+      companyName: brand.company_name,
+      targetsLevels,
+    },
+  };
+}
+
+async function buildDirectorContext(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserContext> {
+  const { data: director } = await supabase
+    .from('athletic_directors')
+    .select('id, school_id, title, department')
+    .eq('profile_id', userId)
+    .maybeSingle();
+
+  if (!director) throw new Error(`director profile missing for ${userId}`);
+
+  return {
+    role: 'athletic_director',
+    scope: 'school',
+    userId,
+    director: {
+      id: director.id,
+      schoolId: director.school_id,
+      title: director.title,
+      department: director.department,
+    },
+  };
+}
+
+async function buildStateAdContext(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserContext> {
+  const { data: assignment } = await supabase
+    .from('state_ad_assignments')
+    .select('id, state_code, organization_name')
+    .eq('user_id', userId)
+    .is('deactivated_at', null)
+    .maybeSingle();
+
+  if (!assignment) throw new Error(`state_ad assignment missing for ${userId}`);
+
+  return {
+    role: 'state_ad',
+    scope: 'state',
+    userId,
+    director: {
+      assignmentId: assignment.id,
+      stateCode: assignment.state_code,
+      organizationName: assignment.organization_name,
+    },
+  };
+}
+
+async function buildParentContext(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserContext> {
+  const { data: links } = await supabase
+    .from('hs_parent_athlete_links')
+    .select('athlete_id')
+    .eq('parent_user_id', userId);
+
+  return {
+    role: 'hs_parent',
+    userId,
+    parent: {
+      id: userId,
+      athleteIds: (links ?? []).map((l: { athlete_id: string }) => l.athlete_id),
+    },
+  };
+}
+```
+
+**Performance note:** this makes up to 3 DB round-trips for athletes (profile → hs_athlete_profiles → athletes) and 2 for brands (brands → count). That's acceptable for initial shipping but memoize per-request in Next.js with `React.cache()` (for server) or a request-scoped memo (for API routes). Add that optimization in a follow-up task, not this one.
+
+- [ ] **Step 3: Re-run tests, verify green**
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add gradeup-next/src/lib/shared/get-profile.ts gradeup-next/src/__tests__/lib/shared/get-profile.test.ts
+git -c commit.gpgsign=false commit -m "feat(profile): unified getProfile reader across 6 role/level combos"
+```
+
+### Task 1.α.3: Server + client convenience wrappers
+
+**Files:**
+- Create: `src/lib/shared/profile-server.ts` (thin wrapper for server components + API routes)
+- Create: `src/hooks/useProfile.ts` (client hook for client components)
+
+- [ ] **Step 1: Server helper**
+
+```ts
+// src/lib/shared/profile-server.ts
+import 'server-only';
+import { cache } from 'react';
+import { createServerClient } from '@/lib/supabase/server'; // use existing server client helper
+import { getProfile } from './get-profile';
+import type { UserContext } from '@/types/user-context';
+
+export const getServerProfile = cache(async (): Promise<UserContext | null> => {
+  const supabase = await createServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+  return getProfile(supabase, user.id);
+});
+```
+
+`React.cache()` deduplicates the reads within a single request — same-request calls from layout + page + child components hit the DB once.
+
+- [ ] **Step 2: Client hook**
+
+```ts
+// src/hooks/useProfile.ts
+'use client';
+import { useEffect, useState } from 'react';
+import { createBrowserClient } from '@/lib/supabase/client'; // use existing browser client
+import { getProfile } from '@/lib/shared/get-profile';
+import type { UserContext } from '@/types/user-context';
+
+export function useProfile() {
+  const [profile, setProfile] = useState<UserContext | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = createBrowserClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (!cancelled) { setProfile(null); setLoading(false); }
+          return;
+        }
+        const ctx = await getProfile(supabase, user.id);
+        if (!cancelled) { setProfile(ctx); setLoading(false); }
+      } catch (e) {
+        if (!cancelled) { setError(e as Error); setLoading(false); }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  return { profile, loading, error };
+}
+```
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add gradeup-next/src/lib/shared/profile-server.ts gradeup-next/src/hooks/useProfile.ts
+git -c commit.gpgsign=false commit -m "feat(profile): server (React.cache) + client (useProfile) wrappers"
+```
+
+### Task 1.α.4: Validate baseline holds
+
+- [ ] **Step 1: Run validate**
+
+```bash
+cd gradeup-next && npm run validate 2>&1 | tail -5
+```
+
+Expected: type-check green, lint 0 errors, tests ≤ 82 failures (per `TEST-BASELINE.md`). Any *new* failure is a regression — fix before merging.
+
+- [ ] **Step 2: Smoke-test locally**
+
+Run: `npm run dev`
+
+Log in as athlete (college), brand, athletic director, state-AD, admin. Confirm no page crashes on session boot. At this phase the new `getProfile` is defined but not yet consumed by routes — it's a library add. Smoke check is about confirming no existing import broke.
+
+---
+
+
 
 **Files:**
 - Create: `supabase/migrations/YYYYMMDDHHMMSS_add_role_context_fields.sql`
