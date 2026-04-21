@@ -511,6 +511,25 @@ export async function getFullProfile(): Promise<
         }
         break;
       }
+      case 'state_ad': {
+        const { data } = await supabase
+          .from('state_ad_assignments')
+          .select('id, state_code, organization_name, deactivated_at')
+          .eq('user_id', user.id)
+          .is('deactivated_at', null)
+          .maybeSingle();
+        roleData = data ?? null;
+        break;
+      }
+      case 'hs_parent': {
+        const { data } = await supabase
+          .from('hs_parent_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        roleData = data ?? null;
+        break;
+      }
       case 'admin': {
         // Admins may not have additional role-specific data
         roleData = { isAdmin: true };

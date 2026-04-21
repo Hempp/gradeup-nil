@@ -5,7 +5,9 @@
 // Re-export email types
 export * from './email';
 
-export type UserRole = 'athlete' | 'brand' | 'athletic_director' | 'admin';
+import type { UserRole } from '@/lib/services/auth';
+export type { UserRole } from '@/lib/services/auth';
+export * from './user-context';
 
 export type DealStatus = 'draft' | 'pending' | 'negotiating' | 'accepted' | 'active' | 'completed' | 'cancelled' | 'expired' | 'rejected' | 'paused';
 

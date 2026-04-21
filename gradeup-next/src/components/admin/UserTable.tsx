@@ -35,6 +35,8 @@ const roleBadgeVariant: Record<UserRole, 'primary' | 'success' | 'warning' | 'er
   athlete: 'success',
   brand: 'primary',
   athletic_director: 'warning',
+  state_ad: 'default',
+  hs_parent: 'default',
   admin: 'error',
 };
 
@@ -42,6 +44,8 @@ const roleDisplayName: Record<UserRole, string> = {
   athlete: 'Athlete',
   brand: 'Brand',
   athletic_director: 'Director',
+  state_ad: 'State AD',
+  hs_parent: 'Parent',
   admin: 'Admin',
 };
 
