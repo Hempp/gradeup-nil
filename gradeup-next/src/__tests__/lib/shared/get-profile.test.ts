@@ -1,5 +1,5 @@
 import { getProfile } from '@/lib/shared/get-profile';
-import { makeSupabaseMock } from '@/__tests__/helpers/supabase-mock';
+import { makeSupabaseMock } from '@/test-utils/supabase-mock';
 
 describe('getProfile', () => {
   it('returns athlete (college) when athletes row exists and hs_athlete_profiles does not', async () => {
