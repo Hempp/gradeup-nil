@@ -14,6 +14,22 @@ Every phase of the consolidation MUST ship with:
 
 Exceeding either count is a regression, not inherited debt. Phase PRs should include the current test count in the PR description so the reviewer can enforce this gate.
 
+## Phase 1 completion (2026-04-21)
+
+End of Phase 1 (Task 1.α.4 close, commit `c60de1e`):
+
+```
+Test Suites: 8 failed, 1 skipped, 138 passed, 146 of 147 total
+Tests:       82 failed, 22 skipped, 2884 passed, 2988 total
+```
+
+- Failing tests: **82** (exact baseline ✓)
+- Failing suites: **8** (exact baseline ✓)
+- Passing tests: **+12** (3 new test files × ~4 tests each across getProfile reader, useProfile hook, and supporting tests)
+- Passing suites: **+2** (get-profile.test.ts and useProfile.test.tsx; supabase-mock.ts lives in `src/test-utils/` and is not a test suite)
+
+No regressions introduced.
+
 ## Failing suites snapshot
 
 At time of baseline, the following test files had failures. Listed for future grooming work — these are *not* in scope for any consolidation phase.
