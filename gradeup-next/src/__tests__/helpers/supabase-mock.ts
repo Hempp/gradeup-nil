@@ -73,6 +73,28 @@ function makeChain(
   return chain;
 }
 
+/**
+ * Minimal Supabase client mock for profile/context tests.
+ *
+ * Keying convention: `{tableName}:{firstEqValue}` — when production code
+ * calls `.from(tableName).eq('someColumn', someValue)`, the mock looks up
+ * the key `tableName:someValue`. The column name is ignored.
+ *
+ * IMPORTANT: If a query uses `.eq()` with a value that is NOT `userId`
+ * (e.g., brand's `.eq('brand_id', brand.id)` on `hs_brand_campaigns`),
+ * seed the mock with that value in the key:
+ *   { 'hs_brand_campaigns:b1': [...] }  // b1 is brand.id, NOT userId
+ *
+ * The store value may be a single row object or an array of row objects.
+ * Arrays are spread into the row list (not wrapped), so a count query over
+ * `[{id:'c1'},{id:'c2'}]` correctly returns `count: 2`.
+ *
+ * The mock returns `{ data, error: null }` for `.maybeSingle()`,
+ * `{ data: row[], error: null }` for multi-row select (returns array), and
+ * `{ count, error: null }` for `{ count: 'exact', head: true }`.
+ *
+ * Not intended to be a complete Supabase mock — only enough for these tests.
+ */
 export function makeSupabaseMock(store: RowStore) {
   return {
     from(table: string) {
@@ -85,7 +107,14 @@ export function makeSupabaseMock(store: RowStore) {
               // Find matching rows: "tableName:value" lookup for any column
               const key = `${table}:${value}`;
               const rawRow = store[key];
-              const rows: unknown[] = rawRow !== undefined ? [rawRow] : [];
+              // If the stored value is already an array, spread it as multiple rows.
+              // This ensures count queries over multi-row seeds return the correct count.
+              const rows: unknown[] =
+                rawRow === undefined
+                  ? []
+                  : Array.isArray(rawRow)
+                    ? rawRow
+                    : [rawRow];
               return makeChain(rows, { countOnly });
             },
           };
