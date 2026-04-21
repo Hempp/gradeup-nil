@@ -24,7 +24,10 @@ import {
 } from '@/lib/hs-nil/athlete-profile';
 import type { VerificationTier } from '@/lib/hs-nil/trajectory';
 
-export const runtime = 'edge';
+// Running on Node.js: a transitive import via @/lib/hs-nil/trajectory pulls in
+// node:crypto, which the Edge runtime does not support. Trade a slightly slower
+// cold start for a successful build.
+export const runtime = 'nodejs';
 
 interface RouteContext {
   params: Promise<{ username: string }>;
