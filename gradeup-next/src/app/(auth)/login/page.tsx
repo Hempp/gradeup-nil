@@ -275,40 +275,6 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          {/* Demo Mode Access */}
-          {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <div className="flex items-center gap-2 justify-center mb-4">
-                <div className="h-2 w-2 rounded-full bg-[var(--accent-success)] animate-pulse" />
-                <p className="text-sm font-medium text-white/80">Quick Demo Access</p>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <Link href="/api/demo/login?role=athlete">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-primary)]/30 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10">
-                    Athlete Demo
-                  </Button>
-                </Link>
-                <Link href="/api/demo/login?role=brand">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-success)]/30 text-[var(--accent-success)] hover:bg-[var(--accent-success)]/10">
-                    Brand Demo
-                  </Button>
-                </Link>
-                <Link href="/api/demo/login?role=director">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-gold)]/30 text-[var(--accent-gold)] hover:bg-[var(--accent-gold)]/10">
-                    Director Demo
-                  </Button>
-                </Link>
-                <Link href="/api/demo/login?role=admin">
-                  <Button variant="outline" size="sm" className="w-full text-sm border-[var(--accent-tertiary)]/30 text-[var(--accent-tertiary)] hover:bg-[var(--accent-tertiary)]/10">
-                    Admin Demo
-                  </Button>
-                </Link>
-              </div>
-              <p className="text-center text-[10px] text-white/30 mt-3">
-                No account needed. Click any role to explore the dashboard.
-              </p>
-            </div>
-          )}
         </form>
       </CardContent>
     </Card>
