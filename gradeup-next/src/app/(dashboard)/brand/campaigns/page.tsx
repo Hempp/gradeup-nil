@@ -30,7 +30,7 @@ const CampaignCard = memo(function CampaignCard({ campaign }: { campaign: Enrich
               {campaign.description}
             </p>
           </div>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" aria-label={`More actions for ${campaign.name}`}>
             <MoreVertical className="h-4 w-4" />
           </Button>
         </div>

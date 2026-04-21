@@ -7,8 +7,6 @@ import {
   Users,
   Target,
   TrendingUp,
-  ArrowUpRight,
-  Loader2,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +16,7 @@ import { ErrorState } from '@/components/ui/error-state';
 import { NoCampaigns, NoAthletes, NoRecommendations } from '@/components/ui/empty-state';
 import { SkeletonList, SkeletonStatCard } from '@/components/ui/skeleton';
 import { GPABadge } from '@/components/ui/gpa-ring';
+import { StatCard } from '@/components/ui/stat-card';
 import { PageHeader, StatsGrid, ContentGrid } from '@/components/ui/section-header';
 import { formatCurrency } from '@/lib/utils';
 import { useRequireAuth } from '@/context';
@@ -25,42 +24,6 @@ import { useBrandAnalytics, useBrandCampaigns, useBrandShortlist, useBrandDeals 
 import type { Campaign } from '@/lib/services/brand';
 import type { Athlete } from '@/types';
 import { AthleteRecommendations } from '@/components/ai';
-
-function StatsCard({
-  title,
-  value,
-  icon: Icon,
-  trend,
-  trendValue,
-}: {
-  title: string;
-  value: string;
-  icon: React.ComponentType<{ className?: string }>;
-  trend?: 'up' | 'down';
-  trendValue?: string;
-}) {
-  return (
-    <Card hover>
-      <CardContent className="pt-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-[var(--text-muted)] mb-1">{title}</p>
-            <p className="text-2xl font-bold text-[var(--text-primary)]">{value}</p>
-            {trend && trendValue && (
-              <div className="flex items-center gap-1 mt-2">
-                <ArrowUpRight className="h-4 w-4 text-[var(--color-success)]" />
-                <span className="text-sm text-[var(--color-success)]">{trendValue}</span>
-              </div>
-            )}
-          </div>
-          <div className="h-12 w-12 rounded-[var(--radius-lg)] bg-[var(--color-secondary)]/10 flex items-center justify-center">
-            <Icon className="h-6 w-6 text-[var(--color-secondary)]" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 
 interface RecentMatchesCardProps {
   athletes: Athlete[] | null;
@@ -88,12 +51,12 @@ function RecentMatchesCard({ athletes, loading }: RecentMatchesCardProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Recommended Athletes</CardTitle>
-          <a
+          <Link
             href="/brand/discover"
-            className="text-sm text-[var(--color-primary)] hover:underline"
+            className="text-sm text-[var(--color-primary)] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] rounded-sm"
           >
             View all
-          </a>
+          </Link>
         </div>
       </CardHeader>
       <CardContent>
@@ -106,9 +69,10 @@ function RecentMatchesCard({ athletes, loading }: RecentMatchesCardProps) {
               const schoolName = athlete.school?.name || 'School';
               const sportName = athlete.sport?.name || 'Sport';
               return (
-                <div
+                <Link
                   key={athlete.id}
-                  className="flex items-center gap-4 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-card-hover)] transition-colors cursor-pointer"
+                  href={`/brand/athletes/${athlete.id}`}
+                  className="flex items-center gap-4 p-3 rounded-[var(--radius-md)] bg-[var(--bg-tertiary)] hover:bg-[var(--bg-card-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] transition-colors"
                 >
                   <Avatar
                     src={athlete.avatar_url || undefined}
@@ -128,7 +92,7 @@ function RecentMatchesCard({ athletes, loading }: RecentMatchesCardProps) {
                       <GPABadge gpa={athlete.gpa} size="sm" />
                     )}
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -300,25 +264,25 @@ export default function BrandDashboardPage() {
 
       {/* Stats Grid */}
       <StatsGrid cols={4}>
-        <StatsCard
+        <StatCard
           title="Total Spent"
           value={analyticsLoading ? '...' : formatCurrency(analytics?.total_spent || 0)}
-          icon={DollarSign}
+          icon={<DollarSign className="h-5 w-5" />}
         />
-        <StatsCard
+        <StatCard
           title="Active Partnerships"
           value={dealsLoading ? '...' : activeDealsCount.toString()}
-          icon={Users}
+          icon={<Users className="h-5 w-5" />}
         />
-        <StatsCard
+        <StatCard
           title="Active Campaigns"
           value={campaignsLoading ? '...' : activeCampaignsCount.toString()}
-          icon={Target}
+          icon={<Target className="h-5 w-5" />}
         />
-        <StatsCard
+        <StatCard
           title="Average ROI"
           value={analyticsLoading ? '...' : `${(analytics?.avg_roi || 0).toFixed(1)}x`}
-          icon={TrendingUp}
+          icon={<TrendingUp className="h-5 w-5" />}
         />
       </StatsGrid>
 

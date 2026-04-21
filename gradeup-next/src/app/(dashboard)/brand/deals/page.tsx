@@ -11,6 +11,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Modal } from '@/components/ui/modal';
 import { useToastActions } from '@/components/ui/toast';
+import { NoDeals, NoResults } from '@/components/ui/empty-state';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import type { DealStatus } from '@/types';
 
@@ -144,6 +145,9 @@ function DealRow({ deal, onEditOffer, onViewContract, onMoreMenu }: DealRowProps
             variant="ghost"
             size="sm"
             onClick={() => setShowMoreMenu(!showMoreMenu)}
+            aria-label={`More actions for deal: ${deal.title}`}
+            aria-haspopup="menu"
+            aria-expanded={showMoreMenu}
           >
             <MoreVertical className="h-4 w-4" />
           </Button>
