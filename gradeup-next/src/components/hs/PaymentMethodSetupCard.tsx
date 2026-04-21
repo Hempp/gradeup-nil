@@ -271,7 +271,7 @@ export function PaymentMethodSetupCard({
           Payment method saved.
         </div>
         <p style={{ fontSize: 14, color: '#166534', margin: '8px 0 0' }}>
-          We'll use this card to authorize each deal you sign. Charges are
+          We&apos;ll use this card to authorize each deal you sign. Charges are
           held in escrow and released when you approve the deliverable.
         </p>
       </div>

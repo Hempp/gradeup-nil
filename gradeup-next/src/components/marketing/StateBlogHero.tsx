@@ -4,6 +4,7 @@
  * Server Component. Combines the shared dark aesthetic with a status
  * badge, quick-fact strip, and the last-reviewed date for trust.
  */
+import Link from 'next/link';
 import type { PermissionStatus } from '@/lib/hs-nil/state-rules';
 
 export interface StateBlogHeroProps {
@@ -74,18 +75,18 @@ export function StateBlogHero({
         <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/50">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
-              <a href="/" className="hover:text-white">
+              <Link href="/" className="hover:text-white">
                 Home
-              </a>
+              </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li>
-              <a
+              <Link
                 href="/blog/state-nil-rules"
                 className="hover:text-white"
               >
                 State NIL rules
-              </a>
+              </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li className="text-white/80">{stateName}</li>

@@ -511,7 +511,7 @@ export async function getPublicProfileByUsername(
 
   // Completed-deals COUNT + brand-logo strip. Amounts are NOT selected.
   let completedDealsCount = 0;
-  let completedDealBrands: Array<{
+  const completedDealBrands: Array<{
     brandName: string;
     brandLogoUrl: string | null;
   }> = [];

@@ -135,7 +135,7 @@ export default async function BrandPaymentMethodPage() {
             parent custodian account within 1–2 business days.
           </li>
           <li>
-            If the deal is cancelled or disputed in the brand's favor, the
+            If the deal is cancelled or disputed in the brand&apos;s favor, the
             charge is refunded in full.
           </li>
         </ol>

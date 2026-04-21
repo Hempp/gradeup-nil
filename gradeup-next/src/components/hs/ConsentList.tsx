@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 /**
  * Athlete-facing list of parental consents.
@@ -201,12 +202,12 @@ export default function ConsentList({
           A parent or legal guardian needs to sign off before you can accept NIL
           deals. It takes a few minutes.
         </p>
-        <a
+        <Link
           href="/hs/consent/request"
           className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-lg bg-[var(--accent-primary)] px-5 py-3 font-semibold text-black transition hover:opacity-90"
         >
           Request consent
-        </a>
+        </Link>
       </section>
     );
   }

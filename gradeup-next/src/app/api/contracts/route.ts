@@ -183,7 +183,7 @@ export async function POST(request: NextRequest) {
     // HelloSign's multi-signer shape via `parties[]` + the guardian flag.
     // For adult HS athletes (18+) only the athlete signs. College deals
     // flow through unchanged.
-    let parties = [...validatedData.parties];
+    const parties = [...validatedData.parties];
     let requiresGuardianSignature = validatedData.requires_guardian_signature;
 
     try {

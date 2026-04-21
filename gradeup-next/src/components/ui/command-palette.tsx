@@ -274,13 +274,13 @@ export function CommandPalette({
     setIsOpen(true);
     setSearch('');
     setSelectedIndex(0);
-  }, []);
+  }, [setIsOpen, setSearch, setSelectedIndex]);
 
   const close = useCallback(() => {
     setIsOpen(false);
     setSearch('');
     setSelectedIndex(0);
-  }, []);
+  }, [setIsOpen, setSearch, setSelectedIndex]);
 
   // Execute item action
   const executeItem = useCallback(

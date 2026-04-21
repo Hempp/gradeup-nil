@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface Props {
   campaignId: string;
@@ -76,12 +77,12 @@ export default function CampaignApplyPanel(props: Props) {
       )}
       <div className="flex flex-wrap gap-3">
         {!props.initialCovered || consentGap ? (
-          <a
+          <Link
             href="/hs/consent/request"
             className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-amber-400/50 bg-amber-400/10 px-5 py-3 text-sm font-semibold text-amber-200"
           >
             Ask a parent to expand consent
-          </a>
+          </Link>
         ) : null}
         <button
           type="button"

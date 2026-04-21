@@ -185,7 +185,7 @@ export function RegulatoryChangeReviewPanel(
           maxLength={2000}
         />
         <p className="mt-1 text-xs text-white/40">
-          Notes become part of the audit trail if outcome is "rule change".
+          Notes become part of the audit trail if outcome is &ldquo;rule change&rdquo;.
         </p>
       </div>
 

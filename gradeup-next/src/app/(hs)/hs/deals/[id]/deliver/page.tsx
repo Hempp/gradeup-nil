@@ -122,7 +122,7 @@ export default async function HSDealDeliverPage({
             </h2>
             <p className="mt-2 text-sm text-white/70">
               Deliverables can only be submitted after the deal is fully
-              signed. You will see a big green "Submit deliverables" button
+              signed. You will see a big green &ldquo;Submit deliverables&rdquo; button
               on your deal detail page the moment the signing wraps up.
             </p>
             <div className="mt-6">

@@ -113,7 +113,7 @@ export function ShareCopyCard({
   );
 
   const handleCopy = useCallback(async () => {
-    const eventPlatform: 'copy_link' = 'copy_link';
+    const eventPlatform = 'copy_link' as const;
     // Fire analytics first — don't await in a way that blocks the user
     // if it's slow. We still give it priority because the clipboard action
     // is synchronous on modern browsers.

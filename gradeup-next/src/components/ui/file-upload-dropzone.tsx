@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   forwardRef,
+  createElement,
   type DragEvent,
   type ChangeEvent,
   type ReactNode,
@@ -548,7 +549,7 @@ interface FilePreviewItemProps {
 }
 
 function FilePreviewItem({ file, onRemove }: FilePreviewItemProps) {
-  const FileIcon = getFileIcon(file.type, getFileExtension(file.name));
+  const fileIcon = getFileIcon(file.type, getFileExtension(file.name));
   const isImage = file.type.startsWith('image/');
 
   return (
@@ -569,7 +570,7 @@ function FilePreviewItem({ file, onRemove }: FilePreviewItemProps) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <FileIcon className="h-6 w-6 text-muted-foreground" />
+            {createElement(fileIcon, { className: 'h-6 w-6 text-muted-foreground' })}
           </div>
         )}
       </div>
