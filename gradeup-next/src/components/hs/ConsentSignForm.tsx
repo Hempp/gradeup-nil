@@ -78,6 +78,14 @@ export default function ConsentSignForm({
     );
   }
 
+  // Surface the gating steps so the disabled button never feels silent.
+  const checklist: Array<{ label: string; done: boolean }> = [
+    { label: 'Enter your legal name', done: parentFullName.trim().length >= 2 },
+    { label: 'Confirm you are the parent or legal guardian', done: identityConfirmed },
+    { label: 'Acknowledge the consent scope', done: scopeAcknowledged },
+  ];
+  const remaining = checklist.filter((c) => !c.done).length;
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6" aria-describedby="consent-form-help">
       <p id="consent-form-help" className="sr-only">
@@ -115,9 +123,11 @@ export default function ConsentSignForm({
       </div>
 
       <fieldset className="space-y-3 rounded-lg border border-white/10 bg-white/5 p-4">
-        <legend className="px-2 text-sm font-medium text-white/80">Signature method</legend>
+        <legend className="text-sm font-medium text-white/80">
+          Signature method
+        </legend>
 
-        <label className="flex items-start gap-3 text-sm text-white/80">
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-white/80">
           <input
             type="radio"
             name="signatureMethod"
@@ -136,9 +146,15 @@ export default function ConsentSignForm({
 
         <label
           className="flex items-start gap-3 text-sm text-white/40"
-          title="Coming soon"
+          aria-disabled="true"
         >
-          <input type="radio" name="signatureMethod" value="notarized_upload" disabled className="mt-1" />
+          <input
+            type="radio"
+            name="signatureMethod"
+            value="notarized_upload"
+            disabled
+            className="mt-1"
+          />
           <span>
             <span className="font-medium">Notarized upload</span>
             <span className="block text-xs">Coming soon.</span>
@@ -147,9 +163,15 @@ export default function ConsentSignForm({
 
         <label
           className="flex items-start gap-3 text-sm text-white/40"
-          title="Coming soon"
+          aria-disabled="true"
         >
-          <input type="radio" name="signatureMethod" value="video_attestation" disabled className="mt-1" />
+          <input
+            type="radio"
+            name="signatureMethod"
+            value="video_attestation"
+            disabled
+            className="mt-1"
+          />
           <span>
             <span className="font-medium">Video attestation</span>
             <span className="block text-xs">Coming soon.</span>
@@ -199,10 +221,46 @@ export default function ConsentSignForm({
       <button
         type="submit"
         disabled={!canSubmit}
-        className="w-full rounded-lg bg-[var(--accent-primary)] px-4 py-3 font-semibold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+        aria-describedby={remaining > 0 ? 'sign-remaining-hint' : undefined}
+        className="inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-3 font-semibold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
       >
+        {submitting && (
+          <svg
+            aria-hidden="true"
+            className="h-4 w-4 animate-spin"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeOpacity="0.25"
+            />
+            <path
+              d="M22 12a10 10 0 0 1-10 10"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          </svg>
+        )}
         {submitting ? 'Recording signature…' : 'Sign consent'}
       </button>
+
+      {remaining > 0 && (
+        <p
+          id="sign-remaining-hint"
+          className="text-center text-xs text-white/50"
+          aria-live="polite"
+        >
+          {remaining === 1
+            ? '1 step left before you can sign.'
+            : `${remaining} steps left before you can sign.`}
+        </p>
+      )}
     </form>
   );
 }

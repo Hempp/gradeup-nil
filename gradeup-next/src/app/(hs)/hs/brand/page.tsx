@@ -573,15 +573,23 @@ function EmptyDealsCard() {
       <p className="text-sm font-semibold text-white">No HS deals yet.</p>
       <p className="mt-1 text-sm text-white/60">
         Post your first deal and we&rsquo;ll route it into the parent-consent
-        flow. If you need help identifying the right athlete, the founder
-        concierge is a note away.
+        flow. If you&rsquo;re not sure which athlete fits, the founder
+        concierge will hand-match you for your first deal.
       </p>
-      <Link
-        href="/hs/brand/deals/new"
-        className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-5 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
-      >
-        Post a new deal
-      </Link>
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+        <Link
+          href="/hs/brand/deals/new"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-5 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+        >
+          Post a new deal
+        </Link>
+        <a
+          href="mailto:concierge@gradeupnil.com?subject=Help%20matching%20my%20first%20HS%20deal"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+        >
+          Get a concierge match
+        </a>
+      </div>
     </div>
   );
 }

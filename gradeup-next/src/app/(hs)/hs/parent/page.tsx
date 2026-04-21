@@ -586,14 +586,14 @@ export default async function HSParentDashboardPage() {
           </p>
           <ul className="mt-5 grid gap-3 md:grid-cols-2">
             <ResourceLink
-              title={`Understanding NIL${protectionsState ? ` in ${protectionsState.state}` : ''}`}
-              hint="What your state allows and where the lines are."
-              href="/hs"
-            />
-            <ResourceLink
               title="How consent works"
               hint="Categories, dollar limits, duration, and revocation."
               href="/hs/consent/manage"
+            />
+            <ResourceLink
+              title="Request or renew consent"
+              hint="Send a fresh signing link to a parent or guardian."
+              href="/hs/consent/request"
             />
             <ResourceLink
               title="Contact support"

@@ -37,9 +37,20 @@ function HSRoleCard({ href, title, description, icon }: HSRoleCardProps) {
       </div>
       <h3 className="font-display text-xl text-white">{title}</h3>
       <p className="mt-2 text-sm text-white/70">{description}</p>
-      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent-primary)] opacity-0 transition-opacity group-hover:opacity-100">
+      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent-primary)] opacity-60 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
         Continue
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          aria-hidden="true"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-transform group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5"
+        >
           <path d="M5 12h14" />
           <path d="m12 5 7 7-7 7" />
         </svg>

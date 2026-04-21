@@ -20,7 +20,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 export interface DealAcceptPanelProps {
@@ -159,6 +159,20 @@ export function DealAcceptPanel(props: DealAcceptPanelProps) {
   const [submitting, setSubmitting] = useState(false);
   const [declineReason, setDeclineReason] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  // Close the modal on Escape when a dialog is open and no mutation is in
+  // flight. Keeps the UX consistent with the rest of the product and
+  // prevents trapping mobile users with no visible Cancel affordance.
+  useEffect(() => {
+    if (mode === 'idle') return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !submitting) {
+        setMode('idle');
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [mode, submitting]);
 
   async function handleAccept() {
     setError(null);
@@ -314,6 +328,9 @@ export function DealAcceptPanel(props: DealAcceptPanelProps) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="accept-confirm-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !submitting) setMode('idle');
+          }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
         >
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--marketing-gray-900,#0a0a0a)] p-6 text-white shadow-xl">
@@ -354,6 +371,9 @@ export function DealAcceptPanel(props: DealAcceptPanelProps) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="decline-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !submitting) setMode('idle');
+          }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
         >
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--marketing-gray-900,#0a0a0a)] p-6 text-white shadow-xl">

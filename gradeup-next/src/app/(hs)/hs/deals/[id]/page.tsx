@@ -93,7 +93,15 @@ function calcAge(dob: string): number | null {
 }
 
 function formatCurrency(n: number): string {
-  return `$${Math.round(n).toLocaleString()}`;
+  // Round to whole dollars when the amount is whole; keep two decimals
+  // otherwise. Parents notice pennies — don't hide $125.50 as $126.
+  const isWhole = Math.abs(n - Math.round(n)) < 0.005;
+  return isWhole
+    ? `$${Math.round(n).toLocaleString()}`
+    : `$${n.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
 }
 
 function formatDate(iso: string | null): string {

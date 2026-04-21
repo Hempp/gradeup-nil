@@ -471,8 +471,13 @@ export default async function HSAthleteDashboardPage() {
             : 'Institution-verified.',
       completed: tier === 'institution_verified',
       href: tier === 'self_reported' ? '/hs/onboarding/verify-gpa' : undefined,
-      status: tier === 'self_reported' ? 'Coming soon' : 'In review',
-      disabled: tier !== 'institution_verified',
+      status:
+        tier === 'institution_verified'
+          ? 'Complete'
+          : tier === 'user_submitted'
+            ? 'In review'
+            : 'Optional',
+      disabled: tier === 'user_submitted',
     },
     {
       label: 'Set up payouts',
