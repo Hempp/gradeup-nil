@@ -6,11 +6,11 @@
     },
     {
       "path": "/api/cron/hs-disclosures",
-      "schedule": "0 * * * *"
+      "schedule": "0 9 * * *"
     },
     {
       "path": "/api/cron/hs-waitlist-sequencer",
-      "schedule": "0 */4 * * *"
+      "schedule": "0 11 * * *"
     },
     {
       "path": "/api/cron/hs-nurture-sequencer",
@@ -38,7 +38,7 @@
     },
     {
       "path": "/api/cron/hs-sms-worker",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 13 * * *"
     }
   ]
 }
