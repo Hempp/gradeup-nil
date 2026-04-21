@@ -6,7 +6,10 @@ import { Search, Grid, List, Calendar, DollarSign, GraduationCap, ChevronDown, S
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLandingOpportunities, type LandingOpportunity } from '@/lib/hooks/use-landing-data';
-import { MarketingEmptyState } from '@/components/marketing';
+// Import directly from the file (not via the '@/components/marketing' barrel) because
+// the barrel re-exports server components (CaseStudyTagStrip → supabase/server →
+// next/headers) that Turbopack cannot tree-shake out of a 'use client' entry point.
+import { MarketingEmptyState } from '@/components/marketing/EmptyState';
 import { cn } from '@/lib/utils';
 
 // ═══════════════════════════════════════════════════════════════════════════
