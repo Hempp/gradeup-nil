@@ -279,6 +279,33 @@ export default async function HSBrandDashboardPage() {
         <BrandDashboardPerformanceCard summary={performanceSummary} />
       </div>
 
+      {/* Public brand profile section */}
+      <section aria-labelledby="public-profile-nav-heading" className="mt-10">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+              Public directory
+            </p>
+            <h2
+              id="public-profile-nav-heading"
+              className="mt-1 font-display text-xl md:text-2xl"
+            >
+              Appear in the brand directory.
+            </h2>
+            <p className="mt-1 text-sm text-white/70">
+              Claim a slug, add a bio, and opt in to /brands/[slug] so athletes
+              can discover you.
+            </p>
+          </div>
+          <Link
+            href="/hs/brand/public-profile"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white/20 bg-transparent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+          >
+            Set up public profile →
+          </Link>
+        </div>
+      </section>
+
       {/* Your campaigns section */}
       <section aria-labelledby="campaigns-nav-heading" className="mt-10">
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-6">

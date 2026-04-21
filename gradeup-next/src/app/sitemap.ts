@@ -22,6 +22,9 @@ import {
   listPublishedPosts,
   blogPostPath,
 } from '@/lib/hs-nil/blog-content';
+import { listPublicAthletes } from '@/lib/hs-nil/athlete-profile';
+import { listPublicBrands } from '@/lib/hs-nil/brand-directory';
+import { createClient as createServiceRoleSupabase } from '@supabase/supabase-js';
 
 /**
  * Absolute origin used when Next needs it. Falls back to env, then to a
@@ -62,7 +65,7 @@ function altsFor(enPath: string, origin: string): MetadataRoute.Sitemap[number][
   };
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const origin = siteOrigin();
   const now = new Date().toISOString();
 
@@ -116,5 +119,50 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }),
   );
 
-  return [...staticRoutes, ...stateRoutes, ...evergreenBlogRoutes];
+  // Per-profile public URLs. Capped at 5000 each per sitemap best-practice;
+  // split into separate sitemap files if the catalogue grows past that.
+  // All queries service-role and wrapped in try/catch so a DB hiccup at
+  // build time degrades gracefully to static-only sitemap.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  let athleteRoutes: MetadataRoute.Sitemap = [];
+  let brandRoutes: MetadataRoute.Sitemap = [];
+
+  if (supabaseUrl && supabaseServiceKey) {
+    try {
+      const sb = createServiceRoleSupabase(supabaseUrl, supabaseServiceKey, {
+        auth: { persistSession: false },
+      });
+
+      const athletes = await listPublicAthletes({ limit: 5000 }).catch(
+        () => [],
+      );
+      athleteRoutes = athletes.map((a) => ({
+        url: `${origin}/athletes/${a.username}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: 0.5,
+      }));
+
+      const brands = await listPublicBrands(sb, { limit: 5000 }).catch(
+        () => [],
+      );
+      brandRoutes = brands.map((b) => ({
+        url: `${origin}/brands/${b.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: 0.5,
+      }));
+    } catch {
+      // Sitemap build continues with static routes only.
+    }
+  }
+
+  return [
+    ...staticRoutes,
+    ...stateRoutes,
+    ...evergreenBlogRoutes,
+    ...athleteRoutes,
+    ...brandRoutes,
+  ];
 }

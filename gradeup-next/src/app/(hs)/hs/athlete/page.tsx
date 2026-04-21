@@ -610,6 +610,19 @@ export default async function HSAthleteDashboardPage() {
             title="When a brand partnership is ready, it'll show up here."
             description="Until then, here's your pre-flight checklist. GradeUp is brokering deals manually during our concierge MVP — the closer you are to fully verified, the faster we can move."
           />
+
+          <OnboardingCard
+            eyebrow="Public profile"
+            title="Claim your bio-linkable URL."
+            description="Verified scholar-athletes can opt into a public /athletes/[username] page showing GPA, trajectory, and deal history. Visibility is off until you turn it on."
+          >
+            <a
+              href="/hs/athlete/public-profile"
+              className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-md bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-black hover:opacity-90"
+            >
+              Set up public profile
+            </a>
+          </OnboardingCard>
         </div>
       </section>
 
