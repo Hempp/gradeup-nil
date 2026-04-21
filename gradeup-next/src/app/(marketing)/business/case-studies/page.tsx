@@ -9,7 +9,7 @@
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, FileSearch } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { listPublishedCaseStudies } from '@/lib/hs-nil/case-studies';
 import { CaseStudyCard } from '@/components/hs/CaseStudyCard';
@@ -93,7 +93,7 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
               Proven results from the concierge era
             </span>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white max-w-3xl">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white max-w-3xl">
             Case studies.{' '}
             <span className="text-[var(--accent-primary)]">Verified earnings.</span>
           </h1>
@@ -148,17 +148,20 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
           </div>
 
           {studies.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center">
-              <h2 className="text-xl font-semibold text-white">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-10 sm:p-12 text-center">
+              <div className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-black/40 text-[var(--accent-primary)]">
+                <FileSearch className="h-7 w-7" aria-hidden="true" />
+              </div>
+              <h2 className="text-xl sm:text-2xl font-semibold text-white">
                 No case studies yet for this filter
               </h2>
-              <p className="mt-2 text-[var(--marketing-gray-400)]">
+              <p className="mx-auto mt-2 max-w-md text-[var(--marketing-gray-400)]">
                 Try clearing the filter or check back soon — we publish new
                 studies as deals close.
               </p>
               <Link
                 href="/business/case-studies"
-                className="inline-flex items-center gap-2 mt-6 text-[var(--accent-primary)] font-semibold"
+                className="btn-marketing-outline mt-6 inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold"
               >
                 Show all case studies
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />

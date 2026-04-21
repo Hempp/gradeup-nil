@@ -207,7 +207,7 @@ function CompareTable() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="overflow-x-auto rounded-xl border border-white/10 bg-[var(--marketing-gray-950)]">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[820px] text-left text-sm">
             <caption className="sr-only">
               Feature-by-feature comparison of GradeUp HS-NIL, Opendorse, and
               NIL Club across {rows.length} dimensions
@@ -257,6 +257,9 @@ function CompareTable() {
             </tbody>
           </table>
         </div>
+        <p className="mt-3 text-xs text-white/40 sm:hidden">
+          Scroll horizontally to compare all three platforms.
+        </p>
       </div>
     </section>
   );
@@ -270,8 +273,8 @@ function WhenToChoose() {
   return (
     <section aria-label="When to choose each platform" className="bg-black py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-black p-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-black p-6 md:col-span-2 lg:col-span-1">
             <h3 className="text-lg font-bold text-[var(--accent-primary)] mb-3">
               When to choose GradeUp
             </h3>

@@ -227,10 +227,10 @@ export default function BrandsSolutionPage() {
             />
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-4 justify-center">
+          <div className="mt-10 flex flex-wrap gap-3 justify-center">
             <Link
               href="/pricing"
-              className="btn-marketing-outline inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold"
+              className="btn-marketing-primary inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold shadow-lg"
             >
               See brand pricing
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -240,7 +240,6 @@ export default function BrandsSolutionPage() {
               className="btn-marketing-outline inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold"
             >
               Compare to Opendorse
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>

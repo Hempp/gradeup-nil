@@ -308,11 +308,11 @@ function FAQAccordionItem({
         />
       </button>
       <div
-        className={`overflow-hidden transition-all duration-300 ${
-          isOpen ? 'max-h-96 pb-5' : 'max-h-0'
+        className={`grid overflow-hidden transition-all duration-300 ${
+          isOpen ? 'grid-rows-[1fr] pb-5' : 'grid-rows-[0fr]'
         }`}
       >
-        <p className="text-[var(--marketing-gray-400)] leading-relaxed pr-8">
+        <p className="text-[var(--marketing-gray-400)] leading-relaxed pr-8 min-h-0 overflow-hidden">
           {faq.answer}
         </p>
       </div>
@@ -664,13 +664,13 @@ function ContactSupportSection() {
               Email Support
             </Button>
           </Link>
-          <Link href="#live-chat">
+          <Link href="/solutions/parents">
             <Button
               size="lg"
               className="w-full sm:w-auto bg-white/20 hover:bg-white/30 text-black font-semibold border-2 border-black/20 gap-2"
             >
               <MessageSquare className="h-5 w-5" />
-              Live Chat
+              Talk to our team
             </Button>
           </Link>
         </div>

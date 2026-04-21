@@ -141,7 +141,7 @@ const tiers: Tier[] = [
     name: 'Brand Plus',
     headline: 'For regional brands running campaigns',
     price: '$149',
-    priceDetail: 'per month, or $1,490/yr (save $298)',
+    priceDetail: 'per month · $1,490/yr (save $298)',
     description:
       'Unlocks unlimited campaigns, priority athlete matching, a branded case study on our site, and a 1-on-1 onboarding call. Platform fee reduced to 5% on completed deals.',
     ctaLabel: 'Start Brand Plus',
@@ -289,7 +289,7 @@ function TierCards() {
                 <p className="mt-1 text-white/60 text-sm">{tier.headline}</p>
               </div>
               <div className="mb-6">
-                <div className="flex items-baseline gap-2">
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                   <span className="text-4xl font-bold text-white sm:text-5xl">
                     {tier.price}
                   </span>
@@ -408,7 +408,7 @@ function FeatureTable() {
           </p>
         </div>
         <div className="overflow-x-auto rounded-xl border border-white/10 bg-[var(--marketing-gray-950)]">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[720px] text-left text-sm">
             <caption className="sr-only">
               Feature availability across Athletes, Brands, and Brand Plus tiers
             </caption>
@@ -439,18 +439,21 @@ function FeatureTable() {
                 >
                   <th
                     scope="row"
-                    className="px-4 py-3 font-medium text-white/90 sm:px-6"
+                    className="px-4 py-3 font-medium text-white/90 sm:px-6 align-top"
                   >
                     {row.label}
                   </th>
-                  <td className="px-4 py-3 text-white/70 sm:px-6">{row.athletes}</td>
-                  <td className="px-4 py-3 text-white/70 sm:px-6">{row.brands}</td>
-                  <td className="px-4 py-3 text-white/90 sm:px-6">{row.brandPlus}</td>
+                  <td className="px-4 py-3 text-white/70 sm:px-6 align-top">{row.athletes}</td>
+                  <td className="px-4 py-3 text-white/70 sm:px-6 align-top">{row.brands}</td>
+                  <td className="px-4 py-3 text-white/90 sm:px-6 align-top">{row.brandPlus}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <p className="mt-3 text-xs text-white/40 sm:hidden">
+          Scroll horizontally to compare tiers.
+        </p>
       </div>
     </section>
   );

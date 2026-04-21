@@ -26,7 +26,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/solutions/athletes" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   How It Works
                 </Link>
               </li>
@@ -48,12 +48,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/#athletes" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
+                <Link href="/athletes" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Browse Athletes
                 </Link>
               </li>
               <li>
-                <Link href="/#brands" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
+                <Link href="/solutions/brands" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Why GradeUp
                 </Link>
               </li>
@@ -65,7 +65,7 @@ export function Footer() {
             <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-[var(--marketing-gray-400)]">
               <li>
-                <Link href="/#how-it-works" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">
+                <Link href="/solutions" className="hover:text-white focus:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-sm transition-colors">
                   About
                 </Link>
               </li>

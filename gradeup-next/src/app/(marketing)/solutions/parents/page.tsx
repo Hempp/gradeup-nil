@@ -175,7 +175,7 @@ export default function ParentsSolutionPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={<Heart className="h-6 w-6" />}
               title="Dual-signed consent"

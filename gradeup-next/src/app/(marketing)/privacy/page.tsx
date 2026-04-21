@@ -18,10 +18,10 @@ export default function PrivacyPage() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-white mb-4">Information We Collect</h2>
-            <p className="text-[var(--marketing-gray-400)] mb-4">
+            <p className="text-[var(--marketing-gray-300)] mb-4">
               GradeUp NIL collects information you provide directly to us, including:
             </p>
-            <ul className="list-disc pl-6 text-[var(--marketing-gray-400)] space-y-2">
+            <ul className="list-disc pl-6 text-[var(--marketing-gray-300)] space-y-2">
               <li>Account information (name, email, password)</li>
               <li>Profile information (school, sport, GPA, social media handles)</li>
               <li>Transaction and payment information</li>
@@ -31,10 +31,10 @@ export default function PrivacyPage() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-white mb-4">How We Use Your Information</h2>
-            <p className="text-[var(--marketing-gray-400)] mb-4">
+            <p className="text-[var(--marketing-gray-300)] mb-4">
               We use the information we collect to:
             </p>
-            <ul className="list-disc pl-6 text-[var(--marketing-gray-400)] space-y-2">
+            <ul className="list-disc pl-6 text-[var(--marketing-gray-300)] space-y-2">
               <li>Provide, maintain, and improve our services</li>
               <li>Connect athletes with brands for NIL opportunities</li>
               <li>Process transactions and send related information</li>
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-white mb-4">Data Security</h2>
-            <p className="text-[var(--marketing-gray-400)]">
+            <p className="text-[var(--marketing-gray-300)]">
               We implement appropriate technical and organizational measures to protect your personal
               information against unauthorized access, alteration, disclosure, or destruction.
             </p>
@@ -53,7 +53,7 @@ export default function PrivacyPage() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-white mb-4">Contact Us</h2>
-            <p className="text-[var(--marketing-gray-400)]">
+            <p className="text-[var(--marketing-gray-300)]">
               If you have questions about this Privacy Policy, please contact us at{' '}
               <a
                 href="mailto:privacy@gradeupnil.com"
