@@ -84,6 +84,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${origin}/business/case-studies`, lastModified: now, changeFrequency: 'weekly', priority: 0.7, alternates: altsFor('/business/case-studies', origin) },
     { url: `${origin}/blog`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${origin}/blog/state-nil-rules`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${origin}/athletes`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
+    { url: `${origin}/brands`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${origin}/hs`, lastModified: now, changeFrequency: 'weekly', priority: 0.8, alternates: altsFor('/hs', origin) },
     { url: `${origin}/hs/valuation`, lastModified: now, changeFrequency: 'weekly', priority: 0.7, alternates: altsFor('/hs/valuation', origin) },
     // Spanish companions — listed separately so Google sees them independently.
