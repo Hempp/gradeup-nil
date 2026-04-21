@@ -9,6 +9,8 @@ const config: Config = {
 
   // Module name mapping (matches tsconfig paths)
   moduleNameMapper: {
+    // server-only throws at runtime to prevent client bundling — no-op in Jest
+    '^server-only$': '<rootDir>/__mocks__/server-only.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     // Handle CSS imports (with CSS modules)
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
