@@ -41,8 +41,10 @@ Worktrees are created **only after Wave 1 (Phase 0) and Wave 2 (Phase 1) have me
 ## Wave 1 — Phase 0: Clean Baseline
 
 **Owner:** Solo (whoever runs Wave 1).
-**Goal:** Empty working tree + green validation. No refactor starts on dirty state.
-**Exit criteria:** `git status` clean on `main`; `npm run validate` green; `npm run dev` boots; Vercel preview deploys.
+**Goal:** Empty working tree + lint-green validation + recorded test baseline. No refactor starts on dirty state.
+**Exit criteria (amended 2026-04-21):** `git status` clean on `main`; `npm run type-check` green; `npm run lint` reports **0 errors**; `npm run test` baseline **recorded at 82 failures / 2872 passing / 8 failed suites / 22 skipped**; `npm run dev` boots; Vercel preview deploys.
+
+**Regression rule for subsequent phases:** Every subsequent phase MUST NOT increase the failing-test count above the 82 baseline. Any phase that ships with 83+ failures is introducing regressions, not inheriting them. Pre-existing test rot is tracked for a separate grooming session and is *not* in scope for any consolidation phase.
 
 ### Task 0.1: Inventory the 25 uncommitted files
 
@@ -129,6 +131,48 @@ Expected: server starts on :3000, `/`, `/login`, `/athlete/dashboard`, `/hs/athl
 - [ ] **Step 4: Confirm Vercel preview**
 
 Push the cleanup commits and confirm Vercel builds + deploys the preview without error.
+
+### Task 0.4: Record test baseline (amended)
+
+- [ ] **Step 1: Capture current test stats**
+
+Run: `npm test 2>&1 | tail -5`
+
+Record the line `Tests: N failed, M skipped, K passed, T total` and `Test Suites: N failed, ...`.
+
+- [ ] **Step 2: Add a `TEST-BASELINE.md` tracking doc**
+
+Create `docs/TEST-BASELINE.md`:
+
+```markdown
+# Test baseline — 2026-04-21 (Phase 0 checkpoint)
+
+**At the start of the role-model consolidation refactor:**
+
+- Tests: **82 failed**, 22 skipped, 2872 passed, 2976 total
+- Test Suites: **8 failed**, 1 skipped, 136 passed, 144 of 145 total
+
+Every phase of the consolidation must ship with ≤ 82 failing tests and ≤ 8
+failing suites. Exceeding either count is a regression, not inherited debt.
+
+**Failing suites (for future grooming work):**
+- `src/__tests__/components/ui/button.test.tsx`
+- `tests/services/auth.test.js` (if Vitest root tests are in the run)
+- `tests/services/opportunities.test.js`
+- `tests/validation.test.js`
+- (list others as seen in local run)
+
+Test rot is tracked separately from this refactor. A dedicated grooming
+session addresses stale component-vs-test drift (e.g., Button size class
+change for WCAG AA touch targets that never propagated to tests).
+```
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add gradeup-next/docs/TEST-BASELINE.md
+git -c commit.gpgsign=false commit -m "docs: record Phase 0 test baseline (82 fail / 2872 pass)"
+```
 
 ---
 
