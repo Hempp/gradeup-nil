@@ -385,6 +385,11 @@ function PartnerLogosSection() {
     { name: 'Nike', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg', invert: true },
     { name: 'Under Armour', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Under_armour_logo.svg', invert: true },
     { name: 'Adidas', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg', invert: true },
+    { name: 'Cricket Wireless', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Cricket_Wireless_logo.svg/1200px-Cricket_Wireless_logo.svg.png', invert: false },
+    { name: 'Subway', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Subway_2016_logo.svg/1200px-Subway_2016_logo.svg.png', invert: false },
+    { name: "Papa John's", logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Papa_John%27s_new_logo.svg/1200px-Papa_John%27s_new_logo.svg.png', invert: false },
+    { name: 'Gatorade', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Gatorade_logo.svg/1200px-Gatorade_logo.svg.png', invert: true },
+    { name: 'Chipotle', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Chipotle_Mexican_Grill_logo.svg/1200px-Chipotle_Mexican_Grill_logo.svg.png', invert: true },
   ];
 
   return (
