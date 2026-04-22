@@ -5,7 +5,6 @@
  * Core GradeUp thesis alignment: the scholar-athlete IS the perfect
  * spokesperson for an educational brand. Server Component. ISR 5-min.
  */
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ShieldAlert, GraduationCap, Check, ArrowRight } from 'lucide-react';
 import {
@@ -21,23 +20,19 @@ import {
   formatValuationCents,
   type ValuationInput,
 } from '@/lib/hs-nil/valuation';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions/brands/tutoring';
 
-export const metadata: Metadata = {
-  title: 'Tutoring brand NIL campaigns | HS scholar-athletes | GradeUp',
-  description:
-    'Local tutoring, online test-prep, and study-app brands run compliance-handled NIL campaigns with verified 3.9+ GPA scholar-athletes across 7 pilot states. Academic integrity first.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'Tutoring NIL campaigns with HS scholar-athletes',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'Tutoring brand NIL campaigns | HS scholar-athletes | GradeUp',
     description:
-      'The scholar-athlete with a 3.9 GPA IS your spokesperson. We verify the transcript before they post.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'Local tutoring, online test-prep, and study-app brands run compliance-handled NIL campaigns with verified 3.9+ GPA scholar-athletes across 7 pilot states. Academic integrity first.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'tutoring NIL',

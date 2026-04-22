@@ -1,9 +1,10 @@
-import { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = buildMarketingMetadata({
   title: 'Privacy Policy',
-  description: 'Privacy policy for the GradeUp NIL platform',
-};
+  description: 'How GradeUp NIL collects, uses, and protects scholar-athlete and supporter data.',
+  path: '/privacy',
+});
 
 export default function PrivacyPage() {
   return (

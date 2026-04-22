@@ -11,7 +11,6 @@
  *
  * Server Component. ISR 5-min.
  */
-import type { Metadata } from 'next';
 import {
   ShieldCheck,
   Eye,
@@ -28,23 +27,19 @@ import {
   SolutionSchema,
   SolutionCtaBand,
 } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions/state-ads';
 
-export const metadata: Metadata = {
-  title: 'NIL Oversight for State Athletic Associations | GradeUp',
-  description:
-    'A read-only dashboard of every GradeUp NIL deal in your state, per member school, with disclosure-window compliance signals. Free for state athletic associations.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'GradeUp State-AD Portal — Oversight across member schools',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'NIL Oversight for State Athletic Associations | GradeUp',
     description:
-      'Every HS NIL deal in your state, in one read-only dashboard. Free for state athletic associations.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'A read-only dashboard of every GradeUp NIL deal in your state, per member school, with disclosure-window compliance signals. Free for state athletic associations.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'state athletic association NIL',

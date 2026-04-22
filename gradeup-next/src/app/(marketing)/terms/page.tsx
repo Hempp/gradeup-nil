@@ -1,9 +1,10 @@
-import { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = buildMarketingMetadata({
   title: 'Terms of Service',
-  description: 'Terms of service for the GradeUp NIL platform',
-};
+  description: 'Terms governing use of GradeUp NIL by athletes, brands, supporters, and school staff.',
+  path: '/terms',
+});
 
 export default function TermsPage() {
   return (

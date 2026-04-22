@@ -86,6 +86,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'i.ytimg.com', // YouTube thumbnails (alternate)
       },
+      {
+        protocol: 'https',
+        hostname: 'www.google.com', // Google s2 favicon service for HS logos
+        pathname: '/s2/favicons',
+      },
     ],
   },
 

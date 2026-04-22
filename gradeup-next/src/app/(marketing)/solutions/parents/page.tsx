@@ -7,7 +7,6 @@
  *
  * Server Component. ISR 5-min.
  */
-import type { Metadata } from 'next';
 import {
   Heart,
   ShieldCheck,
@@ -24,15 +23,20 @@ import {
   SolutionSchema,
   SolutionCtaBand,
 } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions/parents';
 
-export const metadata: Metadata = {
-  title: 'NIL for Parents — A first deal without the risk | GradeUp',
-  description:
-    'The safest way for your scholar-athlete to sign their first NIL deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'NIL for Parents — A first deal without the risk | GradeUp',
+    description:
+      'The safest way for your scholar-athlete to sign their first NIL deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
+    path: PAGE_URL,
+  }),
+  // Preserve Spanish language alternates (helper only sets `canonical`).
   alternates: {
     canonical: PAGE_URL,
     languages: {
@@ -40,13 +44,6 @@ export const metadata: Metadata = {
       es: '/es/solutions/parents',
       'x-default': PAGE_URL,
     },
-  },
-  openGraph: {
-    title: 'GradeUp for Parents — Your scholar-athlete&rsquo;s first NIL deal, without the risk',
-    description:
-      'Dual signature. Custodial payouts. State-compliant. Built for the parent who wants their kid to earn, safely.',
-    type: 'website',
-    url: PAGE_URL,
   },
   robots: { index: true, follow: true },
   keywords: [

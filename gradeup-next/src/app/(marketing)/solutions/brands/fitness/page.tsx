@@ -5,7 +5,6 @@
  *
  * Server Component. ISR 5-min.
  */
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ShieldAlert, Flame, Check, ArrowRight } from 'lucide-react';
 import {
@@ -21,23 +20,19 @@ import {
   formatValuationCents,
   type ValuationInput,
 } from '@/lib/hs-nil/valuation';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions/brands/fitness';
 
-export const metadata: Metadata = {
-  title: 'Fitness brand NIL campaigns | HS scholar-athletes | GradeUp',
-  description:
-    'Gyms, fitness apps, non-prohibited supplements, sport equipment, and recovery brands run compliance-handled NIL campaigns with verified HS scholar-athletes across 7 pilot states. Banned-substance checks included.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'Fitness NIL campaigns with HS scholar-athletes',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'Fitness brand NIL campaigns | HS scholar-athletes | GradeUp',
     description:
-      'The athlete already lives in your category. We handle banned-substance checks, disclosure, and pay-on-approval.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'Gyms, fitness apps, non-prohibited supplements, sport equipment, and recovery brands run compliance-handled NIL campaigns with verified HS scholar-athletes across 7 pilot states. Banned-substance checks included.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'fitness NIL',

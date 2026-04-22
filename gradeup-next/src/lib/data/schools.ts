@@ -6,10 +6,11 @@
  *   - `tier` segments the list into ncaa (Power 5 programs), hbcu
  *     (Historically Black Colleges & Universities), and hs
  *     (high-school programs frequently producing NIL-eligible athletes).
- *   - NCAA + HBCU entries carry a `logo` URL (Wikipedia-hosted, curl-
- *     verified). HS entries carry an `abbrev` for the letter-avatar
- *     rendering — Wikipedia doesn't reliably host clean HS athletic
- *     logos, so we use colored initial cards instead of broken images.
+ *   - NCAA + HBCU entries carry Wikipedia-hosted `logo` URLs (curl-
+ *     verified). HS entries use the school's own site favicon via
+ *     Google's s2 service when available, falling back to an initial
+ *     letter-avatar. Every HS entry keeps `abbrev` so the card renderer
+ *     can fall back cleanly if a logo URL 404s in the future.
  *   - `school_name` on hs_athlete_profiles is what the /athletes page
  *     filters on. The `name` field here is what the URL uses
  *     (/athletes?school=${name}), so keep it short and unambiguous.
@@ -22,9 +23,9 @@ export interface FeaturedSchool {
   name: string;
   /** Display name on the card ("Oregon Ducks" / "Crenshaw Cougars") */
   fullName: string;
-  /** 2-3 letter initials for letter-avatar rendering (HS tier) */
+  /** 2-3 letter initials — required for HS tier letter-avatar fallback */
   abbrev?: string;
-  /** Wikipedia-hosted logo URL (NCAA + HBCU tiers) */
+  /** Logo URL — Wikipedia for NCAA/HBCU, school-site favicon for HS */
   logo?: string;
   /** Athletic brand color — drives card chip tint + letter-avatar bg */
   color: string;
@@ -64,27 +65,30 @@ export const FEATURED_SCHOOLS: FeaturedSchool[] = [
   { tier: 'hbcu', name: 'Prairie View A&M',  fullName: 'Prairie View A&M Panthers', location: 'Prairie View, TX', color: '#4B0082', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Prairie_view_univ_athletics_textlogo.png' },
 
   // ─── High Schools ─────────────────────────────────────────────────
-  // Letter-avatars rather than logos — Wikipedia's HS pages rarely host
-  // clean athletic brandmarks (most URLs resolved to building photos or
-  // unrelated icons). Initials + color still give each school visual
-  // identity and avoid trademark/hotlink risk.
+  // Mix of real school-site favicons (via Google's s2 service) and
+  // letter-avatar fallbacks. Favicons come from the school's own domain,
+  // so they stay in sync if the school rebrands. Where Google returns a
+  // 404 or a 16×16 placeholder, we fall back to initials + color.
+  //   Card renderer: if `logo` is present, show the image; otherwise
+  //   render `abbrev` over `color`. Every HS entry keeps `abbrev` so the
+  //   fallback is always available.
   // Los Angeles area
-  { tier: 'hs', name: 'Crenshaw',       fullName: 'Crenshaw Cougars',          location: 'Los Angeles, CA', abbrev: 'CR',  color: '#1E4B8F' },
+  { tier: 'hs', name: 'Crenshaw',       fullName: 'Crenshaw Cougars',          location: 'Los Angeles, CA', abbrev: 'CR',  color: '#1E4B8F', logo: 'https://www.google.com/s2/favicons?domain=crenshawhs.org&sz=128' },
   { tier: 'hs', name: 'Dorsey',         fullName: 'Dorsey Dons',               location: 'Los Angeles, CA', abbrev: 'DD',  color: '#5B2E8C' },
-  { tier: 'hs', name: 'Junipero Serra', fullName: 'Serra Cavaliers',           location: 'Gardena, CA',     abbrev: 'JS',  color: '#0A7C47' },
+  { tier: 'hs', name: 'Junipero Serra', fullName: 'Serra Cavaliers',           location: 'Gardena, CA',     abbrev: 'JS',  color: '#0A7C47', logo: 'https://www.google.com/s2/favicons?domain=serrahs.org&sz=128' },
   { tier: 'hs', name: 'View Park',      fullName: 'View Park Knights',         location: 'Los Angeles, CA', abbrev: 'VP',  color: '#B31B1B' },
-  { tier: 'hs', name: 'Fairfax',        fullName: 'Fairfax Lions',             location: 'Los Angeles, CA', abbrev: 'FX',  color: '#C41230' },
-  { tier: 'hs', name: 'Narbonne',       fullName: 'Narbonne Gauchos',          location: 'Harbor City, CA', abbrev: 'NB',  color: '#006747' },
+  { tier: 'hs', name: 'Fairfax',        fullName: 'Fairfax Lions',             location: 'Los Angeles, CA', abbrev: 'FX',  color: '#C41230', logo: 'https://www.google.com/s2/favicons?domain=fairfaxhs.org&sz=128' },
+  { tier: 'hs', name: 'Narbonne',       fullName: 'Narbonne Gauchos',          location: 'Harbor City, CA', abbrev: 'NB',  color: '#006747', logo: 'https://www.google.com/s2/favicons?domain=narbonnehs.org&sz=128' },
   { tier: 'hs', name: 'Mater Dei',      fullName: 'Mater Dei Monarchs',        location: 'Santa Ana, CA',   abbrev: 'MD',  color: '#A32638' },
-  { tier: 'hs', name: 'St. John Bosco', fullName: 'St. John Bosco Braves',     location: 'Bellflower, CA',  abbrev: 'SJB', color: '#00703C' },
+  { tier: 'hs', name: 'St. John Bosco', fullName: 'St. John Bosco Braves',     location: 'Bellflower, CA',  abbrev: 'SJB', color: '#00703C', logo: 'https://www.google.com/s2/favicons?domain=bosco.org&sz=128' },
   // National NIL powerhouses
-  { tier: 'hs', name: 'IMG Academy',    fullName: 'IMG Academy Ascenders',     location: 'Bradenton, FL',   abbrev: 'IMG', color: '#004B87' },
-  { tier: 'hs', name: 'Montverde',      fullName: 'Montverde Eagles',          location: 'Montverde, FL',   abbrev: 'MVA', color: '#C5A54F' },
-  { tier: 'hs', name: 'DeMatha',        fullName: 'DeMatha Stags',             location: 'Hyattsville, MD', abbrev: 'DM',  color: '#002F6C' },
+  { tier: 'hs', name: 'IMG Academy',    fullName: 'IMG Academy Ascenders',     location: 'Bradenton, FL',   abbrev: 'IMG', color: '#004B87', logo: 'https://www.google.com/s2/favicons?domain=imgacademy.com&sz=128' },
+  { tier: 'hs', name: 'Montverde',      fullName: 'Montverde Eagles',          location: 'Montverde, FL',   abbrev: 'MVA', color: '#C5A54F', logo: 'https://www.google.com/s2/favicons?domain=montverde.org&sz=128' },
+  { tier: 'hs', name: 'DeMatha',        fullName: 'DeMatha Stags',             location: 'Hyattsville, MD', abbrev: 'DM',  color: '#002F6C', logo: 'https://www.google.com/s2/favicons?domain=dematha.org&sz=128' },
   { tier: 'hs', name: 'Miami Northwestern', fullName: 'Northwestern Bulls',    location: 'Miami, FL',       abbrev: 'MNW', color: '#552583' },
-  { tier: 'hs', name: 'DeSoto',         fullName: 'DeSoto Eagles',             location: 'DeSoto, TX',      abbrev: 'DS',  color: '#C8102E' },
+  { tier: 'hs', name: 'DeSoto',         fullName: 'DeSoto Eagles',             location: 'DeSoto, TX',      abbrev: 'DS',  color: '#C8102E', logo: 'https://www.google.com/s2/favicons?domain=desotoisd.org&sz=128' },
   { tier: 'hs', name: 'Duncanville',    fullName: 'Duncanville Panthers',      location: 'Duncanville, TX', abbrev: 'DV',  color: '#FFC72C' },
-  { tier: 'hs', name: 'Bishop Gorman',  fullName: 'Bishop Gorman Gaels',       location: 'Las Vegas, NV',   abbrev: 'BG',  color: '#6A2C91' },
+  { tier: 'hs', name: 'Bishop Gorman',  fullName: 'Bishop Gorman Gaels',       location: 'Las Vegas, NV',   abbrev: 'BG',  color: '#6A2C91', logo: 'https://www.google.com/s2/favicons?domain=bishopgorman.com&sz=128' },
   { tier: 'hs', name: 'St. Frances',    fullName: 'St. Frances Panthers',      location: 'Baltimore, MD',   abbrev: 'SFA', color: '#0C356A' },
   { tier: 'hs', name: 'Paramus Catholic', fullName: 'Paramus Catholic Paladins', location: 'Paramus, NJ',  abbrev: 'PC',  color: '#006F3C' },
   { tier: 'hs', name: 'Bergen Catholic', fullName: 'Bergen Catholic Crusaders', location: 'Oradell, NJ',    abbrev: 'BC',  color: '#8B0000' },

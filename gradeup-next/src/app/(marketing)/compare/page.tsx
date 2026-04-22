@@ -1,26 +1,20 @@
-import type { Metadata } from 'next';
 import Script from 'next/script';
 import Link from 'next/link';
 import { ArrowRight, Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 // ISR every 5 minutes
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+export const metadata = buildMarketingMetadata({
   title:
     'GradeUp HS-NIL vs. Opendorse vs. NIL Club | Compare High-School NIL Platforms',
   description:
     'See how GradeUp compares to Opendorse and NIL Club on parent-centered HS-NIL, transparent pricing, state compliance, and viral referral systems.',
-  openGraph: {
-    title:
-      'GradeUp HS-NIL vs. Opendorse vs. NIL Club | Compare High-School NIL Platforms',
-    description:
-      'See how GradeUp compares to Opendorse and NIL Club on parent-centered HS-NIL, transparent pricing, state compliance, and viral referral systems.',
-    type: 'article',
-  },
-  alternates: { canonical: '/compare' },
-};
+  path: '/compare',
+  ogType: 'article',
+});
 
 const PUBLISHED_ISO = '2026-04-17T00:00:00Z';
 const LAST_REVIEWED_HUMAN = 'April 17, 2026';

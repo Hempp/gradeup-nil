@@ -9,15 +9,16 @@
  * (see lib/hs-nil/athlete-profile.ts).
  */
 
-import type { Metadata } from 'next';
 import { SchoolsDirectoryClient } from './SchoolsDirectoryClient';
 import { FEATURED_SCHOOLS } from '@/lib/data/schools';
+import { buildMarketingMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = buildMarketingMetadata({
   title: 'Browse Schools — GradeUp NIL',
   description:
     'Search the schools on GradeUp. NCAA Power 5, HBCU programs, and high-school powerhouses — click a school to see every athlete from that program.',
-};
+  path: '/schools',
+});
 
 export default function SchoolsPage() {
   return (

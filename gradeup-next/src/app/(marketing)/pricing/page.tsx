@@ -1,22 +1,20 @@
-import type { Metadata } from 'next';
 import Script from 'next/script';
 import Link from 'next/link';
 import { Check, ArrowRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 // ISR every 5 minutes
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: 'Pricing — GradeUp HS-NIL',
-  description:
-    'Transparent NIL pricing for HS scholar-athletes, their parents, and local brands. No sales calls. No hidden fees. 8% take-rate on deals.',
-  openGraph: {
+export const metadata = {
+  ...buildMarketingMetadata({
     title: 'Pricing — GradeUp HS-NIL',
     description:
       'Transparent NIL pricing for HS scholar-athletes, their parents, and local brands. No sales calls. No hidden fees. 8% take-rate on deals.',
-    type: 'website',
-  },
+    path: '/pricing',
+  }),
+  // Preserve language alternates for i18n — helper only sets `canonical`.
   alternates: {
     canonical: '/pricing',
     languages: {

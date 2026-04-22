@@ -25,46 +25,35 @@
  *   via /api/hs/valuation/estimate/convert (fire-and-forget).
  */
 
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import { ArrowRight, Shield, Sparkles, TrendingUp } from 'lucide-react';
 import { ValuationCalculatorClient } from '@/components/hs/ValuationCalculatorClient';
+import { buildMarketingMetadata, siteUrl } from '@/lib/seo';
 
 // ISR: page body is static copy. Revalidate hourly in case we tweak
 // marketing language via a deploy.
 export const revalidate = 3600;
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
-  'https://gradeupnil.com';
+const PAGE_PATH = '/hs/valuation';
+const BASE_URL = siteUrl();
+const CANONICAL_URL = `${BASE_URL}${PAGE_PATH}`;
 
-const CANONICAL_URL = `${BASE_URL}/hs/valuation`;
-
-export const metadata: Metadata = {
-  title: 'NIL Valuation Calculator — GradeUp HS',
-  description:
-    "Find out what your high-school scholar-athlete's NIL is worth. Free, instant estimate. Factors in sport, state, grade level, social following, and GPA.",
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'NIL Valuation Calculator — GradeUp HS',
+    description:
+      "Find out what your high-school scholar-athlete's NIL is worth. Free, instant estimate. Factors in sport, state, grade level, social following, and GPA.",
+    path: PAGE_PATH,
+  }),
+  // Preserve Spanish language alternates.
   alternates: {
-    canonical: CANONICAL_URL,
+    canonical: `${siteUrl()}${PAGE_PATH}`,
     languages: {
-      en: CANONICAL_URL,
-      es: `${BASE_URL}/es/hs/valuation`,
-      'x-default': CANONICAL_URL,
+      en: `${siteUrl()}${PAGE_PATH}`,
+      es: `${siteUrl()}/es/hs/valuation`,
+      'x-default': `${siteUrl()}${PAGE_PATH}`,
     },
-  },
-  openGraph: {
-    title: 'NIL Valuation Calculator — GradeUp HS',
-    description:
-      'What is your scholar-athlete worth? Free, instant NIL estimate for high-school athletes in pilot states.',
-    type: 'website',
-    url: CANONICAL_URL,
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'NIL Valuation Calculator — GradeUp HS',
-    description:
-      "Find out what your high-school scholar-athlete's NIL is worth. Free, instant estimate.",
   },
   keywords: [
     'NIL valuation calculator',
@@ -74,10 +63,7 @@ export const metadata: Metadata = {
     'NIL deal calculator',
     'HS athlete sponsorship value',
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 // Built as a plain object then stringified at render time. Content is

@@ -9,7 +9,6 @@
  * Statically rendered with hourly revalidation so newly-published posts
  * propagate without a redeploy.
  */
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, BookOpen } from 'lucide-react';
 import {
@@ -20,23 +19,19 @@ import {
 } from '@/lib/hs-nil/blog-content';
 import { listAllStateBlogPosts } from '@/lib/hs-nil/state-blog-content';
 import { BlogPostCard, SolutionSchema } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 const PAGE_URL = '/blog';
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: 'GradeUp Blog — NIL for high-school athletes, parents, and brands',
-  description:
-    'Plain-English guides to high-school NIL. Parent playbooks, athlete strategy, brand campaign tactics, state-by-state rule breakdowns, and everything in between.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'GradeUp Blog — High-school NIL, explained',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'GradeUp Blog — NIL for high-school athletes, parents, and brands',
     description:
-      'Evergreen guides and state-by-state rule breakdowns for HS NIL.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'Plain-English guides to high-school NIL. Parent playbooks, athlete strategy, brand campaign tactics, state-by-state rule breakdowns, and everything in between.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'high school NIL blog',

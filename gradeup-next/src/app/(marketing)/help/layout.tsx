@@ -1,9 +1,12 @@
-import { Metadata } from 'next';
+import { buildMarketingMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Help Center & FAQ',
-  description:
-    'Find answers to frequently asked questions about GradeUp NIL. Learn about signing up, verification, NIL deals, payments, NCAA compliance, and more.',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'Help Center & FAQ',
+    description:
+      'Find answers to frequently asked questions about GradeUp NIL. Learn about signing up, verification, NIL deals, payments, NCAA compliance, and more.',
+    path: '/help',
+  }),
   keywords: [
     'GradeUp FAQ',
     'NIL help',
@@ -16,26 +19,7 @@ export const metadata: Metadata = {
     'college athlete deals',
     'NIL support',
   ],
-  openGraph: {
-    title: 'Help Center & FAQ',
-    description:
-      'Find answers to frequently asked questions about GradeUp NIL. Learn about signing up, verification, NIL deals, payments, and NCAA compliance.',
-    type: 'website',
-    url: 'https://gradeupnil.com/help',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Help Center & FAQ',
-    description:
-      'Find answers to frequently asked questions about GradeUp NIL. Learn about NIL deals, payments, and NCAA compliance.',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: 'https://gradeupnil.com/help',
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function HelpLayout({ children }: { children: React.ReactNode }) {

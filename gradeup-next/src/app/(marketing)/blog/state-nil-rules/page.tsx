@@ -10,7 +10,6 @@
  *
  * Server Component. Statically rendered with daily revalidation.
  */
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import {
@@ -21,23 +20,19 @@ import {
 } from '@/lib/hs-nil/state-blog-content';
 import type { PermissionStatus } from '@/lib/hs-nil/state-rules';
 import { SolutionSchema } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 const PAGE_URL = '/blog/state-nil-rules';
 
 export const revalidate = 86400; // Rebuild once per day.
 
-export const metadata: Metadata = {
-  title: 'High-School NIL Rules by State (2026 Guide) | GradeUp',
-  description:
-    'Complete 2026 guide to high-school Name, Image, and Likeness (NIL) rules in all 50 U.S. states and D.C. See which states permit HS NIL, the consent and disclosure rules, banned categories, and state-by-state compliance details.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'High-School NIL Rules by State — GradeUp',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'High-School NIL Rules by State (2026 Guide) | GradeUp',
     description:
-      'Which states allow HS NIL? Every U.S. state + D.C., grouped by permission status. Updated regularly from each state athletic association.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'Complete 2026 guide to high-school Name, Image, and Likeness (NIL) rules in all 50 U.S. states and D.C. See which states permit HS NIL, the consent and disclosure rules, banned categories, and state-by-state compliance details.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'high school NIL rules',

@@ -8,7 +8,6 @@
  *
  * Server Component. ISR 5-min.
  */
-import type { Metadata } from 'next';
 import {
   GraduationCap,
   ShieldCheck,
@@ -25,23 +24,19 @@ import {
   SolutionSchema,
   SolutionCtaBand,
 } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions/ads';
 
-export const metadata: Metadata = {
-  title: 'NIL for High-School Athletic Directors | GradeUp',
-  description:
-    'The compliance layer your school doesn&rsquo;t have bandwidth to build. Parent-signed consent, state disclosures, and a full audit trail — without a single new hire.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'GradeUp for HS Athletic Directors — Compliance you don&rsquo;t have to build',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'NIL for High-School Athletic Directors | GradeUp',
     description:
-      'NIL compliance at an HS is non-trivial. Parent consent, state disclosures, audit trail — we handle all of it.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'The compliance layer your school doesn&rsquo;t have bandwidth to build. Parent-signed consent, state disclosures, and a full audit trail — without a single new hire.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'high school athletic director NIL',

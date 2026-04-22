@@ -7,7 +7,6 @@
  *
  * Server Component. ISR 5-min.
  */
-import type { Metadata } from 'next';
 import {
   Trophy,
   Share2,
@@ -24,23 +23,19 @@ import {
   SolutionSchema,
   SolutionCtaBand,
 } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions/athletes';
 
-export const metadata: Metadata = {
-  title: 'NIL for HS Athletes — Your GPA is the advantage | GradeUp',
-  description:
-    'The first NIL platform that pays you for your GPA. Tier-B-verified grade badges, share-the-win trajectory cards, and parental consent handled for you. Built for high-school scholar-athletes.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'GradeUp for Athletes — Your GPA is your advantage',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'NIL for HS Athletes — Your GPA is the advantage | GradeUp',
     description:
-      'Get paid for your grades. Build a resume that compounds. First NIL platform built for HS scholar-athletes.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'The first NIL platform that pays you for your GPA. Tier-B-verified grade badges, share-the-win trajectory cards, and parental consent handled for you. Built for high-school scholar-athletes.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'high school NIL athlete',

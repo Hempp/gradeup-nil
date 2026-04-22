@@ -8,7 +8,6 @@
  * Server Component. ISR revalidate every 5 min so copy edits propagate
  * without redeploy-pressure.
  */
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Users,
@@ -19,23 +18,19 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { SolutionHero, PersonaCard, SolutionSchema } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions';
 
-export const metadata: Metadata = {
-  title: 'Solutions — Built for every side of the high-school NIL deal',
-  description:
-    'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. Verified grades, parental consent, state-by-state compliance.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'GradeUp NIL — Solutions for every persona',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'Solutions — Built for every side of the high-school NIL deal',
     description:
-      'The only NIL platform built HS-first. One product. Five front doors: parents, athletes, brands, ADs, state associations.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. Verified grades, parental consent, state-by-state compliance.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'high school NIL',

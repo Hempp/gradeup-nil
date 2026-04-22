@@ -20,39 +20,20 @@
  *   - robots: indexable.
  */
 
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Shield, Sparkles, TrendingUp } from 'lucide-react';
 import { BrandFmvCalculatorClient } from './client';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 3600;
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
-  'https://gradeupnil.com';
-
-const CANONICAL_URL = `${BASE_URL}/solutions/brands/fmv`;
-
-export const metadata: Metadata = {
-  title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp HS',
-  description:
-    'Know before you negotiate. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
-  alternates: {
-    canonical: CANONICAL_URL,
-  },
-  openGraph: {
-    title: 'HS Athlete NIL Fair Market Value — GradeUp HS for Brands',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp HS',
     description:
-      'What should you pay a high-school athlete with these specs? Free, instant Fair Market Value range.',
-    type: 'website',
-    url: CANONICAL_URL,
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'HS Athlete NIL Fair Market Value — GradeUp HS for Brands',
-    description:
-      'Know before you negotiate. Free HS-NIL Fair Market Value calculator for brands.',
-  },
+      'Know before you negotiate. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
+    path: '/solutions/brands/fmv',
+  }),
   keywords: [
     'NIL fair market value',
     'HS NIL budget',
@@ -62,10 +43,7 @@ export const metadata: Metadata = {
     'high school NIL FMV',
     'Opendorse alternative',
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function BrandFmvPage() {

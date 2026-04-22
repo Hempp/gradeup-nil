@@ -7,17 +7,21 @@
  *
  * Revalidate every 5 min to keep freshness while amortizing DB load.
  */
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, FileSearch } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { listPublishedCaseStudies } from '@/lib/hs-nil/case-studies';
 import { CaseStudyCard } from '@/components/hs/CaseStudyCard';
+import { buildMarketingMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Case Studies — GradeUp HS',
-  description:
-    'How real scholar-athlete partnerships performed. Verified earnings, share counts, and brand ROI from the GradeUp HS concierge era.',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'Case Studies — GradeUp HS',
+    description:
+      'How real scholar-athlete partnerships performed. Verified earnings, share counts, and brand ROI from the GradeUp HS concierge era.',
+    path: '/business/case-studies',
+  }),
+  // Preserve Spanish language alternates.
   alternates: {
     canonical: '/business/case-studies',
     languages: {
@@ -25,13 +29,6 @@ export const metadata: Metadata = {
       es: '/es/business/case-studies',
       'x-default': '/business/case-studies',
     },
-  },
-  openGraph: {
-    title: 'GradeUp HS — Case Studies',
-    description:
-      'Real deals. Verified results. How scholar-athlete NIL partnerships drive brand ROI.',
-    type: 'website',
-    url: '/business/case-studies',
   },
   robots: { index: true, follow: true },
 };

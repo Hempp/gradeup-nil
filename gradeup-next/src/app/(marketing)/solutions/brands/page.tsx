@@ -11,7 +11,6 @@
  *
  * Server Component. ISR 5-min.
  */
-import type { Metadata } from 'next';
 import {
   Utensils,
   Dumbbell,
@@ -31,23 +30,19 @@ import {
   SolutionSchema,
   SolutionCtaBand,
 } from '@/components/marketing';
+import { buildMarketingMetadata } from '@/lib/seo';
 
 export const revalidate = 300;
 
 const PAGE_URL = '/solutions/brands';
 
-export const metadata: Metadata = {
-  title: 'NIL for Brands — Reach HS scholar-athletes, compliance handled | GradeUp',
-  description:
-    'Self-serve NIL for local brands. Filter scholar-athletes by state, sport, and verified GPA. Compliance, consent, and disclosures are built in. Deals close in days, not months.',
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
-    title: 'GradeUp for Brands — HS NIL, compliance handled',
+export const metadata = {
+  ...buildMarketingMetadata({
+    title: 'NIL for Brands — Reach HS scholar-athletes, compliance handled | GradeUp',
     description:
-      'Local restaurants, tutors, gyms, boutique retail. Filter by state, sport, GPA. Compliance handled. Pay only when a deal closes.',
-    type: 'website',
-    url: PAGE_URL,
-  },
+      'Self-serve NIL for local brands. Filter scholar-athletes by state, sport, and verified GPA. Compliance, consent, and disclosures are built in. Deals close in days, not months.',
+    path: PAGE_URL,
+  }),
   robots: { index: true, follow: true },
   keywords: [
     'NIL for brands',
