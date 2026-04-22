@@ -382,14 +382,34 @@ function PartnerLogosSection() {
 
   // Brand logos - only keeping ones that display correctly
   const brands = [
+    // Apparel / footwear
     { name: 'Nike', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg', invert: true },
     { name: 'Under Armour', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Under_armour_logo.svg', invert: true },
     { name: 'Adidas', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg', invert: true },
-    { name: 'Cricket Wireless', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Cricket_Wireless_logo.svg/1200px-Cricket_Wireless_logo.svg.png', invert: false },
-    { name: 'Subway', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Subway_2016_logo.svg/1200px-Subway_2016_logo.svg.png', invert: false },
-    { name: "Papa John's", logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Papa_John%27s_new_logo.svg/1200px-Papa_John%27s_new_logo.svg.png', invert: false },
-    { name: 'Gatorade', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Gatorade_logo.svg/1200px-Gatorade_logo.svg.png', invert: true },
-    { name: 'Chipotle', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Chipotle_Mexican_Grill_logo.svg/1200px-Chipotle_Mexican_Grill_logo.svg.png', invert: true },
+    { name: 'Puma', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Puma_complete_logo.svg', invert: true },
+    { name: 'New Balance', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/New_Balance_logo.svg', invert: true },
+    // QSR / food
+    { name: 'Subway', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Subway_logo_2016.svg', invert: false },
+    { name: "Papa John's", logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Papa_John%27s_new_logo.svg', invert: false },
+    { name: 'Chipotle', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Chipotle_Mexican_Grill_logo.svg', invert: true },
+    { name: "Wendy's", logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9e/Wendy%27s_full_logo_2012.svg', invert: false },
+    { name: "McDonald's", logo: 'https://upload.wikimedia.org/wikipedia/commons/3/36/McDonald%27s_Golden_Arches.svg', invert: false },
+    { name: "Raising Cane's", logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Raising_Cane%27s_logo.svg', invert: true },
+    { name: 'Chick-fil-A', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Chick-fil-A_Logo.svg', invert: false },
+    // Beverages
+    { name: 'Gatorade', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Gatorade_logo.svg', invert: true },
+    { name: 'Powerade', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/Powerade_logo.svg', invert: false },
+    { name: 'Dr Pepper', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/Dr_Pepper_logo_2016.svg', invert: false },
+    { name: 'Red Bull', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Red_Bull.svg', invert: true },
+    { name: 'Celsius', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fe/Celsius_Holdings_Logo.svg', invert: true },
+    // Telecom / services
+    { name: 'Cricket Wireless', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Cricket_Wireless_logo.svg', invert: false },
+    { name: 'State Farm', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8b/State_Farm_logo.svg', invert: false },
+    { name: 'AT&T', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/35/AT%26T_logo_2016.svg', invert: true },
+    // Audio / tech
+    { name: 'Beats by Dre', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Beats_Electronics_logo.svg', invert: true },
+    // Collectibles
+    { name: 'Panini', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/dd/Panini_Logo.svg', invert: true },
   ];
 
   return (
