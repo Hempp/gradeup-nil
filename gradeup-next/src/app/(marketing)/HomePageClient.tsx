@@ -506,12 +506,8 @@ function PartnerLogosSection() {
             ))}
           </div>
         </div>
-        <style jsx>{`
-          @keyframes team-strip-scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-          }
-        `}</style>
+        {/* Keyframes consolidated in the single <style jsx> block at the
+            bottom of this section — Next.js disallows nested styled-jsx. */}
 
         {/* Brand Partners — continuous-scroll wordmark strip.
             Uses a CSS-only keyframe marquee; the list is doubled in the DOM
@@ -558,6 +554,10 @@ function PartnerLogosSection() {
           </div>
           <style jsx>{`
             @keyframes brand-strip-scroll {
+              from { transform: translateX(0); }
+              to { transform: translateX(-50%); }
+            }
+            @keyframes team-strip-scroll {
               from { transform: translateX(0); }
               to { transform: translateX(-50%); }
             }
