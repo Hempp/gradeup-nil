@@ -1,15 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, memo } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
-
-// Brand-strip Remotion player is heavy; lazy-loaded and skipped on SSR.
-const BrandStripPlayer = dynamic(
-  () => import('@/components/marketing/BrandStripPlayer'),
-  { ssr: false, loading: () => <div className="w-full aspect-[1920/200]" /> },
-);
 import {
   ArrowRight,
   CheckCircle2,
@@ -478,10 +471,29 @@ function PartnerLogosSection() {
           <p className="text-center text-sm font-medium text-[var(--marketing-gray-500)] mb-8">
             Brand partners actively recruiting
           </p>
-          {/* Remotion-powered marquee — infinite left-scrolling logo strip.
-              The same composition is registered in remotion/Root.tsx under
-              id "BrandStrip" and can be rendered to MP4 for social use. */}
-          <BrandStripPlayer brands={brands} background="var(--marketing-gray-950)" />
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+            {brands.map((brand, index) => (
+              <div
+                key={brand.name}
+                className={`group flex items-center justify-center hover:scale-110 transition-all duration-300 px-4 py-3 rounded-lg hover:bg-white/5 ${
+                  isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                }`}
+                style={{ transitionDelay: isVisible ? `${700 + index * 100}ms` : '0ms' }}
+                title={brand.name}
+              >
+                <Image
+                  src={brand.logo}
+                  alt={`${brand.name} logo`}
+                  width={100}
+                  height={36}
+                  className={`h-7 md:h-9 w-auto object-contain transition-opacity ${
+                    brand.invert ? 'brightness-0 invert opacity-70 group-hover:opacity-100' : 'opacity-90 group-hover:opacity-100'
+                  }`}
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
