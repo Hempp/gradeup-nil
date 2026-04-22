@@ -125,6 +125,25 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  // Permanent redirects. Consolidated April 2026 when /discover and
+  // /opportunities were folded into /athletes and /brands respectively
+  // (Directories nav cleanup). Using permanent:true → 308, which preserves
+  // method + body and signals to search engines to drop the old URLs.
+  async redirects() {
+    return [
+      {
+        source: '/discover',
+        destination: '/athletes',
+        permanent: true,
+      },
+      {
+        source: '/opportunities',
+        destination: '/brands?tab=opportunities',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 // Export with Sentry configuration and optional bundle analyzer

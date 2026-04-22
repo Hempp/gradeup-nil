@@ -72,8 +72,6 @@ const NAV: NavItem[] = [
     children: [
       { href: '/athletes', label: 'Athletes', description: 'Browse verified scholar-athletes' },
       { href: '/brands', label: 'Brands', description: 'Partners sponsoring locally' },
-      { href: '/discover', label: 'Discover', description: 'Curated matches by sport + state' },
-      { href: '/opportunities', label: 'Opportunities', description: 'Open deals accepting applications' },
     ],
   },
   { kind: 'link', href: '/pricing', label: 'Pricing' },
