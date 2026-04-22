@@ -504,8 +504,19 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Protected dashboard routes
-  if (path.startsWith('/athlete') || path.startsWith('/brand') || path.startsWith('/director') || path.startsWith('/admin')) {
+  // Protected dashboard routes — match the EXACT segment, not a prefix.
+  // `startsWith('/athlete')` used to swallow `/athletes` (the public scholar-
+  // athlete directory) and `/brand` used to swallow `/brands` (public brand
+  // directory), silently redirecting both to /login. Segment-boundary check
+  // keeps `/athlete/dashboard`, `/brand/campaigns`, `/admin/users`, etc.
+  // protected while leaving plural public directories alone.
+  const isDashboardRoute =
+    path === '/athlete' || path.startsWith('/athlete/') ||
+    path === '/brand' || path.startsWith('/brand/') ||
+    path === '/director' || path.startsWith('/director/') ||
+    path === '/admin' || path.startsWith('/admin/');
+
+  if (isDashboardRoute) {
     if (!user) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', path);
