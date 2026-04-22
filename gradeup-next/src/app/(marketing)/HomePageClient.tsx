@@ -370,14 +370,18 @@ function PartnerLogosSection() {
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
-  // School logos - only keeping ones that display correctly
+  // Team/school cards — only schools whose Wikipedia Commons logo URLs we've
+  // verified. Adding more: look up the logo on Wikipedia's athletics article,
+  // right-click the image → copy URL, paste into a new entry here. Format:
+  //   { name, fullName, logo, color }
+  // A full-name field drives the card label ("Oregon Ducks" style).
   const schools = [
-    { name: 'Stanford', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Stanford_Cardinal_logo.svg', color: '#8C1515' },
-    { name: 'Ohio State', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Ohio_State_Buckeyes_logo.svg', color: '#BB0000' },
-    { name: 'Michigan', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Michigan_Wolverines_logo.svg', color: '#FFCB05' },
-    { name: 'USC', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/94/USC_Trojans_logo.svg', color: '#990000' },
-    { name: 'Alabama', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Alabama_Crimson_Tide_logo.svg', color: '#9E1B32' },
-    { name: 'Texas', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Texas_Longhorns_logo.svg', color: '#BF5700' },
+    { name: 'Stanford',   fullName: 'Stanford Cardinal',      logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Stanford_Cardinal_logo.svg', color: '#8C1515' },
+    { name: 'Ohio State', fullName: 'Ohio State Buckeyes',    logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Ohio_State_Buckeyes_logo.svg', color: '#BB0000' },
+    { name: 'Michigan',   fullName: 'Michigan Wolverines',    logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Michigan_Wolverines_logo.svg', color: '#FFCB05' },
+    { name: 'USC',        fullName: 'USC Trojans',            logo: 'https://upload.wikimedia.org/wikipedia/commons/9/94/USC_Trojans_logo.svg',         color: '#990000' },
+    { name: 'Alabama',    fullName: 'Alabama Crimson Tide',   logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Alabama_Crimson_Tide_logo.svg', color: '#9E1B32' },
+    { name: 'Texas',      fullName: 'Texas Longhorns',        logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Texas_Longhorns_logo.svg',     color: '#BF5700' },
   ];
 
   // Brand wordmarks — rendered as stylized text rather than image logos.
@@ -425,44 +429,61 @@ function PartnerLogosSection() {
       role="region"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Animated Header */}
+        {/* Explore Teams — section header with View all escape */}
         <div
-          className={`text-center mb-10 transition-all duration-700 ${
+          className={`flex items-end justify-between mb-8 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <p className="text-sm font-medium text-[var(--marketing-gray-500)]">
-            Athletes from 40+ universities trust GradeUp
-          </p>
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-white">
+              Explore Teams
+            </h2>
+            <p className="mt-1 text-sm text-[var(--marketing-gray-500)]">
+              Athletes from 40+ universities trust GradeUp
+            </p>
+          </div>
+          <Link
+            href="/athletes"
+            className="text-sm font-semibold text-[var(--accent-primary)] hover:text-white transition-colors whitespace-nowrap"
+          >
+            View all <span aria-hidden="true">→</span>
+          </Link>
         </div>
 
-        {/* School Logos Grid - Staggered Animation */}
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
+        {/* Team cards grid — logo + school name, responsive columns.
+            Cards link into the athletes directory filtered by school. */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {schools.map((school, index) => (
-            <div
+            <Link
               key={school.name}
-              className={`group flex flex-col items-center gap-2 transition-all duration-500 ${
-                isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-90'
+              href={`/athletes?school=${encodeURIComponent(school.name)}`}
+              className={`group flex items-center gap-3 p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
-              style={{ transitionDelay: isVisible ? `${index * 80}ms` : '0ms' }}
+              style={{ transitionDelay: isVisible ? `${index * 60}ms` : '0ms' }}
+              aria-label={`Browse ${school.fullName} athletes`}
             >
               <div
-                className="w-14 h-14 rounded-xl flex items-center justify-center p-2 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg"
-                style={{ backgroundColor: school.color + '25', boxShadow: `0 4px 20px ${school.color}30` }}
+                className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform duration-300"
+                style={{
+                  backgroundColor: `${school.color}1A`,
+                  boxShadow: `0 0 0 1px ${school.color}33 inset`,
+                }}
               >
                 <Image
                   src={school.logo}
-                  alt={`${school.name} logo`}
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 object-contain"
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-contain"
                   loading="lazy"
                 />
               </div>
-              <span className="text-xs text-[var(--marketing-gray-500)] group-hover:text-white transition-colors font-medium">
-                {school.name}
+              <span className="text-sm md:text-base font-semibold text-white/85 group-hover:text-white transition-colors truncate">
+                {school.fullName}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
 
