@@ -26,6 +26,7 @@ import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
 import { PaymentMethodsSection } from '@/components/athlete/PaymentMethodsSection';
 import { InviteMyDirectorModal } from '@/components/athlete/InviteMyDirectorModal';
+import { ParentSupervisionCard } from '@/components/hs/ParentSupervisionCard';
 import { useTheme, useAuth } from '@/context';
 import { updatePassword } from '@/lib/services/auth';
 
@@ -415,6 +416,10 @@ export default function AthleteSettingsPage() {
         isOpen={inviteDirectorModalOpen}
         onClose={() => setInviteDirectorModalOpen(false)}
       />
+
+      {/* Parent Supervision — HS-NIL only. Card self-hides when the
+          viewer isn't an HS athlete or the feature flag is off. */}
+      <ParentSupervisionCard />
 
       {/* Danger Zone */}
       <Card className="border-[var(--color-error)]/30">
