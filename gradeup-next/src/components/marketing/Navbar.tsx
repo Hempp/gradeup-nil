@@ -160,7 +160,14 @@ export function Navbar() {
       ref={navRef}
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        scrolled ? 'glass-marketing shadow-lg' : 'bg-transparent',
+        // When the mobile drawer is open, force a solid opaque bar so the
+        // hamburger/logo row doesn't appear to float on hero imagery.
+        // Otherwise: frosted glass on scroll, fully transparent at top.
+        mobileMenuOpen
+          ? 'bg-[var(--marketing-gray-900)] shadow-lg'
+          : scrolled
+            ? 'glass-marketing shadow-lg'
+            : 'bg-transparent',
       )}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
@@ -251,7 +258,7 @@ export function Navbar() {
             <Link href="/login">
               <Button
                 variant="ghost"
-                className="text-white hover:bg-white/10 hover:text-[var(--accent-primary)]"
+                className="text-white border border-white/25 bg-white/5 hover:bg-white/15 hover:border-white/40 hover:text-[var(--accent-primary)]"
               >
                 Log In
               </Button>
@@ -274,11 +281,13 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu — full-screen accordion. One group expanded at a time. */}
+      {/* Mobile Menu — full-screen accordion. One group expanded at a time.
+          Uses explicit `bg-neutral-950` (≈#0a0a0a) rather than a CSS var so
+          we never inherit a transparent token from an outer theme scope. */}
       <div
         id="mobile-menu"
         className={cn(
-          'lg:hidden fixed inset-0 top-16 z-40 bg-[var(--marketing-gray-900)] border-t border-[var(--marketing-gray-800)]',
+          'lg:hidden fixed inset-0 top-16 z-40 bg-neutral-950 border-t border-[var(--marketing-gray-800)]',
           'transition-all duration-300 ease-in-out',
           mobileMenuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'

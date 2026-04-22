@@ -1285,7 +1285,7 @@ function FinalCTASection() {
           <Link href="/signup/brand">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-white/20 hover:bg-white/30 text-black font-semibold border-2 border-black/20"
+              className="w-full sm:w-auto bg-white hover:bg-white/90 text-black font-semibold border-2 border-black/30"
             >
               Partner as Brand
             </Button>
