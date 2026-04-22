@@ -41,7 +41,7 @@ export const metadata = {
     'brand NIL calculator',
     'NIL campaign budget',
     'high school NIL FMV',
-    'Opendorse alternative',
+    'college NIL alternative',
   ],
   robots: { index: true, follow: true },
 };
@@ -110,7 +110,7 @@ export default function BrandFmvPage() {
                   className="h-3.5 w-3.5 text-[var(--accent-gold)]"
                   aria-hidden="true"
                 />
-                Benchmarked to Opendorse college averages
+                Benchmarked to published college-NIL averages
               </span>
               <span>Campaign preview included</span>
             </div>

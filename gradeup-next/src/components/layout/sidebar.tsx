@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -17,6 +17,11 @@ import {
   Target,
   Shield,
   ChevronLeft,
+  Home,
+  Globe,
+  Store,
+  BadgeCheck,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types';
@@ -33,6 +38,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Users,
   Target,
   Shield,
+  Home,
+  Globe,
+  Store,
+  BadgeCheck,
 };
 
 export interface SidebarProps {
@@ -134,48 +143,89 @@ export function Sidebar({ navItems, variant = 'athlete', className, user, collap
       {/* Navigation */}
       <nav aria-label="Main menu" className="flex-1 py-4 px-3 overflow-y-auto">
         <ul className="space-y-1" role="list">
-          {navItems.map((item) => {
+          {navItems.map((item, idx) => {
             const Icon = iconMap[item.icon] || LayoutDashboard;
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            // Render a section heading whenever this item's section label
+            // differs from the previous item's. `undefined` section items
+            // stay ungrouped (no heading).
+            const showSection =
+              item.section && item.section !== navItems[idx - 1]?.section;
+
+            const linkInner = (
+              <>
+                <Icon className="h-5 w-5 flex-shrink-0" />
+                {!collapsed && (
+                  <>
+                    <span className="flex-1">{item.label}</span>
+                    {item.external && (
+                      <ExternalLink
+                        className="h-3.5 w-3.5 flex-shrink-0 opacity-60"
+                        aria-hidden="true"
+                      />
+                    )}
+                    {item.badge && item.badge > 0 && (
+                      <span className="h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-[var(--accent-primary)] text-black text-xs font-semibold">
+                        {item.badge > 99 ? '99+' : item.badge}
+                      </span>
+                    )}
+                  </>
+                )}
+              </>
+            );
+
+            const linkClass = cn(
+              'flex items-center gap-3 rounded-lg',
+              'min-h-[44px] py-2.5 px-3',
+              'text-sm transition-all duration-200',
+              isActive && !item.external
+                ? 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] font-medium border-l-2 border-[var(--accent-primary)]'
+                : 'text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10',
+              collapsed && 'justify-center px-0',
+              'touch-manipulation'
+            );
 
             return (
-              <li key={item.href} className="relative">
-                <Link
-                  href={item.href}
-                  className={cn(
-                    // Base layout
-                    'flex items-center gap-3 rounded-lg',
-                    // Touch-friendly sizing (44px min height)
-                    'min-h-[44px] py-2.5 px-3',
-                    // Typography
-                    'text-sm transition-all duration-200',
-                    // Active state
-                    isActive
-                      ? 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] font-medium border-l-2 border-[var(--accent-primary)]'
-                      : 'text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10',
-                    // Collapsed state
-                    collapsed && 'justify-center px-0',
-                    // Touch optimization
-                    'touch-manipulation'
-                  )}
-                  title={collapsed ? item.label : undefined}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  {!collapsed && (
-                    <>
-                      <span className="flex-1">{item.label}</span>
-                      {item.badge && item.badge > 0 && (
-                        <span className="h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-[var(--accent-primary)] text-black text-xs font-semibold">
-                          {item.badge > 99 ? '99+' : item.badge}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </Link>
-                {collapsed && item.badge && item.badge > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-white" />
+              <Fragment key={item.href}>
+                {showSection && !collapsed && (
+                  <li className="pt-4 pb-1 px-3" role="presentation">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40">
+                      {item.section}
+                    </p>
+                  </li>
                 )}
-              </li>
+                {showSection && collapsed && (
+                  <li
+                    className="my-2 mx-2 h-px bg-white/10"
+                    role="presentation"
+                    aria-hidden="true"
+                  />
+                )}
+                <li className="relative">
+                  {item.external ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                      title={collapsed ? item.label : undefined}
+                    >
+                      {linkInner}
+                    </a>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={linkClass}
+                      title={collapsed ? item.label : undefined}
+                    >
+                      {linkInner}
+                    </Link>
+                  )}
+                  {collapsed && item.badge && item.badge > 0 && (
+                    <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-white" />
+                  )}
+                </li>
+              </Fragment>
             );
           })}
         </ul>

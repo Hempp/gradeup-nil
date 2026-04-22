@@ -79,9 +79,9 @@ export default async function HsAnnualReportLanding({
             report
           </h1>
           <p className="mt-3 max-w-2xl text-sm text-white/60">
-            Opendorse&apos;s &ldquo;NIL at N&rdquo; reports are the college-NIL
-            industry reference. This is ours. Pick a window, preview, export
-            the numbers, then write the narrative on top of the generated draft.
+            Our annual high-school NIL report — pick a window, preview,
+            export the numbers, then write the narrative on top of the
+            generated draft.
           </p>
         </header>
 

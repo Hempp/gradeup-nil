@@ -1204,6 +1204,12 @@ html.no-transitions *::after {
   --text-secondary: var(--marketing-gray-300);
   --text-muted: var(--marketing-gray-500);
   --border-color: var(--marketing-gray-800);
+  /* Text color intended to sit ON an accent-colored surface. Without
+     this override we inherit :root's `--text-inverse: white`, which
+     renders white-on-cyan buttons (Button primary variant) at ~2:1
+     contrast — effectively invisible. Keep it locked to marketing-
+     black so every cyan/lime/gold surface gets legible text. */
+  --text-inverse: var(--marketing-black);
 }
 
 /* Hero Orbs (floating gradient spheres) */
@@ -1960,6 +1966,11 @@ a:hover {
   --text-primary: #ffffff;
   --text-secondary: var(--marketing-gray-300);
   --text-muted: var(--marketing-gray-500);
+  /* Text that sits ON an accent-colored surface. Without this override
+     we inherit :root's `--text-inverse: white`, and the Button primary
+     variant renders cyan-on-cyan-white — unreadable on the dashboards
+     where primary maps to cyan. */
+  --text-inverse: var(--marketing-black);
 
   /* ─── Override Border Colors ─── */
   --border-color: var(--marketing-gray-800);

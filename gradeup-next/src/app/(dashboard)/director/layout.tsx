@@ -14,6 +14,12 @@ const directorNavItems: NavItem[] = [
   { label: 'Compliance', href: '/director/compliance', icon: 'Shield', badge: 2 },
   { label: 'Analytics', href: '/director/analytics', icon: 'BarChart3' },
   { label: 'Settings', href: '/director/settings', icon: 'Settings' },
+  // Outbound links to public surfaces. Grouped under "Explore" so the
+  // director can jump to the marketing side of the product without
+  // losing the dashboard — each opens in a new tab (external: true).
+  { label: 'Home page', href: '/', icon: 'Home', section: 'Explore', external: true },
+  { label: 'Athlete directory', href: '/athletes', icon: 'Globe', section: 'Explore', external: true },
+  { label: 'Brand directory', href: '/brands', icon: 'Store', section: 'Explore', external: true },
 ];
 
 // Map paths to breadcrumb labels

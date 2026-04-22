@@ -366,6 +366,13 @@ export interface NavItem {
   href: string;
   icon: string;
   badge?: number;
+  /** When set, the sidebar renders this group heading above the item
+   *  and any adjacent items with the same section. Used to break up
+   *  the sidebar into zones (e.g. "Manage" vs "Explore"). */
+  section?: string;
+  /** If true, the link opens in a new tab. Useful for sending dashboard
+   *  users out to public marketing pages without losing their place. */
+  external?: boolean;
 }
 
 // ─── Verification Workflow ───

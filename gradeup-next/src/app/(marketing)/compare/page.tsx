@@ -9,9 +9,9 @@ export const revalidate = 300;
 
 export const metadata = buildMarketingMetadata({
   title:
-    'GradeUp HS-NIL vs. Opendorse vs. NIL Club | Compare High-School NIL Platforms',
+    'How GradeUp compares to other NIL platforms | HS-first NIL',
   description:
-    'See how GradeUp compares to Opendorse and NIL Club on parent-centered HS-NIL, transparent pricing, state compliance, and viral referral systems.',
+    'How GradeUp HS-NIL differs from enterprise college NIL platforms and subscription-based NIL apps on parent-centered HS-NIL, transparent pricing, state compliance, and referrals.',
   path: '/compare',
   ogType: 'article',
 });
@@ -24,9 +24,9 @@ const ARTICLE_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline:
-    'GradeUp HS-NIL vs. Opendorse vs. NIL Club — how they actually differ',
+    'How GradeUp HS-NIL compares to other NIL platforms',
   description:
-    'Side-by-side comparison of GradeUp HS-NIL, Opendorse, and NIL Club across audience, compliance, pricing transparency, and HS-specific product depth.',
+    'Side-by-side comparison of GradeUp HS-NIL against enterprise college NIL platforms and subscription-based NIL apps across audience, compliance, pricing transparency, and HS-specific product depth.',
   author: { '@type': 'Organization', name: 'GradeUp NIL' },
   publisher: { '@type': 'Organization', name: 'GradeUp NIL' },
   datePublished: PUBLISHED_ISO,
@@ -38,117 +38,107 @@ const ARTICLE_JSONLD = {
 // COMPARISON ROWS
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Two competitor archetypes we compare against. Deliberately not named —
+// we describe the category they represent so the comparison is about
+// product shape, not brand positioning.
 type CompareRow = {
   dimension: string;
   gradeup: string;
-  opendorse: string;
-  nilClub: string;
+  enterprise: string; // "Enterprise college NIL" archetype
+  subscription: string; // "Subscription / fan-app NIL" archetype
 };
 
 const rows: CompareRow[] = [
   {
     dimension: 'Primary audience',
     gradeup: 'HS scholar-athletes + parents, extending into college',
-    opendorse: 'College athletes via enterprise (schools, collectives)',
-    nilClub: 'College athletes + paying fans (subscription)',
+    enterprise: 'College athletes via enterprise (schools, collectives)',
+    subscription: 'College athletes + paying fans (subscription)',
   },
   {
     dimension: 'Self-serve signup for brands',
     gradeup: 'Yes — under two minutes, no sales call',
-    opendorse: 'No — contact sales',
-    nilClub: 'No — contact sales',
+    enterprise: 'No — contact sales',
+    subscription: 'No — contact sales',
   },
   {
     dimension: 'Self-serve signup for parents',
     gradeup: 'Yes — parents sign up first, then link their athlete',
-    opendorse: 'No — no parent-facing surface',
-    nilClub: 'No — no parent-facing surface',
+    enterprise: 'No — no parent-facing surface',
+    subscription: 'No — no parent-facing surface',
   },
   {
     dimension: 'Parental consent architecture',
     gradeup: 'Yes — scope-based consent, identity verification, audit log',
-    opendorse: 'No — enterprise district contract implies out-of-band consent',
-    nilClub: 'No — not surfaced publicly',
+    enterprise: 'No — enterprise district contract implies out-of-band consent',
+    subscription: 'No — not surfaced publicly',
   },
   {
     dimension: 'Per-state rules engine (automated)',
     gradeup: 'Yes — preflight validation against 7 pilot states',
-    opendorse: 'Partial — blog post cataloguing state rules; not a live engine',
-    nilClub: 'Asserted compliance, not demonstrated',
+    enterprise: 'Partial — published blog content, not a live engine',
+    subscription: 'Asserted compliance, not demonstrated',
   },
   {
     dimension: 'State AD compliance portal',
     gradeup: 'Yes — free read-only portal for state athletic associations',
-    opendorse: 'No — sells to schools, not to state athletic associations',
-    nilClub: 'No',
+    enterprise: 'No — sells to schools, not to state athletic associations',
+    subscription: 'No',
   },
   {
     dimension: 'Public pricing',
     gradeup: 'Yes — 8% / 6% take-rate published; Brand Plus at $149/mo',
-    opendorse: 'No — contact sales on every product page',
-    nilClub: 'No — contact sales for brand campaigns',
+    enterprise: 'No — contact sales on every product page',
+    subscription: 'No — contact sales for brand campaigns',
   },
   {
     dimension: 'HS-specific product',
     gradeup: 'Yes — core product; 7-state pilot, consent, disclosure pipeline',
-    opendorse:
-      'No — one blog post + 3-year district enterprise contract pilot',
-    nilClub: 'No — single help-center article',
+    enterprise: 'No — college-first; HS via enterprise district pilots',
+    subscription: 'No — single help-center article',
   },
   {
     dimension: 'Dual-audience (HS + college)',
     gradeup: 'Yes — built to preserve trajectory HS → college → alumni',
-    opendorse: 'No — college-first; HS via enterprise-district only',
-    nilClub: 'No — college-first; HS footnoted',
+    enterprise: 'No — college-first; HS via enterprise-district only',
+    subscription: 'No — college-first; HS footnoted',
   },
   {
     dimension: 'Viral referral system',
     gradeup: 'Yes — parent-to-parent referrals, tiered rewards',
-    opendorse: 'No — enterprise sales-driven growth',
-    nilClub: 'Partial — fan subscription creates some network effect',
+    enterprise: 'No — enterprise sales-driven growth',
+    subscription: 'Partial — fan subscription creates some network effect',
   },
   {
     dimension: 'Dispute resolution system',
     gradeup: 'Yes — structured dispute flow with admin mediation',
-    opendorse: 'Not publicly surfaced',
-    nilClub:
+    enterprise: 'Not publicly surfaced',
+    subscription:
       'Reported gap — public complaints of unfulfilled deals after content posted',
   },
   {
     dimension: 'Case studies with per-deal ROI',
     gradeup: 'Yes — verified case studies tied to share events and deal data',
-    opendorse: 'No — scale claims + reviews, not per-deal ROI studies',
-    nilClub: 'Yes — sub-affiliate case studies with named brand numbers',
+    enterprise: 'No — scale claims + reviews, not per-deal ROI studies',
+    subscription: 'Yes — sub-affiliate case studies with named brand numbers',
   },
   {
     dimension: 'Trajectory narrative / public share URLs',
     gradeup: 'Yes — /hs/trajectory/[token] with dynamic OG image',
-    opendorse: 'No',
-    nilClub: 'No — profile shows subscribers and recent content only',
+    enterprise: 'No',
+    subscription: 'No — profile shows subscribers and recent content only',
   },
   {
     dimension: 'PWA + push notifications',
     gradeup: 'Yes — PWA shell with push notification wiring',
-    opendorse: 'Native apps; no PWA emphasis',
-    nilClub: 'Native apps; no PWA emphasis',
-  },
-  {
-    dimension: 'Funding raised (public sources)',
-    gradeup: 'Bootstrapped',
-    opendorse: '$38.9M across 16 investors (PitchBook)',
-    nilClub: '~$2M (TMV + Notre Dame; PitchBook / Crunchbase)',
-  },
-  {
-    dimension: 'Scale claimed (athletes / deals)',
-    gradeup: 'Pre-launch concierge MVP',
-    opendorse: '175,000+ athletes · $250M+ NIL compensation processed',
-    nilClub: '650,000+ athletes · $50M+ paid · 1.7B follower reach',
+    enterprise: 'Native apps; no PWA emphasis',
+    subscription: 'Native apps; no PWA emphasis',
   },
   {
     dimension: 'Time-to-first-deal for a new user (estimate)',
     gradeup: 'Days — self-serve parent + brand signup, preflight at deal time',
-    opendorse: 'Weeks to months — enterprise sales + legal review',
-    nilClub: 'Days for athlete-side; brand side is sales-gated',
+    enterprise: 'Weeks to months — enterprise sales + legal review',
+    subscription: 'Days for athlete-side; brand side is sales-gated',
   },
 ];
 
@@ -176,13 +166,16 @@ function Hero() {
         </span>
         <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
           GradeUp HS-NIL vs.{' '}
-          <span className="gradient-text-cyan">Opendorse</span> vs.{' '}
-          <span className="text-[var(--accent-gold)]">NIL Club</span>
+          <span className="gradient-text-cyan">enterprise college NIL</span>{' '}
+          vs.{' '}
+          <span className="text-[var(--accent-gold)]">
+            subscription NIL apps
+          </span>
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
-          How the three platforms actually differ — from public sources, with
-          citations. We&rsquo;re new; we know it. We win on specific axes.
-          Here&rsquo;s the honest comparison.
+          How the three categories actually differ — product shape, pricing
+          posture, and who they were designed for. We&rsquo;re new; we know
+          it. We win on specific axes. Here&rsquo;s the honest comparison.
         </p>
       </div>
     </section>
@@ -203,8 +196,9 @@ function CompareTable() {
         <div className="overflow-x-auto rounded-xl border border-white/10 bg-[var(--marketing-gray-950)]">
           <table className="w-full min-w-[820px] text-left text-sm">
             <caption className="sr-only">
-              Feature-by-feature comparison of GradeUp HS-NIL, Opendorse, and
-              NIL Club across {rows.length} dimensions
+              Feature-by-feature comparison of GradeUp HS-NIL against
+              enterprise college NIL and subscription-based NIL platforms
+              across {rows.length} dimensions
             </caption>
             <thead className="bg-white/5">
               <tr>
@@ -218,10 +212,10 @@ function CompareTable() {
                   GradeUp HS-NIL
                 </th>
                 <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
-                  Opendorse
+                  Enterprise college NIL
                 </th>
                 <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
-                  NIL Club
+                  Subscription NIL apps
                 </th>
               </tr>
             </thead>
@@ -241,10 +235,10 @@ function CompareTable() {
                     {row.gradeup}
                   </td>
                   <td className="px-4 py-3 text-white/70 sm:px-6 align-top">
-                    {row.opendorse}
+                    {row.enterprise}
                   </td>
                   <td className="px-4 py-3 text-white/70 sm:px-6 align-top">
-                    {row.nilClub}
+                    {row.subscription}
                   </td>
                 </tr>
               ))}
@@ -252,7 +246,7 @@ function CompareTable() {
           </table>
         </div>
         <p className="mt-3 text-xs text-white/40 sm:hidden">
-          Scroll horizontally to compare all three platforms.
+          Scroll horizontally to compare all three categories.
         </p>
       </div>
     </section>
@@ -285,32 +279,32 @@ function WhenToChoose() {
           </div>
           <div className="rounded-2xl border border-white/10 bg-[var(--marketing-gray-950)] p-6">
             <h3 className="text-lg font-bold text-white mb-3">
-              When Opendorse might fit
+              When enterprise college NIL might fit
             </h3>
             <p className="text-sm text-white/75 leading-relaxed">
               If you&rsquo;re already an enrolled college program or a
-              collective with an enterprise budget, Opendorse is the incumbent:
-              175,000+ athletes, $250M+ in NIL compensation processed, and deep
-              integrations with school compliance offices. Their pricing is
-              bespoke and their sales cycle is weeks to months. For established
-              Division-I programs with existing institutional procurement,
-              Opendorse is a credible choice — it&rsquo;s simply not designed
-              for a high-school parent or a local brand with a $200 budget.
+              collective with an enterprise budget, the established
+              college-first platforms have deep integrations with school
+              compliance offices and large athlete networks. Their pricing is
+              bespoke and their sales cycles run weeks to months. For
+              established Division-I programs with existing institutional
+              procurement, that&rsquo;s a credible choice — it&rsquo;s simply
+              not designed for a high-school parent or a local brand with a
+              $200 budget.
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-[var(--marketing-gray-950)] p-6">
             <h3 className="text-lg font-bold text-white mb-3">
-              When NIL Club might fit
+              When a subscription NIL app might fit
             </h3>
             <p className="text-sm text-white/75 leading-relaxed">
               If you&rsquo;re a college athlete who wants to turn an existing
-              fan following into recurring subscription revenue, NIL Club is
-              purpose-built for that. Their sub-affiliate brand campaigns
-              (SoFi, Coinbase, Amazon Prime Student, Subway) show strong
-              conversion numbers for advertisers. The product is
-              college-oriented; high school is a single help-center article,
-              and the architecture assumes an already-of-age athlete rather
-              than a parent-as-custodian relationship.
+              fan following into recurring subscription revenue, the
+              subscription-based apps are purpose-built for that, and some run
+              strong sub-affiliate brand-campaign funnels. The product is
+              college-oriented; high school is usually a footnote, and the
+              architecture assumes an already-of-age athlete rather than a
+              parent-as-custodian relationship.
             </p>
           </div>
         </div>
@@ -320,61 +314,25 @@ function WhenToChoose() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SOURCES + UPDATED
+// UPDATED
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SourcesAndUpdated() {
-  const sources = [
-    { label: 'Opendorse homepage (opendorse.com)', href: 'https://opendorse.com/' },
-    { label: 'Opendorse enterprise site (biz.opendorse.com)', href: 'https://biz.opendorse.com/' },
-    { label: 'PitchBook — Opendorse company profile', href: 'https://pitchbook.com/profiles/company/57762-64' },
-    { label: 'Opendorse "NIL at Four" annual report (July 2025)', href: 'https://biz.opendorse.com/wp-content/uploads/2025/07/NIL-at-Four-Monetizing-the-New-Reality_July2025.pdf' },
-    { label: 'Opendorse blog — high-school NIL state-by-state', href: 'https://biz.opendorse.com/blog/nil-high-school/' },
-    { label: 'County 17 — Wyoming HS Opendorse contract (April 2026)', href: 'https://county17.com/2026/04/16/trustees-take-first-step-on-opendorse-policy/' },
-    { label: 'NIL Club homepage (nilclub.com)', href: 'https://nilclub.com' },
-    { label: 'NIL Club sub-affiliate case studies', href: 'https://nilclub.com/business/case-studies?type=sub-affiliate' },
-    { label: 'PitchBook — NIL Club company profile', href: 'https://pitchbook.com/profiles/company/454329-28' },
-    { label: 'Crunchbase — NIL Club profile', href: 'https://www.crunchbase.com/organization/nil-club' },
-    { label: 'KWCH (Sept 2024) — Kansas school warning on HS NIL app', href: 'https://www.kwch.com/2024/09/19/app-claims-help-high-school-athletes-make-money-kansas-school-warns-against-joining/' },
-  ];
-
+function UpdatedNotice() {
   return (
     <section
-      aria-label="Sources and update metadata"
+      aria-label="Update metadata"
       className="bg-[var(--marketing-gray-950)] py-12 border-y border-white/10"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-xl border border-white/10 bg-black p-5 mb-8">
+        <div className="rounded-xl border border-white/10 bg-black p-5">
           <p className="text-sm text-white/70">
-            This page is updated <strong className="text-white">{LAST_REVIEWED_HUMAN}</strong> based on public sources.
-            Last reviewed against competitor sites on{' '}
-            <strong className="text-white">{LAST_REVIEWED_HUMAN}</strong>. We
-            re-audit this comparison when competitor public surfaces change
-            materially or at least quarterly.
+            This page is updated{' '}
+            <strong className="text-white">{LAST_REVIEWED_HUMAN}</strong>{' '}
+            based on publicly available product information from platforms in
+            each category. We re-audit this comparison when public product
+            surfaces change materially or at least quarterly.
           </p>
         </div>
-
-        <h2 className="font-display text-2xl font-bold text-white mb-4">
-          Sources
-        </h2>
-        <p className="text-sm text-white/60 mb-4">
-          All claims above are drawn from publicly accessible sources. We do
-          not use private or non-public data to compare competitors.
-        </p>
-        <ul className="list-disc pl-6 text-sm text-white/75 space-y-2">
-          {sources.map((s) => (
-            <li key={s.href}>
-              <a
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[var(--accent-primary)] underline underline-offset-2"
-              >
-                {s.label}
-              </a>
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );
@@ -423,21 +381,19 @@ function CompareCTA() {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export default function ComparePage() {
-  // Structured data. Build-time static; no user input.
-  const jsonLdString = JSON.stringify(ARTICLE_JSONLD);
   return (
     <>
       <Script
         id="compare-article-jsonld"
         type="application/ld+json"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
       >
-        {jsonLdString}
+        {JSON.stringify(ARTICLE_JSONLD)}
       </Script>
       <Hero />
       <CompareTable />
       <WhenToChoose />
-      <SourcesAndUpdated />
+      <UpdatedNotice />
       <CompareCTA />
     </>
   );

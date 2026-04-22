@@ -131,18 +131,17 @@ export function BrandFmvResultCard({
         </p>
       </div>
 
-      {/* Opendorse-comparison framing */}
+      {/* Benchmark framing against published college NIL averages. */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5">
         <h3 className="text-sm font-semibold text-white">
           Benchmark check
         </h3>
         <p className="mt-2 text-sm text-white/70">
           These ranges fall <strong className="text-white">below</strong>{' '}
-          Opendorse&rsquo;s published college-NIL averages, consistent
-          with the HS market where deals are smaller and more
-          locally-scoped. That&rsquo;s the point: HS-NIL is where you
-          build a pipeline of loyal creators early, before the college
-          premium kicks in.
+          the published college-NIL averages, consistent with the HS
+          market where deals are smaller and more locally-scoped.
+          That&rsquo;s the point: HS-NIL is where you build a pipeline
+          of loyal creators early, before the college premium kicks in.
         </p>
       </div>
 

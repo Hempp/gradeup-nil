@@ -57,7 +57,7 @@ export const metadata = {
 
 const FAQ_ITEMS = [
   {
-    question: 'How is this different from Opendorse or the big NIL platforms?',
+    question: 'How is this different from the big college NIL platforms?',
     answer:
       'They&rsquo;re built for college athletic departments. We&rsquo;re built for high school, parent-first. Our deal flow assumes minors, our compliance engine is state-by-state, and our pricing is self-serve — no enterprise sales call required.',
   },
@@ -84,7 +84,7 @@ const FAQ_ITEMS = [
   {
     question: 'Can I run campaigns across multiple athletes?',
     answer:
-      'Yes. Post a campaign, get matched applications, accept the athletes that fit your budget and fit your brand. Our multi-athlete surface (the NIL Club sub-affiliate counter) tracks every share and deliverable across the whole cohort.',
+      'Yes. Post a campaign, get matched applications, accept the athletes that fit your budget and fit your brand. Our multi-athlete surface tracks every share and deliverable across the whole cohort.',
   },
 ];
 
@@ -234,7 +234,7 @@ export default function BrandsSolutionPage() {
               href="/compare"
               className="btn-marketing-outline inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold"
             >
-              Compare to Opendorse
+              See how we compare
             </Link>
           </div>
         </div>
