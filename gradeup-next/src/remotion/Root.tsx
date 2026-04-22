@@ -1,5 +1,6 @@
 import { Composition, registerRoot } from 'remotion';
 import { GradeUpDemo } from './GradeUpDemo';
+import { BrandStripScene } from './scenes/BrandStripScene';
 
 /**
  * GradeUp NIL Remotion Video Configuration
@@ -62,6 +63,29 @@ const RemotionRoot: React.FC = () => {
         height={1920} // Vertical for social
         defaultProps={{
           // voiceoverPath: 'audio/voiceover-short.mp3',
+        }}
+      />
+
+      {/* Brand-partner marquee — embedded on the homepage via @remotion/player.
+          20-second loop at 30 fps; short enough that the continuous scroll
+          feels natural but long enough to render to MP4 for social use. */}
+      <Composition
+        id="BrandStrip"
+        component={BrandStripScene}
+        durationInFrames={600}
+        fps={30}
+        width={1920}
+        height={200}
+        defaultProps={{
+          background: '#0a0a0a',
+          scrollSpeedPxPerSec: 80,
+          gap: 64,
+          logoWidth: 140,
+          brands: [
+            { name: 'Nike', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg', invert: true },
+            { name: 'Under Armour', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Under_armour_logo.svg', invert: true },
+            { name: 'Adidas', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg', invert: true },
+          ],
         }}
       />
     </>
