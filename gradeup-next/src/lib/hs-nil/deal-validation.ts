@@ -104,7 +104,25 @@ export interface CheckConsentScopeInput {
 }
 
 export type CheckConsentScopeResult =
-  | { covered: true; consentId: string }
+  | {
+      covered: true;
+      /**
+       * The matching parental_consents.id, OR null when the athlete
+       * has unlinked parent supervision (`athleteSelfManaged: true`).
+       * Callers that stamp deal.parental_consent_id MUST treat null
+       * as "leave the FK null" — it's a real UUID FK in the DB and
+       * there is no consent row to reference for self-managed deals.
+       */
+      consentId: string | null;
+      /**
+       * True when coverage was satisfied by the athlete being
+       * unlinked from parent supervision (age >= 18 OR graduated),
+       * rather than by a matching parental_consents row. Used by
+       * audit paths that want to distinguish "parent approved" from
+       * "athlete self-approved".
+       */
+      athleteSelfManaged?: boolean;
+    }
   | {
       covered: false;
       reason:
@@ -395,6 +413,42 @@ export async function checkConsentScope(
   input: CheckConsentScopeInput,
 ): Promise<CheckConsentScopeResult> {
   const { athleteUserId, category, amount, durationMonths, supabase } = input;
+
+  // Unlinked-athlete short-circuit. When a student-athlete has
+  // removed parent supervision (age >= 18 OR post-graduation —
+  // enforced at PATCH time by /api/hs/athlete/parent-supervision),
+  // they no longer need a matching parental_consents row for NEW
+  // deals. We resolve 'covered: true' with a synthetic sentinel
+  // consentId so callers that stamp deal.parental_consent_id see
+  // a stable marker in the audit trail rather than a null.
+  //
+  // Historical consents are untouched: past deals keep their
+  // original parental_consent_id. This only affects deals signed
+  // after the unlink moment — which is the whole point.
+  //
+  // We query the minimal shape and swallow errors: a transient
+  // lookup failure here falls through to the normal consent-scope
+  // walk (fail-closed to the existing gate). The existing gate
+  // produces a 'no_active_consent' result if the athlete has no
+  // consent on file, which is still the correct behaviour when
+  // we can't prove they're unlinked.
+  const { data: unlinkRow } = await supabase
+    .from('hs_athlete_profiles')
+    .select('parent_unlinked_at')
+    .eq('user_id', athleteUserId)
+    .maybeSingle();
+
+  const unlinkedAt =
+    (unlinkRow as { parent_unlinked_at?: string | null } | null)
+      ?.parent_unlinked_at ?? null;
+
+  if (unlinkedAt) {
+    return {
+      covered: true,
+      consentId: null,
+      athleteSelfManaged: true,
+    };
+  }
 
   const nowIso = new Date().toISOString();
 
