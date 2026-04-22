@@ -29,6 +29,7 @@ import {
 // components like CaseStudyTagStrip that pull next/headers in via supabase/server.
 // Bundling that into this client component's graph produces a runtime 500.
 import { LazyDashboardPreview } from '@/components/marketing/lazy-dashboard-preview';
+import { FEATURED_SCHOOLS } from '@/lib/data/schools';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HERO SECTION
@@ -370,41 +371,10 @@ function PartnerLogosSection() {
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
-  // Team/school cards — URLs curl-verified against Wikipedia upload hosts.
-  // HBCUs and Power 5 programs mixed intentionally so the grid surfaces both
-  // communities. To add more: fetch the school's Wikipedia athletics article,
-  // grep the HTML for `upload\.wikimedia\.org/.*\.svg|png`, paste the raw
-  // (non-thumb) URL here along with the school's athletic-brand hex color.
-  const schools = [
-    // Existing six
-    { name: 'Stanford',              fullName: 'Stanford Cardinal',       logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Stanford_Cardinal_logo.svg',                       color: '#8C1515' },
-    { name: 'Ohio State',            fullName: 'Ohio State Buckeyes',     logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Ohio_State_Buckeyes_logo.svg',                     color: '#BB0000' },
-    { name: 'Michigan',              fullName: 'Michigan Wolverines',     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Michigan_Wolverines_logo.svg',                     color: '#FFCB05' },
-    { name: 'USC',                   fullName: 'USC Trojans',             logo: 'https://upload.wikimedia.org/wikipedia/commons/9/94/USC_Trojans_logo.svg',                             color: '#990000' },
-    { name: 'Alabama',               fullName: 'Alabama Crimson Tide',    logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Alabama_Crimson_Tide_logo.svg',                    color: '#9E1B32' },
-    { name: 'Texas',                 fullName: 'Texas Longhorns',         logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Texas_Longhorns_logo.svg',                         color: '#BF5700' },
-    // HBCUs
-    { name: 'Jackson State',         fullName: 'Jackson State Tigers',    logo: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Jackson_State_athletics_logo.svg',                 color: '#21409A' },
-    { name: 'Howard',                fullName: 'Howard Bison',            logo: 'https://upload.wikimedia.org/wikipedia/en/b/b4/Howard_Bison_logo.svg',                                 color: '#E51937' },
-    { name: 'Grambling State',       fullName: 'Grambling State Tigers',  logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Grambling_State_Tigers_logo.svg',                  color: '#FFD700' },
-    { name: 'Florida A&M',           fullName: 'Florida A&M Rattlers',    logo: 'https://upload.wikimedia.org/wikipedia/en/5/54/Florida_A%26M_Rattlers_logo.svg',                       color: '#FF8200' },
-    { name: 'NC A&T',                fullName: 'North Carolina A&T Aggies', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/42/North_Carolina_A%26T_Aggies_logo.svg',           color: '#00529B' },
-    { name: 'Norfolk State',         fullName: 'Norfolk State Spartans',  logo: 'https://upload.wikimedia.org/wikipedia/en/7/78/Norfork_State_Spartans_logo.svg',                       color: '#046A38' },
-    { name: 'Tennessee State',       fullName: 'Tennessee State Tigers',  logo: 'https://upload.wikimedia.org/wikipedia/en/d/d3/Tennessee_State_Athletics_logo.svg',                    color: '#004B87' },
-    { name: 'Southern',              fullName: 'Southern Jaguars',        logo: 'https://upload.wikimedia.org/wikipedia/commons/6/61/Southern-u_logo_from_NCAA.svg',                    color: '#002D72' },
-    { name: 'Morgan State',          fullName: 'Morgan State Bears',      logo: 'https://upload.wikimedia.org/wikipedia/en/8/8f/Morgan_State_Bears_logo.svg',                           color: '#001E62' },
-    { name: 'Hampton',               fullName: 'Hampton Pirates',         logo: 'https://upload.wikimedia.org/wikipedia/en/7/71/Hampton_pirates_athletics_logo.png',                    color: '#002F6C' },
-    { name: 'Bethune-Cookman',       fullName: 'Bethune-Cookman Wildcats', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Bethune%E2%80%93Cookman_Wildcats_logo.svg',        color: '#AC1A2F' },
-    { name: 'Prairie View A&M',      fullName: 'Prairie View A&M Panthers', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Prairie_view_univ_athletics_textlogo.png',       color: '#4B0082' },
-    // More Power 5
-    { name: 'Oregon',                fullName: 'Oregon Ducks',            logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f8/Oregon_Ducks_logo.svg',                            color: '#154733' },
-    { name: 'Duke',                  fullName: 'Duke Blue Devils',        logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/Duke_Athletics_logo.svg',                          color: '#003087' },
-    { name: 'Georgia',               fullName: 'Georgia Bulldogs',        logo: 'https://upload.wikimedia.org/wikipedia/commons/8/80/Georgia_Athletics_logo.svg',                       color: '#BA0C2F' },
-    { name: 'UCLA',                  fullName: 'UCLA Bruins',             logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d1/UCLA_Bruins_primary_logo.svg',                     color: '#2774AE' },
-    { name: 'Kansas',                fullName: 'Kansas Jayhawks',         logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Kansas_Jayhawks_1946_logo.svg',                    color: '#0051BA' },
-    { name: 'Nebraska',              fullName: 'Nebraska Cornhuskers',    logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Nebraska_Cornhuskers_logo.svg',                    color: '#E41C38' },
-    { name: 'Wisconsin',             fullName: 'Wisconsin Badgers',       logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Wisconsin_Badgers_logo.svg',                       color: '#C5050C' },
-  ];
+  // Featured schools moved to a shared module so /schools can reuse them.
+  // Now includes 18 HS programs alongside NCAA + HBCU, rendered with
+  // letter-avatars when no Wikipedia logo is available.
+  const schools = FEATURED_SCHOOLS;
 
   // Brand wordmarks — rendered as stylized text rather than image logos.
   //
@@ -466,48 +436,82 @@ function PartnerLogosSection() {
             </p>
           </div>
           <Link
-            href="/athletes"
+            href="/schools"
             className="text-sm font-semibold text-[var(--accent-primary)] hover:text-white transition-colors whitespace-nowrap"
           >
-            View all <span aria-hidden="true">→</span>
+            View all schools <span aria-hidden="true">→</span>
           </Link>
         </div>
 
-        {/* Team cards grid — logo + school name, responsive columns.
-            Cards link into the athletes directory filtered by school. */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {schools.map((school, index) => (
-            <Link
-              key={school.name}
-              href={`/athletes?school=${encodeURIComponent(school.name)}`}
-              className={`group flex items-center gap-3 p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: isVisible ? `${index * 60}ms` : '0ms' }}
-              aria-label={`Browse ${school.fullName} athletes`}
-            >
-              <div
-                className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform duration-300"
-                style={{
-                  backgroundColor: `${school.color}1A`,
-                  boxShadow: `0 0 0 1px ${school.color}33 inset`,
-                }}
+        {/* 2-row auto-scrolling marquee of team cards. Same card shape as
+            before, now with letter-avatar fallback for schools without a
+            logo URL. Two rows share one grid that scrolls horizontally via
+            CSS @keyframes; list is doubled for a seamless loop and paused
+            on hover so cards are clickable. Mask-image fades the edges. */}
+        <div
+          className={`relative transition-all duration-700 ${
+            isVisible ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={{
+            maskImage:
+              'linear-gradient(to right, transparent 0, black 5%, black 95%, transparent 100%)',
+            WebkitMaskImage:
+              'linear-gradient(to right, transparent 0, black 5%, black 95%, transparent 100%)',
+          }}
+        >
+          <div
+            className="grid grid-rows-2 grid-flow-col gap-3 md:gap-4 hover:[animation-play-state:paused] will-change-transform"
+            style={{
+              width: 'max-content',
+              animation: 'team-strip-scroll 90s linear infinite',
+            }}
+          >
+            {[...schools, ...schools].map((school, index) => (
+              <Link
+                key={`${school.name}-${index}`}
+                href={`/athletes?school=${encodeURIComponent(school.name)}`}
+                className="group flex items-center gap-3 w-[260px] md:w-[280px] p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-colors"
+                aria-label={`Browse ${school.fullName} athletes`}
               >
-                <Image
-                  src={school.logo}
-                  alt=""
-                  width={36}
-                  height={36}
-                  className="w-full h-full object-contain"
-                  loading="lazy"
-                />
-              </div>
-              <span className="text-sm md:text-base font-semibold text-white/85 group-hover:text-white transition-colors truncate">
-                {school.fullName}
-              </span>
-            </Link>
-          ))}
+                <div
+                  className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform"
+                  style={{
+                    backgroundColor: `${school.color}1A`,
+                    boxShadow: `0 0 0 1px ${school.color}33 inset`,
+                  }}
+                >
+                  {school.logo ? (
+                    <Image
+                      src={school.logo}
+                      alt=""
+                      width={36}
+                      height={36}
+                      className="w-full h-full object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span
+                      aria-hidden="true"
+                      className="font-bold text-sm md:text-base leading-none"
+                      style={{ color: school.color }}
+                    >
+                      {school.abbrev ?? school.name.slice(0, 2).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <span className="text-sm md:text-base font-semibold text-white/85 group-hover:text-white transition-colors truncate">
+                  {school.fullName}
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
+        <style jsx>{`
+          @keyframes team-strip-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+        `}</style>
 
         {/* Brand Partners — continuous-scroll wordmark strip.
             Uses a CSS-only keyframe marquee; the list is doubled in the DOM
