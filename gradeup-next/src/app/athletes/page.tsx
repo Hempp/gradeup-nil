@@ -34,6 +34,7 @@ type SearchParams = Promise<{
   state?: string;
   sport?: string;
   grad?: string;
+  school?: string;
 }>;
 
 export default async function AthletesDirectoryPage({
@@ -47,11 +48,13 @@ export default async function AthletesDirectoryPage({
     : null;
   const sportFilter = sp.sport ?? null;
   const gradFilter = sp.grad ? parseInt(sp.grad, 10) : null;
+  const schoolFilter = sp.school ? sp.school.trim().slice(0, 100) : null;
 
   const athletes = await listPublicAthletes({
     stateCode: stateFilter,
     sport: sportFilter,
     graduationYear: Number.isFinite(gradFilter) ? gradFilter : null,
+    school: schoolFilter,
     limit: 60,
   }).catch(() => []);
 
@@ -90,13 +93,35 @@ export default async function AthletesDirectoryPage({
         </section>
 
         <section className="mx-auto max-w-6xl px-6 pb-24">
+          {schoolFilter && (
+            <div className="mb-6 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+              <span className="text-white/60">Filtering by school:</span>
+              <span className="font-semibold text-white">{schoolFilter}</span>
+              <a
+                href={`/athletes${[
+                  stateFilter ? `state=${stateFilter}` : null,
+                  sportFilter ? `sport=${sportFilter}` : null,
+                  gradFilter ? `grad=${gradFilter}` : null,
+                ].filter(Boolean).join('&') ? '?' + [
+                  stateFilter ? `state=${stateFilter}` : null,
+                  sportFilter ? `sport=${sportFilter}` : null,
+                  gradFilter ? `grad=${gradFilter}` : null,
+                ].filter(Boolean).join('&') : ''}`}
+                className="ml-auto text-xs text-white/60 underline underline-offset-2 hover:text-white"
+              >
+                Clear
+              </a>
+            </div>
+          )}
           {athletes.length === 0 ? (
             <div className="rounded-2xl border border-white/10 bg-black/30 p-10 text-center text-white/70">
               <p className="text-lg">No athletes match those filters yet.</p>
               <p className="mt-2 text-sm text-white/50">
-                {stateFilter
-                  ? `${STATE_RULES[stateFilter as USPSStateCode]?.state ?? stateFilter} pilot is active — check back as athletes claim profiles.`
-                  : 'Pilot states are CA, FL, GA, IL, NJ, NY, and TX.'}
+                {schoolFilter
+                  ? `No public athletes matched "${schoolFilter}". The HS-NIL pilot is active in CA, FL, GA, IL, NJ, NY, and TX — athletes from other schools can claim profiles as states expand.`
+                  : stateFilter
+                    ? `${STATE_RULES[stateFilter as USPSStateCode]?.state ?? stateFilter} pilot is active — check back as athletes claim profiles.`
+                    : 'Pilot states are CA, FL, GA, IL, NJ, NY, and TX.'}
               </p>
             </div>
           ) : (

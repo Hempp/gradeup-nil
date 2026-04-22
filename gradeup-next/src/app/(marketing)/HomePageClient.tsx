@@ -370,18 +370,40 @@ function PartnerLogosSection() {
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
-  // Team/school cards — only schools whose Wikipedia Commons logo URLs we've
-  // verified. Adding more: look up the logo on Wikipedia's athletics article,
-  // right-click the image → copy URL, paste into a new entry here. Format:
-  //   { name, fullName, logo, color }
-  // A full-name field drives the card label ("Oregon Ducks" style).
+  // Team/school cards — URLs curl-verified against Wikipedia upload hosts.
+  // HBCUs and Power 5 programs mixed intentionally so the grid surfaces both
+  // communities. To add more: fetch the school's Wikipedia athletics article,
+  // grep the HTML for `upload\.wikimedia\.org/.*\.svg|png`, paste the raw
+  // (non-thumb) URL here along with the school's athletic-brand hex color.
   const schools = [
-    { name: 'Stanford',   fullName: 'Stanford Cardinal',      logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Stanford_Cardinal_logo.svg', color: '#8C1515' },
-    { name: 'Ohio State', fullName: 'Ohio State Buckeyes',    logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Ohio_State_Buckeyes_logo.svg', color: '#BB0000' },
-    { name: 'Michigan',   fullName: 'Michigan Wolverines',    logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Michigan_Wolverines_logo.svg', color: '#FFCB05' },
-    { name: 'USC',        fullName: 'USC Trojans',            logo: 'https://upload.wikimedia.org/wikipedia/commons/9/94/USC_Trojans_logo.svg',         color: '#990000' },
-    { name: 'Alabama',    fullName: 'Alabama Crimson Tide',   logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Alabama_Crimson_Tide_logo.svg', color: '#9E1B32' },
-    { name: 'Texas',      fullName: 'Texas Longhorns',        logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Texas_Longhorns_logo.svg',     color: '#BF5700' },
+    // Existing six
+    { name: 'Stanford',              fullName: 'Stanford Cardinal',       logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Stanford_Cardinal_logo.svg',                       color: '#8C1515' },
+    { name: 'Ohio State',            fullName: 'Ohio State Buckeyes',     logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Ohio_State_Buckeyes_logo.svg',                     color: '#BB0000' },
+    { name: 'Michigan',              fullName: 'Michigan Wolverines',     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Michigan_Wolverines_logo.svg',                     color: '#FFCB05' },
+    { name: 'USC',                   fullName: 'USC Trojans',             logo: 'https://upload.wikimedia.org/wikipedia/commons/9/94/USC_Trojans_logo.svg',                             color: '#990000' },
+    { name: 'Alabama',               fullName: 'Alabama Crimson Tide',    logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Alabama_Crimson_Tide_logo.svg',                    color: '#9E1B32' },
+    { name: 'Texas',                 fullName: 'Texas Longhorns',         logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Texas_Longhorns_logo.svg',                         color: '#BF5700' },
+    // HBCUs
+    { name: 'Jackson State',         fullName: 'Jackson State Tigers',    logo: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Jackson_State_athletics_logo.svg',                 color: '#21409A' },
+    { name: 'Howard',                fullName: 'Howard Bison',            logo: 'https://upload.wikimedia.org/wikipedia/en/b/b4/Howard_Bison_logo.svg',                                 color: '#E51937' },
+    { name: 'Grambling State',       fullName: 'Grambling State Tigers',  logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Grambling_State_Tigers_logo.svg',                  color: '#FFD700' },
+    { name: 'Florida A&M',           fullName: 'Florida A&M Rattlers',    logo: 'https://upload.wikimedia.org/wikipedia/en/5/54/Florida_A%26M_Rattlers_logo.svg',                       color: '#FF8200' },
+    { name: 'NC A&T',                fullName: 'North Carolina A&T Aggies', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/42/North_Carolina_A%26T_Aggies_logo.svg',           color: '#00529B' },
+    { name: 'Norfolk State',         fullName: 'Norfolk State Spartans',  logo: 'https://upload.wikimedia.org/wikipedia/en/7/78/Norfork_State_Spartans_logo.svg',                       color: '#046A38' },
+    { name: 'Tennessee State',       fullName: 'Tennessee State Tigers',  logo: 'https://upload.wikimedia.org/wikipedia/en/d/d3/Tennessee_State_Athletics_logo.svg',                    color: '#004B87' },
+    { name: 'Southern',              fullName: 'Southern Jaguars',        logo: 'https://upload.wikimedia.org/wikipedia/commons/6/61/Southern-u_logo_from_NCAA.svg',                    color: '#002D72' },
+    { name: 'Morgan State',          fullName: 'Morgan State Bears',      logo: 'https://upload.wikimedia.org/wikipedia/en/8/8f/Morgan_State_Bears_logo.svg',                           color: '#001E62' },
+    { name: 'Hampton',               fullName: 'Hampton Pirates',         logo: 'https://upload.wikimedia.org/wikipedia/en/7/71/Hampton_pirates_athletics_logo.png',                    color: '#002F6C' },
+    { name: 'Bethune-Cookman',       fullName: 'Bethune-Cookman Wildcats', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Bethune%E2%80%93Cookman_Wildcats_logo.svg',        color: '#AC1A2F' },
+    { name: 'Prairie View A&M',      fullName: 'Prairie View A&M Panthers', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Prairie_view_univ_athletics_textlogo.png',       color: '#4B0082' },
+    // More Power 5
+    { name: 'Oregon',                fullName: 'Oregon Ducks',            logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f8/Oregon_Ducks_logo.svg',                            color: '#154733' },
+    { name: 'Duke',                  fullName: 'Duke Blue Devils',        logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/Duke_Athletics_logo.svg',                          color: '#003087' },
+    { name: 'Georgia',               fullName: 'Georgia Bulldogs',        logo: 'https://upload.wikimedia.org/wikipedia/commons/8/80/Georgia_Athletics_logo.svg',                       color: '#BA0C2F' },
+    { name: 'UCLA',                  fullName: 'UCLA Bruins',             logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d1/UCLA_Bruins_primary_logo.svg',                     color: '#2774AE' },
+    { name: 'Kansas',                fullName: 'Kansas Jayhawks',         logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Kansas_Jayhawks_1946_logo.svg',                    color: '#0051BA' },
+    { name: 'Nebraska',              fullName: 'Nebraska Cornhuskers',    logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Nebraska_Cornhuskers_logo.svg',                    color: '#E41C38' },
+    { name: 'Wisconsin',             fullName: 'Wisconsin Badgers',       logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Wisconsin_Badgers_logo.svg',                       color: '#C5050C' },
   ];
 
   // Brand wordmarks — rendered as stylized text rather than image logos.

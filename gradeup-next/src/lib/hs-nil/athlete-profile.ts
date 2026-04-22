@@ -86,6 +86,8 @@ export interface DirectoryFilters {
   stateCode?: string | null;
   sport?: string | null;
   graduationYear?: number | null;
+  /** Case-insensitive substring match against hs_athlete_profiles.school_name. */
+  school?: string | null;
   limit?: number;
   offset?: number;
 }
@@ -619,6 +621,11 @@ export async function listPublicAthletes(
   if (filters.sport) query = query.eq('sport', filters.sport);
   if (filters.graduationYear) {
     query = query.eq('graduation_year', filters.graduationYear);
+  }
+  if (filters.school) {
+    // Case-insensitive LIKE so 'Stanford' matches 'Stanford High School' etc.
+    const escaped = filters.school.replace(/[%_]/g, (ch) => `\\${ch}`);
+    query = query.ilike('school_name', `%${escaped}%`);
   }
 
   const { data, error } = await query.range(offset, offset + limit - 1);
