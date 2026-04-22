@@ -136,19 +136,6 @@ function computeEligibility(params: {
   return false;
 }
 
-/**
- * Light email mask. "jane.doe@example.com" → "j***@example.com".
- * Used only for UI confirmation on re-link — we never surface the
- * full parent email to the athlete surface post-unlink.
- */
-function maskEmail(email: string | null): string | null {
-  if (!email) return null;
-  const [local, domain] = email.split('@');
-  if (!local || !domain) return null;
-  if (local.length <= 1) return `${local}***@${domain}`;
-  return `${local[0]}***@${domain}`;
-}
-
 // ----------------------------------------------------------------------------
 // Shared: load the athlete's supervision state
 // ----------------------------------------------------------------------------
@@ -255,7 +242,7 @@ async function loadSupervisionState(
 // GET
 // ----------------------------------------------------------------------------
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     if (!isFeatureEnabled('HS_NIL')) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });

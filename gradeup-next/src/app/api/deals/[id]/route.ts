@@ -224,8 +224,14 @@ export async function PATCH(
         }
 
         // Stamp the matched consent on the deal so disclosure / audit can
-        // trace which consent cleared this acceptance.
-        updateData.parental_consent_id = scopeResult.consentId;
+        // trace which consent cleared this acceptance. consentId is null
+        // when the athlete has unlinked parent supervision — leave the
+        // FK null in that case (no parental_consents row exists to point
+        // at) and let audit trails key off deal.athlete.hs_athlete_profiles
+        // .parent_unlinked_at instead.
+        if (scopeResult.consentId) {
+          updateData.parental_consent_id = scopeResult.consentId;
+        }
       }
     }
 

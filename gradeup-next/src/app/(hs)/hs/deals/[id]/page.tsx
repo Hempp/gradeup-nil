@@ -216,7 +216,13 @@ export default async function HSDealDetailPage({
   const durationMonths = computeDurationMonths(deal.start_date, deal.end_date);
 
   let scopeStatus:
-    | { covered: true; consentId: string }
+    | {
+        covered: true;
+        // consentId may be null when the athlete has unlinked
+        // parent supervision — see deal-validation.ts.
+        consentId: string | null;
+        athleteSelfManaged?: boolean;
+      }
     | {
         covered: false;
         reason:
