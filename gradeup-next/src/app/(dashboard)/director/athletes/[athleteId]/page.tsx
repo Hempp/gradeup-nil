@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useToastActions } from '@/components/ui/toast';
 
 // Import refactored components
 import {
@@ -184,12 +186,18 @@ export default function AthleteDetailPage() {
   const params = useParams();
   const router = useRouter();
   const athleteId = params.athleteId as string;
+  const toast = useToastActions();
 
   // Loading state
   const [isLoading, setIsLoading] = useState(false);
 
   // Verification notes state
   const [verificationNotes, setVerificationNotes] = useState('');
+
+  // GPA update state — defaults are set once athlete data is loaded (see below)
+  const [gpaInput, setGpaInput] = useState('');
+  const [displayedGpa, setDisplayedGpa] = useState<number | null>(null);
+  const [gpaLoading, setGpaLoading] = useState(false);
 
   // Admin modal states
   const [adminModals, setAdminModalsState] = useState<AdminModalState>({
@@ -221,6 +229,38 @@ export default function AthleteDetailPage() {
 
   // Get athlete data (mock)
   const athlete = mockAthleteData[athleteId];
+
+  // Seed GPA inputs once the athlete is known
+  useEffect(() => {
+    if (athlete) {
+      setGpaInput(athlete.gpa.toFixed(2));
+      setDisplayedGpa(athlete.gpa);
+    }
+  }, [athlete]);
+
+  const handleUpdateGpa = async () => {
+    const parsed = parseFloat(gpaInput);
+    if (isNaN(parsed) || parsed < 0 || parsed > 4.0) {
+      toast.error('Invalid GPA', 'GPA must be between 0.0 and 4.0.');
+      return;
+    }
+    setGpaLoading(true);
+    try {
+      const res = await fetch(`/api/director/athletes/${athleteId}/grades`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gpa: parsed }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? 'Failed to update GPA');
+      setDisplayedGpa(data.updated.gpa);
+      toast.success('GPA updated', `GPA set to ${data.updated.gpa.toFixed(2)} and grades verified.`);
+    } catch (err) {
+      toast.error('GPA update failed', err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setGpaLoading(false);
+    }
+  };
 
   // Handle case where athlete is not found
   if (!athlete) {
@@ -275,19 +315,46 @@ export default function AthleteDetailPage() {
 
   const handleVerifyType = async (type: VerificationType) => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    setVerificationModals({ [type]: false });
-    setVerificationNotes('');
+    try {
+      // Map 'stats' modal type to 'sport' DB flag (column is sport_verified)
+      const flag = type === 'stats' ? 'sport' : type;
+      const res = await fetch(`/api/director/athletes/${athleteId}/verify`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flag, value: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? 'Failed to verify');
+      toast.success('Verification updated', `${type} verified successfully.`);
+    } catch (err) {
+      toast.error('Update failed', err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsLoading(false);
+      setVerificationModals({ [type]: false });
+      setVerificationNotes('');
+    }
   };
 
   const handleRevokeType = async (type: VerificationType) => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    const revokeKey = `revoke${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof VerificationModalState;
-    setVerificationModals({ [revokeKey]: false });
-    setVerificationNotes('');
+    try {
+      const flag = type === 'stats' ? 'sport' : type;
+      const res = await fetch(`/api/director/athletes/${athleteId}/verify`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flag, value: false }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? 'Failed to revoke');
+      toast.success('Verification revoked', `${type} verification removed.`);
+    } catch (err) {
+      toast.error('Update failed', err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsLoading(false);
+      const revokeKey = `revoke${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof VerificationModalState;
+      setVerificationModals({ [revokeKey]: false });
+      setVerificationNotes('');
+    }
   };
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -318,7 +385,7 @@ export default function AthleteDetailPage() {
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row gap-6">
         <AthleteHeader athlete={athlete} />
-        <AthleteStats athlete={athlete} />
+        <AthleteStats athlete={{ ...athlete, gpa: displayedGpa ?? athlete.gpa }} />
       </div>
 
       {/* Verification Management */}
@@ -328,6 +395,31 @@ export default function AthleteDetailPage() {
         onRevoke={handleOpenRevokeModal}
         onCompleteFullVerification={() => setAdminModals({ verify: true })}
       />
+
+      {/* GPA Update (director-only) */}
+      <div className="flex items-center gap-3 p-4 rounded-[var(--radius-lg)] border border-[var(--border-color)] bg-[var(--bg-card)]">
+        <label className="text-sm font-medium text-[var(--text-primary)] whitespace-nowrap">
+          Update GPA
+        </label>
+        <Input
+          type="number"
+          min={0}
+          max={4}
+          step={0.01}
+          value={gpaInput}
+          onChange={(e) => setGpaInput(e.target.value)}
+          className="w-28"
+          aria-label="GPA value"
+        />
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={handleUpdateGpa}
+          isLoading={gpaLoading}
+        >
+          Save GPA
+        </Button>
+      </div>
 
       {/* Admin Actions */}
       <AthleteAdminActions
