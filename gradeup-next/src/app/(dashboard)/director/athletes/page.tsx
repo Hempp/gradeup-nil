@@ -20,6 +20,7 @@ import {
   AlertTriangle,
   RefreshCw,
   Upload,
+  UserPlus,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,7 @@ import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, cn } from '@/lib/utils';
 import { useDirectorAthletes, type DirectorAthlete } from '@/lib/hooks/use-director-athletes';
 import { BulkImportModal } from '@/components/director/BulkImportModal';
+import { InviteAthleteModal } from '@/components/director/InviteAthleteModal';
 
 const statusFilters = ['All', 'Verified', 'Pending', 'Issues'];
 const verificationFilters = ['All Verifications', 'Enrollment Pending', 'Grades Pending', 'Stats Pending'];
@@ -221,6 +223,7 @@ export default function DirectorAthletesPage() {
   const [showBulkVerifyConfirm, setShowBulkVerifyConfirm] = useState(false);
   const [showBulkEmailModal, setShowBulkEmailModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   // Memoize callback to prevent AthleteRow re-renders
   const handleViewAthlete = useCallback((athleteId: string) => {
@@ -355,6 +358,10 @@ export default function DirectorAthletesPage() {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={() => refetch()} aria-label="Refresh data">
             <RefreshCw className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" onClick={() => setShowInviteModal(true)}>
+            <UserPlus className="h-4 w-4 mr-2" />
+            Invite Athlete
           </Button>
           <Button variant="primary" onClick={() => setShowImportModal(true)}>
             <Upload className="h-4 w-4 mr-2" />
@@ -742,6 +749,13 @@ export default function DirectorAthletesPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Invite Athlete Modal */}
+      <InviteAthleteModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        onInviteComplete={() => refetch()}
+      />
 
       {/* Bulk Import Modal */}
       <BulkImportModal
