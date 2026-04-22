@@ -15,6 +15,7 @@ import {
   Sun,
   Moon,
   Monitor,
+  GraduationCap,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ import { Modal } from '@/components/ui/modal';
 import { Switch } from '@/components/ui/switch';
 import { useToastActions } from '@/components/ui/toast';
 import { PaymentMethodsSection } from '@/components/athlete/PaymentMethodsSection';
+import { InviteMyDirectorModal } from '@/components/athlete/InviteMyDirectorModal';
 import { useTheme, useAuth } from '@/context';
 import { updatePassword } from '@/lib/services/auth';
 
@@ -98,6 +100,7 @@ export default function AthleteSettingsPage() {
   // Modal states
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
   const [enable2FAModalOpen, setEnable2FAModalOpen] = useState(false);
+  const [inviteDirectorModalOpen, setInviteDirectorModalOpen] = useState(false);
   const [downloadDataModalOpen, setDownloadDataModalOpen] = useState(false);
   const [deleteAccountModalOpen, setDeleteAccountModalOpen] = useState(false);
 
@@ -385,6 +388,33 @@ export default function AthleteSettingsPage() {
           />
         </div>
       </SettingsSection>
+
+      {/* Academic Verification */}
+      <SettingsSection
+        icon={GraduationCap}
+        title="Academic Verification"
+        description="Invite your Athletic Director or coach to verify your enrollment and grades"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-[var(--text-secondary)]">
+            Your Athletic Director or coach can verify your enrollment and academic
+            standing directly on GradeUp. Completing verification strengthens your
+            profile and unlocks additional NIL opportunities.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => setInviteDirectorModalOpen(true)}
+          >
+            <GraduationCap className="h-4 w-4 mr-2" aria-hidden="true" />
+            Invite my Athletic Director
+          </Button>
+        </div>
+      </SettingsSection>
+
+      <InviteMyDirectorModal
+        isOpen={inviteDirectorModalOpen}
+        onClose={() => setInviteDirectorModalOpen(false)}
+      />
 
       {/* Danger Zone */}
       <Card className="border-[var(--color-error)]/30">
