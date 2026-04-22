@@ -74,21 +74,21 @@ export function buildCspHeader(
 
     // Script policy.
     //
-    // HOTFIX 2026-04-22: removed 'strict-dynamic'. When that keyword is present,
-    // browsers supporting CSP Level 3 *ignore* 'self' and 'https:' — the only
-    // trusted scripts are those carrying the nonce attribute. Our middleware
-    // sets the nonce in an `x-csp-nonce` header, but Next.js auto-generates its
-    // <script src="/_next/static/chunks/*.js" /> tags WITHOUT reading that
-    // header (Next.js expects `x-nonce`). The result: every Next.js chunk was
-    // blocked in production, the client never hydrated, and the whole site
-    // rendered blank shells. Dropping 'strict-dynamic' brings 'self' + 'https:'
-    // back into effect so Next.js chunks load from same-origin normally.
+    // HOTFIX 2026-04-22: dropped the nonce clause AND 'strict-dynamic'. Next.js
+    // 16 does not auto-decorate its injected inline hydration/RSC-payload
+    // scripts with the nonce (despite reading x-nonce for Server Component
+    // access). When ANY nonce source is present in script-src, modern browsers
+    // ignore 'unsafe-inline' entirely — meaning every un-nonced inline script
+    // was blocked and the site rendered as empty shells everywhere.
     //
-    // Long-term proper fix: rename CSP_NONCE_HEADER from 'x-csp-nonce' to
-    // 'x-nonce' (Next.js convention). Then Next.js auto-decorates its script
-    // tags with the matching nonce and 'strict-dynamic' can come back for
-    // stricter XSS protection.
-    `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https:`,
+    // This policy retains 'self' + 'https:' for external chunks, 'unsafe-inline'
+    // for Next.js's inline bootstrap scripts, and 'unsafe-eval' for hydration
+    // patterns in some build outputs. Weaker than nonce+strict-dynamic, but
+    // demonstrably working vs. the site-wide outage it replaces.
+    //
+    // Long-term proper fix: manually thread the nonce via headers().get('x-nonce')
+    // into every <Script> tag in the app, then re-introduce nonce+strict-dynamic.
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`,
 
     // Style policy: inline styles retained. Tailwind + Next.js emit inline style
     // attributes/tags that are impractical to nonce today, and the XSS-via-style
