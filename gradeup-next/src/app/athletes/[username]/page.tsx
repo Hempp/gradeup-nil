@@ -7,6 +7,7 @@ import {
 } from '@/lib/hs-nil/athlete-profile';
 import { AthletePublicHero } from '@/components/marketing/AthletePublicHero';
 import { AthletePublicTrajectoryStrip } from '@/components/marketing/AthletePublicTrajectoryStrip';
+import { SupportAthleteButton } from '@/components/hs/SupportAthleteButton';
 import { headers } from 'next/headers';
 
 export const revalidate = 3600;
@@ -169,6 +170,26 @@ export default async function AthletePublicProfilePage({
             >
               Start a campaign
             </a>
+          </section>
+
+          {/* Supporter payment CTA — fan-to-athlete NIL. See migration
+              20260422_002 and /api/athletes/[username]/support/checkout.
+              Legally distinct from a donation: taxable NIL income to the
+              athlete, not deductible to the supporter. */}
+          <section className="mt-6 rounded-2xl border border-white/10 bg-black/30 p-6 text-center">
+            <p className="text-lg text-white/90">
+              Just a fan? Send {profile.firstName} a shoutout payment.
+            </p>
+            <p className="mt-2 text-sm text-white/60">
+              Small NIL payment in exchange for a personalized shoutout or
+              thank-you message. Not a donation — not tax-deductible.
+            </p>
+            <div className="mt-4 flex justify-center">
+              <SupportAthleteButton
+                username={profile.username}
+                athleteDisplayName={profile.firstName}
+              />
+            </div>
           </section>
         </div>
       </main>

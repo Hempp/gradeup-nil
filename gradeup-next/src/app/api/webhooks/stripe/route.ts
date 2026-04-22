@@ -152,16 +152,45 @@ async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
   supabase: Awaited<ReturnType<typeof createClient>>
 ) {
-  const { dealId, athleteId: _athleteId, brandId: _brandId } = session.metadata || {};
+  const meta = session.metadata || {};
+  const { dealId, athleteId: _athleteId, brandId: _brandId } = meta;
+  const metaType = meta.type;
 
   logWebhookEvent('info', 'checkout.session.completed', 'Checkout session completed', {
     sessionId: session.id,
     customerId: session.customer,
     amountTotal: session.amount_total,
+    metaType,
     dealId,
   });
 
-  // If there's an associated payment intent, update the payment record
+  // Branch 1 — Supporter payment (fan → athlete NIL; see migration
+  // 20260422_002 and /api/athletes/[username]/support/checkout).
+  if (metaType === 'supporter_payment' && meta.supporter_payment_id) {
+    const paymentIntentId =
+      typeof session.payment_intent === 'string' ? session.payment_intent : null;
+    const { error } = await supabase
+      .from('supporter_payments')
+      .update({
+        status: 'paid',
+        paid_at: new Date().toISOString(),
+        stripe_payment_intent: paymentIntentId,
+        stripe_customer_id:
+          typeof session.customer === 'string' ? session.customer : null,
+      })
+      .eq('id', meta.supporter_payment_id);
+
+    if (error) {
+      logWebhookEvent('warn', 'checkout.session.completed', 'supporter_payments update failed', {
+        sessionId: session.id,
+        paymentId: meta.supporter_payment_id,
+        error: error.message,
+      });
+    }
+    return;
+  }
+
+  // Branch 2 — Existing brand-deal checkout path.
   if (session.payment_intent && typeof session.payment_intent === 'string') {
     const { error } = await supabase
       .from('payments')
@@ -181,7 +210,6 @@ async function handleCheckoutSessionCompleted(
     }
   }
 
-  // Handle subscription checkout
   if (session.mode === 'subscription' && session.subscription) {
     logWebhookEvent('info', 'checkout.session.completed', 'Subscription checkout completed', {
       sessionId: session.id,
