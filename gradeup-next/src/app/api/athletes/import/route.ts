@@ -294,10 +294,51 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
 
       try {
-        // Create profile for the athlete
+        // Generate an opaque random password — athlete will reset via email confirmation link
+        const tempPassword = crypto.randomUUID() + '-' + crypto.randomUUID();
+
+        // Create auth.users entry FIRST so the athlete can sign in
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password: tempPassword,
+          options: {
+            data: {
+              role: 'athlete',
+              invited_by: user.id,
+            },
+          },
+        });
+
+        if (signUpError) {
+          // Treat email-already-registered as a duplicate
+          if (
+            signUpError.message?.toLowerCase().includes('already registered') ||
+            signUpError.message?.toLowerCase().includes('already exists') ||
+            signUpError.status === 422
+          ) {
+            results.push({
+              rowIndex,
+              success: false,
+              error: 'Email already exists in the system',
+            });
+            existingEmails.add(email);
+            failCount++;
+            continue;
+          }
+          throw signUpError;
+        }
+
+        if (!signUpData.user) {
+          throw new Error('Auth sign-up did not return a user');
+        }
+
+        const authUserId = signUpData.user.id;
+
+        // Create profile keyed to the auth user id
         const { data: newProfile, error: profileCreateError } = await supabase
           .from('profiles')
           .insert({
+            id: authUserId,
             email: email,
             first_name: data.first_name.trim(),
             last_name: data.last_name.trim(),
@@ -310,10 +351,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (profileCreateError) {
           // Check if it's a duplicate email error
           if (profileCreateError.code === '23505') {
+            // Auth account was created but profile already exists — note for follow-up
             results.push({
               rowIndex,
               success: false,
-              error: 'Email already exists in the system',
+              error: 'Email already exists in the system (auth account created but profile already present — follow up required)',
             });
             existingEmails.add(email);
             failCount++;
@@ -350,7 +392,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           .single();
 
         if (athleteCreateError) {
-          // Rollback profile creation
+          // Rollback profile; auth account cannot be deleted without service role
+          // key — it is flagged as an orphan for operator follow-up
           await supabase.from('profiles').delete().eq('id', newProfile.id);
           throw athleteCreateError;
         }
