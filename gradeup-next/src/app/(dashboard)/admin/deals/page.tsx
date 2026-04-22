@@ -442,7 +442,7 @@ export default function AdminDealsPage() {
                     onClick={() => toggleStatus(status.value)}
                     className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                       selectedStatuses.includes(status.value)
-                        ? 'bg-[var(--color-primary)] text-white'
+                        ? 'bg-[var(--color-primary)] text-black'
                         : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'
                     }`}
                   >

@@ -487,7 +487,7 @@ export function ContractBuilder({
                 className={cn(
                   'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap',
                   isActive
-                    ? 'bg-[var(--color-primary)] text-white'
+                    ? 'bg-[var(--color-primary)] text-black'
                     : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]'
                 )}
               >

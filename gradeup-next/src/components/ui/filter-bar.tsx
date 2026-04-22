@@ -188,7 +188,7 @@ function MobileFilterDrawer({ isOpen, onClose, filters, activeFilterCount }: Mob
           <h3 className="text-base font-semibold text-[var(--text-primary)]">
             Filters
             {activeFilterCount > 0 && (
-              <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-[var(--color-primary)] text-white">
+              <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-[var(--color-primary)] text-black">
                 {activeFilterCount}
               </span>
             )}
@@ -229,7 +229,7 @@ function MobileFilterDrawer({ isOpen, onClose, filters, activeFilterCount }: Mob
           </button>
           <button
             onClick={onClose}
-            className="flex-1 h-11 min-h-[44px] px-4 rounded-[var(--radius-lg)] bg-[var(--color-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity touch-manipulation"
+            className="flex-1 h-11 min-h-[44px] px-4 rounded-[var(--radius-lg)] bg-[var(--color-primary)] text-black text-sm font-medium hover:opacity-90 transition-opacity touch-manipulation"
           >
             Apply
           </button>
@@ -295,7 +295,7 @@ const FilterBar = forwardRef<HTMLDivElement, FilterBarProps>(
               <FilterIcon />
               <span>{mobileFilterLabel}</span>
               {activeFilterCount > 0 && (
-                <span className="px-1.5 py-0.5 text-xs rounded-full bg-[var(--color-primary)] text-white">
+                <span className="px-1.5 py-0.5 text-xs rounded-full bg-[var(--color-primary)] text-black">
                   {activeFilterCount}
                 </span>
               )}

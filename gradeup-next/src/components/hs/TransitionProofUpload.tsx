@@ -16,6 +16,7 @@ import {
   type FileValidation,
 } from '@/components/ui/file-upload-dropzone';
 import { Button } from '@/components/ui/button';
+import { compressImage } from '@/lib/services/storage';
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const ACCEPT = 'application/pdf,image/png,image/jpeg';
@@ -74,9 +75,15 @@ export default function TransitionProofUpload({
 
     setSubmitting(true);
     try {
+      // Downscale + re-encode JPG/PNG phone photos so we aren't shipping
+      // 5-8MB over mobile networks. PDFs pass through untouched.
+      const toUpload = selectedFile.type.startsWith('image/')
+        ? await compressImage(selectedFile, 1800, 0.85).catch(() => selectedFile)
+        : selectedFile;
+
       const fd = new FormData();
       fd.append('transitionId', transitionId);
-      fd.append('file', selectedFile);
+      fd.append('file', toUpload);
       const res = await fetch('/api/hs/athlete/transition/proof', {
         method: 'POST',
         body: fd,

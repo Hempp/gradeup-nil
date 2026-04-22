@@ -21,6 +21,7 @@
 
 import { useCallback, useId, useRef, useState } from 'react';
 import { FileUploadDropzone } from '@/components/ui/file-upload-dropzone';
+import { compressImage } from '@/lib/services/storage';
 
 type SubmissionType =
   | 'social_post_url'
@@ -173,9 +174,20 @@ export function DeliverableSubmitForm({ dealId, onSubmitted }: Props) {
 
         let res: Response;
         if (isFileMode) {
+          // Compress phone-camera JPGs/PNGs before upload. A 4032×3024
+          // shot from a phone is often 5-8MB; resized to 2000px wide +
+          // re-encoded at 0.85 quality it drops to ~400-800KB with no
+          // visible loss at feed scale. compressImage returns the
+          // original untouched for non-image types or if compression
+          // would make it larger.
+          const fileToSend =
+            file && file.type.startsWith('image/')
+              ? await compressImage(file, 2000, 0.85).catch(() => file)
+              : file;
+
           const form = new FormData();
           form.append('submissionType', submissionType);
-          if (file) form.append('file', file);
+          if (fileToSend) form.append('file', fileToSend);
           if (note.trim()) form.append('note', note.trim());
           res = await fetch(`/api/hs/deals/${dealId}/deliverables`, {
             method: 'POST',

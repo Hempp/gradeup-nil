@@ -169,7 +169,7 @@ export function FilterPanel({
           <SlidersHorizontal className="h-4 w-4 text-[var(--text-muted)]" />
           <span className="text-sm font-medium text-[var(--text-primary)]">Filters</span>
           {activeFilterCount > 0 && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-[var(--color-primary)] text-white rounded-full">
+            <span className="px-2 py-0.5 text-xs font-medium bg-[var(--color-primary)] text-black rounded-full">
               {activeFilterCount}
             </span>
           )}

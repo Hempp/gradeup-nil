@@ -231,7 +231,7 @@ export function MessagesPanel({ deal }: MessagesPanelProps) {
                   <div
                     className={`max-w-[80%] ${
                       isCurrentUser
-                        ? 'bg-[var(--color-primary)] text-white'
+                        ? 'bg-[var(--color-primary)] text-black'
                         : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                     } rounded-[var(--radius-lg)] px-4 py-3`}
                   >

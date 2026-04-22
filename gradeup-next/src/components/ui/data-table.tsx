@@ -634,7 +634,7 @@ function MobileTableControls({
         >
           <Filter className="h-4 w-4 text-[var(--text-muted)]" />
           {activeFilterCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex items-center justify-center h-4 w-4 text-[10px] font-medium bg-[var(--color-primary)] text-white rounded-full">
+            <span className="absolute -top-1 -right-1 flex items-center justify-center h-4 w-4 text-[10px] font-medium bg-[var(--color-primary)] text-black rounded-full">
               {activeFilterCount}
             </span>
           )}

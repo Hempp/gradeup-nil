@@ -21,6 +21,7 @@ import {
   type FileValidation,
 } from '@/components/ui/file-upload-dropzone';
 import { Button } from '@/components/ui/button';
+import { compressImage } from '@/lib/services/storage';
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const ACCEPT = 'application/pdf,image/png,image/jpeg';
@@ -96,8 +97,18 @@ export default function TranscriptUploadForm({
 
     setSubmitting(true);
     try {
+      // Client-side compress for JPG/PNG phone photos. A 4032×3024 photo
+      // from a phone is often 4-8MB; after resize + JPEG re-encode it
+      // drops to 300-700KB with no visible loss at transcript scan sizes.
+      // PDFs are passed through untouched (compressImage early-returns on
+      // non-image types). compressImage also returns the original if the
+      // re-encoded result is larger, so small files aren't penalized.
+      const toUpload = selectedFile.type.startsWith('image/')
+        ? await compressImage(selectedFile, 1800, 0.85).catch(() => selectedFile)
+        : selectedFile;
+
       const fd = new FormData();
-      fd.append('file', selectedFile);
+      fd.append('file', toUpload);
       fd.append('claimed_gpa', String(gpaNum));
 
       const res = await fetch('/api/hs/transcripts/upload', {

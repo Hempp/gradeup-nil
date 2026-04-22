@@ -289,7 +289,7 @@ function StepCircle({
 
   const statusClasses = {
     completed: 'bg-[var(--color-success)] text-white',
-    current: 'bg-[var(--color-primary)] text-white ring-4 ring-[var(--color-primary-muted)]',
+    current: 'bg-[var(--color-primary)] text-black ring-4 ring-[var(--color-primary-muted)]',
     upcoming: 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] border-2 border-[var(--border-color)]',
   };
 

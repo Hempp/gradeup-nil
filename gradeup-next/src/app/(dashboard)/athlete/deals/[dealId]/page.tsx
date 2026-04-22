@@ -415,7 +415,7 @@ export default function DealDetailPage() {
             <tab.icon className="h-4 w-4" />
             {tab.label}
             {tab.id === 'messages' && deal.messages.length > 0 && (
-              <span className="h-5 w-5 rounded-full bg-[var(--color-primary)] text-white text-xs flex items-center justify-center">
+              <span className="h-5 w-5 rounded-full bg-[var(--color-primary)] text-black text-xs flex items-center justify-center">
                 {deal.messages.length}
               </span>
             )}

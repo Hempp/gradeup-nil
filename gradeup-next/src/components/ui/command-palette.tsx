@@ -438,7 +438,7 @@ export function CommandPalette({
                         className={cn(
                           'w-full flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)] transition-colors',
                           isSelected
-                            ? 'bg-[var(--color-primary)] text-white'
+                            ? 'bg-[var(--color-primary)] text-black'
                             : 'text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]'
                         )}
                       >

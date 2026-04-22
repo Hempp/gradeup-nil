@@ -335,7 +335,7 @@ export default function AthleteSettingsPage() {
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                     theme === 'light'
-                      ? 'bg-[var(--color-primary)] text-white'
+                      ? 'bg-[var(--color-primary)] text-black'
                       : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
                   }`}
                   aria-pressed={theme === 'light'}
@@ -351,7 +351,7 @@ export default function AthleteSettingsPage() {
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                     theme === 'dark'
-                      ? 'bg-[var(--color-primary)] text-white'
+                      ? 'bg-[var(--color-primary)] text-black'
                       : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
                   }`}
                   aria-pressed={theme === 'dark'}
@@ -367,7 +367,7 @@ export default function AthleteSettingsPage() {
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                     theme === 'system'
-                      ? 'bg-[var(--color-primary)] text-white'
+                      ? 'bg-[var(--color-primary)] text-black'
                       : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
                   }`}
                   aria-pressed={theme === 'system'}

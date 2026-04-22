@@ -212,7 +212,7 @@ const Avatar = memo(forwardRef<HTMLDivElement, AvatarProps>(
         {verified && (
           <span
             className={cn(
-              'absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full bg-[var(--color-primary)] text-white',
+              'absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full bg-[var(--color-primary)] text-black',
               size === 'xs' ? 'h-3 w-3' : size === 'sm' ? 'h-3.5 w-3.5' : size === 'md' ? 'h-4 w-4' : size === 'lg' ? 'h-5 w-5' : 'h-6 w-6'
             )}
             aria-label="Verified"

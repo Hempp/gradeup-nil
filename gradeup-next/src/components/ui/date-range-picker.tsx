@@ -250,8 +250,8 @@ export function DateRangePicker({
           !selectable && 'text-[var(--text-muted)] cursor-not-allowed opacity-50',
           selectable && !inRange && !position && 'text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]',
           inRange && !position && 'bg-[var(--color-primary-muted)] text-[var(--text-primary)]',
-          position === 'start' && 'bg-[var(--color-primary)] text-white',
-          position === 'end' && 'bg-[var(--color-primary)] text-white'
+          position === 'start' && 'bg-[var(--color-primary)] text-black',
+          position === 'end' && 'bg-[var(--color-primary)] text-black'
         )}
       >
         {day}
@@ -318,7 +318,7 @@ export function DateRangePicker({
                     'w-full text-left px-3 py-2 rounded-[var(--radius-md)] text-sm',
                     'transition-colors',
                     preset === p
-                      ? 'bg-[var(--color-primary)] text-white'
+                      ? 'bg-[var(--color-primary)] text-black'
                       : 'text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]'
                   )}
                 >

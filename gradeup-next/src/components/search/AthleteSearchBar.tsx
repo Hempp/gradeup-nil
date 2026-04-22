@@ -401,7 +401,7 @@ export function AthleteSearchBar({
               className={cn(
                 'inline-flex items-center gap-1.5',
                 'rounded-full',
-                'bg-[var(--color-primary)] text-white',
+                'bg-[var(--color-primary)] text-black',
                 'hover:bg-[var(--color-primary)]/80',
                 'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2',
                 'transition-colors duration-150',

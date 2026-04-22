@@ -321,7 +321,7 @@ export const AvatarUpload = forwardRef<HTMLDivElement, AvatarUploadProps>(
             onClick={triggerFileInput}
             className={cn(
               'absolute rounded-full p-1.5',
-              'bg-[var(--color-primary)] text-white shadow-lg',
+              'bg-[var(--color-primary)] text-black shadow-lg',
               'hover:bg-[var(--color-primary-hover)] transition-colors',
               'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2',
               buttonPositions[size]

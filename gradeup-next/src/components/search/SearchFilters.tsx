@@ -315,7 +315,7 @@ function RangeSlider({
               className={cn(
                 'px-2 py-1 text-xs rounded-full border transition-colors',
                 value === preset.value
-                  ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]'
+                  ? 'bg-[var(--color-primary)] text-black border-[var(--color-primary)]'
                   : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--color-primary)]'
               )}
             >
@@ -534,7 +534,7 @@ export function SearchFilters({
                             className={cn(
                               'px-2.5 py-1.5 text-xs rounded-full border transition-colors',
                               isSelected
-                                ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]'
+                                ? 'bg-[var(--color-primary)] text-black border-[var(--color-primary)]'
                                 : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--color-primary)]'
                             )}
                           >

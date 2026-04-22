@@ -151,7 +151,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
                   ${isCompleted
                     ? 'bg-[var(--color-success)] text-white'
                     : isCurrent
-                      ? 'bg-[var(--color-primary)] text-white ring-4 ring-[var(--color-primary-muted)]'
+                      ? 'bg-[var(--color-primary)] text-black ring-4 ring-[var(--color-primary-muted)]'
                       : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] border border-[var(--border-color)]'
                   }
                 `}
@@ -360,7 +360,7 @@ function TargetAthletesStep({
                     px-3 py-1.5 rounded-full text-sm font-medium
                     transition-all duration-200
                     ${data.targetSports.includes(sport)
-                      ? 'bg-[var(--color-primary)] text-white'
+                      ? 'bg-[var(--color-primary)] text-black'
                       : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
                     }
                   `}

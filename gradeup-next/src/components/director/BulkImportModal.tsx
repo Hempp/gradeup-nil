@@ -84,7 +84,7 @@ function StepIndicator({
             className={cn(
               'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
               index === currentIndex
-                ? 'bg-[var(--color-primary)] text-white'
+                ? 'bg-[var(--color-primary)] text-black'
                 : index < currentIndex
                   ? 'bg-[var(--color-success)]/20 text-[var(--color-success)]'
                   : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)]'
