@@ -12,7 +12,6 @@ import { GoogleAnalytics } from "@/components/providers/google-analytics";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ServiceWorkerProvider } from "@/components/providers/service-worker-provider";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
-import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // OPTIMIZED FONT LOADING
@@ -145,7 +144,6 @@ export default function RootLayout({
               <KeyboardShortcutsProvider>
                 <ServiceWorkerProvider>
                   <ServiceWorkerRegistration />
-                  <InstallPrompt />
                   <Suspense fallback={null}>
                     <AnalyticsProvider>
                       <ToastGlobalHandler />

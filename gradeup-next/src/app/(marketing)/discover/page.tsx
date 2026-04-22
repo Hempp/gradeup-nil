@@ -69,18 +69,27 @@ function AthletePublicCard({ athlete }: { athlete: PublicAthlete }) {
 
       {/* Stats Row */}
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <div className="text-center p-2 rounded-lg bg-white/5">
+        <div className="min-w-0 text-center p-2 rounded-lg bg-white/5">
           <p className={`text-lg font-bold ${gpaColor}`}>{athlete.gpa.toFixed(1)}</p>
           <p className="text-[10px] text-[var(--marketing-gray-500)] uppercase">GPA</p>
         </div>
-        <div className="text-center p-2 rounded-lg bg-white/5">
+        <div className="min-w-0 text-center p-2 rounded-lg bg-white/5">
           <p className="text-lg font-bold text-white">
             {totalFollowers >= 1000 ? `${(totalFollowers / 1000).toFixed(0)}K` : totalFollowers}
           </p>
           <p className="text-[10px] text-[var(--marketing-gray-500)] uppercase">Followers</p>
         </div>
-        <div className="text-center p-2 rounded-lg bg-white/5">
-          <p className="text-lg font-bold text-white">{athlete.position}</p>
+        {/* Position is variable-length ("Quarterback", "Point Guard",
+            "Defensive End") and blows out a 3-column mobile grid at
+            text-lg. Scale down + clamp to 2 lines and add a title so
+            the full string is still reachable via long-press / hover. */}
+        <div className="min-w-0 text-center p-2 rounded-lg bg-white/5">
+          <p
+            className="text-xs sm:text-sm md:text-base font-bold text-white leading-tight line-clamp-2 break-words"
+            title={athlete.position}
+          >
+            {athlete.position}
+          </p>
           <p className="text-[10px] text-[var(--marketing-gray-500)] uppercase">Position</p>
         </div>
       </div>

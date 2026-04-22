@@ -3,9 +3,6 @@
  *
  * Server Component. Surfaces:
  *   - the PushSubscribeButton (capability + permission state on client);
- *   - the InstallPrompt so users who haven't installed the PWA get one
- *     reminder at the place it matters most (they're about to opt into
- *     push, which works better once installed on iOS);
  *   - per-type preference toggles (client island);
  *   - the list of active subscriptions for this user.
  */
@@ -13,7 +10,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { PushSubscribeButton } from '@/components/pwa/PushSubscribeButton';
 import { PreferenceListClient } from './PreferenceListClient';
 
@@ -91,8 +87,6 @@ export default async function NotificationsSettingsPage() {
 
   return (
     <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
-      <InstallPrompt />
-
       <section className="mx-auto max-w-3xl px-6 pt-12 pb-16">
         <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
           Settings
