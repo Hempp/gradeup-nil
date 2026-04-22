@@ -380,36 +380,41 @@ function PartnerLogosSection() {
     { name: 'Texas', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Texas_Longhorns_logo.svg', color: '#BF5700' },
   ];
 
-  // Brand logos - only keeping ones that display correctly
-  const brands = [
-    // Apparel / footwear
-    { name: 'Nike', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg', invert: true },
-    { name: 'Under Armour', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Under_armour_logo.svg', invert: true },
-    { name: 'Adidas', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg', invert: true },
-    { name: 'Puma', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Puma_complete_logo.svg', invert: true },
-    { name: 'New Balance', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/New_Balance_logo.svg', invert: true },
-    // QSR / food
-    { name: 'Subway', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Subway_logo_2016.svg', invert: false },
-    { name: "Papa John's", logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Papa_John%27s_new_logo.svg', invert: false },
-    { name: 'Chipotle', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Chipotle_Mexican_Grill_logo.svg', invert: true },
-    { name: "Wendy's", logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9e/Wendy%27s_full_logo_2012.svg', invert: false },
-    { name: "McDonald's", logo: 'https://upload.wikimedia.org/wikipedia/commons/3/36/McDonald%27s_Golden_Arches.svg', invert: false },
-    { name: "Raising Cane's", logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Raising_Cane%27s_logo.svg', invert: true },
-    { name: 'Chick-fil-A', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Chick-fil-A_Logo.svg', invert: false },
-    // Beverages
-    { name: 'Gatorade', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Gatorade_logo.svg', invert: true },
-    { name: 'Powerade', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/Powerade_logo.svg', invert: false },
-    { name: 'Dr Pepper', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/Dr_Pepper_logo_2016.svg', invert: false },
-    { name: 'Red Bull', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Red_Bull.svg', invert: true },
-    { name: 'Celsius', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fe/Celsius_Holdings_Logo.svg', invert: true },
-    // Telecom / services
-    { name: 'Cricket Wireless', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Cricket_Wireless_logo.svg', invert: false },
-    { name: 'State Farm', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8b/State_Farm_logo.svg', invert: false },
-    { name: 'AT&T', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/35/AT%26T_logo_2016.svg', invert: true },
-    // Audio / tech
-    { name: 'Beats by Dre', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Beats_Electronics_logo.svg', invert: true },
-    // Collectibles
-    { name: 'Panini', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/dd/Panini_Logo.svg', invert: true },
+  // Brand wordmarks — rendered as stylized text rather than image logos.
+  //
+  // Why text instead of logos? Wikipedia Commons URLs for brand logos are
+  // unreliable (most of our candidates returned 404), and Clearbit's free
+  // logo endpoint was sunsetted by HubSpot in 2023. Rather than ship broken
+  // images, we render each brand as its name in a uniform grayscale wordmark
+  // — the same aesthetic pattern used by competitor directory pages where
+  // 'audible', 'classpass', 'LaserAway' etc. appear as stylized text.
+  //
+  // Per-brand `family` overrides let a few brands use their signature letter
+  // treatment (italics, lowercase-only, etc.) so the row feels varied, not
+  // like a list.
+  const brands: Array<{ name: string; display?: string; italic?: boolean; lowercase?: boolean }> = [
+    { name: 'Nike', lowercase: false },
+    { name: 'Under Armour' },
+    { name: 'Adidas', lowercase: true },
+    { name: 'Puma', lowercase: true },
+    { name: 'New Balance' },
+    { name: 'Subway' },
+    { name: "Papa John's" },
+    { name: 'Chipotle' },
+    { name: "Wendy's" },
+    { name: "McDonald's" },
+    { name: "Raising Cane's" },
+    { name: 'Chick-fil-A' },
+    { name: 'Gatorade' },
+    { name: 'Powerade' },
+    { name: 'Dr Pepper' },
+    { name: 'Red Bull' },
+    { name: 'Celsius', italic: true },
+    { name: 'Cricket Wireless' },
+    { name: 'State Farm' },
+    { name: 'AT&T' },
+    { name: 'Beats by Dre' },
+    { name: 'Panini' },
   ];
 
   return (
@@ -461,39 +466,55 @@ function PartnerLogosSection() {
           ))}
         </div>
 
-        {/* Brand Partners - Animated */}
+        {/* Brand Partners — continuous-scroll wordmark strip.
+            Uses a CSS-only keyframe marquee; the list is doubled in the DOM
+            so the 50%-translate loops seamlessly. Grayscale text wordmarks
+            sidestep the brittleness of external logo URLs. */}
         <div
-          className={`mt-12 pt-10 border-t border-[var(--marketing-gray-800)] transition-all duration-700 ${
+          className={`mt-12 pt-10 border-t border-white/10 transition-all duration-700 ${
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ transitionDelay: isVisible ? '600ms' : '0ms' }}
         >
-          <p className="text-center text-sm font-medium text-[var(--marketing-gray-500)] mb-8">
-            Brand partners actively recruiting
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-10">
+            Get paid by brands like
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            {brands.map((brand, index) => (
-              <div
-                key={brand.name}
-                className={`group flex items-center justify-center hover:scale-110 transition-all duration-300 px-4 py-3 rounded-lg hover:bg-white/5 ${
-                  isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                }`}
-                style={{ transitionDelay: isVisible ? `${700 + index * 100}ms` : '0ms' }}
-                title={brand.name}
-              >
-                <Image
-                  src={brand.logo}
-                  alt={`${brand.name} logo`}
-                  width={100}
-                  height={36}
-                  className={`h-7 md:h-9 w-auto object-contain transition-opacity ${
-                    brand.invert ? 'brightness-0 invert opacity-70 group-hover:opacity-100' : 'opacity-90 group-hover:opacity-100'
-                  }`}
-                  loading="lazy"
-                />
-              </div>
-            ))}
+          <div
+            className="relative overflow-hidden"
+            style={{
+              maskImage:
+                'linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)',
+            }}
+          >
+            <div
+              className="flex items-center gap-16 whitespace-nowrap will-change-transform"
+              style={{
+                animation: 'brand-strip-scroll 60s linear infinite',
+                width: 'max-content',
+              }}
+            >
+              {[...brands, ...brands].map((brand, i) => (
+                <span
+                  key={`${brand.name}-${i}`}
+                  title={brand.name}
+                  className={`flex-shrink-0 text-2xl md:text-3xl font-semibold tracking-tight text-white/50 hover:text-white transition-colors duration-300 select-none ${
+                    brand.italic ? 'italic' : ''
+                  } ${brand.lowercase ? 'lowercase' : ''}`}
+                  style={{ fontFamily: "'Bebas Neue', var(--font-dm-sans), sans-serif" }}
+                >
+                  {brand.display ?? brand.name}
+                </span>
+              ))}
+            </div>
           </div>
+          <style jsx>{`
+            @keyframes brand-strip-scroll {
+              from { transform: translateX(0); }
+              to { transform: translateX(-50%); }
+            }
+          `}</style>
         </div>
       </div>
     </section>
