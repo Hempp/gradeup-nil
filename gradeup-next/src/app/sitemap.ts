@@ -73,8 +73,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${origin}/`, lastModified: now, changeFrequency: 'daily', priority: 1, alternates: altsFor('/', origin) },
     { url: `${origin}/pricing`, lastModified: now, changeFrequency: 'weekly', priority: 0.8, alternates: altsFor('/pricing', origin) },
     { url: `${origin}/compare`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${origin}/discover`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
-    { url: `${origin}/opportunities`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
+    // /discover and /opportunities retired April 2026 → 301 to /athletes
+    // and /brands?tab=opportunities respectively (see next.config.ts).
     { url: `${origin}/help`, lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
     { url: `${origin}/privacy`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
     { url: `${origin}/terms`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
