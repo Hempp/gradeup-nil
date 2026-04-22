@@ -37,10 +37,11 @@ export function AthleteDirectoryFilters() {
     state: params.get('state') ?? '',
     sport: params.get('sport') ?? '',
     grad: params.get('grad') ?? '',
+    gpa: params.get('gpa') ?? '',
   };
 
   const update = useCallback(
-    (key: 'state' | 'sport' | 'grad', value: string) => {
+    (key: 'state' | 'sport' | 'grad' | 'gpa', value: string) => {
       const next = new URLSearchParams(Array.from(params.entries()));
       if (value) next.set(key, value);
       else next.delete(key);
@@ -49,6 +50,15 @@ export function AthleteDirectoryFilters() {
     },
     [params, router],
   );
+
+  // GPA tiers — thresholds map to the scholar-athlete narrative. Values are
+  // minimums; "3.5" matches an athlete with gpa >= 3.5.
+  const GPA_TIERS = [
+    { value: '',    label: 'Any GPA' },
+    { value: '3.0', label: '3.0+' },
+    { value: '3.5', label: '3.5+ (Scholar)' },
+    { value: '3.8', label: '3.8+ (Honors)' },
+  ];
 
   return (
     <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-white/10 bg-black/30 p-4">
@@ -98,6 +108,22 @@ export function AthleteDirectoryFilters() {
           {GRAD_YEARS.map((yr) => (
             <option key={yr} value={String(yr)}>
               {yr}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="flex flex-col text-xs uppercase tracking-wide text-white/50">
+        Scholar tier
+        <select
+          className="mt-1 min-w-[10rem] rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          value={current.gpa}
+          onChange={(e) => update('gpa', e.target.value)}
+          aria-label="Filter by minimum GPA"
+        >
+          {GPA_TIERS.map((tier) => (
+            <option key={tier.value} value={tier.value}>
+              {tier.label}
             </option>
           ))}
         </select>

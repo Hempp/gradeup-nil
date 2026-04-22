@@ -88,6 +88,8 @@ export interface DirectoryFilters {
   graduationYear?: number | null;
   /** Case-insensitive substring match against hs_athlete_profiles.school_name. */
   school?: string | null;
+  /** Minimum GPA (inclusive). 3.5 → athletes with gpa >= 3.5. */
+  minGpa?: number | null;
   limit?: number;
   offset?: number;
 }
@@ -626,6 +628,12 @@ export async function listPublicAthletes(
     // Case-insensitive LIKE so 'Stanford' matches 'Stanford High School' etc.
     const escaped = filters.school.replace(/[%_]/g, (ch) => `\\${ch}`);
     query = query.ilike('school_name', `%${escaped}%`);
+  }
+  if (filters.minGpa != null && Number.isFinite(filters.minGpa)) {
+    // Clamp to the valid 0.0-5.0 range so a malformed URL param can't pass
+    // garbage into Postgres. 5.0 ceiling matches the CHECK on the column.
+    const clamped = Math.max(0, Math.min(5, filters.minGpa));
+    query = query.gte('gpa', clamped);
   }
 
   const { data, error } = await query.range(offset, offset + limit - 1);

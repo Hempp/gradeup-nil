@@ -35,6 +35,7 @@ type SearchParams = Promise<{
   sport?: string;
   grad?: string;
   school?: string;
+  gpa?: string;
 }>;
 
 export default async function AthletesDirectoryPage({
@@ -49,12 +50,15 @@ export default async function AthletesDirectoryPage({
   const sportFilter = sp.sport ?? null;
   const gradFilter = sp.grad ? parseInt(sp.grad, 10) : null;
   const schoolFilter = sp.school ? sp.school.trim().slice(0, 100) : null;
+  const gpaParsed = sp.gpa ? parseFloat(sp.gpa) : NaN;
+  const minGpaFilter = Number.isFinite(gpaParsed) && gpaParsed > 0 ? gpaParsed : null;
 
   const athletes = await listPublicAthletes({
     stateCode: stateFilter,
     sport: sportFilter,
     graduationYear: Number.isFinite(gradFilter) ? gradFilter : null,
     school: schoolFilter,
+    minGpa: minGpaFilter,
     limit: 60,
   }).catch(() => []);
 
