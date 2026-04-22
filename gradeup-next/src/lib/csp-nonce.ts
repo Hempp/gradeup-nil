@@ -16,7 +16,14 @@ import { headers } from 'next/headers';
 /**
  * Header name for storing the CSP nonce
  */
-export const CSP_NONCE_HEADER = 'x-csp-nonce';
+// Next.js 13.4+ reads the nonce from an incoming-request header named
+// 'x-nonce' and auto-decorates its generated <script> / <style> tags with
+// the matching nonce attribute. Using this exact name is load-bearing:
+// renaming it (the project previously used 'x-csp-nonce') silently
+// defeats Next.js's nonce propagation — inline hydration scripts render
+// without the nonce attribute, the CSP then rejects them, and every
+// client-component page ships as an empty shell. Do NOT rename.
+export const CSP_NONCE_HEADER = 'x-nonce';
 
 /**
  * Generate a cryptographically secure nonce for CSP
