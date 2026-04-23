@@ -239,7 +239,7 @@ CREATE INDEX IF NOT EXISTS idx_referral_perk_activations_grant
 
 CREATE INDEX IF NOT EXISTS idx_referral_perk_activations_perk_active
   ON public.referral_perk_activations (perk_name, expires_at)
-  WHERE expires_at IS NULL OR expires_at > now();
+  WHERE expires_at IS NULL  -- now()-based filter happens at query time;
 
 ALTER TABLE public.referral_perk_activations ENABLE ROW LEVEL SECURITY;
 

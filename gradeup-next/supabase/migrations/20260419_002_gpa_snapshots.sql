@@ -87,7 +87,7 @@ ALTER TABLE public.hs_athlete_gpa_snapshots ENABLE ROW LEVEL SECURITY;
 CREATE POLICY hs_gpa_snapshots_read_own ON public.hs_athlete_gpa_snapshots
   FOR SELECT USING (auth.uid() = athlete_user_id);
 
--- Brand on an active (non-completed, non-canceled) deal with the athlete
+-- Brand on an active (non-completed, non-cancelled) deal with the athlete
 -- may read the athlete's snapshots for their inline trajectory view.
 -- `deals.athlete_id -> athletes.id`; we resolve via athletes.profile_id.
 CREATE POLICY hs_gpa_snapshots_read_brand_on_active_deal ON public.hs_athlete_gpa_snapshots
@@ -98,7 +98,7 @@ CREATE POLICY hs_gpa_snapshots_read_brand_on_active_deal ON public.hs_athlete_gp
       JOIN public.athletes a ON a.id = d.athlete_id
       JOIN public.brands b ON b.id = d.brand_id
       WHERE b.profile_id = auth.uid()
-        AND d.status NOT IN ('canceled', 'declined', 'expired')
+        AND d.status NOT IN ('cancelled', 'rejected', 'expired')
     )
   );
 

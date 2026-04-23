@@ -37,6 +37,17 @@
 --   before insert.
 -- ============================================================
 
+
+-- Postgres CHECK constraints cannot contain subqueries, so the
+-- "every element matches ^[A-Z]{2}$" rule is wrapped in an
+-- IMMUTABLE helper function and called from the constraint.
+CREATE OR REPLACE FUNCTION public._is_upper_2letter_array(codes text[])
+RETURNS boolean LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $fn$
+  SELECT codes IS NULL
+         OR array_length(codes, 1) IS NULL
+         OR NOT EXISTS (SELECT 1 FROM unnest(codes) c WHERE c !~ '^[A-Z]{2}$');
+$fn$;
+
 ALTER TABLE public.brands
   ADD COLUMN IF NOT EXISTS is_hs_enabled boolean NOT NULL DEFAULT false,
   ADD COLUMN IF NOT EXISTS hs_target_states text[],
@@ -51,19 +62,7 @@ BEGIN
   ) THEN
     ALTER TABLE public.brands
       ADD CONSTRAINT brands_hs_target_states_shape
-      CHECK (
-        hs_target_states IS NULL
-        OR (
-          array_length(hs_target_states, 1) IS NULL
-          OR (
-            -- every element matches ^[A-Z]{2}$
-            (
-              SELECT bool_and(code ~ '^[A-Z]{2}$')
-              FROM unnest(hs_target_states) AS code
-            )
-          )
-        )
-      );
+      CHECK (public._is_upper_2letter_array(hs_target_states));
   END IF;
 END $$;
 
