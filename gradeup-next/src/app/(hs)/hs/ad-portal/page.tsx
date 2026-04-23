@@ -29,7 +29,7 @@ import { ADPortalMetricsHeader } from '@/components/hs/ADPortalMetricsHeader';
 import { ADComplianceRateCard } from '@/components/hs/ADComplianceRateCard';
 
 export const metadata: Metadata = {
-  title: 'State Compliance Portal — GradeUp NIL',
+  title: 'State Athletic Association Reports — GradeUp NIL',
   robots: { index: false, follow: false },
 };
 
@@ -104,15 +104,16 @@ export default async function AdPortalPage({ searchParams }: PageProps) {
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
-              State Compliance Portal · Read-only
+              State Athletic Association Reports · On request
             </p>
             <h1 className="mt-2 font-display text-3xl text-white md:text-4xl">
               {active.organizationName}
             </h1>
             <p className="mt-2 text-sm text-white/60">
-              Read-only view of every HS-NIL deal and disclosure in{' '}
-              <strong>{active.stateCode}</strong>. Every page view is
-              audit-logged.
+              Request a per-school transcript covering every HS-NIL deal and
+              disclosure from a member school in{' '}
+              <strong>{active.stateCode}</strong>. Every report generation
+              is audit-logged.
             </p>
           </div>
           {assignments.length > 1 ? (

@@ -44,7 +44,7 @@ const roleDisplayName: Record<UserRole, string> = {
   athlete: 'Athlete',
   brand: 'Brand',
   athletic_director: 'Director',
-  state_ad: 'State AD',
+  state_ad: 'State Athletic Association',
   hs_parent: 'Parent',
   admin: 'Admin',
 };

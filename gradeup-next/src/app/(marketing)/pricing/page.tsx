@@ -183,7 +183,7 @@ const faqs: { q: string; a: string }[] = [
   },
   {
     q: 'Do you charge the state athletic association?',
-    a: 'No. The State AD compliance portal is always free. It is a non-commercial public-good product. State athletic associations get read-only visibility into every deal in their state at no cost.',
+    a: 'No. School-transcript reports are always free for state athletic associations. It is a non-commercial public-good product — associations request per-school reports covering NIL activity, disclosures, and compliance status, on demand, at no cost.',
   },
   {
     q: 'Are there any application fees?',

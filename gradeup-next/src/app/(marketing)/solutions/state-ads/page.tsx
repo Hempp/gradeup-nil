@@ -35,18 +35,18 @@ const PAGE_URL = '/solutions/state-ads';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL Oversight for State Athletic Associations | GradeUp',
+    title: 'GradeUp transcripts for State Athletic Associations',
     description:
-      'A read-only dashboard of every GradeUp NIL deal in your state, per member school, with disclosure-window compliance signals. Free for state athletic associations.',
+      'State athletic associations can request a GradeUp transcript for any member school — a per-school report of NIL activity, disclosures, and compliance status. Free for governing bodies.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
   keywords: [
     'state athletic association NIL',
-    'HS NIL compliance oversight',
-    'state NIL dashboard',
+    'HS NIL compliance reports',
+    'per-school NIL transcript',
     'interscholastic NIL reporting',
-    'state athletic director NIL portal',
+    'state athletic association NIL reports',
     'NIL disclosure window tracking',
   ],
 };
@@ -55,27 +55,27 @@ const FAQ_ITEMS = [
   {
     question: 'Is there any cost to the association?',
     answer:
-      'No. The State-AD Portal is free for state athletic associations. It is an oversight surface, not a product we monetize against governing bodies.',
+      'No. School-transcript reports are free for state athletic associations. This is a governance-support surface, not a product we monetize against governing bodies.',
   },
   {
-    question: 'What exactly does the portal show?',
+    question: 'What exactly does a school transcript include?',
     answer:
-      'Read-only access to every GradeUp NIL deal originating from a member school in your state: athlete (with privacy-appropriate display), school, brand, deal category, compensation band, and the disclosure window status (filed on time, filed late, not yet filed).',
+      'A per-school report covering every GradeUp NIL deal originating from that member school: athlete (with privacy-appropriate display), brand, deal category, compensation band, and disclosure-window status (filed on time, filed late, not yet filed). Requested by your association; scoped to one school per report.',
   },
   {
-    question: 'Can the portal trigger enforcement actions?',
+    question: 'Can these reports trigger enforcement actions?',
     answer:
-      'The portal is read-only and advisory. Enforcement remains the association&rsquo;s responsibility under its bylaws. What we provide is clean evidence — timestamps, signatures, a full audit trail — so any action taken is fact-backed.',
+      'The transcript is evidentiary and advisory — not an enforcement pipeline. Enforcement remains the association&rsquo;s responsibility under its bylaws. What we provide is clean, timestamped, audit-ready data so any action taken is fact-backed.',
   },
   {
-    question: 'How do we request access?',
+    question: 'How does the association request a report?',
     answer:
-      'Email state-ads@gradeupnil.com from an association domain. We verify the sender against publicly listed association contacts, provision a named administrator account, and share the invite flow at /hs/state-ad-invite. Turnaround is typically 3 business days.',
+      'Email state-ads@gradeupnil.com from an association domain. We verify the sender against publicly listed association contacts and onboard a named administrator. Once onboarded, your admin can request a transcript for any member school — reports generate on demand and are emailed plus made available in-app.',
   },
   {
-    question: 'Does the portal work in states where HS NIL is prohibited?',
+    question: 'Do these reports work in states where HS NIL is prohibited?',
     answer:
-      'No active deal flow exists in prohibited states. The portal is relevant only for states with permitting rules. Our current coverage is California, Florida, Georgia, Illinois, New Jersey, New York, and Texas, with more added as associations finalize rule sets.',
+      'No active deal flow exists in prohibited states, so transcripts would be empty. This surface is relevant for states with permitting rules. Current coverage: California, Florida, Georgia, Illinois, New Jersey, New York, and Texas, with more added as associations finalize rule sets.',
   },
 ];
 
@@ -85,32 +85,32 @@ export default function StateAdsSolutionPage() {
       <SolutionSchema
         scriptId="solutions-state-ads-jsonld"
         pageUrl={PAGE_URL}
-        name="GradeUp State-AD Portal"
-        description="Read-only oversight dashboard for state athletic associations. Every NIL deal in the state, per member school, with disclosure-window compliance signals. Free."
+        name="GradeUp school transcripts for State Athletic Associations"
+        description="State athletic associations can request a GradeUp transcript for any member school — a per-school report of NIL activity, disclosures, and compliance status. Free."
         audience="State athletic associations (governing bodies)"
       />
 
       <SolutionHero
         eyebrow="State athletic associations"
-        title="Every NIL deal in your state."
-        titleAccent="One read-only dashboard. Free."
-        subtitle="You can&rsquo;t govern what you can&rsquo;t see. The GradeUp State-AD Portal gives your compliance office a read-only view across every member school: athletes, brands, deal categories, and disclosure-window status — all audit-ready."
+        title="Request a GradeUp transcript"
+        titleAccent="for any member school. Free."
+        subtitle="Instead of a live oversight dashboard, your association requests a transcript for a specific school — one per-school report covering NIL activity, disclosures, and compliance status. Data belongs to the school&rsquo;s athletic program; you see it as a governing body, on request."
         primaryCta={{
-          label: 'Request portal access',
-          href: 'mailto:state-ads@gradeupnil.com?subject=State-AD%20Portal%20access%20request&body=Association%20name%3A%20%0AState%3A%20%0APrimary%20contact%20name%20%26%20title%3A%20%0AEmail%3A%20%0APhone%3A%20',
-          ariaLabel: 'Email GradeUp to request state athletic association portal access',
+          label: 'Request association onboarding',
+          href: 'mailto:state-ads@gradeupnil.com?subject=State%20athletic%20association%20onboarding&body=Association%20name%3A%20%0AState%3A%20%0APrimary%20contact%20name%20%26%20title%3A%20%0AEmail%3A%20%0APhone%3A%20',
+          ariaLabel: 'Email GradeUp to onboard your state athletic association',
         }}
         secondaryCta={{
-          label: 'How the invite flow works',
+          label: 'How the onboarding works',
           href: '/hs/state-ad-invite',
         }}
         supportingNote="Zero cost. 3 business-day turnaround. Read-only by design."
       />
 
       <ProblemProductProof
-        eyebrow="Oversight gap"
-        heading="HS NIL is live. The visibility layer isn&rsquo;t."
-        subheading="Most state associations issued rules in 2023-25, then moved on. The reporting infrastructure to enforce those rules was never built. That&rsquo;s what this portal is."
+        eyebrow="Visibility gap"
+        heading="HS NIL is live. The reporting layer isn&rsquo;t."
+        subheading="Most state associations issued rules in 2023-25, then moved on. The infrastructure to audit those rules was never built. Our school-transcript reports fill that gap — pulled on demand, per member school."
         steps={[
           {
             kind: 'problem',
@@ -119,16 +119,16 @@ export default function StateAdsSolutionPage() {
             bullets: [
               'Deals happen off-platform, off-record',
               'Disclosure windows miss with no automatic flag',
-              'No single source of truth across member schools',
+              'No per-school audit trail available on request',
               'Audit requests require manual school-by-school outreach',
             ],
           },
           {
             kind: 'product',
-            heading: 'What the portal provides',
-            body: 'A read-only dashboard across every GradeUp-originated deal in the state. Every deal shows the school, athlete (privacy-appropriate), brand, category, compensation band, and the disclosure-window status. Exportable.',
+            heading: 'What a school transcript contains',
+            body: 'An on-demand, per-school report covering every GradeUp-originated deal from that member school. Each deal shows athlete (privacy-appropriate), brand, category, compensation band, and disclosure-window status. Generated on request, scoped to one school per report.',
             bullets: [
-              'Read-only access — no write permissions, ever',
+              'Per-school scoping — one report, one school',
               'Disclosure-window filed / late / missing flag per deal',
               'Full audit trail of signatures and timestamps',
               'CSV export for association records',
@@ -137,36 +137,36 @@ export default function StateAdsSolutionPage() {
           {
             kind: 'proof',
             heading: 'How we&rsquo;ve built it',
-            body: 'The portal already ships with Phase 12. The underlying disclosure-pipeline is live in every pilot state, with automatic filings on every deal. The oversight surface is the read-only mirror of the same data.',
+            body: 'The underlying disclosure pipeline is live in every pilot state, auto-filing on every deal. Transcript reports are the request-time, per-school view of that data, generated when your association asks for a given school.',
             bullets: [
-              'Phase 12 feature — already in production',
+              'Already in production',
               'Covers 7 pilot states today (CA, FL, GA, IL, NJ, NY, TX)',
-              'Disclosure-pipeline battle-tested across every deal on platform',
+              'Disclosure pipeline battle-tested across every deal on platform',
             ],
           },
         ]}
       />
 
-      <section aria-label="What the portal provides" className="bg-black py-20">
+      <section aria-label="What a school transcript contains" className="bg-black py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
             <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
-              In the portal
+              On a school transcript
             </span>
             <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
               Three things. Done well.
             </h2>
             <p className="mt-3 text-white/70 text-lg">
-              The State-AD Portal is deliberately narrow. We don&rsquo;t sell
-              anything else to your association.
+              Each report is deliberately narrow — one school, scoped
+              data. We don&rsquo;t sell anything else to your association.
             </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
             <FeatureCard
               icon={<Eye className="h-6 w-6" />}
-              title="Visibility"
-              body="Every deal on the platform originating from your member schools, in one sortable list."
+              title="Per-school visibility"
+              body="Every GradeUp deal originating from one member school, in a single sortable report."
             />
             <FeatureCard
               icon={<ShieldCheck className="h-6 w-6" />}
@@ -176,7 +176,7 @@ export default function StateAdsSolutionPage() {
             <FeatureCard
               icon={<FileCheck className="h-6 w-6" />}
               title="Audit export"
-              body="Filtered CSV export on demand. Signatures, timestamps, and the full disclosure-pipeline trail."
+              body="Filtered CSV export on demand. Signatures, timestamps, and the full disclosure-pipeline trail — per school."
             />
           </div>
 
@@ -184,20 +184,20 @@ export default function StateAdsSolutionPage() {
             <List className="h-5 w-5 mt-0.5 flex-shrink-0 text-[var(--accent-primary)]" aria-hidden="true" />
             <div>
               <strong className="text-white font-semibold">
-                Screenshot placeholder.
+                Sample report.
               </strong>{' '}
-              A representative portal screenshot will ship with the public
-              launch. Request access via the invite flow to see the real thing.
+              A representative school-transcript sample ships with the
+              public launch. Start onboarding below to see real data.
               <span className="block text-white/40 mt-1">TODO: /public/solutions/state-ad-dashboard.png</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section aria-label="Request access" className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10">
+      <section aria-label="Onboard your association" className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
-            Request access
+            Onboard your association
           </span>
           <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
             How to get started
@@ -216,13 +216,13 @@ export default function StateAdsSolutionPage() {
             <Step
               n="03"
               title="Named administrator account provisioned"
-              body="You receive an invite through /hs/state-ad-invite. Log in; the read-only dashboard is populated with all deals in your state from day one."
+              body="You receive an invite through /hs/state-ad-invite. Log in; your admin can then request a transcript for any member school in your state, on demand."
             />
           </ol>
 
           <div className="mt-10 flex flex-wrap gap-3">
             <a
-              href="mailto:state-ads@gradeupnil.com?subject=State-AD%20Portal%20access%20request&body=Association%20name%3A%20%0AState%3A%20%0APrimary%20contact%20name%20%26%20title%3A%20%0AEmail%3A%20%0APhone%3A%20"
+              href="mailto:state-ads@gradeupnil.com?subject=State%20athletic%20association%20onboarding&body=Association%20name%3A%20%0AState%3A%20%0APrimary%20contact%20name%20%26%20title%3A%20%0AEmail%3A%20%0APhone%3A%20"
               className="btn-marketing-primary inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold"
             >
               <Mail className="h-4 w-4" aria-hidden="true" />
@@ -232,7 +232,7 @@ export default function StateAdsSolutionPage() {
               href="/hs/state-ad-invite"
               className="btn-marketing-outline inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold"
             >
-              View the invite flow
+              View the onboarding flow
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
@@ -247,13 +247,13 @@ export default function StateAdsSolutionPage() {
       />
 
       <SolutionCtaBand
-        heading="Oversight you don&rsquo;t have to build."
-        subheading="Already running in 7 pilot states. Free to your association. Read-only by design."
-        primaryLabel="Email to request access"
-        primaryHref="mailto:state-ads@gradeupnil.com?subject=State-AD%20Portal%20access%20request"
+        heading="Reporting you don&rsquo;t have to build."
+        subheading="Already running in 7 pilot states. Free to your association. Per-school transcripts on request."
+        primaryLabel="Email to onboard your association"
+        primaryHref="mailto:state-ads@gradeupnil.com?subject=State%20athletic%20association%20onboarding"
         secondaryLabel="Browse case studies"
         secondaryHref="/business/case-studies"
-        trustNote="Read-only · Free · 3 business-day turnaround"
+        trustNote="Per-school · Free · 3 business-day turnaround"
       />
     </>
   );

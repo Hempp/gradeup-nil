@@ -142,13 +142,13 @@ export default function SolutionsIndexPage() {
               ctaLabel="For athletic directors"
             />
             <PersonaCard
-              eyebrow="For state associations"
-              title="Every NIL deal in your state. One read-only dashboard. Free."
-              description="You can&rsquo;t govern what you can&rsquo;t see. The GradeUp State-AD Portal gives your compliance office a read-only view across every member school."
+              eyebrow="For state athletic associations"
+              title="Request a GradeUp transcript for any member school. Free."
+              description="You can&rsquo;t govern what you can&rsquo;t see. State athletic associations can request a per-school transcript covering NIL activity, disclosures, and compliance status — on demand, scoped to one school."
               href="/solutions/state-ads"
               icon={<ShieldCheck className="h-6 w-6" />}
               bullets={[
-                'Read-only member-school activity',
+                'Per-school transcripts on request',
                 'Disclosure-window compliance signals',
                 'Zero cost to your association',
               ]}

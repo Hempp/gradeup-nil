@@ -61,7 +61,7 @@ const NAV: NavItem[] = [
       { href: '/solutions/athletes', label: 'For Athletes', description: 'Your GPA is the advantage' },
       { href: '/solutions/brands', label: 'For Brands', description: 'Local, state-compliant, self-serve' },
       { href: '/solutions/ads', label: 'For Athletic Directors', description: 'Compliance you do not have to build' },
-      { href: '/solutions/state-ads', label: 'State AD Portal', description: 'Oversight across member schools' },
+      { href: '/solutions/state-ads', label: 'State Athletic Associations', description: 'On-request transcripts per member school' },
       { href: '/hs/valuation', label: 'NIL Valuation', description: 'Estimate a deal in 60 seconds' },
     ],
   },

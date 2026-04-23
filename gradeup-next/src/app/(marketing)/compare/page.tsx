@@ -80,8 +80,8 @@ const rows: CompareRow[] = [
     subscription: 'Asserted compliance, not demonstrated',
   },
   {
-    dimension: 'State AD compliance portal',
-    gradeup: 'Yes — free read-only portal for state athletic associations',
+    dimension: 'State athletic association reporting',
+    gradeup: 'Yes — free per-school transcripts, on-request, for state athletic associations',
     enterprise: 'No — sells to schools, not to state athletic associations',
     subscription: 'No',
   },
