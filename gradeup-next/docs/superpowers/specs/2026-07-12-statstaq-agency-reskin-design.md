@@ -9,18 +9,26 @@
 
 ## 1. Goal
 
-Combine **StatStaq's business model** (a done-for-you NIL agency — "four jobs off
-your plate": produce content · value brand · source deals · negotiate contracts,
-priced free-to-join + commission) with **GradeUp's signature feature** (the
-verified-GPA requirement and its 3-tier verification system) — and express the
-merged product through a **visual + messaging + SEO reskin only**, with no changes
-to information architecture, user flows, or features.
+**GradeUp is part of StatStaq** — not a rival product. StatStaq already runs the
+done-for-you NIL agency ("four jobs off your plate": produce content · value brand
+· source deals · negotiate contracts, priced free-to-join + commission). GradeUp
+is the **scholar-athlete layer on top of that engine**: the verified-GPA
+eligibility gate and its 3-tier verification system that decides who StatStaq
+represents on academic merit.
+
+Express this through a **visual + messaging + SEO reskin only** — GradeUp's
+surfaces adopt StatStaq's look and voice and carry the StatStaq endorsement — with
+no changes to information architecture, user flows, or features.
+
+**Brand lockup:** GradeUp stays the product name and leads on every surface.
+StatStaq appears as the **parent endorsement** — "part of StatStaq" / "A StatStaq
+company" in the header/footer/about — the credential, not the headline. (Decided.)
 
 **One-line positioning:**
 
-> An NIL agency that only represents scholar-athletes. Keep your GPA up (verified),
-> and we run your NIL for you — produce your content, value your brand, source your
-> deals, negotiate your contracts.
+> GradeUp is the scholar-athlete layer of StatStaq. Keep your GPA up (verified) and
+> StatStaq runs your NIL for you — produces your content, values your brand, sources
+> your deals, negotiates your contracts. GradeUp is how you qualify.
 
 ## 2. Non-Goals (explicit exclusions)
 
@@ -96,14 +104,20 @@ reuses the old gold hue but is scoped to status semantics, not accent.
 Retone copy **inside existing page structures** — same components, same section
 order, same routes. This is where StatStaq's model actually lands.
 
-**Core promise (home hero + solutions/athletes):** "Four jobs, off your plate" —
-produce content · value your brand · source your deals · negotiate your contracts.
-"A real producer, with agent superpowers."
+**Core promise (home hero + solutions/athletes):** StatStaq takes four jobs off
+your plate — produce content · value your brand · source your deals · negotiate
+your contracts. "A real producer, with agent superpowers." Attribute the agency
+work to StatStaq (the engine); GradeUp is how a scholar-athlete gets in.
 
-**The GradeUp wedge as the gate:** we only represent scholar-athletes. Keep your
-GPA up — verified through the 3-tier system (self-reported → transcript OCR
-auto-approve at ≥0.90 confidence & ±0.05 of claim → institution-verified) — and we
-run your NIL. The verified-GPA requirement is the eligibility hook, not a badge.
+**The GradeUp layer as the gate:** GradeUp represents scholar-athletes only. Keep
+your GPA up — verified through the 3-tier system (self-reported → transcript OCR
+auto-approve at ≥0.90 confidence & ±0.05 of claim → institution-verified) — and
+StatStaq runs your NIL. The verified-GPA requirement is the eligibility hook, not a
+badge. Frame: *"GradeUp qualifies you. StatStaq represents you."*
+
+**StatStaq endorsement placement:** add "part of StatStaq" / "A StatStaq company"
+lockup to the marketing header and footer, and an endorsement line on the About
+page. This is brand copy/lockup, not an IA change — no new routes, no nav items.
 
 **Pricing (`/pricing`):** reframe to StatStaq's model — free to join · % on deals
 we source · % on deals you bring — reconciled with the existing page's structure.
@@ -117,13 +131,15 @@ can source it. (Consistent with seg's no-fabricated-stats red line and NTP-v1.)
 ## 6. SEO
 
 - Root `layout.tsx` metadata (title template, description, `openGraph`,
-  `twitter`) retoned: "Your GPA Is Worth Money / marketplace" → agency positioning
-  ("Done-for-you NIL for scholar-athletes"). Strip the fabricated `$127,450+`
-  figure per §5.
+  `twitter`) retoned: "Your GPA Is Worth Money / marketplace" → the layer
+  positioning ("GradeUp — the scholar-athlete layer of StatStaq" register). GradeUp
+  stays the `siteName`. Strip the fabricated `$127,450+` figure per §5.
 - Per-page `metadata` exports across the `(marketing)` routes retoned to match.
-- JSON-LD updated: `Organization` + a `Service` entity describing the done-for-you
-  agency offering (content production, brand valuation, deal sourcing, contract
-  negotiation) gated on academic eligibility.
+- JSON-LD updated: GradeUp `Organization` with `parentOrganization` = StatStaq (the
+  machine-readable form of the endorsement), plus a `Service` entity for the
+  done-for-you agency offering (content production, brand valuation, deal sourcing,
+  contract negotiation) `provider` = StatStaq, gated on GradeUp's academic
+  eligibility.
 - **Unchanged:** `metadataBase` (`https://gradeup-next.vercel.app`), all URLs, all
   slugs, sitemap structure. No IA change ⇒ no redirects ⇒ no ranking loss.
 
@@ -147,8 +163,12 @@ can source it. (Consistent with seg's no-fabricated-stats red line and NTP-v1.)
 2. **Font swap** — body/UI DM Sans → Inter in the marketing/auth register
    (load via `next/font`, bind the body font var in-scope). Bebas Neue hero
    untouched.
-3. **Copy retone** — per-route text edits within `(marketing)`, structure-preserving.
-4. **SEO metadata** — root + per-page metadata + JSON-LD.
+3. **Copy retone + StatStaq endorsement** — per-route text edits within
+   `(marketing)`, structure-preserving; plus the "part of StatStaq" lockup in the
+   marketing header/footer components and the About page. Endorsement is copy/logo
+   only — confirm the header/footer edits stay within the marketing layout and add
+   no nav items or routes.
+4. **SEO metadata** — root + per-page metadata + JSON-LD (incl. `parentOrganization`).
 
 Each unit is independently testable and independently revertable.
 
@@ -156,3 +176,7 @@ Each unit is independently testable and independently revertable.
 
 - Any **real, sourceable** metrics to feature? Default: none (claim-free copy).
 - Confirm cobalt `#2563EB` is the final accent (vs. sampling StatStaq's live cobalt).
+- Exact endorsement wording — "part of StatStaq" vs "A StatStaq company" vs
+  "Powered by StatStaq"? Default: **"part of StatStaq."**
+- Is there a StatStaq logo/wordmark asset to place in the header/footer lockup, or
+  should the endorsement be text-only for now? Default: **text-only.**
