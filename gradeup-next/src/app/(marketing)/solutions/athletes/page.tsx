@@ -171,14 +171,14 @@ export default function AthletesSolutionPage() {
               body="Start self-reported. Upload a transcript and it auto-approves at ≥90% OCR confidence and within ±0.05 of your claimed GPA — or your school verifies you directly for the top tier. Any tier gets you in front of StatStaq."
             />
             <FeatureCard
-              icon={<TrendingUp className="h-6 w-6" />}
-              title="StatStaq values your brand"
-              body="Your GPA, sport, grade level, and closed deals build a public trajectory that shows exactly what you&rsquo;re worth — a valuation StatStaq&rsquo;s team uses to price your next deal."
-            />
-            <FeatureCard
               icon={<Share2 className="h-6 w-6" />}
               title="StatStaq produces your content"
               body="StatStaq&rsquo;s team turns every closed deal into content — the trajectory card, the caption, the deliverable brief. You show up; they handle production. Share it in one tap."
+            />
+            <FeatureCard
+              icon={<TrendingUp className="h-6 w-6" />}
+              title="StatStaq values your brand"
+              body="Your GPA, sport, grade level, and closed deals build a public trajectory that shows exactly what you&rsquo;re worth — a valuation StatStaq&rsquo;s team uses to price your next deal."
             />
             <FeatureCard
               icon={<Trophy className="h-6 w-6" />}
