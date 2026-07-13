@@ -28,14 +28,14 @@ const PAGE_URL = '/solutions/brands/training-facility';
 
 export const metadata: Metadata = {
   title:
-    'Training facility brand NIL campaigns | HS scholar-athletes | GradeUp',
+    'Training facility brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'Private coaching gyms, speed-and-agility programs, and skill camps run compliance-handled NIL campaigns with verified HS scholar-athletes. No performance guarantees, no school IP, real enrollments.',
+    'Private coaching gyms, speed-and-agility programs, and skill camps partner with GPA-verified HS scholar-athletes. GradeUp verifies the GPA; StatStaq&rsquo;s team sources and runs the campaign. No performance guarantees, no school IP.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
-    title: 'Training facility NIL campaigns with HS scholar-athletes',
+    title: 'Training facility NIL campaigns with verified scholar-athletes',
     description:
-      'Sponsor the athlete who already trains with you. Compliance-handled, monthly-series pricing.',
+      'Sponsor the athlete who already trains with you. GradeUp handles compliance; StatStaq&rsquo;s team runs the deal, monthly-series pricing.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -102,7 +102,7 @@ export default function TrainingFacilityPage() {
         scriptId="solutions-brands-training-facility-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Training Facility NIL Campaigns"
-        description="Compliance-handled NIL campaigns connecting private training facilities and skill camps with verified HS scholar-athletes in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with private training facilities and skill camps; StatStaq&rsquo;s team runs the campaign. Live in 7 pilot states."
         audience="Private training facilities, skill camps, speed-and-agility gyms, and sport-specific coaches"
       />
 
@@ -110,7 +110,7 @@ export default function TrainingFacilityPage() {
         eyebrow="For training facilities"
         title="Sponsor the athlete"
         titleAccent="who already trains with you."
-        subtitle="Private coaching gyms, speed-and-agility programs, sport-specific facilities, and skill camps turn their best clients into their best marketing. Monthly-series pricing. Compliance handled."
+        subtitle="Private coaching gyms, speed-and-agility programs, sport-specific facilities, and skill camps turn their best clients into their best marketing. GradeUp verifies the GPA; StatStaq&rsquo;s team runs the campaign. Monthly-series pricing."
         primaryCta={{
           label: 'Start a training campaign',
           href: '/hs/signup/brand',
@@ -152,8 +152,8 @@ export default function TrainingFacilityPage() {
           },
           {
             kind: 'proof',
-            heading: 'Summer camps convert 3-5x on this pattern',
-            body: 'In the pilot period, training-facility brands running May-August scholar-athlete series saw 3-5x lift on summer-camp enrollment vs. paid social, with 30-day attribution.',
+            heading: 'Summer camps follow a repeatable pattern',
+            body: 'Training-facility brands running May-August scholar-athlete series pair training reels and a progress post with an opening-day appearance, then track enrollment through a promo code with 30-day attribution.',
             bullets: [
               'Long-form retainers avoid per-post friction',
               'Promo codes close the attribution loop',

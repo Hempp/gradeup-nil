@@ -38,9 +38,9 @@ const PAGE_URL = '/solutions/brands';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for Brands — Reach HS scholar-athletes, compliance handled | GradeUp',
+    title: 'NIL for Brands — Partner with verified scholar-athletes | GradeUp, part of StatStaq',
     description:
-      'Self-serve NIL for local brands. Filter scholar-athletes by state, sport, and verified GPA. Compliance, consent, and disclosures are built in. Deals close in days, not months.',
+      'Partner with GPA-verified HS scholar-athletes. GradeUp verifies the grades; StatStaq&rsquo;s team produces the content, values the brand fit, sources the deal, and negotiates the contract. Compliance, consent, and disclosures are built in.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -59,7 +59,7 @@ const FAQ_ITEMS = [
   {
     question: 'How is this different from the big college NIL platforms?',
     answer:
-      'They&rsquo;re built for college athletic departments. We&rsquo;re built for high school, parent-first. Our deal flow assumes minors, our compliance engine is state-by-state, and our pricing is self-serve — no enterprise sales call required.',
+      'They&rsquo;re built for college athletic departments. We&rsquo;re built for high school, parent-first. Our deal flow assumes minors, our compliance engine is state-by-state, and sign-up is self-serve — no enterprise sales call required. GradeUp verifies every athlete&rsquo;s GPA; StatStaq&rsquo;s team sources the match and negotiates the deal on the athlete&rsquo;s side.',
   },
   {
     question: 'Is my state even eligible?',
@@ -74,7 +74,7 @@ const FAQ_ITEMS = [
   {
     question: 'Who handles consent and disclosures?',
     answer:
-      'We do. Every deal requires a dual-signed consent from athlete + parent before it activates. State disclosures (72-hour, 7-day, 14-day — it varies) file automatically from a template we maintain. You ship the offer; we handle the paperwork.',
+      'GradeUp does. Every deal requires a dual-signed consent from athlete + parent before it activates. State disclosures (72-hour, 7-day, 14-day — it varies) file automatically from a template we maintain. You post the offer; GradeUp handles the paperwork and StatStaq&rsquo;s team runs the deal on the athlete&rsquo;s side.',
   },
   {
     question: 'When do I pay?',
@@ -84,7 +84,7 @@ const FAQ_ITEMS = [
   {
     question: 'Can I run campaigns across multiple athletes?',
     answer:
-      'Yes. Post a campaign, get matched applications, accept the athletes that fit your budget and fit your brand. Our multi-athlete surface tracks every share and deliverable across the whole cohort.',
+      'Yes. Post a campaign; StatStaq&rsquo;s team matches it to verified athletes that fit your budget and your brand, and you accept the ones you want. Our multi-athlete surface tracks every share and deliverable across the whole cohort.',
   },
 ];
 
@@ -95,7 +95,7 @@ export default function BrandsSolutionPage() {
         scriptId="solutions-brands-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp NIL for Brands"
-        description="Self-serve NIL platform for local brands reaching HS scholar-athletes. State-by-state compliance, parent-signed consent, FMV-priced offers."
+        description="GradeUp verifies HS scholar-athletes&rsquo; GPA and runs state-by-state compliance; StatStaq&rsquo;s team sources and negotiates the deal for local brands reaching them. FMV-priced offers, parent-signed consent."
         audience="Local and regional brands marketing to HS scholar-athletes"
       />
 
@@ -103,7 +103,7 @@ export default function BrandsSolutionPage() {
         eyebrow="For brands"
         title="Reach HS scholar-athletes in your state —"
         titleAccent="compliance handled."
-        subtitle="Self-serve NIL for local brands. Filter athletes by state, sport, and verified GPA. Consent, disclosures, and payouts are all automated. You ship the offer; we run the rail."
+        subtitle="Partner with GPA-verified HS scholar-athletes in your state. GradeUp verifies grades and runs compliance; StatStaq&rsquo;s team produces the content, values the brand fit, sources the match, and negotiates the deal. You post the offer — their team runs the rest."
         primaryCta={{
           label: 'Partner as a brand',
           href: '/signup?role=brand',
@@ -135,7 +135,7 @@ export default function BrandsSolutionPage() {
           {
             kind: 'product',
             heading: 'What we built',
-            body: 'A brand dashboard where you filter athletes, price the deal with FMV, sign the contract, fund escrow, and review the deliverable — all in one place. State rules are encoded. Parent consent is mandatory. Everything happens on rails.',
+            body: 'A brand dashboard where you browse GPA-verified athletes and price the deal with FMV. GradeUp verifies the GPA and runs compliance; StatStaq&rsquo;s team sources the match and negotiates the contract on the athlete&rsquo;s side. You fund escrow and review the deliverable — everything happens on rails.',
             bullets: [
               'Filter by state, sport, grade, verified GPA',
               'FMV calculator on every offer',
@@ -145,12 +145,12 @@ export default function BrandsSolutionPage() {
           },
           {
             kind: 'proof',
-            heading: 'Brands closing, fast',
-            body: 'The first brand cohort included local restaurants, training facilities, tutoring services, boutique retail, and fitness studios. All five verticals closed deals in the pilot period. Every deal is traceable to a published case study.',
+            heading: 'The proof is published, not promised',
+            body: 'StatStaq&rsquo;s team is already sourcing and negotiating deals across five brand verticals — local restaurants, training facilities, tutoring services, boutique retail, and fitness studios. Every closed deal becomes a case study, tied to a verified GPA and a real brand.',
             bullets: [
-              '5 brand verticals closed deals in pilot',
-              'Average time from signup to first deal: under 2 weeks',
-              'Published case studies with verified brand ROI',
+              'Case studies published as deals close, not projected',
+              'Every case study ties to a verified GPA and a real brand',
+              'No stock numbers — what closed is what you see',
             ],
           },
         ]}
@@ -163,7 +163,7 @@ export default function BrandsSolutionPage() {
               Pick your vertical
             </span>
             <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
-              Playbooks for the five brand types we&rsquo;ve run deals in.
+              Playbooks for the five brand types StatStaq&rsquo;s team runs deals in.
             </h2>
             <p className="mt-3 text-white/70 text-lg">
               Each page includes real deal examples, typical FMV ranges, and
@@ -254,8 +254,8 @@ export default function BrandsSolutionPage() {
       />
 
       <SolutionCtaBand
-        heading="Run your first HS NIL deal in under 2 weeks."
-        subheading="Self-serve, FMV-priced, compliance handled. Pay only when the deal closes."
+        heading="Partner with a verified scholar-athlete. StatStaq runs the deal."
+        subheading="FMV-priced, compliance handled. Pay only when the deal closes."
         primaryLabel="Partner as a brand"
         primaryHref="/signup?role=brand"
         secondaryLabel="See brand pricing"

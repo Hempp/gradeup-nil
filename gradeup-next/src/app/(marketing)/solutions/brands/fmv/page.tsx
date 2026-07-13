@@ -29,9 +29,9 @@ export const revalidate = 3600;
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp HS',
+    title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp, part of StatStaq',
     description:
-      'Know before you negotiate. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
+      'Know before you negotiate — or before StatStaq&rsquo;s team negotiates on the athlete&rsquo;s behalf. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
     path: '/solutions/brands/fmv',
   }),
   keywords: [
@@ -165,9 +165,10 @@ export default function BrandFmvPage() {
             <p className="mt-6 text-sm text-white/60">
               <strong className="text-white">What this is not:</strong>{' '}
               a quote, offer, or guarantee. Actual deals are brokered
-              between brand + athlete + parent on GradeUp HS. The range
-              is a starting point so you walk into the conversation
-              anchored, not bluffing.
+              between brand + athlete + parent on GradeUp HS &mdash;
+              StatStaq&rsquo;s team runs the negotiation on the athlete&rsquo;s
+              side. The range is a starting point so you walk into the
+              conversation anchored, not bluffing.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">

@@ -34,14 +34,14 @@ const PAGE_URL = '/solutions/brands/local-restaurant';
 
 export const metadata: Metadata = {
   title:
-    'Local restaurant brand NIL campaigns | HS scholar-athletes | GradeUp',
+    'Local restaurant brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'QSR, cafes, ice-cream shops, and family restaurants run compliance-handled NIL campaigns with verified HS scholar-athletes across 7 pilot states. Pay on approval, no alcohol exposure, real foot traffic.',
+    'QSR, cafes, ice-cream shops, and family restaurants partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq&rsquo;s team sources and runs the campaign. Pay on approval, no alcohol exposure.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
-    title: 'Local restaurant NIL campaigns with HS scholar-athletes',
+    title: 'Local restaurant NIL campaigns with verified scholar-athletes',
     description:
-      'Fill seats on a Tuesday. Sponsor a junior QB with 2,000 followers. We handle every compliance check.',
+      'Fill seats on a Tuesday. Sponsor a junior QB with 2,000 followers. GradeUp handles every compliance check; StatStaq&rsquo;s team runs the deal.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -108,7 +108,7 @@ export default function LocalRestaurantPage() {
         scriptId="solutions-brands-local-restaurant-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Local Restaurant NIL Campaigns"
-        description="Compliance-handled NIL campaigns connecting QSR, cafes, and family restaurants with verified HS scholar-athletes in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with QSR, cafes, and family restaurants; StatStaq&rsquo;s team runs the campaign. Live in 7 pilot states."
         audience="Local restaurants, QSR, cafes, bakeries, and family-owned food brands"
       />
 
@@ -116,7 +116,7 @@ export default function LocalRestaurantPage() {
         eyebrow="For local restaurants"
         title="Fill the Tuesday booths."
         titleAccent="Sponsor a scholar-athlete."
-        subtitle="QSR, cafes, ice-cream shops, bakeries, and family restaurants run NIL campaigns with HS scholar-athletes in their ZIP code. Compliance handled. Pay on approval. No alcohol exposure."
+        subtitle="QSR, cafes, ice-cream shops, bakeries, and family restaurants partner with GradeUp-verified HS scholar-athletes in their ZIP code — StatStaq&rsquo;s team runs the campaign. Pay on approval. No alcohol exposure."
         primaryCta={{
           label: 'Start a restaurant campaign',
           href: '/hs/signup/brand',
@@ -126,7 +126,7 @@ export default function LocalRestaurantPage() {
           label: 'See what to pay',
           href: '/solutions/brands/fmv',
         }}
-        supportingNote="Live in 7 pilot states. No setup fee. First deal typically ships in 7 days."
+        supportingNote="Live in 7 pilot states. No setup fee."
       />
 
       <ConcreteExampleSection />
@@ -159,10 +159,10 @@ export default function LocalRestaurantPage() {
           },
           {
             kind: 'proof',
-            heading: 'Food & beverage is our busiest vertical',
-            body: 'Food campaigns are the highest fit rate, fastest close time, and lowest rejection rate of any brand vertical in the pilot period.',
+            heading: 'Food & beverage moves fast',
+            body: 'Grand-openings are the most common first campaign in this vertical. GradeUp verifies the athlete and StatStaq&rsquo;s team runs the match and disclosure end-to-end, so the first deal can ship quickly.',
             bullets: [
-              'Grand-openings are the #1 first campaign',
+              'Grand-openings are the most common first campaign',
               'Athletes convert friends into Friday-night diners',
               'Multi-location packages prorate disclosure',
             ],
@@ -196,7 +196,7 @@ export default function LocalRestaurantPage() {
       <HorizontalVerticalNav current="local-restaurant" />
 
       <SolutionCtaBand
-        heading="Your first campaign can ship this week."
+        heading="Partner with a verified scholar-athlete near you."
         subheading="No setup fee. No monthly minimum. You only pay when the athlete delivers and you approve."
         primaryLabel="Start a restaurant campaign"
         primaryHref="/hs/signup/brand"

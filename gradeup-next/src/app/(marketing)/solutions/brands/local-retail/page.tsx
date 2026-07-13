@@ -27,14 +27,14 @@ export const revalidate = 300;
 const PAGE_URL = '/solutions/brands/local-retail';
 
 export const metadata: Metadata = {
-  title: 'Local retail brand NIL campaigns | HS scholar-athletes | GradeUp',
+  title: 'Local retail brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'Local boutiques, skate shops, outdoor retail, and independent apparel brands run compliance-handled NIL campaigns with verified HS scholar-athletes across 7 pilot states. No school IP, real foot traffic.',
+    'Local boutiques, skate shops, outdoor retail, and independent apparel brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq&rsquo;s team sources and runs the campaign. No school IP.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
-    title: 'Local retail NIL campaigns with HS scholar-athletes',
+    title: 'Local retail NIL campaigns with verified scholar-athletes',
     description:
-      'Teen athlete + Instagram + your product = native content. Compliance handled.',
+      'Teen athlete + Instagram + your product = native content. GradeUp handles compliance; StatStaq&rsquo;s team runs the deal.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -68,7 +68,7 @@ const FAQ_ITEMS = [
   {
     question: 'What is the right season timing?',
     answer:
-      'Back-to-school (August), season-opener (varies by sport), holiday (November-December), and spring-break (March) are the four highest-converting windows. We pre-book athletes 4-6 weeks before each. Off-season sits at 40-60% of peak conversion.',
+      'Back-to-school (August), season-opener (varies by sport), holiday (November-December), and spring-break (March) are the four highest-converting windows. We pre-book athletes 4-6 weeks before each. Off-season timing still works, but converts less than those four peak windows.',
   },
   {
     question: 'Do you offer volume discounts for multi-athlete drops?',
@@ -101,7 +101,7 @@ export default function LocalRetailPage() {
         scriptId="solutions-brands-local-retail-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Local Retail NIL Campaigns"
-        description="Compliance-handled NIL campaigns connecting independent retail brands with verified HS scholar-athletes in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with independent retail brands; StatStaq&rsquo;s team runs the campaign. Live in 7 pilot states."
         audience="Local retail, boutiques, skate shops, outdoor retail, and independent apparel brands"
       />
 
@@ -109,7 +109,7 @@ export default function LocalRetailPage() {
         eyebrow="For local retail"
         title="The kid with the"
         titleAccent="good fit shot."
-        subtitle="Boutiques, skate shops, outdoor stores, independent apparel, and non-school team stores turn a teen athlete Instagram grid into native product content. Compliance handled. No school IP."
+        subtitle="Boutiques, skate shops, outdoor stores, independent apparel, and non-school team stores turn a GradeUp-verified scholar-athlete&rsquo;s Instagram grid into native product content — StatStaq&rsquo;s team runs the campaign. No school IP."
         primaryCta={{
           label: 'Start a retail campaign',
           href: '/hs/signup/brand',
@@ -151,8 +151,8 @@ export default function LocalRetailPage() {
           },
           {
             kind: 'proof',
-            heading: 'Drops at 3+ athletes beat single-influencer CAC',
-            body: 'In pilot data, retail brands that ran 3-5 concurrent local athletes in one drop saw 1.8-3.1x better CAC than a single mid-tier influencer campaign. The overlap in audiences creates a small-town saturation effect.',
+            heading: 'Local saturation, not broad reach',
+            body: 'Retail brands that run 3-5 concurrent local athletes in one drop create overlapping audiences inside a single ZIP code — a small-town saturation effect a single mid-tier influencer campaign cannot replicate.',
             bullets: [
               'Batch disclosure for 3+ athletes',
               'Volume discount at 3+ concurrent',

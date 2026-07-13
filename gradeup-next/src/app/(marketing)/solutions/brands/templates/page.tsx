@@ -27,9 +27,9 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title:
-    'NIL Campaign Templates — Scholar-Athlete Campaign Examples | GradeUp',
+    'NIL Campaign Templates — Scholar-Athlete Campaign Examples | GradeUp, part of StatStaq',
   description:
-    'Eight pre-built NIL campaign templates for local brands. Grand opening, back-to-school, summer camp, product launch, athlete spotlight. Clone, customize in two minutes, post.',
+    'Eight pre-built NIL campaign templates for local brands. Grand opening, back-to-school, summer camp, product launch, athlete spotlight. Post a template; StatStaq&rsquo;s team sources the GradeUp-verified scholar-athlete match.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: 'NIL Campaign Templates — GradeUp for Brands',
@@ -90,8 +90,10 @@ export default async function PublicCampaignTemplatesPage() {
         <p className="mt-4 max-w-2xl text-lg text-white/70">
           Customize in two minutes. Eight battle-tested NIL briefs for local
           brands — grand openings, back-to-school, summer camps, product
-          launches, athlete spotlights, recurring series. Compliance, parental
-          consent, and disclosures are built in.
+          launches, athlete spotlights, recurring series. GradeUp verifies
+          the athlete and handles compliance, parental consent, and
+          disclosures; StatStaq&rsquo;s team sources the match and runs the
+          deal once you post.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link

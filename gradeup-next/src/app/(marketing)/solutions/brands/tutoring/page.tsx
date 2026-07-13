@@ -28,9 +28,9 @@ const PAGE_URL = '/solutions/brands/tutoring';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Tutoring brand NIL campaigns | HS scholar-athletes | GradeUp',
+    title: 'Tutoring brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
     description:
-      'Local tutoring, online test-prep, and study-app brands run compliance-handled NIL campaigns with verified 3.9+ GPA scholar-athletes across 7 pilot states. Academic integrity first.',
+      'Local tutoring, online test-prep, and study-app brands partner with 3.9+ GPA GradeUp-verified scholar-athletes across 7 pilot states. StatStaq&rsquo;s team sources and runs the campaign. Academic integrity first.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -96,7 +96,7 @@ export default function TutoringPage() {
         scriptId="solutions-brands-tutoring-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Tutoring & Test-Prep NIL Campaigns"
-        description="Compliance-handled NIL campaigns connecting tutoring and test-prep brands with verified scholar-athletes who have real GPA and transcript proof."
+        description="GradeUp-verified scholar-athletes with real GPA and transcript proof partner with tutoring and test-prep brands; StatStaq&rsquo;s team runs the campaign."
         audience="Tutoring services, SAT/ACT test-prep, study apps, and educational brands"
       />
 
@@ -104,7 +104,7 @@ export default function TutoringPage() {
         eyebrow="For tutoring & test-prep"
         title="The 3.9 GPA IS"
         titleAccent="your spokesperson."
-        subtitle="Local tutoring, online test-prep, and study-app brands partner with verified scholar-athletes whose transcripts we have actually checked. Academic integrity first. FTC disclosure baked in."
+        subtitle="Local tutoring, online test-prep, and study-app brands partner with scholar-athletes whose transcripts GradeUp has actually checked — StatStaq&rsquo;s team runs the campaign. Academic integrity first. FTC disclosure baked in."
         primaryCta={{
           label: 'Start a tutoring campaign',
           href: '/hs/signup/brand',
@@ -146,10 +146,10 @@ export default function TutoringPage() {
           },
           {
             kind: 'proof',
-            heading: 'Highest-credibility, lowest-cost vertical',
-            body: 'Tutoring has the lowest deal dollar per post but the highest enrollment conversion rate. ROI shows up in sign-ups, not reach. Multi-athlete bundles make the cost math work.',
+            heading: 'Verified, not generic',
+            body: 'Tutoring runs a lower deal dollar per post than most verticals. ROI shows up in enrollment sign-ups, not reach. Multi-athlete bundles make the cost math work.',
             bullets: [
-              'Scholar-athlete testimonials outperform generic influencers 2-4x on enrollments',
+              'Every testimonial ties to a verified transcript and a real GPA',
               '30-day attribution window on promo-code redemptions',
               'Multi-athlete bundles drop per-testimonial cost',
             ],
