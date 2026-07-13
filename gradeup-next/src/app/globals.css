@@ -2311,13 +2311,13 @@ a:hover {
 .auth-theme [data-variant="primary"],
 .auth-theme button[type="submit"] {
   background: var(--marketing-cyan) !important;
-  color: black !important;
+  color: #ffffff !important; /* white on cobalt ≈5.2:1 (AA). Was black — fine on old light-neon, fails on dark cobalt. */
   font-weight: 600;
 }
 
 .auth-theme [data-variant="primary"]:hover,
 .auth-theme button[type="submit"]:hover {
-  background: var(--marketing-lime) !important;
+  background: #3B82F6 !important; /* cobalt hover (was --marketing-lime, now == cobalt so no visible change) */
 }
 
 /* Auth - Button Outline */
