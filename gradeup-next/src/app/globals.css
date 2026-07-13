@@ -223,27 +223,28 @@
   --radius-2xl: 1.5rem;    /* 24px - Hero elements */
   --radius-full: 9999px;   /* Badges, avatars, pills */
 
-  /* ─── Marketing Dark Theme Colors (Nike-inspired) ─── */
-  --marketing-black: #000000;
-  --marketing-gray-950: #0a0a0a;
-  --marketing-gray-900: #171717;
-  --marketing-gray-800: #262626;
+  /* ─── Surface ladder (StatStaq stats-lab) ─── */
+  --marketing-black: #0A0A0A;    /* ink — page bg */
+  --marketing-gray-950: #141414; /* surface — sections */
+  --marketing-gray-900: #1C1C1C; /* surface-2 — cards, tiles, chat bubbles */
+  --marketing-gray-800: #262626; /* borders */
   --marketing-gray-700: #404040;
   --marketing-gray-600: #525252;
   --marketing-gray-500: #737373;
   --marketing-gray-400: #a3a3a3;
   --marketing-gray-300: #d4d4d4;
 
-  /* ─── Marketing Accent Colors ─── */
-  --marketing-cyan: #00f0ff;
-  --marketing-cyan-dark: #00c4cc;
-  --marketing-cyan-glow: rgba(0, 240, 255, 0.4);
-  --marketing-lime: #adff2f;
-  --marketing-lime-glow: rgba(173, 255, 47, 0.3);
-  --marketing-gold: #ffd700;
-  --marketing-gold-glow: rgba(255, 215, 0, 0.3);
-  --marketing-magenta: #ff00ff;
-  --marketing-magenta-glow: rgba(255, 0, 255, 0.3);
+  /* ─── Single accent: cobalt (all former accents collapse here) ─── */
+  --marketing-cyan: #2563EB;
+  --marketing-cyan-dark: #1D4ED8;
+  --marketing-cyan-glow: rgba(37, 99, 235, 0.40);
+  --marketing-lime: #2563EB;
+  --marketing-lime-glow: rgba(37, 99, 235, 0.30);
+  --marketing-gold: #2563EB;
+  --marketing-gold-glow: rgba(37, 99, 235, 0.30);
+  --marketing-magenta: #2563EB;
+  --marketing-magenta-glow: rgba(37, 99, 235, 0.30);
+  --marketing-cobalt-hover: #3B82F6;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1221,13 +1222,16 @@ html.no-transitions *::after {
   animation: marketing-float 8s ease-in-out infinite;
 }
 
+.hero-orb-cyan,
+.hero-orb-magenta {
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.55) 0%, transparent 70%);
+}
+
 .hero-orb-cyan {
-  background: radial-gradient(circle, var(--marketing-cyan) 0%, transparent 70%);
   opacity: 0.4;
 }
 
 .hero-orb-magenta {
-  background: radial-gradient(circle, var(--marketing-magenta) 0%, transparent 70%);
   opacity: 0.3;
   animation-delay: -4s;
 }
