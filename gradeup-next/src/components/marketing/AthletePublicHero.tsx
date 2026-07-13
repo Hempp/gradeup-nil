@@ -92,7 +92,7 @@ export function AthletePublicHero({
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <Link
           href={brandSignupHref}
-          className="inline-flex min-h-[44px] items-center rounded-lg bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-black hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)]"
+          className="inline-flex min-h-[44px] items-center rounded-lg bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)]"
         >
           Request a deal
         </Link>

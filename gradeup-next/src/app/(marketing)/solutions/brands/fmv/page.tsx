@@ -181,7 +181,7 @@ export default function BrandFmvPage() {
               </Link>
               <Link
                 href="/hs/signup/brand"
-                className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
               >
                 Sign up as a brand
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

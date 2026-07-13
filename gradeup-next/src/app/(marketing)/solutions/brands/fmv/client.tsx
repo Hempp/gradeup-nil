@@ -65,7 +65,7 @@ export function BrandFmvCalculatorClient() {
         {/* Primary CTA: sign up + prefill campaign */}
         <Link
           href={signupHref}
-          className="flex items-center justify-between gap-3 rounded-xl bg-[var(--accent-primary)] px-5 py-4 text-sm font-semibold text-black transition-transform hover:scale-[1.01]"
+          className="flex items-center justify-between gap-3 rounded-xl bg-[var(--accent-primary)] px-5 py-4 text-sm font-semibold text-white transition-transform hover:scale-[1.01]"
         >
           <span>Sign up as a brand &mdash; post this campaign</span>
           <ArrowRight className="h-4 w-4" aria-hidden="true" />

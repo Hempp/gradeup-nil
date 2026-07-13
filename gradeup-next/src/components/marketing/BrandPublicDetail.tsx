@@ -91,7 +91,7 @@ export function BrandPublicDetail({ brand }: { brand: PublicBrand }) {
         <div className="mt-4 flex flex-wrap gap-2">
           <a
             href="/hs/signup/athlete"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-md bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-black hover:opacity-90"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-md bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
           >
             Sign up as athlete
           </a>

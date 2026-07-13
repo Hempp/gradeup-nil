@@ -415,7 +415,7 @@ function CategoryNav({
         onClick={() => setActiveCategory(null)}
         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
           activeCategory === null
-            ? 'bg-[var(--accent-primary)] text-black'
+            ? 'bg-[var(--accent-primary)] text-white'
             : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
         }`}
       >
@@ -429,7 +429,7 @@ function CategoryNav({
             onClick={() => setActiveCategory(category.id)}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
               activeCategory === category.id
-                ? 'bg-[var(--accent-primary)] text-black'
+                ? 'bg-[var(--accent-primary)] text-white'
                 : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
             }`}
           >

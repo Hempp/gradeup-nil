@@ -183,7 +183,7 @@ function FilterBar({
                 className={cn(
                   'p-2 rounded transition-colors',
                   viewMode === 'grid'
-                    ? 'bg-[var(--accent-primary)] text-black'
+                    ? 'bg-[var(--accent-primary)] text-white'
                     : 'text-[var(--marketing-gray-400)] hover:text-white',
                 )}
                 aria-label="Grid view"
@@ -195,7 +195,7 @@ function FilterBar({
                 className={cn(
                   'p-2 rounded transition-colors',
                   viewMode === 'list'
-                    ? 'bg-[var(--accent-primary)] text-black'
+                    ? 'bg-[var(--accent-primary)] text-white'
                     : 'text-[var(--marketing-gray-400)] hover:text-white',
                 )}
                 aria-label="List view"

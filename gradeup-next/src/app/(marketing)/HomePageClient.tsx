@@ -587,7 +587,7 @@ const AthleteCard = memo(function AthleteCard({ athlete }: { athlete: FeaturedAt
         )}
         {/* Earnings Badge - Top left */}
         {(athlete as FeaturedAthlete & { earnings?: string }).earnings && (
-          <div className="absolute top-3 left-3 bg-[var(--accent-success)]/90 text-black px-2 py-1 rounded-full text-xs font-bold shadow-md">
+          <div className="absolute top-3 left-3 bg-[var(--accent-success)]/90 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">
             {(athlete as FeaturedAthlete & { earnings?: string }).earnings}
           </div>
         )}

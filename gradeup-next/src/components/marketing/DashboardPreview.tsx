@@ -138,7 +138,7 @@ const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
       <div className="bg-[var(--marketing-gray-900)] rounded-xl p-4 border border-[var(--marketing-gray-800)]">
         <div className="flex items-center gap-4">
           {/* Avatar placeholder */}
-          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-success)] flex items-center justify-center text-black font-bold text-xl">
+          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-success)] flex items-center justify-center text-white font-bold text-xl">
             JD
           </div>
           <div className="flex-1">
@@ -287,7 +287,7 @@ const BrandDashboardMockup = memo(function BrandDashboardMockup() {
               key={athlete.id}
               className="flex items-center gap-3 p-3 rounded-lg bg-[var(--marketing-gray-800)]/50 hover:bg-[var(--marketing-gray-800)] transition-colors group cursor-pointer"
             >
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-tertiary)] flex items-center justify-center text-black font-semibold text-sm">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-tertiary)] flex items-center justify-center text-white font-semibold text-sm">
                 {athlete.initials}
               </div>
               <div className="flex-1 min-w-0">
@@ -461,7 +461,7 @@ export function DashboardPreview({
               </p>
               <Link
                 href={ctaHref}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-primary)] text-black font-semibold hover:bg-[var(--accent-success)] transition-all hover:scale-105 hover:shadow-[0_0_30px_var(--accent-primary-glow)]"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-primary)] text-white font-semibold hover:bg-[var(--accent-success)] transition-all hover:scale-105 hover:shadow-[0_0_30px_var(--accent-primary-glow)]"
               >
                 {ctaText}
                 <ArrowRight className="h-5 w-5" />

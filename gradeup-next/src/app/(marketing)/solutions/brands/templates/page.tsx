@@ -98,7 +98,7 @@ export default async function PublicCampaignTemplatesPage() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/hs/signup/brand"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
           >
             Sign up to post a campaign
           </Link>
@@ -146,7 +146,7 @@ export default async function PublicCampaignTemplatesPage() {
           <div className="mt-6">
             <Link
               href="/hs/signup/brand"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
               Create a brand account
             </Link>

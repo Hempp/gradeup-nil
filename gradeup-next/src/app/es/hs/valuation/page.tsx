@@ -149,7 +149,7 @@ export default async function SpanishValuationPage() {
               </Link>
               <Link
                 href="/es/hs"
-                className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
               >
                 {v.howItWorks.joinWaitlist}
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
