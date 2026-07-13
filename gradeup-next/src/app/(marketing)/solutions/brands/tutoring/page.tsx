@@ -30,7 +30,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'Tutoring brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
     description:
-      'Local tutoring, online test-prep, and study-app brands partner with 3.9+ GPA GradeUp-verified scholar-athletes across 7 pilot states. StatStaq&rsquo;s team sources and runs the campaign. Academic integrity first.',
+      'Local tutoring, online test-prep, and study-app brands partner with 3.9+ GPA GradeUp-verified scholar-athletes across 7 pilot states. StatStaq’s team sources and runs the campaign. Academic integrity first.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -96,7 +96,7 @@ export default function TutoringPage() {
         scriptId="solutions-brands-tutoring-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Tutoring & Test-Prep NIL Campaigns"
-        description="GradeUp-verified scholar-athletes with real GPA and transcript proof partner with tutoring and test-prep brands; StatStaq&rsquo;s team runs the campaign."
+        description="GradeUp-verified scholar-athletes with real GPA and transcript proof partner with tutoring and test-prep brands; StatStaq’s team runs the campaign."
         audience="Tutoring services, SAT/ACT test-prep, study apps, and educational brands"
       />
 
@@ -104,7 +104,7 @@ export default function TutoringPage() {
         eyebrow="For tutoring & test-prep"
         title="The 3.9 GPA IS"
         titleAccent="your spokesperson."
-        subtitle="Local tutoring, online test-prep, and study-app brands partner with scholar-athletes whose transcripts GradeUp has actually checked — StatStaq&rsquo;s team runs the campaign. Academic integrity first. FTC disclosure baked in."
+        subtitle="Local tutoring, online test-prep, and study-app brands partner with scholar-athletes whose transcripts GradeUp has actually checked — StatStaq’s team runs the campaign. Academic integrity first. FTC disclosure baked in."
         primaryCta={{
           label: 'Start a tutoring campaign',
           href: '/hs/signup/brand',

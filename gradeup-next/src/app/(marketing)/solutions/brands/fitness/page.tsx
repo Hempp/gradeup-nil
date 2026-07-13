@@ -30,7 +30,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'Fitness brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
     description:
-      'Gyms, fitness apps, non-prohibited supplements, sport equipment, and recovery brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA and runs banned-substance + compliance checks; StatStaq&rsquo;s team sources and runs the campaign.',
+      'Gyms, fitness apps, non-prohibited supplements, sport equipment, and recovery brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA and runs banned-substance + compliance checks; StatStaq’s team sources and runs the campaign.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -96,7 +96,7 @@ export default function FitnessPage() {
         scriptId="solutions-brands-fitness-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Fitness NIL Campaigns"
-        description="GradeUp-verified HS scholar-athletes partner with fitness, equipment, and recovery brands; StatStaq&rsquo;s team runs the campaign. Banned-substance screening included."
+        description="GradeUp-verified HS scholar-athletes partner with fitness, equipment, and recovery brands; StatStaq’s team runs the campaign. Banned-substance screening included."
         audience="Gyms, fitness apps, non-prohibited supplements, equipment brands, and recovery services"
       />
 
@@ -104,7 +104,7 @@ export default function FitnessPage() {
         eyebrow="For fitness + recovery"
         title="The athlete already"
         titleAccent="lives in your category."
-        subtitle="Gyms, fitness apps, non-prohibited supplements, sport-equipment brands, and recovery services partner with GradeUp-verified HS scholar-athletes — StatStaq&rsquo;s team runs the campaign. Banned-substance screening built in. No performance contingencies."
+        subtitle="Gyms, fitness apps, non-prohibited supplements, sport-equipment brands, and recovery services partner with GradeUp-verified HS scholar-athletes — StatStaq’s team runs the campaign. Banned-substance screening built in. No performance contingencies."
         primaryCta={{
           label: 'Start a fitness campaign',
           href: '/hs/signup/brand',

@@ -681,7 +681,7 @@ function renderFinalCta(data: ReturnType<typeof getStateBlogData>) {
 
   return (
     <SolutionCtaBand
-      heading={`${name} changes the rules — we&rsquo;ll tell you first.`}
+      heading={`${name} changes the rules — we’ll tell you first.`}
       subheading="Join the interest list and be first in line when your state activates."
       primaryLabel="Join the interest list"
       primaryHref={`/hs?ref=state-${slug}`}

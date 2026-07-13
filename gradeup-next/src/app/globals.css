@@ -2250,6 +2250,14 @@ a:hover {
   --accent-success-glow: var(--marketing-lime-glow);
   --accent-tertiary-glow: var(--marketing-magenta-glow);
   --surface-elevated: var(--marketing-gray-800);
+  /* Text color intended to sit ON the accent surface. The accent is now
+     dark cobalt (#2563EB), so text-on-accent must be light: white-on-cobalt
+     is ~5.2:1 (passes WCAG AA). Without this override, :root's
+     --text-inverse: var(--surface-white) resolves through this scope's
+     --surface-white (var(--marketing-gray-900), i.e. dark #1C1C1C), putting
+     dark text on the cobalt Sign In button and failing WCAG AA. Mirror of
+     the fix in .marketing-dark. */
+  --text-inverse: #ffffff;
 }
 
 /* Auth - Card Styling */

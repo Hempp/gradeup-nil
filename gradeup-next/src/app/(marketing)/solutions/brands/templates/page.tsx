@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   title:
     'NIL Campaign Templates — Scholar-Athlete Campaign Examples | GradeUp, part of StatStaq',
   description:
-    'Eight pre-built NIL campaign templates for local brands. Grand opening, back-to-school, summer camp, product launch, athlete spotlight. Post a template; StatStaq&rsquo;s team sources the GradeUp-verified scholar-athlete match.',
+    'Eight pre-built NIL campaign templates for local brands. Grand opening, back-to-school, summer camp, product launch, athlete spotlight. Post a template; StatStaq’s team sources the GradeUp-verified scholar-athlete match.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: 'NIL Campaign Templates — GradeUp for Brands',

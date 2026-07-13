@@ -40,7 +40,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'NIL for Brands — Partner with verified scholar-athletes | GradeUp, part of StatStaq',
     description:
-      'Partner with GPA-verified HS scholar-athletes. GradeUp verifies the grades; StatStaq&rsquo;s team produces the content, values the brand fit, sources the deal, and negotiates the contract. Compliance, consent, and disclosures are built in.',
+      'Partner with GPA-verified HS scholar-athletes. GradeUp verifies the grades; StatStaq’s team produces the content, values the brand fit, sources the deal, and negotiates the contract. Compliance, consent, and disclosures are built in.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -59,32 +59,32 @@ const FAQ_ITEMS = [
   {
     question: 'How is this different from the big college NIL platforms?',
     answer:
-      'They&rsquo;re built for college athletic departments. We&rsquo;re built for high school, parent-first. Our deal flow assumes minors, our compliance engine is state-by-state, and sign-up is self-serve — no enterprise sales call required. GradeUp verifies every athlete&rsquo;s GPA; StatStaq&rsquo;s team sources the match and negotiates the deal on the athlete&rsquo;s side.',
+      'They’re built for college athletic departments. We’re built for high school, parent-first. Our deal flow assumes minors, our compliance engine is state-by-state, and sign-up is self-serve — no enterprise sales call required. GradeUp verifies every athlete’s GPA; StatStaq’s team sources the match and negotiates the deal on the athlete’s side.',
   },
   {
     question: 'Is my state even eligible?',
     answer:
-      'We&rsquo;re live in California, Florida, Georgia, Illinois, New Jersey, New York, and Texas. More states roll out as their athletic associations finalize NIL rules. If your target athletes are in a pilot state, you&rsquo;re ready to go.',
+      'We’re live in California, Florida, Georgia, Illinois, New Jersey, New York, and Texas. More states roll out as their athletic associations finalize NIL rules. If your target athletes are in a pilot state, you’re ready to go.',
   },
   {
     question: 'How do I know what a deal is worth?',
     answer:
-      'Use the Brand FMV calculator at /solutions/brands/fmv. Enter sport, state, and the deliverable; you get a fair-market-value range in seconds. Pricing all HS deals at FMV is also how we keep you on the right side of every state&rsquo;s rule set.',
+      'Use the Brand FMV calculator at /solutions/brands/fmv. Enter sport, state, and the deliverable; you get a fair-market-value range in seconds. Pricing all HS deals at FMV is also how we keep you on the right side of every state’s rule set.',
   },
   {
     question: 'Who handles consent and disclosures?',
     answer:
-      'GradeUp does. Every deal requires a dual-signed consent from athlete + parent before it activates. State disclosures (72-hour, 7-day, 14-day — it varies) file automatically from a template we maintain. You post the offer; GradeUp handles the paperwork and StatStaq&rsquo;s team runs the deal on the athlete&rsquo;s side.',
+      'GradeUp does. Every deal requires a dual-signed consent from athlete + parent before it activates. State disclosures (72-hour, 7-day, 14-day — it varies) file automatically from a template we maintain. You post the offer; GradeUp handles the paperwork and StatStaq’s team runs the deal on the athlete’s side.',
   },
   {
     question: 'When do I pay?',
     answer:
-      'Brand funds escrow at deal signing; deliverable is reviewed within 48 hours of submission; payout releases to the athlete&rsquo;s custodial parent account on approval. GradeUp&rsquo;s platform fee is added to the brand side, never subtracted from the athlete&rsquo;s payout. See /pricing.',
+      'Brand funds escrow at deal signing; deliverable is reviewed within 48 hours of submission; payout releases to the athlete’s custodial parent account on approval. GradeUp’s platform fee is added to the brand side, never subtracted from the athlete’s payout. See /pricing.',
   },
   {
     question: 'Can I run campaigns across multiple athletes?',
     answer:
-      'Yes. Post a campaign; StatStaq&rsquo;s team matches it to verified athletes that fit your budget and your brand, and you accept the ones you want. Our multi-athlete surface tracks every share and deliverable across the whole cohort.',
+      'Yes. Post a campaign; StatStaq’s team matches it to verified athletes that fit your budget and your brand, and you accept the ones you want. Our multi-athlete surface tracks every share and deliverable across the whole cohort.',
   },
 ];
 
@@ -95,7 +95,7 @@ export default function BrandsSolutionPage() {
         scriptId="solutions-brands-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp NIL for Brands"
-        description="GradeUp verifies HS scholar-athletes&rsquo; GPA and runs state-by-state compliance; StatStaq&rsquo;s team sources and negotiates the deal for local brands reaching them. FMV-priced offers, parent-signed consent."
+        description="GradeUp verifies HS scholar-athletes’ GPA and runs state-by-state compliance; StatStaq’s team sources and negotiates the deal for local brands reaching them. FMV-priced offers, parent-signed consent."
         audience="Local and regional brands marketing to HS scholar-athletes"
       />
 
@@ -103,7 +103,7 @@ export default function BrandsSolutionPage() {
         eyebrow="For brands"
         title="Reach HS scholar-athletes in your state —"
         titleAccent="compliance handled."
-        subtitle="Partner with GPA-verified HS scholar-athletes in your state. GradeUp verifies grades and runs compliance; StatStaq&rsquo;s team produces the content, values the brand fit, sources the match, and negotiates the deal. You post the offer — their team runs the rest."
+        subtitle="Partner with GPA-verified HS scholar-athletes in your state. GradeUp verifies grades and runs compliance; StatStaq’s team produces the content, values the brand fit, sources the match, and negotiates the deal. You post the offer — their team runs the rest."
         primaryCta={{
           label: 'Partner as a brand',
           href: '/signup?role=brand',
@@ -117,14 +117,14 @@ export default function BrandsSolutionPage() {
       />
 
       <ProblemProductProof
-        eyebrow="The brand&rsquo;s problem"
+        eyebrow="The brand’s problem"
         heading="You want a local athlete. Your options today are awful."
-        subheading="The big platforms are enterprise SaaS. The alternative is DM&rsquo;ing a 16-year-old from your brand account. Neither of those works."
+        subheading="The big platforms are enterprise SaaS. The alternative is DM’ing a 16-year-old from your brand account. Neither of those works."
         steps={[
           {
             kind: 'problem',
             heading: 'The status quo',
-            body: 'You can hire an agency, pay for a college-NIL platform your budget can&rsquo;t support, or cold-message athletes on Instagram. Every path is slow, expensive, or legally exposed.',
+            body: 'You can hire an agency, pay for a college-NIL platform your budget can’t support, or cold-message athletes on Instagram. Every path is slow, expensive, or legally exposed.',
             bullets: [
               'No self-serve HS option',
               'Unclear state-by-state rules',
@@ -135,7 +135,7 @@ export default function BrandsSolutionPage() {
           {
             kind: 'product',
             heading: 'What we built',
-            body: 'A brand dashboard where you browse GPA-verified athletes and price the deal with FMV. GradeUp verifies the GPA and runs compliance; StatStaq&rsquo;s team sources the match and negotiates the contract on the athlete&rsquo;s side. You fund escrow and review the deliverable — everything happens on rails.',
+            body: 'A brand dashboard where you browse GPA-verified athletes and price the deal with FMV. GradeUp verifies the GPA and runs compliance; StatStaq’s team sources the match and negotiates the contract on the athlete’s side. You fund escrow and review the deliverable — everything happens on rails.',
             bullets: [
               'Filter by state, sport, grade, verified GPA',
               'FMV calculator on every offer',
@@ -146,7 +146,7 @@ export default function BrandsSolutionPage() {
           {
             kind: 'proof',
             heading: 'The proof is published, not promised',
-            body: 'StatStaq&rsquo;s team is already sourcing and negotiating deals across five brand verticals — local restaurants, training facilities, tutoring services, boutique retail, and fitness studios. Every closed deal becomes a case study, tied to a verified GPA and a real brand.',
+            body: 'StatStaq’s team is already sourcing and negotiating deals across five brand verticals — local restaurants, training facilities, tutoring services, boutique retail, and fitness studios. Every closed deal becomes a case study, tied to a verified GPA and a real brand.',
             bullets: [
               'Case studies published as deals close, not projected',
               'Every case study ties to a verified GPA and a real brand',
@@ -163,7 +163,7 @@ export default function BrandsSolutionPage() {
               Pick your vertical
             </span>
             <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
-              Playbooks for the five brand types StatStaq&rsquo;s team runs deals in.
+              Playbooks for the five brand types StatStaq’s team runs deals in.
             </h2>
             <p className="mt-3 text-white/70 text-lg">
               Each page includes real deal examples, typical FMV ranges, and
@@ -174,7 +174,7 @@ export default function BrandsSolutionPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <PersonaCard
               eyebrow="Local restaurants"
-              title="Restaurant &amp; QSR"
+              title="Restaurant & QSR"
               description="Meal deals, team meals, post-game visits. Low-ticket, high-frequency, high community signal."
               href="/solutions/brands/local-restaurant"
               icon={<Utensils className="h-6 w-6" />}
@@ -182,7 +182,7 @@ export default function BrandsSolutionPage() {
             />
             <PersonaCard
               eyebrow="Training facilities"
-              title="Training &amp; performance"
+              title="Training & performance"
               description="Gyms, strength coaches, sport-specific facilities. Long-term sponsorships that double as program endorsements."
               href="/solutions/brands/training-facility"
               icon={<Dumbbell className="h-6 w-6" />}
@@ -190,7 +190,7 @@ export default function BrandsSolutionPage() {
             />
             <PersonaCard
               eyebrow="Tutoring services"
-              title="Tutoring &amp; academic"
+              title="Tutoring & academic"
               description="The purest GradeUp match — a tutor paying a 3.9 scholar-athlete to say studying works. Exceptional community signal."
               href="/solutions/brands/tutoring"
               icon={<BookOpen className="h-6 w-6" />}
@@ -205,8 +205,8 @@ export default function BrandsSolutionPage() {
               ctaLabel="Retail playbook"
             />
             <PersonaCard
-              eyebrow="Fitness &amp; wellness"
-              title="Fitness &amp; wellness"
+              eyebrow="Fitness & wellness"
+              title="Fitness & wellness"
               description="Yoga, recovery, nutrition, wellness brands. Athlete-endorsement fits naturally with the brand promise."
               href="/solutions/brands/fitness"
               icon={<Heart className="h-6 w-6" />}

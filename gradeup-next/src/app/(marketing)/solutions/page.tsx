@@ -28,7 +28,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'Solutions — Built for every side of the high-school NIL deal | GradeUp, part of StatStaq',
     description:
-      'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. GradeUp verifies grades and consent; StatStaq&rsquo;s team runs the deal — content, brand value, sourcing, and contracts.',
+      'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. GradeUp verifies grades and consent; StatStaq’s team runs the deal — content, brand value, sourcing, and contracts.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -91,7 +91,7 @@ export default function SolutionsIndexPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <PersonaCard
               eyebrow="For parents"
-              title="Your scholar-athlete&rsquo;s first NIL deal — without the risk."
+              title="Your scholar-athlete’s first NIL deal — without the risk."
               description="Dual signature. State-compliant consent. Custodial payouts. A parent dashboard for the person actually signing the permission slip."
               href="/solutions/parents"
               icon={<Users className="h-6 w-6" />}
@@ -105,7 +105,7 @@ export default function SolutionsIndexPage() {
             <PersonaCard
               eyebrow="For athletes"
               title="Verify your GPA. StatStaq gets you paid."
-              description="GradeUp verifies your grades in three tiers. Once you qualify, StatStaq&rsquo;s team produces your content, values your brand, sources your deals, and negotiates your contracts."
+              description="GradeUp verifies your grades in three tiers. Once you qualify, StatStaq’s team produces your content, values your brand, sources your deals, and negotiates your contracts."
               href="/solutions/athletes"
               icon={<Trophy className="h-6 w-6" />}
               bullets={[
@@ -130,7 +130,7 @@ export default function SolutionsIndexPage() {
             />
             <PersonaCard
               eyebrow="For athletic directors"
-              title="Compliance your school doesn&rsquo;t have bandwidth to build."
+              title="Compliance your school doesn’t have bandwidth to build."
               description="Parent consent, state disclosure, audit trail — all handled automatically. Every deal in your school is visible in one list."
               href="/solutions/ads"
               icon={<GraduationCap className="h-6 w-6" />}
@@ -144,7 +144,7 @@ export default function SolutionsIndexPage() {
             <PersonaCard
               eyebrow="For state athletic associations"
               title="Request a GradeUp transcript for any member school. Free."
-              description="You can&rsquo;t govern what you can&rsquo;t see. State athletic associations can request a per-school transcript covering NIL activity, disclosures, and compliance status — on demand, scoped to one school."
+              description="You can’t govern what you can’t see. State athletic associations can request a per-school transcript covering NIL activity, disclosures, and compliance status — on demand, scoped to one school."
               href="/solutions/state-ads"
               icon={<ShieldCheck className="h-6 w-6" />}
               bullets={[

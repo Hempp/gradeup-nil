@@ -30,12 +30,12 @@ export const metadata: Metadata = {
   title:
     'Training facility brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'Private coaching gyms, speed-and-agility programs, and skill camps partner with GPA-verified HS scholar-athletes. GradeUp verifies the GPA; StatStaq&rsquo;s team sources and runs the campaign. No performance guarantees, no school IP.',
+    'Private coaching gyms, speed-and-agility programs, and skill camps partner with GPA-verified HS scholar-athletes. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. No performance guarantees, no school IP.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: 'Training facility NIL campaigns with verified scholar-athletes',
     description:
-      'Sponsor the athlete who already trains with you. GradeUp handles compliance; StatStaq&rsquo;s team runs the deal, monthly-series pricing.',
+      'Sponsor the athlete who already trains with you. GradeUp handles compliance; StatStaq’s team runs the deal, monthly-series pricing.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -102,7 +102,7 @@ export default function TrainingFacilityPage() {
         scriptId="solutions-brands-training-facility-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Training Facility NIL Campaigns"
-        description="GradeUp-verified HS scholar-athletes partner with private training facilities and skill camps; StatStaq&rsquo;s team runs the campaign. Live in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with private training facilities and skill camps; StatStaq’s team runs the campaign. Live in 7 pilot states."
         audience="Private training facilities, skill camps, speed-and-agility gyms, and sport-specific coaches"
       />
 
@@ -110,7 +110,7 @@ export default function TrainingFacilityPage() {
         eyebrow="For training facilities"
         title="Sponsor the athlete"
         titleAccent="who already trains with you."
-        subtitle="Private coaching gyms, speed-and-agility programs, sport-specific facilities, and skill camps turn their best clients into their best marketing. GradeUp verifies the GPA; StatStaq&rsquo;s team runs the campaign. Monthly-series pricing."
+        subtitle="Private coaching gyms, speed-and-agility programs, sport-specific facilities, and skill camps turn their best clients into their best marketing. GradeUp verifies the GPA; StatStaq’s team runs the campaign. Monthly-series pricing."
         primaryCta={{
           label: 'Start a training campaign',
           href: '/hs/signup/brand',

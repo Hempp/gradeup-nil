@@ -29,12 +29,12 @@ const PAGE_URL = '/solutions/brands/local-retail';
 export const metadata: Metadata = {
   title: 'Local retail brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'Local boutiques, skate shops, outdoor retail, and independent apparel brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq&rsquo;s team sources and runs the campaign. No school IP.',
+    'Local boutiques, skate shops, outdoor retail, and independent apparel brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. No school IP.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: 'Local retail NIL campaigns with verified scholar-athletes',
     description:
-      'Teen athlete + Instagram + your product = native content. GradeUp handles compliance; StatStaq&rsquo;s team runs the deal.',
+      'Teen athlete + Instagram + your product = native content. GradeUp handles compliance; StatStaq’s team runs the deal.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -101,7 +101,7 @@ export default function LocalRetailPage() {
         scriptId="solutions-brands-local-retail-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Local Retail NIL Campaigns"
-        description="GradeUp-verified HS scholar-athletes partner with independent retail brands; StatStaq&rsquo;s team runs the campaign. Live in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with independent retail brands; StatStaq’s team runs the campaign. Live in 7 pilot states."
         audience="Local retail, boutiques, skate shops, outdoor retail, and independent apparel brands"
       />
 
@@ -109,7 +109,7 @@ export default function LocalRetailPage() {
         eyebrow="For local retail"
         title="The kid with the"
         titleAccent="good fit shot."
-        subtitle="Boutiques, skate shops, outdoor stores, independent apparel, and non-school team stores turn a GradeUp-verified scholar-athlete&rsquo;s Instagram grid into native product content — StatStaq&rsquo;s team runs the campaign. No school IP."
+        subtitle="Boutiques, skate shops, outdoor stores, independent apparel, and non-school team stores turn a GradeUp-verified scholar-athlete’s Instagram grid into native product content — StatStaq’s team runs the campaign. No school IP."
         primaryCta={{
           label: 'Start a retail campaign',
           href: '/hs/signup/brand',

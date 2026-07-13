@@ -32,7 +32,7 @@ export function Logo({ size = 'md', showText = true, variant = 'gradient', class
           className={cn(
             'font-bold tracking-tight',
             textSize,
-            variant === 'gradient' && 'bg-gradient-to-r from-[#00f0ff] to-[#adff2f] bg-clip-text text-transparent',
+            variant === 'gradient' && 'bg-gradient-to-r from-[var(--marketing-cyan)] to-[var(--marketing-lime)] bg-clip-text text-transparent',
             variant === 'white' && 'text-white',
             variant === 'dark' && 'text-gray-900'
           )}
@@ -78,8 +78,8 @@ export function LogoIcon({ size = 32, variant = 'gradient', className }: LogoIco
       {variant === 'gradient' && (
         <defs>
           <linearGradient id={gradientId} x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00f0ff" />
-            <stop offset="100%" stopColor="#adff2f" />
+            <stop offset="0%" style={{ stopColor: 'var(--marketing-cyan)' }} />
+            <stop offset="100%" style={{ stopColor: 'var(--marketing-lime)' }} />
           </linearGradient>
         </defs>
       )}
@@ -109,7 +109,7 @@ export function LogoFull({ variant = 'gradient', className }: { variant?: 'gradi
       <span
         className={cn(
           'text-xs tracking-widest uppercase mt-1',
-          variant === 'gradient' && 'text-[#00f0ff]/70',
+          variant === 'gradient' && 'text-[var(--marketing-cyan)]/70',
           variant === 'white' && 'text-white/70',
           variant === 'dark' && 'text-gray-600'
         )}

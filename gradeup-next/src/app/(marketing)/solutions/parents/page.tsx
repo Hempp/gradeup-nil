@@ -33,7 +33,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'NIL for Parents — A first deal without the risk | GradeUp, part of StatStaq',
     description:
-      'The safest way for your scholar-athlete to sign their first NIL deal. GradeUp verifies their GPA and handles consent; StatStaq&rsquo;s team runs the deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
+      'The safest way for your scholar-athlete to sign their first NIL deal. GradeUp verifies their GPA and handles consent; StatStaq’s team runs the deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
     path: PAGE_URL,
   }),
   // Preserve Spanish language alternates (helper only sets `canonical`).
@@ -60,32 +60,32 @@ const FAQ_ITEMS = [
   {
     question: 'Does my athlete need to be 18 to sign a deal?',
     answer:
-      'No. In most pilot states, athletes under 18 can sign with a parent or legal guardian&rsquo;s written consent, which we collect and store as part of every deal. Texas requires the athlete be at least 17 and holds the payment in trust until they turn 18 — GradeUp handles that automatically.',
+      'No. In most pilot states, athletes under 18 can sign with a parent or legal guardian’s written consent, which we collect and store as part of every deal. Texas requires the athlete be at least 17 and holds the payment in trust until they turn 18 — GradeUp handles that automatically.',
   },
   {
     question: 'Where does the money actually go?',
     answer:
-      'Into a custodial Stripe Connect account that you, the parent, own and control. Payouts route to your account and you decide how to route them from there — save, invest, gift, or transfer. GradeUp never holds your athlete&rsquo;s earnings beyond the short window between deal completion and payout release.',
+      'Into a custodial Stripe Connect account that you, the parent, own and control. Payouts route to your account and you decide how to route them from there — save, invest, gift, or transfer. GradeUp never holds your athlete’s earnings beyond the short window between deal completion and payout release.',
   },
   {
     question: 'Is this NCAA-safe for college recruiting later?',
     answer:
-      'Yes. GradeUp is built to preserve future NCAA eligibility. We follow each state&rsquo;s high-school athletic association rules (which are what governs your athlete today), and we never allow school IP, pay-for-play, or banned categories like gambling, alcohol, or cannabis.',
+      'Yes. GradeUp is built to preserve future NCAA eligibility. We follow each state’s high-school athletic association rules (which are what governs your athlete today), and we never allow school IP, pay-for-play, or banned categories like gambling, alcohol, or cannabis.',
   },
   {
-    question: 'What if I don&rsquo;t want my athlete doing a particular deal?',
+    question: 'What if I don’t want my athlete doing a particular deal?',
     answer:
-      'You approve every deal before it activates. No deal exists on your athlete&rsquo;s profile until you, as the parent, sign. If you decline, the deal never happens. You can also pause or withdraw consent at any time.',
+      'You approve every deal before it activates. No deal exists on your athlete’s profile until you, as the parent, sign. If you decline, the deal never happens. You can also pause or withdraw consent at any time.',
   },
   {
     question: 'What data do you collect on my child?',
     answer:
-      'The minimum to run a compliant deal: name, school, sport, sport season, and self-reported GPA (optionally verified via Tier B transcript review). We do not sell data, do not ship third-party ad trackers to your athlete&rsquo;s dashboard, and follow COPPA/FERPA-aligned practices. Full privacy policy at /privacy.',
+      'The minimum to run a compliant deal: name, school, sport, sport season, and self-reported GPA (optionally verified via Tier B transcript review). We do not sell data, do not ship third-party ad trackers to your athlete’s dashboard, and follow COPPA/FERPA-aligned practices. Full privacy policy at /privacy.',
   },
   {
     question: 'How much does this cost us?',
     answer:
-      'Signing up as a parent is free. Athletes are free too. GradeUp takes a small platform fee only when a deal closes — it comes out of the brand&rsquo;s budget, not out of your athlete&rsquo;s earnings.',
+      'Signing up as a parent is free. Athletes are free too. GradeUp takes a small platform fee only when a deal closes — it comes out of the brand’s budget, not out of your athlete’s earnings.',
   },
 ];
 
@@ -102,9 +102,9 @@ export default function ParentsSolutionPage() {
 
       <SolutionHero
         eyebrow="For parents"
-        title="Your scholar-athlete&rsquo;s first NIL deal,"
+        title="Your scholar-athlete’s first NIL deal,"
         titleAccent="without the risk."
-        subtitle="You&rsquo;re the one actually signing the permission slip. GradeUp &mdash; part of StatStaq &mdash; is the only NIL platform built for that reality: dual-signed consent on every deal, custodial payouts into an account you control, and state-by-state compliance handled in the background while StatStaq&rsquo;s team runs the deal itself."
+        subtitle="You’re the one actually signing the permission slip. GradeUp — part of StatStaq — is the only NIL platform built for that reality: dual-signed consent on every deal, custodial payouts into an account you control, and state-by-state compliance handled in the background while StatStaq’s team runs the deal itself."
         primaryCta={{
           label: 'Sign up as a parent',
           href: '/signup?role=parent',
@@ -118,14 +118,14 @@ export default function ParentsSolutionPage() {
       />
 
       <ProblemProductProof
-        eyebrow="The parent&rsquo;s problem"
-        heading="NIL is loud. Most of it isn&rsquo;t built for you."
-        subheading="College NIL platforms are built for 20-year-olds with an agent. Your athlete is 15. You&rsquo;re the one reading the fine print at midnight. Here&rsquo;s what changes."
+        eyebrow="The parent’s problem"
+        heading="NIL is loud. Most of it isn’t built for you."
+        subheading="College NIL platforms are built for 20-year-olds with an agent. Your athlete is 15. You’re the one reading the fine print at midnight. Here’s what changes."
         steps={[
           {
             kind: 'problem',
             heading: 'The old NIL story',
-            body: 'Most platforms assume the athlete is the decision-maker. For high school, that&rsquo;s you. Consent is buried, money flow is opaque, and nobody explains what a &ldquo;disclosure window&rdquo; is.',
+            body: 'Most platforms assume the athlete is the decision-maker. For high school, that’s you. Consent is buried, money flow is opaque, and nobody explains what a “disclosure window” is.',
             bullets: [
               'Confusing terms written for college athletes',
               'No visibility into which brands your child is talking to',
@@ -136,7 +136,7 @@ export default function ParentsSolutionPage() {
           {
             kind: 'product',
             heading: 'What GradeUp does differently',
-            body: 'A parent dashboard that mirrors the athlete&rsquo;s view. Dual signature required on every deal. Custodial Stripe Connect account in your name. Plain-English disclosures on everything.',
+            body: 'A parent dashboard that mirrors the athlete’s view. Dual signature required on every deal. Custodial Stripe Connect account in your name. Plain-English disclosures on everything.',
             bullets: [
               'Dual-signed consent — no deal goes live without your signature',
               'Custodial payout into a Stripe account you own',
@@ -151,7 +151,7 @@ export default function ParentsSolutionPage() {
             bullets: [
               'California families ran the first deals through the concierge pilot',
               '7 pilot states live today',
-              'Disclosure automation built to file inside every state&rsquo;s window',
+              'Disclosure automation built to file inside every state’s window',
             ],
           },
         ]}
@@ -176,7 +176,7 @@ export default function ParentsSolutionPage() {
             <FeatureCard
               icon={<Heart className="h-6 w-6" />}
               title="Dual-signed consent"
-              body="Every deal requires both the athlete and a parent signature before it can go live. No gray area, no &ldquo;implied&rdquo; consent, no surprise contracts."
+              body="Every deal requires both the athlete and a parent signature before it can go live. No gray area, no “implied” consent, no surprise contracts."
             />
             <FeatureCard
               icon={<Wallet className="h-6 w-6" />}
@@ -186,12 +186,12 @@ export default function ParentsSolutionPage() {
             <FeatureCard
               icon={<ShieldCheck className="h-6 w-6" />}
               title="State-compliant, automatically"
-              body="The platform already knows your state&rsquo;s rules. Disclosure filing, banned categories, minimum-age checks — all handled without you lifting a finger."
+              body="The platform already knows your state’s rules. Disclosure filing, banned categories, minimum-age checks — all handled without you lifting a finger."
             />
             <FeatureCard
               icon={<Eye className="h-6 w-6" />}
               title="Full visibility"
-              body="Your parent dashboard mirrors your athlete&rsquo;s. Every brand conversation, every deal, every payout — visible in real-time."
+              body="Your parent dashboard mirrors your athlete’s. Every brand conversation, every deal, every payout — visible in real-time."
             />
             <FeatureCard
               icon={<FileCheck className="h-6 w-6" />}
@@ -208,7 +208,7 @@ export default function ParentsSolutionPage() {
       </section>
 
       <TestimonialQuote
-        quote="I signed the permission slip at 10pm on a Tuesday, saw the deal in my dashboard by Wednesday, and watched the first payout hit my Stripe on Saturday. That&rsquo;s the shortest distance between &lsquo;this is scary&rsquo; and &lsquo;this is real&rsquo; I&rsquo;ve ever seen."
+        quote="I signed the permission slip at 10pm on a Tuesday, saw the deal in my dashboard by Wednesday, and watched the first payout hit my Stripe on Saturday. That’s the shortest distance between ‘this is scary’ and ‘this is real’ I’ve ever seen."
         attribution="Parent, Los Angeles, CA · Concierge pilot"
       />
 
@@ -228,7 +228,7 @@ export default function ParentsSolutionPage() {
 
       <SolutionCtaBand
         heading="Ready to sign with confidence?"
-        subheading="Create a free parent account. We&rsquo;ll walk you through the first deal."
+        subheading="Create a free parent account. We’ll walk you through the first deal."
         primaryLabel="Sign up as a parent"
         primaryHref="/signup?role=parent"
         secondaryLabel="Browse case studies"

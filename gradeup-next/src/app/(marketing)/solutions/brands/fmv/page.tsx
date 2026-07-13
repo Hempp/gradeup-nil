@@ -31,7 +31,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp, part of StatStaq',
     description:
-      'Know before you negotiate — or before StatStaq&rsquo;s team negotiates on the athlete&rsquo;s behalf. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
+      'Know before you negotiate — or before StatStaq’s team negotiates on the athlete’s behalf. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
     path: '/solutions/brands/fmv',
   }),
   keywords: [
@@ -222,7 +222,7 @@ const FACTORS: { title: string; body: string }[] = [
   },
   {
     title: 'Athlete count scales the campaign',
-    body: 'Total campaign cost = per-athlete x count. At 10+ athletes we surface a volume-rate ribbon &mdash; ask us for a rate card.',
+    body: 'Total campaign cost = per-athlete x count. At 10+ athletes we surface a volume-rate ribbon — ask us for a rate card.',
   },
   {
     title: 'State rules flag compliance',

@@ -143,7 +143,7 @@ describe('LogoFull', () => {
     render(<LogoFull variant="gradient" />);
 
     const tagline = screen.getByText('Your GPA Is Worth Money');
-    expect(tagline).toHaveClass('text-[#00f0ff]/70');
+    expect(tagline).toHaveClass('text-[var(--marketing-cyan)]/70');
   });
 
   it('applies white variant to tagline', () => {

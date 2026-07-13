@@ -36,12 +36,12 @@ export const metadata: Metadata = {
   title:
     'Local restaurant brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'QSR, cafes, ice-cream shops, and family restaurants partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq&rsquo;s team sources and runs the campaign. Pay on approval, no alcohol exposure.',
+    'QSR, cafes, ice-cream shops, and family restaurants partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. Pay on approval, no alcohol exposure.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: 'Local restaurant NIL campaigns with verified scholar-athletes',
     description:
-      'Fill seats on a Tuesday. Sponsor a junior QB with 2,000 followers. GradeUp handles every compliance check; StatStaq&rsquo;s team runs the deal.',
+      'Fill seats on a Tuesday. Sponsor a junior QB with 2,000 followers. GradeUp handles every compliance check; StatStaq’s team runs the deal.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -108,7 +108,7 @@ export default function LocalRestaurantPage() {
         scriptId="solutions-brands-local-restaurant-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Local Restaurant NIL Campaigns"
-        description="GradeUp-verified HS scholar-athletes partner with QSR, cafes, and family restaurants; StatStaq&rsquo;s team runs the campaign. Live in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with QSR, cafes, and family restaurants; StatStaq’s team runs the campaign. Live in 7 pilot states."
         audience="Local restaurants, QSR, cafes, bakeries, and family-owned food brands"
       />
 
@@ -116,7 +116,7 @@ export default function LocalRestaurantPage() {
         eyebrow="For local restaurants"
         title="Fill the Tuesday booths."
         titleAccent="Sponsor a scholar-athlete."
-        subtitle="QSR, cafes, ice-cream shops, bakeries, and family restaurants partner with GradeUp-verified HS scholar-athletes in their ZIP code — StatStaq&rsquo;s team runs the campaign. Pay on approval. No alcohol exposure."
+        subtitle="QSR, cafes, ice-cream shops, bakeries, and family restaurants partner with GradeUp-verified HS scholar-athletes in their ZIP code — StatStaq’s team runs the campaign. Pay on approval. No alcohol exposure."
         primaryCta={{
           label: 'Start a restaurant campaign',
           href: '/hs/signup/brand',
@@ -160,7 +160,7 @@ export default function LocalRestaurantPage() {
           {
             kind: 'proof',
             heading: 'Food & beverage moves fast',
-            body: 'Grand-openings are the most common first campaign in this vertical. GradeUp verifies the athlete and StatStaq&rsquo;s team runs the match and disclosure end-to-end, so the first deal can ship quickly.',
+            body: 'Grand-openings are the most common first campaign in this vertical. GradeUp verifies the athlete and StatStaq’s team runs the match and disclosure end-to-end, so the first deal can ship quickly.',
             bullets: [
               'Grand-openings are the most common first campaign',
               'Athletes convert friends into Friday-night diners',

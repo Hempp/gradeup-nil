@@ -34,7 +34,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'NIL for High-School Athletic Directors | GradeUp, part of StatStaq',
     description:
-      'GradeUp is the compliance layer your school doesn&rsquo;t have bandwidth to build — parent-signed consent, state disclosures, and a full audit trail, without a single new hire. StatStaq&rsquo;s team runs the deals your athletes sign.',
+      'GradeUp is the compliance layer your school doesn’t have bandwidth to build — parent-signed consent, state disclosures, and a full audit trail, without a single new hire. StatStaq’s team runs the deals your athletes sign.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -52,27 +52,27 @@ const FAQ_ITEMS = [
   {
     question: 'Does our school have to formally opt in?',
     answer:
-      'No. Your athletes can sign up as individuals with parental consent; GradeUp verifies their GPA, StatStaq&rsquo;s team runs the deal itself, and disclosures file automatically to your state association. A formal school partnership is optional but gets you an AD-level read-only view of your own athletes&rsquo; deals.',
+      'No. Your athletes can sign up as individuals with parental consent; GradeUp verifies their GPA, StatStaq’s team runs the deal itself, and disclosures file automatically to your state association. A formal school partnership is optional but gets you an AD-level read-only view of your own athletes’ deals.',
   },
   {
     question: 'What does a school partnership actually cost us?',
     answer:
-      'Nothing. School partnerships are free. GradeUp&rsquo;s revenue comes from the brand side of closed deals — never from schools, athletes, or families.',
+      'Nothing. School partnerships are free. GradeUp’s revenue comes from the brand side of closed deals — never from schools, athletes, or families.',
   },
   {
     question: 'How much extra work is this for the AD?',
     answer:
-      'Minimal. Disclosures file automatically. Consent is collected from parents directly. As the AD, you get a read-only view of your athletes&rsquo; deals plus optional alerts when a new disclosure is filed against your school. You can look away and still be compliant.',
+      'Minimal. Disclosures file automatically. Consent is collected from parents directly. As the AD, you get a read-only view of your athletes’ deals plus optional alerts when a new disclosure is filed against your school. You can look away and still be compliant.',
   },
   {
     question: 'Will this put our program at risk with the state association?',
     answer:
-      'The opposite. We follow your state association&rsquo;s disclosure rules automatically, and the state-AD portal (used by your association) sees the same feed. Running HS NIL through GradeUp&rsquo;s compliance layer — with StatStaq&rsquo;s team handling the deals themselves — puts your program on the cleanest possible side of any future audit.',
+      'The opposite. We follow your state association’s disclosure rules automatically, and the state-AD portal (used by your association) sees the same feed. Running HS NIL through GradeUp’s compliance layer — with StatStaq’s team handling the deals themselves — puts your program on the cleanest possible side of any future audit.',
   },
   {
     question: 'What about NCAA recruiting exposure for our athletes?',
     answer:
-      'Every deal passes a rules-engine check against the universal NCAA guardrails — no school IP, no pay-for-play, no banned categories. Your athletes&rsquo; future eligibility is preserved by default.',
+      'Every deal passes a rules-engine check against the universal NCAA guardrails — no school IP, no pay-for-play, no banned categories. Your athletes’ future eligibility is preserved by default.',
   },
   {
     question: 'Can I see the deals my athletes are signing?',
@@ -88,14 +88,14 @@ export default function AdsSolutionPage() {
         scriptId="solutions-ads-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp NIL for High-School Athletic Directors"
-        description="HS NIL compliance the school doesn&rsquo;t have bandwidth to build in-house. Parent consent, state disclosures, audit trail — all automated."
+        description="HS NIL compliance the school doesn’t have bandwidth to build in-house. Parent consent, state disclosures, audit trail — all automated."
         audience="High-school athletic directors and compliance contacts"
       />
 
       <SolutionHero
         eyebrow="For athletic directors"
         title="GradeUp handles the compliance layer"
-        titleAccent="your school doesn&rsquo;t have bandwidth to build."
+        titleAccent="your school doesn’t have bandwidth to build."
         subtitle="Parent-signed consent on every deal. State disclosures filed automatically. A full audit trail you can pull up in two clicks when your superintendent asks. Built for the AD wearing twelve other hats."
         primaryCta={{
           label: 'Partner your school',
@@ -110,13 +110,13 @@ export default function AdsSolutionPage() {
       />
 
       <ProblemProductProof
-        eyebrow="The AD&rsquo;s problem"
-        heading="HS NIL compliance is non-trivial. You&rsquo;re already overloaded."
+        eyebrow="The AD’s problem"
+        heading="HS NIL compliance is non-trivial. You’re already overloaded."
         subheading="Your state just passed a rule set. Your superintendent is asking for a policy. You have a day job running an athletic department."
         steps={[
           {
             kind: 'problem',
-            heading: 'What&rsquo;s being asked of you',
+            heading: 'What’s being asked of you',
             body: 'Figure out NIL compliance, without the legal staff a college program has, without the budget for enterprise SaaS, and without letting your top athletes lose eligibility or slip through the rules.',
             bullets: [
               'State-specific disclosure windows to track',
@@ -131,9 +131,9 @@ export default function AdsSolutionPage() {
             body: 'A compliance rail that runs without you. Parent consent, state-by-state disclosure filings, universal NCAA guardrails, and a read-only dashboard of every deal that touches your school.',
             bullets: [
               'Parent-signed consent on every deal, archived forever',
-              'State disclosures filed automatically within your association&rsquo;s window',
+              'State disclosures filed automatically within your association’s window',
               'Rule-engine check on every deal (school IP, pay-for-play, banned categories)',
-              'Optional AD read-only dashboard across your school&rsquo;s deals',
+              'Optional AD read-only dashboard across your school’s deals',
             ],
           },
           {
@@ -168,7 +168,7 @@ export default function AdsSolutionPage() {
             <FeatureCard
               icon={<ShieldCheck className="h-6 w-6" />}
               title="State disclosures automated"
-              body="Whatever your association&rsquo;s window is — 72 hours, 7 days, 14 days — we file inside it. Every time."
+              body="Whatever your association’s window is — 72 hours, 7 days, 14 days — we file inside it. Every time."
             />
             <FeatureCard
               icon={<FileCheck className="h-6 w-6" />}
@@ -193,7 +193,7 @@ export default function AdsSolutionPage() {
             <FeatureCard
               icon={<GraduationCap className="h-6 w-6" />}
               title="NCAA eligibility protection"
-              body="Every deal runs through the universal rules engine — school IP, pay-for-play, banned categories. Your athletes&rsquo; future is preserved."
+              body="Every deal runs through the universal rules engine — school IP, pay-for-play, banned categories. Your athletes’ future is preserved."
             />
           </div>
         </div>
