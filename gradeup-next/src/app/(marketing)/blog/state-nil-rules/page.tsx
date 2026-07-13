@@ -28,9 +28,9 @@ export const revalidate = 86400; // Rebuild once per day.
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'High-School NIL Rules by State (2026 Guide) | GradeUp',
+    title: 'High-School NIL Rules by State (2026 Guide) | GradeUp, part of StatStaq',
     description:
-      'Complete 2026 guide to high-school Name, Image, and Likeness (NIL) rules in all 50 U.S. states and D.C. See which states permit HS NIL, the consent and disclosure rules, banned categories, and state-by-state compliance details.',
+      "Complete 2026 guide to high-school Name, Image, and Likeness (NIL) rules in all 50 U.S. states and D.C. See which states permit HS NIL, the consent and disclosure rules, banned categories, and state-by-state compliance details. GradeUp verifies the rules; StatStaq's team runs the deal.",
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -231,9 +231,10 @@ export default function StateRulesIndexPage() {
               Not sure how this applies to your athlete?
             </h2>
             <p className="mt-3 text-white/70 max-w-2xl mx-auto">
-              GradeUp handles the compliance automatically. Sign up free — we
-              route your athlete into the right state rules the moment they
-              create a profile.
+              GradeUp verifies the compliance automatically the moment your
+              athlete creates a free profile — routed straight into the right
+              state rules. From there, StatStaq&rsquo;s team sources and runs
+              the deal.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
               <Link

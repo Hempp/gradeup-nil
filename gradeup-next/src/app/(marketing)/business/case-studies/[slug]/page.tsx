@@ -42,10 +42,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const ogImage = `/api/og/case-study/${study.slug}`;
   const description =
     study.subtitle ??
-    'A GradeUp HS scholar-athlete case study. Verified earnings, share counts, and brand ROI.';
+    "A GradeUp HS scholar-athlete case study, part of StatStaq. GradeUp verified the GPA; StatStaq's team ran the deal.";
 
   return {
-    title: `${study.title} — GradeUp HS Case Study`,
+    title: `${study.title} — GradeUp HS Case Study, part of StatStaq`,
     description,
     alternates: { canonical: url },
     openGraph: {
@@ -174,7 +174,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
             Want your brand on the next case study?
           </h2>
           <p className="mt-3 text-[var(--marketing-gray-400)]">
-            Every study starts with a single verified scholar-athlete partnership.
+            Every study starts with a single GradeUp-verified scholar-athlete
+            &mdash; StatStaq&rsquo;s team sources and runs the partnership.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
             <Link

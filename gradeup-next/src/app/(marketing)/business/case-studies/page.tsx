@@ -16,9 +16,9 @@ import { buildMarketingMetadata } from '@/lib/seo';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Case Studies — GradeUp HS',
+    title: 'Case Studies — GradeUp HS, part of StatStaq',
     description:
-      'How real scholar-athlete partnerships performed. Verified earnings, share counts, and brand ROI from the GradeUp HS concierge era.',
+      "How real scholar-athlete partnerships performed. GradeUp verifies the GPA; StatStaq's team runs the deal. Verified earnings, share counts, and brand ROI from the GradeUp HS concierge era.",
     path: '/business/case-studies',
   }),
   // Preserve Spanish language alternates.

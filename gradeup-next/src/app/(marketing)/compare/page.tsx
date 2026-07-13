@@ -9,9 +9,9 @@ export const revalidate = 300;
 
 export const metadata = buildMarketingMetadata({
   title:
-    'How GradeUp compares to other NIL platforms | HS-first NIL',
+    'How GradeUp compares to other NIL platforms | GradeUp, part of StatStaq',
   description:
-    'How GradeUp HS-NIL differs from enterprise college NIL platforms and subscription-based NIL apps on parent-centered HS-NIL, transparent pricing, state compliance, and referrals.',
+    "How GradeUp HS-NIL differs from enterprise college NIL platforms and subscription-based NIL apps on parent-centered HS-NIL, transparent pricing, state compliance, and referrals. GradeUp verifies the GPA; StatStaq's team runs the deal.",
   path: '/compare',
   ogType: 'article',
 });
@@ -176,6 +176,8 @@ function Hero() {
           How the three categories actually differ — product shape, pricing
           posture, and who they were designed for. We&rsquo;re new; we know
           it. We win on specific axes. Here&rsquo;s the honest comparison.
+          GradeUp verifies the GPA gate; StatStaq&rsquo;s team runs everything
+          after that.
         </p>
       </div>
     </section>
@@ -273,8 +275,10 @@ function WhenToChoose() {
               platform is parent-first by architecture, publishes its fees
               transparently, validates every deal against per-state rules at
               creation time, and lets anyone sign up in minutes without a
-              sales call. If &ldquo;contact sales&rdquo; is a dealbreaker, this
-              is the one.
+              sales call. Verify your GPA with GradeUp, and StatStaq&rsquo;s
+              team takes it from there — producing your content, valuing your
+              brand, sourcing your deals, and negotiating your contracts. If
+              &ldquo;contact sales&rdquo; is a dealbreaker, this is the one.
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-[var(--marketing-gray-950)] p-6">

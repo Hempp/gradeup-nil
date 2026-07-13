@@ -60,7 +60,7 @@ export async function generateMetadata({
     return { title: 'Not found | GradeUp' };
   }
   const data = getStateBlogData(code);
-  const title = `${data.name} High-School NIL Rules (2026) | GradeUp`;
+  const title = `${data.name} High-School NIL Rules (2026) | GradeUp, part of StatStaq`;
   const description = buildMetaDescription(data.name, data.status, data.rules);
 
   return {
@@ -68,7 +68,7 @@ export async function generateMetadata({
     description,
     alternates: { canonical: data.canonicalPath },
     openGraph: {
-      title: `${data.name} HS NIL rules — GradeUp`,
+      title: `${data.name} HS NIL rules — GradeUp, part of StatStaq`,
       description,
       type: 'article',
       url: data.canonicalPath,
@@ -298,7 +298,7 @@ function HowGradeUpHandlesState({
   }
   if (rules.agentRegistrationRequired) {
     bullets.push(
-      `${stateName} requires NIL agents to be registered with the state. GradeUp operates as a marketplace, not an agent — but we flag any third-party agent entering a deal so you can verify registration.`,
+      `${stateName} requires NIL agents to be registered with the state. StatStaq's team sources and negotiates the deal for you, not as a registered agent — but we flag any third-party agent entering a deal so you can verify registration.`,
     );
   }
   bullets.push(
@@ -379,8 +379,8 @@ function WhatThisMeansForParents({
           </p>
           <p>
             {rules.paymentDeferredUntilAge18
-              ? `${stateName} holds payment in trust until your athlete turns 18. GradeUp automates that: the brand's money is captured up front, but the transfer to your custodial account is scheduled for your athlete's 18th birthday. You don't track anything.`
-              : 'Money routes through a custodial Stripe Connect account that you own as the parent. We never hold your athlete\'s earnings beyond the short release window after deal completion.'}
+              ? `${stateName} holds payment in trust until your athlete turns 18. GradeUp automates the compliance side: the brand's money is captured up front by StatStaq's team, but the transfer to your custodial account is scheduled for your athlete's 18th birthday. You don't track anything.`
+              : 'Money routes through a custodial Stripe Connect account that you own as the parent, once StatStaq\'s team closes the deal. We never hold your athlete\'s earnings beyond the short release window after deal completion.'}
           </p>
         </div>
 
@@ -445,13 +445,14 @@ function WhatThisMeansForBrands({
               ? `we file the ${rules.disclosureWindowHours}-hour disclosure, `
               : ''}
             we validate consent, we check banned categories, and we refuse
-            deals that involve school IP. You write the brief, we handle the
-            paperwork, the athlete (and parent) sign, the deliverable ships.
+            deals that involve school IP. You write the brief, StatStaq&rsquo;s
+            team sources the athlete and runs the deal, the athlete (and
+            parent) sign, the deliverable ships.
           </p>
           <p>
             {rules.agentRegistrationRequired
-              ? `${stateName} also requires NIL agents/representatives to be registered with the state. If you work with external talent reps, verify registration before you send a contract. GradeUp's marketplace model sidesteps that requirement for you directly.`
-              : `${stateName} does not require agent registration, so brand-direct outreach through the platform is the simplest path.`}
+              ? `${stateName} also requires NIL agents/representatives to be registered with the state. If you work with external talent reps, verify registration before you send a contract. StatStaq's team sources and negotiates the deal for you directly, not as a registered agent.`
+              : `${stateName} does not require agent registration, so brand-direct outreach through StatStaq's team is the simplest path.`}
           </p>
         </div>
 
@@ -668,7 +669,7 @@ function renderFinalCta(data: ReturnType<typeof getStateBlogData>) {
     return (
       <SolutionCtaBand
         heading={`Ready to run your first ${name} deal?`}
-        subheading="Athlete, parent, and brand sign-ups are all free. GradeUp routes every deal through the compliance engine so you can focus on the work, not the forms."
+        subheading="Athlete, parent, and brand sign-ups are all free. GradeUp verifies every deal through the compliance engine, and StatStaq's team runs it from there — so you can focus on the grades, not the forms."
         primaryLabel="Create a free athlete profile"
         primaryHref={`/hs/signup/athlete?ref=state-${slug}`}
         secondaryLabel="Sign up as a parent"
