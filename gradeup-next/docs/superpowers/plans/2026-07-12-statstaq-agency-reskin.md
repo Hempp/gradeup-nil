@@ -41,7 +41,7 @@
 
 ## Task 1: Cobalt token rebind (color reskin)
 
-Rebinds the `--marketing-*` primitives so both `.marketing-dark` and `.auth-theme` adopt the StatStaq palette at once. No component edits.
+Applies StatStaq's palette by **overriding `--marketing-*` INSIDE the `.marketing-dark` and `.auth-theme` scope blocks** (NOT by editing `:root` — `.dashboard-dark` and global utilities also consume those primitives, so a `:root` rebind bleeds into dashboards). No component edits. (Corrected during execution; commits acd3a41..fdbfa9f.)
 
 **Files:**
 - Modify: `src/app/globals.css:227-246` (primitive block) and hero-orb color rules (`.hero-orb-cyan`, `.hero-orb-magenta`, and any sibling orb classes, ~line 1226+).
