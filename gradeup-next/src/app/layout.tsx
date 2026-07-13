@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Script from "next/script";
-import { Geist, Geist_Mono, Bebas_Neue, DM_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Bebas_Neue, DM_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
 import { KeyboardShortcutsProvider } from "@/components/ui/keyboard-shortcuts";
@@ -44,6 +44,12 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -135,7 +141,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} ${inter.variable} antialiased`}
         suppressHydrationWarning
       >
         <AuthProvider>
