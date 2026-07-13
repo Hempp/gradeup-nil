@@ -180,7 +180,7 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'sec-3',
         question: 'How is my GPA information protected?',
-        answer: 'Your exact GPA is visible only to you. Brands see a GPA range (e.g., "3.5-4.0") and your GradeUp Score, but not your precise number. Academic verification is handled through secure institutional partnerships. We use bank-level encryption (AES-256) for all sensitive data, and our systems are SOC 2 Type II certified.',
+        answer: 'Your exact GPA is visible only to you. Brands see a GPA range (e.g., "3.5-4.0") and your GradeUp Score, but not your precise number. Academic verification is handled through secure institutional partnerships. We use strong encryption for all sensitive data.',
         keywords: ['gpa', 'protected', 'privacy', 'secure', 'visible'],
       },
       {
