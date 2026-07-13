@@ -26,9 +26,9 @@ const PAGE_URL = '/solutions';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Solutions — Built for every side of the high-school NIL deal',
+    title: 'Solutions — Built for every side of the high-school NIL deal | GradeUp, part of StatStaq',
     description:
-      'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. Verified grades, parental consent, state-by-state compliance.',
+      'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. GradeUp verifies grades and consent; StatStaq&rsquo;s team runs the deal — content, brand value, sourcing, and contracts.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -104,13 +104,13 @@ export default function SolutionsIndexPage() {
             />
             <PersonaCard
               eyebrow="For athletes"
-              title="Your GPA is your advantage. Get paid for it."
-              description="Verified grades unlock better deals. See your earnings trajectory, share wins publicly, and build a resume that compounds."
+              title="Verify your GPA. StatStaq gets you paid."
+              description="GradeUp verifies your grades in three tiers. Once you qualify, StatStaq&rsquo;s team produces your content, values your brand, sources your deals, and negotiates your contracts."
               href="/solutions/athletes"
               icon={<Trophy className="h-6 w-6" />}
               bullets={[
                 'Tier-B-verified GPA badge on your profile',
-                'Share-the-win trajectory with OG image',
+                'StatStaq-produced share-the-win trajectory',
                 'Parental consent auto-handled in the background',
               ]}
               ctaLabel="For athletes"

@@ -32,9 +32,9 @@ const PAGE_URL = '/solutions/ads';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for High-School Athletic Directors | GradeUp',
+    title: 'NIL for High-School Athletic Directors | GradeUp, part of StatStaq',
     description:
-      'The compliance layer your school doesn&rsquo;t have bandwidth to build. Parent-signed consent, state disclosures, and a full audit trail — without a single new hire.',
+      'GradeUp is the compliance layer your school doesn&rsquo;t have bandwidth to build — parent-signed consent, state disclosures, and a full audit trail, without a single new hire. StatStaq&rsquo;s team runs the deals your athletes sign.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -52,7 +52,7 @@ const FAQ_ITEMS = [
   {
     question: 'Does our school have to formally opt in?',
     answer:
-      'No. Your athletes can sign up as individuals with parental consent; their deals flow through GradeUp with disclosures filed to your state association. A formal school partnership is optional but gets you an AD-level read-only view of your own athletes&rsquo; deals.',
+      'No. Your athletes can sign up as individuals with parental consent; GradeUp verifies their GPA, StatStaq&rsquo;s team runs the deal itself, and disclosures file automatically to your state association. A formal school partnership is optional but gets you an AD-level read-only view of your own athletes&rsquo; deals.',
   },
   {
     question: 'What does a school partnership actually cost us?',
@@ -67,7 +67,7 @@ const FAQ_ITEMS = [
   {
     question: 'Will this put our program at risk with the state association?',
     answer:
-      'The opposite. We follow your state association&rsquo;s disclosure rules automatically, and the state-AD portal (used by your association) sees the same feed. Running HS NIL through GradeUp puts your program on the cleanest possible side of any future audit.',
+      'The opposite. We follow your state association&rsquo;s disclosure rules automatically, and the state-AD portal (used by your association) sees the same feed. Running HS NIL through GradeUp&rsquo;s compliance layer — with StatStaq&rsquo;s team handling the deals themselves — puts your program on the cleanest possible side of any future audit.',
   },
   {
     question: 'What about NCAA recruiting exposure for our athletes?',
@@ -143,7 +143,7 @@ export default function AdsSolutionPage() {
             bullets: [
               'Phase 12 compliance rail — already shipped',
               '7 pilot states covered (CA, FL, GA, IL, NJ, NY, TX)',
-              'Zero late filings in pilot — automation catches everything',
+              'Disclosure filings run on automation built to catch every window before it closes',
             ],
           },
         ]}

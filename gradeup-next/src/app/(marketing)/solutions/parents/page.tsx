@@ -31,9 +31,9 @@ const PAGE_URL = '/solutions/parents';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for Parents — A first deal without the risk | GradeUp',
+    title: 'NIL for Parents — A first deal without the risk | GradeUp, part of StatStaq',
     description:
-      'The safest way for your scholar-athlete to sign their first NIL deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
+      'The safest way for your scholar-athlete to sign their first NIL deal. GradeUp verifies their GPA and handles consent; StatStaq&rsquo;s team runs the deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
     path: PAGE_URL,
   }),
   // Preserve Spanish language alternates (helper only sets `canonical`).
@@ -104,7 +104,7 @@ export default function ParentsSolutionPage() {
         eyebrow="For parents"
         title="Your scholar-athlete&rsquo;s first NIL deal,"
         titleAccent="without the risk."
-        subtitle="You&rsquo;re the one actually signing the permission slip. GradeUp is the only NIL platform built for that reality — dual-signed consent on every deal, custodial payouts into an account you control, and state-by-state compliance handled in the background."
+        subtitle="You&rsquo;re the one actually signing the permission slip. GradeUp &mdash; part of StatStaq &mdash; is the only NIL platform built for that reality: dual-signed consent on every deal, custodial payouts into an account you control, and state-by-state compliance handled in the background while StatStaq&rsquo;s team runs the deal itself."
         primaryCta={{
           label: 'Sign up as a parent',
           href: '/signup?role=parent',
@@ -147,11 +147,11 @@ export default function ParentsSolutionPage() {
           {
             kind: 'proof',
             heading: 'Parents already using it',
-            body: 'We ran the first 20 California parents through a concierge-run pilot before shipping the product. Every deal closed. Zero compliance issues. Every parent kept their dashboard.',
+            body: 'We ran a concierge-run pilot with California parents before shipping the product — every deal used the same dual-signature consent and custodial-payout rails now live for every parent.',
             bullets: [
-              '20+ California families in the concierge pilot',
+              'California families ran the first deals through the concierge pilot',
               '7 pilot states live today',
-              'Zero deals filed late — disclosure automation caught them all',
+              'Disclosure automation built to file inside every state&rsquo;s window',
             ],
           },
         ]}

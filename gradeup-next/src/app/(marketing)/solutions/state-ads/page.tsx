@@ -35,9 +35,9 @@ const PAGE_URL = '/solutions/state-ads';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'GradeUp transcripts for State Athletic Associations',
+    title: 'GradeUp transcripts for State Athletic Associations | GradeUp, part of StatStaq',
     description:
-      'State athletic associations can request a GradeUp transcript for any member school — a per-school report of NIL activity, disclosures, and compliance status. Free for governing bodies.',
+      'State athletic associations can request a GradeUp transcript for any member school — a per-school report of NIL activity, disclosures, and compliance status. GradeUp is the verified-GPA layer of StatStaq&rsquo;s scholar-athlete NIL platform. Free for governing bodies.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -94,7 +94,7 @@ export default function StateAdsSolutionPage() {
         eyebrow="State athletic associations"
         title="Request a GradeUp transcript"
         titleAccent="for any member school. Free."
-        subtitle="Instead of a live oversight dashboard, your association requests a transcript for a specific school — one per-school report covering NIL activity, disclosures, and compliance status. Data belongs to the school&rsquo;s athletic program; you see it as a governing body, on request."
+        subtitle="GradeUp is the verified-GPA layer of StatStaq, the company that runs NIL deals for high-school scholar-athletes. Instead of a live oversight dashboard, your association requests a transcript for a specific school — one per-school report covering NIL activity, disclosures, and compliance status. Data belongs to the school&rsquo;s athletic program; you see it as a governing body, on request."
         primaryCta={{
           label: 'Request association onboarding',
           href: 'mailto:state-ads@gradeupnil.com?subject=State%20athletic%20association%20onboarding&body=Association%20name%3A%20%0AState%3A%20%0APrimary%20contact%20name%20%26%20title%3A%20%0AEmail%3A%20%0APhone%3A%20',
