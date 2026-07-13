@@ -278,7 +278,7 @@ function HeroSection() {
                   <div className="relative h-64 sm:h-80 w-64 sm:w-72">
                     <Image
                       src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=500&fit=crop&crop=face"
-                      alt="Jasmine Taylor, verified Stanford Women's Basketball player with 3.92 GPA"
+                      alt="Illustrative sample athlete profile"
                       fill
                       className="object-cover"
                       priority
@@ -288,23 +288,23 @@ function HeroSection() {
                     <div className="absolute top-3 right-3 verified-badge-marketing p-1.5 shadow-lg">
                       <BadgeCheck className="h-5 w-5" />
                     </div>
-                    {/* Earnings Badge */}
-                    <div className="absolute top-3 left-3 bg-[var(--accent-success)]/90 text-black px-2 py-1 rounded-full text-xs font-bold">
-                      $12,400 earned
+                    {/* Sample Profile Chip */}
+                    <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm text-white/60 px-2 py-1 rounded-full text-xs font-bold">
+                      Sample profile
                     </div>
                   </div>
 
                   {/* Details */}
                   <div className="p-5 bg-gradient-to-t from-[var(--marketing-gray-900)] to-transparent -mt-16 relative">
                     <div className="text-xs font-semibold text-[var(--accent-primary)] tracking-wider mb-1">
-                      STANFORD UNIVERSITY
+                      STATE UNIVERSITY
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-1">Jasmine Taylor</h3>
+                    <h3 className="text-xl font-bold text-white mb-1">Sample Athlete</h3>
                     <p className="text-[var(--marketing-gray-400)] text-sm mb-4">Women&apos;s Basketball • Computer Science</p>
 
                     {/* GPA Badge */}
                     <div className="gpa-badge-marketing inline-flex items-center gap-2">
-                      <span className="text-2xl font-bold">3.92</span>
+                      <span className="text-2xl font-bold">3.9</span>
                       <span className="text-xs font-medium opacity-80">GPA</span>
                     </div>
 
@@ -314,7 +314,7 @@ function HeroSection() {
                         Dean&apos;s List
                       </span>
                       <span className="px-2.5 py-1 rounded-full bg-white/10 text-white/80 text-xs font-medium">
-                        6 Active Deals
+                        Verified GPA
                       </span>
                     </div>
                   </div>
