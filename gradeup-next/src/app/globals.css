@@ -1219,12 +1219,12 @@ html.no-transitions *::after {
   --text-secondary: var(--marketing-gray-300);
   --text-muted: var(--marketing-gray-500);
   --border-color: var(--marketing-gray-800);
-  /* Text color intended to sit ON an accent-colored surface. Without
-     this override we inherit :root's `--text-inverse: white`, which
-     renders white-on-cyan buttons (Button primary variant) at ~2:1
-     contrast — effectively invisible. Keep it locked to marketing-
-     black so every cyan/lime/gold surface gets legible text. */
-  --text-inverse: var(--marketing-black);
+  /* Text color intended to sit ON the accent surface. The accent is now
+     dark cobalt (#2563EB), so text-on-accent must be light: white-on-cobalt
+     is ~5.2:1 (passes WCAG AA), whereas the old ink value gave ~4:1 and
+     failed. (Mirror of the pre-reskin guard, which used ink because the old
+     accent was light cyan.) Button primary = bg cobalt + this text color. */
+  --text-inverse: #ffffff;
 }
 
 /* Hero Orbs (floating gradient spheres) */
