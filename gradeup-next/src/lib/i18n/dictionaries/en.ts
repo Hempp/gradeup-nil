@@ -142,23 +142,23 @@ const _en = {
       finalNote: 'Free to join \u00B7 No credit card required',
     },
     provenResults: {
-      eyebrow: 'Proven results',
-      heading: 'Real deals. Verified earnings. Public case studies.',
+      eyebrow: 'How it works',
+      heading: 'Verified scholar-athletes. Public case studies.',
       body:
-        'Every study is tied to a completed deal, on-platform share events, and a real scholar-athlete. See exactly how brand ROI adds up — before you spend a dollar.',
+        'Every case study is tied to a completed deal and a real scholar-athlete. See exactly how StatStaq runs a campaign end to end — produce, value, source, negotiate.',
       cta: 'See the case studies',
     },
     finalCta: {
-      socialProof: '847 athletes already earning',
+      socialProof: 'Verified scholar-athletes only',
       title1: 'Ready to Turn Your',
       title2: 'GPA Into Opportunity?',
       body:
-        'Join hundreds of scholar-athletes already earning through GradeUp. Your academic excellence deserves to be rewarded.',
+        'Keep your GPA up, get verified, and StatStaq runs your NIL. GradeUp is how you qualify.',
       ctaAthlete: 'Join as Athlete',
       ctaBrand: 'Partner as Brand',
-      statPaid: '$127,450+ paid out',
-      statDeals: '412 deals completed',
-      statGpa: '3.72 avg GPA',
+      statPaid: 'Free to join',
+      statDeals: 'StatStaq sources & negotiates',
+      statGpa: 'Verified GPA required',
     },
   },
 
