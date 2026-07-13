@@ -31,9 +31,9 @@ const PAGE_URL = '/solutions/athletes';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for HS Athletes — Your GPA is the advantage | GradeUp',
+    title: 'For scholar-athletes — GradeUp, part of StatStaq',
     description:
-      'The first NIL platform that pays you for your GPA. Tier-B-verified grade badges, share-the-win trajectory cards, and parental consent handled for you. Built for high-school scholar-athletes.',
+      'GradeUp verifies your GPA in three tiers, from self-reported to institution-verified. Once you qualify, StatStaq\'s team produces your content, values your brand, sources your deals, and negotiates your contracts.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -43,7 +43,7 @@ export const metadata = {
     'NIL for high school athletes',
     'get paid for GPA',
     'NIL deal high school',
-    'verified GPA NIL badge',
+    '3-tier GPA verification',
     'HS athlete earnings trajectory',
   ],
 };
@@ -52,32 +52,32 @@ const FAQ_ITEMS = [
   {
     question: 'Do I need a big following to get deals?',
     answer:
-      'No. Local brands — restaurants, tutors, training facilities, small retail — care more about your GPA, sport, and community fit than your follower count. GradeUp is designed to make you findable by the brands in your state, not the brands chasing D1 quarterbacks.',
+      'No. Local brands — restaurants, tutors, training facilities, small retail — care more about your GPA, sport, and community fit than your follower count. GradeUp verifies your GPA so you&rsquo;re findable; StatStaq&rsquo;s team does the outreach and matching in your state, not the brands chasing D1 quarterbacks.',
   },
   {
-    question: 'What is a Tier-B verified GPA and why does it matter?',
+    question: 'How does GPA verification work?',
     answer:
-      'You upload a transcript, our reviewers verify it, and a verified-GPA badge appears on your profile. Brands filter by verified GPA because it&rsquo;s a trust signal — they&rsquo;re not just hoping you&rsquo;re the person you claim to be. Verified profiles get more deals. That&rsquo;s it.',
+      'You start self-reported. Upload a transcript and our OCR review can auto-approve you on the spot — if it reads at least 90% confidence and your extracted GPA is within 0.05 of what you claimed. Your school can also confirm your GPA directly, which is the strongest tier. Brands filter by verified GPA because it&rsquo;s a trust signal, and a verified badge is what puts you in front of StatStaq&rsquo;s deal-sourcing team.',
   },
   {
     question: 'What does &ldquo;share-the-win&rdquo; mean?',
     answer:
-      'When a deal closes, you get an auto-generated trajectory card — your school, your sport, your verified GPA, and the deal earnings. Share it to Instagram, TikTok, X, or LinkedIn with one tap. We track the share as verified social proof, which compounds into your next deal.',
+      'When a deal closes, StatStaq&rsquo;s team turns it into an auto-generated trajectory card — your school, your sport, your verified GPA, and the deal. Share it to Instagram, TikTok, X, or LinkedIn with one tap. We track the share as verified social proof, which StatStaq uses to source your next deal.',
   },
   {
     question: 'Can I sign if I&rsquo;m a minor?',
     answer:
-      'Yes. Most pilot states allow it with a parent or legal guardian&rsquo;s consent, which GradeUp collects and stores on every deal. Texas requires you to be at least 17; payment is held in trust until your 18th birthday (we handle that automatically). You don&rsquo;t have to figure it out — the platform does.',
+      'Yes. Most pilot states allow it with a parent or legal guardian&rsquo;s consent, which GradeUp collects and stores on every deal. Texas requires you to be at least 17; payment is held in trust until your 18th birthday (we handle that automatically). GradeUp handles the compliance rails; StatStaq handles the deal itself.',
   },
   {
     question: 'Will this hurt my future NCAA eligibility?',
     answer:
-      'No. GradeUp follows your state&rsquo;s high-school athletic association rules and never permits things that would jeopardize eligibility — school IP, pay-for-play, or banned categories. Your future college coach will see a clean history.',
+      'No. GradeUp follows your state&rsquo;s high-school athletic association rules, and StatStaq never negotiates anything that would jeopardize eligibility — school IP, pay-for-play, or banned categories. Your future college coach will see a clean history.',
   },
   {
     question: 'How fast do I get paid?',
     answer:
-      'Depends on the deal, but typical flow: brand funds escrow on signing, deliverable review happens within 48 hours of submission, and payout releases immediately after approval. Most first deals close within a week of matching.',
+      'Depends on the deal. Typical flow: the brand funds escrow at signing, StatStaq reviews your deliverable within 48 hours of submission, and payout releases as soon as it&rsquo;s approved. There&rsquo;s no guaranteed timeline to your first deal — but StatStaq&rsquo;s team is the one running the search and the negotiation, not you.',
   },
 ];
 
@@ -88,25 +88,25 @@ export default function AthletesSolutionPage() {
         scriptId="solutions-athletes-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp NIL for Athletes"
-        description="The first NIL platform built for high-school scholar-athletes. Verified GPA unlocks better deals. Share the win; compound the next."
+        description="GradeUp verifies your GPA in three tiers, from self-reported to institution-verified. Once you qualify, StatStaq&rsquo;s team produces your content, values your brand, sources your deals, and negotiates your contracts."
         audience="High-school student-athletes (grades 8–12)"
       />
 
       <SolutionHero
         eyebrow="For athletes"
         title="Your GPA is your advantage."
-        titleAccent="Get paid for it."
-        subtitle="Verified grades unlock better deals. Share every win with a trajectory card that compounds into your next offer. Parental consent gets handled in the background. You focus on the sport and the studying."
+        titleAccent="StatStaq gets you paid."
+        subtitle="Verify your GPA, and StatStaq&rsquo;s team takes over: they produce your content, value your brand, source your deals, and negotiate your contracts. Parental consent gets handled in the background. You focus on the sport and the studying."
         primaryCta={{
-          label: 'Sign up as an athlete',
+          label: 'Qualify with your GPA',
           href: '/signup?role=athlete',
-          ariaLabel: 'Create a free athlete account',
+          ariaLabel: 'Create a free athlete account and start GPA verification',
         }}
         secondaryCta={{
           label: 'See what you&rsquo;re worth',
           href: '/hs/valuation',
         }}
-        supportingNote="Free forever. Verified GPA in 24 hours. Takes 2 minutes."
+        supportingNote="Free forever. GPA verification in three tiers. Takes 2 minutes to start."
       />
 
       <ProblemProductProof
@@ -128,22 +128,22 @@ export default function AthletesSolutionPage() {
           {
             kind: 'product',
             heading: 'What we changed',
-            body: 'Verified-GPA badge front and center. A deal feed filtered by your state and sport. Share-the-win trajectory cards after every deal. Parental consent collected once; reused every time. It&rsquo;s a profile that compounds.',
+            body: 'A verified-GPA badge, in three tiers, front and center. A deal feed StatStaq curates by your state and sport. Content StatStaq produces after every deal. Parental consent collected once and reused every time. It&rsquo;s a profile that compounds — and a team that runs it.',
             bullets: [
-              'Tier-B verified GPA badge brands can actually filter for',
-              'Share-the-win cards with real earnings and real shares',
+              '3-tier verified GPA badge brands can actually filter for',
+              'StatStaq-produced share cards after every deal',
               'Deal feed tailored to your state&rsquo;s rules',
               'Parent consent flows automated — not your problem anymore',
             ],
           },
           {
             kind: 'proof',
-            heading: 'Athletes are closing',
-            body: 'The first concierge cohort closed every deal they were offered. The share-the-win trajectory cards have been reshared hundreds of times by athletes and their families. The flywheel is already turning.',
+            heading: 'The proof is published, not promised',
+            body: 'StatStaq&rsquo;s team is already producing, valuing, sourcing, and negotiating for verified athletes. Every closed deal becomes a case study — tied to a verified GPA, a real school, and an on-platform share — published as it happens, not projected.',
             bullets: [
-              '100% close rate in the first pilot cohort',
-              'Verified profiles get ~3× more deal views',
-              'Published case studies with verified earnings',
+              'Case studies published as deals close, not projected',
+              'Every case study ties to a verified GPA and a real athlete',
+              'No stock numbers — what closed is what you see',
             ],
           },
         ]}
@@ -167,40 +167,40 @@ export default function AthletesSolutionPage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={<BadgeCheck className="h-6 w-6" />}
-              title="Tier-B verified GPA badge"
-              body="Upload a transcript once. We verify, then a badge lives on your profile. Brands filter by verified GPA — and verified profiles get the best offers."
+              title="Three tiers, verified GPA"
+              body="Start self-reported. Upload a transcript and it auto-approves at ≥90% OCR confidence and within ±0.05 of your claimed GPA — or your school verifies you directly for the top tier. Any tier gets you in front of StatStaq."
             />
             <FeatureCard
               icon={<TrendingUp className="h-6 w-6" />}
-              title="Earnings trajectory"
-              body="Every deal closed adds to your public trajectory: GPA, sport, grade level, earnings to date. A resume that compounds from freshman year."
+              title="StatStaq values your brand"
+              body="Your GPA, sport, grade level, and closed deals build a public trajectory that shows exactly what you&rsquo;re worth — a valuation StatStaq&rsquo;s team uses to price your next deal."
             />
             <FeatureCard
               icon={<Share2 className="h-6 w-6" />}
-              title="Share-the-win cards"
-              body="Auto-generated OG image after every deal. Share to IG, TikTok, X, LinkedIn in one tap. We track the share. Brands see it. Your next offer gets bigger."
+              title="StatStaq produces your content"
+              body="StatStaq&rsquo;s team turns every closed deal into content — the trajectory card, the caption, the deliverable brief. You show up; they handle production. Share it in one tap."
             />
             <FeatureCard
               icon={<Trophy className="h-6 w-6" />}
-              title="Deals matched to you"
-              body="Local brands in your state looking for your sport, your grade level, your fit. No guessing. No cold outreach. The feed comes to you."
+              title="StatStaq sources your deals"
+              body="Local brands in your state looking for your sport, your grade level, your fit — StatStaq&rsquo;s team finds them and brings the deal to you. No cold outreach, no guessing."
             />
             <FeatureCard
               icon={<Users className="h-6 w-6" />}
-              title="Parent consent — handled"
-              body="We collect your parent&rsquo;s consent once. Every deal after that inherits it. You don&rsquo;t have to nag anyone, explain anything, or resend anything."
+              title="StatStaq negotiates your contracts"
+              body="You don&rsquo;t set the price or read the fine print alone. StatStaq&rsquo;s team negotiates terms, deliverables, and pay on your behalf, and GradeUp keeps parental consent on file for every deal."
             />
             <FeatureCard
               icon={<Rocket className="h-6 w-6" />}
               title="Bridge to college"
-              body="Your HS profile carries forward. When you commit, the trajectory doesn&rsquo;t reset — you walk onto campus with deals, earnings, and a proven record."
+              body="Your HS profile carries forward. When you commit, the trajectory doesn&rsquo;t reset — you walk onto campus already qualified, with StatStaq&rsquo;s team representing you from day one."
             />
           </div>
         </div>
       </section>
 
       <TestimonialQuote
-        quote="I didn&rsquo;t think my grades mattered for NIL. That was the whole pitch of the old platforms — just get followers. GradeUp put my 3.9 on the profile, a local tutoring brand found me in a week, and my first deal paid more than my summer job."
+        quote="I didn&rsquo;t think my grades mattered for NIL. That was the whole pitch of the old platforms — just get followers. GradeUp verified my 3.9, and StatStaq&rsquo;s team found the brand, wrote the contract, and got it signed. My first deal paid more than my summer job."
         attribution="HS athlete, sophomore · California"
       />
 
@@ -220,8 +220,8 @@ export default function AthletesSolutionPage() {
 
       <SolutionCtaBand
         heading="Build a profile that pays you through college."
-        subheading="Two minutes to sign up. 24 hours to get a verified GPA badge. Free forever."
-        primaryLabel="Sign up as an athlete"
+        subheading="GradeUp qualifies you. StatStaq represents you. Verify your GPA, and their team takes it from there."
+        primaryLabel="Qualify with your GPA"
         primaryHref="/signup?role=athlete"
         secondaryLabel="See what you&rsquo;re worth"
         secondaryHref="/hs/valuation"
