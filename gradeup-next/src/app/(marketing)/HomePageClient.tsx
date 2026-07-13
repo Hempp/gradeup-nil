@@ -142,7 +142,7 @@ function HeroSection() {
   return (
     <section
       className="relative min-h-[calc(100vh-64px)] sm:min-h-screen flex items-center overflow-hidden bg-black"
-      aria-label="Hero - Turn your GPA into earnings"
+      aria-label="Hero - Keep your grades up, StatStaq runs your NIL"
       role="region"
     >
       {/* Background Effects - simplified for performance */}
@@ -184,18 +184,19 @@ function HeroSection() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white mb-6">
-              <span className="block animate-float-slow">Your GPA</span>
-              <span className="block gradient-text-cyan text-glow-animated">Is Worth</span>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white mb-6">
+              <span className="block animate-float-slow">Keep Your Grades Up.</span>
+              <span className="block gradient-text-cyan text-glow-animated">We&apos;ll Run</span>
               <span className="block bg-gradient-to-r from-[var(--accent-gold)] to-[var(--accent-success)] bg-clip-text text-transparent text-glow-gold">
-                Money.
+                Your NIL.
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-lg sm:text-xl text-[var(--marketing-gray-400)] max-w-xl mx-auto lg:mx-0 mb-8">
-              The only NIL platform where grades unlock better deals. Higher GPA = higher value.
-              Get paid for your excellence.
+              GradeUp is the scholar-athlete layer of StatStaq. Verify your GPA, and
+              StatStaq&apos;s team produces your content, values your brand, sources your
+              deals, and negotiates your contracts.
             </p>
 
             {/* Dual-audience acknowledgment */}
@@ -209,9 +210,9 @@ function HeroSection() {
                 <Button
                   size="lg"
                   className="w-full sm:w-auto btn-marketing-primary gap-2 shadow-lg"
-                  aria-label="Join GradeUp as a student athlete - free signup"
+                  aria-label="Qualify with your GPA - free signup"
                 >
-                  Join as Athlete - It&apos;s Free
+                  Qualify with your GPA
                   <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </Button>
               </Link>
@@ -248,13 +249,6 @@ function HeroSection() {
               role="list"
               aria-label="Platform statistics"
             >
-              <div className="text-center" role="listitem">
-                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-success)]" aria-live="polite">
-                  <AnimatedCounter target={127450} prefix="$" skipAnimation={prefersReducedMotion} />
-                </div>
-                <div className="text-sm text-[var(--marketing-gray-500)] mt-1">Paid to Athletes</div>
-              </div>
-              <div className="w-px h-12 bg-white/10 hidden sm:block" aria-hidden="true" />
               <div className="text-center" role="listitem">
                 <div className="text-3xl sm:text-4xl font-bold text-white" aria-live="polite">
                   <AnimatedCounter target={stats.athletes} skipAnimation={prefersReducedMotion} />
@@ -712,7 +706,7 @@ function FeaturedAthletesSection() {
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="h-4 w-4 text-[var(--accent-success)]" aria-hidden="true" />
-              <span>Deals in 48hrs</span>
+              <span>StatStaq runs the deals</span>
             </div>
           </div>
         </div>
@@ -731,7 +725,7 @@ const steps = [
     icon: User,
     title: 'Create Profile',
     description: 'Sign up and connect your academic records in minutes.',
-    stat: '10 min avg',
+    stat: 'Takes minutes',
     color: 'cyan' as const,
   },
   {
@@ -739,15 +733,16 @@ const steps = [
     icon: Shield,
     title: 'Get Verified',
     description: 'We verify your enrollment, sport, and GPA for authenticity.',
-    stat: '24hr verification',
+    stat: 'GPA verified',
     color: 'lime' as const,
   },
   {
     number: '03',
     icon: DollarSign,
-    title: 'Get Paid',
-    description: 'Match with brands and start earning based on your value.',
-    stat: '$1,850 avg deal',
+    title: 'StatStaq Runs It',
+    description:
+      "StatStaq's team produces your content, values your brand, sources your deals, and negotiates your contracts.",
+    stat: 'StatStaq takes over',
     color: 'gold' as const,
   },
 ];
@@ -786,11 +781,11 @@ function HowItWorksSection() {
             See It In Action
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            From <span className="text-[var(--accent-primary)]">Signup</span> to{' '}
-            <span className="text-[var(--accent-gold)]">Payday</span>
+            From <span className="text-[var(--accent-primary)]">Verified GPA</span> to{' '}
+            <span className="text-[var(--accent-gold)]">StatStaq Deal</span>
           </h2>
           <p className="text-[var(--marketing-gray-400)] max-w-2xl mx-auto text-lg">
-            Watch how GradeUp works, then follow the simple steps to start earning.
+            Watch how the layer works — GradeUp verifies your grades, then StatStaq goes to work.
           </p>
         </div>
 
@@ -857,16 +852,16 @@ function HowItWorksSection() {
               {/* Video stats below */}
               <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-4 sm:mt-6">
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--accent-primary)]">$127K</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Paid Out</div>
+                  <div className="text-base sm:text-xl font-bold text-[var(--accent-primary)]">Verified</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">GPA-Gated</div>
                 </div>
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--accent-success)]">68%</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Match Rate</div>
+                  <div className="text-base sm:text-xl font-bold text-[var(--accent-success)]">StatStaq</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Runs the Deal</div>
                 </div>
                 <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--accent-gold)]">48hrs</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">First Deal</div>
+                  <div className="text-base sm:text-xl font-bold text-[var(--accent-gold)]">NCAA</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Compliant</div>
                 </div>
               </div>
             </div>
@@ -877,7 +872,7 @@ function HowItWorksSection() {
             <div className="mb-4 lg:mb-6 text-center lg:text-left">
               <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">Three Simple Steps</h3>
               <p className="text-xs sm:text-sm text-[var(--marketing-gray-500)]">
-                Our 68% conversion rate means most athletes close deals within a week.
+                StatStaq&apos;s team runs outreach, negotiation, and close — you focus on your grades.
               </p>
             </div>
 
@@ -1054,8 +1049,9 @@ function ForBrandsSection() {
               Partner with <span className="text-[var(--accent-gold)]">Tomorrow&apos;s Leaders</span>
             </h2>
             <p className="text-[var(--marketing-gray-400)] text-lg mb-8">
-              Access a curated network of verified student-athletes who excel academically.
-              Our GradeUp Score™ helps you find athletes who align with your brand values.
+              Access a curated network of verified scholar-athletes who excel academically.
+              StatStaq&apos;s team sources the deal and negotiates the contract — so you get
+              results, not resumes.
             </p>
 
             {/* Features */}
@@ -1068,19 +1064,19 @@ function ForBrandsSection() {
               ))}
             </ul>
 
-            {/* Brand stats */}
+            {/* Brand proof points */}
             <div className="grid grid-cols-3 gap-4 mb-8 p-4 rounded-xl bg-white/5 border border-white/10">
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-primary)]">340%</div>
-                <div className="text-xs text-[var(--marketing-gray-500)]">Avg ROI increase</div>
+                <div className="text-2xl font-bold text-[var(--accent-primary)]">Verified</div>
+                <div className="text-xs text-[var(--marketing-gray-500)]">Academic + athletic</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-success)]">68%</div>
-                <div className="text-xs text-[var(--marketing-gray-500)]">Match-to-deal rate</div>
+                <div className="text-2xl font-bold text-[var(--accent-success)]">StatStaq</div>
+                <div className="text-xs text-[var(--marketing-gray-500)]">Handles outreach</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-gold)]">63</div>
-                <div className="text-xs text-[var(--marketing-gray-500)]">Active brands</div>
+                <div className="text-2xl font-bold text-[var(--accent-gold)]">NCAA</div>
+                <div className="text-xs text-[var(--marketing-gray-500)]">Compliant deals</div>
               </div>
             </div>
 
@@ -1110,16 +1106,16 @@ function ForBrandsSection() {
               <div className="p-6">
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <div className="bg-[var(--accent-primary)]/10 rounded-xl p-4 text-center border border-[var(--accent-primary)]/20">
-                    <div className="text-3xl font-bold text-[var(--accent-primary)]">847</div>
-                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Athletes Found</div>
+                    <div className="text-3xl font-bold text-[var(--accent-primary)]">3-Tier</div>
+                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Verified GPA</div>
                   </div>
                   <div className="bg-[var(--accent-success)]/10 rounded-xl p-4 text-center border border-[var(--accent-success)]/20">
-                    <div className="text-3xl font-bold text-[var(--accent-success)]">23</div>
-                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Active Deals</div>
+                    <div className="text-3xl font-bold text-[var(--accent-success)]">Live</div>
+                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Deal Pipeline</div>
                   </div>
                   <div className="bg-[var(--accent-gold)]/10 rounded-xl p-4 text-center border border-[var(--accent-gold)]/20">
-                    <div className="text-3xl font-bold text-[var(--accent-gold)]">3.2M</div>
-                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Total Reach</div>
+                    <div className="text-3xl font-bold text-[var(--accent-gold)]">StatStaq</div>
+                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Runs Outreach</div>
                   </div>
                 </div>
 
@@ -1260,16 +1256,16 @@ function FinalCTASection() {
               />
             ))}
           </div>
-          <span className="text-sm text-black/80 font-medium">847 athletes already earning</span>
+          <span className="text-sm text-black/80 font-medium">Scholar-athletes already qualifying with GradeUp</span>
         </div>
 
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-6">
-          Ready to Turn Your
-          <span className="block">GPA Into Opportunity?</span>
+          Ready to Let
+          <span className="block">StatStaq Run Your NIL?</span>
         </h2>
         <p className="text-xl text-black/70 mb-10 max-w-2xl mx-auto">
-          Join hundreds of scholar-athletes already earning through GradeUp. Your academic
-          excellence deserves to be rewarded.
+          GradeUp qualifies you. StatStaq represents you. Verify your grades, and their team
+          takes it from there.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -1296,15 +1292,15 @@ function FinalCTASection() {
         <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-black/60">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4" />
-            $127,450+ paid out
+            GPA verification required
           </span>
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4" />
-            412 deals completed
+            StatStaq negotiates for you
           </span>
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4" />
-            3.72 avg GPA
+            NCAA compliant, always
           </span>
         </div>
       </div>
