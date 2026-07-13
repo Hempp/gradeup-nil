@@ -171,12 +171,17 @@ export function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 group transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm"
-          >
-            <Logo size="md" variant="gradient" />
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="flex items-center gap-2 group transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm"
+            >
+              <Logo size="md" variant="gradient" />
+            </Link>
+            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-[0.14em] text-white/45">
+              part of StatStaq
+            </span>
+          </div>
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-6">

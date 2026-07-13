@@ -89,9 +89,14 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-[var(--marketing-gray-800)] flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-[var(--marketing-gray-500)]">
-            © {new Date().getFullYear()} GradeUp NIL. All rights reserved.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-2">
+            <p className="text-sm text-[var(--marketing-gray-500)]">
+              © {new Date().getFullYear()} GradeUp NIL. All rights reserved.
+            </p>
+            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">
+              part of StatStaq
+            </span>
+          </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-[var(--accent-success)] px-3 py-1 rounded-full border border-[var(--accent-success)]/30 bg-[var(--accent-success)]/10">
               NCAA Compliant
