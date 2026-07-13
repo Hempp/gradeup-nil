@@ -74,8 +74,8 @@ export default function AuthLayout({
             >
               <defs>
                 <linearGradient id="auth-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#00f0ff" />
-                  <stop offset="100%" stopColor="#adff2f" />
+                  <stop offset="0%" stopColor="#2563EB" />
+                  <stop offset="100%" stopColor="#3B82F6" />
                 </linearGradient>
               </defs>
               {/* Shield outline */}
@@ -91,7 +91,7 @@ export default function AuthLayout({
                 fill="url(#auth-gradient)"
               />
             </svg>
-            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-[#00f0ff] to-[#adff2f] bg-clip-text text-transparent">
+            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-[#2563EB] to-[#3B82F6] bg-clip-text text-transparent">
               GradeUp
             </span>
           </Link>
