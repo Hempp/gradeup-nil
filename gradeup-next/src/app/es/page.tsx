@@ -134,15 +134,15 @@ export default async function SpanishHomePage() {
 
             <div className="flex flex-wrap gap-8 mt-12 pt-8 border-t border-white/10">
               <div>
-                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-success)]">$127,450</div>
-                <div className="text-sm text-[var(--marketing-gray-500)] mt-1">{h.hero.statsPaid}</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-bold text-white">847</div>
+                <div className="text-3xl sm:text-4xl font-bold text-white">Verificado</div>
                 <div className="text-sm text-[var(--marketing-gray-500)] mt-1">{h.hero.statsVerified}</div>
               </div>
               <div>
-                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-gold)]">3.72</div>
+                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-success)]">StatStaq</div>
+                <div className="text-sm text-[var(--marketing-gray-500)] mt-1">{h.hero.statsPaid}</div>
+              </div>
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-gold)]">NCAA</div>
                 <div className="text-sm text-[var(--marketing-gray-500)] mt-1">{h.hero.statsAvgGpa}</div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import { buildMarketingMetadata } from '@/lib/seo';
 
 export const metadata = buildMarketingMetadata({
   title: 'Privacy Policy',
-  description: 'How GradeUp NIL collects, uses, and protects scholar-athlete and supporter data.',
+  description: 'How GradeUp, part of StatStaq, collects, uses, and protects scholar-athlete and supporter data.',
   path: '/privacy',
 });
 

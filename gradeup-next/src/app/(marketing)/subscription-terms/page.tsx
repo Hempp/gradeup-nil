@@ -5,13 +5,13 @@ import Link from 'next/link';
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: 'Brand Plus Subscription Terms — GradeUp HS-NIL',
+  title: 'Brand Plus Subscription Terms — GradeUp HS-NIL, part of StatStaq',
   description:
-    'Subscription terms for the GradeUp HS-NIL Brand Plus plan. Term, payment, cancellation, service levels, fees, termination, limitation of liability, and governing law.',
+    'Subscription terms for the GradeUp HS-NIL Brand Plus plan, part of StatStaq. Term, payment, cancellation, service levels, fees, termination, limitation of liability, and governing law.',
   openGraph: {
-    title: 'Brand Plus Subscription Terms — GradeUp HS-NIL',
+    title: 'Brand Plus Subscription Terms — GradeUp HS-NIL, part of StatStaq',
     description:
-      'Subscription terms for the GradeUp HS-NIL Brand Plus plan.',
+      'Subscription terms for the GradeUp HS-NIL Brand Plus plan, part of StatStaq.',
     type: 'article',
   },
   alternates: { canonical: '/subscription-terms' },

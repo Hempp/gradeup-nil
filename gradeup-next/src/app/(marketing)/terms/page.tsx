@@ -2,7 +2,7 @@ import { buildMarketingMetadata } from '@/lib/seo';
 
 export const metadata = buildMarketingMetadata({
   title: 'Terms of Service',
-  description: 'Terms governing use of GradeUp NIL by athletes, brands, supporters, and school staff.',
+  description: 'Terms governing use of GradeUp, part of StatStaq, by athletes, brands, supporters, and school staff.',
   path: '/terms',
 });
 

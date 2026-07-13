@@ -87,27 +87,27 @@ export const es: Dictionary = {
 
   home: {
     metadata: {
-      title: 'GradeUp NIL — Tu GPA vale dinero',
+      title: 'GradeUp — NIL verificado para atletas-estudiantes, parte de StatStaq',
       description:
-        'La única plataforma NIL donde las buenas calificaciones desbloquean mejores acuerdos. Mayor GPA = mayor valor. Gana dinero por tu excelencia.',
+        'GradeUp es la capa de atletas-estudiante de StatStaq. Verifica tu GPA y el equipo de StatStaq produce tu contenido, valora tu marca, encuentra tus acuerdos y negocia tus contratos. GradeUp es cómo calificas.',
     },
     hero: {
       badge: 'Plataforma compatible con la NCAA',
-      titleLine1: 'Tu GPA',
-      titleLine2: 'Vale',
-      titleLine3: 'Dinero.',
+      titleLine1: 'Mantén tus calificaciones.',
+      titleLine2: 'Nosotros manejamos',
+      titleLine3: 'tu NIL.',
       subtitle:
-        'La única plataforma NIL donde las calificaciones desbloquean mejores acuerdos. Mayor GPA = mayor valor. Gana dinero por tu excelencia.',
+        'GradeUp es la capa de atletas-estudiante de StatStaq. Verifica tu GPA, y el equipo de StatStaq produce tu contenido, valora tu marca, encuentra tus acuerdos y negocia tus contratos.',
       dualAudience:
         'Hecha para atletas-estudiantes desde 8.º grado hasta el último año de universidad, junto con los padres, entrenadores y directores atléticos que los apoyan.',
-      ctaAthlete: 'Únete como atleta — es gratis',
+      ctaAthlete: 'Califica con tu GPA',
       ctaBrand: 'Asóciate como marca',
       trustNcaa: 'Compatible con la NCAA',
       trustNoCard: 'Sin tarjeta de crédito',
       trustSignup: 'Registro en 2 minutos',
-      statsPaid: 'Pagado a atletas',
-      statsVerified: 'Atletas verificados',
-      statsAvgGpa: 'GPA promedio',
+      statsPaid: 'Gestiona tu acuerdo',
+      statsVerified: 'GPA verificado',
+      statsAvgGpa: 'Cumplimiento total',
     },
     partners: {
       schoolsTrusted: 'Atletas de más de 40 universidades confían en GradeUp',
@@ -136,26 +136,26 @@ export const es: Dictionary = {
     },
     howItWorks: {
       eyebrow: 'Míralo en acción',
-      titlePrefix: 'Del',
-      titleMid: 'registro',
-      titleTo: 'al',
-      titleAccent: 'día de pago',
+      titlePrefix: 'De',
+      titleMid: 'GPA verificado',
+      titleTo: 'a',
+      titleAccent: 'acuerdo de StatStaq',
       subtitle:
-        'Mira cómo funciona GradeUp y después sigue los pasos sencillos para empezar a ganar.',
+        'Mira cómo funciona la capa — GradeUp verifica tus calificaciones y luego StatStaq se pone a trabajar.',
       step1Title: 'Crea tu perfil',
       step1Desc: 'Regístrate y conecta tus registros académicos en minutos.',
-      step1Stat: '10 min en promedio',
+      step1Stat: 'Toma minutos',
       step2Title: 'Verifícate',
       step2Desc:
         'Verificamos tu inscripción, tu deporte y tu GPA para confirmar autenticidad.',
-      step2Stat: 'Verificación en 24 h',
-      step3Title: 'Cobra',
+      step2Stat: 'GPA verificado',
+      step3Title: 'StatStaq se encarga',
       step3Desc:
-        'Emparéjate con marcas y empieza a ganar según tu valor real.',
-      step3Stat: '$1,850 por acuerdo promedio',
+        'El equipo de StatStaq produce tu contenido, valora tu marca, encuentra tus acuerdos y negocia tus contratos.',
+      step3Stat: 'StatStaq toma el mando',
       sideHeading: 'Tres pasos simples',
       sideBody:
-        'Nuestra tasa de conversión del 68 % significa que la mayoría de los atletas cierran acuerdos en menos de una semana.',
+        'El equipo de StatStaq se encarga del contacto, la negociación y el cierre — tú te concentras en tus calificaciones.',
       finalCta: 'Comienza tu camino',
       finalNote: 'Gratis · Sin tarjeta de crédito',
     },
@@ -167,31 +167,31 @@ export const es: Dictionary = {
       cta: 'Ver los casos de éxito',
     },
     finalCta: {
-      socialProof: '847 atletas ya están ganando',
-      title1: '¿Listo para convertir tu',
-      title2: 'GPA en oportunidad?',
+      socialProof: 'Atletas-estudiantes ya están calificando con GradeUp',
+      title1: '¿Listo para dejar que',
+      title2: 'StatStaq maneje tu NIL?',
       body:
-        'Únete a cientos de atletas-estudiantes que ya están ganando con GradeUp. Tu excelencia académica merece reconocimiento.',
+        'GradeUp te califica. StatStaq te representa. Verifica tus calificaciones, y su equipo se encarga de todo lo demás.',
       ctaAthlete: 'Únete como atleta',
       ctaBrand: 'Asóciate como marca',
-      statPaid: 'Más de $127,450 pagados',
-      statDeals: '412 acuerdos completados',
-      statGpa: 'GPA promedio de 3.72',
+      statPaid: 'Verificación de GPA requerida',
+      statDeals: 'StatStaq negocia por ti',
+      statGpa: 'Cumple con la NCAA, siempre',
     },
   },
 
   parents: {
     metadata: {
-      title: 'NIL para padres — Un primer acuerdo sin riesgo | GradeUp',
+      title: 'NIL para padres — Un primer acuerdo sin riesgo | GradeUp, parte de StatStaq',
       description:
-        'La forma más segura de que su atleta-estudiante firme su primer acuerdo NIL. Consentimiento con doble firma, pagos en cuenta custodia, cumplimiento estado por estado y un panel para el padre que firma el permiso.',
+        'La forma más segura de que su atleta-estudiante firme su primer acuerdo NIL. GradeUp verifica su GPA y gestiona el consentimiento; el equipo de StatStaq gestiona el acuerdo. Consentimiento con doble firma, pagos en cuenta custodia, cumplimiento estado por estado y un panel para el padre que firma el permiso.',
     },
     hero: {
       eyebrow: 'Para padres',
       title: 'El primer acuerdo NIL de su atleta-estudiante,',
       titleAccent: 'sin el riesgo.',
       subtitle:
-        'Usted es quien realmente firma el permiso. GradeUp es la única plataforma NIL construida para esa realidad: consentimiento con doble firma en cada acuerdo, pagos en cuenta custodia que usted controla y cumplimiento estado por estado gestionado en segundo plano.',
+        'Usted es quien realmente firma el permiso. GradeUp — parte de StatStaq — es la única plataforma NIL construida para esa realidad: consentimiento con doble firma en cada acuerdo, pagos en cuenta custodia que usted controla, y cumplimiento estado por estado gestionado en segundo plano mientras el equipo de StatStaq gestiona el acuerdo.',
       ctaPrimary: 'Regístrese como padre',
       ctaSecondary: 'Solicite invitación con servicio personalizado',
       supportingNote:
@@ -340,9 +340,9 @@ export const es: Dictionary = {
 
   caseStudies: {
     metadata: {
-      title: 'Casos de éxito — GradeUp HS',
+      title: 'Casos de éxito — GradeUp HS, parte de StatStaq',
       description:
-        'Cómo funcionaron las alianzas reales de atletas-estudiantes. Ingresos verificados, compartidos y ROI de marca de la era de servicio personalizado de GradeUp HS.',
+        'Cómo funcionaron las alianzas reales de atletas-estudiante. GradeUp verifica el GPA; el equipo de StatStaq gestiona el acuerdo. Ingresos verificados, veces compartido y ROI de marca de la era de servicio personalizado de GradeUp HS.',
     },
     hero: {
       badge: 'Resultados comprobados de la era de servicio personalizado',
