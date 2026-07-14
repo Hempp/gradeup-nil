@@ -162,9 +162,9 @@ export function Navbar() {
         // hamburger/logo row doesn't appear to float on hero imagery.
         // Otherwise: frosted glass on scroll, fully transparent at top.
         mobileMenuOpen
-          ? 'bg-[var(--marketing-gray-900)] shadow-lg'
+          ? 'bg-[var(--cream-surface)] border-b border-[var(--hairline)] shadow-lg'
           : scrolled
-            ? 'glass-marketing shadow-lg'
+            ? 'glass-marketing border-b border-[var(--hairline)] shadow-lg'
             : 'bg-transparent',
       )}
     >
@@ -174,11 +174,11 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href="/"
-              className="flex items-center gap-2 group transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm"
+              className="flex items-center gap-2 group transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] rounded-sm"
             >
               <Logo size="md" variant="gradient" />
             </Link>
-            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-[0.14em] text-white/45">
+            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ink-meta)]">
               part of StatStaq
             </span>
           </div>
@@ -191,7 +191,7 @@ export function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-sm font-medium text-white/70 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
+                    className="text-sm font-medium text-[var(--ink)] hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
                   >
                     {item.label}
                   </Link>
@@ -203,7 +203,7 @@ export function Navbar() {
                 <div key={item.id} className="relative">
                   <button
                     type="button"
-                    className="text-sm font-medium text-white/70 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm transition-colors py-2 min-h-[44px] flex items-center gap-1"
+                    className="text-sm font-medium text-[var(--ink)] hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] rounded-sm transition-colors py-2 min-h-[44px] flex items-center gap-1"
                     aria-haspopup="true"
                     aria-expanded={isOpen}
                     aria-controls={menuId}
@@ -219,19 +219,19 @@ export function Navbar() {
                     <div
                       id={menuId}
                       role="menu"
-                      className="absolute left-1/2 top-full -translate-x-1/2 mt-2 w-[340px] rounded-xl border border-white/10 bg-[var(--marketing-gray-900)]/95 backdrop-blur-md shadow-2xl p-2"
+                      className="absolute left-1/2 top-full -translate-x-1/2 mt-2 w-[340px] rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)]/95 backdrop-blur-md shadow-2xl p-2"
                     >
                       {item.overviewHref ? (
                         <>
                           <Link
                             href={item.overviewHref}
                             role="menuitem"
-                            className="block px-4 py-3 rounded-lg text-sm font-semibold text-[var(--accent-primary)] hover:bg-white/5 focus:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+                            className="block px-4 py-3 rounded-lg text-sm font-semibold text-[var(--accent-primary)] hover:bg-[var(--cream-section)] focus:bg-[var(--cream-section)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
                             onClick={closeAll}
                           >
                             {item.overviewLabel ?? 'Overview'}
                           </Link>
-                          <div className="my-1 h-px bg-white/10" />
+                          <div className="my-1 h-px bg-[var(--hairline)]" />
                         </>
                       ) : null}
                       {item.children.map((c) => (
@@ -239,12 +239,12 @@ export function Navbar() {
                           key={c.href}
                           role="menuitem"
                           href={c.href}
-                          className="block px-4 py-3 rounded-lg hover:bg-white/5 focus:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+                          className="block px-4 py-3 rounded-lg hover:bg-[var(--cream-section)] focus:bg-[var(--cream-section)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
                           onClick={closeAll}
                         >
-                          <div className="text-sm font-semibold text-white">{c.label}</div>
+                          <div className="text-sm font-semibold text-[var(--ink)]">{c.label}</div>
                           {c.description ? (
-                            <div className="text-xs text-white/60 mt-0.5">{c.description}</div>
+                            <div className="text-xs text-[var(--ink-meta)] mt-0.5">{c.description}</div>
                           ) : null}
                         </Link>
                       ))}
@@ -261,7 +261,7 @@ export function Navbar() {
             <Link href="/login">
               <Button
                 variant="ghost"
-                className="text-white border border-white/25 bg-white/5 hover:bg-white/15 hover:border-white/40 hover:text-[var(--accent-primary)]"
+                className="text-[var(--ink)] border border-[var(--hairline)] bg-transparent hover:bg-[var(--cream-section)] hover:border-[var(--cobalt)] hover:text-[var(--accent-primary)]"
               >
                 Log In
               </Button>
@@ -273,7 +273,7 @@ export function Navbar() {
 
           {/* Mobile Menu Button - 44px min touch target for WCAG */}
           <button
-            className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-white/80 hover:text-white hover:bg-white/10 active:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-colors touch-manipulation"
+            className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-[var(--ink)] hover:text-[var(--cobalt)] hover:bg-[var(--cream-section)] active:bg-[var(--cream-section)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] transition-colors touch-manipulation"
             onClick={() => setMobileMenuOpen((v) => !v)}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
@@ -285,12 +285,12 @@ export function Navbar() {
       </nav>
 
       {/* Mobile Menu — full-screen accordion. One group expanded at a time.
-          Uses explicit `bg-neutral-950` (≈#0a0a0a) rather than a CSS var so
+          Uses an explicit cream-surface hex rather than a CSS var so
           we never inherit a transparent token from an outer theme scope. */}
       <div
         id="mobile-menu"
         className={cn(
-          'lg:hidden fixed inset-0 top-16 z-40 bg-neutral-950 border-t border-[var(--marketing-gray-800)]',
+          'lg:hidden fixed inset-0 top-16 z-40 bg-[#FBF9F2] border-t border-[var(--hairline)]',
           'transition-all duration-300 ease-in-out',
           mobileMenuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
@@ -307,7 +307,7 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block py-3 px-2 min-h-[44px] text-lg text-white/90 font-medium hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors"
+                  className="block py-3 px-2 min-h-[44px] text-lg text-[var(--ink)] font-medium hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-[var(--cream-section)] active:bg-[var(--cream-section)] transition-colors"
                   onClick={closeAll}
                   tabIndex={mobileMenuOpen ? 0 : -1}
                 >
@@ -318,10 +318,10 @@ export function Navbar() {
             const isExpanded = openMobileGroupId === item.id;
             const panelId = `mobile-panel-${item.id}`;
             return (
-              <div key={item.id} className="border-b border-white/5 pb-2">
+              <div key={item.id} className="border-b border-[var(--hairline)] pb-2">
                 <button
                   type="button"
-                  className="w-full flex items-center justify-between py-3 px-2 min-h-[44px] text-lg text-white font-semibold hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors"
+                  className="w-full flex items-center justify-between py-3 px-2 min-h-[44px] text-lg text-[var(--ink)] font-semibold hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-lg hover:bg-[var(--cream-section)] active:bg-[var(--cream-section)] transition-colors"
                   aria-expanded={isExpanded}
                   aria-controls={panelId}
                   onClick={() => toggleMobileGroup(item.id)}
@@ -338,7 +338,7 @@ export function Navbar() {
                     {item.overviewHref ? (
                       <Link
                         href={item.overviewHref}
-                        className="block py-2 px-2 min-h-[44px] text-sm font-semibold text-[var(--accent-primary)] hover:bg-white/5 focus:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-md"
+                        className="block py-2 px-2 min-h-[44px] text-sm font-semibold text-[var(--accent-primary)] hover:bg-[var(--cream-section)] focus:bg-[var(--cream-section)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-md"
                         onClick={closeAll}
                         tabIndex={mobileMenuOpen ? 0 : -1}
                       >
@@ -349,13 +349,13 @@ export function Navbar() {
                       <Link
                         key={c.href}
                         href={c.href}
-                        className="block py-2 px-2 min-h-[44px] text-sm text-white/80 hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-md hover:bg-white/5"
+                        className="block py-2 px-2 min-h-[44px] text-sm text-[var(--ink-muted)] hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-md hover:bg-[var(--cream-section)]"
                         onClick={closeAll}
                         tabIndex={mobileMenuOpen ? 0 : -1}
                       >
                         <div className="font-medium">{c.label}</div>
                         {c.description ? (
-                          <div className="text-xs text-white/50 mt-0.5">{c.description}</div>
+                          <div className="text-xs text-[var(--ink-meta)] mt-0.5">{c.description}</div>
                         ) : null}
                       </Link>
                     ))}
@@ -364,12 +364,12 @@ export function Navbar() {
               </div>
             );
           })}
-          <div className="pt-6 border-t border-[var(--marketing-gray-800)] space-y-3">
+          <div className="pt-6 border-t border-[var(--hairline)] space-y-3">
             <LocaleSwitcher variant="compact" className="mb-2" />
             <Link href="/login" className="block" onClick={closeAll}>
               <Button
                 variant="outline"
-                className="w-full h-12 border-white/30 text-white hover:bg-white/10"
+                className="w-full h-12 border-[var(--hairline)] text-[var(--ink)] hover:bg-[var(--cream-section)]"
                 tabIndex={mobileMenuOpen ? 0 : -1}
               >
                 Log In

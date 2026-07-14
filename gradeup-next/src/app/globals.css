@@ -773,14 +773,14 @@ html.no-transitions *::after {
   box-shadow: 0 16px 32px rgba(0, 240, 255, 0.1);
 }
 
-/* ─── Glow Hover Effect ─── */
+/* ─── Glow Hover Effect (cream editorial: subtle cobalt border + soft shadow, no neon) ─── */
 .hover-glow {
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 20px var(--marketing-cyan-glow);
-  border-color: var(--marketing-cyan);
+  box-shadow: 0 12px 28px -18px rgba(22, 24, 43, 0.4);
+  border-color: var(--cobalt);
 }
 
 /* ─── Button Micro-Interactions ─── */
@@ -1321,88 +1321,90 @@ html.no-transitions *::after {
 }
 
 .hero-orb-cyan {
-  background: radial-gradient(circle, var(--marketing-cyan) 0%, transparent 70%);
-  opacity: 0.4;
+  background: radial-gradient(circle, var(--cobalt) 0%, transparent 70%);
+  opacity: 0.1;
 }
 
 .hero-orb-magenta {
-  background: radial-gradient(circle, var(--marketing-magenta) 0%, transparent 70%);
-  opacity: 0.3;
+  background: radial-gradient(circle, var(--cobalt) 0%, transparent 70%);
+  opacity: 0.06;
   animation-delay: -4s;
 }
 
-/* Hero Grid Pattern */
+/* Hero Grid Pattern (faint navy grid on cream) */
 .hero-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(22, 24, 43, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 24, 43, 0.05) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
-/* Marketing Gradient Text */
+/* Marketing Gradient Text — solid cobalt (gradient-clip text reads wrong on cream) */
 .gradient-text-cyan {
-  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-lime) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  color: var(--cobalt);
 }
 
 .gradient-text-marketing {
-  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-gold) 50%, var(--marketing-lime) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  color: var(--cobalt);
 }
 
 /* Marketing Buttons */
 .btn-marketing-primary {
-  background: var(--marketing-cyan);
-  color: var(--marketing-black);
+  background: var(--cobalt);
+  color: #FBF9F2;
   font-weight: 600;
   border-radius: var(--radius-lg);
-  box-shadow: 0 0 20px var(--marketing-cyan-glow);
+  box-shadow: 0 8px 20px -10px rgba(22, 24, 43, 0.45);
   transition: all 0.2s ease;
 }
 
 .btn-marketing-primary:hover {
-  background: var(--marketing-cyan-dark);
-  box-shadow: 0 0 40px var(--marketing-cyan-glow);
+  background: var(--cobalt-hover);
+  box-shadow: 0 12px 28px -10px rgba(22, 24, 43, 0.5);
   transform: translateY(-2px);
 }
 
 .btn-marketing-outline {
   background: transparent;
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--ink);
+  border: 1px solid var(--ink);
   font-weight: 500;
   border-radius: var(--radius-lg);
   transition: all 0.2s ease;
 }
 
 .btn-marketing-outline:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--cobalt);
+  background: var(--cream-surface);
+  border-color: var(--cobalt);
 }
 
 /* Marketing Cards */
 .card-marketing {
-  background: var(--marketing-gray-900);
-  border: 1px solid var(--marketing-gray-800);
+  background: var(--cream-surface);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-xl);
   transition: all 0.3s ease;
 }
 
 .card-marketing:hover {
-  border-color: var(--marketing-gray-700);
+  border-color: var(--cobalt);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 50px -30px rgba(22, 24, 43, 0.35);
 }
 
 /* GPA Badge (Marketing) */
 .gpa-badge-marketing {
-  background: linear-gradient(135deg, var(--marketing-lime) 0%, var(--marketing-cyan) 100%);
-  color: var(--marketing-black);
+  background: var(--cobalt);
+  color: #FBF9F2;
   font-weight: 700;
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-full);
@@ -1411,8 +1413,8 @@ html.no-transitions *::after {
 
 /* Verified Badge (Marketing) */
 .verified-badge-marketing {
-  background: var(--marketing-cyan);
-  color: var(--marketing-black);
+  background: var(--cobalt);
+  color: #FBF9F2;
   border-radius: var(--radius-full);
   padding: 0.125rem;
 }
@@ -1426,17 +1428,19 @@ html.no-transitions *::after {
   background: radial-gradient(ellipse at center, var(--marketing-gray-900) 0%, var(--marketing-black) 70%);
 }
 
-/* CTA Section Gradient */
+/* CTA Section Background — warm cream editorial surface w/ a faint cobalt bloom */
 .bg-marketing-cta {
-  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-magenta) 100%);
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
+    linear-gradient(135deg, var(--cream-section) 0%, var(--cream) 100%);
 }
 
-/* Marketing Glass Effect */
+/* Marketing Glass Effect (translucent cream, not dark) */
 .glass-marketing {
-  background: rgba(23, 23, 23, 0.8);
+  background: rgba(251, 249, 242, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--marketing-gray-800);
+  border: 1px solid var(--hairline);
 }
 
 /* Marketing Scrollbar */
@@ -1445,16 +1449,16 @@ html.no-transitions *::after {
 }
 
 .marketing-dark::-webkit-scrollbar-track {
-  background: var(--marketing-gray-900);
+  background: var(--cream);
 }
 
 .marketing-dark::-webkit-scrollbar-thumb {
-  background: var(--marketing-gray-700);
+  background: rgba(22, 24, 43, 0.24);
   border-radius: var(--radius-full);
 }
 
 .marketing-dark::-webkit-scrollbar-thumb:hover {
-  background: var(--marketing-gray-600);
+  background: rgba(22, 24, 43, 0.4);
 }
 
 /* ─── Tailwind Theme Integration ─── */
@@ -2583,14 +2587,17 @@ a:hover {
   }
 }
 
+/* Warm cream editorial CTA surface — was a full-bleed neon aurora; now a
+   quiet cream gradient with a faint cobalt drift so it still reads as
+   "alive" without ever going dark. */
 .aurora-bg {
   background: linear-gradient(
     135deg,
-    var(--marketing-cyan) 0%,
-    var(--marketing-magenta) 25%,
-    var(--marketing-lime) 50%,
-    var(--marketing-gold) 75%,
-    var(--marketing-cyan) 100%
+    var(--cream-section) 0%,
+    var(--cream) 25%,
+    rgba(37, 99, 235, 0.06) 50%,
+    var(--cream) 75%,
+    var(--cream-section) 100%
   );
   background-size: 400% 400%;
   animation: aurora-shift 15s ease-in-out infinite;
@@ -2717,44 +2724,26 @@ a:hover {
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* ─── Premium Text Glow ─── */
+/* ─── Text "Glow" (cream editorial: no glow — solid cobalt, shadow removed) ─── */
 .text-glow-cyan {
-  text-shadow:
-    0 0 10px var(--marketing-cyan-glow),
-    0 0 20px var(--marketing-cyan-glow),
-    0 0 40px var(--marketing-cyan-glow);
+  text-shadow: none;
+  color: var(--cobalt);
 }
 
 .text-glow-gold {
-  text-shadow:
-    0 0 10px var(--marketing-gold-glow),
-    0 0 20px var(--marketing-gold-glow),
-    0 0 40px var(--marketing-gold-glow);
+  text-shadow: none;
+  color: var(--cobalt);
 }
 
 .text-glow-lime {
-  text-shadow:
-    0 0 10px var(--marketing-lime-glow),
-    0 0 20px var(--marketing-lime-glow),
-    0 0 40px var(--marketing-lime-glow);
-}
-
-@keyframes text-glow-pulse {
-  0%, 100% {
-    text-shadow:
-      0 0 10px var(--marketing-cyan-glow),
-      0 0 20px var(--marketing-cyan-glow);
-  }
-  50% {
-    text-shadow:
-      0 0 20px var(--marketing-cyan),
-      0 0 40px var(--marketing-cyan),
-      0 0 60px var(--marketing-cyan-glow);
-  }
+  text-shadow: none;
+  color: var(--cobalt);
 }
 
 .text-glow-animated {
-  animation: text-glow-pulse 2s ease-in-out infinite;
+  text-shadow: none;
+  animation: none;
+  color: var(--cobalt);
 }
 
 /* ─── Premium Button Shine Effect ─── */
@@ -2935,22 +2924,23 @@ a:hover {
   animation: morph-blob 8s ease-in-out infinite;
 }
 
+/* Cream editorial blooms — barely-there cobalt only, no magenta/lime. */
 .blob-cyan {
-  background: linear-gradient(135deg, var(--marketing-cyan) 0%, var(--marketing-cyan-dark) 100%);
+  background: linear-gradient(135deg, var(--cobalt) 0%, var(--cobalt-hover) 100%);
   filter: blur(60px);
-  opacity: 0.4;
+  opacity: 0.08;
 }
 
 .blob-magenta {
-  background: linear-gradient(135deg, var(--marketing-magenta) 0%, #cc00cc 100%);
+  background: linear-gradient(135deg, var(--cobalt) 0%, var(--cobalt-hover) 100%);
   filter: blur(60px);
-  opacity: 0.3;
+  opacity: 0.05;
 }
 
 .blob-lime {
-  background: linear-gradient(135deg, var(--marketing-lime) 0%, #88cc00 100%);
+  background: linear-gradient(135deg, var(--cobalt) 0%, var(--cobalt-hover) 100%);
   filter: blur(60px);
-  opacity: 0.35;
+  opacity: 0.06;
 }
 
 /* ─── Premium Input Focus Ring ─── */
