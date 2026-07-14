@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { useToastActions } from '@/components/ui/toast';
 import { formatCurrency, formatCompactNumber, formatDate } from '@/lib/utils';
+import { SOURCED_FEE_PERCENT } from '@/lib/services/pricing';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -675,7 +676,8 @@ function ReviewStep({ data }: { data: CampaignFormData }) {
               <dd className="font-medium text-[var(--color-primary)]">{formatCurrency(data.budget)}</dd>
               {data.budget > 0 && (
                 <dd className="text-xs text-[var(--text-muted)] mt-1">
-                  + {formatCurrency(data.budget * 0.12)} platform fee (12%) · Athletes receive 100%
+                  {/* Campaigns are StatStaq-sourced deals: 15% platform fee, athlete keeps 85% */}
+                  + {formatCurrency(data.budget * SOURCED_FEE_PERCENT)} platform fee ({SOURCED_FEE_PERCENT * 100}%) · Athletes receive {100 - SOURCED_FEE_PERCENT * 100}%
                 </dd>
               )}
             </div>
