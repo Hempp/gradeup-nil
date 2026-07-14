@@ -1263,19 +1263,18 @@ html.no-transitions *::after {
 .duotone {
   position: relative;
   isolation: isolate;
-  background: var(--cobalt);
 }
 .duotone > img,
 .duotone img {
-  filter: grayscale(1) contrast(1.05) brightness(1.05);
+  filter: saturate(0.2) contrast(1.05);
 }
 .duotone::after {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   background: var(--cobalt);
-  mix-blend-mode: color;
+  opacity: 0.42;
   pointer-events: none;
   border-radius: inherit;
 }
