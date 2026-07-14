@@ -1262,12 +1262,22 @@ html.no-transitions *::after {
 /* Duotone cobalt treatment for photos (editorial "sticky duotone image") */
 .duotone {
   position: relative;
+  isolation: isolate;
   background: var(--cobalt);
 }
 .duotone > img,
 .duotone img {
-  filter: grayscale(1) contrast(1.06);
-  mix-blend-mode: luminosity;
+  filter: grayscale(1) contrast(1.05) brightness(1.05);
+}
+.duotone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--cobalt);
+  mix-blend-mode: color;
+  pointer-events: none;
+  border-radius: inherit;
 }
 /* Editorial stat strip (mono, cobalt figures on cream) */
 .stat-strip {
