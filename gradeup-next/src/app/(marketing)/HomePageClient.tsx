@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   ArrowRight,
+  ArrowUpRight,
   CheckCircle2,
   BadgeCheck,
   User,
@@ -136,73 +137,39 @@ function useReducedMotion(): boolean {
 }
 
 function HeroSection() {
-  const prefersReducedMotion = useReducedMotion();
-  const { data: stats } = useLandingStats();
-
   return (
     <section
-      className="relative min-h-[calc(100vh-64px)] sm:min-h-screen flex items-center overflow-hidden bg-black"
+      className="relative bg-[var(--cream)] overflow-hidden"
       aria-label="Hero - Keep your grades up, StatStaq runs your NIL"
       role="region"
     >
-      {/* Background Effects - simplified for performance */}
-      <div className="absolute inset-0">
-        {/* Static gradient background for better performance */}
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            background: 'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255, 0, 200, 0.1) 0%, transparent 50%)',
-          }}
-        />
-
-        {/* Only show morphing blobs if reduced motion is not preferred */}
-        {!prefersReducedMotion && (
-          <>
-            <div className="blob-cyan blob-morph absolute -top-40 -left-40 w-[500px] h-[500px] will-change-transform" />
-            <div className="blob-magenta blob-morph absolute -bottom-40 -right-40 w-[600px] h-[600px] will-change-transform" style={{ animationDelay: '-3s' }} />
-          </>
-        )}
-
-        {/* Grid pattern */}
-        <div className="absolute inset-0 hero-grid opacity-30" />
-
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black" />
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div className="text-center lg:text-left">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-8">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-success)] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent-success)]"></span>
-              </span>
-              <span className="text-sm font-medium text-white/90">NCAA Compliant Platform</span>
-            </div>
+            <div className="eyebrow mb-6">Part of StatStaq · NCAA compliant</div>
 
             {/* Headline */}
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white mb-6">
-              <span className="block animate-float-slow">Keep Your Grades Up.</span>
-              <span className="block gradient-text-cyan text-glow-animated">We&apos;ll Run</span>
-              <span className="block bg-gradient-to-r from-[var(--accent-gold)] to-[var(--accent-success)] bg-clip-text text-transparent text-glow-gold">
-                Your NIL.
-              </span>
+            <h1 className="font-display text-[clamp(52px,8vw,104px)] text-[var(--ink)] mb-8">
+              Keep your grades up.{' '}
+              <span className="text-[var(--cobalt)]">We&apos;ll run your NIL.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-[var(--marketing-gray-400)] max-w-xl mx-auto lg:mx-0 mb-8">
+            <p className="text-lg sm:text-xl text-[var(--ink-muted)] max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
               GradeUp is the scholar-athlete layer of StatStaq. Verify your GPA, and
               StatStaq&apos;s team produces your content, values your brand, sources your
               deals, and negotiates your contracts.
             </p>
 
-            {/* Dual-audience acknowledgment */}
-            <p className="text-sm text-[var(--marketing-gray-500)] max-w-xl mx-auto lg:mx-0 mb-8">
-              Built for scholar-athletes from 8th grade through senior year of college, with the parents, coaches, and athletic directors who support them.
-            </p>
+            {/* Stat strip (claim-free) */}
+            <div className="stat-strip inline-flex flex-wrap items-center gap-x-4 gap-y-1 mb-8">
+              <span>Verified GPA <b>3 tiers</b></span>
+              <span className="opacity-30">·</span>
+              <span>Sourced <b>15%</b></span>
+              <span className="opacity-30">·</span>
+              <span>You bring <b>0%</b></span>
+            </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -228,97 +195,49 @@ function HeroSection() {
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 mt-6 text-sm text-[var(--marketing-gray-500)]">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 mt-8 text-sm text-[var(--ink-meta)]">
               <div className="flex items-center gap-1.5">
-                <Shield className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
-                <span>NCAA Compliant</span>
+                <Shield className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
+                <span>NCAA compliant</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
+                <CheckCircle2 className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
                 <span>No credit card</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Zap className="h-4 w-4 text-[var(--accent-success)]" aria-hidden="true" />
+                <Zap className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
                 <span>2-min signup</span>
-              </div>
-            </div>
-
-            {/* Stats - Specific Numbers */}
-            <div
-              className="flex flex-wrap justify-center lg:justify-start gap-8 mt-12 pt-8 border-t border-white/10"
-              role="list"
-              aria-label="Platform statistics"
-            >
-              <div className="text-center" role="listitem">
-                <div className="text-3xl sm:text-4xl font-bold text-white" aria-live="polite">
-                  <AnimatedCounter target={stats.athletes} skipAnimation={prefersReducedMotion} />
-                </div>
-                <div className="text-sm text-[var(--marketing-gray-500)] mt-1">Verified Athletes</div>
-              </div>
-              <div className="w-px h-12 bg-white/10 hidden sm:block" aria-hidden="true" />
-              <div className="text-center" role="listitem">
-                <div className="text-3xl sm:text-4xl font-bold text-[var(--accent-gold)]" aria-live="polite">
-                  <AnimatedCounter target={stats.avgGpa} skipAnimation={prefersReducedMotion} />
-                </div>
-                <div className="text-sm text-[var(--marketing-gray-500)] mt-1">Avg Athlete GPA</div>
               </div>
             </div>
           </div>
 
-          {/* Hero Card - Enhanced */}
+          {/* Hero visual — looping stadium film in an editorial frame */}
           <div className="relative flex justify-center lg:justify-end">
-            <div className="relative">
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--accent-tertiary)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
-
-              {/* Athlete Card */}
-              <div className="relative card-marketing p-1 shadow-2xl">
-                <div className="bg-gradient-to-br from-white/5 to-transparent rounded-xl overflow-hidden">
-                  {/* Image */}
-                  <div className="relative h-64 sm:h-80 w-64 sm:w-72">
-                    <Image
-                      src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=500&fit=crop&crop=face"
-                      alt="Illustrative sample athlete profile"
-                      fill
-                      className="object-cover"
-                      priority
-                      sizes="(max-width: 640px) 256px, 288px"
-                    />
-                    {/* Verified Badge */}
-                    <div className="absolute top-3 right-3 verified-badge-marketing p-1.5 shadow-lg">
-                      <BadgeCheck className="h-5 w-5" />
-                    </div>
-                    {/* Sample Profile Chip */}
-                    <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm text-white/60 px-2 py-1 rounded-full text-xs font-bold">
-                      Sample profile
-                    </div>
-                  </div>
-
-                  {/* Details */}
-                  <div className="p-5 bg-gradient-to-t from-[var(--marketing-gray-900)] to-transparent -mt-16 relative">
-                    <div className="text-xs font-semibold text-[var(--accent-primary)] tracking-wider mb-1">
-                      STATE UNIVERSITY
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-1">Sample Athlete</h3>
-                    <p className="text-[var(--marketing-gray-400)] text-sm mb-4">Women&apos;s Basketball • Computer Science</p>
-
-                    {/* GPA Badge */}
-                    <div className="gpa-badge-marketing inline-flex items-center gap-2">
-                      <span className="text-2xl font-bold">3.9</span>
-                      <span className="text-xs font-medium opacity-80">GPA</span>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex gap-2 mt-4">
-                      <span className="px-2.5 py-1 rounded-full bg-white/10 text-white/80 text-xs font-medium">
-                        Dean&apos;s List
-                      </span>
-                      <span className="px-2.5 py-1 rounded-full bg-white/10 text-white/80 text-xs font-medium">
-                        Verified GPA
-                      </span>
-                    </div>
-                  </div>
+            <div className="relative w-full max-w-md">
+              <div className="relative aspect-[4/5] rounded-[28px] overflow-hidden border border-[var(--hairline)] shadow-[0_40px_90px_-40px_rgba(22,24,43,0.45)]">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster="/editorial/photo-02.jpg"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  aria-hidden="true"
+                >
+                  <source src="/editorial/hero.mp4" type="video/mp4" />
+                </video>
+                {/* cobalt wash for editorial cohesion */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--cobalt)]/25 via-transparent to-transparent" />
+                {/* floating stat strip */}
+                <div className="stat-strip absolute left-4 bottom-4 right-4 !bg-[var(--cream-surface)]/95 backdrop-blur-sm text-center">
+                  Produce · Value · Source · <b>Negotiate</b>
                 </div>
+              </div>
+              {/* corner accent tag */}
+              <div className="arrow-pill absolute -top-4 -left-4 hidden sm:flex">
+                <span className="circle">
+                  <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+                </span>
               </div>
             </div>
           </div>
