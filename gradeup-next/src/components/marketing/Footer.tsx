@@ -12,7 +12,8 @@ export function Footer() {
               <Logo size="md" variant="gradient" />
             </div>
             <p className="text-[var(--marketing-gray-400)] text-sm">
-              The NIL platform where your GPA unlocks better deals.
+              The verified-GPA scholar-athlete layer of StatStaq. Keep your
+              grades up, and their team runs your NIL.
             </p>
           </div>
 
