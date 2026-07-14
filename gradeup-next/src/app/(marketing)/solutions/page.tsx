@@ -26,9 +26,9 @@ const PAGE_URL = '/solutions';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Solutions — Built for every side of the high-school NIL deal',
+    title: 'Solutions — Built for every side of the high-school NIL deal | GradeUp, part of StatStaq',
     description:
-      'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. Verified grades, parental consent, state-by-state compliance.',
+      'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. GradeUp verifies grades and consent; StatStaq’s team runs the deal — content, brand value, sourcing, and contracts.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -67,21 +67,25 @@ export default function SolutionsIndexPage() {
           href: '/business/case-studies',
         }}
         supportingNote="Live in California, Florida, Georgia, Illinois, New Jersey, New York, and Texas."
+        image={{
+          src: '/editorial/photo-02.jpg',
+          alt: 'Golden-hour high-school stadium — the field every GradeUp persona shares',
+        }}
       />
 
       <section
         aria-label="Choose your persona"
-        className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10"
+        className="bg-[var(--cream-section)] py-20 border-y border-[var(--hairline)]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               Pick your side
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               Where do you fit?
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               Each persona gets the product built for them. The deal rails,
               consent rails, and disclosure rails are the same underneath — so
               every side sees the same truth.
@@ -91,7 +95,7 @@ export default function SolutionsIndexPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <PersonaCard
               eyebrow="For parents"
-              title="Your scholar-athlete&rsquo;s first NIL deal — without the risk."
+              title="Your scholar-athlete’s first NIL deal — without the risk."
               description="Dual signature. State-compliant consent. Custodial payouts. A parent dashboard for the person actually signing the permission slip."
               href="/solutions/parents"
               icon={<Users className="h-6 w-6" />}
@@ -104,13 +108,13 @@ export default function SolutionsIndexPage() {
             />
             <PersonaCard
               eyebrow="For athletes"
-              title="Your GPA is your advantage. Get paid for it."
-              description="Verified grades unlock better deals. See your earnings trajectory, share wins publicly, and build a resume that compounds."
+              title="Verify your GPA. StatStaq gets you paid."
+              description="GradeUp verifies your grades in three tiers. Once you qualify, StatStaq’s team produces your content, values your brand, sources your deals, and negotiates your contracts."
               href="/solutions/athletes"
               icon={<Trophy className="h-6 w-6" />}
               bullets={[
                 'Tier-B-verified GPA badge on your profile',
-                'Share-the-win trajectory with OG image',
+                'StatStaq-produced share-the-win trajectory',
                 'Parental consent auto-handled in the background',
               ]}
               ctaLabel="For athletes"
@@ -130,7 +134,7 @@ export default function SolutionsIndexPage() {
             />
             <PersonaCard
               eyebrow="For athletic directors"
-              title="Compliance your school doesn&rsquo;t have bandwidth to build."
+              title="Compliance your school doesn’t have bandwidth to build."
               description="Parent consent, state disclosure, audit trail — all handled automatically. Every deal in your school is visible in one list."
               href="/solutions/ads"
               icon={<GraduationCap className="h-6 w-6" />}
@@ -144,7 +148,7 @@ export default function SolutionsIndexPage() {
             <PersonaCard
               eyebrow="For state athletic associations"
               title="Request a GradeUp transcript for any member school. Free."
-              description="You can&rsquo;t govern what you can&rsquo;t see. State athletic associations can request a per-school transcript covering NIL activity, disclosures, and compliance status — on demand, scoped to one school."
+              description="You can’t govern what you can’t see. State athletic associations can request a per-school transcript covering NIL activity, disclosures, and compliance status — on demand, scoped to one school."
               href="/solutions/state-ads"
               icon={<ShieldCheck className="h-6 w-6" />}
               bullets={[
@@ -156,20 +160,20 @@ export default function SolutionsIndexPage() {
             />
             <Link
               href="/business/case-studies"
-              className="card-marketing p-6 flex flex-col justify-center h-full hover-lift transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              className="card-marketing p-6 flex flex-col justify-center h-full hover-lift transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream-section)]"
               aria-label="Browse all case studies"
             >
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-gold)] mb-2">
+              <span className="eyebrow mb-2 block">
                 Proof
               </span>
-              <h3 className="text-xl font-bold text-white mb-2">
+              <h3 className="text-xl font-bold text-[var(--ink)] mb-2">
                 Real deals. Verified earnings.
               </h3>
-              <p className="text-white/70 text-sm mb-4 leading-relaxed">
+              <p className="text-[var(--ink-muted)] text-sm mb-4 leading-relaxed">
                 Every public case study is tied to a completed deal and an
                 on-platform share event. No marketing fluff.
               </p>
-              <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent-primary)]">
+              <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--cobalt)]">
                 Browse case studies
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </span>

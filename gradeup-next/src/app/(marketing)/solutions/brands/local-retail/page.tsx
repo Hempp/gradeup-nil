@@ -27,14 +27,14 @@ export const revalidate = 300;
 const PAGE_URL = '/solutions/brands/local-retail';
 
 export const metadata: Metadata = {
-  title: 'Local retail brand NIL campaigns | HS scholar-athletes | GradeUp',
+  title: 'Local retail brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'Local boutiques, skate shops, outdoor retail, and independent apparel brands run compliance-handled NIL campaigns with verified HS scholar-athletes across 7 pilot states. No school IP, real foot traffic.',
+    'Local boutiques, skate shops, outdoor retail, and independent apparel brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. No school IP.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
-    title: 'Local retail NIL campaigns with HS scholar-athletes',
+    title: 'Local retail NIL campaigns with verified scholar-athletes',
     description:
-      'Teen athlete + Instagram + your product = native content. Compliance handled.',
+      'Teen athlete + Instagram + your product = native content. GradeUp handles compliance; StatStaq’s team runs the deal.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -68,7 +68,7 @@ const FAQ_ITEMS = [
   {
     question: 'What is the right season timing?',
     answer:
-      'Back-to-school (August), season-opener (varies by sport), holiday (November-December), and spring-break (March) are the four highest-converting windows. We pre-book athletes 4-6 weeks before each. Off-season sits at 40-60% of peak conversion.',
+      'Back-to-school (August), season-opener (varies by sport), holiday (November-December), and spring-break (March) are the four highest-converting windows. We pre-book athletes 4-6 weeks before each. Off-season timing still works, but converts less than those four peak windows.',
   },
   {
     question: 'Do you offer volume discounts for multi-athlete drops?',
@@ -101,7 +101,7 @@ export default function LocalRetailPage() {
         scriptId="solutions-brands-local-retail-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Local Retail NIL Campaigns"
-        description="Compliance-handled NIL campaigns connecting independent retail brands with verified HS scholar-athletes in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with independent retail brands; StatStaq’s team runs the campaign. Live in 7 pilot states."
         audience="Local retail, boutiques, skate shops, outdoor retail, and independent apparel brands"
       />
 
@@ -109,7 +109,7 @@ export default function LocalRetailPage() {
         eyebrow="For local retail"
         title="The kid with the"
         titleAccent="good fit shot."
-        subtitle="Boutiques, skate shops, outdoor stores, independent apparel, and non-school team stores turn a teen athlete Instagram grid into native product content. Compliance handled. No school IP."
+        subtitle="Boutiques, skate shops, outdoor stores, independent apparel, and non-school team stores turn a GradeUp-verified scholar-athlete’s Instagram grid into native product content — StatStaq’s team runs the campaign. No school IP."
         primaryCta={{
           label: 'Start a retail campaign',
           href: '/hs/signup/brand',
@@ -120,6 +120,10 @@ export default function LocalRetailPage() {
           href: '/solutions/brands/fmv',
         }}
         supportingNote="Live in 7 pilot states. Volume discounts for multi-athlete drops."
+        image={{
+          src: '/editorial/photo-03.jpg',
+          alt: 'Editorial fit-shoot photography style representing a scholar-athlete product drop for local retail',
+        }}
       />
 
       <ConcreteExampleSection />
@@ -151,8 +155,8 @@ export default function LocalRetailPage() {
           },
           {
             kind: 'proof',
-            heading: 'Drops at 3+ athletes beat single-influencer CAC',
-            body: 'In pilot data, retail brands that ran 3-5 concurrent local athletes in one drop saw 1.8-3.1x better CAC than a single mid-tier influencer campaign. The overlap in audiences creates a small-town saturation effect.',
+            heading: 'Local saturation, not broad reach',
+            body: 'Retail brands that run 3-5 concurrent local athletes in one drop create overlapping audiences inside a single ZIP code — a small-town saturation effect a single mid-tier influencer campaign cannot replicate.',
             bullets: [
               'Batch disclosure for 3+ athletes',
               'Volume discount at 3+ concurrent',
@@ -204,19 +208,19 @@ function ConcreteExampleSection() {
   return (
     <section
       aria-label="Concrete campaign example"
-      className="bg-black py-16 border-y border-white/10"
+      className="bg-[var(--cream-section)] py-16 border-y border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-black via-[var(--marketing-gray-950)] to-black p-8 md:p-10">
+        <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-[var(--cream-surface)] p-8 md:p-10">
           <div className="flex items-start gap-3 mb-4">
             <div className="p-2 rounded-lg bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20">
               <ShoppingBag className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
             </div>
-            <span className="text-xs uppercase tracking-widest text-[var(--accent-primary)] font-semibold mt-1.5">
+            <span className="eyebrow text-xs uppercase tracking-widest text-[var(--accent-primary)] font-semibold mt-1.5">
               What this looks like in practice
             </span>
           </div>
-          <p className="text-xl md:text-2xl text-white leading-relaxed">
+          <p className="text-xl md:text-2xl text-[var(--ink)] leading-relaxed">
             A Brooklyn skate shop pays a{' '}
             <span className="text-[var(--accent-primary)] font-semibold">
               junior track athlete with 720 Instagram followers
@@ -245,7 +249,7 @@ function CampaignShapeSection() {
   return (
     <section aria-label="What a campaign looks like" className="bg-[var(--marketing-gray-950)] py-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-10">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-10">
           What a fit-shoot series{' '}
           <span className="text-[var(--accent-primary)]">looks like</span>
         </h2>
@@ -253,14 +257,14 @@ function CampaignShapeSection() {
           {steps.map((s) => (
             <li
               key={s.n}
-              className="flex gap-4 rounded-xl border border-white/10 bg-black/40 p-5 hover:border-[var(--accent-primary)]/30 transition-colors"
+              className="flex gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 hover:border-[var(--accent-primary)]/30 transition-colors"
             >
               <div className="shrink-0 w-10 h-10 rounded-lg bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 flex items-center justify-center font-bold text-[var(--accent-primary)]">
                 {s.n}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">{s.title}</h3>
-                <p className="text-sm text-white/70 mt-1">{s.body}</p>
+                <h3 className="text-lg font-semibold text-[var(--ink)]">{s.title}</h3>
+                <p className="text-sm text-[var(--ink-muted)] mt-1">{s.body}</p>
               </div>
             </li>
           ))}
@@ -280,13 +284,13 @@ function ValuationPanel({
   highCents: number;
 }) {
   return (
-    <section aria-label="Sample valuation" className="bg-black py-20">
+    <section aria-label="Sample valuation" className="bg-[var(--cream)] py-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[var(--accent-gold)]/5 via-black to-[var(--accent-primary)]/5 p-8 md:p-10">
-          <span className="text-xs uppercase tracking-widest text-[var(--accent-gold)] font-semibold">
+        <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-8 md:p-10">
+          <span className="eyebrow text-xs uppercase tracking-widest text-[var(--accent-gold)] font-semibold">
             Sample numbers
           </span>
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-white mt-3">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--ink)] mt-3">
             A junior track athlete, NY, under-500 followers, 3.0-3.5 GPA verified
           </h2>
           <div className="grid sm:grid-cols-3 gap-4 mt-8">
@@ -294,9 +298,9 @@ function ValuationPanel({
             <Stat label="Annual expected" value={formatValuationCents(midCents)} hint="2-3 drops + friends-circle conversion" accent />
             <Stat label="Annual range (high)" value={formatValuationCents(highCents)} hint="Full seasonal rotation + reels" />
           </div>
-          <p className="mt-6 text-sm text-white/60 max-w-3xl">
+          <p className="mt-6 text-sm text-[var(--ink-muted)] max-w-3xl">
             A single retail fit series for this athlete lands around{' '}
-            <span className="text-white font-semibold">$75 – $200</span>.
+            <span className="text-[var(--ink)] font-semibold">$75 – $200</span>.
             Under-500 followers is the &ldquo;micro-native&rdquo; segment —
             high engagement, low reach, perfect for local retail. Use the{' '}
             <Link
@@ -329,30 +333,30 @@ function Stat({
       className={`rounded-xl border p-5 text-center ${
         accent
           ? 'border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/5'
-          : 'border-white/10 bg-white/5'
+          : 'border-[var(--hairline)] bg-[var(--cream-surface)]'
       }`}
     >
-      <div className="text-xs uppercase tracking-widest text-white/50">{label}</div>
-      <div className={`font-display text-3xl font-bold mt-2 ${accent ? 'text-[var(--accent-primary)]' : 'text-white'}`}>
+      <div className="text-xs uppercase tracking-widest text-[var(--ink-meta)]">{label}</div>
+      <div className={`font-display text-3xl font-bold mt-2 ${accent ? 'text-[var(--accent-primary)]' : 'text-[var(--ink)]'}`}>
         {value}
       </div>
-      <div className="text-xs text-white/60 mt-2">{hint}</div>
+      <div className="text-xs text-[var(--ink-muted)] mt-2">{hint}</div>
     </div>
   );
 }
 
 function ComplianceCallout() {
   return (
-    <section aria-label="Compliance guardrails" className="bg-black py-20">
+    <section aria-label="Compliance guardrails" className="bg-[var(--cream-section)] py-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-[var(--accent-gold)]/30 bg-[var(--accent-gold)]/5 p-8 md:p-10">
           <div className="flex items-center gap-3 mb-5">
             <ShieldAlert className="h-6 w-6 text-[var(--accent-gold)]" aria-hidden="true" />
-            <h2 className="font-display text-2xl font-bold text-white">
+            <h2 className="font-display text-2xl font-bold text-[var(--ink)]">
               What you cannot do
             </h2>
           </div>
-          <p className="text-white/70 mb-6">
+          <p className="text-[var(--ink-muted)] mb-6">
             Retail is clean but product photography is where brands slip up.
           </p>
           <ul className="space-y-3">
@@ -381,7 +385,7 @@ function ComplianceCallout() {
               like branded rolling papers or vape cases.
             </ComplianceItem>
           </ul>
-          <p className="text-sm text-white/60 mt-6">
+          <p className="text-sm text-[var(--ink-muted)] mt-6">
             We review the first post in every campaign before it goes live.
             Cross-check on{' '}
             <Link
@@ -402,7 +406,7 @@ function ComplianceItem({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex gap-3">
       <Check className="h-5 w-5 text-[var(--accent-success)] shrink-0 mt-0.5" aria-hidden="true" />
-      <span className="text-white/85">{children}</span>
+      <span className="text-[var(--ink-muted)]">{children}</span>
     </li>
   );
 }
@@ -418,11 +422,11 @@ function HorizontalVerticalNav({ current }: { current: string }) {
   return (
     <section
       aria-label="Other brand verticals"
-      className="bg-black py-16 border-t border-white/10"
+      className="bg-[var(--cream-section)] py-16 border-t border-[var(--hairline)]"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm uppercase tracking-widest text-white/50 font-semibold">
+          <h2 className="text-sm uppercase tracking-widest text-[var(--ink-meta)] font-semibold">
             Other brand verticals
           </h2>
           <Link
@@ -440,7 +444,7 @@ function HorizontalVerticalNav({ current }: { current: string }) {
               <Link
                 key={v.slug}
                 href={`/solutions/brands/${v.slug}`}
-                className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-white/80 hover:border-[var(--accent-primary)]/40 hover:bg-[var(--accent-primary)]/5 hover:text-white transition-colors"
+                className="px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] text-sm text-[var(--ink-muted)] hover:border-[var(--accent-primary)]/40 hover:bg-[var(--accent-primary)]/5 hover:text-[var(--ink)] transition-colors"
               >
                 {v.label}
               </Link>

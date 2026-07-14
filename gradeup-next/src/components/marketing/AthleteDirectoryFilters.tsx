@@ -61,11 +61,11 @@ export function AthleteDirectoryFilters() {
   ];
 
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-white/10 bg-black/30 p-4">
-      <label className="flex flex-col text-xs uppercase tracking-wide text-white/50">
+    <div className="marketing-dark flex flex-wrap items-end gap-3 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4">
+      <label className="flex flex-col text-xs uppercase tracking-wide text-[var(--ink-meta)]">
         State
         <select
-          className="mt-1 min-w-[10rem] rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          className="mt-1 min-w-[10rem] rounded-md border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
           value={current.state}
           onChange={(e) => update('state', e.target.value)}
           aria-label="Filter by state"
@@ -79,10 +79,10 @@ export function AthleteDirectoryFilters() {
         </select>
       </label>
 
-      <label className="flex flex-col text-xs uppercase tracking-wide text-white/50">
+      <label className="flex flex-col text-xs uppercase tracking-wide text-[var(--ink-meta)]">
         Sport
         <select
-          className="mt-1 min-w-[10rem] rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          className="mt-1 min-w-[10rem] rounded-md border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
           value={current.sport}
           onChange={(e) => update('sport', e.target.value)}
           aria-label="Filter by sport"
@@ -96,10 +96,10 @@ export function AthleteDirectoryFilters() {
         </select>
       </label>
 
-      <label className="flex flex-col text-xs uppercase tracking-wide text-white/50">
+      <label className="flex flex-col text-xs uppercase tracking-wide text-[var(--ink-meta)]">
         Class of
         <select
-          className="mt-1 min-w-[10rem] rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          className="mt-1 min-w-[10rem] rounded-md border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
           value={current.grad}
           onChange={(e) => update('grad', e.target.value)}
           aria-label="Filter by graduation year"
@@ -113,10 +113,10 @@ export function AthleteDirectoryFilters() {
         </select>
       </label>
 
-      <label className="flex flex-col text-xs uppercase tracking-wide text-white/50">
+      <label className="flex flex-col text-xs uppercase tracking-wide text-[var(--ink-meta)]">
         Scholar tier
         <select
-          className="mt-1 min-w-[10rem] rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          className="mt-1 min-w-[10rem] rounded-md border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
           value={current.gpa}
           onChange={(e) => update('gpa', e.target.value)}
           aria-label="Filter by minimum GPA"

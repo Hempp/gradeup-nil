@@ -47,23 +47,23 @@ export async function CaseStudyTagStrip({
   const seeAll = seeAllHref.includes('?') ? seeAllHref : `${seeAllHref}${tagQs}`;
 
   return (
-    <section aria-label="Related case studies" className="bg-black py-20">
+    <section aria-label="Related case studies" className="bg-[var(--cream-section)] py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
           <div>
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               Proof
             </span>
-            <h2 className="font-display mt-3 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-3 text-3xl sm:text-4xl text-[var(--ink)]">
               {heading}
             </h2>
             {subheading ? (
-              <p className="mt-2 text-white/70 max-w-2xl">{subheading}</p>
+              <p className="mt-2 text-[var(--ink-muted)] max-w-2xl">{subheading}</p>
             ) : null}
           </div>
           <Link
             href={seeAll}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent-primary)] hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--cobalt)] hover:underline"
             aria-label="Browse all case studies"
           >
             See all case studies
@@ -72,17 +72,17 @@ export async function CaseStudyTagStrip({
         </div>
 
         {studies.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-10 text-center">
-            <p className="text-white/80 text-lg font-semibold">
+          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-10 text-center">
+            <p className="text-[var(--ink)] text-lg font-semibold">
               We&rsquo;re publishing new case studies as deals close.
             </p>
-            <p className="mt-2 text-white/60 text-sm max-w-xl mx-auto">
+            <p className="mt-2 text-[var(--ink-meta)] text-sm max-w-xl mx-auto">
               Every study is tied to a verified deal, on-platform shares, and a
               real scholar-athlete. Check back soon, or browse what&rsquo;s live.
             </p>
             <Link
               href="/business/case-studies"
-              className="inline-flex items-center gap-1.5 mt-5 text-sm font-semibold text-[var(--accent-primary)]"
+              className="inline-flex items-center gap-1.5 mt-5 text-sm font-semibold text-[var(--cobalt)]"
             >
               Browse case studies
               <ArrowRight className="h-4 w-4" aria-hidden="true" />

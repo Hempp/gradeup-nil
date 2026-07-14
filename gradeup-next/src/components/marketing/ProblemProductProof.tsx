@@ -68,23 +68,23 @@ export function ProblemProductProof({
   return (
     <section
       aria-label="Problem, product, proof"
-      className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-20 border-y border-[var(--hairline)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {(eyebrow || heading || subheading) && (
           <div className="mb-12 max-w-3xl">
             {eyebrow ? (
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+              <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
                 {eyebrow}
               </span>
             ) : null}
             {heading ? (
-              <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+              <h2 className="font-display mt-4 text-3xl sm:text-4xl text-[var(--ink)]">
                 {heading}
               </h2>
             ) : null}
             {subheading ? (
-              <p className="mt-3 text-white/70 text-lg">{subheading}</p>
+              <p className="mt-3 text-[var(--ink-muted)] text-lg">{subheading}</p>
             ) : null}
           </div>
         )}
@@ -104,10 +104,10 @@ export function ProblemProductProof({
                     {num} · {c.label}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">{step.heading}</h3>
-                <p className="text-white/70 text-sm leading-relaxed">{step.body}</p>
+                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{step.heading}</h3>
+                <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{step.body}</p>
                 {step.bullets && step.bullets.length > 0 ? (
-                  <ul className="mt-4 space-y-2 text-sm text-white/80">
+                  <ul className="mt-4 space-y-2 text-sm text-[var(--ink-muted)]">
                     {step.bullets.map((b, bi) => (
                       <li key={bi} className="flex items-start gap-2">
                         <span

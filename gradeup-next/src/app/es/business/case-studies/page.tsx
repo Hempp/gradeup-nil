@@ -8,7 +8,7 @@
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowUpRight, FileSearch } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { listPublishedCaseStudies } from '@/lib/hs-nil/case-studies';
 import { CaseStudyCard } from '@/components/hs/CaseStudyCard';
@@ -84,28 +84,28 @@ export default async function SpanishCaseStudiesPage({ searchParams }: PageProps
     <>
       <section
         aria-label={cs.hero.titlePrefix}
-        className="relative bg-black pt-32 pb-16 overflow-hidden"
+        className="relative bg-[var(--cream)] pt-32 pb-16 overflow-hidden"
       >
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            background:
-              'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.1) 0%, transparent 50%)',
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
-            <Sparkles className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
-            <span className="text-sm font-medium text-white/90">{cs.hero.badge}</span>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-10 lg:grid-cols-[1fr_260px] items-center">
+          <div>
+            <span className="eyebrow inline-flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
+              {cs.hero.badge}
+            </span>
+            <h1 className="font-display mt-4 text-4xl sm:text-5xl lg:text-6xl text-[var(--ink)] max-w-3xl">
+              {cs.hero.titlePrefix}{' '}
+              <span className="text-[var(--cobalt)]">{cs.hero.titleAccent}</span>
+            </h1>
+            <p className="mt-4 text-lg text-[var(--ink-muted)] max-w-2xl">
+              {cs.hero.subtitle}
+            </p>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white max-w-3xl">
-            {cs.hero.titlePrefix}{' '}
-            <span className="text-[var(--accent-primary)]">{cs.hero.titleAccent}</span>
-          </h1>
-          <p className="mt-4 text-lg text-[var(--marketing-gray-400)] max-w-2xl">
-            {cs.hero.subtitle}
-          </p>
+          <div
+            className="duotone hidden lg:block rounded-lg overflow-hidden w-[260px] bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+            role="img"
+            aria-label="Atleta de preparatoria firmando un acuerdo NIL verificado"
+          />
         </div>
       </section>
 
@@ -116,8 +116,8 @@ export default async function SpanishCaseStudiesPage({ searchParams }: PageProps
               href="/es/business/case-studies"
               className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                 activeTagSet.size === 0
-                  ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                  : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                  ? 'border-[var(--cobalt)] bg-[var(--cobalt)]/10 text-[var(--cobalt)]'
+                  : 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)]'
               }`}
             >
               {cs.filters.all}
@@ -137,8 +137,8 @@ export default async function SpanishCaseStudiesPage({ searchParams }: PageProps
                   href={href}
                   className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                     active
-                      ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                      : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                      ? 'border-[var(--cobalt)] bg-[var(--cobalt)]/10 text-[var(--cobalt)]'
+                      : 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)]'
                   }`}
                 >
                   {t.label}
@@ -148,15 +148,20 @@ export default async function SpanishCaseStudiesPage({ searchParams }: PageProps
           </div>
 
           {studies.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center">
-              <h2 className="text-xl font-semibold text-white">{cs.empty.heading}</h2>
-              <p className="mt-2 text-[var(--marketing-gray-400)]">{cs.empty.body}</p>
+            <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-10 sm:p-12 text-center">
+              <div className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full border border-[var(--hairline)] bg-[var(--cream)] text-[var(--cobalt)]">
+                <FileSearch className="h-7 w-7" aria-hidden="true" />
+              </div>
+              <h2 className="text-xl font-semibold text-[var(--ink)]">{cs.empty.heading}</h2>
+              <p className="mt-2 text-[var(--ink-muted)]">{cs.empty.body}</p>
               <Link
                 href="/es/business/case-studies"
-                className="inline-flex items-center gap-2 mt-6 text-[var(--accent-primary)] font-semibold"
+                className="arrow-pill mt-6 text-[var(--cobalt)] font-semibold"
               >
                 {cs.empty.cta}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <span className="circle">
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </span>
               </Link>
             </div>
           ) : (

@@ -16,39 +16,39 @@ function audienceTone(audience: BlogAudience) {
   switch (audience) {
     case 'parents':
       return {
-        bg: 'bg-[var(--accent-gold)]/10',
-        border: 'border-[var(--accent-gold)]/30',
-        text: 'text-[var(--accent-gold)]',
+        bg: 'bg-amber-600/10',
+        border: 'border-amber-600/30',
+        text: 'text-amber-700',
       };
     case 'athletes':
       return {
-        bg: 'bg-[var(--accent-primary)]/10',
-        border: 'border-[var(--accent-primary)]/30',
-        text: 'text-[var(--accent-primary)]',
+        bg: 'bg-[var(--cobalt)]/10',
+        border: 'border-[var(--cobalt)]/30',
+        text: 'text-[var(--cobalt)]',
       };
     case 'brands':
       return {
-        bg: 'bg-[var(--accent-success)]/10',
-        border: 'border-[var(--accent-success)]/30',
-        text: 'text-[var(--accent-success)]',
+        bg: 'bg-emerald-600/10',
+        border: 'border-emerald-600/30',
+        text: 'text-emerald-700',
       };
     case 'state_ads':
       return {
-        bg: 'bg-white/5',
-        border: 'border-white/20',
-        text: 'text-white/80',
+        bg: 'bg-[var(--cream-section)]',
+        border: 'border-[var(--hairline)]',
+        text: 'text-[var(--ink-muted)]',
       };
     case 'coaches':
       return {
-        bg: 'bg-[var(--accent-primary)]/5',
-        border: 'border-[var(--accent-primary)]/20',
-        text: 'text-[var(--accent-primary)]/90',
+        bg: 'bg-[var(--cobalt)]/5',
+        border: 'border-[var(--cobalt)]/20',
+        text: 'text-[var(--cobalt)]/90',
       };
     case 'general':
       return {
-        bg: 'bg-white/5',
-        border: 'border-white/10',
-        text: 'text-white/70',
+        bg: 'bg-[var(--cream-section)]',
+        border: 'border-[var(--hairline)]',
+        text: 'text-[var(--ink-meta)]',
       };
   }
 }

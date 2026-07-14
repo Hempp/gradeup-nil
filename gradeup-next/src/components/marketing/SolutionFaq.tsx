@@ -56,7 +56,7 @@ export function SolutionFaq({
   return (
     <section
       aria-label="Frequently asked questions"
-      className="bg-[var(--marketing-gray-950)] py-20 border-t border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-20 border-t border-[var(--hairline)]"
     >
       <Script
         id={scriptId}
@@ -66,28 +66,28 @@ export function SolutionFaq({
         {JSON.stringify(jsonLd)}
       </Script>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
+        <h2 className="font-display text-3xl sm:text-4xl text-[var(--ink)]">
           {heading}
         </h2>
         {subheading ? (
-          <p className="mt-3 text-white/70 text-lg">{subheading}</p>
+          <p className="mt-3 text-[var(--ink-muted)] text-lg">{subheading}</p>
         ) : null}
 
-        <div className="mt-10 divide-y divide-white/10 border-y border-white/10">
+        <div className="mt-10 divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
           {items.map((it, i) => (
             <details key={i} className="group py-5">
-              <summary className="flex items-start justify-between gap-4 cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm py-1">
-                <span className="text-lg font-semibold text-white">
+              <summary className="flex items-start justify-between gap-4 cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)] rounded-sm py-1">
+                <span className="text-lg font-semibold text-[var(--ink)]">
                   {it.question}
                 </span>
                 <span
                   aria-hidden="true"
-                  className="flex-shrink-0 mt-1 h-6 w-6 rounded-full border border-white/20 text-white/70 flex items-center justify-center transition-transform group-open:rotate-45"
+                  className="flex-shrink-0 mt-1 h-6 w-6 rounded-full border border-[var(--hairline)] text-[var(--ink-meta)] flex items-center justify-center transition-transform group-open:rotate-45"
                 >
                   +
                 </span>
               </summary>
-              <p className="mt-3 text-white/70 leading-relaxed">{it.answer}</p>
+              <p className="mt-3 text-[var(--ink-muted)] leading-relaxed">{it.answer}</p>
             </details>
           ))}
         </div>

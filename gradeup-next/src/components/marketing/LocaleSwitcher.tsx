@@ -87,7 +87,7 @@ export function LocaleSwitcher({ className, variant = 'menu' }: LocaleSwitcherPr
               'px-3 py-1.5 rounded-md text-sm font-medium min-h-[44px] min-w-[44px] transition-colors',
               current === loc
                 ? 'bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30'
-                : 'text-white/70 hover:text-white hover:bg-white/5 border border-white/10',
+                : 'text-[var(--ink-meta)] hover:text-[var(--ink)] hover:bg-[var(--cream-section)] border border-[var(--hairline)]',
             )}
           >
             {getLocaleDisplayName(loc)}
@@ -105,7 +105,7 @@ export function LocaleSwitcher({ className, variant = 'menu' }: LocaleSwitcherPr
         aria-haspopup="true"
         aria-expanded={open}
         aria-label="Select language"
-        className="flex items-center gap-1.5 h-11 px-3 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-colors"
+        className="flex items-center gap-1.5 h-11 px-3 rounded-md text-sm font-medium text-[var(--ink-meta)] hover:text-[var(--ink)] hover:bg-[var(--cream-section)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] transition-colors"
       >
         <Globe className="h-4 w-4" aria-hidden="true" />
         <span className="uppercase">{current}</span>
@@ -113,7 +113,7 @@ export function LocaleSwitcher({ className, variant = 'menu' }: LocaleSwitcherPr
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-2 w-44 rounded-lg border border-white/10 bg-[var(--marketing-gray-900)]/95 backdrop-blur-md shadow-xl p-1 z-50"
+          className="absolute right-0 top-full mt-2 w-44 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)]/95 backdrop-blur-md shadow-xl p-1 z-50"
         >
           {SUPPORTED_LOCALES.map((loc) => (
             <button
@@ -123,8 +123,8 @@ export function LocaleSwitcher({ className, variant = 'menu' }: LocaleSwitcherPr
               type="button"
               onClick={() => handleSelect(loc)}
               className={cn(
-                'w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-white/5 focus:bg-white/5 focus:outline-none',
-                current === loc ? 'text-[var(--accent-primary)]' : 'text-white/80',
+                'w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-[var(--cream-section)] focus:bg-[var(--cream-section)] focus:outline-none',
+                current === loc ? 'text-[var(--accent-primary)]' : 'text-[var(--ink-meta)]',
               )}
             >
               <span>{getLocaleDisplayName(loc)}</span>

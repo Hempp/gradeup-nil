@@ -21,13 +21,13 @@ export interface StateNeighborsSidebarProps {
 function badgeTone(status: PermissionStatus) {
   switch (status) {
     case 'permitted':
-      return 'bg-[var(--accent-success)]/15 text-[var(--accent-success)] border-[var(--accent-success)]/30';
+      return 'bg-emerald-600/10 text-emerald-700 border-emerald-600/30';
     case 'limited':
-      return 'bg-[var(--accent-gold)]/15 text-[var(--accent-gold)] border-[var(--accent-gold)]/30';
+      return 'bg-amber-600/10 text-amber-700 border-amber-600/30';
     case 'transitioning':
-      return 'bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border-[var(--accent-primary)]/30';
+      return 'bg-[var(--cobalt)]/10 text-[var(--cobalt)] border-[var(--cobalt)]/30';
     case 'prohibited':
-      return 'bg-white/5 text-white/60 border-white/15';
+      return 'bg-[var(--cream-surface)] text-[var(--ink-meta)] border-[var(--hairline)]';
   }
 }
 
@@ -44,16 +44,16 @@ export function StateNeighborsSidebar({
   return (
     <section
       aria-label={`States near ${stateName}`}
-      className="bg-black py-16 border-b border-white/10"
+      className="bg-[var(--cream)] py-16 border-b border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+        <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
           Nearby states
         </span>
-        <h2 className="font-display mt-4 text-2xl sm:text-3xl font-bold text-white">
+        <h2 className="font-display mt-4 text-2xl sm:text-3xl text-[var(--ink)]">
           Compare {stateName}&rsquo;s rules to its neighbors
         </h2>
-        <p className="mt-2 text-white/60 text-sm max-w-2xl">
+        <p className="mt-2 text-[var(--ink-muted)] text-sm max-w-2xl">
           HS-NIL rules vary by state association. If you&rsquo;re a parent,
           coach, or brand operating across a region, it pays to know who
           allows what.
@@ -64,13 +64,13 @@ export function StateNeighborsSidebar({
             <li key={n.code}>
               <Link
                 href={`/blog/state-nil-rules/${n.slug}`}
-                className="group flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
+                className="group flex items-center justify-between gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 hover:border-[var(--cobalt)] transition-colors focus-visible:ring-2 focus-visible:ring-[var(--cobalt)] focus-visible:outline-none"
               >
                 <div>
-                  <div className="text-white font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
+                  <div className="text-[var(--ink)] font-semibold group-hover:text-[var(--cobalt)] transition-colors">
                     {n.name}
                   </div>
-                  <div className="text-xs text-white/50 mt-0.5">
+                  <div className="text-xs text-[var(--ink-meta)] mt-0.5">
                     See {n.name} HS NIL rules
                   </div>
                 </div>

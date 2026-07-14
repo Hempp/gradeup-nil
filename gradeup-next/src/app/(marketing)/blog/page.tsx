@@ -27,9 +27,9 @@ export const revalidate = 3600;
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'GradeUp Blog — NIL for high-school athletes, parents, and brands',
+    title: 'GradeUp Blog — NIL for high-school athletes, parents, and brands | GradeUp, part of StatStaq',
     description:
-      'Plain-English guides to high-school NIL. Parent playbooks, athlete strategy, brand campaign tactics, state-by-state rule breakdowns, and everything in between.',
+      "Plain-English guides to high-school NIL. GradeUp verifies the GPA; StatStaq's team runs the deal. Parent playbooks, athlete strategy, brand campaign tactics, state-by-state rule breakdowns, and everything in between.",
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -60,36 +60,36 @@ export default function BlogIndexPage() {
 
       <section
         aria-label="Blog hero"
-        className="relative bg-black pt-32 pb-14 overflow-hidden"
+        className="relative bg-[var(--cream)] pt-32 pb-14 overflow-hidden"
       >
-        <div
-          className="absolute inset-0 opacity-40 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.09) 0%, transparent 55%)',
-          }}
-        />
-        <div className="absolute inset-0 hero-grid opacity-30 pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
-            <Sparkles
-              className="h-4 w-4 text-[var(--accent-primary)]"
-              aria-hidden="true"
-            />
-            <span className="text-sm font-medium text-white/90">
-              {allPosts.length + stateCount} published articles
-            </span>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <span className="eyebrow">Editorial library</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] mt-4 mb-6">
+              <Sparkles
+                className="h-4 w-4 text-[var(--accent-primary)]"
+                aria-hidden="true"
+              />
+              <span className="text-sm font-medium text-[var(--ink)]">
+                {allPosts.length + stateCount} published articles
+              </span>
+            </div>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--ink)] max-w-4xl">
+              The GradeUp{' '}
+              <span className="text-[var(--accent-primary)]">library.</span>
+            </h1>
+            <p className="mt-5 text-lg sm:text-xl text-[var(--ink-muted)] max-w-3xl">
+              Plain-English guides to high-school NIL — for the parent reading
+              their first contract, the athlete landing a first deal, and the
+              brand running their first local campaign.
+            </p>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white max-w-4xl">
-            The GradeUp{' '}
-            <span className="text-[var(--accent-primary)]">library.</span>
-          </h1>
-          <p className="mt-5 text-lg sm:text-xl text-white/70 max-w-3xl">
-            Plain-English guides to high-school NIL — for the parent reading
-            their first contract, the athlete landing a first deal, and the
-            brand running their first local campaign.
-          </p>
+          <div
+            className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-03.jpg)` }}
+            role="img"
+            aria-label="Scholar-athlete reviewing NIL playbook materials"
+          />
         </div>
       </section>
 
@@ -101,7 +101,7 @@ export default function BlogIndexPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/blog/state-nil-rules"
-            className="group block rounded-2xl border border-white/10 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-[var(--accent-gold)]/5 p-8 sm:p-10 hover:border-[var(--accent-primary)]/30 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
+            className="group block rounded-2xl border border-[var(--hairline)] bg-gradient-to-br from-[var(--accent-primary)]/10 via-[var(--cream-section)] to-[var(--accent-gold)]/5 p-8 sm:p-10 hover:border-[var(--accent-primary)]/30 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
             aria-label={`State NIL rules — ${stateCount} states and DC`}
           >
             <div className="flex items-start justify-between gap-6 flex-wrap">
@@ -110,10 +110,10 @@ export default function BlogIndexPage() {
                   <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                   Rules reference
                 </div>
-                <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white group-hover:text-[var(--accent-primary)] transition-colors">
+                <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--ink)] group-hover:text-[var(--accent-primary)] transition-colors">
                   HS NIL rules for every state
                 </h2>
-                <p className="mt-3 text-white/70 max-w-2xl">
+                <p className="mt-3 text-[var(--ink-muted)] max-w-2xl">
                   All 50 states plus DC, grouped by permission status. Every
                   page pulls live from our compliance engine — so the rules you
                   read are the rules we enforce on every deal.
@@ -140,10 +140,10 @@ export default function BlogIndexPage() {
             return (
               <div key={audience}>
                 <div className="mb-6 flex items-center gap-3 flex-wrap">
-                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/80 text-xs font-semibold uppercase tracking-widest">
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)] text-xs font-semibold uppercase tracking-widest">
                     {audienceLabel(audience)}
                   </span>
-                  <span className="text-sm text-white/50">
+                  <span className="text-sm text-[var(--ink-meta)]">
                     {posts.length} article{posts.length === 1 ? '' : 's'}
                   </span>
                 </div>
@@ -157,13 +157,15 @@ export default function BlogIndexPage() {
           })}
 
           {/* Final CTA */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-white">
+          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-8 text-center">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[var(--ink)]">
               Ready to put this into practice?
             </h2>
-            <p className="mt-3 text-white/70 max-w-2xl mx-auto">
-              GradeUp is the compliance-first NIL platform built for
-              scholar-athletes. Free to start, concierge support included.
+            <p className="mt-3 text-[var(--ink-muted)] max-w-2xl mx-auto">
+              GradeUp verifies your GPA — free, and part of StatStaq.
+              Once you qualify, StatStaq&rsquo;s team produces your content,
+              values your brand, sources your deals, and negotiates your
+              contracts.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
               <Link

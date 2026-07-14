@@ -34,14 +34,14 @@ const PAGE_URL = '/solutions/brands/local-restaurant';
 
 export const metadata: Metadata = {
   title:
-    'Local restaurant brand NIL campaigns | HS scholar-athletes | GradeUp',
+    'Local restaurant brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
   description:
-    'QSR, cafes, ice-cream shops, and family restaurants run compliance-handled NIL campaigns with verified HS scholar-athletes across 7 pilot states. Pay on approval, no alcohol exposure, real foot traffic.',
+    'QSR, cafes, ice-cream shops, and family restaurants partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. Pay on approval, no alcohol exposure.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
-    title: 'Local restaurant NIL campaigns with HS scholar-athletes',
+    title: 'Local restaurant NIL campaigns with verified scholar-athletes',
     description:
-      'Fill seats on a Tuesday. Sponsor a junior QB with 2,000 followers. We handle every compliance check.',
+      'Fill seats on a Tuesday. Sponsor a junior QB with 2,000 followers. GradeUp handles every compliance check; StatStaq’s team runs the deal.',
     type: 'website',
     url: PAGE_URL,
   },
@@ -108,7 +108,7 @@ export default function LocalRestaurantPage() {
         scriptId="solutions-brands-local-restaurant-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Local Restaurant NIL Campaigns"
-        description="Compliance-handled NIL campaigns connecting QSR, cafes, and family restaurants with verified HS scholar-athletes in 7 pilot states."
+        description="GradeUp-verified HS scholar-athletes partner with QSR, cafes, and family restaurants; StatStaq’s team runs the campaign. Live in 7 pilot states."
         audience="Local restaurants, QSR, cafes, bakeries, and family-owned food brands"
       />
 
@@ -116,7 +116,7 @@ export default function LocalRestaurantPage() {
         eyebrow="For local restaurants"
         title="Fill the Tuesday booths."
         titleAccent="Sponsor a scholar-athlete."
-        subtitle="QSR, cafes, ice-cream shops, bakeries, and family restaurants run NIL campaigns with HS scholar-athletes in their ZIP code. Compliance handled. Pay on approval. No alcohol exposure."
+        subtitle="QSR, cafes, ice-cream shops, bakeries, and family restaurants partner with GradeUp-verified HS scholar-athletes in their ZIP code — StatStaq’s team runs the campaign. Pay on approval. No alcohol exposure."
         primaryCta={{
           label: 'Start a restaurant campaign',
           href: '/hs/signup/brand',
@@ -126,7 +126,11 @@ export default function LocalRestaurantPage() {
           label: 'See what to pay',
           href: '/solutions/brands/fmv',
         }}
-        supportingNote="Live in 7 pilot states. No setup fee. First deal typically ships in 7 days."
+        supportingNote="Live in 7 pilot states. No setup fee."
+        image={{
+          src: '/editorial/photo-02.jpg',
+          alt: 'Golden-hour stadium shot representing a local restaurant NIL campaign',
+        }}
       />
 
       <ConcreteExampleSection />
@@ -159,10 +163,10 @@ export default function LocalRestaurantPage() {
           },
           {
             kind: 'proof',
-            heading: 'Food & beverage is our busiest vertical',
-            body: 'Food campaigns are the highest fit rate, fastest close time, and lowest rejection rate of any brand vertical in the pilot period.',
+            heading: 'Food & beverage moves fast',
+            body: 'Grand-openings are the most common first campaign in this vertical. GradeUp verifies the athlete and StatStaq’s team runs the match and disclosure end-to-end, so the first deal can ship quickly.',
             bullets: [
-              'Grand-openings are the #1 first campaign',
+              'Grand-openings are the most common first campaign',
               'Athletes convert friends into Friday-night diners',
               'Multi-location packages prorate disclosure',
             ],
@@ -196,7 +200,7 @@ export default function LocalRestaurantPage() {
       <HorizontalVerticalNav current="local-restaurant" />
 
       <SolutionCtaBand
-        heading="Your first campaign can ship this week."
+        heading="Partner with a verified scholar-athlete near you."
         subheading="No setup fee. No monthly minimum. You only pay when the athlete delivers and you approve."
         primaryLabel="Start a restaurant campaign"
         primaryHref="/hs/signup/brand"
@@ -216,10 +220,10 @@ function ConcreteExampleSection() {
   return (
     <section
       aria-label="Concrete campaign example"
-      className="bg-black py-16 border-y border-white/10"
+      className="bg-[var(--cream-section)] py-16 border-y border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-black via-[var(--marketing-gray-950)] to-black p-8 md:p-10">
+        <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-[var(--cream-surface)] p-8 md:p-10">
           <div className="flex items-start gap-3 mb-4">
             <div className="p-2 rounded-lg bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20">
               <Utensils
@@ -227,11 +231,11 @@ function ConcreteExampleSection() {
                 aria-hidden="true"
               />
             </div>
-            <span className="text-xs uppercase tracking-widest text-[var(--accent-primary)] font-semibold mt-1.5">
+            <span className="eyebrow text-xs uppercase tracking-widest text-[var(--accent-primary)] font-semibold mt-1.5">
               What this looks like in practice
             </span>
           </div>
-          <p className="text-xl md:text-2xl text-white leading-relaxed">
+          <p className="text-xl md:text-2xl text-[var(--ink)] leading-relaxed">
             A family-owned pizzeria in Long Beach pays a{' '}
             <span className="text-[var(--accent-primary)] font-semibold">
               junior football player with 1,800 Instagram followers
@@ -282,7 +286,7 @@ function CampaignShapeSection() {
       className="bg-[var(--marketing-gray-950)] py-20"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-10">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-10">
           What a typical campaign{' '}
           <span className="text-[var(--accent-primary)]">looks like</span>
         </h2>
@@ -290,14 +294,14 @@ function CampaignShapeSection() {
           {steps.map((s) => (
             <li
               key={s.n}
-              className="flex gap-4 rounded-xl border border-white/10 bg-black/40 p-5 hover:border-[var(--accent-primary)]/30 transition-colors"
+              className="flex gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 hover:border-[var(--accent-primary)]/30 transition-colors"
             >
               <div className="shrink-0 w-10 h-10 rounded-lg bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 flex items-center justify-center font-bold text-[var(--accent-primary)]">
                 {s.n}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">{s.title}</h3>
-                <p className="text-sm text-white/70 mt-1">{s.body}</p>
+                <h3 className="text-lg font-semibold text-[var(--ink)]">{s.title}</h3>
+                <p className="text-sm text-[var(--ink-muted)] mt-1">{s.body}</p>
               </div>
             </li>
           ))}
@@ -317,13 +321,13 @@ function ValuationPanel({
   highCents: number;
 }) {
   return (
-    <section aria-label="Sample valuation" className="bg-black py-20">
+    <section aria-label="Sample valuation" className="bg-[var(--cream)] py-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[var(--accent-gold)]/5 via-black to-[var(--accent-primary)]/5 p-8 md:p-10">
-          <span className="text-xs uppercase tracking-widest text-[var(--accent-gold)] font-semibold">
+        <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-8 md:p-10">
+          <span className="eyebrow text-xs uppercase tracking-widest text-[var(--accent-gold)] font-semibold">
             Sample numbers
           </span>
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-white mt-3">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--ink)] mt-3">
             A junior football player, CA, 500-2k followers, 3.0-3.5 GPA
             verified
           </h2>
@@ -345,10 +349,10 @@ function ValuationPanel({
               hint="Multi-restaurant, appearance-heavy"
             />
           </div>
-          <p className="mt-6 text-sm text-white/60 max-w-3xl">
+          <p className="mt-6 text-sm text-[var(--ink-muted)] max-w-3xl">
             A single restaurant campaign for this athlete (one IG story +
             one appearance) lands around{' '}
-            <span className="text-white font-semibold">$150 – $350</span>.
+            <span className="text-[var(--ink)] font-semibold">$150 – $350</span>.
             The annual range above assumes a realistic mix of 3-5 deals.
             Live numbers come from the{' '}
             <Link
@@ -381,27 +385,27 @@ function Stat({
       className={`rounded-xl border p-5 text-center ${
         accent
           ? 'border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/5'
-          : 'border-white/10 bg-white/5'
+          : 'border-[var(--hairline)] bg-[var(--cream-surface)]'
       }`}
     >
-      <div className="text-xs uppercase tracking-widest text-white/50">
+      <div className="text-xs uppercase tracking-widest text-[var(--ink-meta)]">
         {label}
       </div>
       <div
         className={`font-display text-3xl font-bold mt-2 ${
-          accent ? 'text-[var(--accent-primary)]' : 'text-white'
+          accent ? 'text-[var(--accent-primary)]' : 'text-[var(--ink)]'
         }`}
       >
         {value}
       </div>
-      <div className="text-xs text-white/60 mt-2">{hint}</div>
+      <div className="text-xs text-[var(--ink-muted)] mt-2">{hint}</div>
     </div>
   );
 }
 
 function ComplianceCallout() {
   return (
-    <section aria-label="Compliance guardrails" className="bg-black py-20">
+    <section aria-label="Compliance guardrails" className="bg-[var(--cream-section)] py-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-[var(--accent-gold)]/30 bg-[var(--accent-gold)]/5 p-8 md:p-10">
           <div className="flex items-center gap-3 mb-5">
@@ -409,11 +413,11 @@ function ComplianceCallout() {
               className="h-6 w-6 text-[var(--accent-gold)]"
               aria-hidden="true"
             />
-            <h2 className="font-display text-2xl font-bold text-white">
+            <h2 className="font-display text-2xl font-bold text-[var(--ink)]">
               What you cannot do
             </h2>
           </div>
-          <p className="text-white/70 mb-6">
+          <p className="text-[var(--ink-muted)] mb-6">
             Restaurants are one of the cleanest HS-NIL verticals, but two
             rules matter.
           </p>
@@ -435,7 +439,7 @@ function ComplianceCallout() {
               automatically.
             </ComplianceItem>
           </ul>
-          <p className="text-sm text-white/60 mt-6">
+          <p className="text-sm text-[var(--ink-muted)] mt-6">
             Compliance is our wedge. We document every guardrail so your
             legal team can audit it in 10 minutes. Compare across verticals
             on{' '}
@@ -460,7 +464,7 @@ function ComplianceItem({ children }: { children: React.ReactNode }) {
         className="h-5 w-5 text-[var(--accent-success)] shrink-0 mt-0.5"
         aria-hidden="true"
       />
-      <span className="text-white/85">{children}</span>
+      <span className="text-[var(--ink-muted)]">{children}</span>
     </li>
   );
 }
@@ -476,11 +480,11 @@ function HorizontalVerticalNav({ current }: { current: string }) {
   return (
     <section
       aria-label="Other brand verticals"
-      className="bg-black py-16 border-t border-white/10"
+      className="bg-[var(--cream-section)] py-16 border-t border-[var(--hairline)]"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm uppercase tracking-widest text-white/50 font-semibold">
+          <h2 className="text-sm uppercase tracking-widest text-[var(--ink-meta)] font-semibold">
             Other brand verticals
           </h2>
           <Link
@@ -498,7 +502,7 @@ function HorizontalVerticalNav({ current }: { current: string }) {
               <Link
                 key={v.slug}
                 href={`/solutions/brands/${v.slug}`}
-                className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-white/80 hover:border-[var(--accent-primary)]/40 hover:bg-[var(--accent-primary)]/5 hover:text-white transition-colors"
+                className="px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] text-sm text-[var(--ink-muted)] hover:border-[var(--accent-primary)]/40 hover:bg-[var(--accent-primary)]/5 hover:text-[var(--ink)] transition-colors"
               >
                 {v.label}
               </Link>

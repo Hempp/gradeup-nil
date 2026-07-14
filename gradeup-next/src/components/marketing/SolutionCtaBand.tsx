@@ -1,10 +1,10 @@
 /**
  * SolutionCtaBand — final CTA band rendered at the bottom of each
- * /solutions/* persona page. Matches the aurora-gradient treatment used on
- * the main landing page's final CTA.
+ * /solutions/* persona page. Cobalt editorial band matching the cream
+ * theme's arrow-pill CTA treatment.
  */
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 export interface SolutionCtaBandProps {
   heading: string;
@@ -29,21 +29,14 @@ export function SolutionCtaBand({
   return (
     <section
       aria-label="Final call to action"
-      className="relative py-20 overflow-hidden bg-gradient-to-br from-[var(--accent-primary)]/25 via-black to-[var(--accent-gold)]/20 border-t border-white/10"
+      className="relative py-20 overflow-hidden bg-[var(--cobalt)] border-t border-[var(--hairline)]"
     >
-      <div
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse at 70% 20%, rgba(0,240,255,0.2) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(255,200,0,0.12) 0%, transparent 55%)',
-        }}
-      />
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#FBF9F2]">
           {heading}
         </h2>
         {subheading ? (
-          <p className="mt-4 text-white/70 text-lg max-w-2xl mx-auto">
+          <p className="mt-4 text-[#FBF9F2]/80 text-lg max-w-2xl mx-auto">
             {subheading}
           </p>
         ) : null}
@@ -51,16 +44,18 @@ export function SolutionCtaBand({
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href={primaryHref}
-            className="btn-marketing-primary inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold shadow-lg"
+            className="arrow-pill inline-flex items-center justify-center gap-3 px-6 py-3 min-h-[44px] rounded-full bg-[var(--cream-surface)] text-[var(--cobalt)] font-semibold shadow-lg"
             aria-label={primaryLabel}
           >
             {primaryLabel}
-            <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            <span className="circle inline-flex items-center justify-center h-6 w-6 rounded-full bg-[var(--cobalt)]">
+              <ArrowUpRight className="h-4 w-4 text-[#FBF9F2]" aria-hidden="true" />
+            </span>
           </Link>
           {secondaryLabel && secondaryHref ? (
             <Link
               href={secondaryHref}
-              className="btn-marketing-outline inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold border border-[#FBF9F2]/40 text-[#FBF9F2] hover:bg-[#FBF9F2]/10 transition-colors"
               aria-label={secondaryLabel}
             >
               {secondaryLabel}
@@ -69,7 +64,7 @@ export function SolutionCtaBand({
         </div>
 
         {trustNote ? (
-          <p className="mt-5 text-sm text-white/60">{trustNote}</p>
+          <p className="mt-5 text-sm text-[#FBF9F2]/60">{trustNote}</p>
         ) : null}
       </div>
     </section>

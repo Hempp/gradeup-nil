@@ -34,7 +34,7 @@ const STATE_NAMES: Record<string, string> = {
 };
 
 const TIER_TONE: Record<VerificationTier, string> = {
-  self_reported: 'border-white/15 bg-white/5 text-white/70',
+  self_reported: 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)]',
   user_submitted: 'border-blue-400/40 bg-blue-400/10 text-blue-200',
   institution_verified:
     'border-emerald-400/40 bg-emerald-400/10 text-emerald-200',
@@ -71,12 +71,12 @@ export function PublicTrajectoryView({
     .join(' • ');
 
   return (
-    <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+    <main className="marketing-dark min-h-screen bg-[var(--cream)] text-[var(--ink)]">
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-8">
         {backHref && (
           <Link
             href={backHref}
-            className="mb-6 inline-flex items-center text-xs font-semibold uppercase tracking-widest text-white/50 hover:text-white"
+            className="mb-6 inline-flex items-center text-xs font-semibold uppercase tracking-widest text-[var(--ink-meta)] hover:text-[var(--cobalt)]"
           >
             ← Back to dashboard
           </Link>
@@ -84,17 +84,17 @@ export function PublicTrajectoryView({
         <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
           Academic-athletic trajectory
         </p>
-        <h1 className="mt-3 font-display text-4xl text-white md:text-5xl">
+        <h1 className="mt-3 font-display text-4xl text-[var(--ink)] md:text-5xl">
           {identity.firstName} {identity.lastInitial}.
         </h1>
-        <p className="mt-2 text-sm text-white/70 md:text-base">{headerLine}</p>
+        <p className="mt-2 text-sm text-[var(--ink-muted)] md:text-base">{headerLine}</p>
 
         <div className="mt-6 flex flex-wrap items-end gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--ink-meta)]">
               Current GPA
             </p>
-            <p className="mt-1 font-display text-6xl leading-none text-white">
+            <p className="mt-1 font-display text-6xl leading-none text-[var(--ink)]">
               {formatGpa(identity.currentGpa)}
             </p>
           </div>
@@ -107,10 +107,10 @@ export function PublicTrajectoryView({
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-10">
-        <h2 className="font-display text-2xl text-white md:text-3xl">
+        <h2 className="font-display text-2xl text-[var(--ink)] md:text-3xl">
           GPA over time
         </h2>
-        <p className="mt-1 text-sm text-white/60">
+        <p className="mt-1 text-sm text-[var(--ink-meta)]">
           Every reading is tied to a verification tier — brands and coaches
           can tell a self-report from a transcript at a glance.
         </p>
@@ -120,7 +120,7 @@ export function PublicTrajectoryView({
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-10">
-        <h2 className="font-display text-2xl text-white md:text-3xl">
+        <h2 className="font-display text-2xl text-[var(--ink)] md:text-3xl">
           Milestones
         </h2>
         <div className="mt-4">
@@ -129,10 +129,10 @@ export function PublicTrajectoryView({
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
-        <h2 className="font-display text-2xl text-white md:text-3xl">
+        <h2 className="font-display text-2xl text-[var(--ink)] md:text-3xl">
           Completed deals
         </h2>
-        <p className="mt-1 text-sm text-white/60">
+        <p className="mt-1 text-sm text-[var(--ink-meta)]">
           Every dollar here settled. Brand, amount, and approximate date —
           nothing private.
         </p>
@@ -143,10 +143,10 @@ export function PublicTrajectoryView({
 
       {showBranding && (
         <footer className="mx-auto max-w-5xl px-6 pb-12">
-          <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-4 text-xs text-white/60">
+          <div className="flex items-center justify-between rounded-2xl border border-[var(--hairline)] bg-white/[0.03] px-6 py-4 text-xs text-[var(--ink-meta)]">
             <span>
               Verified trajectory via{' '}
-              <span className="font-semibold text-white">GradeUp NIL</span>
+              <span className="font-semibold text-[var(--ink)]">GradeUp NIL</span>
             </span>
             <Link
               href="/hs"

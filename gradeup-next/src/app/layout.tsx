@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
 import Script from "next/script";
-import { Geist, Geist_Mono, Bebas_Neue, DM_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Bebas_Neue, DM_Sans, Inter, Anton, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
 import { KeyboardShortcutsProvider } from "@/components/ui/keyboard-shortcuts";
@@ -12,6 +11,7 @@ import { GoogleAnalytics } from "@/components/providers/google-analytics";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { ServiceWorkerProvider } from "@/components/providers/service-worker-provider";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
+import { metadata } from "./metadata";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // OPTIMIZED FONT LOADING
@@ -46,65 +46,29 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "GradeUp NIL - Your GPA Is Worth Money",
-    template: "%s | GradeUp NIL",
-  },
-  description: "The only NIL platform where grades unlock better deals. $127,450+ paid to 847 verified athletes. Higher GPA = higher value. Join free today.",
-  keywords: ["NIL", "student athlete", "college sports", "NIL deals", "athlete sponsorship", "name image likeness", "GradeUp", "college athlete earnings", "NCAA NIL", "athlete brand deals", "scholar athlete"],
-  authors: [{ name: "GradeUp NIL" }],
-  creator: "GradeUp NIL",
-  publisher: "GradeUp NIL",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL("https://gradeup-next.vercel.app"),
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://gradeup-next.vercel.app",
-    siteName: "GradeUp NIL",
-    title: "GradeUp NIL - Your GPA Is Worth Money",
-    description: "The only NIL platform where grades unlock better deals. $127,450+ paid to 847 verified athletes. Higher GPA = higher value.",
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=630&fit=crop",
-        width: 1200,
-        height: 630,
-        alt: "GradeUp NIL - Student Athlete Platform",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "GradeUp NIL - Your GPA Is Worth Money",
-    description: "The only NIL platform where grades unlock better deals. $127,450+ paid to athletes. Join free today.",
-    images: ["https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=630&fit=crop"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "32x32" },
-    ],
-    shortcut: "/favicon.svg",
-    apple: "/logo-icon.svg",
-  },
-  manifest: "/manifest.json",
-};
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
+// Editorial system: heavy condensed display (headlines) + transitional serif (body)
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+export { metadata };
 
 export default function RootLayout({
   children,
@@ -117,8 +81,19 @@ export default function RootLayout({
     name: "GradeUp NIL",
     url: "https://gradeup-next.vercel.app",
     logo: "https://gradeup-next.vercel.app/logo.svg",
+    parentOrganization: { "@type": "Organization", name: "StatStaq" },
     description:
-      "NIL marketplace connecting college and high-school scholar-athletes with brands. Academic GPA is a first-class filter alongside sport and social reach; parent-consent depth for minors.",
+      "GradeUp is the verified-GPA scholar-athlete layer of StatStaq's NIL agency.",
+    makesOffer: {
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: "Done-for-you NIL representation for scholar-athletes",
+        provider: { "@type": "Organization", name: "StatStaq" },
+        serviceType:
+          "Content production, brand valuation, deal sourcing, contract negotiation",
+      },
+    },
   };
 
   return (
@@ -135,7 +110,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} ${inter.variable} ${anton.variable} ${sourceSerif.variable} antialiased`}
         suppressHydrationWarning
       >
         <AuthProvider>

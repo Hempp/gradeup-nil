@@ -65,7 +65,7 @@ export function BrandFmvCalculatorClient() {
         {/* Primary CTA: sign up + prefill campaign */}
         <Link
           href={signupHref}
-          className="flex items-center justify-between gap-3 rounded-xl bg-[var(--accent-primary)] px-5 py-4 text-sm font-semibold text-black transition-transform hover:scale-[1.01]"
+          className="btn-marketing-primary flex items-center justify-between gap-3 rounded-xl px-5 py-4 text-sm font-semibold"
         >
           <span>Sign up as a brand &mdash; post this campaign</span>
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -74,7 +74,7 @@ export function BrandFmvCalculatorClient() {
         {/* Secondary CTA: talk to the team (opt-in only) */}
         <Link
           href="mailto:brands@gradeupnil.com?subject=Talk%20to%20the%20GradeUp%20HS%20team"
-          className="flex items-center justify-between gap-3 rounded-xl border border-white/20 bg-white/5 px-5 py-4 text-sm font-medium text-white/80 transition-colors hover:border-white/40 hover:text-white"
+          className="flex items-center justify-between gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] px-5 py-4 text-sm font-medium text-[var(--ink-muted)] transition-colors hover:border-[var(--cobalt)] hover:text-[var(--ink)]"
         >
           <span className="inline-flex items-center gap-2">
             <Mail className="h-4 w-4" aria-hidden="true" />
@@ -86,12 +86,12 @@ export function BrandFmvCalculatorClient() {
         <button
           type="button"
           onClick={() => setState(null)}
-          className="w-full rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3 text-sm font-medium text-white/70 transition-colors hover:border-white/30 hover:text-white"
+          className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream)] px-4 py-3 text-sm font-medium text-[var(--ink-muted)] transition-colors hover:border-[var(--cobalt)] hover:text-[var(--ink)]"
         >
           Recalculate with different inputs
         </button>
 
-        <p className="text-xs text-white/40">
+        <p className="text-xs text-[var(--ink-meta)]">
           Your inputs logged anonymously (hashed IP, coarse UA) for
           model calibration. We never capture your email unless you
           click &ldquo;Talk to our team.&rdquo;

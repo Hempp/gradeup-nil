@@ -29,9 +29,9 @@ export const revalidate = 3600;
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp HS',
+    title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp, part of StatStaq',
     description:
-      'Know before you negotiate. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
+      'Know before you negotiate — or before StatStaq’s team negotiates on the athlete’s behalf. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
     path: '/solutions/brands/fmv',
   }),
   keywords: [
@@ -48,56 +48,36 @@ export const metadata = {
 
 export default function BrandFmvPage() {
   return (
-    <div className="relative min-h-screen bg-black text-white">
-      {/* Background effects */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full opacity-30 blur-3xl"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, rgba(0, 240, 255, 0.3) 0%, transparent 70%)',
-          }}
-        />
-        <div
-          className="absolute -right-40 top-40 h-[600px] w-[600px] rounded-full opacity-20 blur-3xl"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.25) 0%, transparent 70%)',
-          }}
-        />
-      </div>
-
+    <div className="relative min-h-screen bg-[var(--cream)] text-[var(--ink)]">
       <div className="relative">
         {/* Hero */}
         <section
           aria-label="Brand FMV calculator hero"
-          className="mx-auto max-w-5xl px-4 pt-24 pb-10 sm:px-6 sm:pt-32 lg:px-8"
+          className="mx-auto grid max-w-6xl gap-10 px-4 pt-24 pb-10 sm:px-6 sm:pt-32 lg:grid-cols-2 lg:items-center lg:px-8"
         >
-          <div className="text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm">
+          <div className="text-center lg:text-left">
+            <div className="eyebrow mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] px-4 py-2 text-sm">
               <Sparkles
                 className="h-3.5 w-3.5 text-[var(--accent-primary)]"
                 aria-hidden="true"
               />
-              <span className="text-white/80">
+              <span className="text-[var(--ink-muted)]">
                 For brands &middot; Free &middot; No signup to see estimate
               </span>
             </div>
 
-            <h1 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-[var(--ink)]">
               What should I pay an{' '}
-              <span className="bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-gold)] bg-clip-text text-transparent">
-                HS athlete?
-              </span>
+              <span className="text-[var(--cobalt)]">HS athlete?</span>
             </h1>
 
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[var(--ink-muted)] sm:text-lg lg:mx-0">
               Know before you negotiate. Ranges calibrated to pilot states
               and current HS-NIL deal data. Same engine the athletes use to
               see what they&rsquo;re worth &mdash; reframed for you.
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-white/50">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-[var(--ink-meta)] lg:justify-start">
               <span className="inline-flex items-center gap-1.5">
                 <Shield
                   className="h-3.5 w-3.5 text-[var(--accent-primary)]"
@@ -115,6 +95,13 @@ export default function BrandFmvPage() {
               <span>Campaign preview included</span>
             </div>
           </div>
+
+          <div
+            className="duotone relative aspect-[4/3] overflow-hidden rounded-2xl bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-07.jpg)` }}
+            role="img"
+            aria-label="Brand team reviewing NIL campaign fair-market-value estimates"
+          />
         </section>
 
         {/* Calculator */}
@@ -130,11 +117,11 @@ export default function BrandFmvPage() {
           aria-label="How this tool works"
           className="mx-auto max-w-4xl px-4 pb-16 sm:px-6 lg:px-8"
         >
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-10">
-            <h2 className="font-display text-2xl font-semibold sm:text-3xl">
+          <div className="card-marketing p-6 sm:p-10">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl text-[var(--ink)]">
               Same engine, different question
             </h2>
-            <p className="mt-3 text-white/70">
+            <p className="mt-3 text-[var(--ink-muted)]">
               Athletes land on{' '}
               <Link
                 href="/hs/valuation"
@@ -152,35 +139,36 @@ export default function BrandFmvPage() {
               {FACTORS.map((f) => (
                 <div
                   key={f.title}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                  className="rounded-xl border border-[var(--hairline)] bg-[var(--cream)] p-4"
                 >
                   <div className="text-sm font-semibold text-[var(--accent-primary)]">
                     {f.title}
                   </div>
-                  <p className="mt-1 text-sm text-white/70">{f.body}</p>
+                  <p className="mt-1 text-sm text-[var(--ink-muted)]">{f.body}</p>
                 </div>
               ))}
             </div>
 
-            <p className="mt-6 text-sm text-white/60">
-              <strong className="text-white">What this is not:</strong>{' '}
+            <p className="mt-6 text-sm text-[var(--ink-muted)]">
+              <strong className="text-[var(--ink)]">What this is not:</strong>{' '}
               a quote, offer, or guarantee. Actual deals are brokered
-              between brand + athlete + parent on GradeUp HS. The range
-              is a starting point so you walk into the conversation
-              anchored, not bluffing.
+              between brand + athlete + parent on GradeUp HS &mdash;
+              StatStaq&rsquo;s team runs the negotiation on the athlete&rsquo;s
+              side. The range is a starting point so you walk into the
+              conversation anchored, not bluffing.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/business/case-studies"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:border-white/40 hover:text-white"
+                className="btn-marketing-outline inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium"
               >
                 See brand case studies
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
               <Link
                 href="/hs/signup/brand"
-                className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+                className="btn-marketing-primary inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
               >
                 Sign up as a brand
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -194,7 +182,7 @@ export default function BrandFmvPage() {
           aria-label="Honest framing"
           className="mx-auto max-w-3xl px-4 pb-24 sm:px-6 lg:px-8"
         >
-          <div className="text-center text-sm text-white/50">
+          <div className="text-center text-sm text-[var(--ink-meta)]">
             <p>
               Estimates only, returned based on publicly reported deal
               ranges. Real market numbers vary widely by region, timing,
@@ -221,7 +209,7 @@ const FACTORS: { title: string; body: string }[] = [
   },
   {
     title: 'Athlete count scales the campaign',
-    body: 'Total campaign cost = per-athlete x count. At 10+ athletes we surface a volume-rate ribbon &mdash; ask us for a rate card.',
+    body: 'Total campaign cost = per-athlete x count. At 10+ athletes we surface a volume-rate ribbon — ask us for a rate card.',
   },
   {
     title: 'State rules flag compliance',

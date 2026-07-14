@@ -5,13 +5,13 @@ import Link from 'next/link';
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: 'Brand Plus Subscription Terms — GradeUp HS-NIL',
+  title: 'Brand Plus Subscription Terms — GradeUp HS-NIL, part of StatStaq',
   description:
-    'Subscription terms for the GradeUp HS-NIL Brand Plus plan. Term, payment, cancellation, service levels, fees, termination, limitation of liability, and governing law.',
+    'Subscription terms for the GradeUp HS-NIL Brand Plus plan, part of StatStaq. Term, payment, cancellation, service levels, fees, termination, limitation of liability, and governing law.',
   openGraph: {
-    title: 'Brand Plus Subscription Terms — GradeUp HS-NIL',
+    title: 'Brand Plus Subscription Terms — GradeUp HS-NIL, part of StatStaq',
     description:
-      'Subscription terms for the GradeUp HS-NIL Brand Plus plan.',
+      'Subscription terms for the GradeUp HS-NIL Brand Plus plan, part of StatStaq.',
     type: 'article',
   },
   alternates: { canonical: '/subscription-terms' },
@@ -21,22 +21,22 @@ const LAST_UPDATED = '2026-04-17';
 
 export default function SubscriptionTermsPage() {
   return (
-    <article className="min-h-screen pt-24 pb-20 bg-black">
+    <article className="min-h-screen pt-24 pb-20 bg-[var(--cream)]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="mb-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)] mb-3">
+          <p className="eyebrow mb-3">
             Legal · Subscription Agreement
           </p>
-          <h1 className="font-display text-4xl font-bold text-white sm:text-5xl">
+          <h1 className="font-display text-4xl font-bold text-[var(--ink)] sm:text-5xl">
             Brand Plus Subscription Terms
           </h1>
-          <p className="mt-4 text-white/60">
+          <p className="mt-4 text-[var(--ink-meta)]">
             Last updated: {LAST_UPDATED}. Effective immediately for new
             subscribers; existing subscribers on the effective date shown below.
           </p>
         </header>
 
-        <div className="rounded-xl border border-white/10 bg-[var(--marketing-gray-950)] p-5 mb-10 text-sm text-white/75">
+        <div className="rounded-xl border border-[var(--hairline)] bg-[var(--marketing-gray-950)] p-5 mb-10 text-sm text-[var(--ink-muted)]">
           <p>
             This document complements, and does not replace, our{' '}
             <Link
@@ -58,13 +58,13 @@ export default function SubscriptionTermsPage() {
           </p>
         </div>
 
-        <div className="prose prose-invert prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none">
           {/* 1 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               1. Definitions
             </h2>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               In these terms, &ldquo;GradeUp,&rdquo; &ldquo;we,&rdquo;
               &ldquo;our,&rdquo; and &ldquo;us&rdquo; refer to GradeUp NIL
               Technologies, Inc., a Delaware corporation. &ldquo;Subscriber,&rdquo;
@@ -81,24 +81,24 @@ export default function SubscriptionTermsPage() {
 
           {/* 2 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               2. Subscription Term
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               Brand Plus is offered on two billing cycles:
             </p>
-            <ul className="list-disc pl-6 text-white/75 space-y-2 mb-3">
+            <ul className="list-disc pl-6 text-[var(--ink-muted)] space-y-2 mb-3">
               <li>
-                <strong className="text-white">Monthly:</strong> A one-month
+                <strong className="text-[var(--ink)]">Monthly:</strong> A one-month
                 Billing Cycle, renewing on the same day of each subsequent
                 month.
               </li>
               <li>
-                <strong className="text-white">Annual:</strong> A twelve-month
+                <strong className="text-[var(--ink)]">Annual:</strong> A twelve-month
                 Billing Cycle, renewing on the same date one year later.
               </li>
             </ul>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               Subscriptions auto-renew at the end of each Billing Cycle for a
               new Billing Cycle of the same length, at the then-current price
               for your Plan, unless you cancel before the renewal date. We will
@@ -109,10 +109,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 3 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               3. Payment and Billing
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               Subscription fees are charged in advance at the start of each
               Billing Cycle. By subscribing, you authorize us to charge your
               designated payment method for all fees owed under your Plan,
@@ -120,7 +120,7 @@ export default function SubscriptionTermsPage() {
               and, after a reasonable grace period, suspend or terminate your
               access to Brand Plus features.
             </p>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               Current prices are published on our{' '}
               <Link
                 href="/pricing"
@@ -133,7 +133,7 @@ export default function SubscriptionTermsPage() {
               change; we will give at least thirty (30) days&rsquo; notice of any
               price increase that takes effect at your next renewal.
             </p>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               Per-deal platform fees (the 5% Brand Plus rate) are separate from
               and in addition to subscription fees. Per-deal fees are
               calculated and settled at the time each deal completes.
@@ -142,16 +142,16 @@ export default function SubscriptionTermsPage() {
 
           {/* 4 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               4. Cancellation and Refunds
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               You may cancel your Brand Plus subscription at any time from your
               account settings. Cancellation takes effect at the end of your
               current Billing Cycle: you retain access to Brand Plus features
               through that date, and no further charges will be made.
             </p>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               We do not offer prorated refunds for partial Billing Cycles. If
               you cancel mid-cycle, no refund is issued for the remaining days;
               you simply keep access through cycle end. Annual subscriptions
@@ -159,7 +159,7 @@ export default function SubscriptionTermsPage() {
               required by applicable law or as expressly set out in Section 8
               (Termination for Cause).
             </p>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               If we terminate your subscription for cause under Section 8, we
               may, at our discretion, refund a prorated portion of prepaid
               unused fees. If we terminate for our convenience (such as a
@@ -169,16 +169,16 @@ export default function SubscriptionTermsPage() {
 
           {/* 5 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               5. Service Levels
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               We commit to the following service levels for Brand Plus
               subscribers during the active Billing Cycle:
             </p>
-            <ul className="list-disc pl-6 text-white/75 space-y-2 mb-3">
+            <ul className="list-disc pl-6 text-[var(--ink-muted)] space-y-2 mb-3">
               <li>
-                <strong className="text-white">Uptime target:</strong> 99.9%
+                <strong className="text-[var(--ink)]">Uptime target:</strong> 99.9%
                 monthly availability of the Service, measured by the portion of
                 the calendar month during which the brand-facing web
                 application is reachable and accepts logged-in requests.
@@ -186,7 +186,7 @@ export default function SubscriptionTermsPage() {
                 advance are excluded from the calculation.
               </li>
               <li>
-                <strong className="text-white">Support response time:</strong>{' '}
+                <strong className="text-[var(--ink)]">Support response time:</strong>{' '}
                 First human response within one (1) business day for emails
                 sent to support@gradeup-nil.com, and within four (4) business
                 hours for issues reported through the Brand Plus Slack Connect
@@ -194,12 +194,12 @@ export default function SubscriptionTermsPage() {
                 Monday through Friday, excluding US federal holidays).
               </li>
               <li>
-                <strong className="text-white">Incident transparency:</strong>{' '}
+                <strong className="text-[var(--ink)]">Incident transparency:</strong>{' '}
                 Post-incident summaries for any unplanned outage exceeding 30
                 minutes, published within five (5) business days.
               </li>
             </ul>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               If we fall below the uptime target in a given month by more than
               one full percentage point (that is, below 98.9%), you may request
               a service credit equal to 10% of that month&rsquo;s subscription
@@ -210,10 +210,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 6 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               6. Fees and Taxes
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               All fees are stated in US dollars and are exclusive of applicable
               taxes, including sales, use, value-added, GST, and similar
               transactional taxes. You are responsible for any taxes imposed on
@@ -221,7 +221,7 @@ export default function SubscriptionTermsPage() {
               Where we are required by law to collect a tax, we will add the
               tax to your invoice.
             </p>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               If you are exempt from any tax, you must provide valid
               documentation before we can honor the exemption. Until then, we
               will collect applicable taxes.
@@ -230,10 +230,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 7 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               7. Acceptable Use
             </h2>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               Your use of the Service must comply with our Acceptable Use
               Policy, which is part of our Terms of Use. In particular, you may
               not use Brand Plus to run deals prohibited by applicable
@@ -247,39 +247,39 @@ export default function SubscriptionTermsPage() {
 
           {/* 8 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               8. Termination for Cause
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               We may suspend or terminate your Brand Plus subscription and
               associated platform access, with or without prior notice, for any
               of the following:
             </p>
-            <ul className="list-disc pl-6 text-white/75 space-y-2 mb-3">
+            <ul className="list-disc pl-6 text-[var(--ink-muted)] space-y-2 mb-3">
               <li>
-                <strong className="text-white">Non-payment:</strong> Failure to
+                <strong className="text-[var(--ink)]">Non-payment:</strong> Failure to
                 pay any fee when due, after a reasonable grace period and
                 notice.
               </li>
               <li>
-                <strong className="text-white">Breach of AUP:</strong> Material
+                <strong className="text-[var(--ink)]">Breach of AUP:</strong> Material
                 or repeated breach of our Acceptable Use Policy, Terms of Use,
                 or these Subscription Terms.
               </li>
               <li>
-                <strong className="text-white">Illegal use:</strong> Use of the
+                <strong className="text-[var(--ink)]">Illegal use:</strong> Use of the
                 Service in connection with activity that is unlawful under
                 applicable federal or state law, including but not limited to
                 state-NIL rules that apply to deals with minors.
               </li>
               <li>
-                <strong className="text-white">Fraud or misrepresentation:</strong>{' '}
+                <strong className="text-[var(--ink)]">Fraud or misrepresentation:</strong>{' '}
                 Impersonating a brand you are not authorized to represent,
                 submitting false account information, or engaging in payment
                 fraud.
               </li>
             </ul>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               You may terminate your subscription at any time for any reason by
               following the cancellation flow in Section 4. For material
               uncured breach by us, you may terminate early and receive a
@@ -289,10 +289,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 9 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               9. Disclaimer of Warranties
             </h2>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               The Service is provided &ldquo;as is&rdquo; and &ldquo;as
               available.&rdquo; To the maximum extent permitted by applicable
               law, we disclaim all warranties, express or implied, including
@@ -308,17 +308,17 @@ export default function SubscriptionTermsPage() {
 
           {/* 10 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               10. Limitation of Liability
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               To the maximum extent permitted by applicable law, our aggregate
               liability to you for all claims arising out of or relating to
               your Brand Plus subscription and use of the Service is limited to
               the amount of subscription fees you actually paid to us in the
               twelve (12) months preceding the event giving rise to the claim.
             </p>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               In no event are we liable for indirect, incidental, special,
               consequential, or punitive damages, or for lost profits, lost
               revenue, lost data, or cost of substitute services, even if we
@@ -331,10 +331,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 11 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               11. Indemnification
             </h2>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               You agree to defend, indemnify, and hold us harmless from claims
               arising out of your use of the Service in violation of these
               terms or applicable law, including claims arising from campaign
@@ -346,10 +346,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 12 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               12. Governing Law and Disputes
             </h2>
-            <p className="text-white/75 mb-3">
+            <p className="text-[var(--ink-muted)] mb-3">
               These Subscription Terms are governed by the laws of the State
               of Delaware, without regard to its conflict-of-laws principles.
               The exclusive jurisdiction for any dispute arising out of or
@@ -357,7 +357,7 @@ export default function SubscriptionTermsPage() {
               New Castle County, Delaware, and each party consents to personal
               jurisdiction in those courts.
             </p>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               Before filing a formal dispute, the parties agree to attempt a
               good-faith resolution by written notice describing the dispute,
               followed by at least thirty (30) days of informal negotiation. If
@@ -367,10 +367,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 13 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               13. Changes to These Terms
             </h2>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               We may update these Subscription Terms from time to time. When we
               make a material change, we will update the &ldquo;Last
               updated&rdquo; date above and, where legally required or for
@@ -383,10 +383,10 @@ export default function SubscriptionTermsPage() {
 
           {/* 14 */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-2xl font-bold text-[var(--ink)] mb-3">
               14. Contact
             </h2>
-            <p className="text-white/75">
+            <p className="text-[var(--ink-muted)]">
               Questions about these terms or your subscription? Email{' '}
               <a
                 href="mailto:support@gradeup-nil.com"
@@ -400,7 +400,7 @@ export default function SubscriptionTermsPage() {
           </section>
         </div>
 
-        <footer className="mt-12 border-t border-white/10 pt-6 text-sm text-white/60">
+        <footer className="mt-12 border-t border-[var(--hairline)] pt-6 text-sm text-[var(--ink-meta)]">
           <p>
             This page is a plain-English summary of the Brand Plus subscription
             relationship between GradeUp HS-NIL and its Brand Plus subscribers.

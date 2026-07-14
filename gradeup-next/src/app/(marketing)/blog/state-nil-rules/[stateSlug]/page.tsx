@@ -60,7 +60,7 @@ export async function generateMetadata({
     return { title: 'Not found | GradeUp' };
   }
   const data = getStateBlogData(code);
-  const title = `${data.name} High-School NIL Rules (2026) | GradeUp`;
+  const title = `${data.name} High-School NIL Rules (2026) | GradeUp, part of StatStaq`;
   const description = buildMetaDescription(data.name, data.status, data.rules);
 
   return {
@@ -68,7 +68,7 @@ export async function generateMetadata({
     description,
     alternates: { canonical: data.canonicalPath },
     openGraph: {
-      title: `${data.name} HS NIL rules — GradeUp`,
+      title: `${data.name} HS NIL rules — GradeUp, part of StatStaq`,
       description,
       type: 'article',
       url: data.canonicalPath,
@@ -298,7 +298,7 @@ function HowGradeUpHandlesState({
   }
   if (rules.agentRegistrationRequired) {
     bullets.push(
-      `${stateName} requires NIL agents to be registered with the state. GradeUp operates as a marketplace, not an agent — but we flag any third-party agent entering a deal so you can verify registration.`,
+      `${stateName} requires NIL agents to be registered with the state. StatStaq's team sources and negotiates the deal for you, not as a registered agent — but we flag any third-party agent entering a deal so you can verify registration.`,
     );
   }
   bullets.push(
@@ -308,16 +308,16 @@ function HowGradeUpHandlesState({
   return (
     <section
       aria-label={`How GradeUp handles ${stateName}`}
-      className="bg-black py-16 border-b border-white/10"
+      className="bg-[var(--cream)] py-16 border-b border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--accent-primary)]">
           On-platform
         </span>
-        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
           How GradeUp handles {stateName}
         </h2>
-        <p className="mt-3 text-white/70 max-w-2xl">
+        <p className="mt-3 text-[var(--ink-muted)] max-w-2xl">
           Compliance isn&rsquo;t a checklist on a marketing page — it&rsquo;s
           code. Here&rsquo;s exactly what the platform does when your athlete
           is in {stateName}.
@@ -327,7 +327,7 @@ function HowGradeUpHandlesState({
           {bullets.map((b, i) => (
             <li
               key={i}
-              className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-white/85"
+              className="flex items-start gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 text-[var(--ink-muted)]"
             >
               <span
                 aria-hidden="true"
@@ -354,17 +354,17 @@ function WhatThisMeansForParents({
   return (
     <section
       aria-label={`What this means for parents in ${stateName}`}
-      className="bg-[var(--marketing-gray-950)] py-16 border-b border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-16 border-b border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-gold)]">
+        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--accent-gold)]">
           For parents
         </span>
-        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
           What this means for parents in {stateName}
         </h2>
 
-        <div className="mt-6 space-y-5 text-white/75 leading-relaxed max-w-3xl">
+        <div className="mt-6 space-y-5 text-[var(--ink-muted)] leading-relaxed max-w-3xl">
           <p>
             You&rsquo;re the one signing the permission slip. In {stateName},{' '}
             {governingBody} treats {rules.requiresParentalConsent ? 'parental consent as a hard requirement — no deal is valid without your signature.' : 'parental involvement as strongly recommended, though not always required by statute.'}{' '}
@@ -379,8 +379,8 @@ function WhatThisMeansForParents({
           </p>
           <p>
             {rules.paymentDeferredUntilAge18
-              ? `${stateName} holds payment in trust until your athlete turns 18. GradeUp automates that: the brand's money is captured up front, but the transfer to your custodial account is scheduled for your athlete's 18th birthday. You don't track anything.`
-              : 'Money routes through a custodial Stripe Connect account that you own as the parent. We never hold your athlete\'s earnings beyond the short release window after deal completion.'}
+              ? `${stateName} holds payment in trust until your athlete turns 18. GradeUp automates the compliance side: the brand's money is captured up front by StatStaq's team, but the transfer to your custodial account is scheduled for your athlete's 18th birthday. You don't track anything.`
+              : 'Money routes through a custodial Stripe Connect account that you own as the parent, once StatStaq\'s team closes the deal. We never hold your athlete\'s earnings beyond the short release window after deal completion.'}
           </p>
         </div>
 
@@ -414,17 +414,17 @@ function WhatThisMeansForBrands({
   return (
     <section
       aria-label={`What this means for brands in ${stateName}`}
-      className="bg-black py-16 border-b border-white/10"
+      className="bg-[var(--cream)] py-16 border-b border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--accent-primary)]">
           For brands
         </span>
-        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
           What this means for brands working in {stateName}
         </h2>
 
-        <div className="mt-6 space-y-5 text-white/75 leading-relaxed max-w-3xl">
+        <div className="mt-6 space-y-5 text-[var(--ink-muted)] leading-relaxed max-w-3xl">
           <p>
             {stateName} is a{' '}
             {approxAthleteCount > 200_000
@@ -445,13 +445,14 @@ function WhatThisMeansForBrands({
               ? `we file the ${rules.disclosureWindowHours}-hour disclosure, `
               : ''}
             we validate consent, we check banned categories, and we refuse
-            deals that involve school IP. You write the brief, we handle the
-            paperwork, the athlete (and parent) sign, the deliverable ships.
+            deals that involve school IP. You write the brief, StatStaq&rsquo;s
+            team sources the athlete and runs the deal, the athlete (and
+            parent) sign, the deliverable ships.
           </p>
           <p>
             {rules.agentRegistrationRequired
-              ? `${stateName} also requires NIL agents/representatives to be registered with the state. If you work with external talent reps, verify registration before you send a contract. GradeUp's marketplace model sidesteps that requirement for you directly.`
-              : `${stateName} does not require agent registration, so brand-direct outreach through the platform is the simplest path.`}
+              ? `${stateName} also requires NIL agents/representatives to be registered with the state. If you work with external talent reps, verify registration before you send a contract. StatStaq's team sources and negotiates the deal for you directly, not as a registered agent.`
+              : `${stateName} does not require agent registration, so brand-direct outreach through StatStaq's team is the simplest path.`}
           </p>
         </div>
 
@@ -480,16 +481,16 @@ function TransitioningStateBody({
   return (
     <section
       aria-label={`${stateName} transitioning status`}
-      className="bg-[var(--marketing-gray-950)] py-16 border-b border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-16 border-b border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]">
           Transitioning
         </span>
-        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
           {stateName}&rsquo;s rules are in flux
         </h2>
-        <div className="mt-5 space-y-4 text-white/75 leading-relaxed max-w-3xl">
+        <div className="mt-5 space-y-4 text-[var(--ink-muted)] leading-relaxed max-w-3xl">
           <p>
             {governingBody} has not published a final HS-NIL policy that
             GradeUp has verified and encoded. That doesn&rsquo;t mean nothing
@@ -546,17 +547,17 @@ function ProhibitedStateBody({
   return (
     <section
       aria-label={`${stateName} HS NIL not permitted`}
-      className="bg-[var(--marketing-gray-950)] py-16 border-b border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-16 border-b border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/20 bg-white/5 text-white/70">
+        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)]">
           Not yet permitted
         </span>
-        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
           {stateName} does not permit HS NIL yet
         </h2>
 
-        <div className="mt-5 space-y-4 text-white/75 leading-relaxed max-w-3xl">
+        <div className="mt-5 space-y-4 text-[var(--ink-muted)] leading-relaxed max-w-3xl">
           <p>
             {governingBody} currently prohibits high-school athletes in{' '}
             {stateName} from signing NIL deals while retaining athletic
@@ -579,10 +580,10 @@ function ProhibitedStateBody({
         </div>
 
         <div className="mt-8 rounded-2xl border border-[var(--accent-primary)]/20 bg-[var(--accent-primary)]/5 p-6">
-          <h3 className="text-white font-semibold text-lg">
+          <h3 className="text-[var(--ink)] font-semibold text-lg">
             Get notified when {stateName} changes the rules
           </h3>
-          <p className="mt-2 text-white/70">
+          <p className="mt-2 text-[var(--ink-muted)]">
             Join our interest list. The moment {governingBody} flips its
             policy, your account is enabled — no re-registration needed.
           </p>
@@ -621,22 +622,22 @@ function SourcesBlock({
   return (
     <section
       aria-label={`${stateName} NIL rules sources`}
-      className="bg-black py-12 border-b border-white/10"
+      className="bg-[var(--cream)] py-12 border-b border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-display text-xl font-bold text-white">
+        <h2 className="font-display text-xl font-bold text-[var(--ink)]">
           Sources & citations
         </h2>
-        <ul className="mt-4 space-y-2 text-white/70 text-sm">
+        <ul className="mt-4 space-y-2 text-[var(--ink-muted)] text-sm">
           <li>
             Governing body:{' '}
-            <strong className="text-white">{governingBody}</strong>.{' '}
+            <strong className="text-[var(--ink)]">{governingBody}</strong>.{' '}
             {announcementUrl ? (
               <a
                 href={announcementUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[var(--accent-primary)] underline underline-offset-2 hover:text-white"
+                className="text-[var(--accent-primary)] underline underline-offset-2 hover:text-[var(--ink)]"
               >
                 Visit their site
               </a>
@@ -668,7 +669,7 @@ function renderFinalCta(data: ReturnType<typeof getStateBlogData>) {
     return (
       <SolutionCtaBand
         heading={`Ready to run your first ${name} deal?`}
-        subheading="Athlete, parent, and brand sign-ups are all free. GradeUp routes every deal through the compliance engine so you can focus on the work, not the forms."
+        subheading="Athlete, parent, and brand sign-ups are all free. GradeUp verifies every deal through the compliance engine, and StatStaq's team runs it from there — so you can focus on the grades, not the forms."
         primaryLabel="Create a free athlete profile"
         primaryHref={`/hs/signup/athlete?ref=state-${slug}`}
         secondaryLabel="Sign up as a parent"
@@ -680,7 +681,7 @@ function renderFinalCta(data: ReturnType<typeof getStateBlogData>) {
 
   return (
     <SolutionCtaBand
-      heading={`${name} changes the rules — we&rsquo;ll tell you first.`}
+      heading={`${name} changes the rules — we’ll tell you first.`}
       subheading="Join the interest list and be first in line when your state activates."
       primaryLabel="Join the interest list"
       primaryHref={`/hs?ref=state-${slug}`}

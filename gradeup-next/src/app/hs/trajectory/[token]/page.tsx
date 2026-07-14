@@ -137,21 +137,21 @@ export default async function PublicTrajectoryPage({ params }: PageProps) {
 
   if (!result) {
     return (
-      <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
         <section className="mx-auto max-w-2xl px-6 pt-24 pb-16 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/50">
+          <p className="eyebrow justify-center">
             GradeUp NIL
           </p>
-          <h1 className="mt-4 font-display text-4xl md:text-5xl">
+          <h1 className="mt-4 font-display text-4xl text-[var(--ink)] md:text-5xl">
             This trajectory is no longer available.
           </h1>
-          <p className="mt-4 text-sm text-white/70">
+          <p className="mt-4 text-sm text-[var(--ink-muted)]">
             The athlete may have revoked this link, or it may have expired.
             Ask them for an updated link.
           </p>
           <Link
             href="/hs"
-            className="mt-8 inline-flex min-h-[44px] items-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+            className="btn-marketing-outline mt-8 inline-flex min-h-[44px] items-center rounded-lg px-4 py-2 text-sm font-semibold"
           >
             Visit GradeUp HS
           </Link>

@@ -34,11 +34,11 @@ export function BrandDirectoryFilters() {
   );
 
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-white/10 bg-black/30 p-4">
-      <label className="flex flex-col text-xs uppercase tracking-wide text-white/50">
+    <div className="marketing-dark flex flex-wrap items-end gap-3 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4">
+      <label className="flex flex-col text-xs uppercase tracking-wide text-[var(--ink-meta)]">
         State
         <select
-          className="mt-1 min-w-[10rem] rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          className="mt-1 min-w-[10rem] rounded-md border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
           value={current.state}
           onChange={(e) => update('state', e.target.value)}
           aria-label="Filter by state"
@@ -52,10 +52,10 @@ export function BrandDirectoryFilters() {
         </select>
       </label>
 
-      <label className="flex flex-col text-xs uppercase tracking-wide text-white/50">
+      <label className="flex flex-col text-xs uppercase tracking-wide text-[var(--ink-meta)]">
         Deal category
         <select
-          className="mt-1 min-w-[12rem] rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          className="mt-1 min-w-[12rem] rounded-md border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
           value={current.category}
           onChange={(e) => update('category', e.target.value)}
           aria-label="Filter by deal category"

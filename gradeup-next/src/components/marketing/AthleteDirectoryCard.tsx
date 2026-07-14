@@ -3,10 +3,10 @@ import type { DirectoryAthleteSummary } from '@/lib/hs-nil/athlete-profile';
 import { tierLabel, formatGpa } from '@/lib/hs-nil/trajectory';
 
 const TIER_TONE: Record<string, string> = {
-  self_reported: 'border-white/10 bg-white/5 text-white/70',
-  user_submitted: 'border-blue-400/40 bg-blue-400/10 text-blue-200',
+  self_reported: 'border-[var(--hairline)] bg-[var(--cream-section)] text-[var(--ink-meta)]',
+  user_submitted: 'border-[var(--cobalt)]/40 bg-[var(--cobalt)]/10 text-[var(--cobalt)]',
   institution_verified:
-    'border-emerald-400/40 bg-emerald-400/10 text-emerald-200',
+    'border-emerald-600/40 bg-emerald-600/10 text-emerald-700',
 };
 
 export function AthleteDirectoryCard({
@@ -20,10 +20,10 @@ export function AthleteDirectoryCard({
   return (
     <Link
       href={`/athletes/${athlete.username}`}
-      className="group block rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:border-white/25 hover:bg-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+      className="marketing-dark card-marketing group block rounded-2xl p-5 hover-lift transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
     >
       <div className="flex items-baseline justify-between gap-3">
-        <h3 className="font-display text-2xl leading-none text-white">
+        <h3 className="font-display text-2xl leading-none text-[var(--ink)]">
           {athlete.firstName} {athlete.lastInitial}.
         </h3>
         {athlete.currentGpa !== null && (
@@ -35,13 +35,13 @@ export function AthleteDirectoryCard({
           </span>
         )}
       </div>
-      <p className="mt-1 text-sm text-white/60">
+      <p className="mt-1 text-sm text-[var(--ink-muted)]">
         {[athlete.sport, athlete.school, athlete.stateName ?? athlete.stateCode]
           .filter(Boolean)
           .join(' · ')}
       </p>
       {athlete.graduationYear && (
-        <p className="mt-2 text-xs uppercase tracking-widest text-white/40">
+        <p className="eyebrow mt-2">
           Class of {athlete.graduationYear}
         </p>
       )}

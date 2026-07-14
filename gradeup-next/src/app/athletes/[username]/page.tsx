@@ -113,7 +113,7 @@ export default async function AthletePublicProfilePage({
       >
         {JSON.stringify(jsonLd)}
       </Script>
-      <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
         <div className="mx-auto max-w-5xl px-6 pt-24 pb-20">
           <AthletePublicHero
             profile={profile}
@@ -122,9 +122,9 @@ export default async function AthletePublicProfilePage({
           />
 
           {profile.publicBio && (
-            <section className="mt-10 rounded-2xl border border-white/10 bg-black/30 p-6">
-              <h2 className="font-display text-xl text-white">About</h2>
-              <p className="mt-2 whitespace-pre-line text-white/80">
+            <section className="mt-10 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6">
+              <h2 className="font-display text-xl text-[var(--ink)]">About</h2>
+              <p className="mt-2 whitespace-pre-line text-[var(--ink-muted)]">
                 {profile.publicBio}
               </p>
             </section>
@@ -135,10 +135,10 @@ export default async function AthletePublicProfilePage({
           </section>
 
           {profile.completedDealsCount > 0 && (
-            <section className="mt-10 rounded-2xl border border-white/10 bg-black/30 p-6">
+            <section className="mt-10 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6">
               <div className="flex items-baseline justify-between">
-                <h2 className="font-display text-xl text-white">Deal history</h2>
-                <span className="text-sm text-white/50">
+                <h2 className="font-display text-xl text-[var(--ink)]">Deal history</h2>
+                <span className="text-sm text-[var(--ink-meta)]">
                   {profile.completedDealsCount} completed
                 </span>
               </div>
@@ -147,26 +147,26 @@ export default async function AthletePublicProfilePage({
                   {profile.completedDealBrands.map((b) => (
                     <span
                       key={b.brandName}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80"
+                      className="rounded-full border border-[var(--hairline)] bg-[var(--cream)] px-3 py-1 text-sm text-[var(--ink-muted)]"
                     >
                       {b.brandName}
                     </span>
                   ))}
                 </div>
               )}
-              <p className="mt-4 text-xs uppercase tracking-widest text-white/40">
+              <p className="mt-4 text-xs uppercase tracking-widest text-[var(--ink-meta)]">
                 Amounts are not publicly displayed.
               </p>
             </section>
           )}
 
-          <section className="mt-10 rounded-2xl border border-white/10 bg-[var(--marketing-gray-800)]/60 p-6 text-center">
-            <p className="text-lg text-white/90">
+          <section className="mt-10 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-section)] p-6 text-center">
+            <p className="text-lg text-[var(--ink)]">
               Want to partner with {profile.firstName}?
             </p>
             <a
               href={brandSignupHref}
-              className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-md bg-[var(--accent-primary)] px-6 py-2 text-sm font-semibold text-black hover:opacity-90"
+              className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-md bg-[var(--accent-primary)] px-6 py-2 text-sm font-semibold text-[#FBF9F2] hover:opacity-90"
             >
               Start a campaign
             </a>
@@ -176,11 +176,11 @@ export default async function AthletePublicProfilePage({
               20260422_002 and /api/athletes/[username]/support/checkout.
               Legally distinct from a donation: taxable NIL income to the
               athlete, not deductible to the supporter. */}
-          <section className="mt-6 rounded-2xl border border-white/10 bg-black/30 p-6 text-center">
-            <p className="text-lg text-white/90">
+          <section className="mt-6 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6 text-center">
+            <p className="text-lg text-[var(--ink)]">
               Just a fan? Send {profile.firstName} a shoutout payment.
             </p>
-            <p className="mt-2 text-sm text-white/60">
+            <p className="mt-2 text-sm text-[var(--ink-meta)]">
               Small NIL payment in exchange for a personalized shoutout or
               thank-you message. Not a donation — not tax-deductible.
             </p>

@@ -16,9 +16,9 @@ import { buildMarketingMetadata } from '@/lib/seo';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Case Studies — GradeUp HS',
+    title: 'Case Studies — GradeUp HS, part of StatStaq',
     description:
-      'How real scholar-athlete partnerships performed. Verified earnings, share counts, and brand ROI from the GradeUp HS concierge era.',
+      "How real scholar-athlete partnerships performed. GradeUp verifies the GPA; StatStaq's team runs the deal. Verified earnings, share counts, and brand ROI from the GradeUp HS concierge era.",
     path: '/business/case-studies',
   }),
   // Preserve Spanish language alternates.
@@ -73,32 +73,33 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
     <>
       <section
         aria-label="Case studies hero"
-        className="relative bg-black pt-32 pb-16 overflow-hidden"
+        className="relative bg-[var(--cream)] pt-32 pb-16 overflow-hidden"
       >
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            background:
-              'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.1) 0%, transparent 50%)',
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
-            <Sparkles className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
-            <span className="text-sm font-medium text-white/90">
-              Proven results from the concierge era
-            </span>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <span className="eyebrow">Proven results</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] mt-4 mb-6">
+              <Sparkles className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
+              <span className="text-sm font-medium text-[var(--ink)]">
+                Proven results from the concierge era
+              </span>
+            </div>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--ink)] max-w-3xl">
+              Case studies.{' '}
+              <span className="text-[var(--accent-primary)]">Verified earnings.</span>
+            </h1>
+            <p className="mt-4 text-lg text-[var(--ink-muted)] max-w-2xl">
+              Every number you see here is tied to a completed deal, an on-platform
+              share event, and a real scholar-athlete. Names are abbreviated for
+              privacy; brand attribution is always shown.
+            </p>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white max-w-3xl">
-            Case studies.{' '}
-            <span className="text-[var(--accent-primary)]">Verified earnings.</span>
-          </h1>
-          <p className="mt-4 text-lg text-[var(--marketing-gray-400)] max-w-2xl">
-            Every number you see here is tied to a completed deal, an on-platform
-            share event, and a real scholar-athlete. Names are abbreviated for
-            privacy; brand attribution is always shown.
-          </p>
+          <div
+            className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-07.jpg)` }}
+            role="img"
+            aria-label="Brand partnership case study in progress"
+          />
         </div>
       </section>
 
@@ -114,7 +115,7 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
               className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                 activeTagSet.size === 0
                   ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                  : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                  : 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)]'
               }`}
             >
               All
@@ -135,7 +136,7 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
                   className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                     active
                       ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                      : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                      : 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)]'
                   }`}
                 >
                   {t.label}
@@ -145,11 +146,11 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
           </div>
 
           {studies.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-10 sm:p-12 text-center">
-              <div className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-black/40 text-[var(--accent-primary)]">
+            <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-10 sm:p-12 text-center">
+              <div className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--accent-primary)]">
                 <FileSearch className="h-7 w-7" aria-hidden="true" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-semibold text-white">
+              <h2 className="text-xl sm:text-2xl font-semibold text-[var(--ink)]">
                 No case studies yet for this filter
               </h2>
               <p className="mx-auto mt-2 max-w-md text-[var(--marketing-gray-400)]">

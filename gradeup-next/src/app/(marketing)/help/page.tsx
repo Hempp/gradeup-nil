@@ -63,7 +63,7 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'gs-3',
         question: 'What GPA do I need to join?',
-        answer: 'There\'s no minimum GPA requirement to join GradeUp. However, our platform rewards academic excellence - athletes with higher GPAs (3.0+) typically receive more deal opportunities and higher compensation. A 3.5+ GPA unlocks premium brand partnerships. Your GPA is one factor brands consider alongside your sport, followers, and engagement.',
+        answer: 'There\'s no minimum GPA requirement to get verified on GradeUp. A higher verified GPA (3.0+, 3.5+) is a stronger credential - it\'s one of the signals StatStaq\'s team uses when sourcing and pricing your deals, alongside your sport, followers, and engagement. Get verified first; StatStaq takes it from there.',
         keywords: ['gpa', 'grades', 'academic', 'minimum', 'requirement'],
       },
       {
@@ -90,31 +90,31 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'ath-1',
         question: 'How do NIL deals work on GradeUp?',
-        answer: 'Once verified, your profile becomes visible to brands seeking athlete partnerships. Brands can send you deal offers directly, or you can apply to open opportunities. Each deal specifies deliverables (social posts, appearances, endorsements), compensation, and timeline. You review, negotiate if needed, and accept deals that align with your brand. All deals are managed through our platform with NCAA-compliant contracts.',
+        answer: 'Once your GPA is verified, StatStaq\'s team takes over: they produce your content, value your brand, source the deal from a brand looking for your sport and school, and negotiate the terms and compensation on your behalf. You review the contract they bring you - deliverables, compensation, timeline - and sign if it works for you. Every deal runs through GradeUp\'s compliance layer with NCAA-compliant contracts.',
         keywords: ['deals', 'nil', 'work', 'how', 'process'],
       },
       {
         id: 'ath-2',
         question: 'How does GPA affect my earning potential?',
-        answer: 'Your GPA directly influences your GradeUp Score, which brands use to evaluate partnerships. Athletes with 3.5+ GPAs typically see 40-60% higher deal values because brands value the "scholar-athlete" image. Dean\'s List recognition, academic awards, and maintaining strong grades while competing demonstrate discipline and reliability - qualities brands actively seek.',
+        answer: 'Your GPA directly feeds your GradeUp Score, which StatStaq\'s team uses when sourcing and pricing deals on your behalf - brands weight the "scholar-athlete" credential heavily. We don\'t publish a fixed GPA-to-dollar formula because deal value also depends on sport, following, and market, but Dean\'s List recognition, academic awards, and maintaining strong grades while competing are exactly the signals StatStaq brings to a brand conversation.',
         keywords: ['gpa', 'earning', 'money', 'compensation', 'value'],
       },
       {
         id: 'ath-3',
         question: 'When and how do I get paid?',
-        answer: 'Payment is processed within 5-7 business days after you complete all deal deliverables and the brand confirms satisfaction. You can choose direct deposit (ACH), PayPal, or Venmo. Minimum payout threshold is $25. For larger deals, milestone payments may be arranged. All payments are tracked in your dashboard with tax-ready reporting (1099 forms provided annually).',
+        answer: 'Payment is processed within 5-7 business days after you complete all deal deliverables and StatStaq\'s team confirms the brand\'s approval. You can choose direct deposit (ACH), PayPal, or Venmo. Minimum payout threshold is $25. For larger deals, milestone payments may be arranged. All payments are tracked in your dashboard with tax-ready reporting (1099 forms provided annually).',
         keywords: ['paid', 'payment', 'money', 'deposit', 'payout', 'when'],
       },
       {
         id: 'ath-4',
         question: 'What types of deals are available?',
-        answer: 'GradeUp offers various deal types: Social Media Posts (Instagram, TikTok, Twitter/X), Brand Ambassador programs (ongoing partnerships), Product Endorsements, Appearances (events, camps, clinics), Content Creation (photos, videos), and Academic Mentorship programs. Deal values range from $100 for single posts to $10,000+ for comprehensive ambassador packages.',
+        answer: 'StatStaq sources several deal types for GradeUp-verified athletes: Social Media Posts (Instagram, TikTok, Twitter/X), Brand Ambassador programs (ongoing partnerships), Product Endorsements, Appearances (events, camps, clinics), Content Creation (photos, videos), and Academic Mentorship programs. Deal values range from $100 for single posts to $10,000+ for comprehensive ambassador packages.',
         keywords: ['types', 'kinds', 'deals', 'opportunities', 'ambassador'],
       },
       {
         id: 'ath-5',
         question: 'Can I negotiate deal terms?',
-        answer: 'Absolutely! When you receive an offer, you can accept as-is, decline, or submit a counter-offer through our messaging system. Common negotiation points include compensation amount, deliverable timeline, usage rights, and exclusivity terms. Our platform provides market rate data to help you negotiate fairly. About 35% of deals go through some negotiation before finalizing.',
+        answer: 'You\'re never negotiating alone. When StatStaq\'s team brings you an offer, you can accept it, decline it, or ask them to push back on terms through our messaging system. Common negotiation points include compensation amount, deliverable timeline, usage rights, and exclusivity terms - StatStaq negotiates those directly with the brand on your behalf, using market rate data to get you a fair deal.',
         keywords: ['negotiate', 'counter', 'terms', 'offer', 'change'],
       },
     ],
@@ -129,13 +129,13 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'br-1',
         question: 'How do I find the right athletes for my brand?',
-        answer: 'Our advanced filtering system lets you search by GPA range, sport, school, geographic region, follower count, engagement rate, and more. The GradeUp Score combines academic achievement with social influence to identify high-value partnerships. You can also browse curated collections like "Dean\'s List Athletes" or "Rising Stars" to discover emerging talent.',
+        answer: 'Our advanced filtering system lets you search by GPA range, sport, school, geographic region, follower count, engagement rate, and more. The GradeUp Score combines a verified academic achievement with social influence to identify high-value partnerships. You can also browse curated collections like "Dean\'s List Athletes" or "Rising Stars" to discover emerging talent - once you find a match, StatStaq\'s team runs outreach, negotiation, and close on your behalf.',
         keywords: ['find', 'search', 'discover', 'athletes', 'filter'],
       },
       {
         id: 'br-2',
         question: 'Are all deals NCAA compliant?',
-        answer: 'Yes, 100%. Every deal on GradeUp is structured to comply with current NCAA NIL rules and state-specific regulations. Our contracts include standard compliance language, and we automatically flag potential issues. Athletes must disclose school NIL office contacts, and we can coordinate with compliance departments when required. We stay current with evolving regulations to protect both parties.',
+        answer: 'Every deal on GradeUp is structured to comply with current NCAA NIL rules and state-specific regulations. Our contracts include standard compliance language, and we automatically flag potential issues. Athletes must disclose school NIL office contacts, and we can coordinate with compliance departments when required. We stay current with evolving regulations to protect both parties.',
         keywords: ['ncaa', 'compliant', 'compliance', 'legal', 'rules'],
       },
       {
@@ -153,7 +153,7 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'br-5',
         question: 'Can I run exclusive ambassador programs?',
-        answer: 'Yes! You can create exclusive partnerships where athletes commit to representing only your brand within their category (e.g., "exclusive nutrition sponsor"). Exclusivity terms are built into contracts with clear definitions and duration. Ambassador programs typically include monthly retainers, product provisions, and bonus structures tied to performance milestones.',
+        answer: 'Yes! You can request an exclusive partnership where an athlete commits to representing only your brand within their category (e.g., "exclusive nutrition sponsor"). StatStaq\'s team negotiates the terms and brings you a contract, with exclusivity clearly defined and a set duration. Ambassador programs typically include monthly retainers, product provisions, and bonus structures tied to performance milestones.',
         keywords: ['exclusive', 'ambassador', 'program', 'partnership', 'long-term'],
       },
     ],
@@ -180,7 +180,7 @@ const faqCategories: FAQCategory[] = [
       {
         id: 'sec-3',
         question: 'How is my GPA information protected?',
-        answer: 'Your exact GPA is visible only to you. Brands see a GPA range (e.g., "3.5-4.0") and your GradeUp Score, but not your precise number. Academic verification is handled through secure institutional partnerships. We use bank-level encryption (AES-256) for all sensitive data, and our systems are SOC 2 Type II certified.',
+        answer: 'Your exact GPA is visible only to you. Brands see a GPA range (e.g., "3.5-4.0") and your GradeUp Score, but not your precise number. Academic verification is handled through secure institutional partnerships. We use strong encryption for all sensitive data.',
         keywords: ['gpa', 'protected', 'privacy', 'secure', 'visible'],
       },
       {
@@ -212,34 +212,33 @@ function HelpHeroSection({
 }) {
   return (
     <section
-      className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-black"
+      className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-[var(--cream)]"
       aria-label="Help center hero"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="hero-orb hero-orb-cyan absolute -top-40 -left-40 w-[400px] h-[400px]" />
-        <div className="hero-orb hero-orb-magenta absolute -bottom-40 -right-40 w-[500px] h-[500px]" />
-        <div className="absolute inset-0 hero-grid opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black" />
-      </div>
-
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] mb-8">
           <HelpCircle className="h-4 w-4 text-[var(--accent-primary)]" />
-          <span className="text-sm font-medium text-white/90">Help Center</span>
+          <span className="text-sm font-medium text-[var(--ink)]">Help Center</span>
         </div>
 
         {/* Headline */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--ink)] mb-6">
           How Can We{' '}
-          <span className="gradient-text-cyan">Help You?</span>
+          <span className="text-[var(--accent-primary)]">Help You?</span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg sm:text-xl text-[var(--marketing-gray-400)] max-w-2xl mx-auto mb-10">
+        <p className="text-lg sm:text-xl text-[var(--ink-muted)] max-w-2xl mx-auto mb-10">
           Find answers to common questions about GradeUp, NIL deals, payments, and more.
         </p>
+
+        <div
+          className="duotone relative mx-auto mb-10 aspect-[21/9] max-w-2xl rounded-2xl overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: `url(/editorial/photo-05.jpg)` }}
+          role="img"
+          aria-label="GradeUp support team assisting a scholar-athlete family"
+        />
 
         {/* Search Bar */}
         <div className="relative max-w-xl mx-auto">
@@ -254,7 +253,7 @@ function HelpHeroSection({
               placeholder="Search for answers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
+              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-[var(--ink)] placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
               aria-label="Search help articles"
             />
           </div>
@@ -266,7 +265,7 @@ function HelpHeroSection({
             <button
               key={topic}
               onClick={() => setSearchQuery(topic)}
-              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+              className="px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] text-sm text-[var(--ink-muted)] hover:bg-[var(--cream-section)] hover:text-[var(--ink)] transition-colors"
             >
               {topic}
             </button>
@@ -297,7 +296,7 @@ function FAQAccordionItem({
         className="w-full flex items-center justify-between gap-4 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--marketing-gray-900)] rounded-sm group"
         aria-expanded={isOpen}
       >
-        <span className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--accent-primary)] transition-colors">
+        <span className="text-base sm:text-lg font-medium text-[var(--ink)] group-hover:text-[var(--accent-primary)] transition-colors">
           {faq.question}
         </span>
         <ChevronDown
@@ -378,7 +377,7 @@ function FAQCategorySection({
           <Icon className={`h-6 w-6 ${colors.icon}`} />
         </div>
         <div>
-          <h2 className={`text-xl font-bold text-white mb-1`}>{category.title}</h2>
+          <h2 className={`text-xl font-bold text-[var(--ink)] mb-1`}>{category.title}</h2>
           <p className="text-sm text-[var(--marketing-gray-500)]">{category.description}</p>
         </div>
       </div>
@@ -415,8 +414,8 @@ function CategoryNav({
         onClick={() => setActiveCategory(null)}
         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
           activeCategory === null
-            ? 'bg-[var(--accent-primary)] text-black'
-            : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
+            ? 'bg-[var(--accent-primary)] text-[var(--ink)]'
+            : 'bg-[var(--cream-surface)] border border-[var(--hairline)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)] hover:text-[var(--ink)]'
         }`}
       >
         All Topics
@@ -429,8 +428,8 @@ function CategoryNav({
             onClick={() => setActiveCategory(category.id)}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
               activeCategory === category.id
-                ? 'bg-[var(--accent-primary)] text-black'
-                : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
+                ? 'bg-[var(--accent-primary)] text-[var(--ink)]'
+                : 'bg-[var(--cream-surface)] border border-[var(--hairline)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)] hover:text-[var(--ink)]'
             }`}
           >
             <Icon className="h-4 w-4" />
@@ -533,7 +532,7 @@ function FAQSection({
             <div className="w-16 h-16 rounded-full bg-[var(--marketing-gray-800)] flex items-center justify-center mx-auto mb-4">
               <Search className="h-8 w-8 text-[var(--marketing-gray-500)]" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">No results found</h3>
+            <h3 className="text-xl font-bold text-[var(--ink)] mb-2">No results found</h3>
             <p className="text-[var(--marketing-gray-400)] mb-6">
               We couldn&apos;t find any answers matching &quot;{searchQuery}&quot;. Try different keywords or browse categories.
             </p>
@@ -607,9 +606,9 @@ function QuickHelpSection() {
   };
 
   return (
-    <section className="py-12 bg-black">
+    <section className="py-12 bg-[var(--cream)]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-white text-center mb-8">Quick Help</h2>
+        <h2 className="text-2xl font-bold text-[var(--ink)] text-center mb-8">Quick Help</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickHelp.map((item) => {
             const Icon = item.icon;
@@ -620,7 +619,7 @@ function QuickHelpSection() {
                 className={`group p-5 rounded-xl bg-[var(--marketing-gray-900)] border ${colorClasses[item.color]} transition-all hover:-translate-y-1`}
               >
                 <Icon className={`h-6 w-6 mb-3 ${colorClasses[item.color].split(' ')[0]}`} />
-                <h3 className="font-semibold text-white mb-1">{item.title}</h3>
+                <h3 className="font-semibold text-[var(--ink)] mb-1">{item.title}</h3>
                 <p className="text-sm text-[var(--marketing-gray-500)]">{item.description}</p>
               </Link>
             );
@@ -638,19 +637,16 @@ function QuickHelpSection() {
 function ContactSupportSection() {
   return (
     <section className="section-spacing-md bg-marketing-cta relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2)_0%,transparent_60%)]" />
-
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Icon */}
-        <div className="w-16 h-16 rounded-full bg-black/20 flex items-center justify-center mx-auto mb-6">
-          <MessageSquare className="h-8 w-8 text-black" />
+        <div className="w-16 h-16 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] flex items-center justify-center mx-auto mb-6">
+          <MessageSquare className="h-8 w-8 text-[var(--accent-primary)]" />
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-4">
           Still Need Help?
         </h2>
-        <p className="text-xl text-black/70 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-[var(--ink-muted)] mb-8 max-w-2xl mx-auto">
           Our support team is here to help you succeed. Reach out and we&apos;ll get back to you within 24 hours.
         </p>
 
@@ -658,7 +654,7 @@ function ContactSupportSection() {
           <Link href="mailto:support@gradeup.com">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-black hover:bg-[var(--marketing-gray-900)] text-white font-semibold gap-2"
+              className="btn-marketing-primary w-full sm:w-auto font-semibold gap-2"
             >
               <Mail className="h-5 w-5" />
               Email Support
@@ -667,7 +663,7 @@ function ContactSupportSection() {
           <Link href="/solutions/parents">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-white hover:bg-white/90 text-black font-semibold border-2 border-black/30 gap-2"
+              className="btn-marketing-outline w-full sm:w-auto font-semibold gap-2"
             >
               <MessageSquare className="h-5 w-5" />
               Talk to our team
@@ -676,7 +672,7 @@ function ContactSupportSection() {
         </div>
 
         {/* Support Hours */}
-        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-black/60">
+        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-[var(--ink-meta)]">
           <span className="flex items-center gap-1.5">
             <Clock className="h-4 w-4" />
             Mon-Fri, 9am-6pm EST

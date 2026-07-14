@@ -27,9 +27,9 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title:
-    'NIL Campaign Templates — Scholar-Athlete Campaign Examples | GradeUp',
+    'NIL Campaign Templates — Scholar-Athlete Campaign Examples | GradeUp, part of StatStaq',
   description:
-    'Eight pre-built NIL campaign templates for local brands. Grand opening, back-to-school, summer camp, product launch, athlete spotlight. Clone, customize in two minutes, post.',
+    'Eight pre-built NIL campaign templates for local brands. Grand opening, back-to-school, summer camp, product launch, athlete spotlight. Post a template; StatStaq’s team sources the GradeUp-verified scholar-athlete match.',
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: 'NIL Campaign Templates — GradeUp for Brands',
@@ -72,7 +72,7 @@ export default async function PublicCampaignTemplatesPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+    <main className="min-h-screen bg-[var(--cream)] text-[var(--ink)]">
       <Script
         id="campaign-templates-itemlist"
         type="application/ld+json"
@@ -80,38 +80,49 @@ export default async function PublicCampaignTemplatesPage() {
       >
         {JSON.stringify(itemListLd)}
       </Script>
-      <section className="mx-auto max-w-6xl px-6 pt-20 pb-12">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
-          For brands
-        </p>
-        <h1 className="mt-3 font-display text-4xl md:text-6xl">
-          Start with a proven template.
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg text-white/70">
-          Customize in two minutes. Eight battle-tested NIL briefs for local
-          brands — grand openings, back-to-school, summer camps, product
-          launches, athlete spotlights, recurring series. Compliance, parental
-          consent, and disclosures are built in.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/hs/signup/brand"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
-          >
-            Sign up to post a campaign
-          </Link>
-          <Link
-            href="/solutions/brands"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white/20 px-6 py-3 text-sm font-semibold text-white/80 hover:border-white/40"
-          >
-            How GradeUp works
-          </Link>
+      <section className="mx-auto grid max-w-6xl gap-10 px-6 pt-20 pb-12 lg:grid-cols-2 lg:items-center">
+        <div>
+          <p className="eyebrow text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+            For brands
+          </p>
+          <h1 className="mt-3 font-display text-4xl md:text-6xl text-[var(--ink)]">
+            Start with a proven template.
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-[var(--ink-muted)]">
+            Customize in two minutes. Eight battle-tested NIL briefs for local
+            brands — grand openings, back-to-school, summer camps, product
+            launches, athlete spotlights, recurring series. GradeUp verifies
+            the athlete and handles compliance, parental consent, and
+            disclosures; StatStaq&rsquo;s team sources the match and runs the
+            deal once you post.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/hs/signup/brand"
+              className="btn-marketing-primary inline-flex min-h-[44px] items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold"
+            >
+              Sign up to post a campaign
+            </Link>
+            <Link
+              href="/solutions/brands"
+              className="btn-marketing-outline inline-flex min-h-[44px] items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold"
+            >
+              How GradeUp works
+            </Link>
+          </div>
         </div>
+
+        <div
+          className="duotone relative aspect-[4/3] overflow-hidden rounded-2xl bg-cover bg-center"
+          style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+          role="img"
+          aria-label="Brand campaign template preview — scholar-athlete NIL partnership"
+        />
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-24">
         {templates.length === 0 ? (
-          <p className="text-sm text-white/60">
+          <p className="text-sm text-[var(--ink-muted)]">
             Templates are being updated. Check back soon.
           </p>
         ) : (
@@ -131,11 +142,11 @@ export default async function PublicCampaignTemplatesPage() {
           </ul>
         )}
 
-        <div className="mt-16 rounded-2xl border border-white/10 bg-white/5 p-8 text-center md:p-12">
-          <h2 className="font-display text-3xl md:text-4xl">
+        <div className="card-marketing mt-16 p-8 text-center md:p-12">
+          <h2 className="font-display text-3xl md:text-4xl text-[var(--ink)]">
             A template is a starting point, not a contract.
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-white/70">
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-[var(--ink-muted)]">
             Every template pre-fills title, description, compensation,
             timeline, and deliverables. You edit anything before posting.
             Compensation shown is a national baseline — CA, NY, and TX
@@ -144,7 +155,7 @@ export default async function PublicCampaignTemplatesPage() {
           <div className="mt-6">
             <Link
               href="/hs/signup/brand"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+              className="btn-marketing-primary inline-flex min-h-[44px] items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold"
             >
               Create a brand account
             </Link>

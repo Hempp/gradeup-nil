@@ -83,21 +83,21 @@ export function DirectorInviteClient({ token, invitation }: Props) {
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-16">
-      <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+      <p className="eyebrow">
         GradeUp NIL · Athletic Director Invite
       </p>
-      <h1 className="mt-2 font-display text-3xl text-white md:text-4xl">
+      <h1 className="mt-2 font-display text-3xl text-[var(--ink)] md:text-4xl">
         Create your account
       </h1>
-      <p className="mt-3 text-sm text-white/70">
-        <strong className="text-white">{invitation.athleteName}</strong> has invited you to
+      <p className="mt-3 text-sm text-[var(--ink-muted)]">
+        <strong className="text-[var(--ink)]">{invitation.athleteName}</strong> has invited you to
         verify student-athletes at{' '}
-        <strong className="text-white">{invitation.schoolName}</strong>.
+        <strong className="text-[var(--ink)]">{invitation.schoolName}</strong>.
       </p>
 
-      <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-6">
-        <h2 className="font-display text-lg text-white">What you can do</h2>
-        <ul className="mt-3 space-y-2 text-sm text-white/70">
+      <div className="mt-8 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6">
+        <h2 className="font-display text-lg text-[var(--ink)]">What you can do</h2>
+        <ul className="mt-3 space-y-2 text-sm text-[var(--ink-muted)]">
           <li>Verify enrolled athletes at {invitation.schoolName}</li>
           <li>Confirm academic standing, sport participation, and transcripts</li>
           <li>Manage your school&apos;s NIL compliance roster</li>
@@ -106,7 +106,7 @@ export function DirectorInviteClient({ token, invitation }: Props) {
 
       <form onSubmit={handleSubmit} className="mt-10 space-y-5" noValidate>
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-1.5">
+          <label className="block text-sm font-medium text-[var(--ink-muted)] mb-1.5">
             Email address
           </label>
           <Input
@@ -116,13 +116,13 @@ export function DirectorInviteClient({ token, invitation }: Props) {
             disabled
             className="opacity-70 cursor-not-allowed"
           />
-          <p className="mt-1 text-xs text-white/50">
+          <p className="mt-1 text-xs text-[var(--ink-meta)]">
             Your account will be created with this email.
           </p>
         </div>
 
         <div>
-          <label htmlFor="ad-name" className="block text-sm font-medium text-white/80 mb-1.5">
+          <label htmlFor="ad-name" className="block text-sm font-medium text-[var(--ink-muted)] mb-1.5">
             Your name
           </label>
           <Input
@@ -147,7 +147,7 @@ export function DirectorInviteClient({ token, invitation }: Props) {
         </div>
 
         <div>
-          <label htmlFor="ad-password" className="block text-sm font-medium text-white/80 mb-1.5">
+          <label htmlFor="ad-password" className="block text-sm font-medium text-[var(--ink-muted)] mb-1.5">
             Password <span className="text-[var(--color-error)]">*</span>
           </label>
           <Input
@@ -163,7 +163,7 @@ export function DirectorInviteClient({ token, invitation }: Props) {
         </div>
 
         <div>
-          <label htmlFor="ad-confirm-password" className="block text-sm font-medium text-white/80 mb-1.5">
+          <label htmlFor="ad-confirm-password" className="block text-sm font-medium text-[var(--ink-muted)] mb-1.5">
             Confirm password <span className="text-[var(--color-error)]">*</span>
           </label>
           <Input
@@ -202,21 +202,21 @@ export function DirectorInviteClient({ token, invitation }: Props) {
           Accept Invitation &amp; Create Account
         </Button>
 
-        <p className="text-center text-xs text-white/50">
+        <p className="text-center text-xs text-[var(--ink-meta)]">
           Already have an account?{' '}
-          <a href="/login" className="text-[var(--accent-primary)] underline underline-offset-2">
+          <a href="/login" className="text-[var(--cobalt)] underline underline-offset-2">
             Sign in
           </a>
         </p>
       </form>
 
-      <div className="mt-12 rounded-xl border border-white/10 bg-white/5 p-5 text-xs text-white/60">
-        <p className="font-semibold text-white/80">Questions?</p>
+      <div className="mt-12 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 text-xs text-[var(--ink-meta)]">
+        <p className="font-semibold text-[var(--ink-muted)]">Questions?</p>
         <p className="mt-2">
           Contact{' '}
           <a
             href="mailto:support@gradeupnil.com"
-            className="text-[var(--accent-primary)] underline decoration-white/30 underline-offset-2"
+            className="text-[var(--cobalt)] underline decoration-[var(--hairline)] underline-offset-2"
           >
             support@gradeupnil.com
           </a>

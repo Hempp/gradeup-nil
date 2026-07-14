@@ -28,9 +28,9 @@ const PAGE_URL = '/solutions/brands/tutoring';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Tutoring brand NIL campaigns | HS scholar-athletes | GradeUp',
+    title: 'Tutoring brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
     description:
-      'Local tutoring, online test-prep, and study-app brands run compliance-handled NIL campaigns with verified 3.9+ GPA scholar-athletes across 7 pilot states. Academic integrity first.',
+      'Local tutoring, online test-prep, and study-app brands partner with 3.9+ GPA GradeUp-verified scholar-athletes across 7 pilot states. StatStaq’s team sources and runs the campaign. Academic integrity first.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -96,7 +96,7 @@ export default function TutoringPage() {
         scriptId="solutions-brands-tutoring-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp HS — Tutoring & Test-Prep NIL Campaigns"
-        description="Compliance-handled NIL campaigns connecting tutoring and test-prep brands with verified scholar-athletes who have real GPA and transcript proof."
+        description="GradeUp-verified scholar-athletes with real GPA and transcript proof partner with tutoring and test-prep brands; StatStaq’s team runs the campaign."
         audience="Tutoring services, SAT/ACT test-prep, study apps, and educational brands"
       />
 
@@ -104,7 +104,7 @@ export default function TutoringPage() {
         eyebrow="For tutoring & test-prep"
         title="The 3.9 GPA IS"
         titleAccent="your spokesperson."
-        subtitle="Local tutoring, online test-prep, and study-app brands partner with verified scholar-athletes whose transcripts we have actually checked. Academic integrity first. FTC disclosure baked in."
+        subtitle="Local tutoring, online test-prep, and study-app brands partner with scholar-athletes whose transcripts GradeUp has actually checked — StatStaq’s team runs the campaign. Academic integrity first. FTC disclosure baked in."
         primaryCta={{
           label: 'Start a tutoring campaign',
           href: '/hs/signup/brand',
@@ -115,6 +115,7 @@ export default function TutoringPage() {
           href: '/solutions/brands/fmv',
         }}
         supportingNote="Live in 7 pilot states. Tier B transcript verification included."
+        image={{ src: '/editorial/photo-playbook.jpg', alt: 'A coach’s worn blue playbook and whistle on a desk, standing in for the disciplined, verified-transcript rigor behind every tutoring NIL testimonial.' }}
       />
 
       <ConcreteExampleSection />
@@ -146,10 +147,10 @@ export default function TutoringPage() {
           },
           {
             kind: 'proof',
-            heading: 'Highest-credibility, lowest-cost vertical',
-            body: 'Tutoring has the lowest deal dollar per post but the highest enrollment conversion rate. ROI shows up in sign-ups, not reach. Multi-athlete bundles make the cost math work.',
+            heading: 'Verified, not generic',
+            body: 'Tutoring runs a lower deal dollar per post than most verticals. ROI shows up in enrollment sign-ups, not reach. Multi-athlete bundles make the cost math work.',
             bullets: [
-              'Scholar-athlete testimonials outperform generic influencers 2-4x on enrollments',
+              'Every testimonial ties to a verified transcript and a real GPA',
               '30-day attribution window on promo-code redemptions',
               'Multi-athlete bundles drop per-testimonial cost',
             ],
@@ -199,19 +200,19 @@ function ConcreteExampleSection() {
   return (
     <section
       aria-label="Concrete campaign example"
-      className="bg-black py-16 border-y border-white/10"
+      className="bg-[var(--cream-section)] py-16 border-y border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-black via-[var(--marketing-gray-950)] to-black p-8 md:p-10">
+        <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-[var(--cream-surface)] p-8 md:p-10">
           <div className="flex items-start gap-3 mb-4">
             <div className="p-2 rounded-lg bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20">
               <GraduationCap className="h-5 w-5 text-[var(--accent-primary)]" aria-hidden="true" />
             </div>
-            <span className="text-xs uppercase tracking-widest text-[var(--accent-primary)] font-semibold mt-1.5">
+            <span className="eyebrow text-xs uppercase tracking-widest text-[var(--accent-primary)] font-semibold mt-1.5">
               What this looks like in practice
             </span>
           </div>
-          <p className="text-xl md:text-2xl text-white leading-relaxed">
+          <p className="text-xl md:text-2xl text-[var(--ink)] leading-relaxed">
             An SAT-prep company in Chicago pays a{' '}
             <span className="text-[var(--accent-primary)] font-semibold">
               senior soccer player with a verified 4.0 GPA and 1,400 Instagram followers
@@ -239,7 +240,7 @@ function CampaignShapeSection() {
   return (
     <section aria-label="What a campaign looks like" className="bg-[var(--marketing-gray-950)] py-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-10">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-10">
           What a testimonial series{' '}
           <span className="text-[var(--accent-primary)]">looks like</span>
         </h2>
@@ -247,14 +248,14 @@ function CampaignShapeSection() {
           {steps.map((s) => (
             <li
               key={s.n}
-              className="flex gap-4 rounded-xl border border-white/10 bg-black/40 p-5 hover:border-[var(--accent-primary)]/30 transition-colors"
+              className="flex gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 hover:border-[var(--accent-primary)]/30 transition-colors"
             >
               <div className="shrink-0 w-10 h-10 rounded-lg bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 flex items-center justify-center font-bold text-[var(--accent-primary)]">
                 {s.n}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">{s.title}</h3>
-                <p className="text-sm text-white/70 mt-1">{s.body}</p>
+                <h3 className="text-lg font-semibold text-[var(--ink)]">{s.title}</h3>
+                <p className="text-sm text-[var(--ink-muted)] mt-1">{s.body}</p>
               </div>
             </li>
           ))}
@@ -274,13 +275,13 @@ function ValuationPanel({
   highCents: number;
 }) {
   return (
-    <section aria-label="Sample valuation" className="bg-black py-20">
+    <section aria-label="Sample valuation" className="bg-[var(--cream)] py-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[var(--accent-gold)]/5 via-black to-[var(--accent-primary)]/5 p-8 md:p-10">
-          <span className="text-xs uppercase tracking-widest text-[var(--accent-gold)] font-semibold">
+        <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-8 md:p-10">
+          <span className="eyebrow text-xs uppercase tracking-widest text-[var(--accent-gold)] font-semibold">
             Sample numbers
           </span>
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-white mt-3">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--ink)] mt-3">
             A senior soccer player, IL, 500-2k followers, 4.0 GPA verified + transcript
           </h2>
           <div className="grid sm:grid-cols-3 gap-4 mt-8">
@@ -288,9 +289,9 @@ function ValuationPanel({
             <Stat label="Annual expected" value={formatValuationCents(midCents)} hint="Multi-brand testimonial mix" accent />
             <Stat label="Annual range (high)" value={formatValuationCents(highCents)} hint="Four-week series across two brands" />
           </div>
-          <p className="mt-6 text-sm text-white/60 max-w-3xl">
+          <p className="mt-6 text-sm text-[var(--ink-muted)] max-w-3xl">
             A single testimonial series for this athlete lands around{' '}
-            <span className="text-white font-semibold">$100 – $300 total</span>.
+            <span className="text-[var(--ink)] font-semibold">$100 – $300 total</span>.
             Tutoring is a lower-dollar but higher-credibility vertical — ROI
             shows up in enrollment, not post-reach. Open the{' '}
             <Link
@@ -323,30 +324,30 @@ function Stat({
       className={`rounded-xl border p-5 text-center ${
         accent
           ? 'border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/5'
-          : 'border-white/10 bg-white/5'
+          : 'border-[var(--hairline)] bg-[var(--cream-surface)]'
       }`}
     >
-      <div className="text-xs uppercase tracking-widest text-white/50">{label}</div>
-      <div className={`font-display text-3xl font-bold mt-2 ${accent ? 'text-[var(--accent-primary)]' : 'text-white'}`}>
+      <div className="text-xs uppercase tracking-widest text-[var(--ink-meta)]">{label}</div>
+      <div className={`font-display text-3xl font-bold mt-2 ${accent ? 'text-[var(--accent-primary)]' : 'text-[var(--ink)]'}`}>
         {value}
       </div>
-      <div className="text-xs text-white/60 mt-2">{hint}</div>
+      <div className="text-xs text-[var(--ink-muted)] mt-2">{hint}</div>
     </div>
   );
 }
 
 function ComplianceCallout() {
   return (
-    <section aria-label="Compliance guardrails" className="bg-black py-20">
+    <section aria-label="Compliance guardrails" className="bg-[var(--cream-section)] py-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-[var(--accent-gold)]/30 bg-[var(--accent-gold)]/5 p-8 md:p-10">
           <div className="flex items-center gap-3 mb-5">
             <ShieldAlert className="h-6 w-6 text-[var(--accent-gold)]" aria-hidden="true" />
-            <h2 className="font-display text-2xl font-bold text-white">
+            <h2 className="font-display text-2xl font-bold text-[var(--ink)]">
               What you cannot do
             </h2>
           </div>
-          <p className="text-white/70 mb-6">
+          <p className="text-[var(--ink-muted)] mb-6">
             Tutoring is the highest-credibility vertical — which means the
             compliance bar is higher too.
           </p>
@@ -376,7 +377,7 @@ function ComplianceCallout() {
               yearbook, or appear in school uniform.
             </ComplianceItem>
           </ul>
-          <p className="text-sm text-white/60 mt-6">
+          <p className="text-sm text-[var(--ink-muted)] mt-6">
             Our Tier B verification includes the actual transcript, so
             &ldquo;verified 3.9&rdquo; means something. Compare across
             verticals at{' '}
@@ -398,7 +399,7 @@ function ComplianceItem({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex gap-3">
       <Check className="h-5 w-5 text-[var(--accent-success)] shrink-0 mt-0.5" aria-hidden="true" />
-      <span className="text-white/85">{children}</span>
+      <span className="text-[var(--ink-muted)]">{children}</span>
     </li>
   );
 }
@@ -414,11 +415,11 @@ function HorizontalVerticalNav({ current }: { current: string }) {
   return (
     <section
       aria-label="Other brand verticals"
-      className="bg-black py-16 border-t border-white/10"
+      className="bg-[var(--cream-section)] py-16 border-t border-[var(--hairline)]"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm uppercase tracking-widest text-white/50 font-semibold">
+          <h2 className="text-sm uppercase tracking-widest text-[var(--ink-meta)] font-semibold">
             Other brand verticals
           </h2>
           <Link
@@ -436,7 +437,7 @@ function HorizontalVerticalNav({ current }: { current: string }) {
               <Link
                 key={v.slug}
                 href={`/solutions/brands/${v.slug}`}
-                className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-white/80 hover:border-[var(--accent-primary)]/40 hover:bg-[var(--accent-primary)]/5 hover:text-white transition-colors"
+                className="px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] text-sm text-[var(--ink-muted)] hover:border-[var(--accent-primary)]/40 hover:bg-[var(--accent-primary)]/5 hover:text-[var(--ink)] transition-colors"
               >
                 {v.label}
               </Link>

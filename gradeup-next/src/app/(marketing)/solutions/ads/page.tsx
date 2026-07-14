@@ -32,9 +32,9 @@ const PAGE_URL = '/solutions/ads';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for High-School Athletic Directors | GradeUp',
+    title: 'NIL for High-School Athletic Directors | GradeUp, part of StatStaq',
     description:
-      'The compliance layer your school doesn&rsquo;t have bandwidth to build. Parent-signed consent, state disclosures, and a full audit trail — without a single new hire.',
+      'GradeUp is the compliance layer your school doesn’t have bandwidth to build — parent-signed consent, state disclosures, and a full audit trail, without a single new hire. StatStaq’s team runs the deals your athletes sign.',
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },
@@ -52,27 +52,27 @@ const FAQ_ITEMS = [
   {
     question: 'Does our school have to formally opt in?',
     answer:
-      'No. Your athletes can sign up as individuals with parental consent; their deals flow through GradeUp with disclosures filed to your state association. A formal school partnership is optional but gets you an AD-level read-only view of your own athletes&rsquo; deals.',
+      'No. Your athletes can sign up as individuals with parental consent; GradeUp verifies their GPA, StatStaq’s team runs the deal itself, and disclosures file automatically to your state association. A formal school partnership is optional but gets you an AD-level read-only view of your own athletes’ deals.',
   },
   {
     question: 'What does a school partnership actually cost us?',
     answer:
-      'Nothing. School partnerships are free. GradeUp&rsquo;s revenue comes from the brand side of closed deals — never from schools, athletes, or families.',
+      'Nothing. School partnerships are free. GradeUp’s revenue comes from the brand side of closed deals — never from schools, athletes, or families.',
   },
   {
     question: 'How much extra work is this for the AD?',
     answer:
-      'Minimal. Disclosures file automatically. Consent is collected from parents directly. As the AD, you get a read-only view of your athletes&rsquo; deals plus optional alerts when a new disclosure is filed against your school. You can look away and still be compliant.',
+      'Minimal. Disclosures file automatically. Consent is collected from parents directly. As the AD, you get a read-only view of your athletes’ deals plus optional alerts when a new disclosure is filed against your school. You can look away and still be compliant.',
   },
   {
     question: 'Will this put our program at risk with the state association?',
     answer:
-      'The opposite. We follow your state association&rsquo;s disclosure rules automatically, and the state-AD portal (used by your association) sees the same feed. Running HS NIL through GradeUp puts your program on the cleanest possible side of any future audit.',
+      'The opposite. We follow your state association’s disclosure rules automatically, and the state-AD portal (used by your association) sees the same feed. Running HS NIL through GradeUp’s compliance layer — with StatStaq’s team handling the deals themselves — puts your program on the cleanest possible side of any future audit.',
   },
   {
     question: 'What about NCAA recruiting exposure for our athletes?',
     answer:
-      'Every deal passes a rules-engine check against the universal NCAA guardrails — no school IP, no pay-for-play, no banned categories. Your athletes&rsquo; future eligibility is preserved by default.',
+      'Every deal passes a rules-engine check against the universal NCAA guardrails — no school IP, no pay-for-play, no banned categories. Your athletes’ future eligibility is preserved by default.',
   },
   {
     question: 'Can I see the deals my athletes are signing?',
@@ -88,14 +88,14 @@ export default function AdsSolutionPage() {
         scriptId="solutions-ads-jsonld"
         pageUrl={PAGE_URL}
         name="GradeUp NIL for High-School Athletic Directors"
-        description="HS NIL compliance the school doesn&rsquo;t have bandwidth to build in-house. Parent consent, state disclosures, audit trail — all automated."
+        description="HS NIL compliance the school doesn’t have bandwidth to build in-house. Parent consent, state disclosures, audit trail — all automated."
         audience="High-school athletic directors and compliance contacts"
       />
 
       <SolutionHero
         eyebrow="For athletic directors"
         title="GradeUp handles the compliance layer"
-        titleAccent="your school doesn&rsquo;t have bandwidth to build."
+        titleAccent="your school doesn’t have bandwidth to build."
         subtitle="Parent-signed consent on every deal. State disclosures filed automatically. A full audit trail you can pull up in two clicks when your superintendent asks. Built for the AD wearing twelve other hats."
         primaryCta={{
           label: 'Partner your school',
@@ -107,16 +107,20 @@ export default function AdsSolutionPage() {
           href: 'mailto:schools@gradeupnil.com?subject=School%20partnership%20inquiry&body=School%20name%3A%20%0AState%3A%20%0AAD%20name%3A%20%0AEmail%3A%20%0APhone%3A%20',
         }}
         supportingNote="Free for schools. Zero new headcount. 7 pilot states live."
+        image={{
+          src: '/editorial/photo-02.jpg',
+          alt: 'Golden-hour high-school stadium, the compliance ground every athletic director oversees',
+        }}
       />
 
       <ProblemProductProof
-        eyebrow="The AD&rsquo;s problem"
-        heading="HS NIL compliance is non-trivial. You&rsquo;re already overloaded."
+        eyebrow="The AD’s problem"
+        heading="HS NIL compliance is non-trivial. You’re already overloaded."
         subheading="Your state just passed a rule set. Your superintendent is asking for a policy. You have a day job running an athletic department."
         steps={[
           {
             kind: 'problem',
-            heading: 'What&rsquo;s being asked of you',
+            heading: 'What’s being asked of you',
             body: 'Figure out NIL compliance, without the legal staff a college program has, without the budget for enterprise SaaS, and without letting your top athletes lose eligibility or slip through the rules.',
             bullets: [
               'State-specific disclosure windows to track',
@@ -131,9 +135,9 @@ export default function AdsSolutionPage() {
             body: 'A compliance rail that runs without you. Parent consent, state-by-state disclosure filings, universal NCAA guardrails, and a read-only dashboard of every deal that touches your school.',
             bullets: [
               'Parent-signed consent on every deal, archived forever',
-              'State disclosures filed automatically within your association&rsquo;s window',
+              'State disclosures filed automatically within your association’s window',
               'Rule-engine check on every deal (school IP, pay-for-play, banned categories)',
-              'Optional AD read-only dashboard across your school&rsquo;s deals',
+              'Optional AD read-only dashboard across your school’s deals',
             ],
           },
           {
@@ -143,22 +147,22 @@ export default function AdsSolutionPage() {
             bullets: [
               'Phase 12 compliance rail — already shipped',
               '7 pilot states covered (CA, FL, GA, IL, NJ, NY, TX)',
-              'Zero late filings in pilot — automation catches everything',
+              'Disclosure filings run on automation built to catch every window before it closes',
             ],
           },
         ]}
       />
 
-      <section aria-label="What the AD gets" className="bg-black py-20">
+      <section aria-label="What the AD gets" className="bg-[var(--cream-section)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               What you get
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               A compliance partner. Not another app to run.
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               The goal is fewer things on your plate. Every feature below
               subtracts work from your day.
             </p>
@@ -168,7 +172,7 @@ export default function AdsSolutionPage() {
             <FeatureCard
               icon={<ShieldCheck className="h-6 w-6" />}
               title="State disclosures automated"
-              body="Whatever your association&rsquo;s window is — 72 hours, 7 days, 14 days — we file inside it. Every time."
+              body="Whatever your association’s window is — 72 hours, 7 days, 14 days — we file inside it. Every time."
             />
             <FeatureCard
               icon={<FileCheck className="h-6 w-6" />}
@@ -193,7 +197,7 @@ export default function AdsSolutionPage() {
             <FeatureCard
               icon={<GraduationCap className="h-6 w-6" />}
               title="NCAA eligibility protection"
-              body="Every deal runs through the universal rules engine — school IP, pay-for-play, banned categories. Your athletes&rsquo; future is preserved."
+              body="Every deal runs through the universal rules engine — school IP, pay-for-play, banned categories. Your athletes’ future is preserved."
             />
           </div>
         </div>
@@ -239,8 +243,8 @@ function FeatureCard({
       <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] mb-4">
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-white/70 text-sm leading-relaxed">{body}</p>
+      <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{title}</h3>
+      <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{body}</p>
     </div>
   );
 }
