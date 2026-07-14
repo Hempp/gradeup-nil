@@ -9,7 +9,8 @@
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Check, ArrowRight, Shield } from 'lucide-react';
+import Image from 'next/image';
+import { Check, ArrowRight, ArrowUpRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getDictionary } from '@/lib/i18n/get-dictionary';
 
@@ -140,30 +141,43 @@ export default async function SpanishPricingPage() {
       {/* Hero */}
       <section
         aria-label={p.hero.titleAccent}
-        className="relative overflow-hidden bg-black pt-32 pb-20 sm:pt-40 sm:pb-24"
+        className="relative overflow-hidden bg-[var(--cream)] pt-32 pb-20 sm:pt-40 sm:pb-24"
       >
-        <div
-          className="absolute inset-0 opacity-40 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.08) 0%, transparent 50%)',
-          }}
-        />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
-            <Shield className="h-3.5 w-3.5" aria-hidden="true" />
-            {p.hero.badge}
-          </span>
-          <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            {p.hero.titlePrefix}{' '}
-            <span className="gradient-text-cyan">{p.hero.titleAccent}</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">{p.hero.subtitle}</p>
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="duotone mx-auto mb-8 w-[160px] rounded-lg overflow-hidden">
+            <Image
+              src="/editorial/photo-04.jpg"
+              alt="Atleta de preparatoria y su familia revisando el desglose de tarifas de StatStaq"
+              width={160}
+              height={200}
+              sizes="160px"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="text-center">
+            <span className="eyebrow inline-flex items-center gap-2">
+              <Shield className="h-3.5 w-3.5 text-[var(--cobalt)]" aria-hidden="true" />
+              {p.hero.badge}
+            </span>
+            <h1 className="mt-6 font-display text-4xl tracking-tight text-[var(--ink)] sm:text-5xl lg:text-6xl">
+              {p.hero.titlePrefix}{' '}
+              <span className="text-[var(--cobalt)]">{p.hero.titleAccent}</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--ink-muted)]">
+              {p.hero.subtitle}
+            </p>
+            <div className="mt-8 flex justify-center">
+              <div className="stat-strip">
+                Fijo <b>15%</b> conseguido &middot; <b>0%</b> que usted trae &middot; <b>$0</b> para
+                empezar
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Tiers */}
-      <section aria-label="Niveles" className="bg-black py-12 sm:py-16">
+      <section aria-label="Niveles" className="bg-[var(--cream)] py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 md:grid-cols-3">
             {tiers.map((tier) => (
@@ -172,35 +186,37 @@ export default async function SpanishPricingPage() {
                 id={tier.id}
                 className={`relative flex flex-col rounded-2xl border p-6 sm:p-8 ${
                   tier.highlighted
-                    ? 'border-[var(--accent-primary)]/40 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-black shadow-[0_0_40px_-10px_rgba(0,240,255,0.3)]'
-                    : 'border-white/10 bg-[var(--marketing-gray-950)]'
+                    ? 'border-[var(--cobalt)]/40 bg-[var(--cream-surface)] shadow-[0_0_40px_-15px_rgba(37,99,235,0.35)]'
+                    : 'border-[var(--hairline)] bg-[var(--cream-surface)]'
                 }`}
               >
                 {tier.highlighted && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-[var(--accent-primary)]/50 bg-black px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-[var(--cobalt)]/50 bg-[var(--cream)] px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--cobalt)]">
                     {p.tiers.mostPopular}
                   </span>
                 )}
                 <div className="mb-4">
-                  <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                  <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--cobalt)]">
                     {tier.name}
                   </h2>
-                  <p className="mt-1 text-white/60 text-sm">{tier.headline}</p>
+                  <p className="mt-1 text-[var(--ink-meta)] text-sm">{tier.headline}</p>
                 </div>
                 <div className="mb-6">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-white sm:text-5xl">{tier.price}</span>
+                    <span className="font-display text-4xl text-[var(--ink)] sm:text-5xl">
+                      {tier.price}
+                    </span>
                     {tier.priceDetail && (
-                      <span className="text-sm text-white/60">{tier.priceDetail}</span>
+                      <span className="text-sm text-[var(--ink-meta)]">{tier.priceDetail}</span>
                     )}
                   </div>
-                  <p className="mt-3 text-sm text-white/70">{tier.description}</p>
+                  <p className="mt-3 text-sm text-[var(--ink-muted)]">{tier.description}</p>
                 </div>
                 <ul className="mb-6 flex-1 space-y-3">
                   {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm text-white/80">
+                    <li key={feature} className="flex items-start gap-3 text-sm text-[var(--ink-muted)]">
                       <Check
-                        className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--accent-success)]"
+                        className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--cobalt)]"
                         aria-hidden="true"
                       />
                       <span>{feature}</span>
@@ -228,14 +244,15 @@ export default async function SpanishPricingPage() {
       {/* Always free */}
       <section
         aria-label={p.alwaysFree.heading}
-        className="bg-[var(--marketing-gray-950)] py-12 sm:py-16 border-y border-white/10"
+        className="bg-[var(--cream-section)] py-12 sm:py-16 border-y border-[var(--hairline)]"
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
+            <span className="eyebrow">{p.alwaysFree.alwaysZero}</span>
+            <h2 className="font-display mt-3 text-2xl text-[var(--ink)] sm:text-3xl">
               {p.alwaysFree.heading}
             </h2>
-            <p className="mt-2 text-white/60">{p.alwaysFree.body}</p>
+            <p className="mt-2 text-[var(--ink-muted)]">{p.alwaysFree.body}</p>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {[
@@ -243,15 +260,18 @@ export default async function SpanishPricingPage() {
               { label: p.alwaysFree.parents, detail: p.alwaysFree.parentsDetail },
               { label: p.alwaysFree.schools, detail: p.alwaysFree.schoolsDetail },
             ].map((row) => (
-              <div key={row.label} className="rounded-xl border border-white/10 bg-black p-5">
-                <div className="flex items-center gap-2 text-[var(--accent-success)]">
+              <div
+                key={row.label}
+                className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5"
+              >
+                <div className="flex items-center gap-2 text-[var(--cobalt)]">
                   <Check className="h-4 w-4" aria-hidden="true" />
                   <span className="text-xs font-semibold uppercase tracking-widest">
                     {p.alwaysFree.alwaysZero}
                   </span>
                 </div>
-                <h3 className="mt-3 text-lg font-bold text-white">{row.label}</h3>
-                <p className="mt-2 text-sm text-white/70">{row.detail}</p>
+                <h3 className="mt-3 text-lg font-bold text-[var(--ink)]">{row.label}</h3>
+                <p className="mt-2 text-sm text-[var(--ink-muted)]">{row.detail}</p>
               </div>
             ))}
           </div>
@@ -259,42 +279,45 @@ export default async function SpanishPricingPage() {
       </section>
 
       {/* Feature table */}
-      <section aria-label={p.table.heading} className="bg-black py-16">
+      <section aria-label={p.table.heading} className="bg-[var(--cream)] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
+            <h2 className="font-display text-2xl text-[var(--ink)] sm:text-3xl">
               {p.table.heading}
             </h2>
-            <p className="mt-2 text-white/60">{p.table.subheading}</p>
+            <p className="mt-2 text-[var(--ink-muted)]">{p.table.subheading}</p>
           </div>
-          <div className="overflow-x-auto rounded-xl border border-white/10 bg-[var(--marketing-gray-950)]">
+          <div className="overflow-x-auto rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)]">
             <table className="w-full text-left text-sm">
               <caption className="sr-only">{p.table.caption}</caption>
-              <thead className="bg-white/5">
+              <thead className="bg-[var(--cream-section)]">
                 <tr>
-                  <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                  <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                     {p.table.featureColumn}
                   </th>
-                  <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                  <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                     {p.table.athletesColumn}
                   </th>
-                  <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                  <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                     {p.table.brandsColumn}
                   </th>
-                  <th scope="col" className="px-4 py-3 font-semibold text-[var(--accent-primary)] sm:px-6">
+                  <th scope="col" className="px-4 py-3 font-semibold text-[var(--cobalt)] sm:px-6">
                     {p.table.brandPlusColumn}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {tableRows.map((row, i) => (
-                  <tr key={row.label} className={i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}>
-                    <th scope="row" className="px-4 py-3 font-medium text-white/90 sm:px-6">
+                  <tr
+                    key={row.label}
+                    className={i % 2 === 0 ? 'bg-transparent' : 'bg-[var(--cream-section)]/60'}
+                  >
+                    <th scope="row" className="px-4 py-3 font-medium text-[var(--ink)] sm:px-6">
                       {row.label}
                     </th>
-                    <td className="px-4 py-3 text-white/70 sm:px-6">{row.athletes}</td>
-                    <td className="px-4 py-3 text-white/70 sm:px-6">{row.brands}</td>
-                    <td className="px-4 py-3 text-white/90 sm:px-6">{row.brandPlus}</td>
+                    <td className="px-4 py-3 text-[var(--ink-muted)] sm:px-6">{row.athletes}</td>
+                    <td className="px-4 py-3 text-[var(--ink-muted)] sm:px-6">{row.brands}</td>
+                    <td className="px-4 py-3 text-[var(--ink)] sm:px-6">{row.brandPlus}</td>
                   </tr>
                 ))}
               </tbody>
@@ -306,19 +329,22 @@ export default async function SpanishPricingPage() {
       {/* FAQ */}
       <section
         aria-label={p.faq.heading}
-        className="bg-[var(--marketing-gray-950)] py-16 border-y border-white/10"
+        className="bg-[var(--cream-section)] py-16 border-y border-[var(--hairline)]"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
+            <h2 className="font-display text-2xl text-[var(--ink)] sm:text-3xl">
               {p.faq.heading}
             </h2>
           </div>
           <dl className="space-y-6">
             {faqs.map((item) => (
-              <div key={item.q} className="rounded-xl border border-white/10 bg-black p-5">
-                <dt className="text-base font-semibold text-white">{item.q}</dt>
-                <dd className="mt-2 text-sm leading-relaxed text-white/75">{item.a}</dd>
+              <div
+                key={item.q}
+                className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5"
+              >
+                <dt className="text-base font-semibold text-[var(--ink)]">{item.q}</dt>
+                <dd className="mt-2 text-sm leading-relaxed text-[var(--ink-muted)]">{item.a}</dd>
               </div>
             ))}
           </dl>
@@ -326,31 +352,31 @@ export default async function SpanishPricingPage() {
       </section>
 
       {/* Final CTA */}
-      <section aria-label={p.finalCta.heading} className="bg-black py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-[var(--accent-gold)]/10 p-10 text-center">
-            <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[var(--accent-primary)]/15 blur-3xl" />
-            <div className="relative">
-              <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
-                {p.finalCta.heading}
-              </h2>
-              <p className="mt-4 text-white/70 max-w-2xl mx-auto">{p.finalCta.body}</p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-                <Link href="/signup/brand">
-                  <Button size="lg" className="btn-marketing-primary gap-2 w-full sm:w-auto">
-                    {p.finalCta.primary}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </Link>
-                <Link href="/signup/athlete">
-                  <Button size="lg" className="btn-marketing-outline gap-2 w-full sm:w-auto">
-                    {p.finalCta.secondary}
-                  </Button>
-                </Link>
-              </div>
-            </div>
+      <section aria-label={p.finalCta.heading} className="bg-[var(--cobalt)] py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display text-3xl text-[#FBF9F2] sm:text-4xl">
+            {p.finalCta.heading}
+          </h2>
+          <p className="mt-4 text-[#FBF9F2]/80 max-w-2xl mx-auto">{p.finalCta.body}</p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/signup/brand"
+              className="arrow-pill inline-flex items-center justify-center gap-3 px-6 py-3 min-h-[44px] rounded-full bg-[var(--cream-surface)] text-[var(--cobalt)] font-semibold shadow-lg"
+              aria-label={p.finalCta.primary}
+            >
+              {p.finalCta.primary}
+              <span className="circle inline-flex items-center justify-center h-6 w-6 rounded-full bg-[var(--cobalt)]">
+                <ArrowUpRight className="h-4 w-4 text-[#FBF9F2]" aria-hidden="true" />
+              </span>
+            </Link>
+            <Link
+              href="/signup/athlete"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold border border-[#FBF9F2]/40 text-[#FBF9F2] hover:bg-[#FBF9F2]/10 transition-colors"
+            >
+              {p.finalCta.secondary}
+            </Link>
           </div>
-          <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-white/50 leading-relaxed">
+          <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-[#FBF9F2]/60 leading-relaxed">
             {p.finalCta.disclaimer}
           </p>
         </div>

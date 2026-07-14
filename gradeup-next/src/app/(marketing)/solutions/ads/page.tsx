@@ -107,6 +107,10 @@ export default function AdsSolutionPage() {
           href: 'mailto:schools@gradeupnil.com?subject=School%20partnership%20inquiry&body=School%20name%3A%20%0AState%3A%20%0AAD%20name%3A%20%0AEmail%3A%20%0APhone%3A%20',
         }}
         supportingNote="Free for schools. Zero new headcount. 7 pilot states live."
+        image={{
+          src: '/editorial/photo-02.jpg',
+          alt: 'Golden-hour high-school stadium, the compliance ground every athletic director oversees',
+        }}
       />
 
       <ProblemProductProof
@@ -149,16 +153,16 @@ export default function AdsSolutionPage() {
         ]}
       />
 
-      <section aria-label="What the AD gets" className="bg-black py-20">
+      <section aria-label="What the AD gets" className="bg-[var(--cream-section)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               What you get
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               A compliance partner. Not another app to run.
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               The goal is fewer things on your plate. Every feature below
               subtracts work from your day.
             </p>
@@ -239,8 +243,8 @@ function FeatureCard({
       <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] mb-4">
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-white/70 text-sm leading-relaxed">{body}</p>
+      <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{title}</h3>
+      <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{body}</p>
     </div>
   );
 }

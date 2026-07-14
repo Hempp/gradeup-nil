@@ -72,19 +72,12 @@ export default async function CaseStudyPage({ params }: PageProps) {
   if (!study) notFound();
 
   return (
-    <article className="bg-black">
-      <header className="relative pt-28 pb-16 overflow-hidden border-b border-white/10">
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            background:
-              'radial-gradient(ellipse at 10% 10%, rgba(0, 240, 255, 0.12) 0%, transparent 50%), radial-gradient(ellipse at 90% 90%, rgba(255, 200, 0, 0.08) 0%, transparent 55%)',
-          }}
-        />
+    <article className="bg-[var(--cream)]">
+      <header className="relative pt-28 pb-16 overflow-hidden border-b border-[var(--hairline)] bg-[var(--cream-section)]">
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/business/case-studies"
-            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-white/60 hover:text-white mb-6"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--ink-meta)] hover:text-[var(--ink)] mb-6"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             All case studies
@@ -94,14 +87,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
               {study.tags.map((t) => (
                 <span
                   key={t}
-                  className="px-2.5 py-1 rounded-full bg-white/10 text-xs font-semibold uppercase tracking-wider text-white/80"
+                  className="px-2.5 py-1 rounded-full bg-[var(--cream-surface)] text-xs font-semibold uppercase tracking-wider text-[var(--ink-muted)]"
                 >
                   {t.replace(/_/g, ' ')}
                 </span>
               ))}
             </div>
           )}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-4">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--ink)] mb-4">
             {study.title}
           </h1>
           {study.subtitle && (
@@ -125,7 +118,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
       {study.heroImageUrl && (
         <div className="bg-[var(--marketing-gray-950)] py-8">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative aspect-[16/9] rounded-3xl overflow-hidden border border-white/10">
+            <div className="relative aspect-[16/9] rounded-3xl overflow-hidden border border-[var(--hairline)]">
               <Image
                 src={study.heroImageUrl}
                 alt={study.title}
@@ -151,7 +144,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
       )}
 
       {study.bodyMarkdown.trim() && (
-        <section className="bg-black py-12 md:py-16">
+        <section className="bg-[var(--cream)] py-12 md:py-16">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <CaseStudyBody markdown={study.bodyMarkdown} />
           </div>
@@ -168,9 +161,9 @@ export default async function CaseStudyPage({ params }: PageProps) {
         </section>
       )}
 
-      <section className="bg-black py-16 border-t border-white/10">
+      <section className="bg-[var(--cream)] py-16 border-t border-[var(--hairline)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
+          <h2 className="text-2xl md:text-3xl font-bold text-[var(--ink)]">
             Want your brand on the next case study?
           </h2>
           <p className="mt-3 text-[var(--marketing-gray-400)]">

@@ -15,7 +15,7 @@ export function AthletePublicTrajectoryStrip({
 }) {
   if (!snapshots || snapshots.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-black/30 p-6 text-center text-sm text-white/50">
+      <div className="marketing-dark rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6 text-center text-sm text-[var(--ink-meta)]">
         No trajectory yet. Add verified GPAs to build one.
       </div>
     );
@@ -43,10 +43,10 @@ export function AthletePublicTrajectoryStrip({
     .join(' ');
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+    <div className="marketing-dark rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5">
       <div className="mb-3 flex items-baseline justify-between">
-        <h3 className="font-display text-lg text-white">GPA trajectory</h3>
-        <span className="text-xs text-white/50">
+        <h3 className="font-display text-lg text-[var(--ink)]">GPA trajectory</h3>
+        <span className="stat-strip">
           {sorted.length} snapshot{sorted.length === 1 ? '' : 's'}
         </span>
       </div>
@@ -60,7 +60,7 @@ export function AthletePublicTrajectoryStrip({
           <path
             d={d}
             fill="none"
-            stroke="var(--accent-primary)"
+            stroke="var(--cobalt)"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -70,10 +70,10 @@ export function AthletePublicTrajectoryStrip({
             const y = height - ((snap.gpa - min) / range) * height;
             const fill =
               snap.tier === 'institution_verified'
-                ? '#10b981'
+                ? '#0F9D58'
                 : snap.tier === 'user_submitted'
-                  ? '#3b82f6'
-                  : '#9ca3af';
+                  ? '#2563EB'
+                  : '#6B6E82';
             return (
               <circle
                 key={`${snap.reportedAt}-${idx}`}
@@ -86,7 +86,7 @@ export function AthletePublicTrajectoryStrip({
           })}
         </svg>
       </div>
-      <div className="mt-3 flex items-center justify-between text-xs text-white/50">
+      <div className="mt-3 flex items-center justify-between text-xs text-[var(--ink-meta)]">
         <span>{formatGpa(sorted[0]?.gpa ?? null)} start</span>
         <span>{formatGpa(sorted[sorted.length - 1]?.gpa ?? null)} now</span>
       </div>

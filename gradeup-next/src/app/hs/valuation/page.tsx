@@ -27,7 +27,17 @@
 
 import Link from 'next/link';
 import Script from 'next/script';
-import { ArrowRight, Shield, Sparkles, TrendingUp } from 'lucide-react';
+import Image from 'next/image';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Shield,
+  Sparkles,
+  TrendingUp,
+  Flag,
+  Compass,
+  Award,
+} from 'lucide-react';
 import { ValuationCalculatorClient } from '@/components/hs/ValuationCalculatorClient';
 import { buildMarketingMetadata, siteUrl } from '@/lib/seo';
 
@@ -144,71 +154,50 @@ export default function ValuationPage() {
         {JSON_LD_STRING}
       </Script>
 
-      <div className="relative min-h-screen bg-black text-white">
-        {/* Background effects */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div
-            className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full opacity-30 blur-3xl"
-            style={{
-              background:
-                'radial-gradient(ellipse at center, rgba(0, 240, 255, 0.3) 0%, transparent 70%)',
-            }}
-          />
-          <div
-            className="absolute -right-40 top-40 h-[600px] w-[600px] rounded-full opacity-20 blur-3xl"
-            style={{
-              background:
-                'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.25) 0%, transparent 70%)',
-            }}
-          />
-        </div>
-
+      <div className="marketing-dark relative min-h-screen bg-[var(--cream)] text-[var(--ink)]">
         <main className="relative">
           {/* Hero */}
           <section
             aria-label="NIL Valuation Calculator hero"
-            className="mx-auto max-w-5xl px-4 pt-24 pb-10 sm:px-6 sm:pt-32 lg:px-8"
+            className="mx-auto grid max-w-6xl gap-10 px-4 pt-24 pb-10 sm:px-6 sm:pt-32 lg:px-8 md:grid-cols-[1.1fr_0.9fr] md:items-center"
           >
-            <div className="text-center">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm">
+            <div className="text-center md:text-left">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] px-4 py-2 text-sm">
                 <Sparkles
-                  className="h-3.5 w-3.5 text-[var(--accent-primary)]"
+                  className="h-3.5 w-3.5 text-[var(--cobalt)]"
                   aria-hidden="true"
                 />
-                <span className="text-white/80">Free · 60-second estimate</span>
+                <span className="text-[var(--ink-muted)]">Free · 60-second estimate</span>
               </div>
 
-              <h1 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-[var(--ink)] sm:text-5xl lg:text-6xl">
                 What&rsquo;s your{' '}
-                <span className="bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-gold)] bg-clip-text text-transparent">
+                <span className="text-[var(--cobalt)]">
                   scholar-athlete
                 </span>{' '}
                 worth?
               </h1>
 
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[var(--ink-muted)] sm:text-lg md:mx-0">
                 You know your kid is a scholar-athlete. We think these ranges
                 make sense. Answer a few questions and we&rsquo;ll give you an
                 honest NIL value range — no email required to see your number.
               </p>
 
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-white/50">
-                <span className="inline-flex items-center gap-1.5">
-                  <Shield
-                    className="h-3.5 w-3.5 text-[var(--accent-primary)]"
-                    aria-hidden="true"
-                  />
-                  State-rules aware
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <TrendingUp
-                    className="h-3.5 w-3.5 text-[var(--accent-gold)]"
-                    aria-hidden="true"
-                  />
-                  Public market data
-                </span>
-                <span>No signup to see estimate</span>
+              <div className="stat-strip mt-6 inline-flex">
+                <span><b>State-rules</b> aware · Public market data · No signup required</span>
               </div>
+            </div>
+            <div className="duotone hidden overflow-hidden rounded-2xl md:block">
+              <Image
+                src="/editorial/photo-02.jpg"
+                alt="Golden-hour view of a high-school stadium at game time"
+                width={640}
+                height={480}
+                sizes="(min-width: 768px) 40vw, 100vw"
+                className="h-full w-full object-cover"
+                priority
+              />
             </div>
           </section>
 
@@ -225,11 +214,12 @@ export default function ValuationPage() {
             aria-label="How the calculator works"
             className="mx-auto max-w-4xl px-4 pb-16 sm:px-6 lg:px-8"
           >
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-10">
-              <h2 className="font-display text-2xl font-semibold sm:text-3xl">
-                How this works
+            <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-section)] p-6 sm:p-10">
+              <p className="eyebrow">How this works</p>
+              <h2 className="mt-2 font-display text-2xl font-semibold text-[var(--ink)] sm:text-3xl">
+                Five public-market signals
               </h2>
-              <p className="mt-3 text-white/70">
+              <p className="mt-3 text-[var(--ink-muted)]">
                 Our v1 model blends five public-market signals into a range
                 calibrated against reported high-school NIL deal data from
                 2024–2026.
@@ -239,18 +229,19 @@ export default function ValuationPage() {
                 {FACTORS.map((f) => (
                   <div
                     key={f.title}
-                    className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                    className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4"
                   >
-                    <div className="text-sm font-semibold text-[var(--accent-primary)]">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-[var(--cobalt)]">
+                      <f.icon className="h-4 w-4" aria-hidden="true" />
                       {f.title}
                     </div>
-                    <p className="mt-1 text-sm text-white/70">{f.body}</p>
+                    <p className="mt-1 text-sm text-[var(--ink-muted)]">{f.body}</p>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-6 text-sm text-white/60">
-                <strong className="text-white">
+              <p className="mt-6 text-sm text-[var(--ink-meta)]">
+                <strong className="text-[var(--ink)]">
                   What we don&rsquo;t model:
                 </strong>{' '}
                 specific deal offers you&rsquo;ve received, regional rivalries,
@@ -260,20 +251,19 @@ export default function ValuationPage() {
                 state goes live.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href="/business/case-studies"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:border-white/40 hover:text-white"
+                  className="btn-marketing-outline inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
                 >
                   See real deal case studies
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
-                <Link
-                  href="/hs"
-                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
-                >
-                  Join the GradeUp HS waitlist
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <Link href="/hs" className="arrow-pill">
+                  <span className="circle">
+                    <ArrowUpRight className="h-4 w-4 text-[#FBF9F2]" aria-hidden="true" />
+                  </span>
+                  <span className="label">Join the GradeUp HS waitlist</span>
                 </Link>
               </div>
             </div>
@@ -284,7 +274,7 @@ export default function ValuationPage() {
             aria-label="Honest framing"
             className="mx-auto max-w-3xl px-4 pb-24 sm:px-6 lg:px-8"
           >
-            <div className="text-center text-sm text-white/50">
+            <div className="text-center text-sm text-[var(--ink-meta)]">
               <p>
                 This calculator returns v1 estimates based on publicly reported
                 deal ranges. Real market numbers vary widely. Nothing here is
@@ -298,25 +288,30 @@ export default function ValuationPage() {
   );
 }
 
-const FACTORS: { title: string; body: string }[] = [
+const FACTORS: { title: string; body: string; icon: typeof Flag }[] = [
   {
     title: 'Sport demand',
+    icon: Flag,
     body: 'Football and basketball drive most HS NIL deal volume. Women\u2019s basketball and niche sports command premium deals in their segments.',
   },
   {
     title: 'State brand density',
+    icon: Compass,
     body: 'California, Texas, Florida, Georgia, and New York carry higher multipliers thanks to headquartered consumer brands and larger media markets.',
   },
   {
     title: 'Social reach',
+    icon: TrendingUp,
     body: 'Log-scale follower buckets. Advertisers pay more per follower as scale grows — but the first thousand matter most for proving authenticity.',
   },
   {
     title: 'Grade level',
+    icon: Award,
     body: 'Seniors and college-bound athletes carry a premium because brand activation is near-term. Underclassmen discount reflects a longer payoff.',
   },
   {
     title: 'GPA + verification',
+    icon: Shield,
     body: 'Our differentiator: scholar-athlete framing. Verified 3.9+ GPAs unlock education and financial-services sponsors that won\u2019t touch unverified claims.',
   },
 ];

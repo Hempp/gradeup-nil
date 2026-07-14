@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Search,
   ChevronDown,
@@ -212,34 +213,36 @@ function HelpHeroSection({
 }) {
   return (
     <section
-      className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-black"
+      className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-[var(--cream)]"
       aria-label="Help center hero"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="hero-orb hero-orb-cyan absolute -top-40 -left-40 w-[400px] h-[400px]" />
-        <div className="hero-orb hero-orb-magenta absolute -bottom-40 -right-40 w-[500px] h-[500px]" />
-        <div className="absolute inset-0 hero-grid opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black" />
-      </div>
-
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] mb-8">
           <HelpCircle className="h-4 w-4 text-[var(--accent-primary)]" />
-          <span className="text-sm font-medium text-white/90">Help Center</span>
+          <span className="text-sm font-medium text-[var(--ink)]">Help Center</span>
         </div>
 
         {/* Headline */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--ink)] mb-6">
           How Can We{' '}
-          <span className="gradient-text-cyan">Help You?</span>
+          <span className="text-[var(--accent-primary)]">Help You?</span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg sm:text-xl text-[var(--marketing-gray-400)] max-w-2xl mx-auto mb-10">
+        <p className="text-lg sm:text-xl text-[var(--ink-muted)] max-w-2xl mx-auto mb-10">
           Find answers to common questions about GradeUp, NIL deals, payments, and more.
         </p>
+
+        <div className="duotone relative mx-auto mb-10 aspect-[21/9] max-w-2xl rounded-2xl overflow-hidden">
+          <Image
+            src="/editorial/photo-05.jpg"
+            alt="GradeUp support team assisting a scholar-athlete family"
+            fill
+            sizes="(max-width: 1024px) 100vw, 640px"
+            className="object-cover"
+          />
+        </div>
 
         {/* Search Bar */}
         <div className="relative max-w-xl mx-auto">
@@ -254,7 +257,7 @@ function HelpHeroSection({
               placeholder="Search for answers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
+              className="w-full h-14 pl-12 pr-4 rounded-xl bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-[var(--ink)] placeholder:text-[var(--marketing-gray-500)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
               aria-label="Search help articles"
             />
           </div>
@@ -266,7 +269,7 @@ function HelpHeroSection({
             <button
               key={topic}
               onClick={() => setSearchQuery(topic)}
-              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+              className="px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] text-sm text-[var(--ink-muted)] hover:bg-[var(--cream-section)] hover:text-[var(--ink)] transition-colors"
             >
               {topic}
             </button>
@@ -297,7 +300,7 @@ function FAQAccordionItem({
         className="w-full flex items-center justify-between gap-4 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--marketing-gray-900)] rounded-sm group"
         aria-expanded={isOpen}
       >
-        <span className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--accent-primary)] transition-colors">
+        <span className="text-base sm:text-lg font-medium text-[var(--ink)] group-hover:text-[var(--accent-primary)] transition-colors">
           {faq.question}
         </span>
         <ChevronDown
@@ -378,7 +381,7 @@ function FAQCategorySection({
           <Icon className={`h-6 w-6 ${colors.icon}`} />
         </div>
         <div>
-          <h2 className={`text-xl font-bold text-white mb-1`}>{category.title}</h2>
+          <h2 className={`text-xl font-bold text-[var(--ink)] mb-1`}>{category.title}</h2>
           <p className="text-sm text-[var(--marketing-gray-500)]">{category.description}</p>
         </div>
       </div>
@@ -415,8 +418,8 @@ function CategoryNav({
         onClick={() => setActiveCategory(null)}
         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
           activeCategory === null
-            ? 'bg-[var(--accent-primary)] text-white'
-            : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
+            ? 'bg-[var(--accent-primary)] text-[var(--ink)]'
+            : 'bg-[var(--cream-surface)] border border-[var(--hairline)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)] hover:text-[var(--ink)]'
         }`}
       >
         All Topics
@@ -429,8 +432,8 @@ function CategoryNav({
             onClick={() => setActiveCategory(category.id)}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
               activeCategory === category.id
-                ? 'bg-[var(--accent-primary)] text-white'
-                : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
+                ? 'bg-[var(--accent-primary)] text-[var(--ink)]'
+                : 'bg-[var(--cream-surface)] border border-[var(--hairline)] text-[var(--ink-muted)] hover:bg-[var(--cream-section)] hover:text-[var(--ink)]'
             }`}
           >
             <Icon className="h-4 w-4" />
@@ -533,7 +536,7 @@ function FAQSection({
             <div className="w-16 h-16 rounded-full bg-[var(--marketing-gray-800)] flex items-center justify-center mx-auto mb-4">
               <Search className="h-8 w-8 text-[var(--marketing-gray-500)]" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">No results found</h3>
+            <h3 className="text-xl font-bold text-[var(--ink)] mb-2">No results found</h3>
             <p className="text-[var(--marketing-gray-400)] mb-6">
               We couldn&apos;t find any answers matching &quot;{searchQuery}&quot;. Try different keywords or browse categories.
             </p>
@@ -607,9 +610,9 @@ function QuickHelpSection() {
   };
 
   return (
-    <section className="py-12 bg-black">
+    <section className="py-12 bg-[var(--cream)]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-white text-center mb-8">Quick Help</h2>
+        <h2 className="text-2xl font-bold text-[var(--ink)] text-center mb-8">Quick Help</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickHelp.map((item) => {
             const Icon = item.icon;
@@ -620,7 +623,7 @@ function QuickHelpSection() {
                 className={`group p-5 rounded-xl bg-[var(--marketing-gray-900)] border ${colorClasses[item.color]} transition-all hover:-translate-y-1`}
               >
                 <Icon className={`h-6 w-6 mb-3 ${colorClasses[item.color].split(' ')[0]}`} />
-                <h3 className="font-semibold text-white mb-1">{item.title}</h3>
+                <h3 className="font-semibold text-[var(--ink)] mb-1">{item.title}</h3>
                 <p className="text-sm text-[var(--marketing-gray-500)]">{item.description}</p>
               </Link>
             );
@@ -638,19 +641,16 @@ function QuickHelpSection() {
 function ContactSupportSection() {
   return (
     <section className="section-spacing-md bg-marketing-cta relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2)_0%,transparent_60%)]" />
-
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Icon */}
-        <div className="w-16 h-16 rounded-full bg-black/20 flex items-center justify-center mx-auto mb-6">
-          <MessageSquare className="h-8 w-8 text-white" />
+        <div className="w-16 h-16 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] flex items-center justify-center mx-auto mb-6">
+          <MessageSquare className="h-8 w-8 text-[var(--accent-primary)]" />
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-4">
           Still Need Help?
         </h2>
-        <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-[var(--ink-muted)] mb-8 max-w-2xl mx-auto">
           Our support team is here to help you succeed. Reach out and we&apos;ll get back to you within 24 hours.
         </p>
 
@@ -658,7 +658,7 @@ function ContactSupportSection() {
           <Link href="mailto:support@gradeup.com">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-black hover:bg-[var(--marketing-gray-900)] text-white font-semibold gap-2"
+              className="btn-marketing-primary w-full sm:w-auto font-semibold gap-2"
             >
               <Mail className="h-5 w-5" />
               Email Support
@@ -667,7 +667,7 @@ function ContactSupportSection() {
           <Link href="/solutions/parents">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-white hover:bg-white/90 text-black font-semibold border-2 border-black/30 gap-2"
+              className="btn-marketing-outline w-full sm:w-auto font-semibold gap-2"
             >
               <MessageSquare className="h-5 w-5" />
               Talk to our team
@@ -676,7 +676,7 @@ function ContactSupportSection() {
         </div>
 
         {/* Support Hours */}
-        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-white/60">
+        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-[var(--ink-meta)]">
           <span className="flex items-center gap-1.5">
             <Clock className="h-4 w-4" />
             Mon-Fri, 9am-6pm EST

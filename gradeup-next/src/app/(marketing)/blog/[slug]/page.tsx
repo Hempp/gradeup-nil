@@ -146,28 +146,28 @@ function FurtherReading({
   return (
     <section
       aria-label="Further reading"
-      className="bg-black py-14 border-b border-white/10"
+      className="bg-[var(--cream)] py-14 border-b border-[var(--hairline)]"
     >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-display text-2xl font-bold text-white">
+        <h2 className="font-display text-2xl font-bold text-[var(--ink)]">
           Keep reading
         </h2>
         <ul className="mt-5 space-y-3">
           <li>
             <Link
               href={`/blog/state-nil-rules/${stateSlug}`}
-              className="group flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 hover:border-white/20 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
+              className="group flex items-center justify-between gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 hover:bg-[var(--cream-section)] hover:border-[var(--hairline)] transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
             >
               <div>
                 <div className="text-[10px] uppercase tracking-widest text-[var(--accent-primary)] font-semibold">
                   State rules
                 </div>
-                <div className="mt-1 text-white font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
+                <div className="mt-1 text-[var(--ink)] font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
                   See your state&rsquo;s HS NIL rules in detail
                 </div>
               </div>
               <ArrowRight
-                className="h-5 w-5 text-white/50 group-hover:text-[var(--accent-primary)] group-hover:translate-x-1 transition-all"
+                className="h-5 w-5 text-[var(--ink-meta)] group-hover:text-[var(--accent-primary)] group-hover:translate-x-1 transition-all"
                 aria-hidden="true"
               />
             </Link>
@@ -175,18 +175,18 @@ function FurtherReading({
           <li>
             <Link
               href={solutionPath}
-              className="group flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 hover:border-white/20 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
+              className="group flex items-center justify-between gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 hover:bg-[var(--cream-section)] hover:border-[var(--hairline)] transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
             >
               <div>
                 <div className="text-[10px] uppercase tracking-widest text-[var(--accent-gold)] font-semibold">
                   Persona walkthrough
                 </div>
-                <div className="mt-1 text-white font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
+                <div className="mt-1 text-[var(--ink)] font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
                   How GradeUp works for this audience
                 </div>
               </div>
               <ArrowRight
-                className="h-5 w-5 text-white/50 group-hover:text-[var(--accent-primary)] group-hover:translate-x-1 transition-all"
+                className="h-5 w-5 text-[var(--ink-meta)] group-hover:text-[var(--accent-primary)] group-hover:translate-x-1 transition-all"
                 aria-hidden="true"
               />
             </Link>
@@ -198,18 +198,18 @@ function FurtherReading({
               <li key={relatedSlug}>
                 <Link
                   href={blogPostPath(related.slug)}
-                  className="group flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 hover:border-white/20 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
+                  className="group flex items-center justify-between gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 hover:bg-[var(--cream-section)] hover:border-[var(--hairline)] transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
                 >
                   <div>
-                    <div className="text-[10px] uppercase tracking-widest text-white/50 font-semibold">
+                    <div className="text-[10px] uppercase tracking-widest text-[var(--ink-meta)] font-semibold">
                       Related article &middot; {readingMinutes(related)} min
                     </div>
-                    <div className="mt-1 text-white font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
+                    <div className="mt-1 text-[var(--ink)] font-semibold group-hover:text-[var(--accent-primary)] transition-colors">
                       {related.title}
                     </div>
                   </div>
                   <ArrowRight
-                    className="h-5 w-5 text-white/50 group-hover:text-[var(--accent-primary)] group-hover:translate-x-1 transition-all"
+                    className="h-5 w-5 text-[var(--ink-meta)] group-hover:text-[var(--accent-primary)] group-hover:translate-x-1 transition-all"
                     aria-hidden="true"
                   />
                 </Link>

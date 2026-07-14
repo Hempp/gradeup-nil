@@ -6,6 +6,7 @@
  * passing Spanish strings from the dictionary.
  */
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import {
   Heart,
   ShieldCheck,
@@ -134,16 +135,14 @@ export default async function SpanishParentsPage() {
         ]}
       />
 
-      <section aria-label={p.features.heading} className="bg-black py-20">
+      <section aria-label={p.features.heading} className="bg-[var(--cream-section)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
-              {p.features.eyebrow}
-            </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <span className="eyebrow">{p.features.eyebrow}</span>
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               {p.features.heading}
             </h2>
-            <p className="mt-3 text-white/70 text-lg">{p.features.subheading}</p>
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">{p.features.subheading}</p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -183,15 +182,27 @@ export default async function SpanishParentsPage() {
 
       <section
         aria-label="Parent quote"
-        className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10"
+        className="bg-[var(--marketing-gray-950)] py-20 border-y border-[var(--hairline)]"
       >
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <blockquote className="font-display text-2xl sm:text-3xl font-semibold text-white leading-snug">
-            &ldquo;{p.quote.text}&rdquo;
-          </blockquote>
-          <p className="mt-5 text-sm uppercase tracking-widest text-[var(--accent-primary)]">
-            {p.quote.attribution}
-          </p>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-8 sm:grid-cols-[200px_1fr] items-center">
+          <div className="duotone mx-auto sm:mx-0 rounded-lg overflow-hidden w-[200px]">
+            <Image
+              src="/editorial/photo-05.jpg"
+              alt="Padre revisando el panel de consentimiento junto a su atleta de preparatoria"
+              width={200}
+              height={260}
+              sizes="200px"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="text-center sm:text-left">
+            <blockquote className="font-display text-2xl sm:text-3xl font-semibold text-[var(--ink)] leading-snug">
+              &ldquo;{p.quote.text}&rdquo;
+            </blockquote>
+            <p className="mt-5 text-sm uppercase tracking-widest text-[var(--cobalt)]">
+              {p.quote.attribution}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -233,11 +244,11 @@ function FeatureCard({
 }) {
   return (
     <div className="card-marketing p-6">
-      <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] mb-4">
+      <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--cobalt)]/10 text-[var(--cobalt)] mb-4">
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-white/70 text-sm leading-relaxed">{body}</p>
+      <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{title}</h3>
+      <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{body}</p>
     </div>
   );
 }

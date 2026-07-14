@@ -19,13 +19,13 @@ export function BlogRelatedPosts({
   return (
     <section
       aria-label="Related posts"
-      className="bg-black py-16 border-b border-white/10"
+      className="bg-[var(--cream)] py-16 border-b border-[var(--hairline)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="font-display text-2xl sm:text-3xl font-bold text-white">
+        <h2 className="font-display text-2xl sm:text-3xl text-[var(--ink)]">
           {heading}
         </h2>
-        <p className="mt-2 text-white/60 text-sm">
+        <p className="mt-2 text-[var(--ink-muted)] text-sm">
           More from the GradeUp editorial library.
         </p>
 

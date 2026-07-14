@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import Link from 'next/link';
+import Image from 'next/image';
 import { listPublicBrands } from '@/lib/hs-nil/brand-directory';
 import { createClient } from '@/lib/supabase/server';
 import { BrandDirectoryCard } from '@/components/marketing/BrandDirectoryCard';
@@ -91,19 +92,33 @@ export default async function BrandsDirectoryPage({
           {JSON.stringify(jsonLd)}
         </Script>
       ) : null}
-      <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
-        <section className="mx-auto max-w-6xl px-6 pt-24 pb-6">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
-            Brand Partners
-          </p>
-          <h1 className="mt-2 font-display text-5xl leading-tight md:text-6xl">
-            The brands partnering with scholar-athletes.
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/70">
-            Local restaurants, training facilities, retail, fitness, tutoring.
-            Every brand here runs HS-compliant campaigns — state rules
-            validated at deal creation, parental consent required.
-          </p>
+      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
+        <section className="mx-auto grid max-w-6xl gap-10 px-6 pt-24 pb-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
+          <div>
+            <p className="eyebrow">Brand Partners</p>
+            <h1 className="mt-2 font-display text-5xl leading-tight text-[var(--ink)] md:text-6xl">
+              The brands <span className="text-[var(--cobalt)]">partnering</span> with scholar-athletes.
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-[var(--ink-muted)]">
+              Local restaurants, training facilities, retail, fitness, tutoring.
+              Every brand here runs HS-compliant campaigns — state rules
+              validated at deal creation, parental consent required.
+            </p>
+            <div className="stat-strip mt-6 inline-flex">
+              <span><b>State rules</b> validated · Parental consent required</span>
+            </div>
+          </div>
+          <div className="duotone hidden overflow-hidden rounded-2xl md:block">
+            <Image
+              src="/editorial/photo-06.jpg"
+              alt="Local brand partners working alongside scholar-athletes"
+              width={640}
+              height={480}
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="h-full w-full object-cover"
+              priority
+            />
+          </div>
         </section>
 
         {/* Tab bar — real anchor links so both views stay crawlable. */}
@@ -111,7 +126,7 @@ export default async function BrandsDirectoryPage({
           <div
             role="tablist"
             aria-label="Brands sections"
-            className="flex items-center gap-2 border-b border-white/10"
+            className="flex items-center gap-2 border-b border-[var(--hairline)]"
           >
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -124,8 +139,8 @@ export default async function BrandsDirectoryPage({
                   className={cn(
                     'relative -mb-px px-4 py-3 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-t-md',
                     isActive
-                      ? 'text-[var(--accent-primary)] border-b-2 border-[var(--accent-primary)]'
-                      : 'text-white/60 hover:text-white border-b-2 border-transparent',
+                      ? 'text-[var(--cobalt)] border-b-2 border-[var(--cobalt)]'
+                      : 'text-[var(--ink-meta)] hover:text-[var(--ink)] border-b-2 border-transparent',
                   )}
                 >
                   {tab.label}
@@ -145,9 +160,9 @@ export default async function BrandsDirectoryPage({
 
             <section className="mx-auto max-w-6xl px-6 pb-24">
               {brands.length === 0 ? (
-                <div className="rounded-2xl border border-white/10 bg-black/30 p-10 text-center text-white/70">
+                <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-10 text-center text-[var(--ink-muted)]">
                   <p className="text-lg">No brands match those filters yet.</p>
-                  <p className="mt-2 text-sm text-white/50">
+                  <p className="mt-2 text-sm text-[var(--ink-meta)]">
                     Early pilot — brand partners are opting in weekly.
                   </p>
                 </div>

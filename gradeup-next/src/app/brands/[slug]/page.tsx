@@ -111,7 +111,7 @@ export default async function BrandPublicProfilePage({
       >
         {JSON.stringify(jsonLd)}
       </Script>
-      <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
         <div className="mx-auto max-w-5xl px-6 pt-24 pb-20">
           <BrandPublicHero brand={brand} />
 
@@ -121,7 +121,7 @@ export default async function BrandPublicProfilePage({
 
           {caseStudies.length > 0 && (
             <section className="mt-12">
-              <h2 className="font-display text-2xl text-white">
+              <h2 className="font-display text-2xl text-[var(--ink)]">
                 Related case studies
               </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">

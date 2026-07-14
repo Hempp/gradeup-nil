@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import Image from 'next/image';
 import { listPublicAthletes } from '@/lib/hs-nil/athlete-profile';
 import { AthleteDirectoryCard } from '@/components/marketing/AthleteDirectoryCard';
 import { AthleteDirectoryFilters } from '@/components/marketing/AthleteDirectoryFilters';
@@ -78,18 +79,32 @@ export default async function AthletesDirectoryPage({
       <Script id="athlete-directory-jsonld" type="application/ld+json">
         {JSON.stringify(jsonLd)}
       </Script>
-      <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
-        <section className="mx-auto max-w-6xl px-6 pt-24 pb-10">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
-            Scholar-Athletes
-          </p>
-          <h1 className="mt-2 font-display text-5xl leading-tight md:text-6xl">
-            Verified by GPA. Grounded by deals.
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/70">
-            Every athlete here has opted in to a public profile. Filter by
-            state, sport, or graduation year. PII is minimized by design.
-          </p>
+      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
+        <section className="mx-auto grid max-w-6xl gap-10 px-6 pt-24 pb-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
+          <div>
+            <p className="eyebrow">Scholar-Athletes</p>
+            <h1 className="mt-2 font-display text-5xl leading-tight text-[var(--ink)] md:text-6xl">
+              Verified by <span className="text-[var(--cobalt)]">GPA</span>. Grounded by deals.
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-[var(--ink-muted)]">
+              Every athlete here has opted in to a public profile. Filter by
+              state, sport, or graduation year. PII is minimized by design.
+            </p>
+            <div className="stat-strip mt-6 inline-flex">
+              <span><b>Verified</b> GPA · State-rules aware · PII-minimized</span>
+            </div>
+          </div>
+          <div className="duotone hidden overflow-hidden rounded-2xl md:block">
+            <Image
+              src="/editorial/photo-playbook.jpg"
+              alt="A coach's playbook and whistle, symbolizing verified scholar-athlete trajectories"
+              width={640}
+              height={480}
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="h-full w-full object-cover"
+              priority
+            />
+          </div>
         </section>
 
         <section className="mx-auto max-w-6xl px-6 pb-6">
@@ -98,9 +113,9 @@ export default async function AthletesDirectoryPage({
 
         <section className="mx-auto max-w-6xl px-6 pb-24">
           {schoolFilter && (
-            <div className="mb-6 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
-              <span className="text-white/60">Filtering by school:</span>
-              <span className="font-semibold text-white">{schoolFilter}</span>
+            <div className="mb-6 flex items-center gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] px-4 py-3 text-sm">
+              <span className="text-[var(--ink-meta)]">Filtering by school:</span>
+              <span className="font-semibold text-[var(--ink)]">{schoolFilter}</span>
               <a
                 href={`/athletes${[
                   stateFilter ? `state=${stateFilter}` : null,
@@ -111,16 +126,16 @@ export default async function AthletesDirectoryPage({
                   sportFilter ? `sport=${sportFilter}` : null,
                   gradFilter ? `grad=${gradFilter}` : null,
                 ].filter(Boolean).join('&') : ''}`}
-                className="ml-auto text-xs text-white/60 underline underline-offset-2 hover:text-white"
+                className="ml-auto text-xs text-[var(--ink-meta)] underline underline-offset-2 hover:text-[var(--ink)]"
               >
                 Clear
               </a>
             </div>
           )}
           {athletes.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-black/30 p-10 text-center text-white/70">
+            <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-10 text-center text-[var(--ink-muted)]">
               <p className="text-lg">No athletes match those filters yet.</p>
-              <p className="mt-2 text-sm text-white/50">
+              <p className="mt-2 text-sm text-[var(--ink-meta)]">
                 {schoolFilter
                   ? `No public athletes matched "${schoolFilter}". The HS-NIL pilot is active in CA, FL, GA, IL, NJ, NY, and TX — athletes from other schools can claim profiles as states expand.`
                   : stateFilter

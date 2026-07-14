@@ -115,6 +115,10 @@ export default function ParentsSolutionPage() {
           href: '/hs#waitlist',
         }}
         supportingNote="Free to start. No credit card. No commitment."
+        image={{
+          src: '/editorial/photo-05.jpg',
+          alt: 'A parent and their scholar-athlete reviewing a deal together',
+        }}
       />
 
       <ProblemProductProof
@@ -157,19 +161,22 @@ export default function ParentsSolutionPage() {
         ]}
       />
 
-      <section aria-label="What parents get" className="bg-black py-20">
+      <section aria-label="What parents get" className="bg-[var(--cream-section)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               What you get
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               A parent dashboard, not a marketing pitch.
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               Everything below is already in the product. Not a roadmap, not a
               future state — the working platform, today.
             </p>
+            <div className="stat-strip mt-6 inline-flex">
+              <b>Dual-signed</b>&nbsp;·&nbsp;<b>Custodial</b>&nbsp;·&nbsp;<b>State-compliant</b>
+            </div>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -253,8 +260,8 @@ function FeatureCard({
       <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] mb-4">
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-white/70 text-sm leading-relaxed">{body}</p>
+      <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{title}</h3>
+      <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{body}</p>
     </div>
   );
 }
@@ -267,9 +274,9 @@ function TestimonialQuote({
   attribution: string;
 }) {
   return (
-    <section aria-label="Parent quote" className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10">
+    <section aria-label="Parent quote" className="bg-[var(--marketing-gray-950)] py-20 border-y border-[var(--hairline)]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <blockquote className="font-display text-2xl sm:text-3xl font-semibold text-white leading-snug">
+        <blockquote className="font-display text-2xl sm:text-3xl font-semibold text-[var(--ink)] leading-snug">
           &ldquo;{quote}&rdquo;
         </blockquote>
         <p className="mt-5 text-sm uppercase tracking-widest text-[var(--accent-primary)]">

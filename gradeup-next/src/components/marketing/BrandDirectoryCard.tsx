@@ -1,35 +1,38 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { PublicBrandSummary } from '@/lib/hs-nil/brand-directory';
 
 export function BrandDirectoryCard({ brand }: { brand: PublicBrandSummary }) {
   return (
     <Link
       href={`/brands/${brand.slug}`}
-      className="group block rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:border-white/25 hover:bg-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+      className="marketing-dark card-marketing group block rounded-2xl p-5 hover-lift transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)]"
     >
       <div className="flex items-start gap-4">
         {brand.avatarUrl ? (
-          <img
+          <Image
             src={brand.avatarUrl}
             alt={`${brand.companyName} logo`}
-            className="h-14 w-14 flex-shrink-0 rounded-lg border border-white/10 bg-white/5 object-contain p-1"
+            width={56}
+            height={56}
+            className="h-14 w-14 flex-shrink-0 rounded-lg border border-[var(--hairline)] bg-[var(--cream-section)] object-contain p-1"
           />
         ) : (
-          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-lg font-semibold text-white/70">
+          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-[var(--hairline)] bg-[var(--cream-section)] text-lg font-semibold text-[var(--ink-meta)]">
             {brand.companyName.charAt(0).toUpperCase()}
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <h3 className="font-display text-xl leading-tight text-white">
+          <h3 className="font-display text-xl leading-tight text-[var(--ink)]">
             {brand.companyName}
           </h3>
           {(brand.city || brand.region) && (
-            <p className="mt-0.5 text-xs uppercase tracking-widest text-white/40">
+            <p className="eyebrow mt-0.5">
               {[brand.city, brand.region].filter(Boolean).join(' · ')}
             </p>
           )}
           {brand.bio && (
-            <p className="mt-2 line-clamp-2 text-sm text-white/70">
+            <p className="mt-2 line-clamp-2 text-sm text-[var(--ink-muted)]">
               {brand.bio}
             </p>
           )}
@@ -40,7 +43,7 @@ export function BrandDirectoryCard({ brand }: { brand: PublicBrandSummary }) {
           {brand.dealCategories.slice(0, 4).map((cat) => (
             <span
               key={cat}
-              className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs text-white/60"
+              className="rounded-full border border-[var(--hairline)] bg-[var(--cream-section)] px-2 py-0.5 text-xs text-[var(--ink-meta)]"
             >
               {cat.replace(/_/g, ' ')}
             </span>

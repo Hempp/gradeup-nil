@@ -105,6 +105,10 @@ export default function StateAdsSolutionPage() {
           href: '/hs/state-ad-invite',
         }}
         supportingNote="Zero cost. 3 business-day turnaround. Read-only by design."
+        image={{
+          src: '/editorial/photo-06.jpg',
+          alt: 'A high-school athletics administrator reviewing compliance paperwork',
+        }}
       />
 
       <ProblemProductProof
@@ -147,19 +151,22 @@ export default function StateAdsSolutionPage() {
         ]}
       />
 
-      <section aria-label="What a school transcript contains" className="bg-black py-20">
+      <section aria-label="What a school transcript contains" className="bg-[var(--cream-section)] py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               On a school transcript
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               Three things. Done well.
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               Each report is deliberately narrow — one school, scoped
               data. We don’t sell anything else to your association.
             </p>
+            <div className="stat-strip mt-6 inline-flex">
+              <b>Per-school</b>&nbsp;·&nbsp;<b>Free</b>&nbsp;·&nbsp;<b>3-day turnaround</b>
+            </div>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -180,29 +187,29 @@ export default function StateAdsSolutionPage() {
             />
           </div>
 
-          <div className="mt-10 rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white/70 flex items-start gap-3">
+          <div className="mt-10 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6 text-sm text-[var(--ink-muted)] flex items-start gap-3">
             <List className="h-5 w-5 mt-0.5 flex-shrink-0 text-[var(--accent-primary)]" aria-hidden="true" />
             <div>
-              <strong className="text-white font-semibold">
+              <strong className="text-[var(--ink)] font-semibold">
                 Sample report.
               </strong>{' '}
               A representative school-transcript sample ships with the
               public launch. Start onboarding below to see real data.
-              <span className="block text-white/40 mt-1">TODO: /public/solutions/state-ad-dashboard.png</span>
+              <span className="block text-[var(--ink-meta)] mt-1">TODO: /public/solutions/state-ad-dashboard.png</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section aria-label="Onboard your association" className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10">
+      <section aria-label="Onboard your association" className="bg-[var(--marketing-gray-950)] py-20 border-y border-[var(--hairline)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+          <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
             Onboard your association
           </span>
-          <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+          <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
             How to get started
           </h2>
-          <ol className="mt-8 space-y-6 text-white/80">
+          <ol className="mt-8 space-y-6 text-[var(--ink-muted)]">
             <Step
               n="01"
               title="Email us from an association domain"
@@ -273,8 +280,8 @@ function FeatureCard({
       <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] mb-4">
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-white/70 text-sm leading-relaxed">{body}</p>
+      <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{title}</h3>
+      <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{body}</p>
     </div>
   );
 }
@@ -294,8 +301,8 @@ function Step({
         {n}
       </span>
       <div>
-        <h3 className="text-lg font-bold text-white">{title}</h3>
-        <p className="mt-1 text-white/70 text-sm leading-relaxed">{body}</p>
+        <h3 className="text-lg font-bold text-[var(--ink)]">{title}</h3>
+        <p className="mt-1 text-[var(--ink-muted)] text-sm leading-relaxed">{body}</p>
       </div>
     </li>
   );

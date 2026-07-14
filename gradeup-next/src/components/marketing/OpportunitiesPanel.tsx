@@ -129,13 +129,13 @@ function FilterBar({
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           {/* Search */}
           <div className="relative w-full lg:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--marketing-gray-500)]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--ink-meta)]" />
             <Input
               type="text"
               placeholder="Search opportunities..."
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 bg-[var(--marketing-gray-900)] border-[var(--marketing-gray-700)] text-white placeholder:text-[var(--marketing-gray-500)] focus:border-[var(--accent-primary)]"
+              className="pl-10 bg-[var(--marketing-gray-900)] border-[var(--marketing-gray-700)] text-[var(--ink)] placeholder:text-[var(--ink-meta)] focus:border-[var(--accent-primary)]"
             />
           </div>
 
@@ -146,7 +146,7 @@ function FilterBar({
               <select
                 value={category}
                 onChange={(e) => onCategoryChange(e.target.value)}
-                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--accent-primary)] focus:outline-none cursor-pointer"
+                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-[var(--ink)] rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--accent-primary)] focus:outline-none cursor-pointer"
               >
                 <option value="all">All Categories</option>
                 {categories.slice(1).map((cat) => (
@@ -155,7 +155,7 @@ function FilterBar({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--marketing-gray-500)] pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--ink-meta)] pointer-events-none" />
             </div>
 
             {/* Compensation type filter */}
@@ -165,7 +165,7 @@ function FilterBar({
                 onChange={(e) =>
                   onCompensationTypeChange(e.target.value as CompensationType)
                 }
-                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-white rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--accent-primary)] focus:outline-none cursor-pointer"
+                className="appearance-none bg-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] text-[var(--ink)] rounded-lg px-4 py-2 pr-10 text-sm focus:border-[var(--accent-primary)] focus:outline-none cursor-pointer"
               >
                 {compensationTypes.map((type) => (
                   <option key={type.value} value={type.value}>
@@ -173,7 +173,7 @@ function FilterBar({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--marketing-gray-500)] pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--ink-meta)] pointer-events-none" />
             </div>
 
             {/* View mode toggle */}
@@ -183,8 +183,8 @@ function FilterBar({
                 className={cn(
                   'p-2 rounded transition-colors',
                   viewMode === 'grid'
-                    ? 'bg-[var(--accent-primary)] text-white'
-                    : 'text-[var(--marketing-gray-400)] hover:text-white',
+                    ? 'bg-[var(--accent-primary)] text-[#FBF9F2]'
+                    : 'text-[var(--ink-muted)] hover:text-[var(--ink)]',
                 )}
                 aria-label="Grid view"
               >
@@ -195,8 +195,8 @@ function FilterBar({
                 className={cn(
                   'p-2 rounded transition-colors',
                   viewMode === 'list'
-                    ? 'bg-[var(--accent-primary)] text-white'
-                    : 'text-[var(--marketing-gray-400)] hover:text-white',
+                    ? 'bg-[var(--accent-primary)] text-[#FBF9F2]'
+                    : 'text-[var(--ink-muted)] hover:text-[var(--ink)]',
                 )}
                 aria-label="List view"
               >
@@ -207,7 +207,7 @@ function FilterBar({
         </div>
 
         {/* Results count */}
-        <p className="mt-4 text-sm text-[var(--marketing-gray-400)]">
+        <p className="mt-4 text-sm text-[var(--ink-muted)]">
           Showing{' '}
           <span className="text-[var(--accent-primary)] font-semibold">
             {resultCount}
@@ -258,10 +258,10 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-lg font-semibold text-white group-hover:text-[var(--accent-primary)] transition-colors">
+                <h3 className="text-lg font-semibold text-[var(--ink)] group-hover:text-[var(--accent-primary)] transition-colors">
                   {opportunity.title}
                 </h3>
-                <p className="text-sm text-[var(--marketing-gray-400)]">
+                <p className="text-sm text-[var(--ink-muted)]">
                   {opportunity.brandName}
                 </p>
               </div>
@@ -272,7 +272,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
               )}
             </div>
 
-            <div className="flex flex-wrap gap-3 mt-3 text-sm text-[var(--marketing-gray-400)]">
+            <div className="flex flex-wrap gap-3 mt-3 text-sm text-[var(--ink-muted)]">
               <span className="flex items-center gap-1">
                 <DollarSign className="h-4 w-4" />
                 {opportunity.compensation}
@@ -318,10 +318,10 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
               </span>
             </div>
             <div>
-              <h3 className="font-semibold text-white group-hover:text-[var(--accent-primary)] transition-colors line-clamp-1">
+              <h3 className="font-semibold text-[var(--ink)] group-hover:text-[var(--accent-primary)] transition-colors line-clamp-1">
                 {opportunity.title}
               </h3>
-              <p className="text-sm text-[var(--marketing-gray-400)]">
+              <p className="text-sm text-[var(--ink-muted)]">
                 {opportunity.brandName}
               </p>
             </div>
@@ -336,7 +336,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
 
       {/* Body */}
       <div className="p-4 flex-1">
-        <p className="text-sm text-[var(--marketing-gray-400)] line-clamp-2 mb-4">
+        <p className="text-sm text-[var(--ink-muted)] line-clamp-2 mb-4">
           {opportunity.description}
         </p>
 
@@ -351,23 +351,23 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
             {opportunity.compensationType.charAt(0).toUpperCase() +
               opportunity.compensationType.slice(1)}
           </span>
-          <span className="px-2 py-1 text-xs font-medium bg-[var(--marketing-gray-800)] text-[var(--marketing-gray-300)] rounded border border-[var(--marketing-gray-700)]">
+          <span className="px-2 py-1 text-xs font-medium bg-[var(--marketing-gray-800)] text-[var(--ink-muted)] rounded border border-[var(--marketing-gray-700)]">
             {opportunity.category}
           </span>
         </div>
 
         {/* Meta */}
         <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between text-[var(--marketing-gray-400)]">
+          <div className="flex items-center justify-between text-[var(--ink-muted)]">
             <span className="flex items-center gap-1">
               <DollarSign className="h-4 w-4" />
               Compensation
             </span>
-            <span className="text-white font-medium">
+            <span className="text-[var(--ink)] font-medium">
               {opportunity.compensation}
             </span>
           </div>
-          <div className="flex items-center justify-between text-[var(--marketing-gray-400)]">
+          <div className="flex items-center justify-between text-[var(--ink-muted)]">
             <span className="flex items-center gap-1">
               <GraduationCap className="h-4 w-4" />
               Min GPA
@@ -376,7 +376,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
               {opportunity.minGpa}
             </span>
           </div>
-          <div className="flex items-center justify-between text-[var(--marketing-gray-400)]">
+          <div className="flex items-center justify-between text-[var(--ink-muted)]">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               Deadline
@@ -386,7 +386,7 @@ function OpportunityCard({ opportunity, viewMode }: OpportunityCardProps) {
                 'font-medium',
                 isExpiringSoon
                   ? 'text-[var(--accent-gold)]'
-                  : 'text-white',
+                  : 'text-[var(--ink)]',
               )}
             >
               {deadlineDate.toLocaleDateString()}
@@ -440,30 +440,9 @@ function CTASection() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
-          <div className="text-center">
-            <div className="text-3xl font-bold text-[var(--accent-primary)]">
-              $127K+
-            </div>
-            <div className="text-sm text-[var(--marketing-gray-500)]">
-              Paid to Athletes
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-[var(--accent-success)]">
-              847
-            </div>
-            <div className="text-sm text-[var(--marketing-gray-500)]">
-              Active Athletes
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-[var(--accent-gold)]">
-              68%
-            </div>
-            <div className="text-sm text-[var(--marketing-gray-500)]">
-              Match Rate
-            </div>
-          </div>
+          <span className="stat-strip"><b>$127K+</b> Paid to Athletes</span>
+          <span className="stat-strip"><b>847</b> Active Athletes</span>
+          <span className="stat-strip"><b>68%</b> Match Rate</span>
         </div>
 
         <div
@@ -471,17 +450,17 @@ function CTASection() {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--cream-surface)] backdrop-blur-sm border border-[var(--hairline)] mb-6">
             <Sparkles className="h-4 w-4 text-[var(--accent-gold)]" />
-            <span className="text-sm text-white/80">
+            <span className="text-sm text-[var(--ink-muted)]">
               Join 847 athletes already earning
             </span>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--ink)] mb-4">
             Ready to Start Earning?
           </h2>
-          <p className="text-lg text-[var(--marketing-gray-400)] mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-2xl mx-auto">
             Your GPA is your competitive advantage. Higher grades unlock better
             deals.
           </p>
@@ -502,7 +481,7 @@ function CTASection() {
             onClick={() =>
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }
-            className="border-white/30 text-white hover:bg-white/10 px-8 py-3 text-lg"
+            className="border-[var(--hairline)] text-[var(--ink)] hover:bg-[var(--cream-surface)] px-8 py-3 text-lg"
           >
             Browse More Deals
           </Button>
@@ -538,7 +517,7 @@ export function OpportunitiesPanel() {
   }, [opportunities]);
 
   return (
-    <div className="bg-black">
+    <div className="bg-[var(--cream)]">
       <FilterBar
         search={search}
         onSearchChange={setSearch}

@@ -34,27 +34,27 @@ export function PersonaCard({
   return (
     <Link
       href={href}
-      className="group card-marketing p-6 flex flex-col h-full hover-lift transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+      className="group card-marketing p-6 flex flex-col h-full hover-lift transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)]"
       aria-label={`${title} — ${ctaLabel ?? 'Learn more'}`}
     >
       {icon ? (
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] mb-4">
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--cobalt)]/10 text-[var(--cobalt)] mb-4">
           {icon}
         </div>
       ) : null}
-      <span className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)] mb-2">
+      <span className="eyebrow mb-2">
         {eyebrow}
       </span>
-      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--accent-primary)] transition-colors">
+      <h3 className="text-xl font-bold text-[var(--ink)] mb-2 group-hover:text-[var(--cobalt)] transition-colors">
         {title}
       </h3>
-      <p className="text-white/70 text-sm mb-4 leading-relaxed">{description}</p>
+      <p className="text-[var(--ink-muted)] text-sm mb-4 leading-relaxed">{description}</p>
       {bullets && bullets.length > 0 ? (
-        <ul className="mb-5 space-y-2 text-sm text-white/80">
+        <ul className="mb-5 space-y-2 text-sm text-[var(--ink-muted)]">
           {bullets.map((b) => (
             <li key={b} className="flex items-start gap-2">
               <span
-                className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] flex-shrink-0"
+                className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full bg-[var(--cobalt)] flex-shrink-0"
                 aria-hidden="true"
               />
               <span>{b}</span>
@@ -62,7 +62,7 @@ export function PersonaCard({
           ))}
         </ul>
       ) : null}
-      <div className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent-primary)]">
+      <div className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--cobalt)]">
         {ctaLabel ?? 'Learn more'}
         <ArrowRight
           className="h-4 w-4 transition-transform group-hover:translate-x-1"

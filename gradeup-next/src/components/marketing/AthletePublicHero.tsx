@@ -11,15 +11,16 @@
  */
 
 import Link from 'next/link';
+import { Share2, Linkedin, Link2 } from 'lucide-react';
 import type { PublicAthleteProfile } from '@/lib/hs-nil/athlete-profile';
 import { tierLabel, formatGpa } from '@/lib/hs-nil/trajectory';
 import type { VerificationTier } from '@/lib/hs-nil/trajectory';
 
 const TIER_TONE: Record<VerificationTier, string> = {
-  self_reported: 'border-white/15 bg-white/5 text-white/70',
-  user_submitted: 'border-blue-400/40 bg-blue-400/10 text-blue-200',
+  self_reported: 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-meta)]',
+  user_submitted: 'border-[var(--cobalt)]/40 bg-[var(--cobalt)]/10 text-[var(--cobalt)]',
   institution_verified:
-    'border-emerald-400/40 bg-emerald-400/10 text-emerald-200',
+    'border-emerald-600/40 bg-emerald-600/10 text-emerald-700',
 };
 
 export interface AthletePublicHeroProps {
@@ -55,23 +56,23 @@ export function AthletePublicHero({
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
 
   return (
-    <section className="mx-auto max-w-5xl px-6 pt-16 pb-8">
-      <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+    <section className="marketing-dark mx-auto max-w-5xl px-6 pt-16 pb-8 bg-[var(--cream)]">
+      <p className="eyebrow">
         Verified Scholar-Athlete
       </p>
-      <h1 className="mt-3 font-display text-4xl text-white md:text-5xl">
-        {profile.firstName} {profile.lastInitial}.
+      <h1 className="mt-3 font-display text-4xl text-[var(--ink)] md:text-5xl">
+        {profile.firstName} <span className="text-[var(--cobalt)]">{profile.lastInitial}.</span>
       </h1>
       {metaLine && (
-        <p className="mt-2 text-sm text-white/70 md:text-base">{metaLine}</p>
+        <p className="mt-2 text-sm text-[var(--ink-muted)] md:text-base">{metaLine}</p>
       )}
 
       <div className="mt-6 flex flex-wrap items-end gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/50">
+          <p className="eyebrow">
             Current GPA
           </p>
-          <p className="mt-1 font-display text-6xl leading-none text-white">
+          <p className="mt-1 font-display text-6xl leading-none text-[var(--ink)]">
             {formatGpa(profile.currentGpa)}
           </p>
         </div>
@@ -84,7 +85,7 @@ export function AthletePublicHero({
       </div>
 
       {profile.publicBio && (
-        <p className="mt-6 max-w-2xl text-base text-white/80 md:text-lg">
+        <p className="mt-6 max-w-2xl text-base text-[var(--ink-muted)] md:text-lg">
           {profile.publicBio}
         </p>
       )}
@@ -92,7 +93,7 @@ export function AthletePublicHero({
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <Link
           href={brandSignupHref}
-          className="inline-flex min-h-[44px] items-center rounded-lg bg-[var(--accent-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)]"
+          className="btn-marketing-primary inline-flex min-h-[44px] items-center rounded-lg px-5 py-2 text-sm font-semibold"
         >
           Request a deal
         </Link>
@@ -100,18 +101,20 @@ export function AthletePublicHero({
           href={twitterUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+          className="btn-marketing-outline inline-flex min-h-[44px] items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
           aria-label="Share on X (Twitter)"
         >
+          <Share2 className="h-4 w-4" aria-hidden="true" />
           Share on X
         </a>
         <a
           href={linkedInUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-[44px] items-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+          className="btn-marketing-outline inline-flex min-h-[44px] items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
           aria-label="Share on LinkedIn"
         >
+          <Linkedin className="h-4 w-4" aria-hidden="true" />
           Share on LinkedIn
         </a>
         <CopyLinkButton url={publicUrl} />
@@ -127,9 +130,10 @@ function CopyLinkButton({ url }: { url: string }) {
   return (
     <a
       href={url}
-      className="inline-flex min-h-[44px] items-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+      className="btn-marketing-outline inline-flex min-h-[44px] items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
       aria-label={`Public profile link: ${url}`}
     >
+      <Link2 className="h-4 w-4" aria-hidden="true" />
       Copy link
     </a>
   );

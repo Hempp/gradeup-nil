@@ -64,10 +64,10 @@ export function LocaleFallbackBanner() {
     <div
       role="status"
       aria-live="polite"
-      className="relative z-40 bg-[var(--accent-primary)]/10 border-b border-[var(--accent-primary)]/20 text-white/90 backdrop-blur"
+      className="relative z-40 bg-[var(--accent-primary)]/10 border-b border-[var(--accent-primary)]/20 text-[var(--ink)] backdrop-blur"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-3">
-        <p className="text-sm text-white/80 flex-1">{message}</p>
+        <p className="text-sm text-[var(--ink-muted)] flex-1">{message}</p>
         <button
           type="button"
           onClick={() => {
@@ -79,7 +79,7 @@ export function LocaleFallbackBanner() {
             }
           }}
           aria-label={DISMISS_LABELS[locale]}
-          className="inline-flex items-center justify-center h-8 w-8 rounded-md text-white/70 hover:text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+          className="inline-flex items-center justify-center h-8 w-8 rounded-md text-[var(--ink-meta)] hover:text-[var(--ink)] hover:bg-[var(--cream-surface)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>

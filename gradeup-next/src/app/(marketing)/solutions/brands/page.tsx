@@ -114,6 +114,10 @@ export default function BrandsSolutionPage() {
           href: '/solutions/brands/fmv',
         }}
         supportingNote="Free to sign up. Pay only when a deal closes. No enterprise sales call."
+        image={{
+          src: '/editorial/photo-03.jpg',
+          alt: 'A local brand owner preparing a partnership offer for a scholar-athlete',
+        }}
       />
 
       <ProblemProductProof
@@ -156,19 +160,22 @@ export default function BrandsSolutionPage() {
         ]}
       />
 
-      <section aria-label="Brand verticals" className="bg-black py-20">
+      <section aria-label="Brand verticals" className="bg-[var(--cream-section)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               Pick your vertical
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               Playbooks for the five brand types StatStaq’s team runs deals in.
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               Each page includes real deal examples, typical FMV ranges, and
               deliverable templates tuned to that vertical.
             </p>
+            <div className="stat-strip mt-6 inline-flex">
+              <b>Produce</b>&nbsp;·&nbsp;<b>Value</b>&nbsp;·&nbsp;<b>Source</b>&nbsp;·&nbsp;<b>Negotiate</b>
+            </div>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -107,6 +107,10 @@ export default function AthletesSolutionPage() {
           href: '/hs/valuation',
         }}
         supportingNote="Free forever. GPA verification in three tiers. Takes 2 minutes to start."
+        image={{
+          src: '/editorial/photo-playbook.jpg',
+          alt: 'A coach’s playbook and whistle, the tools behind a verified scholar-athlete’s game plan',
+        }}
       />
 
       <ProblemProductProof
@@ -149,19 +153,22 @@ export default function AthletesSolutionPage() {
         ]}
       />
 
-      <section aria-label="What athletes get" className="bg-black py-20">
+      <section aria-label="What athletes get" className="bg-[var(--cream-section)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               What you get
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               A profile that compounds with every deal.
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               Everything here ships today. Your GPA, your trajectory, your
               leverage.
             </p>
+            <div className="stat-strip mt-6 inline-flex">
+              <b>Produce</b>&nbsp;·&nbsp;<b>Value</b>&nbsp;·&nbsp;<b>Source</b>&nbsp;·&nbsp;<b>Negotiate</b>
+            </div>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -245,8 +252,8 @@ function FeatureCard({
       <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] mb-4">
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-white/70 text-sm leading-relaxed">{body}</p>
+      <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{title}</h3>
+      <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{body}</p>
     </div>
   );
 }
@@ -259,9 +266,9 @@ function TestimonialQuote({
   attribution: string;
 }) {
   return (
-    <section aria-label="Athlete quote" className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10">
+    <section aria-label="Athlete quote" className="bg-[var(--marketing-gray-950)] py-20 border-y border-[var(--hairline)]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <blockquote className="font-display text-2xl sm:text-3xl font-semibold text-white leading-snug">
+        <blockquote className="font-display text-2xl sm:text-3xl font-semibold text-[var(--ink)] leading-snug">
           &ldquo;{quote}&rdquo;
         </blockquote>
         <p className="mt-5 text-sm uppercase tracking-widest text-[var(--accent-primary)]">

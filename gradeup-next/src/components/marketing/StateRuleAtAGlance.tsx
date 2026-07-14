@@ -2,6 +2,7 @@
  * StateRuleAtAGlance — renders the state's rule values as a fact list.
  * Server Component, no state. Deliberately literal so parents can scan.
  */
+import { ClipboardCheck } from 'lucide-react';
 import type { StateNILRules } from '@/lib/hs-nil/state-rules';
 import {
   formatBannedCategories,
@@ -83,14 +84,15 @@ export function StateRuleAtAGlance({
   return (
     <section
       aria-label={`${stateName} NIL rule summary`}
-      className="bg-[var(--marketing-gray-950)] py-16 border-y border-white/10"
+      className="bg-[var(--cream-section)] py-16 border-y border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+          <span className="eyebrow inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
+            <ClipboardCheck className="h-3.5 w-3.5 text-[var(--cobalt)]" aria-hidden="true" />
             Rule at a glance
           </span>
-          <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+          <h2 className="font-display mt-4 text-3xl sm:text-4xl text-[var(--ink)]">
             What {stateName}&rsquo;s HS NIL rules require
           </h2>
         </div>
@@ -99,16 +101,16 @@ export function StateRuleAtAGlance({
           {rows.map((row) => (
             <div
               key={row.label}
-              className="rounded-xl border border-white/10 bg-white/5 p-5"
+              className="card-marketing rounded-xl p-5"
             >
-              <dt className="text-xs uppercase tracking-widest text-white/50">
+              <dt className="eyebrow">
                 {row.label}
               </dt>
-              <dd className="mt-2 text-white font-semibold">
+              <dd className="mt-2 text-[var(--ink)] font-semibold">
                 {Array.isArray(row.value) ? (
                   <ul className="list-disc pl-5 space-y-1 text-sm font-normal">
                     {row.value.map((v) => (
-                      <li key={v} className="text-white/90">
+                      <li key={v} className="text-[var(--ink-muted)]">
                         {v}
                       </li>
                     ))}
@@ -118,7 +120,7 @@ export function StateRuleAtAGlance({
                 )}
               </dd>
               {row.note ? (
-                <p className="mt-2 text-xs text-white/60 leading-relaxed">
+                <p className="mt-2 text-xs text-[var(--ink-meta)] leading-relaxed">
                   {row.note}
                 </p>
               ) : null}
@@ -127,11 +129,11 @@ export function StateRuleAtAGlance({
         </dl>
 
         {rules.notes ? (
-          <div className="mt-6 rounded-xl border border-[var(--accent-primary)]/20 bg-[var(--accent-primary)]/5 p-5">
-            <p className="text-xs uppercase tracking-widest text-[var(--accent-primary)]">
+          <div className="mt-6 rounded-xl border border-[var(--cobalt)]/20 bg-[var(--cobalt)]/5 p-5">
+            <p className="eyebrow text-[var(--cobalt)]">
               Rule notes
             </p>
-            <p className="mt-2 text-white/80 text-sm leading-relaxed">
+            <p className="mt-2 text-[var(--ink-muted)] text-sm leading-relaxed">
               {rules.notes}
             </p>
           </div>

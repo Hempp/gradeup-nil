@@ -11,6 +11,7 @@
  * Server Component. Statically rendered with daily revalidation.
  */
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import {
   groupStateBlogPostsByStatus,
@@ -76,10 +77,10 @@ function statusAccent(status: PermissionStatus) {
       };
     case 'prohibited':
       return {
-        dot: 'bg-white/40',
-        text: 'text-white/70',
-        border: 'border-white/15',
-        bg: 'bg-white/5',
+        dot: 'bg-[var(--ink-meta)]',
+        text: 'text-[var(--ink-muted)]',
+        border: 'border-[var(--hairline)]',
+        bg: 'bg-[var(--cream-surface)]',
       };
   }
 }
@@ -89,14 +90,14 @@ function StateCard({ entry }: { entry: StateBlogIndexEntry }) {
   return (
     <Link
       href={entry.canonicalPath}
-      className="group flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 hover:border-white/20 transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
+      className="group flex items-center justify-between gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 hover:bg-[var(--cream-section)] hover:border-[var(--hairline)] transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:outline-none"
       aria-label={`${entry.name} high-school NIL rules — ${permissionStatusLabel(entry.status)}`}
     >
       <div className="min-w-0">
-        <div className="text-white font-semibold truncate group-hover:text-[var(--accent-primary)] transition-colors">
+        <div className="text-[var(--ink)] font-semibold truncate group-hover:text-[var(--accent-primary)] transition-colors">
           {entry.name}
         </div>
-        <div className="text-xs text-white/50 mt-0.5 truncate">
+        <div className="text-xs text-[var(--ink-meta)] mt-0.5 truncate">
           {entry.governingBody} &middot; Last reviewed {entry.lastReviewed}
         </div>
       </div>
@@ -130,60 +131,64 @@ export default function StateRulesIndexPage() {
 
       <section
         aria-label="State NIL rules hero"
-        className="relative bg-black pt-32 pb-14 overflow-hidden"
+        className="relative bg-[var(--cream)] pt-32 pb-14 overflow-hidden"
       >
-        <div
-          className="absolute inset-0 opacity-40 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.09) 0%, transparent 55%)',
-          }}
-        />
-        <div className="absolute inset-0 hero-grid opacity-30 pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <span className="eyebrow">Compliance reference</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] mt-4 mb-6">
+              <Sparkles
+                className="h-4 w-4 text-[var(--accent-primary)]"
+                aria-hidden="true"
+              />
+              <span className="text-sm font-medium text-[var(--ink)]">
+                Updated from 51 state athletic associations
+              </span>
+            </div>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--ink)] max-w-4xl">
+              High-school NIL rules,{' '}
+              <span className="text-[var(--accent-primary)]">state by state.</span>
+            </h1>
+            <p className="mt-5 text-lg sm:text-xl text-[var(--ink-muted)] max-w-3xl">
+              Your high-schooler&rsquo;s NIL eligibility is set by the state they
+              compete in — not the state where the brand is. This guide lists all
+              50 states and D.C. by permission status, with a dedicated page for
+              every one. Same data our compliance engine uses on live deals.
+            </p>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
-            <Sparkles
-              className="h-4 w-4 text-[var(--accent-primary)]"
-              aria-hidden="true"
-            />
-            <span className="text-sm font-medium text-white/90">
-              Updated from 51 state athletic associations
-            </span>
+            <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
+              <SummaryStat
+                label="Permitted"
+                value={totalPermitted}
+                status="permitted"
+              />
+              <SummaryStat
+                label="Limited"
+                value={totalLimited}
+                status="limited"
+              />
+              <SummaryStat
+                label="Transitioning"
+                value={totalTransitioning}
+                status="transitioning"
+              />
+              <SummaryStat
+                label="Not yet permitted"
+                value={totalProhibited}
+                status="prohibited"
+              />
+            </dl>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white max-w-4xl">
-            High-school NIL rules,{' '}
-            <span className="text-[var(--accent-primary)]">state by state.</span>
-          </h1>
-          <p className="mt-5 text-lg sm:text-xl text-white/70 max-w-3xl">
-            Your high-schooler&rsquo;s NIL eligibility is set by the state they
-            compete in — not the state where the brand is. This guide lists all
-            50 states and D.C. by permission status, with a dedicated page for
-            every one. Same data our compliance engine uses on live deals.
-          </p>
-
-          <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
-            <SummaryStat
-              label="Permitted"
-              value={totalPermitted}
-              status="permitted"
+          <div className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden">
+            <Image
+              src="/editorial/photo-06.jpg"
+              alt="Coach reviewing state athletic association rulebook"
+              fill
+              sizes="(max-width: 1024px) 100vw, 480px"
+              className="object-cover"
+              priority
             />
-            <SummaryStat
-              label="Limited"
-              value={totalLimited}
-              status="limited"
-            />
-            <SummaryStat
-              label="Transitioning"
-              value={totalTransitioning}
-              status="transitioning"
-            />
-            <SummaryStat
-              label="Not yet permitted"
-              value={totalProhibited}
-              status="prohibited"
-            />
-          </dl>
+          </div>
         </div>
       </section>
 
@@ -205,14 +210,14 @@ export default function StateRulesIndexPage() {
                     <span className={`h-1.5 w-1.5 rounded-full ${accent.dot}`} />
                     {permissionStatusLabel(status)}
                   </span>
-                  <span className="text-sm text-white/50">
+                  <span className="text-sm text-[var(--ink-meta)]">
                     {entries.length} state{entries.length === 1 ? '' : 's'}
                   </span>
                 </div>
-                <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
+                <h2 className="font-display text-2xl sm:text-3xl font-bold text-[var(--ink)] mb-2">
                   {groupHeading(status)}
                 </h2>
-                <p className="text-white/60 text-sm max-w-2xl mb-6">
+                <p className="text-[var(--ink-meta)] text-sm max-w-2xl mb-6">
                   {permissionStatusDescription(status)}
                 </p>
                 <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -226,11 +231,11 @@ export default function StateRulesIndexPage() {
             );
           })}
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-white">
+          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-8 text-center">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[var(--ink)]">
               Not sure how this applies to your athlete?
             </h2>
-            <p className="mt-3 text-white/70 max-w-2xl mx-auto">
+            <p className="mt-3 text-[var(--ink-muted)] max-w-2xl mx-auto">
               GradeUp verifies the compliance automatically the moment your
               athlete creates a free profile — routed straight into the right
               state rules. From there, StatStaq&rsquo;s team sources and runs
@@ -285,7 +290,7 @@ function SummaryStat({
     <div
       className={`rounded-xl border p-4 ${accent.bg} ${accent.border}`}
     >
-      <dt className="text-xs uppercase tracking-widest text-white/60">
+      <dt className="text-xs uppercase tracking-widest text-[var(--ink-meta)]">
         {label}
       </dt>
       <dd className={`mt-1 text-2xl font-bold ${accent.text}`}>

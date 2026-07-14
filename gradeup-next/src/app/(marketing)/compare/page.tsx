@@ -1,5 +1,6 @@
 import Script from 'next/script';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { buildMarketingMetadata } from '@/lib/seo';
@@ -150,35 +151,38 @@ function Hero() {
   return (
     <section
       aria-label="Compare hero"
-      className="relative overflow-hidden bg-black pt-32 pb-16 sm:pt-40 sm:pb-20"
+      className="relative overflow-hidden bg-[var(--cream)] pt-32 pb-16 sm:pt-40 sm:pb-20"
     >
-      <div
-        className="absolute inset-0 opacity-40 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255, 0, 200, 0.08) 0%, transparent 50%)',
-        }}
-      />
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+        <span className="inline-flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
           <Scale className="h-3.5 w-3.5" aria-hidden="true" />
           Head-to-head comparison
         </span>
-        <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+        <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-[var(--ink)] sm:text-5xl lg:text-6xl">
           GradeUp HS-NIL vs.{' '}
-          <span className="gradient-text-cyan">enterprise college NIL</span>{' '}
+          <span className="text-[var(--ink-muted)]">enterprise college NIL</span>{' '}
           vs.{' '}
           <span className="text-[var(--accent-gold)]">
             subscription NIL apps
           </span>
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--ink-muted)]">
           How the three categories actually differ — product shape, pricing
           posture, and who they were designed for. We&rsquo;re new; we know
           it. We win on specific axes. Here&rsquo;s the honest comparison.
           GradeUp verifies the GPA gate; StatStaq&rsquo;s team runs everything
           after that.
         </p>
+        <div className="duotone relative mx-auto mt-10 aspect-[21/9] max-w-3xl rounded-2xl overflow-hidden">
+          <Image
+            src="/editorial/photo-04.jpg"
+            alt="GradeUp scholar-athlete profile compared side by side"
+            fill
+            sizes="(max-width: 1024px) 100vw, 768px"
+            className="object-cover"
+            priority
+          />
+        </div>
       </div>
     </section>
   );
@@ -192,19 +196,19 @@ function CompareTable() {
   return (
     <section
       aria-label="Feature-by-feature comparison"
-      className="bg-black pb-12"
+      className="bg-[var(--cream)] pb-12"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="overflow-x-auto rounded-xl border border-white/10 bg-[var(--marketing-gray-950)]">
+        <div className="overflow-x-auto rounded-xl border border-[var(--hairline)] bg-[var(--marketing-gray-950)]">
           <table className="w-full min-w-[820px] text-left text-sm">
             <caption className="sr-only">
               Feature-by-feature comparison of GradeUp HS-NIL against
               enterprise college NIL and subscription-based NIL platforms
               across {rows.length} dimensions
             </caption>
-            <thead className="bg-white/5">
+            <thead className="bg-[var(--cream-surface)]">
               <tr>
-                <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                   Dimension
                 </th>
                 <th
@@ -213,10 +217,10 @@ function CompareTable() {
                 >
                   GradeUp HS-NIL
                 </th>
-                <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                   Enterprise college NIL
                 </th>
-                <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                   Subscription NIL apps
                 </th>
               </tr>
@@ -225,21 +229,21 @@ function CompareTable() {
               {rows.map((row, i) => (
                 <tr
                   key={row.dimension}
-                  className={i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}
+                  className={i % 2 === 0 ? 'bg-transparent' : 'bg-[var(--cream-section)]'}
                 >
                   <th
                     scope="row"
-                    className="px-4 py-3 font-medium text-white/90 sm:px-6 align-top"
+                    className="px-4 py-3 font-medium text-[var(--ink)] sm:px-6 align-top"
                   >
                     {row.dimension}
                   </th>
-                  <td className="px-4 py-3 text-white/90 sm:px-6 align-top">
+                  <td className="px-4 py-3 text-[var(--ink)] sm:px-6 align-top">
                     {row.gradeup}
                   </td>
-                  <td className="px-4 py-3 text-white/70 sm:px-6 align-top">
+                  <td className="px-4 py-3 text-[var(--ink-muted)] sm:px-6 align-top">
                     {row.enterprise}
                   </td>
-                  <td className="px-4 py-3 text-white/70 sm:px-6 align-top">
+                  <td className="px-4 py-3 text-[var(--ink-muted)] sm:px-6 align-top">
                     {row.subscription}
                   </td>
                 </tr>
@@ -247,7 +251,7 @@ function CompareTable() {
             </tbody>
           </table>
         </div>
-        <p className="mt-3 text-xs text-white/40 sm:hidden">
+        <p className="mt-3 text-xs text-[var(--ink-meta)] sm:hidden">
           Scroll horizontally to compare all three categories.
         </p>
       </div>
@@ -261,14 +265,14 @@ function CompareTable() {
 
 function WhenToChoose() {
   return (
-    <section aria-label="When to choose each platform" className="bg-black py-12">
+    <section aria-label="When to choose each platform" className="bg-[var(--cream)] py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-black p-6 md:col-span-2 lg:col-span-1">
+          <div className="rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-[var(--cream-section)] to-[var(--cream-surface)] p-6 md:col-span-2 lg:col-span-1">
             <h3 className="text-lg font-bold text-[var(--accent-primary)] mb-3">
               When to choose GradeUp
             </h3>
-            <p className="text-sm text-white/80 leading-relaxed">
+            <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
               If you&rsquo;re a high-school scholar-athlete, a parent, a local
               or regional brand running HS-facing deals, or a state athletic
               association compliance office — GradeUp is built for you. The
@@ -281,11 +285,11 @@ function WhenToChoose() {
               &ldquo;contact sales&rdquo; is a dealbreaker, this is the one.
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-[var(--marketing-gray-950)] p-6">
-            <h3 className="text-lg font-bold text-white mb-3">
+          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--marketing-gray-950)] p-6">
+            <h3 className="text-lg font-bold text-[var(--ink)] mb-3">
               When enterprise college NIL might fit
             </h3>
-            <p className="text-sm text-white/75 leading-relaxed">
+            <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
               If you&rsquo;re already an enrolled college program or a
               collective with an enterprise budget, the established
               college-first platforms have deep integrations with school
@@ -297,11 +301,11 @@ function WhenToChoose() {
               $200 budget.
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-[var(--marketing-gray-950)] p-6">
-            <h3 className="text-lg font-bold text-white mb-3">
+          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--marketing-gray-950)] p-6">
+            <h3 className="text-lg font-bold text-[var(--ink)] mb-3">
               When a subscription NIL app might fit
             </h3>
-            <p className="text-sm text-white/75 leading-relaxed">
+            <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
               If you&rsquo;re a college athlete who wants to turn an existing
               fan following into recurring subscription revenue, the
               subscription-based apps are purpose-built for that, and some run
@@ -325,13 +329,13 @@ function UpdatedNotice() {
   return (
     <section
       aria-label="Update metadata"
-      className="bg-[var(--marketing-gray-950)] py-12 border-y border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-12 border-y border-[var(--hairline)]"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-xl border border-white/10 bg-black p-5">
-          <p className="text-sm text-white/70">
+        <div className="rounded-xl border border-[var(--hairline)] bg-[var(--cream)] p-5">
+          <p className="text-sm text-[var(--ink-muted)]">
             This page is updated{' '}
-            <strong className="text-white">{LAST_REVIEWED_HUMAN}</strong>{' '}
+            <strong className="text-[var(--ink)]">{LAST_REVIEWED_HUMAN}</strong>{' '}
             based on publicly available product information from platforms in
             each category. We re-audit this comparison when public product
             surfaces change materially or at least quarterly.
@@ -348,15 +352,15 @@ function UpdatedNotice() {
 
 function CompareCTA() {
   return (
-    <section aria-label="Compare CTA" className="bg-black py-20">
+    <section aria-label="Compare CTA" className="bg-[var(--cream)] py-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-[var(--accent-gold)]/10 p-10 text-center">
+        <div className="relative overflow-hidden rounded-3xl border border-[var(--hairline)] bg-gradient-to-br from-[var(--accent-primary)]/10 via-[var(--cream-section)] to-[var(--accent-gold)]/10 p-10 text-center">
           <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[var(--accent-primary)]/15 blur-3xl" />
           <div className="relative">
-            <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
+            <h2 className="font-display text-3xl font-bold text-[var(--ink)] sm:text-4xl">
               See the pricing. Then decide.
             </h2>
-            <p className="mt-4 text-white/70 max-w-2xl mx-auto">
+            <p className="mt-4 text-[var(--ink-muted)] max-w-2xl mx-auto">
               No sales call. Our take-rate, subscription price, and everything
               included is on one public page.
             </p>

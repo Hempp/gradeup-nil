@@ -95,7 +95,7 @@ export default async function DirectorInvitePage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+    <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
       <DirectorInviteClient token={token} invitation={result.invitation} />
     </main>
   );
@@ -103,18 +103,18 @@ export default async function DirectorInvitePage({ params }: PageProps) {
 
 function ErrorShell({ title, body }: { title: string; body: string }) {
   return (
-    <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+    <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
       <section className="mx-auto max-w-2xl px-6 py-16">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+        <p className="eyebrow">
           GradeUp NIL · Athletic Director Invite
         </p>
-        <h1 className="mt-2 font-display text-3xl text-white md:text-4xl">{title}</h1>
-        <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-6">
-          <p className="text-sm text-white/70">{body}</p>
+        <h1 className="mt-2 font-display text-3xl text-[var(--ink)] md:text-4xl">{title}</h1>
+        <div className="mt-8 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6">
+          <p className="text-sm text-[var(--ink-muted)]">{body}</p>
           <div className="mt-5">
             <a
               href="mailto:support@gradeupnil.com"
-              className="inline-flex items-center rounded-md border border-white/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/80 transition hover:bg-white/10"
+              className="inline-flex items-center rounded-md border border-[var(--hairline)] px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--ink-muted)] transition hover:bg-[var(--cream-section)]"
             >
               Contact support
             </a>

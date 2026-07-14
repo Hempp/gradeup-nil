@@ -105,17 +105,17 @@ export default async function StateAdInviteLandingPage({ params }: PageProps) {
   const loginHref = `/login?next=${loginNext}`;
 
   return (
-    <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+    <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
       <section className="mx-auto max-w-2xl px-6 py-16">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+        <p className="eyebrow">
           GradeUp NIL · State Compliance Portal
         </p>
-        <h1 className="mt-2 font-display text-3xl text-white md:text-4xl">
+        <h1 className="mt-2 font-display text-3xl text-[var(--ink)] md:text-4xl">
           {invitation.status === 'pending'
             ? `You're invited to review NIL compliance for ${invitation.stateCode}`
             : 'Invitation notice'}
         </h1>
-        <p className="mt-3 text-sm text-white/70">
+        <p className="mt-3 text-sm text-[var(--ink-muted)]">
           Issued to <strong>{invitation.organizationName}</strong>.
         </p>
 
@@ -144,15 +144,15 @@ export default async function StateAdInviteLandingPage({ params }: PageProps) {
           />
         )}
 
-        <div className="mt-12 rounded-xl border border-white/10 bg-white/5 p-5 text-xs text-white/60">
-          <p className="font-semibold text-white/80">
+        <div className="mt-12 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 text-xs text-[var(--ink-meta)]">
+          <p className="font-semibold text-[var(--ink-muted)]">
             Questions before accepting?
           </p>
           <p className="mt-2">
             Reply directly to the invitation email, or contact GradeUp at{' '}
             <Link
               href="mailto:support@gradeupnil.com"
-              className="text-[var(--accent-primary)] underline decoration-white/30 underline-offset-2 hover:text-[var(--accent-primary)]"
+              className="text-[var(--cobalt)] underline decoration-[var(--hairline)] underline-offset-2 hover:text-[var(--cobalt-hover)]"
             >
               support@gradeupnil.com
             </Link>
@@ -179,15 +179,15 @@ function PendingPanel({
   acceptHref: string;
 }) {
   return (
-    <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-6">
-      <p className="text-sm text-white/80">
+    <div className="mt-8 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6">
+      <p className="text-sm text-[var(--ink-muted)]">
         GradeUp NIL is extending read-only portal access to{' '}
-        <strong>{organizationName}</strong> so you can monitor the
-        high-school NIL activity in <strong>{stateCode}</strong> under your
+        <strong className="text-[var(--ink)]">{organizationName}</strong> so you can monitor the
+        high-school NIL activity in <strong className="text-[var(--ink)]">{stateCode}</strong> under your
         jurisdiction.
       </p>
-      <h2 className="mt-6 font-display text-lg text-white">What you get</h2>
-      <ul className="mt-3 space-y-2 text-sm text-white/70">
+      <h2 className="mt-6 font-display text-lg text-[var(--ink)]">What you get</h2>
+      <ul className="mt-3 space-y-2 text-sm text-[var(--ink-muted)]">
         <li>
           Every HS NIL deal signed in {stateCode}, with per-deal compliance
           status (parental consent, disclosure sent, rule version).
@@ -206,11 +206,11 @@ function PendingPanel({
         </li>
       </ul>
 
-      <h2 className="mt-6 font-display text-lg text-white">Next step</h2>
-      <p className="mt-2 text-sm text-white/70">
+      <h2 className="mt-6 font-display text-lg text-[var(--ink)]">Next step</h2>
+      <p className="mt-2 text-sm text-[var(--ink-muted)]">
         Accepting takes two steps:
       </p>
-      <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-white/70">
+      <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-[var(--ink-muted)]">
         <li>
           Sign in or create a GradeUp account with your professional email.
         </li>
@@ -223,18 +223,18 @@ function PendingPanel({
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <Link
           href={loginHref}
-          className="inline-flex items-center rounded-md border border-[var(--accent-primary)]/60 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)] transition hover:bg-[var(--accent-primary)]/10"
+          className="inline-flex items-center rounded-md border border-[var(--cobalt)]/60 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-[var(--cobalt)] transition hover:bg-[var(--cream)]"
         >
           Sign in to continue
         </Link>
         <Link
           href={acceptHref}
-          className="inline-flex items-center rounded-md border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white/80 transition hover:bg-white/10"
+          className="inline-flex items-center rounded-md border border-[var(--hairline)] px-4 py-2 text-xs font-semibold uppercase tracking-widest text-[var(--ink-muted)] transition hover:bg-[var(--cream-section)]"
         >
           I&rsquo;m already signed in
         </Link>
       </div>
-      <p className="mt-4 text-xs text-white/50">
+      <p className="mt-4 text-xs text-[var(--ink-meta)]">
         Invitation expires {fmtDate(expiresAt)}.
       </p>
     </div>
@@ -243,13 +243,13 @@ function PendingPanel({
 
 function StatusPanel({ title, body }: { title: string; body: string }) {
   return (
-    <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-6">
-      <h2 className="font-display text-xl text-white">{title}</h2>
-      <p className="mt-2 text-sm text-white/70">{body}</p>
+    <div className="mt-8 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6">
+      <h2 className="font-display text-xl text-[var(--ink)]">{title}</h2>
+      <p className="mt-2 text-sm text-[var(--ink-muted)]">{body}</p>
       <div className="mt-5">
         <Link
           href="mailto:support@gradeupnil.com"
-          className="inline-flex items-center rounded-md border border-white/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/80 transition hover:bg-white/10"
+          className="inline-flex items-center rounded-md border border-[var(--hairline)] px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--ink-muted)] transition hover:bg-[var(--cream-section)]"
         >
           Contact GradeUp
         </Link>

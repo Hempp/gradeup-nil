@@ -1,6 +1,7 @@
 import Script from 'next/script';
 import Link from 'next/link';
-import { Check, ArrowRight, Shield } from 'lucide-react';
+import Image from 'next/image';
+import { Check, ArrowRight, ArrowUpRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { buildMarketingMetadata } from '@/lib/seo';
 
@@ -228,30 +229,41 @@ function Hero() {
   return (
     <section
       aria-label="Pricing hero"
-      className="relative overflow-hidden bg-black pt-32 pb-20 sm:pt-40 sm:pb-24"
+      className="relative overflow-hidden bg-[var(--cream)] pt-32 pb-20 sm:pt-40 sm:pb-24"
     >
-      <div
-        className="absolute inset-0 opacity-40 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.08) 0%, transparent 50%)',
-        }}
-      />
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
-          <Shield className="h-3.5 w-3.5" aria-hidden="true" />
-          Transparent pricing
-        </span>
-        <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-          Pricing that doesn&rsquo;t require a{' '}
-          <span className="gradient-text-cyan">sales call.</span>
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-          We publish our commission structure, our subscription price, and
-          what&rsquo;s included — so parents, athletes, brands, and
-          compliance officers can read this page, decide, and sign up in
-          minutes.
-        </p>
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+          <div className="text-center lg:text-left">
+            <span className="eyebrow inline-flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-1">
+              <Shield className="h-3.5 w-3.5" aria-hidden="true" />
+              Transparent pricing
+            </span>
+            <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-[var(--ink)] sm:text-5xl lg:text-6xl">
+              Pricing that doesn&rsquo;t require a{' '}
+              <span className="text-[var(--cobalt)]">sales call.</span>
+            </h1>
+            <p className="mx-auto lg:mx-0 mt-6 max-w-2xl text-lg text-[var(--ink-muted)]">
+              We publish our commission structure, our subscription price, and
+              what&rsquo;s included — so parents, athletes, brands, and
+              compliance officers can read this page, decide, and sign up in
+              minutes.
+            </p>
+            <div className="stat-strip mt-8 inline-flex">
+              <b>Free</b> to start · <b>15%</b> sourced · <b>0%</b> you bring
+            </div>
+          </div>
+          <div className="duotone rounded-2xl overflow-hidden mx-auto w-full max-w-sm lg:max-w-none">
+            <Image
+              src="/editorial/photo-04.jpg"
+              alt="Scholar-athlete reviewing a sponsorship deal on the sideline"
+              width={640}
+              height={800}
+              sizes="(min-width: 1024px) 420px, 90vw"
+              className="h-full w-full object-cover"
+              priority
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -263,49 +275,47 @@ function Hero() {
 
 function TierCards() {
   return (
-    <section aria-label="Pricing tiers" className="bg-black py-12 sm:py-16">
+    <section aria-label="Pricing tiers" className="bg-[var(--cream)] py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 md:grid-cols-3">
           {tiers.map((tier) => (
             <div
               key={tier.id}
               id={tier.id}
-              className={`relative flex flex-col rounded-2xl border p-6 sm:p-8 ${
+              className={`relative flex flex-col rounded-2xl border p-6 sm:p-8 bg-[var(--cream-surface)] ${
                 tier.highlighted
-                  ? 'border-[var(--accent-primary)]/40 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-black shadow-[0_0_40px_-10px_rgba(0,240,255,0.3)]'
-                  : 'border-white/10 bg-[var(--marketing-gray-950)]'
+                  ? 'border-[var(--cobalt)]/40 shadow-[0_0_40px_-14px_rgba(37,99,235,0.35)]'
+                  : 'border-[var(--hairline)]'
               }`}
             >
               {tier.highlighted && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-[var(--accent-primary)]/50 bg-black px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-[var(--cobalt)]/50 bg-[var(--cream-surface)] px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--cobalt)]">
                   Most popular for brands
                 </span>
               )}
               <div className="mb-4">
-                <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
-                  {tier.name}
-                </h2>
-                <p className="mt-1 text-white/60 text-sm">{tier.headline}</p>
+                <h2 className="eyebrow">{tier.name}</h2>
+                <p className="mt-1 text-[var(--ink-meta)] text-sm">{tier.headline}</p>
               </div>
               <div className="mb-6">
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  <span className="text-4xl font-bold text-white sm:text-5xl">
+                  <span className="text-4xl font-bold text-[var(--ink)] sm:text-5xl">
                     {tier.price}
                   </span>
                   {tier.priceDetail && (
-                    <span className="text-sm text-white/60">{tier.priceDetail}</span>
+                    <span className="text-sm text-[var(--ink-meta)]">{tier.priceDetail}</span>
                   )}
                 </div>
-                <p className="mt-3 text-sm text-white/70">{tier.description}</p>
+                <p className="mt-3 text-sm text-[var(--ink-muted)]">{tier.description}</p>
               </div>
               <ul className="mb-6 flex-1 space-y-3">
                 {tier.features.map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-start gap-3 text-sm text-white/80"
+                    className="flex items-start gap-3 text-sm text-[var(--ink-muted)]"
                   >
                     <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--accent-success)]"
+                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--cobalt)]"
                       aria-hidden="true"
                     />
                     <span>{feature}</span>
@@ -357,14 +367,14 @@ function AlwaysFree() {
   return (
     <section
       aria-label="Always-free roles"
-      className="bg-[var(--marketing-gray-950)] py-12 sm:py-16 border-y border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-12 sm:py-16 border-y border-[var(--hairline)]"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
+          <h2 className="font-display text-2xl font-bold text-[var(--ink)] sm:text-3xl">
             Always free
           </h2>
-          <p className="mt-2 text-white/60">
+          <p className="mt-2 text-[var(--ink-muted)]">
             Three groups never pay us — as a matter of policy, not just pricing.
           </p>
         </div>
@@ -372,16 +382,16 @@ function AlwaysFree() {
           {rows.map((row) => (
             <div
               key={row.label}
-              className="rounded-xl border border-white/10 bg-black p-5"
+              className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5"
             >
-              <div className="flex items-center gap-2 text-[var(--accent-success)]">
+              <div className="flex items-center gap-2 text-[var(--cobalt)]">
                 <Check className="h-4 w-4" aria-hidden="true" />
                 <span className="text-xs font-semibold uppercase tracking-widest">
                   Always $0
                 </span>
               </div>
-              <h3 className="mt-3 text-lg font-bold text-white">{row.label}</h3>
-              <p className="mt-2 text-sm text-white/70">{row.detail}</p>
+              <h3 className="mt-3 text-lg font-bold text-[var(--ink)]">{row.label}</h3>
+              <p className="mt-2 text-sm text-[var(--ink-muted)]">{row.detail}</p>
             </div>
           ))}
         </div>
@@ -396,35 +406,35 @@ function AlwaysFree() {
 
 function FeatureTable() {
   return (
-    <section aria-label="Feature comparison by tier" className="bg-black py-16">
+    <section aria-label="Feature comparison by tier" className="bg-[var(--cream)] py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
+          <h2 className="font-display text-2xl font-bold text-[var(--ink)] sm:text-3xl">
             Every feature, every tier
           </h2>
-          <p className="mt-2 text-white/60">
+          <p className="mt-2 text-[var(--ink-muted)]">
             Nothing hidden behind an enterprise call.
           </p>
         </div>
-        <div className="overflow-x-auto rounded-xl border border-white/10 bg-[var(--marketing-gray-950)]">
+        <div className="overflow-x-auto rounded-xl border border-[var(--hairline)] bg-[var(--marketing-gray-950)]">
           <table className="w-full min-w-[720px] text-left text-sm">
             <caption className="sr-only">
               Feature availability across Athletes, Brands, and Brand Plus tiers
             </caption>
-            <thead className="bg-white/5">
+            <thead className="bg-[var(--cream-section)]">
               <tr>
-                <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                   Feature
                 </th>
-                <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                   Athletes
                 </th>
-                <th scope="col" className="px-4 py-3 font-semibold text-white sm:px-6">
+                <th scope="col" className="px-4 py-3 font-semibold text-[var(--ink)] sm:px-6">
                   Brands
                 </th>
                 <th
                   scope="col"
-                  className="px-4 py-3 font-semibold text-[var(--accent-primary)] sm:px-6"
+                  className="px-4 py-3 font-semibold text-[var(--cobalt)] sm:px-6"
                 >
                   Brand Plus
                 </th>
@@ -434,23 +444,23 @@ function FeatureTable() {
               {tableRows.map((row, i) => (
                 <tr
                   key={row.label}
-                  className={i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}
+                  className={i % 2 === 0 ? 'bg-transparent' : 'bg-[var(--cream-section)]'}
                 >
                   <th
                     scope="row"
-                    className="px-4 py-3 font-medium text-white/90 sm:px-6 align-top"
+                    className="px-4 py-3 font-medium text-[var(--ink)] sm:px-6 align-top"
                   >
                     {row.label}
                   </th>
-                  <td className="px-4 py-3 text-white/70 sm:px-6 align-top">{row.athletes}</td>
-                  <td className="px-4 py-3 text-white/70 sm:px-6 align-top">{row.brands}</td>
-                  <td className="px-4 py-3 text-white/90 sm:px-6 align-top">{row.brandPlus}</td>
+                  <td className="px-4 py-3 text-[var(--ink-muted)] sm:px-6 align-top">{row.athletes}</td>
+                  <td className="px-4 py-3 text-[var(--ink-muted)] sm:px-6 align-top">{row.brands}</td>
+                  <td className="px-4 py-3 text-[var(--ink)] sm:px-6 align-top">{row.brandPlus}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="mt-3 text-xs text-white/40 sm:hidden">
+        <p className="mt-3 text-xs text-[var(--ink-meta)] sm:hidden">
           Scroll horizontally to compare tiers.
         </p>
       </div>
@@ -466,11 +476,11 @@ function FAQ() {
   return (
     <section
       aria-label="Pricing FAQ"
-      className="bg-[var(--marketing-gray-950)] py-16 border-y border-white/10"
+      className="bg-[var(--marketing-gray-950)] py-16 border-y border-[var(--hairline)]"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
+          <h2 className="font-display text-2xl font-bold text-[var(--ink)] sm:text-3xl">
             Frequently asked questions
           </h2>
         </div>
@@ -478,10 +488,10 @@ function FAQ() {
           {faqs.map((item) => (
             <div
               key={item.q}
-              className="rounded-xl border border-white/10 bg-black p-5"
+              className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5"
             >
-              <dt className="text-base font-semibold text-white">{item.q}</dt>
-              <dd className="mt-2 text-sm leading-relaxed text-white/75">
+              <dt className="text-base font-semibold text-[var(--ink)]">{item.q}</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-[var(--ink-muted)]">
                 {item.a}
               </dd>
             </div>
@@ -498,34 +508,34 @@ function FAQ() {
 
 function FinalCTA() {
   return (
-    <section aria-label="Pricing final call to action" className="bg-black py-20">
+    <section aria-label="Pricing final call to action" className="bg-[var(--cream)] py-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-[var(--accent-gold)]/10 p-10 text-center">
-          <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[var(--accent-primary)]/15 blur-3xl" />
+        <div className="relative overflow-hidden rounded-3xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-10 text-center">
           <div className="relative">
-            <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
-              Start free. No sales call.
+            <h2 className="font-display text-3xl font-bold text-[var(--ink)] sm:text-4xl">
+              Start free. <span className="text-[var(--cobalt)]">No sales call.</span>
             </h2>
-            <p className="mt-4 text-white/70 max-w-2xl mx-auto">
+            <p className="mt-4 text-[var(--ink-muted)] max-w-2xl mx-auto">
               Create your account today. Review the terms. Run your first deal
               this week.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center items-center">
               <Link href="/signup/brand">
                 <Button size="lg" className="btn-marketing-primary gap-2 w-full sm:w-auto">
                   Create a brand account
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </Link>
-              <Link href="/signup/athlete">
-                <Button size="lg" className="btn-marketing-outline gap-2 w-full sm:w-auto">
-                  Create an athlete profile
-                </Button>
+              <Link href="/signup/athlete" className="arrow-pill">
+                <span className="circle">
+                  <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="label">Create an athlete profile</span>
               </Link>
             </div>
           </div>
         </div>
-        <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-white/50 leading-relaxed">
+        <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-[var(--ink-meta)] leading-relaxed">
           We do not charge application fees. We do not charge athletes. Parents
           never see a fee. Our 15% commission on StatStaq-sourced deals pays
           for platform + compliance + state-disclosure infrastructure.

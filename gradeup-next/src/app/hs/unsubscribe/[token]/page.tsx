@@ -43,11 +43,11 @@ export default async function UnsubscribePage({ params }: PageProps) {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center gap-6 px-6 py-16 text-center text-white">
-      <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+    <main className="marketing-dark mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center gap-6 bg-[var(--marketing-gray-900)] px-6 py-16 text-center text-[var(--ink)]">
+      <p className="eyebrow">
         GradeUp NIL · HS Pilot
       </p>
-      <h1 className="font-display text-3xl text-white md:text-4xl">
+      <h1 className="font-display text-3xl text-[var(--ink)] md:text-4xl">
         {error
           ? "Something went wrong."
           : matched
@@ -56,24 +56,24 @@ export default async function UnsubscribePage({ params }: PageProps) {
       </h1>
 
       {error ? (
-        <p className="max-w-md text-sm text-white/60">
+        <p className="max-w-md text-sm text-[var(--ink-meta)]">
           We hit an error processing this unsubscribe link. Reply to any
           GradeUp email and we&rsquo;ll remove you manually.
         </p>
       ) : matched ? (
         <>
-          <p className="max-w-md text-sm text-white/70">
+          <p className="max-w-md text-sm text-[var(--ink-muted)]">
             We&rsquo;ve stopped sending you GradeUp HS nurture emails. You
             won&rsquo;t hear from this sequence again.
           </p>
-          <p className="max-w-md text-xs text-white/50">
+          <p className="max-w-md text-xs text-[var(--ink-meta)]">
             If you change your mind later, you can re-join by signing up
             again on the waitlist form. This opt-out is permanent for the
             current signup.
           </p>
         </>
       ) : (
-        <p className="max-w-md text-sm text-white/60">
+        <p className="max-w-md text-sm text-[var(--ink-meta)]">
           This unsubscribe link isn&rsquo;t recognised. You may have
           already opted out, or this link never existed. Nothing for you
           to do.
@@ -82,7 +82,7 @@ export default async function UnsubscribePage({ params }: PageProps) {
 
       <Link
         href="/hs"
-        className="mt-4 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)] underline-offset-4 hover:underline"
+        className="mt-4 text-xs font-semibold uppercase tracking-widest text-[var(--cobalt)] underline-offset-4 hover:underline"
       >
         Back to GradeUp HS
       </Link>

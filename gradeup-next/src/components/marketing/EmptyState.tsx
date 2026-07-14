@@ -57,7 +57,7 @@ function EmptyIllustration({ variant }: { variant: EmptyStateVariant }) {
       {/* Icon container */}
       <div className="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-[var(--marketing-gray-800)] to-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] flex items-center justify-center shadow-xl">
         <Icon
-          className="h-10 w-10 text-[var(--marketing-gray-500)]"
+          className="h-10 w-10 text-[var(--ink-meta)]"
           strokeWidth={1.5}
           aria-hidden="true"
         />
@@ -122,12 +122,12 @@ export function MarketingEmptyState({
       <EmptyIllustration variant={variant} />
 
       {/* Title */}
-      <h3 className="text-xl font-semibold text-white mb-3">
+      <h3 className="text-xl font-semibold text-[var(--ink)] mb-3">
         {displayTitle}
       </h3>
 
       {/* Description */}
-      <p className="text-[var(--marketing-gray-400)] max-w-md mb-8 leading-relaxed">
+      <p className="text-[var(--ink-muted)] max-w-md mb-8 leading-relaxed">
         {displayDescription}
       </p>
 
@@ -148,7 +148,7 @@ export function MarketingEmptyState({
           <Button
             onClick={onRetry}
             variant="outline"
-            className="border-[var(--marketing-gray-600)] text-white hover:bg-white/10"
+            className="border-[var(--marketing-gray-600)] text-[var(--ink)] hover:bg-[var(--cream-surface)]"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -169,10 +169,10 @@ export function MarketingEmptyState({
       {/* Helpful tips */}
       {variant === 'no-results' && (
         <div className="mt-10 p-4 rounded-xl bg-[var(--marketing-gray-900)]/50 border border-[var(--marketing-gray-800)] max-w-md">
-          <p className="text-sm text-[var(--marketing-gray-500)] mb-2 font-medium">
+          <p className="text-sm text-[var(--ink-meta)] mb-2 font-medium">
             Tips for finding opportunities:
           </p>
-          <ul className="text-sm text-[var(--marketing-gray-400)] text-left space-y-1">
+          <ul className="text-sm text-[var(--ink-muted)] text-left space-y-1">
             <li className="flex items-start gap-2">
               <span className="text-[var(--accent-primary)]">•</span>
               Try broader search terms

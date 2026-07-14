@@ -67,21 +67,25 @@ export default function SolutionsIndexPage() {
           href: '/business/case-studies',
         }}
         supportingNote="Live in California, Florida, Georgia, Illinois, New Jersey, New York, and Texas."
+        image={{
+          src: '/editorial/photo-02.jpg',
+          alt: 'Golden-hour high-school stadium — the field every GradeUp persona shares',
+        }}
       />
 
       <section
         aria-label="Choose your persona"
-        className="bg-[var(--marketing-gray-950)] py-20 border-y border-white/10"
+        className="bg-[var(--cream-section)] py-20 border-y border-[var(--hairline)]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-3xl">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest border border-white/10 bg-white/5 text-[var(--accent-primary)]">
+            <span className="eyebrow inline-block px-3 py-1 rounded-full border border-[var(--hairline)] bg-[var(--cream-surface)]">
               Pick your side
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl font-bold text-[var(--ink)]">
               Where do you fit?
             </h2>
-            <p className="mt-3 text-white/70 text-lg">
+            <p className="mt-3 text-[var(--ink-muted)] text-lg">
               Each persona gets the product built for them. The deal rails,
               consent rails, and disclosure rails are the same underneath — so
               every side sees the same truth.
@@ -156,20 +160,20 @@ export default function SolutionsIndexPage() {
             />
             <Link
               href="/business/case-studies"
-              className="card-marketing p-6 flex flex-col justify-center h-full hover-lift transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              className="card-marketing p-6 flex flex-col justify-center h-full hover-lift transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cobalt)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream-section)]"
               aria-label="Browse all case studies"
             >
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-gold)] mb-2">
+              <span className="eyebrow mb-2 block">
                 Proof
               </span>
-              <h3 className="text-xl font-bold text-white mb-2">
+              <h3 className="text-xl font-bold text-[var(--ink)] mb-2">
                 Real deals. Verified earnings.
               </h3>
-              <p className="text-white/70 text-sm mb-4 leading-relaxed">
+              <p className="text-[var(--ink-muted)] text-sm mb-4 leading-relaxed">
                 Every public case study is tied to a completed deal and an
                 on-platform share event. No marketing fluff.
               </p>
-              <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent-primary)]">
+              <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--cobalt)]">
                 Browse case studies
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </span>
