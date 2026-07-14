@@ -11,7 +11,7 @@ export const metadata = {
   ...buildMarketingMetadata({
     title: 'Pricing — GradeUp HS-NIL',
     description:
-      'Transparent NIL pricing for HS scholar-athletes, their parents, and local brands. No sales calls. No hidden fees. 8% take-rate on deals.',
+      'Transparent NIL pricing for HS scholar-athletes, their parents, and local brands. No sales calls. No hidden fees. Free to join — 15% only on deals StatStaq sources, 0% on deals you bring.',
     path: '/pricing',
   }),
   // Preserve language alternates for i18n — helper only sets `canonical`.
@@ -39,7 +39,7 @@ const OFFERS_JSONLD = {
       '@type': 'Offer',
       name: 'GradeUp HS-NIL — Athletes',
       description:
-        'Free forever for HS scholar-athletes. Platform take-rate of 8% on deals under $500 and 6% on deals $500 and above is applied to deal compensation. Parent custodian receives 92-94% of gross.',
+        "Free to join for HS scholar-athletes. GradeUp qualifies you with a verified-GPA gate; StatStaq's deal desk sources and represents you. 15% commission only on deals StatStaq's deal desk sources and closes — no deal, no fee. 0% on deals you bring yourself. Parent custodian keeps 85% of StatStaq-sourced deals, 100% of deals you bring.",
       price: '0',
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
@@ -50,7 +50,7 @@ const OFFERS_JSONLD = {
       '@type': 'Offer',
       name: 'GradeUp HS-NIL — Brands',
       description:
-        'Free to sign up. 8% platform fee per completed deal. No monthly minimums. No hidden costs.',
+        "Free to sign up. No per-deal platform fee — StatStaq's deal desk earns its commission on the athlete side. No monthly minimums. No hidden costs.",
       price: '0',
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
@@ -61,7 +61,7 @@ const OFFERS_JSONLD = {
       '@type': 'Offer',
       name: 'GradeUp HS-NIL — Brand Plus',
       description:
-        'Unlimited campaigns, priority athlete matching, branded case study, 1-on-1 onboarding. Reduced 5% platform fee on completed deals.',
+        'Unlimited campaigns, priority athlete matching, branded case study, 1-on-1 onboarding. An optional $149/mo upgrade — no per-deal platform fee, same as Brands.',
       price: '149',
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
@@ -99,18 +99,18 @@ const tiers: Tier[] = [
   {
     id: 'athletes',
     name: 'Athletes',
-    headline: 'Free forever',
+    headline: 'Free to join',
     price: '$0',
     priceDetail: 'per month',
     description:
-      'Free forever for HS scholar-athletes. The platform take-rate is applied to deal compensation only — you never pay out-of-pocket.',
+      "Free to join for HS scholar-athletes. GradeUp qualifies you with a verified-GPA gate; StatStaq's deal desk sources and represents you. You only ever pay out of money StatStaq makes you.",
     ctaLabel: 'Create athlete profile',
     ctaHref: '/signup/athlete',
     features: [
       'Free profile, matching, and dashboard',
-      'Take-rate: 8% on deals under $500',
-      'Take-rate: 6% on deals $500 and above',
-      'Parent custodian receives 92–94% of gross',
+      "15% commission — only on deals StatStaq's deal desk sources and closes",
+      '0% on deals you bring yourself — those stay entirely yours',
+      'You keep 85% of StatStaq-sourced deals, 100% of deals you bring',
       'Per-state rules engine, included',
       'Parental consent flow, included',
     ],
@@ -122,12 +122,12 @@ const tiers: Tier[] = [
     price: '$0',
     priceDetail: 'to sign up',
     description:
-      'Free to sign up. 8% platform fee per completed deal. No monthly minimums. No hidden costs.',
+      "Free to sign up. No per-deal platform fee — GradeUp qualifies verified-GPA scholar-athletes and StatStaq's deal desk handles sourcing and negotiation. No monthly minimums. No hidden costs.",
     ctaLabel: 'Create brand account',
     ctaHref: '/signup/brand',
     features: [
       'Self-serve brand signup in under two minutes',
-      '8% platform fee on completed deals only',
+      'No per-deal platform fee',
       'No monthly minimum, no seat fees',
       'Real-time state-rule preflight on every deal',
       'Escrow-at-signing protects both parties',
@@ -141,7 +141,7 @@ const tiers: Tier[] = [
     price: '$149',
     priceDetail: 'per month · $1,490/yr (save $298)',
     description:
-      'Unlocks unlimited campaigns, priority athlete matching, a branded case study on our site, and a 1-on-1 onboarding call. Platform fee reduced to 5% on completed deals.',
+      'Unlocks unlimited campaigns, priority athlete matching, a branded case study on our site, and a 1-on-1 onboarding call. An optional upgrade — no per-deal platform fee, same as Brands.',
     ctaLabel: 'Start Brand Plus',
     ctaHref: '/signup/brand?plan=plus',
     highlighted: true,
@@ -150,7 +150,7 @@ const tiers: Tier[] = [
       'Priority athlete matching in the queue',
       'Branded case study on gradeup-nil.com',
       '1-on-1 onboarding call with our team',
-      'Reduced 5% platform fee on completed deals',
+      'No per-deal platform fee — same as Brands',
       'Dedicated support (email + Slack Connect)',
     ],
   },
@@ -163,19 +163,19 @@ const tiers: Tier[] = [
 const faqs: { q: string; a: string }[] = [
   {
     q: 'Why is it free for parents?',
-    a: 'Parents are the trusted adults in the HS-NIL system. We do not charge them. Ever. Parents never see a fee for signing up, approving a deal, or acting as the custodian of their athlete\'s earnings. Our take-rate on brand deals pays for the platform, compliance, and state-disclosure infrastructure.',
+    a: 'Parents are the trusted adults in the HS-NIL system. We do not charge them. Ever. Parents never see a fee for signing up, approving a deal, or acting as the custodian of their athlete\'s earnings. Our 15% commission on deals StatStaq\'s deal desk sources pays for the platform, compliance, and state-disclosure infrastructure.',
   },
   {
-    q: 'What is a "take-rate"?',
-    a: 'A take-rate is the percentage of a completed deal that the platform retains to cover its costs. GradeUp\'s take-rate is 8% on deals under $500 and 6% on deals of $500 or more. The remaining 92–94% goes to the parent custodian account for the benefit of the athlete. For example, on a $300 deal, the athlete\'s custodian receives $276; on a $1,000 deal, the custodian receives $940.',
+    q: "What's the difference between a StatStaq-sourced deal and a deal I bring myself?",
+    a: "GradeUp is the verified-GPA scholar-athlete layer of StatStaq. GradeUp qualifies you; StatStaq's deal desk sources, negotiates, and closes brand deals on your behalf — and takes a flat 15% commission only when it brings you an opportunity and closes it. No deal, no fee. If you already have a sponsor, StatStaq will produce, value, and paper the deal for you and take 0% — that deal stays entirely yours. For example, on a $1,000 deal StatStaq sources, your custodian keeps $850; on a $1,000 deal you bring yourself, your custodian keeps the full $1,000.",
   },
   {
     q: 'How do I know my deal is in compliance?',
-    a: 'Every deal is validated in real time against the current rules for the athlete\'s state. Our per-state rules engine checks for prohibited categories (alcohol, tobacco, gambling, etc.), disclosure windows, amount caps where applicable, and consent scope. Non-compliant deals are rejected at creation, before anyone signs. The state athletic association receives an auditable disclosure record for every completed deal in their state.',
+    a: 'Every deal — whether StatStaq sources it or you bring it — is validated in real time against the current rules for the athlete\'s state. Our per-state rules engine checks for prohibited categories (alcohol, tobacco, gambling, etc.), disclosure windows, amount caps where applicable, and consent scope. Non-compliant deals are rejected at creation, before anyone signs. The state athletic association receives an auditable disclosure record for every completed deal in their state.',
   },
   {
-    q: 'What happens if the platform fee would eat too much of a small deal?',
-    a: 'We already designed for this: below $500 the take-rate is 8%, so on a $50 deal the fee is $4. We do not charge flat minimums that disproportionately impact small deals. If a deal ever fails state-rule validation, no fee is charged because no deal occurred.',
+    q: 'Does the commission scale with deal size?',
+    a: "No — it's a flat 15% on any deal StatStaq's deal desk sources and closes, with no sliding scale and no flat minimum that disproportionately hits small deals. On a $200 sourced deal the commission is $30; on a $5,000 sourced deal it's $750. Deals you bring yourself are always 0%. If a deal ever fails state-rule validation, no fee is charged because no deal occurred.",
   },
   {
     q: 'Do you charge schools?',
@@ -205,10 +205,10 @@ const tableRows: Row[] = [
   { label: "Who it's for", athletes: 'HS scholar-athletes (8th grade through senior year)', brands: 'Local / regional brands running individual deals', brandPlus: 'Brands running repeat campaigns' },
   { label: 'Signup fee', athletes: '$0', brands: '$0', brandPlus: '$149/mo or $1,490/yr' },
   { label: 'Monthly minimum', athletes: 'None', brands: 'None', brandPlus: 'Subscription itself' },
-  { label: 'Fee per completed deal', athletes: 'N/A — take-rate, not fee', brands: '8%', brandPlus: '5%' },
-  { label: 'Take-rate on deals < $500', athletes: '8% of deal', brands: 'N/A', brandPlus: 'N/A' },
-  { label: 'Take-rate on deals ≥ $500', athletes: '6% of deal', brands: 'N/A', brandPlus: 'N/A' },
-  { label: 'Parent custodian share', athletes: '92–94% of gross', brands: 'N/A', brandPlus: 'N/A' },
+  { label: 'Fee per completed deal', athletes: 'N/A — commission, not fee', brands: '0% — no per-deal fee', brandPlus: '0% — no per-deal fee' },
+  { label: 'Commission on StatStaq-sourced deals', athletes: '15% flat', brands: 'N/A', brandPlus: 'N/A' },
+  { label: 'Commission on deals you bring', athletes: '0%', brands: 'N/A', brandPlus: 'N/A' },
+  { label: 'Parent custodian share', athletes: '85% sourced · 100% brought', brands: 'N/A', brandPlus: 'N/A' },
   { label: 'State-rule checks', athletes: 'Yes, included', brands: 'Yes, included', brandPlus: 'Yes, included' },
   { label: 'Parental consent architecture', athletes: 'Yes, included', brands: 'Yes, included', brandPlus: 'Yes, included' },
   { label: 'Dispute resolution', athletes: 'Yes, included', brands: 'Yes, included', brandPlus: 'Yes, included' },
@@ -247,9 +247,10 @@ function Hero() {
           <span className="gradient-text-cyan">sales call.</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-          We publish our take-rate, our subscription price, and what&rsquo;s
-          included — so parents, athletes, brands, and compliance officers can
-          read this page, decide, and sign up in minutes.
+          We publish our commission structure, our subscription price, and
+          what&rsquo;s included — so parents, athletes, brands, and
+          compliance officers can read this page, decide, and sign up in
+          minutes.
         </p>
       </div>
     </section>
@@ -526,8 +527,8 @@ function FinalCTA() {
         </div>
         <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-white/50 leading-relaxed">
           We do not charge application fees. We do not charge athletes. Parents
-          never see a fee. Our take-rate pays for platform + compliance +
-          state-disclosure infrastructure.
+          never see a fee. Our 15% commission on StatStaq-sourced deals pays
+          for platform + compliance + state-disclosure infrastructure.
         </p>
       </div>
     </section>

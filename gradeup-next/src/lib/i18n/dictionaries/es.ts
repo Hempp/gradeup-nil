@@ -372,28 +372,28 @@ export const es: Dictionary = {
     metadata: {
       title: 'Precios — GradeUp HS-NIL',
       description:
-        'Precios NIL transparentes para atletas-estudiantes de preparatoria, sus padres y marcas locales. Sin llamadas de ventas. Sin tarifas ocultas. 8 % de comisión sobre los acuerdos.',
+        'Precios NIL transparentes para atletas-estudiantes de preparatoria, sus padres y marcas locales. Sin llamadas de ventas. Sin tarifas ocultas. Registro gratis — 15 % solo en acuerdos que consigue StatStaq, 0 % en los que usted trae.',
     },
     hero: {
       badge: 'Precios transparentes',
       titlePrefix: 'Precios que no requieren una',
       titleAccent: 'llamada de ventas.',
       subtitle:
-        'Publicamos nuestra comisión, el precio de suscripción y lo que está incluido — para que padres, atletas, marcas y oficiales de cumplimiento puedan leer esta página, decidir y registrarse en minutos.',
+        'Publicamos nuestra estructura de comisiones, el precio de suscripción y lo que está incluido — para que padres, atletas, marcas y oficiales de cumplimiento puedan leer esta página, decidir y registrarse en minutos.',
     },
     tiers: {
       mostPopular: 'El más popular para marcas',
       athletesName: 'Atletas',
-      athletesHeadline: 'Gratis para siempre',
+      athletesHeadline: 'Registro gratis',
       athletesPrice: '$0',
       athletesPriceDetail: 'al mes',
       athletesDescription:
-        'Gratis para siempre para atletas-estudiantes de preparatoria. La comisión de plataforma se aplica solo sobre la compensación del acuerdo — usted nunca paga de su bolsillo.',
+        'Registro gratis para atletas-estudiantes de preparatoria. GradeUp le califica con un filtro de GPA verificado; el equipo de negociación de StatStaq consigue y le representa. Usted solo paga del dinero que StatStaq le genera.',
       athletesCta: 'Crear perfil de atleta',
       athletesFeature1: 'Perfil, emparejamiento y panel gratis',
-      athletesFeature2: 'Comisión: 8 % en acuerdos menores a $500',
-      athletesFeature3: 'Comisión: 6 % en acuerdos de $500 o más',
-      athletesFeature4: 'El custodio padre recibe 92\u201394 % del bruto',
+      athletesFeature2: 'Comisión del 15 % — solo en acuerdos que consigue y cierra el equipo de StatStaq',
+      athletesFeature3: '0 % en los acuerdos que usted trae — esos son enteramente suyos',
+      athletesFeature4: 'Usted se queda con el 85 % de los acuerdos que consigue StatStaq, 100 % de los que trae',
       athletesFeature5: 'Motor de reglas por estado incluido',
       athletesFeature6: 'Flujo de consentimiento parental incluido',
       brandsName: 'Marcas',
@@ -401,11 +401,11 @@ export const es: Dictionary = {
       brandsPrice: '$0',
       brandsPriceDetail: 'para registrarse',
       brandsDescription:
-        'Registro gratis. 8 % de comisión de plataforma por acuerdo completado. Sin mínimos mensuales. Sin costos ocultos.',
+        'Registro gratis. Sin tarifa de plataforma por acuerdo — GradeUp califica a los atletas-estudiantes con GPA verificado y el equipo de negociación de StatStaq se encarga de conseguir y negociar. Sin mínimos mensuales. Sin costos ocultos.',
       brandsCta: 'Crear cuenta de marca',
       brandsFeature1: 'Registro de marca en menos de dos minutos',
       brandsFeature2:
-        '8 % de comisión de plataforma solo en acuerdos completados',
+        'Sin tarifa de plataforma por acuerdo',
       brandsFeature3: 'Sin mínimo mensual, sin tarifas por puesto',
       brandsFeature4:
         'Verificación de reglas estatales en tiempo real en cada acuerdo',
@@ -416,13 +416,13 @@ export const es: Dictionary = {
       brandPlusPrice: '$149',
       brandPlusPriceDetail: 'al mes, o $1,490/año (ahorra $298)',
       brandPlusDescription:
-        'Desbloquea campañas ilimitadas, emparejamiento prioritario de atletas, un caso de éxito con marca en nuestro sitio y una llamada de incorporación uno a uno. Comisión reducida a 5 % en acuerdos completados.',
+        'Desbloquea campañas ilimitadas, emparejamiento prioritario de atletas, un caso de éxito con marca en nuestro sitio y una llamada de incorporación uno a uno. Una mejora opcional — sin tarifa por acuerdo, igual que Marcas.',
       brandPlusCta: 'Comenzar Brand Plus',
       brandPlusFeature1: 'Campañas activas ilimitadas',
       brandPlusFeature2: 'Emparejamiento prioritario de atletas',
       brandPlusFeature3: 'Caso de éxito con marca en gradeup-nil.com',
       brandPlusFeature4: 'Llamada de incorporación uno a uno',
-      brandPlusFeature5: '5 % de comisión reducida en acuerdos completados',
+      brandPlusFeature5: 'Sin tarifa de plataforma por acuerdo — igual que Marcas',
       brandPlusFeature6: 'Soporte dedicado (correo + Slack Connect)',
     },
     alwaysFree: {
@@ -452,13 +452,13 @@ export const es: Dictionary = {
     faq: {
       heading: 'Preguntas frecuentes',
       q1: '¿Por qué es gratis para los padres?',
-      a1: 'Los padres son los adultos de confianza en el sistema HS-NIL. No les cobramos. Nunca. Los padres no ven una tarifa por registrarse, por aprobar un acuerdo o por actuar como custodio de los ingresos de su atleta. Nuestra comisión sobre los acuerdos de marca paga la plataforma, el cumplimiento y la infraestructura de divulgación estatal.',
-      q2: '¿Qué es una "comisión"?',
-      a2: 'Una comisión es el porcentaje de un acuerdo completado que la plataforma retiene para cubrir sus costos. La comisión de GradeUp es del 8 % en acuerdos menores a $500 y del 6 % en acuerdos de $500 o más. El 92\u201394 % restante va a la cuenta custodia del padre para beneficio del atleta. Por ejemplo, en un acuerdo de $300, el custodio recibe $276; en uno de $1,000, recibe $940.',
+      a1: 'Los padres son los adultos de confianza en el sistema HS-NIL. No les cobramos. Nunca. Los padres no ven una tarifa por registrarse, por aprobar un acuerdo o por actuar como custodio de los ingresos de su atleta. Nuestra comisión del 15 % sobre los acuerdos que consigue el equipo de StatStaq paga la plataforma, el cumplimiento y la infraestructura de divulgación estatal.',
+      q2: '¿Cuál es la diferencia entre un acuerdo que consigue StatStaq y uno que traigo yo mismo?',
+      a2: 'GradeUp es la capa de atletas-estudiantes con GPA verificado de StatStaq. GradeUp lo califica; el equipo de negociaci\u00f3n de StatStaq consigue, negocia y cierra acuerdos de marca en su nombre, y cobra una comisi\u00f3n fija del 15 % solo cuando trae una oportunidad y la cierra. Sin acuerdo, no hay tarifa. Si ya tiene un patrocinador, StatStaq producir\u00e1, valorar\u00e1 y documentar\u00e1 el acuerdo por usted y no cobrar\u00e1 nada, ese acuerdo es enteramente suyo. Por ejemplo, en un acuerdo de $1,000 que consigue StatStaq, su custodio se queda con $850; en un acuerdo de $1,000 que usted trae, su custodio se queda con los $1,000 completos.',
       q3: '¿Cómo sé que mi acuerdo cumple con las reglas?',
-      a3: 'Cada acuerdo se valida en tiempo real contra las reglas vigentes del estado del atleta. Nuestro motor de reglas por estado revisa categorías prohibidas (alcohol, tabaco, apuestas, etc.), ventanas de divulgación, topes de monto cuando aplican y alcance del consentimiento. Los acuerdos no conformes se rechazan al crearse, antes de que alguien firme. La asociación atlética estatal recibe un registro de divulgación auditable de cada acuerdo completado en su estado.',
-      q4: '¿Qué pasa si la comisión se come demasiado de un acuerdo pequeño?',
-      a4: 'Ya lo diseñamos pensando en eso: por debajo de $500 la comisión es del 8 %, así que en un acuerdo de $50 la tarifa es $4. No cobramos mínimos fijos que afecten desproporcionadamente a los acuerdos pequeños. Si un acuerdo falla la validación de reglas estatales, no se cobra tarifa porque el acuerdo no ocurrió.',
+      a3: 'Cada acuerdo, ya sea que lo consiga StatStaq o que usted lo traiga, se valida en tiempo real contra las reglas vigentes del estado del atleta. Nuestro motor de reglas por estado revisa categorías prohibidas (alcohol, tabaco, apuestas, etc.), ventanas de divulgación, topes de monto cuando aplican y alcance del consentimiento. Los acuerdos no conformes se rechazan al crearse, antes de que alguien firme. La asociación atlética estatal recibe un registro de divulgación auditable de cada acuerdo completado en su estado.',
+      q4: '¿La comisión cambia según el tamaño del acuerdo?',
+      a4: 'No: es un 15 % fijo en cualquier acuerdo que consiga y cierre el equipo de StatStaq, sin escala variable ni mínimos fijos que afecten desproporcionadamente a los acuerdos pequeños. En un acuerdo conseguido de $200 la comisión es $30; en uno de $5,000 es $750. Los acuerdos que usted trae siempre son 0 %. Si un acuerdo falla la validación de reglas estatales, no se cobra tarifa porque el acuerdo no ocurrió.',
       q5: '¿Les cobran a las escuelas?',
       a5: 'No. Las preparatorias individuales pagan $0 en el año 1 de un estado piloto. A partir de 2027 puede existir un precio empresarial personalizado para escuelas que busquen reportes o integraciones avanzadas, pero hoy no hay tarifa.',
       q6: '¿Les cobran a la asociación atlética estatal?',
@@ -475,7 +475,7 @@ export const es: Dictionary = {
       primary: 'Crear cuenta de marca',
       secondary: 'Crear perfil de atleta',
       disclaimer:
-        'No cobramos tarifas de solicitud. No cobramos a los atletas. Los padres nunca ven una tarifa. Nuestra comisión paga la plataforma, el cumplimiento y la infraestructura de divulgación estatal.',
+        'No cobramos tarifas de solicitud. No cobramos a los atletas. Los padres nunca ven una tarifa. Nuestra comisión del 15 % sobre los acuerdos que consigue StatStaq paga la plataforma, el cumplimiento y la infraestructura de divulgación estatal.',
     },
   },
 
