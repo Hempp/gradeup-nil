@@ -5,11 +5,30 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ─── Platform Fee Configuration ────────────────────────────────────────────
+// StatStaq pricing model (matches the public pricing page):
+//   - Free to join.
+//   - 15% platform fee on deals StatStaq SOURCES (the platform found/brokered the deal).
+//   - 0% platform fee on deals the athlete BRINGS themselves (self-sourced).
+// There are no other tiers — no 8%/6%/12% flat rate.
 
-/** Platform fee percentage (12% of deal value, paid by brand) */
-export const PLATFORM_FEE_PERCENT = 0.12;
+/** Deal origin: did StatStaq source this deal, or did the athlete bring it themselves? */
+export type DealOrigin = 'sourced' | 'brought';
 
-/** Minimum platform fee in cents */
+/** Platform fee percentage on StatStaq-sourced deals (paid by brand) */
+export const SOURCED_FEE_PERCENT = 0.15;
+
+/** Platform fee percentage on athlete-brought deals — StatStaq takes no cut */
+export const BROUGHT_FEE_PERCENT = 0;
+
+/**
+ * @deprecated Use {@link SOURCED_FEE_PERCENT} / {@link BROUGHT_FEE_PERCENT} via
+ * {@link calculateFees}'s `dealOrigin` parameter instead of a single flat rate.
+ * Kept only so any stale external references fail loudly rather than silently
+ * reading a wrong percentage.
+ */
+export const PLATFORM_FEE_PERCENT = SOURCED_FEE_PERCENT;
+
+/** Minimum platform fee in cents (only applies to sourced deals; brought deals are always $0) */
 export const PLATFORM_FEE_MIN_CENTS = 500; // $5.00
 
 /** Stripe processing fee (2.9% + $0.30) */
@@ -21,7 +40,9 @@ export const STRIPE_FEE_FIXED_CENTS = 30;
 export interface FeeBreakdown {
   /** Original deal amount in cents */
   dealAmount: number;
-  /** Platform fee in cents (12%) */
+  /** How this deal originated — determines the take rate */
+  dealOrigin: DealOrigin;
+  /** Platform fee in cents (15% sourced / 0% brought) */
   platformFee: number;
   /** Stripe processing fee in cents */
   stripeFee: number;
@@ -36,16 +57,33 @@ export interface FeeBreakdown {
 }
 
 /**
- * Calculate fee breakdown for a deal
- * Brand pays: deal amount + 12% platform fee
- * Athlete receives: full deal amount (fee is on top, not subtracted)
- * GradeUp keeps: 12% platform fee
+ * Calculate fee breakdown for a deal.
+ *
+ * StatStaq take-rate model (matches the public pricing page):
+ *   - `dealOrigin: 'sourced'` — StatStaq found/brokered the deal: 15% platform fee,
+ *     athlete keeps 85%.
+ *   - `dealOrigin: 'brought'` — the athlete brought the deal themselves: 0% platform
+ *     fee, athlete keeps 100%.
+ *
+ * Brand pays: deal amount + platform fee (fee is on top, not subtracted from the deal).
+ * Athlete receives: full deal amount regardless of origin (the fee never comes out of
+ * the athlete's payout — it's billed to the brand).
+ *
+ * TODO(pricing): `dealOrigin` defaults to `'sourced'` (StatStaq's default revenue case)
+ * for any caller that doesn't yet know the real origin of a deal. Thread the actual
+ * deal/campaign origin through once that field exists on the data model, rather than
+ * relying on this default.
  */
-export function calculateFees(dealAmountCents: number): FeeBreakdown {
-  const platformFee = Math.max(
-    Math.round(dealAmountCents * PLATFORM_FEE_PERCENT),
-    PLATFORM_FEE_MIN_CENTS
-  );
+export function calculateFees(
+  dealAmountCents: number,
+  dealOrigin: DealOrigin = 'sourced'
+): FeeBreakdown {
+  const feePercent = dealOrigin === 'sourced' ? SOURCED_FEE_PERCENT : BROUGHT_FEE_PERCENT;
+
+  const platformFee =
+    dealOrigin === 'sourced'
+      ? Math.max(Math.round(dealAmountCents * SOURCED_FEE_PERCENT), PLATFORM_FEE_MIN_CENTS)
+      : 0;
 
   const brandTotal = dealAmountCents + platformFee;
   const stripeFee = Math.round(brandTotal * STRIPE_FEE_PERCENT) + STRIPE_FEE_FIXED_CENTS;
@@ -54,12 +92,13 @@ export function calculateFees(dealAmountCents: number): FeeBreakdown {
 
   return {
     dealAmount: dealAmountCents,
+    dealOrigin,
     platformFee,
     stripeFee,
     brandTotal,
     athletePayout,
     platformRevenue,
-    feePercent: PLATFORM_FEE_PERCENT * 100,
+    feePercent: feePercent * 100,
   };
 }
 

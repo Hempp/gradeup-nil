@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { calculateFees } from './pricing';
+import { calculateFees, type DealOrigin } from './pricing';
 
 // Lazy initialization to avoid build-time errors when env vars aren't set
 let stripeClient: Stripe | null = null;
@@ -23,6 +23,12 @@ export interface CreatePaymentIntentInput {
   athleteId: string;
   brandId: string;
   description?: string;
+  /**
+   * How this deal originated — StatStaq-sourced (15% fee) or athlete-brought (0% fee).
+   * TODO(pricing): callers should pass the real origin once it's threaded through the
+   * deal data model; defaults to 'sourced' (see calculateFees in ./pricing).
+   */
+  dealOrigin?: DealOrigin;
 }
 
 export async function createPaymentIntent(input: CreatePaymentIntentInput) {
@@ -32,8 +38,9 @@ export async function createPaymentIntent(input: CreatePaymentIntentInput) {
 
   try {
     const stripe = getStripe();
-    // Calculate platform fee (12%) — brand pays deal + fee, athlete gets full deal amount
-    const fees = calculateFees(input.amount);
+    // Platform fee: 15% on StatStaq-sourced deals, 0% on athlete-brought deals.
+    // Brand pays deal + fee; athlete always gets the full deal amount.
+    const fees = calculateFees(input.amount, input.dealOrigin);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: fees.brandTotal,
