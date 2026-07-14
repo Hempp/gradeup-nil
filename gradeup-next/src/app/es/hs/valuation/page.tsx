@@ -7,7 +7,6 @@
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight, Shield, Sparkles, TrendingUp } from 'lucide-react';
 import { ValuationCalculatorClient } from '@/components/hs/ValuationCalculatorClient';
 import { getDictionary } from '@/lib/i18n/get-dictionary';
@@ -143,15 +142,12 @@ export default async function SpanishValuationPage() {
 
               {/* Sticky duotone editorial image */}
               <div className="hidden lg:block lg:sticky lg:top-24">
-                <div className="duotone relative aspect-[4/5] rounded-2xl overflow-hidden border border-[var(--hairline)]">
-                  <Image
-                    src="/editorial/photo-06.jpg"
-                    alt="Atleta escolar entrenando, representando el valor NIL que calcula esta herramienta"
-                    fill
-                    sizes="(max-width: 1024px) 0px, 35vw"
-                    className="object-cover"
-                  />
-                </div>
+                <div
+                  className="duotone relative aspect-[4/5] rounded-2xl overflow-hidden border border-[var(--hairline)] bg-cover bg-center"
+                  style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+                  role="img"
+                  aria-label="Atleta escolar entrenando, representando el valor NIL que calcula esta herramienta"
+                />
               </div>
             </div>
           </div>

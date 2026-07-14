@@ -14,7 +14,6 @@
  * Server Component — no client state.
  */
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 
 export interface SolutionCta {
@@ -104,15 +103,12 @@ export function SolutionHero({
         </div>
 
         {image ? (
-          <div className="duotone relative rounded-2xl overflow-hidden aspect-[4/3]">
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              sizes="(min-width: 1024px) 40vw, 100vw"
-              className="object-cover"
-            />
-          </div>
+          <div
+            className="duotone rounded-2xl overflow-hidden aspect-[4/3] bg-cover bg-center"
+            style={{ backgroundImage: `url(${image.src})` }}
+            role="img"
+            aria-label={image.alt}
+          />
         ) : null}
       </div>
     </section>

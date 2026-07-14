@@ -9,7 +9,6 @@
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Check, ArrowRight, ArrowUpRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getDictionary } from '@/lib/i18n/get-dictionary';
@@ -144,16 +143,12 @@ export default async function SpanishPricingPage() {
         className="relative overflow-hidden bg-[var(--cream)] pt-32 pb-20 sm:pt-40 sm:pb-24"
       >
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="duotone mx-auto mb-8 w-[160px] rounded-lg overflow-hidden">
-            <Image
-              src="/editorial/photo-04.jpg"
-              alt="Atleta de preparatoria y su familia revisando el desglose de tarifas de StatStaq"
-              width={160}
-              height={200}
-              sizes="160px"
-              className="h-full w-full object-cover"
-            />
-          </div>
+          <div
+            className="duotone mx-auto mb-8 w-[160px] rounded-lg overflow-hidden bg-cover bg-center aspect-[4/5]"
+            style={{ backgroundImage: `url(/editorial/photo-04.jpg)` }}
+            role="img"
+            aria-label="Atleta de preparatoria y su familia revisando el desglose de tarifas de StatStaq"
+          />
           <div className="text-center">
             <span className="eyebrow inline-flex items-center gap-2">
               <Shield className="h-3.5 w-3.5 text-[var(--cobalt)]" aria-hidden="true" />

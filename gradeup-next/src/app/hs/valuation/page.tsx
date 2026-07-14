@@ -27,7 +27,6 @@
 
 import Link from 'next/link';
 import Script from 'next/script';
-import Image from 'next/image';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -188,17 +187,12 @@ export default function ValuationPage() {
                 <span><b>State-rules</b> aware · Public market data · No signup required</span>
               </div>
             </div>
-            <div className="duotone hidden overflow-hidden rounded-2xl md:block">
-              <Image
-                src="/editorial/photo-02.jpg"
-                alt="Golden-hour view of a high-school stadium at game time"
-                width={640}
-                height={480}
-                sizes="(min-width: 768px) 40vw, 100vw"
-                className="h-full w-full object-cover"
-                priority
-              />
-            </div>
+            <div
+              className="duotone hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
+              style={{ backgroundImage: `url(/editorial/photo-02.jpg)` }}
+              role="img"
+              aria-label="Golden-hour view of a high-school stadium at game time"
+            />
           </section>
 
           {/* Calculator */}

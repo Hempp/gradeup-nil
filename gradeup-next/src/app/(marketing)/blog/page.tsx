@@ -10,7 +10,6 @@
  * propagate without a redeploy.
  */
 import Link from 'next/link';
-import Image from 'next/image';
 import { Sparkles, ArrowRight, BookOpen } from 'lucide-react';
 import {
   AUDIENCE_ORDER,
@@ -85,16 +84,12 @@ export default function BlogIndexPage() {
               brand running their first local campaign.
             </p>
           </div>
-          <div className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden">
-            <Image
-              src="/editorial/photo-03.jpg"
-              alt="Scholar-athlete reviewing NIL playbook materials"
-              fill
-              sizes="(max-width: 1024px) 100vw, 480px"
-              className="object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-03.jpg)` }}
+            role="img"
+            aria-label="Scholar-athlete reviewing NIL playbook materials"
+          />
         </div>
       </section>
 

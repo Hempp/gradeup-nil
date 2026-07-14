@@ -17,7 +17,6 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import Script from 'next/script';
 import CampaignTemplateCard from '@/components/hs/CampaignTemplateCard';
 import { listTemplates } from '@/lib/hs-nil/campaign-templates';
@@ -113,15 +112,12 @@ export default async function PublicCampaignTemplatesPage() {
           </div>
         </div>
 
-        <div className="duotone relative aspect-[4/3] overflow-hidden rounded-2xl">
-          <Image
-            src="/editorial/photo-06.jpg"
-            alt="Brand campaign template preview — scholar-athlete NIL partnership"
-            fill
-            sizes="(min-width: 1024px) 40vw, 100vw"
-            className="object-cover"
-          />
-        </div>
+        <div
+          className="duotone relative aspect-[4/3] overflow-hidden rounded-2xl bg-cover bg-center"
+          style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+          role="img"
+          aria-label="Brand campaign template preview — scholar-athlete NIL partnership"
+        />
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-24">

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import Image from 'next/image';
 import { listPublicAthletes } from '@/lib/hs-nil/athlete-profile';
 import { AthleteDirectoryCard } from '@/components/marketing/AthleteDirectoryCard';
 import { AthleteDirectoryFilters } from '@/components/marketing/AthleteDirectoryFilters';
@@ -94,17 +93,12 @@ export default async function AthletesDirectoryPage({
               <span><b>Verified</b> GPA · State-rules aware · PII-minimized</span>
             </div>
           </div>
-          <div className="duotone hidden overflow-hidden rounded-2xl md:block">
-            <Image
-              src="/editorial/photo-playbook.jpg"
-              alt="A coach's playbook and whistle, symbolizing verified scholar-athlete trajectories"
-              width={640}
-              height={480}
-              sizes="(min-width: 768px) 40vw, 100vw"
-              className="h-full w-full object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-playbook.jpg)` }}
+            role="img"
+            aria-label="A coach's playbook and whistle, symbolizing verified scholar-athlete trajectories"
+          />
         </section>
 
         <section className="mx-auto max-w-6xl px-6 pb-6">

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import Link from 'next/link';
-import Image from 'next/image';
 import { listPublicBrands } from '@/lib/hs-nil/brand-directory';
 import { createClient } from '@/lib/supabase/server';
 import { BrandDirectoryCard } from '@/components/marketing/BrandDirectoryCard';
@@ -108,17 +107,12 @@ export default async function BrandsDirectoryPage({
               <span><b>State rules</b> validated · Parental consent required</span>
             </div>
           </div>
-          <div className="duotone hidden overflow-hidden rounded-2xl md:block">
-            <Image
-              src="/editorial/photo-06.jpg"
-              alt="Local brand partners working alongside scholar-athletes"
-              width={640}
-              height={480}
-              sizes="(min-width: 768px) 40vw, 100vw"
-              className="h-full w-full object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+            role="img"
+            aria-label="Local brand partners working alongside scholar-athletes"
+          />
         </section>
 
         {/* Tab bar — real anchor links so both views stay crawlable. */}

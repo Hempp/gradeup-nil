@@ -6,7 +6,6 @@
  * passing Spanish strings from the dictionary.
  */
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import {
   Heart,
   ShieldCheck,
@@ -185,16 +184,12 @@ export default async function SpanishParentsPage() {
         className="bg-[var(--marketing-gray-950)] py-20 border-y border-[var(--hairline)]"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-8 sm:grid-cols-[200px_1fr] items-center">
-          <div className="duotone mx-auto sm:mx-0 rounded-lg overflow-hidden w-[200px]">
-            <Image
-              src="/editorial/photo-05.jpg"
-              alt="Padre revisando el panel de consentimiento junto a su atleta de preparatoria"
-              width={200}
-              height={260}
-              sizes="200px"
-              className="h-full w-full object-cover"
-            />
-          </div>
+          <div
+            className="duotone mx-auto sm:mx-0 rounded-lg overflow-hidden w-[200px] bg-cover bg-center aspect-[4/5]"
+            style={{ backgroundImage: `url(/editorial/photo-05.jpg)` }}
+            role="img"
+            aria-label="Padre revisando el panel de consentimiento junto a su atleta de preparatoria"
+          />
           <div className="text-center sm:text-left">
             <blockquote className="font-display text-2xl sm:text-3xl font-semibold text-[var(--ink)] leading-snug">
               &ldquo;{p.quote.text}&rdquo;

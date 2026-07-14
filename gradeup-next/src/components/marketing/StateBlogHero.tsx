@@ -5,7 +5,6 @@
  * badge, quick-fact strip, and the last-reviewed date for trust.
  */
 import Link from 'next/link';
-import Image from 'next/image';
 import type { PermissionStatus } from '@/lib/hs-nil/state-rules';
 
 export interface StateBlogHeroProps {
@@ -124,16 +123,12 @@ export function StateBlogHero({
           ) : null}
         </div>
 
-        <div className="duotone relative rounded-2xl overflow-hidden aspect-[4/5] hidden lg:block">
-          <Image
-            src="/editorial/photo-04.jpg"
-            alt="High-school athlete on the field, representing state NIL rules"
-            fill
-            sizes="(min-width: 1024px) 35vw, 100vw"
-            className="object-cover"
-            priority
-          />
-        </div>
+        <div
+          className="duotone relative rounded-2xl overflow-hidden aspect-[4/5] hidden lg:block bg-cover bg-center"
+          style={{ backgroundImage: `url(/editorial/photo-04.jpg)` }}
+          role="img"
+          aria-label="High-school athlete on the field, representing state NIL rules"
+        />
       </div>
     </section>
   );

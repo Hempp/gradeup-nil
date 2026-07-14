@@ -7,7 +7,6 @@
  * scope for v1 of i18n and will be a separate pass).
  */
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { ClipboardCheck, Award, Compass } from 'lucide-react';
 import { WaitlistForm } from '@/components/hs/WaitlistForm';
 import { getDictionary } from '@/lib/i18n/get-dictionary';
@@ -59,16 +58,12 @@ export default async function SpanishHSLandingPage() {
           </div>
 
           {/* Coach's playbook — cobalt duotone editorial image */}
-          <div className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--hairline)] shadow-[0_40px_90px_-40px_rgba(22,24,43,0.35)]">
-            <Image
-              src="/editorial/photo-playbook.jpg"
-              alt="Cuaderno de un entrenador con una jugada diagramada junto a un silbato"
-              fill
-              sizes="(max-width: 1024px) 90vw, 40vw"
-              className="object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--hairline)] shadow-[0_40px_90px_-40px_rgba(22,24,43,0.35)] bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-playbook.jpg)` }}
+            role="img"
+            aria-label="Cuaderno de un entrenador con una jugada diagramada junto a un silbato"
+          />
         </div>
       </section>
 

@@ -786,15 +786,12 @@ function HowItWorksSection() {
           <div className="lg:col-span-2 space-y-4">
             {/* Sticky duotone editorial image — the coach's playbook, cobalt duotone */}
             <div className="hidden lg:block lg:sticky lg:top-24 mb-6">
-              <div className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--hairline)]">
-                <Image
-                  src="/editorial/photo-playbook.jpg"
-                  alt="Coach's notebook with a play diagrammed, representing the verified path from grades to a StatStaq deal"
-                  fill
-                  sizes="(max-width: 1024px) 0px, 40vw"
-                  className="object-cover"
-                />
-              </div>
+              <div
+                className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--hairline)] bg-cover bg-center"
+                style={{ backgroundImage: `url(/editorial/photo-playbook.jpg)` }}
+                role="img"
+                aria-label="Coach's notebook with a play diagrammed, representing the verified path from grades to a StatStaq deal"
+              />
             </div>
 
             <div className="mb-4 lg:mb-6 text-center lg:text-left">

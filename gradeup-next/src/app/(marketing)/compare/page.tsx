@@ -1,6 +1,5 @@
 import Script from 'next/script';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight, Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { buildMarketingMetadata } from '@/lib/seo';
@@ -173,16 +172,12 @@ function Hero() {
           GradeUp verifies the GPA gate; StatStaq&rsquo;s team runs everything
           after that.
         </p>
-        <div className="duotone relative mx-auto mt-10 aspect-[21/9] max-w-3xl rounded-2xl overflow-hidden">
-          <Image
-            src="/editorial/photo-04.jpg"
-            alt="GradeUp scholar-athlete profile compared side by side"
-            fill
-            sizes="(max-width: 1024px) 100vw, 768px"
-            className="object-cover"
-            priority
-          />
-        </div>
+        <div
+          className="duotone relative mx-auto mt-10 aspect-[21/9] max-w-3xl rounded-2xl overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: `url(/editorial/photo-04.jpg)` }}
+          role="img"
+          aria-label="GradeUp scholar-athlete profile compared side by side"
+        />
       </div>
     </section>
   );

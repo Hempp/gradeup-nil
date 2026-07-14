@@ -8,7 +8,6 @@
  * Revalidate every 5 min to keep freshness while amortizing DB load.
  */
 import Link from 'next/link';
-import Image from 'next/image';
 import { Sparkles, ArrowRight, FileSearch } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { listPublishedCaseStudies } from '@/lib/hs-nil/case-studies';
@@ -95,16 +94,12 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
               privacy; brand attribution is always shown.
             </p>
           </div>
-          <div className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden">
-            <Image
-              src="/editorial/photo-07.jpg"
-              alt="Brand partnership case study in progress"
-              fill
-              sizes="(max-width: 1024px) 100vw, 480px"
-              className="object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-07.jpg)` }}
+            role="img"
+            aria-label="Brand partnership case study in progress"
+          />
         </div>
       </section>
 

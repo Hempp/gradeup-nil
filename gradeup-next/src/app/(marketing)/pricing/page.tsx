@@ -1,6 +1,5 @@
 import Script from 'next/script';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Check, ArrowRight, ArrowUpRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { buildMarketingMetadata } from '@/lib/seo';
@@ -252,17 +251,12 @@ function Hero() {
               <b>Free</b> to start · <b>15%</b> sourced · <b>0%</b> you bring
             </div>
           </div>
-          <div className="duotone rounded-2xl overflow-hidden mx-auto w-full max-w-sm lg:max-w-none">
-            <Image
-              src="/editorial/photo-04.jpg"
-              alt="Scholar-athlete reviewing a sponsorship deal on the sideline"
-              width={640}
-              height={800}
-              sizes="(min-width: 1024px) 420px, 90vw"
-              className="h-full w-full object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone rounded-2xl overflow-hidden mx-auto w-full max-w-sm lg:max-w-none bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-04.jpg)` }}
+            role="img"
+            aria-label="Scholar-athlete reviewing a sponsorship deal on the sideline"
+          />
         </div>
       </div>
     </section>

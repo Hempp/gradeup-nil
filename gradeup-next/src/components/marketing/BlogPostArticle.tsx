@@ -6,7 +6,6 @@
  * for accessibility and SEO. Sections are rendered in the order declared.
  */
 import Link from 'next/link';
-import Image from 'next/image';
 import { Clock, Calendar } from 'lucide-react';
 import type { BlogPost } from '@/lib/hs-nil/blog-content';
 import {
@@ -105,16 +104,12 @@ export function BlogPostArticle({ post }: BlogPostArticleProps) {
             </div>
           </div>
 
-          <div className="duotone relative rounded-2xl overflow-hidden aspect-[4/5] hidden lg:block">
-            <Image
-              src="/editorial/photo-05.jpg"
-              alt="GradeUp editorial — scholar-athlete NIL coverage"
-              fill
-              sizes="(min-width: 1024px) 35vw, 100vw"
-              className="object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone relative rounded-2xl overflow-hidden aspect-[4/5] hidden lg:block bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-05.jpg)` }}
+            role="img"
+            aria-label="GradeUp editorial — scholar-athlete NIL coverage"
+          />
         </div>
       </section>
 

@@ -8,7 +8,6 @@
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Sparkles, ArrowUpRight, FileSearch } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { listPublishedCaseStudies } from '@/lib/hs-nil/case-studies';
@@ -101,16 +100,12 @@ export default async function SpanishCaseStudiesPage({ searchParams }: PageProps
               {cs.hero.subtitle}
             </p>
           </div>
-          <div className="duotone hidden lg:block rounded-lg overflow-hidden w-[260px]">
-            <Image
-              src="/editorial/photo-06.jpg"
-              alt="Atleta de preparatoria firmando un acuerdo NIL verificado"
-              width={260}
-              height={320}
-              sizes="260px"
-              className="h-full w-full object-cover"
-            />
-          </div>
+          <div
+            className="duotone hidden lg:block rounded-lg overflow-hidden w-[260px] bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+            role="img"
+            aria-label="Atleta de preparatoria firmando un acuerdo NIL verificado"
+          />
         </div>
       </section>
 

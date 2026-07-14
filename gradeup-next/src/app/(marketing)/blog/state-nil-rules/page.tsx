@@ -11,7 +11,6 @@
  * Server Component. Statically rendered with daily revalidation.
  */
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import {
   groupStateBlogPostsByStatus,
@@ -179,16 +178,12 @@ export default function StateRulesIndexPage() {
               />
             </dl>
           </div>
-          <div className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden">
-            <Image
-              src="/editorial/photo-06.jpg"
-              alt="Coach reviewing state athletic association rulebook"
-              fill
-              sizes="(max-width: 1024px) 100vw, 480px"
-              className="object-cover"
-              priority
-            />
-          </div>
+          <div
+            className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden bg-cover bg-center"
+            style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+            role="img"
+            aria-label="Coach reviewing state athletic association rulebook"
+          />
         </div>
       </section>
 

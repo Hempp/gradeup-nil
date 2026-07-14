@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Search,
   ChevronDown,
@@ -234,15 +233,12 @@ function HelpHeroSection({
           Find answers to common questions about GradeUp, NIL deals, payments, and more.
         </p>
 
-        <div className="duotone relative mx-auto mb-10 aspect-[21/9] max-w-2xl rounded-2xl overflow-hidden">
-          <Image
-            src="/editorial/photo-05.jpg"
-            alt="GradeUp support team assisting a scholar-athlete family"
-            fill
-            sizes="(max-width: 1024px) 100vw, 640px"
-            className="object-cover"
-          />
-        </div>
+        <div
+          className="duotone relative mx-auto mb-10 aspect-[21/9] max-w-2xl rounded-2xl overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: `url(/editorial/photo-05.jpg)` }}
+          role="img"
+          aria-label="GradeUp support team assisting a scholar-athlete family"
+        />
 
         {/* Search Bar */}
         <div className="relative max-w-xl mx-auto">
