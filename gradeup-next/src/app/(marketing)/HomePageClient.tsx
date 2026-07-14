@@ -18,6 +18,8 @@ import {
   TrendingUp,
   Award,
   Sparkles,
+  ClipboardCheck,
+  Flag,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -329,7 +331,7 @@ function PartnerLogosSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-16 bg-[var(--marketing-gray-950)] border-y border-[var(--marketing-gray-800)] overflow-hidden"
+      className="py-16 bg-[var(--cream-section)] border-y border-[var(--hairline)] overflow-hidden"
       aria-label="Trusted by top universities"
       role="region"
     >
@@ -341,16 +343,17 @@ function PartnerLogosSection() {
           }`}
         >
           <div>
-            <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-white">
+            <div className="eyebrow mb-2">Trusted network</div>
+            <h2 className="font-display text-2xl md:text-3xl text-[var(--ink)]">
               Explore Teams
             </h2>
-            <p className="mt-1 text-sm text-[var(--marketing-gray-500)]">
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               Athletes from 40+ universities trust GradeUp
             </p>
           </div>
           <Link
             href="/schools"
-            className="text-sm font-semibold text-[var(--accent-primary)] hover:text-white transition-colors whitespace-nowrap"
+            className="text-sm font-semibold text-[var(--cobalt)] hover:text-[var(--cobalt-hover)] transition-colors whitespace-nowrap"
           >
             View all schools <span aria-hidden="true">→</span>
           </Link>
@@ -383,7 +386,7 @@ function PartnerLogosSection() {
               <Link
                 key={`${school.name}-${index}`}
                 href={`/athletes?school=${encodeURIComponent(school.name)}`}
-                className="group flex items-center gap-3 w-[260px] md:w-[280px] p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-colors"
+                className="group flex items-center gap-3 w-[260px] md:w-[280px] p-3 md:p-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] hover:border-[var(--cobalt)] hover:shadow-[0_12px_30px_-20px_rgba(22,24,43,0.35)] transition-colors"
                 aria-label={`Browse ${school.fullName} athletes`}
               >
                 <div
@@ -412,7 +415,7 @@ function PartnerLogosSection() {
                     </span>
                   )}
                 </div>
-                <span className="text-sm md:text-base font-semibold text-white/85 group-hover:text-white transition-colors truncate">
+                <span className="text-sm md:text-base font-semibold text-[var(--ink)] group-hover:text-[var(--cobalt)] transition-colors truncate">
                   {school.fullName}
                 </span>
               </Link>
@@ -427,12 +430,12 @@ function PartnerLogosSection() {
             so the 50%-translate loops seamlessly. Grayscale text wordmarks
             sidestep the brittleness of external logo URLs. */}
         <div
-          className={`mt-12 pt-10 border-t border-white/10 transition-all duration-700 ${
+          className={`mt-12 pt-10 border-t border-[var(--hairline)] transition-all duration-700 ${
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ transitionDelay: isVisible ? '600ms' : '0ms' }}
         >
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-10">
+          <p className="eyebrow text-center mb-10">
             Get paid by brands like
           </p>
           <div
@@ -455,7 +458,7 @@ function PartnerLogosSection() {
                 <span
                   key={`${brand.name}-${i}`}
                   title={brand.name}
-                  className={`flex-shrink-0 text-2xl md:text-3xl font-semibold tracking-tight text-white/50 hover:text-white transition-colors duration-300 select-none ${
+                  className={`flex-shrink-0 text-2xl md:text-3xl font-semibold tracking-tight text-[var(--ink-meta)] hover:text-[var(--cobalt)] transition-colors duration-300 select-none ${
                     brand.italic ? 'italic' : ''
                   } ${brand.lowercase ? 'lowercase' : ''}`}
                   style={{ fontFamily: "'Bebas Neue', var(--font-dm-sans), sans-serif" }}
@@ -506,7 +509,7 @@ const AthleteCard = memo(function AthleteCard({ athlete }: { athlete: FeaturedAt
         )}
         {/* Earnings Badge - Top left */}
         {(athlete as FeaturedAthlete & { earnings?: string }).earnings && (
-          <div className="absolute top-3 left-3 bg-[var(--accent-success)]/90 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">
+          <div className="absolute top-3 left-3 bg-[var(--cobalt)]/90 text-[var(--cream-surface)] px-2 py-1 rounded-full text-xs font-bold shadow-md">
             {(athlete as FeaturedAthlete & { earnings?: string }).earnings}
           </div>
         )}
@@ -519,16 +522,16 @@ const AthleteCard = memo(function AthleteCard({ athlete }: { athlete: FeaturedAt
 
       {/* Content */}
       <div className="p-4">
-        <div className="text-xs font-semibold text-[var(--accent-primary)] tracking-wider mb-1">
+        <div className="text-xs font-semibold text-[var(--cobalt)] tracking-wider mb-1">
           {athlete.school.toUpperCase()}
         </div>
-        <h3 className="text-lg font-bold text-white mb-1">{athlete.name}</h3>
-        <p className="text-sm text-[var(--marketing-gray-400)] mb-3">
+        <h3 className="text-lg font-bold text-[var(--ink)] mb-1">{athlete.name}</h3>
+        <p className="text-sm text-[var(--ink-muted)] mb-3">
           {athlete.sport}
         </p>
 
         {/* Stats */}
-        <div className="flex items-center gap-3 text-xs text-[var(--marketing-gray-400)]">
+        <div className="flex items-center gap-3 text-xs text-[var(--ink-meta)]">
           <span className="flex items-center gap-1">
             <User className="h-3 w-3" />
             {athlete.followers}
@@ -548,20 +551,18 @@ function FeaturedAthletesSection() {
   return (
     <section
       id="athletes"
-      className="section-spacing-md bg-[var(--marketing-gray-950)]"
+      className="section-spacing-md bg-[var(--cream)]"
       aria-label="Featured scholar-athletes"
       role="region"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="inline-block px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] text-sm font-medium mb-4 border border-[var(--accent-primary)]/20">
-            Real Athletes, Real Earnings
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Scholar-Athletes <span className="text-[var(--accent-gold)]">Getting Paid</span>
+          <div className="eyebrow mb-4 justify-center flex">Real Athletes, Real Earnings</div>
+          <h2 className="font-display text-3xl sm:text-4xl text-[var(--ink)] mb-4">
+            Scholar-Athletes <span className="text-[var(--cobalt)]">Getting Paid</span>
           </h2>
-          <p className="text-[var(--marketing-gray-400)] max-w-2xl mx-auto">
+          <p className="text-[var(--ink-muted)] max-w-2xl mx-auto">
             Meet verified athletes earning through GradeUp. Their GPA is their competitive advantage.
           </p>
         </div>
@@ -572,11 +573,11 @@ function FeaturedAthletesSection() {
             // Loading skeleton
             [...Array(4)].map((_, i) => (
               <div key={i} className="card-marketing animate-pulse">
-                <div className="h-48 bg-[var(--marketing-gray-800)]" />
+                <div className="h-48 bg-[var(--cream-section)]" />
                 <div className="p-4 space-y-3">
-                  <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-1/2" />
-                  <div className="h-5 bg-[var(--marketing-gray-800)] rounded w-3/4" />
-                  <div className="h-4 bg-[var(--marketing-gray-800)] rounded w-1/3" />
+                  <div className="h-4 bg-[var(--cream-section)] rounded w-1/2" />
+                  <div className="h-5 bg-[var(--cream-section)] rounded w-3/4" />
+                  <div className="h-4 bg-[var(--cream-section)] rounded w-1/3" />
                 </div>
               </div>
             ))
@@ -590,8 +591,8 @@ function FeaturedAthletesSection() {
         {/* Enhanced CTA */}
         <div className="mt-16 text-center">
           <div className="mb-6">
-            <h3 className="text-2xl font-bold text-white mb-2">See Yourself Here?</h3>
-            <p className="text-[var(--marketing-gray-400)] text-lg">
+            <h3 className="font-display text-2xl text-[var(--ink)] mb-2">See Yourself Here?</h3>
+            <p className="text-[var(--ink-muted)] text-lg">
               Your academic excellence + athletic talent = opportunity
             </p>
           </div>
@@ -614,17 +615,17 @@ function FeaturedAthletesSection() {
           </div>
 
           {/* Trust Reinforcement */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-sm text-[var(--marketing-gray-500)]">
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-sm text-[var(--ink-meta)]">
             <div className="flex items-center gap-1.5">
-              <BadgeCheck className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
+              <BadgeCheck className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
               <span>All athletes verified</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Shield className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
+              <Shield className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
               <span>NCAA compliant</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-[var(--accent-success)]" aria-hidden="true" />
+              <Clock className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
               <span>StatStaq runs the deals</span>
             </div>
           </div>
@@ -641,7 +642,7 @@ function FeaturedAthletesSection() {
 const steps = [
   {
     number: '01',
-    icon: User,
+    icon: ClipboardCheck,
     title: 'Create Profile',
     description: 'Sign up and connect your academic records in minutes.',
     stat: 'Takes minutes',
@@ -649,7 +650,7 @@ const steps = [
   },
   {
     number: '02',
-    icon: Shield,
+    icon: Flag,
     title: 'Get Verified',
     description: 'We verify your enrollment, sport, and GPA for authenticity.',
     stat: 'GPA verified',
@@ -657,7 +658,7 @@ const steps = [
   },
   {
     number: '03',
-    icon: DollarSign,
+    icon: TrendingUp,
     title: 'StatStaq Runs It',
     description:
       "StatStaq's team produces your content, values your brand, sources your deals, and negotiates your contracts.",
@@ -689,21 +690,19 @@ function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="section-spacing-lg bg-black"
+      className="section-spacing-lg bg-[var(--cream-section)]"
       aria-label="How GradeUp works"
       role="region"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
-          <span className="inline-block px-3 py-1 rounded-full bg-[var(--accent-tertiary)]/10 text-[var(--accent-tertiary)] text-sm font-medium mb-4 border border-[var(--accent-tertiary)]/20">
-            See It In Action
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            From <span className="text-[var(--accent-primary)]">Verified GPA</span> to{' '}
-            <span className="text-[var(--accent-gold)]">StatStaq Deal</span>
+          <div className="eyebrow mb-4 justify-center flex">See It In Action</div>
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[var(--ink)] mb-4">
+            From <span className="text-[var(--cobalt)]">Verified GPA</span> to{' '}
+            <span className="text-[var(--cobalt)]">StatStaq Deal</span>
           </h2>
-          <p className="text-[var(--marketing-gray-400)] max-w-2xl mx-auto text-lg">
+          <p className="text-[var(--ink-muted)] max-w-2xl mx-auto text-lg">
             Watch how the layer works — GradeUp verifies your grades, then StatStaq goes to work.
           </p>
         </div>
@@ -713,12 +712,9 @@ function HowItWorksSection() {
           {/* Video Column - Takes 3/5 of space */}
           <div className="lg:col-span-3">
             <div className="relative">
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/20 via-[var(--accent-tertiary)]/20 to-[var(--accent-success)]/20 rounded-3xl blur-2xl animate-marketing-glow" />
-
-              <div className="relative card-marketing overflow-hidden gradient-border gradient-border-subtle">
+              <div className="relative card-marketing overflow-hidden">
                 {/* Video container */}
-                <div className="relative aspect-video bg-[var(--marketing-gray-900)]">
+                <div className="relative aspect-video bg-[var(--ink)]">
                   <video
                     ref={videoRef}
                     className="w-full h-full object-cover"
@@ -770,17 +766,17 @@ function HowItWorksSection() {
 
               {/* Video stats below */}
               <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-4 sm:mt-6">
-                <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--accent-primary)]">Verified</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">GPA-Gated</div>
+                <div className="stat-strip text-center block">
+                  <div className="text-base sm:text-xl font-bold text-[var(--cobalt)]">Verified</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--ink-meta)] normal-case tracking-normal">GPA-Gated</div>
                 </div>
-                <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--accent-success)]">StatStaq</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Runs the Deal</div>
+                <div className="stat-strip text-center block">
+                  <div className="text-base sm:text-xl font-bold text-[var(--cobalt)]">StatStaq</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--ink-meta)] normal-case tracking-normal">Runs the Deal</div>
                 </div>
-                <div className="text-center p-2 sm:p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-base sm:text-xl font-bold text-[var(--accent-gold)]">NCAA</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--marketing-gray-500)]">Compliant</div>
+                <div className="stat-strip text-center block">
+                  <div className="text-base sm:text-xl font-bold text-[var(--cobalt)]">NCAA</div>
+                  <div className="text-[10px] sm:text-xs text-[var(--ink-meta)] normal-case tracking-normal">Compliant</div>
                 </div>
               </div>
             </div>
@@ -788,9 +784,22 @@ function HowItWorksSection() {
 
           {/* Steps Column - Takes 2/5 of space */}
           <div className="lg:col-span-2 space-y-4">
+            {/* Sticky duotone editorial image — the coach's playbook, cobalt duotone */}
+            <div className="hidden lg:block lg:sticky lg:top-24 mb-6">
+              <div className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--hairline)]">
+                <Image
+                  src="/editorial/photo-playbook.jpg"
+                  alt="Coach's notebook with a play diagrammed, representing the verified path from grades to a StatStaq deal"
+                  fill
+                  sizes="(max-width: 1024px) 0px, 40vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+
             <div className="mb-4 lg:mb-6 text-center lg:text-left">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">Three Simple Steps</h3>
-              <p className="text-xs sm:text-sm text-[var(--marketing-gray-500)]">
+              <h3 className="font-display text-lg sm:text-xl text-[var(--ink)] mb-1 sm:mb-2">Three Simple Steps</h3>
+              <p className="text-xs sm:text-sm text-[var(--ink-meta)]">
                 StatStaq&apos;s team runs outreach, negotiation, and close — you focus on your grades.
               </p>
             </div>
@@ -821,27 +830,27 @@ function HowItWorksSection() {
               return (
                 <div
                   key={step.number}
-                  className={`relative card-marketing p-5 border-l-4 ${colors.border} hover:bg-white/5 transition-colors card-hover-glow`}
+                  className={`relative card-marketing p-5 border-l-4 ${colors.border} hover:bg-[var(--cream)] transition-colors`}
                 >
                   {/* Connector */}
                   {index < steps.length - 1 && (
-                    <div className="absolute left-[calc(2rem-1px)] -bottom-4 w-0.5 h-4 bg-gradient-to-b from-[var(--marketing-gray-700)] to-transparent" />
+                    <div className="absolute left-[calc(2rem-1px)] -bottom-4 w-0.5 h-4 bg-gradient-to-b from-[var(--hairline)] to-transparent" />
                   )}
 
                   <div className="flex items-start gap-4">
-                    {/* Icon */}
-                    <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center`}>
+                    {/* Cobalt flag/number marker */}
+                    <div className="relative flex-shrink-0 w-12 h-12 rounded-xl bg-[var(--cobalt)] text-[var(--cream-surface)] flex items-center justify-center">
                       <step.icon className="h-6 w-6" />
+                      <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--ink)] text-[10px] font-bold text-[var(--cream-surface)]">
+                        {step.number}
+                      </span>
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-xs font-bold ${colors.text}`}>{step.number}</span>
-                        <h4 className="text-lg font-bold text-white">{step.title}</h4>
-                      </div>
-                      <p className="text-sm text-[var(--marketing-gray-400)] mb-2">{step.description}</p>
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${colors.stat}`}>
+                      <h4 className="font-display text-lg text-[var(--ink)] mb-1">{step.title}</h4>
+                      <p className="text-sm text-[var(--ink-muted)] mb-2">{step.description}</p>
+                      <span className="stat-strip inline-block px-3 py-1">
                         {step.stat}
                       </span>
                     </div>
@@ -858,7 +867,7 @@ function HowItWorksSection() {
                   <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
-              <p className="text-center text-xs text-[var(--marketing-gray-500)] mt-3">
+              <p className="text-center text-xs text-[var(--ink-meta)] mt-3">
                 Free to join • No credit card required
               </p>
             </div>
@@ -877,27 +886,21 @@ function PlatformPreviewSection() {
   return (
     <section
       id="preview"
-      className="section-spacing-lg bg-[var(--marketing-gray-950)] relative overflow-hidden"
+      className="section-spacing-lg bg-[var(--cream)] relative overflow-hidden"
       aria-label="Platform dashboard preview"
       role="region"
     >
-      {/* Background accent */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--accent-tertiary)]/10 rounded-full blur-[100px]" />
-      </div>
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] text-sm font-medium mb-6 border border-[var(--accent-primary)]/20">
+          <div className="eyebrow mb-4 justify-center flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
             Sneak Peek
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Your Dashboard <span className="text-[var(--accent-primary)]">Awaits</span>
+          </div>
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[var(--ink)] mb-4">
+            Your Dashboard <span className="text-[var(--cobalt)]">Awaits</span>
           </h2>
-          <p className="text-[var(--marketing-gray-400)] max-w-2xl mx-auto text-lg">
+          <p className="text-[var(--ink-muted)] max-w-2xl mx-auto text-lg">
             See what you&apos;ll get access to. Track earnings, manage deals, and discover opportunities
             – all in one powerful dashboard.
           </p>
@@ -922,12 +925,10 @@ function PlatformPreviewSection() {
           ].map((feature) => (
             <div
               key={feature.label}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-[var(--cream-surface)] border border-[var(--hairline)] hover:border-[var(--cobalt)] transition-colors"
             >
-              <feature.icon
-                className={`h-6 w-6 text-[var(--marketing-${feature.color})]`}
-              />
-              <span className="text-sm text-[var(--marketing-gray-300)] text-center font-medium">
+              <feature.icon className="h-6 w-6 text-[var(--cobalt)]" />
+              <span className="text-sm text-[var(--ink-muted)] text-center font-medium">
                 {feature.label}
               </span>
             </div>
@@ -953,7 +954,7 @@ function ForBrandsSection() {
   return (
     <section
       id="brands"
-      className="section-spacing-md bg-[var(--marketing-gray-950)]"
+      className="section-spacing-md bg-[var(--cream-section)]"
       aria-label="Brand partnership opportunities"
       role="region"
     >
@@ -961,13 +962,11 @@ function ForBrandsSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div>
-            <span className="inline-block px-3 py-1 rounded-full bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] text-sm font-medium mb-4 border border-[var(--accent-gold)]/20">
-              For Brands
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Partner with <span className="text-[var(--accent-gold)]">Tomorrow&apos;s Leaders</span>
+            <div className="eyebrow mb-4">For Brands</div>
+            <h2 className="font-display text-3xl sm:text-4xl text-[var(--ink)] mb-6">
+              Partner with <span className="text-[var(--cobalt)]">Tomorrow&apos;s Leaders</span>
             </h2>
-            <p className="text-[var(--marketing-gray-400)] text-lg mb-8">
+            <p className="text-[var(--ink-muted)] text-lg mb-8">
               Access a curated network of verified scholar-athletes who excel academically.
               StatStaq&apos;s team sources the deal and negotiates the contract — so you get
               results, not resumes.
@@ -977,25 +976,25 @@ function ForBrandsSection() {
             <ul className="space-y-4 mb-8">
               {brandFeatures.map((feature) => (
                 <li key={feature.text} className="flex items-center gap-3">
-                  <feature.icon className="h-5 w-5 text-[var(--accent-success)] flex-shrink-0" />
-                  <span className="text-[var(--marketing-gray-300)]">{feature.text}</span>
+                  <feature.icon className="h-5 w-5 text-[var(--cobalt)] flex-shrink-0" />
+                  <span className="text-[var(--ink-muted)]">{feature.text}</span>
                 </li>
               ))}
             </ul>
 
             {/* Brand proof points */}
-            <div className="grid grid-cols-3 gap-4 mb-8 p-4 rounded-xl bg-white/5 border border-white/10">
+            <div className="stat-strip grid grid-cols-3 gap-4 mb-8 p-4 !rounded-xl">
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-primary)]">Verified</div>
-                <div className="text-xs text-[var(--marketing-gray-500)]">Academic + athletic</div>
+                <div className="text-2xl font-bold text-[var(--cobalt)]">Verified</div>
+                <div className="text-xs text-[var(--ink-meta)] normal-case tracking-normal">Academic + athletic</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-success)]">StatStaq</div>
-                <div className="text-xs text-[var(--marketing-gray-500)]">Handles outreach</div>
+                <div className="text-2xl font-bold text-[var(--cobalt)]">StatStaq</div>
+                <div className="text-xs text-[var(--ink-meta)] normal-case tracking-normal">Handles outreach</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[var(--accent-gold)]">NCAA</div>
-                <div className="text-xs text-[var(--marketing-gray-500)]">Compliant deals</div>
+                <div className="text-2xl font-bold text-[var(--cobalt)]">NCAA</div>
+                <div className="text-xs text-[var(--ink-meta)] normal-case tracking-normal">Compliant deals</div>
               </div>
             </div>
 
@@ -1009,42 +1008,41 @@ function ForBrandsSection() {
 
           {/* Dashboard Preview */}
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent-primary)]/10 to-[var(--accent-tertiary)]/10 rounded-3xl blur-2xl" />
             <div className="relative card-marketing shadow-xl overflow-hidden">
               {/* Browser chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-[var(--marketing-gray-800)] border-b border-[var(--marketing-gray-700)]">
+              <div className="flex items-center gap-2 px-4 py-3 bg-[var(--cream)] border-b border-[var(--hairline)]">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/80" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                   <div className="w-3 h-3 rounded-full bg-green-500/80" />
                 </div>
-                <span className="text-xs text-[var(--marketing-gray-500)] ml-2">Brand Dashboard</span>
+                <span className="text-xs text-[var(--ink-meta)] ml-2">Brand Dashboard</span>
               </div>
 
               {/* Dashboard content */}
               <div className="p-6">
                 <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-[var(--accent-primary)]/10 rounded-xl p-4 text-center border border-[var(--accent-primary)]/20">
-                    <div className="text-3xl font-bold text-[var(--accent-primary)]">3-Tier</div>
-                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Verified GPA</div>
+                  <div className="bg-[var(--cobalt)]/10 rounded-xl p-4 text-center border border-[var(--cobalt)]/20">
+                    <div className="text-3xl font-bold text-[var(--cobalt)]">3-Tier</div>
+                    <div className="text-xs text-[var(--ink-meta)] mt-1">Verified GPA</div>
                   </div>
-                  <div className="bg-[var(--accent-success)]/10 rounded-xl p-4 text-center border border-[var(--accent-success)]/20">
-                    <div className="text-3xl font-bold text-[var(--accent-success)]">Live</div>
-                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Deal Pipeline</div>
+                  <div className="bg-[var(--cobalt)]/10 rounded-xl p-4 text-center border border-[var(--cobalt)]/20">
+                    <div className="text-3xl font-bold text-[var(--cobalt)]">Live</div>
+                    <div className="text-xs text-[var(--ink-meta)] mt-1">Deal Pipeline</div>
                   </div>
-                  <div className="bg-[var(--accent-gold)]/10 rounded-xl p-4 text-center border border-[var(--accent-gold)]/20">
-                    <div className="text-3xl font-bold text-[var(--accent-gold)]">StatStaq</div>
-                    <div className="text-xs text-[var(--marketing-gray-500)] mt-1">Runs Outreach</div>
+                  <div className="bg-[var(--cobalt)]/10 rounded-xl p-4 text-center border border-[var(--cobalt)]/20">
+                    <div className="text-3xl font-bold text-[var(--cobalt)]">StatStaq</div>
+                    <div className="text-xs text-[var(--ink-meta)] mt-1">Runs Outreach</div>
                   </div>
                 </div>
 
                 {/* Filter preview */}
-                <div className="bg-[var(--marketing-gray-800)]/50 rounded-lg p-4">
-                  <div className="text-xs text-[var(--marketing-gray-500)] mb-3">Active Filters</div>
+                <div className="bg-[var(--cream)] rounded-lg p-4">
+                  <div className="text-xs text-[var(--ink-meta)] mb-3">Active Filters</div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-1 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs rounded-full">GPA ≥ 3.5</span>
-                    <span className="px-2 py-1 bg-[var(--accent-success)]/20 text-[var(--accent-success)] text-xs rounded-full">Division I</span>
-                    <span className="px-2 py-1 bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] text-xs rounded-full">10K+ followers</span>
+                    <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full border border-[var(--cobalt)]/20">GPA ≥ 3.5</span>
+                    <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full border border-[var(--cobalt)]/20">Division I</span>
+                    <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full border border-[var(--cobalt)]/20">10K+ followers</span>
                   </div>
                 </div>
               </div>
@@ -1065,18 +1063,16 @@ function TestimonialsSection() {
 
   return (
     <section
-      className="section-spacing-md bg-black"
+      className="section-spacing-md bg-[var(--cream)]"
       aria-label="Customer testimonials"
       role="region"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="inline-block px-3 py-1 rounded-full bg-white/5 text-white/80 text-sm font-medium mb-4 border border-white/10">
-            Real Stories
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            Don&apos;t Take Our <span className="text-[var(--accent-primary)]">Word For It</span>
+          <div className="eyebrow mb-4 justify-center flex">Real Stories</div>
+          <h2 className="font-display text-3xl sm:text-4xl text-[var(--ink)]">
+            Don&apos;t Take Our <span className="text-[var(--cobalt)]">Word For It</span>
           </h2>
         </div>
 
@@ -1090,18 +1086,18 @@ function TestimonialsSection() {
               {/* Verified badge */}
               {(testimonial as typeof testimonial & { verified?: boolean }).verified && (
                 <div className="absolute top-4 right-4">
-                  <BadgeCheck className="h-5 w-5 text-[var(--accent-primary)]" />
+                  <BadgeCheck className="h-5 w-5 text-[var(--cobalt)]" />
                 </div>
               )}
 
               {/* Stars */}
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-[var(--accent-gold)] text-[var(--accent-gold)]" />
+                  <Star key={i} className="h-4 w-4 fill-[var(--cobalt)] text-[var(--cobalt)]" />
                 ))}
               </div>
 
-              <p className="text-[var(--marketing-gray-300)] mb-6 leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
+              <p className="text-[var(--ink-muted)] mb-6 leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
 
               <div className="flex items-center gap-3">
                 <Image
@@ -1113,20 +1109,20 @@ function TestimonialsSection() {
                   loading="lazy"
                 />
                 <div className="flex-1">
-                  <div className="font-semibold text-white">{testimonial.name}</div>
-                  <div className="text-sm text-[var(--marketing-gray-500)]">{testimonial.role}</div>
+                  <div className="font-semibold text-[var(--ink)]">{testimonial.name}</div>
+                  <div className="text-sm text-[var(--ink-meta)]">{testimonial.role}</div>
                 </div>
               </div>
 
               {/* Earnings/date badges */}
-              <div className="mt-4 pt-4 border-t border-[var(--marketing-gray-800)] flex flex-wrap gap-2">
+              <div className="mt-4 pt-4 border-t border-[var(--hairline)] flex flex-wrap gap-2">
                 {(testimonial as typeof testimonial & { earnings?: string }).earnings && (
-                  <span className="px-2 py-1 bg-[var(--accent-success)]/10 text-[var(--accent-success)] text-xs rounded-full font-medium">
+                  <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full font-medium">
                     {(testimonial as typeof testimonial & { earnings?: string }).earnings}
                   </span>
                 )}
                 {(testimonial as typeof testimonial & { date?: string }).date && (
-                  <span className="px-2 py-1 bg-white/5 text-[var(--marketing-gray-400)] text-xs rounded-full">
+                  <span className="px-2 py-1 bg-[var(--cream-section)] text-[var(--ink-meta)] text-xs rounded-full">
                     {(testimonial as typeof testimonial & { date?: string }).date}
                   </span>
                 )}
@@ -1150,13 +1146,9 @@ function FinalCTASection() {
       aria-label="Sign up call-to-action"
       role="region"
     >
-      {/* Background effects */}
-      <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.3)_0%,transparent_60%)]" />
-      <div className="absolute inset-0 opacity-10 hero-grid" />
-
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Social proof */}
-        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-black/20 backdrop-blur-sm mb-8">
+        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] mb-8">
           <div className="flex -space-x-2">
             {[
               'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=64&h=64&fit=crop&crop=face',
@@ -1170,19 +1162,19 @@ function FinalCTASection() {
                 alt={`Athlete ${i + 1}`}
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full border-2 border-black/20 object-cover"
+                className="w-8 h-8 rounded-full border-2 border-[var(--cream-surface)] object-cover"
                 loading="lazy"
               />
             ))}
           </div>
-          <span className="text-sm text-white/80 font-medium">Scholar-athletes already qualifying with GradeUp</span>
+          <span className="text-sm text-[var(--ink-muted)] font-medium">Scholar-athletes already qualifying with GradeUp</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[var(--ink)] mb-6">
           Ready to Let
           <span className="block">StatStaq Run Your NIL?</span>
         </h2>
-        <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+        <p className="text-xl text-[var(--ink-muted)] mb-10 max-w-2xl mx-auto">
           GradeUp qualifies you. StatStaq represents you. Verify your grades, and their team
           takes it from there.
         </p>
@@ -1191,7 +1183,7 @@ function FinalCTASection() {
           <Link href="/signup/athlete">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-black hover:bg-[var(--marketing-gray-900)] text-white font-semibold gap-2"
+              className="w-full sm:w-auto btn-marketing-primary gap-2"
             >
               Join as Athlete
               <ArrowRight className="h-5 w-5" />
@@ -1200,7 +1192,7 @@ function FinalCTASection() {
           <Link href="/signup/brand">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-white hover:bg-white/90 text-black font-semibold border-2 border-black/30"
+              className="w-full sm:w-auto btn-marketing-outline"
             >
               Partner as Brand
             </Button>
@@ -1208,17 +1200,17 @@ function FinalCTASection() {
         </div>
 
         {/* Final trust indicators */}
-        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-white/60">
+        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-[var(--ink-meta)]">
           <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="h-4 w-4" />
+            <CheckCircle2 className="h-4 w-4 text-[var(--cobalt)]" />
             GPA verification required
           </span>
           <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="h-4 w-4" />
+            <CheckCircle2 className="h-4 w-4 text-[var(--cobalt)]" />
             StatStaq negotiates for you
           </span>
           <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="h-4 w-4" />
+            <CheckCircle2 className="h-4 w-4 text-[var(--cobalt)]" />
             NCAA compliant, always
           </span>
         </div>
@@ -1243,20 +1235,19 @@ function ValuationCTASection() {
   return (
     <section
       aria-label="NIL Valuation Calculator entry point"
-      className="bg-black py-12 sm:py-16"
+      className="bg-[var(--cream-section)] py-12 sm:py-16"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-black to-[var(--accent-gold)]/10 p-6 sm:p-10">
-          <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[var(--accent-primary)]/15 blur-3xl" />
+        <div className="relative overflow-hidden rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6 sm:p-10">
           <div className="relative grid gap-6 md:grid-cols-[2fr_1fr] md:items-center">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+              <span className="eyebrow inline-flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--cream)] px-3 py-1">
                 New · Free
               </span>
-              <h2 className="mt-4 font-display text-3xl font-bold text-white sm:text-4xl">
+              <h2 className="mt-4 font-display text-3xl text-[var(--ink)] sm:text-4xl">
                 What&rsquo;s your scholar-athlete worth?
               </h2>
-              <p className="mt-3 max-w-xl text-white/70">
+              <p className="mt-3 max-w-xl text-[var(--ink-muted)]">
                 Sport, state, grades, followers — answer five questions and
                 get an honest NIL value range. No signup needed to see the
                 number.
@@ -1289,26 +1280,19 @@ function ProvenResultsCTASection() {
   return (
     <section
       aria-label="Proven case-study results"
-      className="bg-black py-20 border-y border-white/10"
+      className="bg-[var(--cream)] py-20 border-y border-[var(--hairline)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[var(--marketing-gray-950)] p-8 md:p-12">
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none"
-            style={{
-              background:
-                'radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.12) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(255, 200, 0, 0.08) 0%, transparent 55%)',
-            }}
-          />
+        <div className="relative overflow-hidden rounded-3xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-8 md:p-12">
           <div className="relative grid gap-6 md:grid-cols-[2fr_1fr] md:items-center">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+              <span className="eyebrow inline-flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-[var(--cream)] px-3 py-1">
                 Proven results
               </span>
-              <h2 className="mt-4 font-display text-3xl font-bold text-white sm:text-4xl">
+              <h2 className="mt-4 font-display text-3xl text-[var(--ink)] sm:text-4xl">
                 Real deals. Verified earnings. Public case studies.
               </h2>
-              <p className="mt-3 max-w-xl text-white/70">
+              <p className="mt-3 max-w-xl text-[var(--ink-muted)]">
                 Every study is tied to a completed deal, on-platform share
                 events, and a real scholar-athlete. See exactly how brand ROI
                 adds up — before you spend a dollar.
