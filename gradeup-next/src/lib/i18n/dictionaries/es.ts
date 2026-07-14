@@ -160,10 +160,10 @@ export const es: Dictionary = {
       finalNote: 'Gratis · Sin tarjeta de crédito',
     },
     provenResults: {
-      eyebrow: 'Resultados comprobados',
-      heading: 'Acuerdos reales. Ingresos verificados. Casos públicos.',
+      eyebrow: 'Cómo funciona',
+      heading: 'Deportistas-estudiantes verificados. Casos públicos.',
       body:
-        'Cada caso está ligado a un acuerdo completado, a eventos de compartición en la plataforma y a un atleta-estudiante real. Vea exactamente cómo suma el ROI de marca antes de gastar un solo dólar.',
+        'Cada caso se vincula a un acuerdo cerrado y a un deportista-estudiante real. Vea exactamente cómo el equipo de StatStaq gestiona una campaña de principio a fin: produce, valora, busca y negocia.',
       cta: 'Ver los casos de éxito',
     },
     finalCta: {

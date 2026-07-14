@@ -1256,14 +1256,14 @@ function FinalCTASection() {
               />
             ))}
           </div>
-          <span className="text-sm text-black/80 font-medium">Scholar-athletes already qualifying with GradeUp</span>
+          <span className="text-sm text-white/80 font-medium">Scholar-athletes already qualifying with GradeUp</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-6">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
           Ready to Let
           <span className="block">StatStaq Run Your NIL?</span>
         </h2>
-        <p className="text-xl text-black/70 mb-10 max-w-2xl mx-auto">
+        <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
           GradeUp qualifies you. StatStaq represents you. Verify your grades, and their team
           takes it from there.
         </p>
@@ -1289,7 +1289,7 @@ function FinalCTASection() {
         </div>
 
         {/* Final trust indicators */}
-        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-black/60">
+        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-white/60">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4" />
             GPA verification required

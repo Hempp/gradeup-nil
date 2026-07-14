@@ -644,13 +644,13 @@ function ContactSupportSection() {
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Icon */}
         <div className="w-16 h-16 rounded-full bg-black/20 flex items-center justify-center mx-auto mb-6">
-          <MessageSquare className="h-8 w-8 text-black" />
+          <MessageSquare className="h-8 w-8 text-white" />
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">
+        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
           Still Need Help?
         </h2>
-        <p className="text-xl text-black/70 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto">
           Our support team is here to help you succeed. Reach out and we&apos;ll get back to you within 24 hours.
         </p>
 
@@ -676,7 +676,7 @@ function ContactSupportSection() {
         </div>
 
         {/* Support Hours */}
-        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-black/60">
+        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-white/60">
           <span className="flex items-center gap-1.5">
             <Clock className="h-4 w-4" />
             Mon-Fri, 9am-6pm EST

@@ -134,10 +134,10 @@ const _en = {
       step2Stat: '24hr verification',
       step3Title: 'Get Paid',
       step3Desc: 'Match with brands and start earning based on your value.',
-      step3Stat: '$1,850 avg deal',
+      step3Stat: 'Brand-matched offers',
       sideHeading: 'Three Simple Steps',
       sideBody:
-        'Our 68% conversion rate means most athletes close deals within a week.',
+        'Most athletes get their first brand match within a week of verification.',
       finalCta: 'Start Your Journey',
       finalNote: 'Free to join \u00B7 No credit card required',
     },
@@ -315,7 +315,7 @@ const _en = {
         'How real scholar-athlete partnerships performed. Verified earnings, share counts, and brand ROI from the GradeUp HS concierge era.',
     },
     hero: {
-      badge: 'Proven results from the concierge era',
+      badge: 'Concierge-era case studies',
       titlePrefix: 'Case studies.',
       titleAccent: 'Verified earnings.',
       subtitle:

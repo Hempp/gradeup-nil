@@ -277,13 +277,13 @@ export default async function SpanishHomePage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-black/20 backdrop-blur-sm mb-8">
             <BadgeCheck className="h-4 w-4" />
-            <span className="text-sm text-black/80 font-medium">{h.finalCta.socialProof}</span>
+            <span className="text-sm text-white/80 font-medium">{h.finalCta.socialProof}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             {h.finalCta.title1}
             <span className="block">{h.finalCta.title2}</span>
           </h2>
-          <p className="text-xl text-black/70 mb-10 max-w-2xl mx-auto">{h.finalCta.body}</p>
+          <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">{h.finalCta.body}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup/athlete">
               <Button size="lg" className="w-full sm:w-auto bg-black hover:bg-[var(--marketing-gray-900)] text-white font-semibold gap-2">
@@ -297,7 +297,7 @@ export default async function SpanishHomePage() {
               </Button>
             </Link>
           </div>
-          <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-black/60">
+          <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-white/60">
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" />{h.finalCta.statPaid}</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" />{h.finalCta.statDeals}</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" />{h.finalCta.statGpa}</span>
