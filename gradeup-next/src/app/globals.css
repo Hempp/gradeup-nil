@@ -1183,50 +1183,132 @@ html.no-transitions *::after {
 
 /* Marketing Page Wrapper */
 .marketing-dark {
-  /* ─── StatStaq cobalt reskin (scoped — do not lift into :root) ─── */
-  --marketing-black: #0A0A0A;
-  --marketing-gray-950: #141414;
-  --marketing-gray-900: #1C1C1C;
+  /* ═══ CREAM EDITORIAL SYSTEM (scoped — do not lift into :root) ═══
+     Light warm-cream surfaces, navy ink, cobalt accent, heavy condensed
+     display (Anton) + transitional serif body (Source Serif). The class is
+     still named .marketing-dark for wrapper compatibility, but it is a LIGHT
+     theme. The marketing gray ladder is INVERTED here: --marketing-black is
+     the cream page bg (lightest), the "light text" grays become dark ink, so
+     var-based components flip to light automatically. */
+  --marketing-black: #F2EDE1;   /* page background (cream) */
+  --marketing-gray-950: #ECE6D8; /* section surface */
+  --marketing-gray-900: #FBF9F2; /* card surface (near-white cream) */
+  --marketing-gray-800: #E2DAC9; /* border / divider on cream */
+  --marketing-gray-700: #C9BFA9;
+  --marketing-gray-600: #6B6E82; /* meta text */
+  --marketing-gray-500: #4A4D63; /* muted text */
+  --marketing-gray-400: #35384D; /* secondary text */
+  --marketing-gray-300: #1E2136; /* near-ink text */
   --marketing-cyan: #2563EB;
   --marketing-cyan-dark: #1D4ED8;
-  --marketing-cyan-glow: rgba(37, 99, 235, 0.40);
+  --marketing-cyan-glow: rgba(37, 99, 235, 0.22);
   --marketing-lime: #2563EB;
-  --marketing-lime-glow: rgba(37, 99, 235, 0.30);
+  --marketing-lime-glow: rgba(37, 99, 235, 0.18);
   --marketing-gold: #2563EB;
-  --marketing-gold-glow: rgba(37, 99, 235, 0.30);
+  --marketing-gold-glow: rgba(37, 99, 235, 0.18);
   --marketing-magenta: #2563EB;
-  --marketing-magenta-glow: rgba(37, 99, 235, 0.30);
-  --marketing-cobalt-hover: #3B82F6;
+  --marketing-magenta-glow: rgba(37, 99, 235, 0.18);
+  --marketing-cobalt-hover: #1D4ED8;
 
-  background: var(--marketing-black);
-  color: white;
-  font-family: var(--font-inter), system-ui, sans-serif;
-  font-feature-settings: "cv02","cv03","cv04","cv11";
+  /* Editorial named tokens (use these in new editorial components) */
+  --cream: #F2EDE1;
+  --cream-surface: #FBF9F2;
+  --cream-section: #ECE6D8;
+  --ink: #16182B;
+  --ink-muted: #35384D;
+  --ink-meta: #6B6E82;
+  --cobalt: #2563EB;
+  --cobalt-hover: #1D4ED8;
+  --hairline: rgba(22, 24, 43, 0.14);
 
-  /* ─── Semantic Accent Aliases (marketing context) ─── */
-  --accent-primary: var(--marketing-cyan);
-  --accent-secondary: var(--marketing-gold);
-  --accent-gold: var(--marketing-gold);
-  --accent-success: var(--marketing-lime);
-  --accent-tertiary: var(--marketing-magenta);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-source-serif), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+
+  /* ─── Semantic tokens rebound to cream/navy/cobalt ─── */
+  --accent-primary: var(--cobalt);
+  --accent-secondary: var(--cobalt);
+  --accent-gold: var(--cobalt);
+  --accent-success: var(--cobalt);
+  --accent-tertiary: var(--cobalt);
   --accent-primary-glow: var(--marketing-cyan-glow);
-  --accent-gold-glow: var(--marketing-gold-glow);
-  --accent-success-glow: var(--marketing-lime-glow);
-  --accent-tertiary-glow: var(--marketing-magenta-glow);
-  --surface-elevated: var(--marketing-gray-900);
-  --bg-primary: var(--marketing-black);
-  --bg-secondary: var(--marketing-gray-950);
-  --bg-card: var(--marketing-gray-900);
-  --text-primary: #ffffff;
-  --text-secondary: var(--marketing-gray-300);
-  --text-muted: var(--marketing-gray-500);
-  --border-color: var(--marketing-gray-800);
-  /* Text color intended to sit ON the accent surface. The accent is now
-     dark cobalt (#2563EB), so text-on-accent must be light: white-on-cobalt
-     is ~5.2:1 (passes WCAG AA), whereas the old ink value gave ~4:1 and
-     failed. (Mirror of the pre-reskin guard, which used ink because the old
-     accent was light cyan.) Button primary = bg cobalt + this text color. */
-  --text-inverse: #ffffff;
+  --accent-gold-glow: var(--marketing-cyan-glow);
+  --accent-success-glow: var(--marketing-cyan-glow);
+  --accent-tertiary-glow: var(--marketing-cyan-glow);
+  --surface-elevated: var(--cream-surface);
+  --bg-primary: var(--cream);
+  --bg-secondary: var(--cream-section);
+  --bg-card: var(--cream-surface);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-muted);
+  --text-muted: var(--ink-meta);
+  --border-color: var(--hairline);
+  --border-color-hover: rgba(22, 24, 43, 0.24);
+  --color-primary: var(--cobalt);
+  --color-primary-hover: var(--cobalt-hover);
+  /* Text ON the cobalt accent surface = cream (white-on-cobalt ≈5.2:1 AA). */
+  --text-inverse: #FBF9F2;
+}
+
+/* ═══ Editorial motif utility classes (cream system) ═══ */
+.marketing-dark .font-display,
+.auth-theme .font-display {
+  font-family: var(--font-anton), "Arial Narrow", sans-serif;
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+/* Duotone cobalt treatment for photos (editorial "sticky duotone image") */
+.duotone {
+  filter: grayscale(1) contrast(1.05);
+  background: var(--cobalt);
+}
+.duotone > img,
+.duotone img {
+  mix-blend-mode: luminosity;
+  opacity: 0.92;
+}
+/* Editorial stat strip (mono, cobalt figures on cream) */
+.stat-strip {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: var(--cream-surface);
+}
+.stat-strip b, .stat-strip .figure { color: var(--cobalt); font-weight: 700; }
+/* Arrow-pill CTA (cobalt circle + arrow, pill label) */
+.arrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.arrow-pill .circle {
+  width: 44px; height: 44px;
+  border-radius: 999px;
+  background: var(--cobalt);
+  color: #FBF9F2;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.arrow-pill .label {
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink);
+}
+/* Eyebrow label (spaced mono/sans) */
+.eyebrow {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-meta);
 }
 
 /* Hero Orbs (floating gradient spheres) */

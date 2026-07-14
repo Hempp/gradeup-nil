@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Script from "next/script";
-import { Geist, Geist_Mono, Bebas_Neue, DM_Sans, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Bebas_Neue, DM_Sans, Inter, Anton, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, ToastGlobalHandler } from "@/components/ui/toast";
 import { KeyboardShortcutsProvider } from "@/components/ui/keyboard-shortcuts";
@@ -53,6 +53,21 @@ const inter = Inter({
   display: "swap",
 });
 
+// Editorial system: heavy condensed display (headlines) + transitional serif (body)
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 export { metadata };
 
 export default function RootLayout({
@@ -95,7 +110,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${dmSans.variable} ${inter.variable} ${anton.variable} ${sourceSerif.variable} antialiased`}
         suppressHydrationWarning
       >
         <AuthProvider>
