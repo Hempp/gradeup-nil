@@ -57,6 +57,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Image optimization
   images: {
+    // Editorial photos are pre-optimized (~300K); serve them directly so
+    // next/image `fill` reliably renders local /editorial assets.
+    unoptimized: true,
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
