@@ -4,7 +4,7 @@
 (free athletes; 8% <$500, 6% ≥$500; Brand+ $149/mo→5%) to StatStaq's model:
 **free to join · X% on deals StatStaq sources · Y% on deals athlete brings.**
 
-**Blocked on:** the actual X and Y percentages (not yet provided).
+**Numbers (2026-07-13, = StatStaq's published pricing):** free to join · **15%** on deals StatStaq's desk sources & closes · **0%** on deals you bring. Page copy done. REMAINING follow-up = the TAKE-RATE CODE (still computes 8%/6% by deal size) must change to 15%-sourced / 0%-brought, or charges won't match the page.
 
 **Scope when unblocked:**
 1. Rewrite `/pricing` (`src/app/(marketing)/pricing/page.tsx`) + `es/pricing`
