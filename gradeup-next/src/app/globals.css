@@ -1261,13 +1261,13 @@ html.no-transitions *::after {
 }
 /* Duotone cobalt treatment for photos (editorial "sticky duotone image") */
 .duotone {
-  filter: grayscale(1) contrast(1.05);
+  position: relative;
   background: var(--cobalt);
 }
 .duotone > img,
 .duotone img {
+  filter: grayscale(1) contrast(1.06);
   mix-blend-mode: luminosity;
-  opacity: 0.92;
 }
 /* Editorial stat strip (mono, cobalt figures on cream) */
 .stat-strip {
