@@ -28,7 +28,7 @@ export default async function SupportThanksPage({ params }: PageProps) {
   const { username } = await params;
 
   return (
-    <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
+    <main id="main-content" tabIndex={-1} className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)] focus:outline-none">
       <section className="mx-auto max-w-2xl px-6 py-20">
         <div className="flex items-center gap-3 text-[var(--cobalt)]">
           <CheckCircle2 className="h-6 w-6" aria-hidden="true" />

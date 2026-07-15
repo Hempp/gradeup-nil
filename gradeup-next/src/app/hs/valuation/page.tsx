@@ -154,7 +154,7 @@ export default function ValuationPage() {
       </Script>
 
       <div className="marketing-dark relative min-h-screen bg-[var(--cream)] text-[var(--ink)]">
-        <main className="relative">
+        <main id="main-content" tabIndex={-1} className="relative focus:outline-none">
           {/* Hero */}
           <section
             aria-label="NIL Valuation Calculator hero"
