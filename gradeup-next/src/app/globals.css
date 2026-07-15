@@ -528,34 +528,34 @@ html.no-transitions *::after {
   box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
 }
 
-/* Dark mode link styles */
-/* App dark-theme link color, wrapped in :where() so it carries ZERO
-   specificity. Every Tailwind `text-*` utility (0,1,0) and `.btn-marketing-*`
-   class then wins over it, so cream editorial links keep their own component
-   colors (nav ink, inline cobalt) with no per-surface exclusion needed. Bare
-   dark-app links (dashboards / HS portal) still get this cyan. :where() is
-   valid on all engines — unlike a complex `:not(.marketing-dark a)`, which
-   drops on Safari < 16.4 and would strip dark-app link colors. `.auth-theme`
-   keeps its own simple `.auth-theme a` rule. See DESIGN.md §7. */
-:where(.dark) a {
-  color: #00f0ff;
-}
-
-:where(.dark) a:hover {
-  color: #00c4cc;
-}
-
-/* Cream editorial link fallback: a bare link with no `text-*` utility defaults
-   to the cobalt accent so inline prose links stay distinct. :where() keeps it
-   zero-specificity (utility/nav/button links win) and valid everywhere. It is
-   defined after the .dark rule so, for links inside both .dark and
-   .marketing-dark, this cobalt fallback wins the source-order tie over cyan. */
-:where(.marketing-dark) a {
-  color: var(--cobalt);
-}
-
-:where(.marketing-dark) a:hover {
-  color: var(--cobalt-hover);
+/* Link colors — declared in @layer base so Tailwind's `text-*` utilities (in
+   the later `utilities` layer) ALWAYS win over them. This is the browser-safe
+   fix for the `<html class="dark">` cascade leak: no complex `:not()` (which
+   drops on Safari < 16.4) and no specificity war. A link with its own `text-*`
+   utility or `.btn-*` class keeps that color (nav ink, inline cobalt); a bare
+   link falls back to its surface default — dark-app cyan, cream cobalt.
+   `.auth-theme` keeps its own unlayered `.auth-theme a` rule. See DESIGN.md §7. */
+@layer base {
+  a {
+    color: var(--primary-500);
+  }
+  a:hover {
+    color: var(--primary-700);
+  }
+  .dark a {
+    color: #00f0ff;
+  }
+  .dark a:hover {
+    color: #00c4cc;
+  }
+  /* .marketing-dark is a LIGHT theme; defined after .dark so cream links inside
+     the global .dark <html> win the source-order tie (equal specificity). */
+  .marketing-dark a {
+    color: var(--cobalt);
+  }
+  .marketing-dark a:hover {
+    color: var(--cobalt-hover);
+  }
 }
 
 /* Dark mode sidebar */
@@ -2095,22 +2095,10 @@ h3.card-title {
   border: 1px solid var(--surface-200);
 }
 
-/* Link styles.
-   Base link color is set at ZERO specificity via :where() so every link's own
-   `text-*` utility / button class controls its color; this is only the fallback
-   for links that set no color of their own. The per-surface fallbacks live with
-   the theme rules above (:where(.dark) a, :where(.marketing-dark) a). The
-   `transition` stays a normal global rule. See DESIGN.md §7. */
+/* Link transition. Link COLOR is handled in @layer base (search "Link colors")
+   so Tailwind `text-*` utilities win; only the transition stays here. */
 a {
   transition: var(--transition-fast);
-}
-
-:where(a) {
-  color: var(--primary-500);
-}
-
-:where(a):hover {
-  color: var(--primary-700);
 }
 
 /* Earnings/Gold accent */

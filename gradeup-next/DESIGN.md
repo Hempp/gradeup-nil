@@ -101,6 +101,17 @@ select, .marketing-dark textarea { … cream tokens … }` with higher specifici
 **Do not remove it.** When adding fields to the cream surface, this makes them
 correct by default; only override for a deliberate reason.
 
+The same leak hits **links**: `.dark a { color:#00f0ff }` painted cream links
+cyan. The twist is Tailwind v4 **layer order** — an *unlayered* rule beats any
+`@layer utilities` rule (which is where `text-*` utilities live) regardless of
+specificity or `:where()`. So the link theme rules are declared inside
+**`@layer base`** (`a`, `.dark a`, `.marketing-dark a`) — a lower layer than
+`utilities` — so any link's own `text-*` utility or `.btn-*` class wins (nav
+ink, inline cobalt), while a *bare* link falls back to its surface default
+(dark-app cyan, cream cobalt). Do **not** use a complex `:not(.marketing-dark
+a)` here — a descendant combinator inside `:not()` drops the whole rule on
+Safari < 16.4. `@layer base` is the browser-safe fix.
+
 ## 8. Accessibility floor
 
 - WCAG 2.2 AA contrast. Ink-on-cream and cream-on-cobalt both clear AA.
