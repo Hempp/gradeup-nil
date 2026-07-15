@@ -22,17 +22,17 @@ export function Footer() {
             <h3 className="font-display uppercase tracking-wide mb-4 text-[var(--ink)]">For Athletes</h3>
             <ul className="space-y-2 text-sm text-[var(--ink-muted)] font-[family-name:var(--font-inter)]">
               <li>
-                <Link href="/signup/athlete" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/signup/athlete" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Join as Athlete
                 </Link>
               </li>
               <li>
-                <Link href="/solutions/athletes" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/solutions/athletes" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   How It Works
                 </Link>
               </li>
               <li>
-                <Link href="/opportunities" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/opportunities" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Browse Opportunities
                 </Link>
               </li>
@@ -44,17 +44,17 @@ export function Footer() {
             <h3 className="font-display uppercase tracking-wide mb-4 text-[var(--ink)]">For Brands</h3>
             <ul className="space-y-2 text-sm text-[var(--ink-muted)] font-[family-name:var(--font-inter)]">
               <li>
-                <Link href="/signup/brand" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
+                <Link href="/signup/brand" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Partner With Us
                 </Link>
               </li>
               <li>
-                <Link href="/athletes" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
+                <Link href="/athletes" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Browse Athletes
                 </Link>
               </li>
               <li>
-                <Link href="/solutions/brands" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
+                <Link href="/solutions/brands" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Why GradeUp
                 </Link>
               </li>
@@ -66,22 +66,22 @@ export function Footer() {
             <h3 className="font-display uppercase tracking-wide mb-4 text-[var(--ink)]">Company</h3>
             <ul className="space-y-2 text-sm text-[var(--ink-muted)] font-[family-name:var(--font-inter)]">
               <li>
-                <Link href="/solutions" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/solutions" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/help" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/privacy" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/terms" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Terms of Service
                 </Link>
               </li>
