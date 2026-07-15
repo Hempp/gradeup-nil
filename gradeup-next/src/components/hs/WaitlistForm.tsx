@@ -208,16 +208,16 @@ export function WaitlistForm() {
     <form
       onSubmit={handleSubmit}
       aria-labelledby={headingId}
-      className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm md:p-8"
+      className="mx-auto max-w-2xl rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6 backdrop-blur-sm md:p-8"
       noValidate
     >
       <h2
         id={headingId}
-        className="font-display text-2xl text-white md:text-3xl"
+        className="font-display text-2xl text-[var(--ink)] md:text-3xl"
       >
         Get early access
       </h2>
-      <p className="mt-2 text-sm text-white/70">
+      <p className="mt-2 text-sm text-[var(--ink-muted)]">
         Tell us who you are. We&rsquo;ll invite you when your state goes live.
       </p>
 
@@ -225,7 +225,7 @@ export function WaitlistForm() {
       <fieldset className="mt-6">
         <legend
           id={roleGroupId}
-          className="text-sm font-medium text-white"
+          className="text-sm font-medium text-[var(--ink)]"
         >
           I&rsquo;m a&hellip;
         </legend>
@@ -242,8 +242,8 @@ export function WaitlistForm() {
                 className={[
                   'flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors',
                   selected
-                    ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
-                    : 'border-white/10 hover:border-white/30',
+                    ? 'border-[var(--cobalt)] bg-[var(--accent-primary-glow)]'
+                    : 'border-[var(--hairline)] hover:border-[var(--cobalt)]',
                 ].join(' ')}
               >
                 <input
@@ -255,10 +255,10 @@ export function WaitlistForm() {
                   className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]"
                 />
                 <span className="flex flex-col">
-                  <span className="text-sm font-medium text-white">
+                  <span className="text-sm font-medium text-[var(--ink)]">
                     {opt.label}
                   </span>
-                  <span className="text-xs text-white/60">{opt.hint}</span>
+                  <span className="text-xs text-[var(--ink-meta)]">{opt.hint}</span>
                 </span>
               </label>
             );
@@ -270,7 +270,7 @@ export function WaitlistForm() {
       <div className="mt-6">
         <label
           htmlFor={emailId}
-          className="block text-sm font-medium text-white"
+          className="block text-sm font-medium text-[var(--ink)]"
         >
           Email
         </label>
@@ -303,7 +303,7 @@ export function WaitlistForm() {
       <div className="mt-6">
         <label
           htmlFor={stateId}
-          className="block text-sm font-medium text-white"
+          className="block text-sm font-medium text-[var(--ink)]"
         >
           State
         </label>
@@ -317,7 +317,7 @@ export function WaitlistForm() {
           />
         </div>
         {isUnlistedState && (
-          <p className="mt-2 rounded-lg border border-white/10 bg-white/5 p-3 text-sm text-white/70">
+          <p className="mt-2 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] p-3 text-sm text-[var(--ink-muted)]">
             Your state isn&rsquo;t in our pilot yet. Drop your email above and
             we&rsquo;ll notify you the moment we expand. (The first three
             states we&rsquo;re opening are California, Florida, and Georgia.)
@@ -330,7 +330,7 @@ export function WaitlistForm() {
         <div className="mt-6">
           <label
             htmlFor={gradYearId}
-            className="block text-sm font-medium text-white"
+            className="block text-sm font-medium text-[var(--ink)]"
           >
             Graduation year
           </label>
@@ -353,9 +353,9 @@ export function WaitlistForm() {
       <div className="mt-6">
         <label
           htmlFor={sportId}
-          className="block text-sm font-medium text-white"
+          className="block text-sm font-medium text-[var(--ink)]"
         >
-          Sport <span className="text-white/50">(optional)</span>
+          Sport <span className="text-[var(--ink-meta)]">(optional)</span>
         </label>
         <div className="mt-1.5">
           <Input
@@ -373,9 +373,9 @@ export function WaitlistForm() {
       <div className="mt-6">
         <label
           htmlFor={schoolId}
-          className="block text-sm font-medium text-white"
+          className="block text-sm font-medium text-[var(--ink)]"
         >
-          School <span className="text-white/50">(optional)</span>
+          School <span className="text-[var(--ink-meta)]">(optional)</span>
         </label>
         <div className="mt-1.5">
           <Input
@@ -412,7 +412,7 @@ export function WaitlistForm() {
         >
           {status === 'submitting' ? 'Joining…' : 'Join the waitlist'}
         </Button>
-        <p className="mt-3 text-xs text-white/50">
+        <p className="mt-3 text-xs text-[var(--ink-meta)]">
           We&rsquo;ll only email you about GradeUp HS. Unsubscribe any time.
         </p>
       </div>

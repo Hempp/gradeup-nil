@@ -78,7 +78,7 @@ export default async function AthletesDirectoryPage({
       <Script id="athlete-directory-jsonld" type="application/ld+json">
         {JSON.stringify(jsonLd)}
       </Script>
-      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
+      <main id="main-content" tabIndex={-1} className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)] focus:outline-none">
         <section className="mx-auto grid max-w-6xl gap-10 px-6 pt-24 pb-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
           <div>
             <p className="eyebrow">Scholar-Athletes</p>

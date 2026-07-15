@@ -113,7 +113,7 @@ export default async function AthletePublicProfilePage({
       >
         {JSON.stringify(jsonLd)}
       </Script>
-      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
+      <main id="main-content" tabIndex={-1} className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)] focus:outline-none">
         <div className="mx-auto max-w-5xl px-6 pt-24 pb-20">
           <AthletePublicHero
             profile={profile}

@@ -120,10 +120,10 @@ export function ValuationPostCTA({
           className="mx-auto mb-3 h-10 w-10 text-[var(--accent-success)]"
           aria-hidden="true"
         />
-        <h3 className="font-display text-xl font-semibold text-white">
+        <h3 className="font-display text-xl font-semibold text-[var(--ink)]">
           You&rsquo;re on the list
         </h3>
-        <p className="mt-2 text-sm text-white/70">
+        <p className="mt-2 text-sm text-[var(--ink-muted)]">
           We&rsquo;ll email you the moment GradeUp HS opens in {inputs.stateCode}.
           Look out for a message from us.
         </p>
@@ -133,11 +133,11 @@ export function ValuationPostCTA({
 
   if (!stateEligible) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-        <h3 className="font-display text-xl font-semibold text-white">
+      <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6">
+        <h3 className="font-display text-xl font-semibold text-[var(--ink)]">
           Your state isn&rsquo;t in our pilot yet
         </h3>
-        <p className="mt-2 text-sm text-white/70">
+        <p className="mt-2 text-sm text-[var(--ink-muted)]">
           GradeUp HS is live in {PILOT_STATES.join(', ')}. Drop your email on
           the main page and we&rsquo;ll reach out the moment we expand.
         </p>
@@ -148,12 +148,12 @@ export function ValuationPostCTA({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 sm:p-8"
+      className="rounded-2xl border border-[var(--hairline)] bg-gradient-to-br from-[var(--cream-surface)] to-[var(--cream-surface)] p-6 sm:p-8"
     >
-      <h3 className="font-display text-2xl font-semibold text-white">
+      <h3 className="font-display text-2xl font-semibold text-[var(--ink)]">
         Get first access when we open
       </h3>
-      <p className="mt-2 text-sm text-white/70">
+      <p className="mt-2 text-sm text-[var(--ink-muted)]">
         We&rsquo;ll email you when GradeUp HS goes live in {inputs.stateCode}.
         Your calculator inputs come along so we can prioritize your onboarding.
       </p>
@@ -192,7 +192,7 @@ export function ValuationPostCTA({
 
       <fieldset className="mt-4">
         <legend className="sr-only">I am a</legend>
-        <div className="flex gap-3 text-sm text-white/80">
+        <div className="flex gap-3 text-sm text-[var(--ink-muted)]">
           <label className="inline-flex cursor-pointer items-center gap-2">
             <input
               type="radio"
@@ -222,13 +222,13 @@ export function ValuationPostCTA({
         <p
           id={errorId}
           role="alert"
-          className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300"
+          className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-600"
         >
           {error}
         </p>
       )}
 
-      <p className="mt-4 text-xs text-white/40">
+      <p className="mt-4 text-xs text-[var(--ink-meta)]">
         No spam. Unsubscribe any time. We don&rsquo;t sell your data.
       </p>
     </form>

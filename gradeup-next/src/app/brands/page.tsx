@@ -91,7 +91,7 @@ export default async function BrandsDirectoryPage({
           {JSON.stringify(jsonLd)}
         </Script>
       ) : null}
-      <main className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)]">
+      <main id="main-content" tabIndex={-1} className="marketing-dark min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)] focus:outline-none">
         <section className="mx-auto grid max-w-6xl gap-10 px-6 pt-24 pb-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
           <div>
             <p className="eyebrow">Brand Partners</p>

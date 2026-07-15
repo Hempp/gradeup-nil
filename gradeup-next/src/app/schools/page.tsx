@@ -22,7 +22,7 @@ export const metadata = buildMarketingMetadata({
 
 export default function SchoolsPage() {
   return (
-    <main className="min-h-screen bg-[var(--marketing-gray-900)] text-white">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--marketing-gray-900)] text-[var(--ink)] focus:outline-none">
       <section className="mx-auto max-w-6xl px-6 pt-20 pb-10">
         <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
           School Directory
@@ -30,7 +30,7 @@ export default function SchoolsPage() {
         <h1 className="mt-2 font-display text-4xl md:text-5xl">
           Every school. Every roster. One place.
         </h1>
-        <p className="mt-4 max-w-2xl text-lg text-white/70">
+        <p className="mt-4 max-w-2xl text-lg text-[var(--ink-muted)]">
           Search across {FEATURED_SCHOOLS.length} featured schools — from
           Power 5 programs to HBCUs to high-school powerhouses. Click a
           school to browse every verified athlete from that program.

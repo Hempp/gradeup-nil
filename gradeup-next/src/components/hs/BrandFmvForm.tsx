@@ -217,10 +217,10 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
     <form
       onSubmit={handleSubmit}
       aria-labelledby={headingId}
-      className="mx-auto w-full max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm sm:p-8"
+      className="mx-auto w-full max-w-2xl rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 backdrop-blur-sm sm:p-8"
     >
       <div className="mb-6">
-        <div className="flex items-center justify-between text-xs text-white/60">
+        <div className="flex items-center justify-between text-xs text-[var(--ink-meta)]">
           <span
             id={headingId}
             className="font-semibold uppercase tracking-widest text-[var(--accent-primary)]"
@@ -229,7 +229,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           </span>
           <span>{Math.round(progressPct)}% complete</span>
         </div>
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--cream-section)]">
           <div
             className="h-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-gold)] transition-all duration-500"
             style={{ width: `${progressPct}%` }}
@@ -241,10 +241,10 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
       {step === 0 && (
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-white">
+            <h2 className="font-display text-2xl text-[var(--ink)]">
               Who are you hiring?
             </h2>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               Pick the sport + state you&rsquo;re targeting. One athlete
               profile sets the per-head math; we&rsquo;ll multiply by your
               campaign size later.
@@ -252,7 +252,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Sport
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -270,7 +270,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           <div>
             <label
               htmlFor="bfmv-state"
-              className="mb-2 block text-sm font-medium text-white"
+              className="mb-2 block text-sm font-medium text-[var(--ink)]"
             >
               State
             </label>
@@ -282,7 +282,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
                   e.target.value ? (e.target.value as USPSStateCode) : null
                 )
               }
-              className="min-h-[44px] w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+              className="min-h-[44px] w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-4 py-2 text-[var(--ink)] focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
             >
               <option value="">Select athlete state</option>
               <optgroup label="Pilot states (GradeUp HS live)">
@@ -302,7 +302,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
                 )}
               </optgroup>
             </select>
-            <p className="mt-2 text-xs text-white/50">
+            <p className="mt-2 text-xs text-[var(--ink-meta)]">
               State drives compliance callouts &mdash; disclosure windows,
               banned categories, school-IP rules.
             </p>
@@ -313,15 +313,15 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
       {step === 1 && (
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-white">Reach profile</h2>
-            <p className="mt-1 text-sm text-white/60">
+            <h2 className="font-display text-2xl text-[var(--ink)]">Reach profile</h2>
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               Grade level + social following anchor the per-athlete unit
               price.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Target grade level
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -337,7 +337,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Target follower bucket
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -357,17 +357,17 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
       {step === 2 && (
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-white">
+            <h2 className="font-display text-2xl text-[var(--ink)]">
               Scholar-athlete premium
             </h2>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               Verified GPA + transcript-on-file unlock premium
               education/financial-services verticals.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Target GPA band
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -385,7 +385,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           <fieldset className="space-y-3">
             <legend className="sr-only">Verification flags</legend>
 
-            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:border-white/30">
+            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-3 transition-colors hover:border-[var(--cobalt)]">
               <input
                 type="checkbox"
                 checked={verifiedGpa}
@@ -393,16 +393,16 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
                 className="mt-0.5 h-4 w-4 accent-[var(--accent-primary)]"
               />
               <span>
-                <span className="block text-sm font-medium text-white">
+                <span className="block text-sm font-medium text-[var(--ink)]">
                   Require verified GPA
                 </span>
-                <span className="block text-xs text-white/60">
+                <span className="block text-xs text-[var(--ink-meta)]">
                   Narrows the pool; bumps the estimate.
                 </span>
               </span>
             </label>
 
-            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:border-white/30">
+            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-3 transition-colors hover:border-[var(--cobalt)]">
               <input
                 type="checkbox"
                 checked={tierBSubmitted}
@@ -410,10 +410,10 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
                 className="mt-0.5 h-4 w-4 accent-[var(--accent-primary)]"
               />
               <span>
-                <span className="block text-sm font-medium text-white">
+                <span className="block text-sm font-medium text-[var(--ink)]">
                   Require transcript on file (Tier B)
                 </span>
-                <span className="block text-xs text-white/60">
+                <span className="block text-xs text-[var(--ink-meta)]">
                   Trust signal \u2014 brand-facing proof the athlete is
                   credible.
                 </span>
@@ -426,17 +426,17 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
       {step === 3 && (
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-white">
+            <h2 className="font-display text-2xl text-[var(--ink)]">
               Campaign shape
             </h2>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               Vertical + deliverable type + how many athletes you&rsquo;re
               planning to hire.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Your vertical
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -452,7 +452,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Deliverable type
             </label>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -470,7 +470,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           <div>
             <label
               htmlFor="bfmv-athlete-count"
-              className="mb-2 block text-sm font-medium text-white"
+              className="mb-2 block text-sm font-medium text-[var(--ink)]"
             >
               How many athletes?
             </label>
@@ -489,9 +489,9 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
                   }
                   setAthleteCount(Math.min(500, Math.max(1, raw)));
                 }}
-                className="min-h-[44px] w-28 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+                className="min-h-[44px] w-28 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-[var(--ink)] focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
               />
-              <span className="text-sm text-white/60">athlete{athleteCount === 1 ? '' : 's'}</span>
+              <span className="text-sm text-[var(--ink-meta)]">athlete{athleteCount === 1 ? '' : 's'}</span>
             </div>
             {athleteCount >= VOLUME_DISCOUNT_ATHLETE_THRESHOLD && (
               <p className="mt-2 rounded-md border border-[var(--accent-gold)]/30 bg-[var(--accent-gold)]/10 px-3 py-2 text-xs text-[var(--accent-gold)]">
@@ -505,10 +505,10 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
           <div>
             <label
               htmlFor="bfmv-notes"
-              className="mb-2 block text-sm font-medium text-white"
+              className="mb-2 block text-sm font-medium text-[var(--ink)]"
             >
               Campaign notes{' '}
-              <span className="text-white/40">(optional)</span>
+              <span className="text-[var(--ink-meta)]">(optional)</span>
             </label>
             <textarea
               id="bfmv-notes"
@@ -517,9 +517,9 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
               value={campaignNotes}
               onChange={(e) => setCampaignNotes(e.target.value)}
               placeholder="e.g. \u201CBack-to-school push across 3 markets, want CA + TX athletes.\u201D"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+              className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--ink-meta)] focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
             />
-            <p className="mt-1 text-xs text-white/40">
+            <p className="mt-1 text-xs text-[var(--ink-meta)]">
               Only visible to our sales team if you choose to talk to us
               afterward. Not shown publicly.
             </p>
@@ -533,7 +533,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
             type="button"
             variant="ghost"
             onClick={() => setStep((s) => (s - 1) as Step)}
-            className="gap-2 text-white/70"
+            className="gap-2 text-[var(--ink-muted)]"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back
@@ -589,8 +589,8 @@ function ChoiceButton({ label, selected, onClick }: ChoiceButtonProps) {
         'min-h-[44px] rounded-lg border px-3 py-2 text-sm font-medium transition-all',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]',
         selected
-          ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/15 text-white'
-          : 'border-white/10 bg-white/5 text-white/70 hover:border-white/30 hover:text-white',
+          ? 'border-[var(--cobalt)] bg-[var(--accent-primary-glow)] text-[var(--cobalt-hover)]'
+          : 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)] hover:border-[var(--cobalt)] hover:text-[var(--ink)]',
       ].join(' ')}
       aria-pressed={selected}
     >

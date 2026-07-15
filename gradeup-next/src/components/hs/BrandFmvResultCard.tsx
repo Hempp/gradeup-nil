@@ -42,7 +42,7 @@ export function BrandFmvResultCard({
   return (
     <div className="space-y-6">
       {/* Headline: per-deliverable */}
-      <div className="relative overflow-hidden rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-white/5 to-[var(--accent-gold)]/10 p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-[var(--cream-surface)] to-[var(--accent-gold)]/10 p-6 sm:p-8">
         <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[var(--accent-primary)]/10 blur-3xl" />
         <div className="relative">
           <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
@@ -51,17 +51,17 @@ export function BrandFmvResultCard({
           </div>
 
           <div
-            className="font-display text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl"
+            className="font-display text-4xl font-bold leading-tight text-[var(--ink)] sm:text-5xl md:text-6xl"
             aria-live="polite"
           >
             {formatValuationCents(result.perDeliverableCents.low)}
-            <span className="mx-2 text-white/40">&ndash;</span>
+            <span className="mx-2 text-[var(--ink-meta)]">&ndash;</span>
             {formatValuationCents(result.perDeliverableCents.high)}
           </div>
 
-          <p className="mt-2 text-sm text-white/60">
+          <p className="mt-2 text-sm text-[var(--ink-meta)]">
             central estimate{' '}
-            <span className="font-semibold text-white/80">
+            <span className="font-semibold text-[var(--ink-muted)]">
               {formatValuationCents(result.perDeliverableCents.mid)}
             </span>
           </p>
@@ -76,15 +76,15 @@ export function BrandFmvResultCard({
           {input.brand.athleteCount === 1 ? '' : 's'}
         </div>
 
-        <div className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
+        <div className="font-display text-3xl font-bold leading-tight text-[var(--ink)] sm:text-4xl">
           {formatValuationCents(result.campaignTotalCents.low)}
-          <span className="mx-2 text-white/40">&ndash;</span>
+          <span className="mx-2 text-[var(--ink-meta)]">&ndash;</span>
           {formatValuationCents(result.campaignTotalCents.high)}
         </div>
 
-        <p className="mt-2 text-sm text-white/60">
+        <p className="mt-2 text-sm text-[var(--ink-meta)]">
           central estimate{' '}
-          <span className="font-semibold text-white/80">
+          <span className="font-semibold text-[var(--ink-muted)]">
             {formatValuationCents(result.campaignTotalCents.mid)}
           </span>
         </p>
@@ -98,11 +98,11 @@ export function BrandFmvResultCard({
       </div>
 
       {/* How we computed this */}
-      <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
-        <h3 className="text-sm font-semibold text-white">
+      <div className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 sm:p-5">
+        <h3 className="text-sm font-semibold text-[var(--ink)]">
           How we computed this
         </h3>
-        <ul className="mt-3 space-y-1.5 text-xs leading-relaxed text-white/70">
+        <ul className="mt-3 space-y-1.5 text-xs leading-relaxed text-[var(--ink-muted)]">
           <li>
             &middot; Athlete-side engine runs first (sport, state, grade,
             followers, GPA, verification) &mdash; same model as the athlete
@@ -110,7 +110,7 @@ export function BrandFmvResultCard({
           </li>
           <li>
             &middot; Deliverable multiplier of{' '}
-            <strong className="text-white">{deliverableMult.toFixed(2)}x</strong>{' '}
+            <strong className="text-[var(--ink)]">{deliverableMult.toFixed(2)}x</strong>{' '}
             applied for &ldquo;{deliverableLabel}&rdquo;.
           </li>
           <li>
@@ -124,7 +124,7 @@ export function BrandFmvResultCard({
             in 2024-2026.
           </li>
         </ul>
-        <p className="mt-3 text-xs text-white/40">
+        <p className="mt-3 text-xs text-[var(--ink-meta)]">
           Vertical &ldquo;{verticalLabel}&rdquo; drives the compliance
           callouts below, not the price. Methodology version{' '}
           {result.methodologyVersion}.
@@ -132,12 +132,12 @@ export function BrandFmvResultCard({
       </div>
 
       {/* Benchmark framing against published college NIL averages. */}
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5">
-        <h3 className="text-sm font-semibold text-white">
+      <div className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 sm:p-5">
+        <h3 className="text-sm font-semibold text-[var(--ink)]">
           Benchmark check
         </h3>
-        <p className="mt-2 text-sm text-white/70">
-          These ranges fall <strong className="text-white">below</strong>{' '}
+        <p className="mt-2 text-sm text-[var(--ink-muted)]">
+          These ranges fall <strong className="text-[var(--ink)]">below</strong>{' '}
           the published college-NIL averages, consistent with the HS
           market where deals are smaller and more locally-scoped.
           That&rsquo;s the point: HS-NIL is where you build a pipeline
@@ -148,21 +148,21 @@ export function BrandFmvResultCard({
       {/* Compliance callouts */}
       {result.complianceCallouts.length > 0 && (
         <div className="rounded-xl border border-[var(--accent-gold)]/30 bg-[var(--accent-gold)]/5 p-4 sm:p-5">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
             <AlertTriangle
               className="h-4 w-4 text-[var(--accent-gold)]"
               aria-hidden="true"
             />
             Compliance callouts for {input.stateCode}
           </div>
-          <ul className="space-y-2 text-sm text-white/80">
+          <ul className="space-y-2 text-sm text-[var(--ink-muted)]">
             {result.complianceCallouts.map((c, i) => (
               <li key={i} className="leading-relaxed">
                 &middot; {c}
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-xs text-white/50">
+          <p className="mt-3 text-xs text-[var(--ink-meta)]">
             We re-surface these at campaign creation time too. You can
             post compliantly without being a lawyer &mdash; that&rsquo;s
             our job.
@@ -173,7 +173,7 @@ export function BrandFmvResultCard({
       {/* Reuse athlete-side caveat list for the general market caveats */}
       <ValuationCaveatList caveats={result.caveats} />
 
-      <p className="text-xs text-white/40">
+      <p className="text-xs text-[var(--ink-meta)]">
         Estimates only &mdash; not an offer, quote, or guarantee. Actual
         deal pricing is brokered between brand + athlete + parent on
         GradeUp HS.

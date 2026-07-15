@@ -1,5 +1,11 @@
 /**
- * POST /api/athletes/[username]/support/checkout
+ * POST /api/athletes/[id]/support/checkout
+ *
+ * NOTE: the dynamic segment is named [id] (not [username]) to satisfy
+ * Next.js's rule that a given URL path position use ONE slug name — the
+ * sibling /api/athletes/[id] route already claims `id`. The value passed
+ * here is still the athlete USERNAME; we alias it below. The public URL
+ * (/api/athletes/<username>/support/checkout) is unchanged.
  *
  * Creates a Stripe Checkout session for a supporter to pay an athlete
  * directly. Returns { url } for the client to redirect to Stripe-hosted
@@ -59,10 +65,11 @@ function siteUrl(): string {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ username: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
-    const { username } = await params;
+    // The [id] segment carries the athlete username (see file header).
+    const { id: username } = await params;
     if (!username || typeof username !== 'string' || username.length > 60) {
       return NextResponse.json({ error: 'Invalid athlete' }, { status: 404 });
     }

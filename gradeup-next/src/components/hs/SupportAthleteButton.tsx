@@ -41,7 +41,7 @@ export function SupportAthleteButton({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-semibold text-black transition hover:opacity-90"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
       >
         <Heart className="h-4 w-4" aria-hidden="true" />
         Send a supporter payment
@@ -142,18 +142,18 @@ function SupportModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--marketing-gray-900)] p-6 text-white">
+      <div className="w-full max-w-md rounded-2xl border border-[var(--hairline)] bg-[var(--marketing-gray-900)] p-6 text-[var(--ink)]">
         <h2 id="support-modal-title" className="font-display text-2xl">
           Send {athleteDisplayName} a supporter payment
         </h2>
-        <p className="mt-2 text-sm text-white/60">
+        <p className="mt-2 text-sm text-[var(--ink-meta)]">
           In exchange, the athlete will send you a personalized shoutout or
           thank-you message.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <fieldset>
-            <legend className="block text-sm font-medium text-white/80 mb-2">
+            <legend className="block text-sm font-medium text-[var(--ink-muted)] mb-2">
               Amount
             </legend>
             <div className="grid grid-cols-4 gap-2">
@@ -167,8 +167,8 @@ function SupportModal({
                   }}
                   className={`rounded-lg border py-2 text-sm font-semibold transition ${
                     !customDollars && selected === p.cents
-                      ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                      : 'border-white/15 text-white/70 hover:border-white/30'
+                      ? 'border-[var(--cobalt)] bg-[var(--accent-primary-glow)] text-[var(--cobalt-hover)]'
+                      : 'border-[var(--hairline)] text-[var(--ink-muted)] hover:border-[var(--cobalt)]'
                   }`}
                 >
                   {p.label}
@@ -185,7 +185,7 @@ function SupportModal({
                 placeholder="Or enter a custom amount ($1 – $500)"
                 value={customDollars}
                 onChange={(e) => setCustomDollars(e.target.value)}
-                className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:border-white/30"
+                className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-meta)] outline-none focus:border-[var(--cobalt)]"
               />
             </div>
           </fieldset>
@@ -193,7 +193,7 @@ function SupportModal({
           <div>
             <label
               htmlFor="supporter-email"
-              className="block text-sm font-medium text-white/80 mb-1.5"
+              className="block text-sm font-medium text-[var(--ink-muted)] mb-1.5"
             >
               Your email <span className="text-[var(--color-error)]">*</span>
             </label>
@@ -205,14 +205,14 @@ function SupportModal({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:border-white/30"
+              className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-meta)] outline-none focus:border-[var(--cobalt)]"
             />
           </div>
 
           <div>
             <label
               htmlFor="supporter-name"
-              className="block text-sm font-medium text-white/80 mb-1.5"
+              className="block text-sm font-medium text-[var(--ink-muted)] mb-1.5"
             >
               Your name (optional)
             </label>
@@ -223,14 +223,14 @@ function SupportModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="How should they address you?"
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:border-white/30"
+              className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-meta)] outline-none focus:border-[var(--cobalt)]"
             />
           </div>
 
           <div>
             <label
               htmlFor="supporter-message"
-              className="block text-sm font-medium text-white/80 mb-1.5"
+              className="block text-sm font-medium text-[var(--ink-muted)] mb-1.5"
             >
               Message to the athlete (optional)
             </label>
@@ -241,7 +241,7 @@ function SupportModal({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Ex: Go Warriors! Can I get a shoutout for my nephew?"
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:border-white/30 resize-none"
+              className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-meta)] outline-none focus:border-[var(--cobalt)] resize-none"
             />
           </div>
 
@@ -254,8 +254,8 @@ function SupportModal({
             </div>
           )}
 
-          <p className="rounded-md border border-white/10 bg-black/30 p-3 text-xs text-white/50 leading-relaxed">
-            <strong className="text-white/70">Important:</strong> This is an
+          <p className="rounded-md border border-[var(--hairline)] bg-[var(--cream-section)] p-3 text-xs text-[var(--ink-meta)] leading-relaxed">
+            <strong className="text-[var(--ink-muted)]">Important:</strong> This is an
             NIL payment to a student-athlete in exchange for a shoutout or
             personalized message. It is <strong>not a donation</strong> and
             is <strong>not tax-deductible</strong>. The athlete reports this
@@ -267,14 +267,14 @@ function SupportModal({
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:bg-white/5"
+              className="rounded-lg border border-[var(--hairline)] px-4 py-2 text-sm text-[var(--ink-muted)] transition hover:bg-[var(--cream-section)]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
             >
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               Continue to checkout

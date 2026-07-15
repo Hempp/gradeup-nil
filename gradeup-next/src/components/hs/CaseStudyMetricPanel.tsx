@@ -15,7 +15,7 @@ export function CaseStudyMetricPanel({ metrics }: { metrics: CaseStudyMetric[] }
       {metrics.map((m, idx) => (
         <div
           key={m.id}
-          className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm"
+          className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 backdrop-blur-sm"
         >
           <div className="text-xs uppercase tracking-widest text-[var(--marketing-gray-500)] font-semibold mb-2">
             {String(idx + 1).padStart(2, '0')}
@@ -23,7 +23,7 @@ export function CaseStudyMetricPanel({ metrics }: { metrics: CaseStudyMetric[] }
           <div className="text-3xl md:text-4xl font-bold text-[var(--accent-success)] tabular-nums">
             {m.metricValue}
           </div>
-          <div className="text-sm text-white mt-2 font-semibold">
+          <div className="text-sm text-[var(--ink)] mt-2 font-semibold">
             {m.metricLabel}
           </div>
           {m.metricHint && (

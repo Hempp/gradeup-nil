@@ -488,6 +488,35 @@ html.no-transitions *::after {
   box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.2);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   CREAM EDITORIAL FORM CONTROLS
+   The marketing wrapper keeps the legacy `.marketing-dark` class name but is
+   a LIGHT theme. Because the app's default <html> carries `.dark`, the
+   `.dark input/select/textarea` rule above would otherwise paint EVERY field
+   #262626 on the cream surface (search, filters, waitlist, the valuation
+   calculator). Re-scope fields to cream tokens. The `:not()` guards bump
+   specificity above `.dark input` (0,1,1) so cream wins regardless of source
+   order; checkboxes/radios keep their accent and are left to component CSS.
+   Auth (`.auth-theme`) is intentionally dark and NOT overridden here.
+   ───────────────────────────────────────────────────────────────────────── */
+.marketing-dark input:not([type="checkbox"]):not([type="radio"]),
+.marketing-dark select,
+.marketing-dark textarea {
+  background: var(--cream-surface);
+  border-color: var(--hairline);
+  color: var(--ink);
+}
+.marketing-dark input:not([type="checkbox"]):not([type="radio"])::placeholder,
+.marketing-dark textarea::placeholder {
+  color: var(--ink-meta);
+}
+.marketing-dark input:not([type="checkbox"]):not([type="radio"]):focus,
+.marketing-dark select:focus,
+.marketing-dark textarea:focus {
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 3px var(--accent-primary-glow);
+}
+
 /* Dark mode button styles */
 .dark .btn-primary {
   background: #00f0ff;
@@ -499,13 +528,34 @@ html.no-transitions *::after {
   box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
 }
 
-/* Dark mode link styles */
-.dark a {
-  color: #00f0ff;
-}
-
-.dark a:hover {
-  color: #00c4cc;
+/* Link colors — declared in @layer base so Tailwind's `text-*` utilities (in
+   the later `utilities` layer) ALWAYS win over them. This is the browser-safe
+   fix for the `<html class="dark">` cascade leak: no complex `:not()` (which
+   drops on Safari < 16.4) and no specificity war. A link with its own `text-*`
+   utility or `.btn-*` class keeps that color (nav ink, inline cobalt); a bare
+   link falls back to its surface default — dark-app cyan, cream cobalt.
+   `.auth-theme` keeps its own unlayered `.auth-theme a` rule. See DESIGN.md §7. */
+@layer base {
+  a {
+    color: var(--primary-500);
+  }
+  a:hover {
+    color: var(--primary-700);
+  }
+  .dark a {
+    color: #00f0ff;
+  }
+  .dark a:hover {
+    color: #00c4cc;
+  }
+  /* .marketing-dark is a LIGHT theme; defined after .dark so cream links inside
+     the global .dark <html> win the source-order tie (equal specificity). */
+  .marketing-dark a {
+    color: var(--cobalt);
+  }
+  .marketing-dark a:hover {
+    color: var(--cobalt-hover);
+  }
 }
 
 /* Dark mode sidebar */
@@ -2045,14 +2095,10 @@ h3.card-title {
   border: 1px solid var(--surface-200);
 }
 
-/* Link styles */
+/* Link transition. Link COLOR is handled in @layer base (search "Link colors")
+   so Tailwind `text-*` utilities win; only the transition stays here. */
 a {
-  color: var(--primary-500);
   transition: var(--transition-fast);
-}
-
-a:hover {
-  color: var(--primary-700);
 }
 
 /* Earnings/Gold accent */
