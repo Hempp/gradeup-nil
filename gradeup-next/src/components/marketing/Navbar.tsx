@@ -184,7 +184,7 @@ export function Navbar() {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-6 font-[family-name:var(--font-inter)]">
             {NAV.map((item) => {
               if (item.kind === 'link') {
                 return (
@@ -256,7 +256,7 @@ export function Navbar() {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3 font-[family-name:var(--font-inter)]">
             <LocaleSwitcher />
             <Link href="/login">
               <Button
@@ -300,7 +300,7 @@ export function Navbar() {
         aria-label="Mobile navigation"
         aria-hidden={!mobileMenuOpen}
       >
-        <div className="px-4 py-6 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div className="px-4 py-6 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto font-[family-name:var(--font-inter)]">
           {NAV.map((item) => {
             if (item.kind === 'link') {
               return (
