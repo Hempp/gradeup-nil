@@ -20,7 +20,7 @@ export function Footer() {
           {/* For Athletes */}
           <div>
             <h3 className="font-display uppercase tracking-wide mb-4 text-[var(--ink)]">For Athletes</h3>
-            <ul className="space-y-2 text-sm text-[var(--ink-muted)]">
+            <ul className="space-y-2 text-sm text-[var(--ink-muted)] font-[family-name:var(--font-inter)]">
               <li>
                 <Link href="/signup/athlete" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   Join as Athlete
@@ -42,7 +42,7 @@ export function Footer() {
           {/* For Brands */}
           <div>
             <h3 className="font-display uppercase tracking-wide mb-4 text-[var(--ink)]">For Brands</h3>
-            <ul className="space-y-2 text-sm text-[var(--ink-muted)]">
+            <ul className="space-y-2 text-sm text-[var(--ink-muted)] font-[family-name:var(--font-inter)]">
               <li>
                 <Link href="/signup/brand" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded-sm transition-colors">
                   Partner With Us
@@ -64,7 +64,7 @@ export function Footer() {
           {/* Company */}
           <div>
             <h3 className="font-display uppercase tracking-wide mb-4 text-[var(--ink)]">Company</h3>
-            <ul className="space-y-2 text-sm text-[var(--ink-muted)]">
+            <ul className="space-y-2 text-sm text-[var(--ink-muted)] font-[family-name:var(--font-inter)]">
               <li>
                 <Link href="/solutions" className="hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   About
