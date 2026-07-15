@@ -41,7 +41,7 @@ export function CaseStudyCard({ study }: { study: CaseStudySummary }) {
       </div>
 
       <div className="flex flex-col flex-1 p-6">
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--accent-primary)] transition-colors">
+        <h3 className="text-xl font-bold text-[var(--ink)] mb-2 group-hover:text-[var(--accent-primary)] transition-colors">
           {study.title}
         </h3>
         {study.subtitle && (
@@ -51,7 +51,7 @@ export function CaseStudyCard({ study }: { study: CaseStudySummary }) {
         )}
 
         {study.topMetrics.length > 0 && (
-          <div className="mt-auto grid grid-cols-3 gap-2 pt-4 border-t border-white/10">
+          <div className="mt-auto grid grid-cols-3 gap-2 pt-4 border-t border-[var(--hairline)]">
             {study.topMetrics.map((m) => (
               <div key={m.id} className="text-center">
                 <div className="text-base font-bold text-[var(--accent-success)] tabular-nums truncate">

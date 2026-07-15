@@ -168,16 +168,16 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
     <form
       onSubmit={handleSubmit}
       aria-labelledby={headingId}
-      className="mx-auto w-full max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm sm:p-8"
+      className="mx-auto w-full max-w-2xl rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-5 backdrop-blur-sm sm:p-8"
     >
       <div className="mb-6">
-        <div className="flex items-center justify-between text-xs text-white/60">
+        <div className="flex items-center justify-between text-xs text-[var(--ink-meta)]">
           <span id={headingId} className="font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
             Step {step + 1} of 3
           </span>
           <span>{Math.round(progressPct)}% complete</span>
         </div>
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--cream-section)]">
           <div
             className="h-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-gold)] transition-all duration-500"
             style={{ width: `${progressPct}%` }}
@@ -189,14 +189,14 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
       {step === 0 && (
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-white">Tell us the basics</h2>
-            <p className="mt-1 text-sm text-white/60">
+            <h2 className="font-display text-2xl text-[var(--ink)]">Tell us the basics</h2>
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               Sport and state drive most of the estimate.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Sport
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -214,7 +214,7 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
           <div>
             <label
               htmlFor="val-state"
-              className="mb-2 block text-sm font-medium text-white"
+              className="mb-2 block text-sm font-medium text-[var(--ink)]"
             >
               State
             </label>
@@ -224,7 +224,7 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
               onChange={(e) =>
                 setStateCode(e.target.value ? (e.target.value as USPSStateCode) : null)
               }
-              className="min-h-[44px] w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
+              className="min-h-[44px] w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-4 py-2 text-[var(--ink)] focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
             >
               <option value="">Select your state</option>
               <optgroup label="Pilot states (GradeUp HS live)">
@@ -251,14 +251,14 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
       {step === 1 && (
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-white">Your reach</h2>
-            <p className="mt-1 text-sm text-white/60">
+            <h2 className="font-display text-2xl text-[var(--ink)]">Your reach</h2>
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               Grade level and social following steer the range up or down.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Grade level
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -274,7 +274,7 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Social followers (largest platform)
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -294,16 +294,16 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
       {step === 2 && (
         <div className="space-y-6">
           <div>
-            <h2 className="font-display text-2xl text-white">
+            <h2 className="font-display text-2xl text-[var(--ink)]">
               Scholar-athlete signal
             </h2>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-[var(--ink-meta)]">
               GradeUp leans into academics. Strong + verified grades add leverage.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">
+            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
               GPA range
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -321,7 +321,7 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
           <fieldset className="space-y-3">
             <legend className="sr-only">Verification flags</legend>
 
-            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:border-white/30">
+            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-3 transition-colors hover:border-[var(--cobalt)]">
               <input
                 type="checkbox"
                 checked={verifiedGpa}
@@ -329,16 +329,16 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
                 className="mt-0.5 h-4 w-4 accent-[var(--accent-primary)]"
               />
               <span>
-                <span className="block text-sm font-medium text-white">
+                <span className="block text-sm font-medium text-[var(--ink)]">
                   Verified GPA
                 </span>
-                <span className="block text-xs text-white/60">
+                <span className="block text-xs text-[var(--ink-meta)]">
                   School or counselor has confirmed the GPA.
                 </span>
               </span>
             </label>
 
-            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:border-white/30">
+            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-3 transition-colors hover:border-[var(--cobalt)]">
               <input
                 type="checkbox"
                 checked={tierBSubmitted}
@@ -346,10 +346,10 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
                 className="mt-0.5 h-4 w-4 accent-[var(--accent-primary)]"
               />
               <span>
-                <span className="block text-sm font-medium text-white">
+                <span className="block text-sm font-medium text-[var(--ink)]">
                   Transcript submitted (Tier B)
                 </span>
-                <span className="block text-xs text-white/60">
+                <span className="block text-xs text-[var(--ink-meta)]">
                   Gives brands a trust signal. Small but real bump.
                 </span>
               </span>
@@ -364,7 +364,7 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
             type="button"
             variant="ghost"
             onClick={() => setStep((s) => (s - 1) as Step)}
-            className="gap-2 text-white/70"
+            className="gap-2 text-[var(--ink-muted)]"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back
@@ -419,8 +419,8 @@ function ChoiceButton({ label, selected, onClick }: ChoiceButtonProps) {
         'min-h-[44px] rounded-lg border px-3 py-2 text-sm font-medium transition-all',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]',
         selected
-          ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/15 text-white'
-          : 'border-white/10 bg-white/5 text-white/70 hover:border-white/30 hover:text-white',
+          ? 'border-[var(--cobalt)] bg-[var(--accent-primary-glow)] text-[var(--cobalt-hover)]'
+          : 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-muted)] hover:border-[var(--cobalt)] hover:text-[var(--ink)]',
       ].join(' ')}
       aria-pressed={selected}
     >

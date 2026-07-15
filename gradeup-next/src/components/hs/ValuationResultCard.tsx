@@ -73,7 +73,7 @@ export function ValuationResultCard({ result }: ValuationResultCardProps) {
   return (
     <div className="space-y-6">
       {/* Headline range */}
-      <div className="relative overflow-hidden rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-white/5 to-[var(--accent-gold)]/10 p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--accent-primary)]/30 bg-gradient-to-br from-[var(--accent-primary)]/10 via-[var(--cream-surface)] to-[var(--accent-gold)]/10 p-6 sm:p-8">
         <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[var(--accent-primary)]/10 blur-3xl" />
 
         <div className="relative">
@@ -83,24 +83,24 @@ export function ValuationResultCard({ result }: ValuationResultCardProps) {
           </div>
 
           <div
-            className="font-display text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl"
+            className="font-display text-4xl font-bold leading-tight text-[var(--ink)] sm:text-5xl md:text-6xl"
             aria-live="polite"
           >
             {formatValuationCents(low)}
-            <span className="mx-2 text-white/40">–</span>
+            <span className="mx-2 text-[var(--ink-meta)]">–</span>
             {formatValuationCents(high)}
           </div>
 
-          <p className="mt-2 text-sm text-white/60">
+          <p className="mt-2 text-sm text-[var(--ink-meta)]">
             per year · central estimate{' '}
-            <span className="font-semibold text-white/80">
+            <span className="font-semibold text-[var(--ink-muted)]">
               {formatValuationCents(mid)}
             </span>
           </p>
 
           {/* Visual range bar */}
           <div className="mt-6">
-            <div className="relative h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="relative h-2 overflow-hidden rounded-full bg-[var(--cream-section)]">
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[var(--accent-primary)] via-[var(--accent-primary)] to-[var(--accent-gold)]"
                 style={{ width: '100%' }}
@@ -112,7 +112,7 @@ export function ValuationResultCard({ result }: ValuationResultCardProps) {
                 aria-hidden="true"
               />
             </div>
-            <div className="mt-2 flex justify-between text-xs text-white/50">
+            <div className="mt-2 flex justify-between text-xs text-[var(--ink-meta)]">
               <span>Low {formatValuationCents(result.lowEstimateCents)}</span>
               <span>High {formatValuationCents(result.highEstimateCents)}</span>
             </div>
@@ -122,8 +122,8 @@ export function ValuationResultCard({ result }: ValuationResultCardProps) {
 
       {/* Categories */}
       {result.topSuggestedCategories.length > 0 && (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
+        <div className="rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4 sm:p-5">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
             <TrendingUp
               className="h-4 w-4 text-[var(--accent-gold)]"
               aria-hidden="true"
@@ -146,7 +146,7 @@ export function ValuationResultCard({ result }: ValuationResultCardProps) {
       {/* Caveats */}
       <ValuationCaveatList caveats={result.caveats} />
 
-      <p className="text-xs text-white/40">
+      <p className="text-xs text-[var(--ink-meta)]">
         Methodology version {result.methodologyVersion}. These are v1 public
         estimates; they are not an offer, quote, or guarantee.
       </p>

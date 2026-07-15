@@ -45,7 +45,7 @@ export function CaseStudyBody({ markdown }: { markdown: string }) {
             return (
               <h2
                 key={key}
-                className="text-3xl font-bold text-white mt-10 mb-2 tracking-tight"
+                className="text-3xl font-bold text-[var(--ink)] mt-10 mb-2 tracking-tight"
               >
                 {renderInline(block.children)}
               </h2>
@@ -54,7 +54,7 @@ export function CaseStudyBody({ markdown }: { markdown: string }) {
             return (
               <h3
                 key={key}
-                className="text-2xl font-bold text-white mt-8 mb-2 tracking-tight"
+                className="text-2xl font-bold text-[var(--ink)] mt-8 mb-2 tracking-tight"
               >
                 {renderInline(block.children)}
               </h3>
@@ -63,7 +63,7 @@ export function CaseStudyBody({ markdown }: { markdown: string }) {
             return (
               <h4
                 key={key}
-                className="text-xl font-semibold text-white mt-6 mb-2"
+                className="text-xl font-semibold text-[var(--ink)] mt-6 mb-2"
               >
                 {renderInline(block.children)}
               </h4>
@@ -113,7 +113,7 @@ export function CaseStudyBody({ markdown }: { markdown: string }) {
             return (
               <pre
                 key={key}
-                className="rounded-xl bg-white/5 border border-white/10 p-4 text-sm overflow-x-auto"
+                className="rounded-xl bg-[var(--cream-surface)] border border-[var(--hairline)] p-4 text-sm overflow-x-auto"
               >
                 <code>{block.value}</code>
               </pre>

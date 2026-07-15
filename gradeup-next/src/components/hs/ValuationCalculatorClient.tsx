@@ -51,7 +51,7 @@ export function ValuationCalculatorClient() {
         <button
           type="button"
           onClick={() => setState(null)}
-          className="w-full rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3 text-sm font-medium text-white/70 transition-colors hover:border-white/30 hover:text-white"
+          className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-4 py-3 text-sm font-medium text-[var(--ink-muted)] transition-colors hover:border-[var(--cobalt)] hover:text-[var(--ink)]"
         >
           Recalculate with different inputs
         </button>

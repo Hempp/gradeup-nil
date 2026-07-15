@@ -45,20 +45,20 @@ export function SchoolsDirectoryClient({ schools }: { schools: FeaturedSchool[] 
       <section className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" aria-hidden="true" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--ink-meta)]" aria-hidden="true" />
             <input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search schools by name or location…"
-              className="w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-10 py-3 text-sm text-white placeholder-white/40 outline-none focus:border-white/30"
+              className="w-full rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] pl-10 pr-10 py-3 text-sm text-[var(--ink)] placeholder-[var(--ink-meta)] outline-none focus:border-[var(--cobalt)] focus:ring-2 focus:ring-[var(--accent-primary-glow)]"
               aria-label="Search schools"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-white/40 hover:bg-white/10 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[var(--ink-meta)] hover:bg-[var(--cream-section)] hover:text-[var(--ink)]"
                 aria-label="Clear search"
               >
                 <X className="h-4 w-4" />
@@ -75,8 +75,8 @@ export function SchoolsDirectoryClient({ schools }: { schools: FeaturedSchool[] 
                 aria-pressed={tier === opt.value}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition border ${
                   tier === opt.value
-                    ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                    : 'border-white/15 text-white/70 hover:border-white/30 hover:text-white'
+                    ? 'border-[var(--cobalt)] bg-[var(--accent-primary-glow)] text-[var(--cobalt-hover)]'
+                    : 'border-[var(--hairline)] text-[var(--ink-muted)] hover:border-[var(--cobalt)] hover:text-[var(--ink)]'
                 }`}
               >
                 {opt.label}
@@ -85,7 +85,7 @@ export function SchoolsDirectoryClient({ schools }: { schools: FeaturedSchool[] 
           </div>
         </div>
 
-        <p className="mt-3 text-xs text-white/50">
+        <p className="mt-3 text-xs text-[var(--ink-meta)]">
           Showing {filtered.length} of {schools.length} schools
         </p>
       </section>
@@ -93,9 +93,9 @@ export function SchoolsDirectoryClient({ schools }: { schools: FeaturedSchool[] 
       {/* Grid */}
       <section className="mx-auto max-w-6xl px-6 py-10">
         {filtered.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-black/30 p-10 text-center text-white/70">
+          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-10 text-center text-[var(--ink-muted)]">
             <p className="text-lg">No schools match those filters.</p>
-            <p className="mt-2 text-sm text-white/50">
+            <p className="mt-2 text-sm text-[var(--ink-meta)]">
               Try a different search term or switch the tier to All.
             </p>
           </div>
@@ -105,7 +105,7 @@ export function SchoolsDirectoryClient({ schools }: { schools: FeaturedSchool[] 
               <Link
                 key={school.name}
                 href={`/athletes?school=${encodeURIComponent(school.name)}`}
-                className="group flex items-center gap-3 p-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-colors"
+                className="group flex items-center gap-3 p-4 rounded-xl border border-[var(--hairline)] bg-[var(--cream-surface)] hover:bg-[var(--cream-section)] hover:border-[var(--border-color-hover)] transition-colors"
                 aria-label={`Browse ${school.fullName} athletes`}
               >
                 <div
@@ -135,10 +135,10 @@ export function SchoolsDirectoryClient({ schools }: { schools: FeaturedSchool[] 
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm md:text-base font-semibold text-white/90 group-hover:text-white transition-colors truncate">
+                  <p className="text-sm md:text-base font-semibold text-[var(--ink)] group-hover:text-[var(--cobalt)] transition-colors truncate">
                     {school.fullName}
                   </p>
-                  <p className="mt-0.5 flex items-center gap-2 text-xs text-white/50">
+                  <p className="mt-0.5 flex items-center gap-2 text-xs text-[var(--ink-meta)]">
                     <span className="uppercase tracking-wide">
                       {SCHOOL_TIER_LABELS[school.tier]}
                     </span>

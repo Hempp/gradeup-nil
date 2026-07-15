@@ -60,7 +60,7 @@ export default function CampaignTemplateCard({
     <article
       aria-labelledby={`${cardId}-title`}
       aria-describedby={descId}
-      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/5 p-6 transition-colors hover:border-white/20 focus-within:border-[var(--accent-primary)]"
+      className="group flex h-full flex-col rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6 transition-colors hover:border-[var(--cobalt)] focus-within:border-[var(--accent-primary)]"
     >
       {template.heroImageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -74,9 +74,9 @@ export default function CampaignTemplateCard({
       ) : (
         <div
           aria-hidden="true"
-          className="mb-5 flex h-32 w-full items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-primary)]/20 to-white/5"
+          className="mb-5 flex h-32 w-full items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-primary)]/20 to-[var(--cream-section)]"
         >
-          <span className="font-display text-3xl text-white/30">
+          <span className="font-display text-3xl text-[var(--ink-meta)]">
             {CATEGORY_LABEL[template.category]?.[0] ?? '+'}
           </span>
         </div>
@@ -87,39 +87,39 @@ export default function CampaignTemplateCard({
       </p>
       <h3
         id={`${cardId}-title`}
-        className="mt-2 font-display text-2xl leading-tight text-white"
+        className="mt-2 font-display text-2xl leading-tight text-[var(--ink)]"
       >
         {template.title}
       </h3>
-      <p id={descId} className="mt-3 flex-1 text-sm leading-relaxed text-white/70">
+      <p id={descId} className="mt-3 flex-1 text-sm leading-relaxed text-[var(--ink-muted)]">
         {template.description}
       </p>
 
-      <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-white/10 pt-4 text-xs">
+      <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-[var(--hairline)] pt-4 text-xs">
         <div>
-          <dt className="text-white/50">Category</dt>
-          <dd className="mt-1 font-semibold text-white">
+          <dt className="text-[var(--ink-meta)]">Category</dt>
+          <dd className="mt-1 font-semibold text-[var(--ink)]">
             {DEAL_CATEGORY_LABEL[template.dealCategory] ?? template.dealCategory}
           </dd>
         </div>
         <div>
-          <dt className="text-white/50">Suggested</dt>
-          <dd className="mt-1 font-semibold text-white">
+          <dt className="text-[var(--ink-meta)]">Suggested</dt>
+          <dd className="mt-1 font-semibold text-[var(--ink)]">
             {formatUsd(template.suggestedCompensationCents)}
-            <span className="ml-1 font-normal text-white/50">
+            <span className="ml-1 font-normal text-[var(--ink-meta)]">
               / {template.suggestedDurationDays}d
             </span>
           </dd>
         </div>
       </dl>
 
-      <p className="mt-2 text-[11px] leading-snug text-white/40">
+      <p className="mt-2 text-[11px] leading-snug text-[var(--ink-meta)]">
         National baseline — adjust 20-30% up for CA / NY / TX.
       </p>
 
       <Link
         href={ctaHref}
-        className="mt-5 inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+        className="mt-5 inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
         aria-label={`${ctaLabel} — ${template.title}`}
       >
         {ctaLabel}

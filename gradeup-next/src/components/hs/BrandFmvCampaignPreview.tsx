@@ -45,12 +45,12 @@ export function BrandFmvCampaignPreview({
   const suggestedTitle = buildSuggestedTitle(input);
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+    <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-6 sm:p-8">
       <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
         Campaign preview
       </div>
-      <h3 className="font-display text-2xl text-white">{suggestedTitle}</h3>
-      <p className="mt-2 text-sm text-white/60">
+      <h3 className="font-display text-2xl text-[var(--ink)]">{suggestedTitle}</h3>
+      <p className="mt-2 text-sm text-[var(--ink-meta)]">
         This is roughly what your brief would look like on GradeUp HS
         today. You can edit everything after signup.
       </p>
@@ -80,8 +80,8 @@ export function BrandFmvCampaignPreview({
       </div>
 
       {/* Athlete profile criteria */}
-      <div className="mt-5 rounded-lg border border-white/10 bg-white/5 p-4">
-        <div className="text-xs font-semibold uppercase tracking-wider text-white/60">
+      <div className="mt-5 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] p-4">
+        <div className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-meta)]">
           Athlete criteria
         </div>
         <div className="mt-2 flex flex-wrap gap-2 text-xs">
@@ -101,12 +101,12 @@ export function BrandFmvCampaignPreview({
         <div className="text-xs font-semibold uppercase tracking-wider text-[var(--accent-primary)]">
           Compensation (per athlete)
         </div>
-        <div className="mt-1 font-display text-2xl text-white">
+        <div className="mt-1 font-display text-2xl text-[var(--ink)]">
           {formatValuationCents(result.perDeliverableCents.low)}
-          <span className="mx-2 text-white/40">&ndash;</span>
+          <span className="mx-2 text-[var(--ink-meta)]">&ndash;</span>
           {formatValuationCents(result.perDeliverableCents.high)}
         </div>
-        <div className="mt-1 text-xs text-white/60">
+        <div className="mt-1 text-xs text-[var(--ink-meta)]">
           Campaign total:{' '}
           {formatValuationCents(result.campaignTotalCents.low)}
           {' '}&ndash;{' '}
@@ -115,11 +115,11 @@ export function BrandFmvCampaignPreview({
       </div>
 
       {/* Deliverable terms */}
-      <div className="mt-5 rounded-lg border border-white/10 bg-white/5 p-4">
-        <div className="text-xs font-semibold uppercase tracking-wider text-white/60">
+      <div className="mt-5 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] p-4">
+        <div className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-meta)]">
           Deliverable terms
         </div>
-        <ul className="mt-2 space-y-1 text-sm text-white/80">
+        <ul className="mt-2 space-y-1 text-sm text-[var(--ink-muted)]">
           {buildDeliverableTerms(input).map((term, i) => (
             <li key={i}>&middot; {term}</li>
           ))}
@@ -132,7 +132,7 @@ export function BrandFmvCampaignPreview({
           <div className="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)]">
             State rules pre-check ({input.stateCode})
           </div>
-          <ul className="mt-2 space-y-1 text-xs text-white/70">
+          <ul className="mt-2 space-y-1 text-xs text-[var(--ink-muted)]">
             <li>
               &middot; Status: <strong>{rules.status}</strong>
             </li>
@@ -158,11 +158,11 @@ export function BrandFmvCampaignPreview({
       )}
 
       {input.brand.campaignNotes && (
-        <div className="mt-5 rounded-lg border border-white/10 bg-white/[0.02] p-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-white/60">
+        <div className="mt-5 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] p-4">
+          <div className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-meta)]">
             Your notes
           </div>
-          <p className="mt-1 text-sm italic text-white/70">
+          <p className="mt-1 text-sm italic text-[var(--ink-muted)]">
             &ldquo;{input.brand.campaignNotes}&rdquo;
           </p>
         </div>
@@ -220,7 +220,7 @@ function Tag({
   const cls =
     tone === 'gold'
       ? 'bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] ring-[var(--accent-gold)]/20'
-      : 'bg-white/5 text-white/70 ring-white/10';
+      : 'bg-[var(--cream-surface)] text-[var(--ink-muted)] ring-[var(--hairline)]';
   return (
     <span
       className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ${cls}`}
@@ -240,15 +240,15 @@ function PreviewRow({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3">
+    <div className="flex items-center gap-3 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] p-3">
       <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]">
         {icon}
       </span>
       <div>
-        <div className="text-xs uppercase tracking-wider text-white/50">
+        <div className="text-xs uppercase tracking-wider text-[var(--ink-meta)]">
           {label}
         </div>
-        <div className="text-sm font-medium text-white">{value}</div>
+        <div className="text-sm font-medium text-[var(--ink)]">{value}</div>
       </div>
     </div>
   );
