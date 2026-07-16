@@ -818,7 +818,7 @@ function ForBrandsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
-          <div>
+          <Reveal>
             <div className="eyebrow mb-4">For Brands</div>
             <h2 className="font-display text-3xl sm:text-4xl text-[var(--ink)] mb-6">
               Partner with <span className="text-[var(--cobalt)]">Tomorrow&apos;s Leaders</span>
@@ -831,10 +831,12 @@ function ForBrandsSection() {
 
             {/* Features */}
             <ul className="space-y-4 mb-8">
-              {brandFeatures.map((feature) => (
-                <li key={feature.text} className="flex items-center gap-3">
-                  <feature.icon className="h-5 w-5 text-[var(--cobalt)] flex-shrink-0" />
-                  <span className="text-[var(--ink-muted)]">{feature.text}</span>
+              {brandFeatures.map((feature, index) => (
+                <li key={feature.text}>
+                  <Reveal delay={index * 90} className="flex items-center gap-3">
+                    <feature.icon className="h-5 w-5 text-[var(--cobalt)] flex-shrink-0" />
+                    <span className="text-[var(--ink-muted)]">{feature.text}</span>
+                  </Reveal>
                 </li>
               ))}
             </ul>
@@ -861,50 +863,24 @@ function ForBrandsSection() {
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
-          </div>
+          </Reveal>
 
-          {/* Dashboard Preview */}
-          <div className="relative">
-            <div className="relative card-marketing shadow-xl overflow-hidden">
-              {/* Browser chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-[var(--cream)] border-b border-[var(--hairline)]">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                </div>
-                <span className="text-xs text-[var(--ink-meta)] ml-2">Brand Dashboard</span>
-              </div>
-
-              {/* Dashboard content */}
-              <div className="p-6">
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-[var(--cobalt)]/10 rounded-xl p-4 text-center border border-[var(--cobalt)]/20">
-                    <div className="text-3xl font-bold text-[var(--cobalt)]">3-Tier</div>
-                    <div className="text-xs text-[var(--ink-meta)] mt-1">Verified GPA</div>
-                  </div>
-                  <div className="bg-[var(--cobalt)]/10 rounded-xl p-4 text-center border border-[var(--cobalt)]/20">
-                    <div className="text-3xl font-bold text-[var(--cobalt)]">Live</div>
-                    <div className="text-xs text-[var(--ink-meta)] mt-1">Deal Pipeline</div>
-                  </div>
-                  <div className="bg-[var(--cobalt)]/10 rounded-xl p-4 text-center border border-[var(--cobalt)]/20">
-                    <div className="text-3xl font-bold text-[var(--cobalt)]">StatStaq</div>
-                    <div className="text-xs text-[var(--ink-meta)] mt-1">Runs Outreach</div>
-                  </div>
-                </div>
-
-                {/* Filter preview */}
-                <div className="bg-[var(--cream)] rounded-lg p-4">
-                  <div className="text-xs text-[var(--ink-meta)] mb-3">Active Filters</div>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full border border-[var(--cobalt)]/20">GPA ≥ 3.5</span>
-                    <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full border border-[var(--cobalt)]/20">Division I</span>
-                    <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full border border-[var(--cobalt)]/20">10K+ followers</span>
-                  </div>
-                </div>
+          {/* Editorial portrait — the scholar-athlete a brand partners with,
+              in the site's duotone frame (replaces the old dashboard mock) */}
+          <Reveal tilt className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative">
+              <div
+                className="duotone relative aspect-[4/5] rounded-[28px] overflow-hidden border border-[var(--hairline)] shadow-[0_40px_90px_-40px_rgba(22,24,43,0.45)] bg-cover bg-center"
+                style={{ backgroundImage: `url(/editorial/photo-05.jpg)` }}
+                role="img"
+                aria-label="Portrait of a high-school scholar-athlete in her team jacket, standing by a window"
+              />
+              {/* floating caption chip */}
+              <div className="stat-strip absolute left-6 bottom-6 right-6 !bg-[var(--cream-surface)]/95 backdrop-blur-sm text-center">
+                GPA verified · <b>NCAA compliant</b> · Deal-ready
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>
