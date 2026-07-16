@@ -349,10 +349,10 @@ export default async function SpanishPricingPage() {
       {/* Final CTA */}
       <section aria-label={p.finalCta.heading} className="bg-[var(--cobalt)] py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-display text-3xl text-[#FBF9F2] sm:text-4xl">
+          <h2 className="font-display text-3xl text-[var(--text-inverse)] sm:text-4xl">
             {p.finalCta.heading}
           </h2>
-          <p className="mt-4 text-[#FBF9F2]/80 max-w-2xl mx-auto">{p.finalCta.body}</p>
+          <p className="mt-4 text-[var(--text-inverse)]/80 max-w-2xl mx-auto">{p.finalCta.body}</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/signup/brand"
@@ -361,17 +361,17 @@ export default async function SpanishPricingPage() {
             >
               {p.finalCta.primary}
               <span className="circle inline-flex items-center justify-center h-6 w-6 rounded-full bg-[var(--cobalt)]">
-                <ArrowUpRight className="h-4 w-4 text-[#FBF9F2]" aria-hidden="true" />
+                <ArrowUpRight className="h-4 w-4 text-[var(--text-inverse)]" aria-hidden="true" />
               </span>
             </Link>
             <Link
               href="/signup/athlete"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold border border-[#FBF9F2]/40 text-[#FBF9F2] hover:bg-[#FBF9F2]/10 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold border border-[var(--text-inverse)]/40 text-[var(--text-inverse)] hover:bg-[var(--text-inverse)]/10 transition-colors"
             >
               {p.finalCta.secondary}
             </Link>
           </div>
-          <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-[#FBF9F2]/60 leading-relaxed">
+          <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-[var(--text-inverse)]/60 leading-relaxed">
             {p.finalCta.disclaimer}
           </p>
         </div>

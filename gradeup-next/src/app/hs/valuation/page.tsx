@@ -255,7 +255,7 @@ export default function ValuationPage() {
                 </Link>
                 <Link href="/hs" className="arrow-pill">
                   <span className="circle">
-                    <ArrowUpRight className="h-4 w-4 text-[#FBF9F2]" aria-hidden="true" />
+                    <ArrowUpRight className="h-4 w-4 text-[var(--text-inverse)]" aria-hidden="true" />
                   </span>
                   <span className="label">Join the GradeUp HS waitlist</span>
                 </Link>

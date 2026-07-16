@@ -290,7 +290,7 @@ export function Navbar() {
       <div
         id="mobile-menu"
         className={cn(
-          'lg:hidden fixed inset-0 top-16 z-40 bg-[#FBF9F2] border-t border-[var(--hairline)]',
+          'lg:hidden fixed inset-0 top-16 z-40 bg-[var(--cream-surface)] border-t border-[var(--hairline)]',
           'transition-all duration-300 ease-in-out',
           mobileMenuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'

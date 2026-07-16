@@ -166,7 +166,7 @@ export default async function AthletePublicProfilePage({
             </p>
             <a
               href={brandSignupHref}
-              className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-md bg-[var(--accent-primary)] px-6 py-2 text-sm font-semibold text-[#FBF9F2] hover:opacity-90"
+              className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-md bg-[var(--accent-primary)] px-6 py-2 text-sm font-semibold text-[var(--text-inverse)] hover:opacity-90"
             >
               Start a campaign
             </a>

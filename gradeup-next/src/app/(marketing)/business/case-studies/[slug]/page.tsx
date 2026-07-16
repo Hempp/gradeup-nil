@@ -121,7 +121,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             <div className="relative aspect-[16/9] rounded-3xl overflow-hidden border border-[var(--hairline)]">
               <Image
                 src={study.heroImageUrl}
-                alt={study.title}
+                alt=""
                 fill
                 sizes="(max-width: 1024px) 100vw, 960px"
                 className="object-cover"

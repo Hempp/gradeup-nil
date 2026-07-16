@@ -332,7 +332,7 @@ function PartnerLogosSection() {
     <section
       ref={sectionRef}
       className="py-16 bg-[var(--cream-section)] border-y border-[var(--hairline)] overflow-hidden"
-      aria-label="Trusted by top universities"
+      aria-label="Trusted network of schools and brands"
       role="region"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -153,7 +153,7 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
               <h2 className="text-xl sm:text-2xl font-semibold text-[var(--ink)]">
                 No case studies yet for this filter
               </h2>
-              <p className="mx-auto mt-2 max-w-md text-[var(--marketing-gray-400)]">
+              <p className="mx-auto mt-2 max-w-md text-[var(--ink-muted)]">
                 Try clearing the filter or check back soon — we publish new
                 studies as deals close.
               </p>

@@ -32,11 +32,11 @@ export function SolutionCtaBand({
       className="relative py-20 overflow-hidden bg-[var(--cobalt)] border-t border-[var(--hairline)]"
     >
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#FBF9F2]">
+        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[var(--text-inverse)]">
           {heading}
         </h2>
         {subheading ? (
-          <p className="mt-4 text-[#FBF9F2]/80 text-lg max-w-2xl mx-auto">
+          <p className="mt-4 text-[var(--text-inverse)]/80 text-lg max-w-2xl mx-auto">
             {subheading}
           </p>
         ) : null}
@@ -49,13 +49,13 @@ export function SolutionCtaBand({
           >
             {primaryLabel}
             <span className="circle inline-flex items-center justify-center h-6 w-6 rounded-full bg-[var(--cobalt)]">
-              <ArrowUpRight className="h-4 w-4 text-[#FBF9F2]" aria-hidden="true" />
+              <ArrowUpRight className="h-4 w-4 text-[var(--text-inverse)]" aria-hidden="true" />
             </span>
           </Link>
           {secondaryLabel && secondaryHref ? (
             <Link
               href={secondaryHref}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold border border-[#FBF9F2]/40 text-[#FBF9F2] hover:bg-[#FBF9F2]/10 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-md font-semibold border border-[var(--text-inverse)]/40 text-[var(--text-inverse)] hover:bg-[var(--text-inverse)]/10 transition-colors"
               aria-label={secondaryLabel}
             >
               {secondaryLabel}
@@ -64,7 +64,7 @@ export function SolutionCtaBand({
         </div>
 
         {trustNote ? (
-          <p className="mt-5 text-sm text-[#FBF9F2]/60">{trustNote}</p>
+          <p className="mt-5 text-sm text-[var(--text-inverse)]/60">{trustNote}</p>
         ) : null}
       </div>
     </section>

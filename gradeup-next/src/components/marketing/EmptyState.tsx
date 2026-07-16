@@ -55,7 +55,7 @@ function EmptyIllustration({ variant }: { variant: EmptyStateVariant }) {
       />
 
       {/* Icon container */}
-      <div className="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-[var(--marketing-gray-800)] to-[var(--marketing-gray-900)] border border-[var(--marketing-gray-700)] flex items-center justify-center shadow-xl">
+      <div className="relative w-24 h-24 rounded-2xl bg-[var(--cream-surface)] border border-[var(--hairline)] flex items-center justify-center shadow-xl">
         <Icon
           className="h-10 w-10 text-[var(--ink-meta)]"
           strokeWidth={1.5}
@@ -64,7 +64,7 @@ function EmptyIllustration({ variant }: { variant: EmptyStateVariant }) {
 
         {/* Decorative dots */}
         <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[var(--accent-primary)]/30" aria-hidden="true" />
-        <div className="absolute -bottom-2 -left-2 w-2 h-2 rounded-full bg-[var(--accent-tertiary)]/30" aria-hidden="true" />
+        <div className="absolute -bottom-2 -left-2 w-2 h-2 rounded-full bg-[var(--cobalt)]/20" aria-hidden="true" />
       </div>
     </div>
   );
@@ -148,7 +148,7 @@ export function MarketingEmptyState({
           <Button
             onClick={onRetry}
             variant="outline"
-            className="border-[var(--marketing-gray-600)] text-[var(--ink)] hover:bg-[var(--cream-surface)]"
+            className="border-[var(--hairline)] text-[var(--ink)] hover:bg-[var(--cream-surface)]"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -168,7 +168,7 @@ export function MarketingEmptyState({
 
       {/* Helpful tips */}
       {variant === 'no-results' && (
-        <div className="mt-10 p-4 rounded-xl bg-[var(--marketing-gray-900)]/50 border border-[var(--marketing-gray-800)] max-w-md">
+        <div className="mt-10 p-4 rounded-xl bg-[var(--cream-section)] border border-[var(--hairline)] max-w-md">
           <p className="text-sm text-[var(--ink-meta)] mb-2 font-medium">
             Tips for finding opportunities:
           </p>

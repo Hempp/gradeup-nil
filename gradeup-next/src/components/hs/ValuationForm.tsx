@@ -196,10 +196,10 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
+            <label id="val-sport-label" className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Sport
             </label>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="group" aria-labelledby="val-sport-label">
               {SPORTS.map((s) => (
                 <ChoiceButton
                   key={s}
@@ -258,10 +258,10 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
+            <label id="val-grade-label" className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Grade level
             </label>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="group" aria-labelledby="val-grade-label">
               {GRADS.map((g) => (
                 <ChoiceButton
                   key={g}
@@ -274,10 +274,10 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
+            <label id="val-followers-label" className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Social followers (largest platform)
             </label>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="group" aria-labelledby="val-followers-label">
               {FOLLOWERS.map((f) => (
                 <ChoiceButton
                   key={f}
@@ -303,10 +303,10 @@ export function ValuationForm({ onResult }: ValuationFormProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--ink)]">
+            <label id="val-gpa-label" className="mb-2 block text-sm font-medium text-[var(--ink)]">
               GPA range
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2" role="group" aria-labelledby="val-gpa-label">
               {GPAS.map((g) => (
                 <ChoiceButton
                   key={g}
