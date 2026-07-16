@@ -94,7 +94,7 @@ export default async function AthletesDirectoryPage({
             </div>
           </div>
           <div
-            className="duotone hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
+            className="duotone aspect-[4/3] hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
             style={{ backgroundImage: `url(/editorial/photo-playbook.jpg)` }}
             role="img"
             aria-label="A coach's playbook and whistle, symbolizing verified scholar-athlete trajectories"

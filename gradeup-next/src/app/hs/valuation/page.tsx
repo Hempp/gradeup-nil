@@ -188,7 +188,7 @@ export default function ValuationPage() {
               </div>
             </div>
             <div
-              className="duotone hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
+              className="duotone aspect-[4/3] hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
               style={{ backgroundImage: `url(/editorial/photo-02.jpg)` }}
               role="img"
               aria-label="Golden-hour view of a high-school stadium at game time"

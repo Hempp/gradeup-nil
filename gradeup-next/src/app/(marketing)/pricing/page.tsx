@@ -252,7 +252,7 @@ function Hero() {
             </div>
           </div>
           <div
-            className="duotone rounded-2xl overflow-hidden mx-auto w-full max-w-sm lg:max-w-none bg-cover bg-center"
+            className="duotone aspect-[4/5] rounded-2xl overflow-hidden mx-auto w-full max-w-sm lg:max-w-none bg-cover bg-center"
             style={{ backgroundImage: `url(/editorial/photo-04.jpg)` }}
             role="img"
             aria-label="Scholar-athlete reviewing a sponsorship deal on the sideline"

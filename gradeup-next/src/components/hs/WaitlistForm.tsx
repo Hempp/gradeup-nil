@@ -49,6 +49,10 @@ const STATE_LABELS: Record<USPSStateCode, string> = {
   CA: 'California',
   FL: 'Florida',
   GA: 'Georgia',
+  IL: 'Illinois',
+  NJ: 'New Jersey',
+  NY: 'New York',
+  TX: 'Texas',
 } as Record<USPSStateCode, string>;
 
 const stateOptions: SelectOption[] = [
@@ -318,9 +322,9 @@ export function WaitlistForm() {
         </div>
         {isUnlistedState && (
           <p className="mt-2 rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] p-3 text-sm text-[var(--ink-muted)]">
-            Your state isn&rsquo;t in our pilot yet. Drop your email above and
-            we&rsquo;ll notify you the moment we expand. (The first three
-            states we&rsquo;re opening are California, Florida, and Georgia.)
+            We&rsquo;re opening in 7 pilot states first — California, Florida,
+            Georgia, Illinois, New Jersey, New York, and Texas. Drop your email
+            above and we&rsquo;ll tell you the moment we reach yours.
           </p>
         )}
       </div>

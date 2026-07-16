@@ -195,7 +195,6 @@ export default function StateAdsSolutionPage() {
               </strong>{' '}
               A representative school-transcript sample ships with the
               public launch. Start onboarding below to see real data.
-              <span className="block text-[var(--ink-meta)] mt-1">TODO: /public/solutions/state-ad-dashboard.png</span>
             </div>
           </div>
         </div>

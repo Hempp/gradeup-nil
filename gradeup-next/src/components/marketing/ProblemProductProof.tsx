@@ -37,9 +37,9 @@ function colorFor(kind: ProblemProductProofStep['kind']): {
 } {
   if (kind === 'problem') {
     return {
-      dot: 'bg-[var(--accent-magenta,_#f43f5e)]',
-      text: 'text-[var(--accent-magenta,_#f43f5e)]',
-      border: 'border-[var(--accent-magenta,_#f43f5e)]/30',
+      dot: 'bg-[var(--ink-meta)]',
+      text: 'text-[var(--ink-muted)]',
+      border: 'border-[var(--hairline)]',
       label: 'Problem',
     };
   }

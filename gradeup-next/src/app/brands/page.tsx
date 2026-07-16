@@ -108,7 +108,7 @@ export default async function BrandsDirectoryPage({
             </div>
           </div>
           <div
-            className="duotone hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
+            className="duotone aspect-[4/3] hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
             style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
             role="img"
             aria-label="Local brand partners working alongside scholar-athletes"

@@ -65,7 +65,7 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
   const studies = await listPublishedCaseStudies(supabase, {
     limit: 24,
     tags: tags.length > 0 ? tags : undefined,
-  });
+  }).catch(() => []);
 
   const activeTagSet = new Set(tags);
 
