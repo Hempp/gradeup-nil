@@ -1271,6 +1271,13 @@ html.no-transitions *::after {
   --cobalt-hover: #1D4ED8;
   --hairline: rgba(22, 24, 43, 0.14);
 
+  /* Semantic status sub-palette (status-only, never decorative).
+     Cobalt remains the ONLY brand accent; these encode real state
+     signals — verified / caution / restricted — and nothing else. */
+  --status-verified: #047857;   /* emerald-700, ~4.6:1 on cream, AA */
+  --status-caution: #B45309;    /* amber-700, AA */
+  --status-restricted: #BE123C; /* rose-700, AA */
+
   background: var(--cream);
   color: var(--ink);
   font-family: var(--font-source-serif), Georgia, "Times New Roman", serif;

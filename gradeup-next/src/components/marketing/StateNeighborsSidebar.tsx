@@ -21,9 +21,9 @@ export interface StateNeighborsSidebarProps {
 function badgeTone(status: PermissionStatus) {
   switch (status) {
     case 'permitted':
-      return 'bg-emerald-600/10 text-emerald-700 border-emerald-600/30';
+      return 'bg-[var(--status-verified)]/10 text-[var(--status-verified)] border-[var(--status-verified)]/30';
     case 'limited':
-      return 'bg-amber-600/10 text-amber-700 border-amber-600/30';
+      return 'bg-[var(--status-caution)]/10 text-[var(--status-caution)] border-[var(--status-caution)]/30';
     case 'transitioning':
       return 'bg-[var(--cobalt)]/10 text-[var(--cobalt)] border-[var(--cobalt)]/30';
     case 'prohibited':

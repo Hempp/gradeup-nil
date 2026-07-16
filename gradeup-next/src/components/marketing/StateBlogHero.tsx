@@ -21,15 +21,15 @@ function statusTone(status: PermissionStatus) {
   switch (status) {
     case 'permitted':
       return {
-        bg: 'bg-emerald-600/10',
-        border: 'border-emerald-600/40',
-        text: 'text-emerald-700',
+        bg: 'bg-[var(--status-verified)]/10',
+        border: 'border-[var(--status-verified)]/40',
+        text: 'text-[var(--status-verified)]',
       };
     case 'limited':
       return {
-        bg: 'bg-amber-600/10',
-        border: 'border-amber-600/40',
-        text: 'text-amber-700',
+        bg: 'bg-[var(--status-caution)]/10',
+        border: 'border-[var(--status-caution)]/40',
+        text: 'text-[var(--status-caution)]',
       };
     case 'transitioning':
       return {

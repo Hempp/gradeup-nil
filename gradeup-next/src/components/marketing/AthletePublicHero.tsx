@@ -20,7 +20,7 @@ const TIER_TONE: Record<VerificationTier, string> = {
   self_reported: 'border-[var(--hairline)] bg-[var(--cream-surface)] text-[var(--ink-meta)]',
   user_submitted: 'border-[var(--cobalt)]/40 bg-[var(--cobalt)]/10 text-[var(--cobalt)]',
   institution_verified:
-    'border-emerald-600/40 bg-emerald-600/10 text-emerald-700',
+    'border-[var(--status-verified)]/40 bg-[var(--status-verified)]/10 text-[var(--status-verified)]',
 };
 
 export interface AthletePublicHeroProps {
@@ -56,7 +56,7 @@ export function AthletePublicHero({
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
 
   return (
-    <section className="marketing-dark mx-auto max-w-5xl px-6 pt-16 pb-8 bg-[var(--cream)]">
+    <section className="marketing-dark pb-8">
       <p className="eyebrow">
         Verified Scholar-Athlete
       </p>

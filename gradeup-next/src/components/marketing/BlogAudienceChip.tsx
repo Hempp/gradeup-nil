@@ -16,9 +16,9 @@ function audienceTone(audience: BlogAudience) {
   switch (audience) {
     case 'parents':
       return {
-        bg: 'bg-amber-600/10',
-        border: 'border-amber-600/30',
-        text: 'text-amber-700',
+        bg: 'bg-[var(--cream-section)]',
+        border: 'border-[var(--hairline)]',
+        text: 'text-[var(--ink-muted)]',
       };
     case 'athletes':
       return {
@@ -28,9 +28,9 @@ function audienceTone(audience: BlogAudience) {
       };
     case 'brands':
       return {
-        bg: 'bg-emerald-600/10',
-        border: 'border-emerald-600/30',
-        text: 'text-emerald-700',
+        bg: 'bg-[var(--cobalt)]/10',
+        border: 'border-[var(--cobalt)]/30',
+        text: 'text-[var(--cobalt)]',
       };
     case 'state_ads':
       return {

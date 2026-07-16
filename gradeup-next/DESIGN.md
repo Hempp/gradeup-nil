@@ -51,6 +51,26 @@ duotone photography. Confident, plain-spoken, proof-first. Never hypey.
   `border-white/10`, `bg-black`) inside the cream surface. `<html>` carries
   `.dark` globally, so those read as the app dark theme and vanish on cream.
   See §7.
+- **Sanctioned dark-on-cream island (the ONE exception):** a deliberately dark
+  media/video frame — the hero demo player on the homepage — may use a dark
+  surface + `--text-inverse`/`text-white` on it (`bg-black/40`, `bg-black`,
+  `text-white/80`, `text-white/60`). It reads as a video chrome, not a UI panel.
+  This is the only place a dark surface + inverse text is allowed on cream; do
+  not generalize it to other components. See §7.
+
+### Semantic status sub-palette (status-only, never decorative)
+
+A bounded, tokenized set of state signals scoped to `.marketing-dark`. **Cobalt
+remains the ONLY brand accent.** These colors may **only** encode
+verified/caution/restricted state — never decoration, categorization, or
+emphasis. If a color is not communicating one of these three states, use cobalt
+or the ink/cream neutrals instead.
+
+| Token | Value | Encodes |
+|-------|-------|---------|
+| `--status-verified` | `#047857` (emerald-700, ~4.6:1 on cream, AA) | verified / positive / live / active |
+| `--status-caution` | `#B45309` (amber-700, AA) | caution / pending / limited |
+| `--status-restricted` | `#BE123C` (rose-700, AA) | restricted / blocked |
 
 ## 4. Typography
 
@@ -128,3 +148,55 @@ Safari < 16.4. `@layer base` is the browser-safe fix.
 - Pre-existing: `/api/athletes/[id]` — the supporter-checkout route was moved
   under `[id]` (was `[username]`) to satisfy Next 16's one-slug-per-path rule;
   URL and payment logic are unchanged.
+
+---
+
+## 10. Addendum — the non-color ladders (documentation only)
+
+The contract above nails color; this section records the intended type, spacing,
+radius, shadow, and motion ladders so new components have one target. This is a
+reference for new work — it does **not** authorize a sweep of existing component
+radii/shadows.
+
+### Type scale
+
+- **Display (Anton, `.font-display`)** — uppercase, `line-height: .95`,
+  `letter-spacing: .01em`. Responsive steps in use: `text-2xl`/`text-3xl` (card
+  + section subheads), `text-4xl` → `text-5xl` → `text-6xl` (hero H1s, cobalt on
+  the emphasis word). Weight is baked into the face (single weight).
+- **Body (Source Serif 4)** — default body on `.marketing-dark`. Steps:
+  `text-sm` (meta/secondary), `text-base` (prose), `text-lg`/`text-xl` (lede +
+  hero subhead). Weight `400` body, `600`/`<strong>` for emphasis.
+- **Nav / labels / buttons (Inter)** — `text-xs`–`text-sm`, weight `500`–`700`.
+  Eyebrows/stats use the `.eyebrow` utility: uppercase, wide tracking, meta ink.
+
+### Spacing
+
+Tailwind's default 4px-based scale (`1`=4px, `2`=8px, `4`=16px, `6`=24px,
+`8`=32px, `12`=48px, `16`=64px …). Section vertical rhythm lives in the
+`py-16`/`py-24` range; card padding `p-4`/`p-5`; inline gaps `gap-2`/`gap-3`.
+Stay on the scale — no arbitrary pixel one-offs.
+
+### Canonical radius set (intended)
+
+- **Pills / chips / status badges** → `rounded-full`
+- **Cards / surfaces / media frames** → `rounded-2xl`
+- **Controls / inputs / buttons** → `rounded-lg`
+
+Any other radius (`rounded-xl`, `rounded-md`, etc.) is **legacy** — match the set
+above for new components; don't mass-migrate existing ones.
+
+### Shadow ladder (2–3 steps)
+
+1. **Rest** — flat; rely on the hairline border, not shadow (editorial paper).
+2. **Raised / hover** — soft, low, single-layer (e.g. `hover-lift`): small y
+   offset, wide blur, low alpha ink.
+3. **Overlay / accent glow** — reserved for the cobalt CTA and the demo player
+   glow; do not scatter glows across the page.
+
+### Motion
+
+- Durations **150–300ms**. Micro (hover/press) ≈150ms; enter/layout ≈200–300ms.
+- **ease-out to enter, ease-in to exit.** Opacity + small translate/scale only.
+- Respect `prefers-reduced-motion`. No decorative infinite motion except the
+  established brand-strip marquee.

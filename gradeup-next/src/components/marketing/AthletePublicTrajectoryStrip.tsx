@@ -70,10 +70,10 @@ export function AthletePublicTrajectoryStrip({
             const y = height - ((snap.gpa - min) / range) * height;
             const fill =
               snap.tier === 'institution_verified'
-                ? '#0F9D58'
+                ? 'var(--status-verified)'
                 : snap.tier === 'user_submitted'
-                  ? '#2563EB'
-                  : '#6B6E82';
+                  ? 'var(--cobalt)'
+                  : 'var(--ink-meta)';
             return (
               <circle
                 key={`${snap.reportedAt}-${idx}`}

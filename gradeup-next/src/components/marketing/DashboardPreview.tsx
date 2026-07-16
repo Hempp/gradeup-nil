@@ -79,8 +79,8 @@ const mockAthletes: MockAthlete[] = [
 const PreviewBadge = memo(function PreviewBadge({ children, variant = 'default' }: { children: React.ReactNode; variant?: 'default' | 'success' | 'warning' | 'gold' }) {
   const variants = {
     default: 'bg-[var(--marketing-gray-800)] text-[var(--ink-muted)] border-[var(--marketing-gray-700)]',
-    success: 'bg-[rgba(34,197,94,0.15)] text-[#4ade80] border-[rgba(34,197,94,0.3)]',
-    warning: 'bg-[rgba(245,158,11,0.15)] text-[#fbbf24] border-[rgba(245,158,11,0.3)]',
+    success: 'bg-[var(--status-verified)]/15 text-[var(--status-verified)] border-[var(--status-verified)]/30',
+    warning: 'bg-[var(--status-caution)]/15 text-[var(--status-caution)] border-[var(--status-caution)]/30',
     gold: 'bg-[rgba(255,215,0,0.15)] text-[var(--accent-gold)] border-[rgba(255,215,0,0.3)]',
   };
 
@@ -109,7 +109,7 @@ const PreviewStatCard = memo(function PreviewStatCard({
           <Icon className="h-4 w-4 text-[var(--accent-primary)]" />
         </div>
         {trend && (
-          <span className="text-xs text-[#4ade80] font-medium">+{trend}</span>
+          <span className="text-xs text-[var(--status-verified)] font-medium">+{trend}</span>
         )}
       </div>
       <div className="text-xl font-bold text-[var(--ink)] mb-0.5">{value}</div>
@@ -120,8 +120,8 @@ const PreviewStatCard = memo(function PreviewStatCard({
 
 const StatusDot = memo(function StatusDot({ status }: { status: 'active' | 'pending' | 'completed' }) {
   const colors = {
-    active: 'bg-[#4ade80]',
-    pending: 'bg-[#fbbf24]',
+    active: 'bg-[var(--status-verified)]',
+    pending: 'bg-[var(--status-caution)]',
     completed: 'bg-[var(--accent-primary)]',
   };
   return <span className={`h-2 w-2 rounded-full ${colors[status]}`} />;
@@ -219,7 +219,7 @@ const AthleteDashboardMockup = memo(function AthleteDashboardMockup() {
               className="flex items-center justify-between p-2.5 rounded-lg bg-[var(--marketing-gray-800)]/30 border border-[var(--marketing-gray-700)]/50"
             >
               <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-[#fbbf24]" />
+                <Clock className="h-4 w-4 text-[var(--status-caution)]" />
                 <span className="text-sm text-[var(--ink)]">{opp.brand}</span>
                 <span className="text-xs text-[var(--ink-meta)]">- {opp.type}</span>
               </div>

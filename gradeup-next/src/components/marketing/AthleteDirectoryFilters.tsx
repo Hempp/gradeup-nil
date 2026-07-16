@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useTransition } from 'react';
 import { PILOT_STATES, STATE_RULES } from '@/lib/hs-nil/state-rules';
 
 const SPORTS = [
@@ -32,6 +32,7 @@ const GRAD_YEARS = [
 export function AthleteDirectoryFilters() {
   const router = useRouter();
   const params = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const current = {
     state: params.get('state') ?? '',
@@ -46,7 +47,7 @@ export function AthleteDirectoryFilters() {
       if (value) next.set(key, value);
       else next.delete(key);
       const qs = next.toString();
-      router.push(qs ? `/athletes?${qs}` : '/athletes');
+      startTransition(() => router.push(qs ? `/athletes?${qs}` : '/athletes'));
     },
     [params, router],
   );
@@ -61,7 +62,12 @@ export function AthleteDirectoryFilters() {
   ];
 
   return (
-    <div className="marketing-dark flex flex-wrap items-end gap-3 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4">
+    <div
+      aria-busy={isPending}
+      className={`marketing-dark flex flex-wrap items-end gap-3 rounded-2xl border border-[var(--hairline)] bg-[var(--cream-surface)] p-4${
+        isPending ? ' opacity-60 transition-opacity' : ''
+      }`}
+    >
       <label className="flex flex-col text-xs uppercase tracking-wide text-[var(--ink-meta)]">
         State
         <select
@@ -128,6 +134,15 @@ export function AthleteDirectoryFilters() {
           ))}
         </select>
       </label>
+
+      {isPending ? (
+        <span
+          aria-live="polite"
+          className="self-center text-xs uppercase tracking-wide text-[var(--ink-meta)]"
+        >
+          Updating…
+        </span>
+      ) : null}
     </div>
   );
 }

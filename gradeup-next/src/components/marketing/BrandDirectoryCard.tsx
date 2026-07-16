@@ -23,7 +23,7 @@ export function BrandDirectoryCard({ brand }: { brand: PublicBrandSummary }) {
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <h3 className="font-display text-xl leading-tight text-[var(--ink)]">
+          <h3 className="font-display text-xl leading-tight text-[var(--ink)] line-clamp-2">
             {brand.companyName}
           </h3>
           {(brand.city || brand.region) && (

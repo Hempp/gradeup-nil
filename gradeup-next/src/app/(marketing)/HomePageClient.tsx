@@ -436,7 +436,7 @@ function PartnerLogosSection() {
           style={{ transitionDelay: isVisible ? '600ms' : '0ms' }}
         >
           <p className="eyebrow text-center mb-10">
-            Get paid by brands like
+            The kinds of brands that run NIL deals
           </p>
           <div
             className="relative overflow-hidden"
@@ -1156,7 +1156,8 @@ function FinalCTASection() {
               <Image
                 key={i}
                 src={src}
-                alt={`Athlete ${i + 1}`}
+                alt=""
+                aria-hidden="true"
                 width={32}
                 height={32}
                 className="w-8 h-8 rounded-full border-2 border-[var(--cream-surface)] object-cover"

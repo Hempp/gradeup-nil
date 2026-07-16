@@ -6,7 +6,7 @@ const TIER_TONE: Record<string, string> = {
   self_reported: 'border-[var(--hairline)] bg-[var(--cream-section)] text-[var(--ink-meta)]',
   user_submitted: 'border-[var(--cobalt)]/40 bg-[var(--cobalt)]/10 text-[var(--cobalt)]',
   institution_verified:
-    'border-emerald-600/40 bg-emerald-600/10 text-emerald-700',
+    'border-[var(--status-verified)]/40 bg-[var(--status-verified)]/10 text-[var(--status-verified)]',
 };
 
 export function AthleteDirectoryCard({
