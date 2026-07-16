@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -88,6 +89,7 @@ const NAV: NavItem[] = [
 ];
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   /** Which desktop group dropdown is open, if any. Only one at a time. */
@@ -153,6 +155,13 @@ export function Navbar() {
     setOpenMobileGroupId(null);
   }, []);
 
+  // The home page opens on the full-bleed cinematic dark hero (DESIGN.md §3
+  // exception). While the transparent navbar sits on it, ink links would
+  // vanish — flip the top row to cream/inverse until scroll or menu-open
+  // restores a cream bar.
+  const onDarkHero =
+    (pathname === '/' || pathname === '/es') && !scrolled && !mobileMenuOpen;
+
   return (
     <header
       ref={navRef}
@@ -178,7 +187,12 @@ export function Navbar() {
             >
               <Logo size="md" variant="gradient" />
             </Link>
-            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--ink-meta)]">
+            <span
+              className={cn(
+                'hidden sm:inline text-[10px] font-bold uppercase tracking-[0.14em]',
+                onDarkHero ? 'text-[var(--cream-surface)]/60' : 'text-[var(--ink-meta)]',
+              )}
+            >
               part of StatStaq
             </span>
           </div>
@@ -191,7 +205,12 @@ export function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-sm font-medium text-[var(--ink)] hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] rounded-sm transition-colors py-2 min-h-[44px] flex items-center"
+                    className={cn(
+                      'text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 rounded-sm transition-colors py-2 min-h-[44px] flex items-center',
+                      onDarkHero
+                        ? 'text-[var(--cream-surface)]/85 hover:text-[var(--cream-surface)] focus:text-[var(--cream-surface)] focus-visible:ring-offset-transparent'
+                        : 'text-[var(--ink)] hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus-visible:ring-offset-[var(--cream)]',
+                    )}
                   >
                     {item.label}
                   </Link>
@@ -203,7 +222,12 @@ export function Navbar() {
                 <div key={item.id} className="relative">
                   <button
                     type="button"
-                    className="text-sm font-medium text-[var(--ink)] hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] rounded-sm transition-colors py-2 min-h-[44px] flex items-center gap-1"
+                    className={cn(
+                      'text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 rounded-sm transition-colors py-2 min-h-[44px] flex items-center gap-1',
+                      onDarkHero
+                        ? 'text-[var(--cream-surface)]/85 hover:text-[var(--cream-surface)] focus:text-[var(--cream-surface)] focus-visible:ring-offset-transparent'
+                        : 'text-[var(--ink)] hover:text-[var(--accent-primary)] focus:text-[var(--accent-primary)] focus-visible:ring-offset-[var(--cream)]',
+                    )}
                     aria-haspopup="true"
                     aria-expanded={isOpen}
                     aria-controls={menuId}
@@ -257,11 +281,16 @@ export function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-3 font-[family-name:var(--font-inter)]">
-            <LocaleSwitcher />
+            <LocaleSwitcher className={onDarkHero ? 'nav-locale-on-dark' : undefined} />
             <Link href="/login">
               <Button
                 variant="ghost"
-                className="text-[var(--ink)] border border-[var(--hairline)] bg-transparent hover:bg-[var(--cream-section)] hover:border-[var(--cobalt)] hover:text-[var(--accent-primary)]"
+                className={cn(
+                  'bg-transparent border',
+                  onDarkHero
+                    ? 'text-[var(--cream-surface)] border-[var(--cream-surface)]/40 hover:bg-[var(--cream-surface)]/10 hover:border-[var(--cream-surface)]/60 hover:text-[var(--cream-surface)]'
+                    : 'text-[var(--ink)] border-[var(--hairline)] hover:bg-[var(--cream-section)] hover:border-[var(--cobalt)] hover:text-[var(--accent-primary)]',
+                )}
               >
                 Log In
               </Button>
@@ -273,7 +302,12 @@ export function Navbar() {
 
           {/* Mobile Menu Button - 44px min touch target for WCAG */}
           <button
-            className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-[var(--ink)] hover:text-[var(--cobalt)] hover:bg-[var(--cream-section)] active:bg-[var(--cream-section)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--cream)] transition-colors touch-manipulation"
+            className={cn(
+              'lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 transition-colors touch-manipulation',
+              onDarkHero
+                ? 'text-[var(--cream-surface)] hover:bg-[var(--cream-surface)]/10 active:bg-[var(--cream-surface)]/10 focus-visible:ring-offset-transparent'
+                : 'text-[var(--ink)] hover:text-[var(--cobalt)] hover:bg-[var(--cream-section)] active:bg-[var(--cream-section)] focus-visible:ring-offset-[var(--cream)]',
+            )}
             onClick={() => setMobileMenuOpen((v) => !v)}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}

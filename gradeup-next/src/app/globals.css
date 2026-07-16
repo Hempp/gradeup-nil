@@ -1388,6 +1388,17 @@ html.no-transitions *::after {
   }
 }
 
+/* Locale switcher trigger, inverse state over the dark cinematic hero.
+   Unlayered on purpose (beats the utility classes on the trigger); the
+   child combinator keeps the dropdown panel's own cream/ink styling. */
+.nav-locale-on-dark > button {
+  color: var(--cream-surface);
+}
+.nav-locale-on-dark > button:hover {
+  color: var(--cream-surface);
+  background: rgba(251, 249, 242, 0.1);
+}
+
 /* Editorial stat strip (mono, cobalt figures on cream) */
 .stat-strip {
   font-family: var(--font-geist-mono), ui-monospace, monospace;

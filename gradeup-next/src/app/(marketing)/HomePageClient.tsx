@@ -214,10 +214,12 @@ function HeroSection() {
             Part of StatStaq · NCAA compliant
           </div>
 
-          {/* Headline — staggered rise, cobalt plate on the promise */}
+          {/* Headline — staggered rise, cobalt plate on the promise.
+              The plate is an atomic inline-block so its box takes part in
+              line layout instead of painting over the line above. */}
           <h1 className="hero-reveal hero-reveal-2 font-display text-[clamp(52px,8vw,104px)] text-[var(--cream-surface)] mb-8">
             Keep your grades up.{' '}
-            <span className="inline decoration-clone bg-[var(--cobalt)] px-3 text-[var(--cream-surface)]">
+            <span className="mt-2 inline-block bg-[var(--cobalt)] px-4 py-1 text-[var(--cream-surface)]">
               We&apos;ll run your NIL.
             </span>
           </h1>
