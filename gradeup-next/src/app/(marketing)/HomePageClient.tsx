@@ -11,10 +11,8 @@ import {
   Shield,
   Zap,
   Clock,
-  DollarSign,
   TrendingUp,
   Award,
-  Sparkles,
   ClipboardCheck,
   Flag,
 } from 'lucide-react';
@@ -26,7 +24,6 @@ import {
 // Direct import (not barrel) — the marketing barrel re-exports server
 // components like CaseStudyTagStrip that pull next/headers in via supabase/server.
 // Bundling that into this client component's graph produces a runtime 500.
-import { LazyDashboardPreview } from '@/components/marketing/lazy-dashboard-preview';
 import { FEATURED_SCHOOLS } from '@/lib/data/schools';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -800,66 +797,6 @@ function HowItWorksSection() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PLATFORM PREVIEW SECTION
-// ═══════════════════════════════════════════════════════════════════════════
-
-function PlatformPreviewSection() {
-  return (
-    <section
-      id="preview"
-      className="section-spacing-lg bg-[var(--cream)] relative overflow-hidden"
-      aria-label="Platform dashboard preview"
-      role="region"
-    >
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <Reveal className="text-center mb-12 lg:mb-16">
-          <div className="eyebrow mb-4 justify-center flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
-            Sneak Peek
-          </div>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[var(--ink)] mb-4">
-            Your Dashboard <span className="text-[var(--cobalt)]">Awaits</span>
-          </h2>
-          <p className="text-[var(--ink-muted)] max-w-2xl mx-auto text-lg">
-            See what you&apos;ll get access to. Track earnings, manage deals, and discover opportunities
-            – all in one powerful dashboard.
-          </p>
-        </Reveal>
-
-        {/* Dashboard preview — rises and flattens into view (lazy-loaded) */}
-        <Reveal tilt className="max-w-5xl mx-auto">
-          <LazyDashboardPreview
-            showCTA={true}
-            ctaText="Get Started Free"
-            ctaHref="/signup/athlete"
-          />
-        </Reveal>
-
-        {/* Feature highlights below preview — staggered entrance */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto">
-          {[
-            { label: 'Real-time Analytics', icon: TrendingUp },
-            { label: 'Deal Management', icon: DollarSign },
-            { label: 'Brand Matching', icon: Zap },
-            { label: 'Verified Profiles', icon: Shield },
-          ].map((feature, index) => (
-            <Reveal key={feature.label} delay={index * 90}>
-              <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-[var(--cream-surface)] border border-[var(--hairline)] hover:border-[var(--cobalt)] transition-colors">
-                <feature.icon className="h-6 w-6 text-[var(--cobalt)]" />
-                <span className="text-sm text-[var(--ink-muted)] text-center font-medium">
-                  {feature.label}
-                </span>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // FOR BRANDS SECTION
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -1165,7 +1102,6 @@ export default function HomePageClient() {
       <ValuationCTASection />
       <FeaturedAthletesSection />
       <HowItWorksSection />
-      <PlatformPreviewSection />
       <ForBrandsSection />
       <ProvenResultsCTASection />
       <FinalCTASection />
