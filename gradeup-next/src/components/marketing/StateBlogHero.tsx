@@ -24,24 +24,28 @@ function statusTone(status: PermissionStatus) {
         bg: 'bg-[var(--status-verified)]/10',
         border: 'border-[var(--status-verified)]/40',
         text: 'text-[var(--status-verified)]',
+        dot: 'bg-[var(--status-verified)]',
       };
     case 'limited':
       return {
         bg: 'bg-[var(--status-caution)]/10',
         border: 'border-[var(--status-caution)]/40',
         text: 'text-[var(--status-caution)]',
+        dot: 'bg-[var(--status-caution)]',
       };
     case 'transitioning':
       return {
         bg: 'bg-[var(--cobalt)]/10',
         border: 'border-[var(--cobalt)]/40',
         text: 'text-[var(--cobalt)]',
+        dot: 'bg-[var(--cobalt)]',
       };
     case 'prohibited':
       return {
-        bg: 'bg-[var(--cream-section)]',
-        border: 'border-[var(--hairline)]',
-        text: 'text-[var(--ink-meta)]',
+        bg: 'bg-[var(--status-restricted)]/10',
+        border: 'border-[var(--status-restricted)]/40',
+        text: 'text-[var(--status-restricted)]',
+        dot: 'bg-[var(--status-restricted)]',
       };
   }
 }
@@ -90,7 +94,7 @@ export function StateBlogHero({
           >
             <span className="relative flex h-2 w-2">
               <span
-                className={`relative inline-flex rounded-full h-2 w-2 ${tone.text.replace('text-', 'bg-')}`}
+                className={`relative inline-flex rounded-full h-2 w-2 ${tone.dot}`}
               />
             </span>
             {statusLabel}

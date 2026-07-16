@@ -55,31 +55,31 @@ function statusAccent(status: PermissionStatus) {
   switch (status) {
     case 'permitted':
       return {
-        dot: 'bg-[var(--accent-success)]',
-        text: 'text-[var(--accent-success)]',
-        border: 'border-[var(--accent-success)]/30',
-        bg: 'bg-[var(--accent-success)]/10',
+        dot: 'bg-[var(--status-verified)]',
+        text: 'text-[var(--status-verified)]',
+        border: 'border-[var(--status-verified)]/30',
+        bg: 'bg-[var(--status-verified)]/10',
       };
     case 'limited':
       return {
-        dot: 'bg-[var(--accent-gold)]',
-        text: 'text-[var(--accent-gold)]',
-        border: 'border-[var(--accent-gold)]/30',
-        bg: 'bg-[var(--accent-gold)]/10',
+        dot: 'bg-[var(--status-caution)]',
+        text: 'text-[var(--status-caution)]',
+        border: 'border-[var(--status-caution)]/30',
+        bg: 'bg-[var(--status-caution)]/10',
       };
     case 'transitioning':
       return {
-        dot: 'bg-[var(--accent-primary)]',
-        text: 'text-[var(--accent-primary)]',
-        border: 'border-[var(--accent-primary)]/30',
-        bg: 'bg-[var(--accent-primary)]/10',
+        dot: 'bg-[var(--cobalt)]',
+        text: 'text-[var(--cobalt)]',
+        border: 'border-[var(--cobalt)]/30',
+        bg: 'bg-[var(--cobalt)]/10',
       };
     case 'prohibited':
       return {
-        dot: 'bg-[var(--ink-meta)]',
-        text: 'text-[var(--ink-muted)]',
-        border: 'border-[var(--hairline)]',
-        bg: 'bg-[var(--cream-surface)]',
+        dot: 'bg-[var(--status-restricted)]',
+        text: 'text-[var(--status-restricted)]',
+        border: 'border-[var(--status-restricted)]/30',
+        bg: 'bg-[var(--status-restricted)]/10',
       };
   }
 }

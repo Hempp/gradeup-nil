@@ -70,7 +70,24 @@ or the ink/cream neutrals instead.
 |-------|-------|---------|
 | `--status-verified` | `#047857` (emerald-700, ~4.6:1 on cream, AA) | verified / positive / live / active |
 | `--status-caution` | `#B45309` (amber-700, AA) | caution / pending / limited |
-| `--status-restricted` | `#BE123C` (rose-700, AA) | restricted / blocked |
+| `--status-restricted` | `#BE123C` (rose-700, AA) | restricted / blocked / prohibited |
+
+**Canonical `PermissionStatus` → token mapping** (state-NIL hero chip, neighbors
+sidebar, and the state index badges/summary stats must all agree):
+
+| Status | Token |
+|--------|-------|
+| `permitted` | `--status-verified` |
+| `limited` | `--status-caution` |
+| `transitioning` | `--cobalt` (an in-flux state is brand-neutral, not a warning) |
+| `prohibited` | `--status-restricted` |
+
+Chip anatomy at every usage: `bg-<token>/10` + `border-<token>/30..40` +
+`text-<token>` + solid `bg-<token>` dot. Never derive the dot class at runtime
+(e.g. `text.replace('text-','bg-')`) — Tailwind's JIT only generates classes it
+can see as literals in source, so a computed class silently renders nothing.
+Legacy aliases `--accent-success` / `--accent-gold` rebind to cobalt inside
+`.marketing-dark` and must NOT be used for status.
 
 ## 4. Typography
 

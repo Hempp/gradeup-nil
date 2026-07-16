@@ -27,7 +27,7 @@ function badgeTone(status: PermissionStatus) {
     case 'transitioning':
       return 'bg-[var(--cobalt)]/10 text-[var(--cobalt)] border-[var(--cobalt)]/30';
     case 'prohibited':
-      return 'bg-[var(--cream-surface)] text-[var(--ink-meta)] border-[var(--hairline)]';
+      return 'bg-[var(--status-restricted)]/10 text-[var(--status-restricted)] border-[var(--status-restricted)]/30';
   }
 }
 
