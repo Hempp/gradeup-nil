@@ -51,12 +51,16 @@ duotone photography. Confident, plain-spoken, proof-first. Never hypey.
   `border-white/10`, `bg-black`) inside the cream surface. `<html>` carries
   `.dark` globally, so those read as the app dark theme and vanish on cream.
   See §7.
-- **Sanctioned dark-on-cream island (the ONE exception):** a deliberately dark
-  media/video frame — the hero demo player on the homepage — may use a dark
-  surface + `--text-inverse`/`text-white` on it (`bg-black/40`, `bg-black`,
-  `text-white/80`, `text-white/60`). It reads as a video chrome, not a UI panel.
-  This is the only place a dark surface + inverse text is allowed on cream; do
-  not generalize it to other components. See §7.
+- **Sanctioned dark-on-cream island (the ONE exception):** the full-bleed
+  cinematic home hero. It layers a duotone editorial photo (cobalt
+  `mix-blend-multiply` wash + ink `#16182B` gradient scrim) edge-to-edge and
+  sets its type in `--cream-surface` (headline plate: cobalt bg + cream text).
+  It reads as film, not as a UI panel. Motion: `hero-kenburns` slow drift +
+  `hero-reveal-*` staggered type rise (globals.css), both disabled under
+  `prefers-reduced-motion`. This is the only place a dark surface + inverse
+  text is allowed on cream; do not generalize it to other components. (The
+  previous exception — the hero demo video player — was removed 2026-07-16
+  along with the testimonials section.) See §7.
 
 ### Semantic status sub-palette (status-only, never decorative)
 
@@ -217,3 +221,11 @@ above for new components; don't mass-migrate existing ones.
 - **ease-out to enter, ease-in to exit.** Opacity + small translate/scale only.
 - Respect `prefers-reduced-motion`. No decorative infinite motion except the
   established brand-strip marquee.
+- **Section-entrance tier (added 2026-07-16):** scroll-triggered reveals use
+  `.reveal-on-scroll` (+ optional `.reveal-tilt` for large media panels) —
+  ~550ms, strong ease-out (`cubic-bezier(0.16,1,0.3,1)`), opacity + 24px rise,
+  stagger siblings ≤120ms apart via `transitionDelay`. One-shot (observer
+  disconnects after reveal). The home hero's load choreography
+  (`hero-kenburns` 28s one-way drift, `hero-reveal-*` 700ms staggered rise) is
+  hero-only — don't reuse Ken Burns elsewhere. All of it no-ops under
+  `prefers-reduced-motion`.

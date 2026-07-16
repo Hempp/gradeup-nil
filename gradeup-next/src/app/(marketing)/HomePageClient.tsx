@@ -5,15 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   ArrowRight,
-  ArrowUpRight,
   CheckCircle2,
   BadgeCheck,
   User,
   Shield,
   Zap,
-  Star,
   Clock,
-  Play,
   DollarSign,
   TrendingUp,
   Award,
@@ -24,8 +21,6 @@ import {
 import { Button } from '@/components/ui/button';
 import {
   useFeaturedAthletes,
-  useLandingStats,
-  useTestimonials,
   type FeaturedAthlete,
 } from '@/lib/hooks/use-landing-data';
 // Direct import (not barrel) — the marketing barrel re-exports server
@@ -138,109 +133,147 @@ function useReducedMotion(): boolean {
   return prefersReducedMotion;
 }
 
+/**
+ * Scroll-triggered entrance wrapper. Pairs with .reveal-on-scroll /
+ * .reveal-tilt in globals.css. Respects prefers-reduced-motion (content
+ * renders visible immediately, no observer).
+ */
+function Reveal({
+  children,
+  className = '',
+  delay = 0,
+  tilt = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  tilt?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setRevealed(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`reveal-on-scroll${tilt ? ' reveal-tilt' : ''}${revealed ? ' is-revealed' : ''} ${className}`}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+    >
+      {children}
+    </div>
+  );
+}
+
 function HeroSection() {
   return (
     <section
-      className="relative bg-[var(--cream)] overflow-hidden"
+      className="relative isolate flex min-h-[88svh] items-center overflow-hidden bg-[var(--ink)]"
       aria-label="Hero - Keep your grades up, StatStaq runs your NIL"
       role="region"
     >
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Content */}
-          <div className="text-center lg:text-left">
-            <div className="eyebrow mb-6">Part of StatStaq · NCAA compliant</div>
+      {/* Full-bleed cinematic backdrop — slow Ken Burns drift.
+          Documented dark-hero exception: see DESIGN.md §3. */}
+      <div className="absolute inset-0 -z-10" aria-hidden="true">
+        <Image
+          src="/editorial/photo-02.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="hero-kenburns object-cover saturate-[0.35] contrast-105"
+        />
+        {/* cobalt duotone wash */}
+        <div className="absolute inset-0 bg-[var(--cobalt)]/30 mix-blend-multiply" />
+        {/* ink scrim, heaviest behind the type */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#16182B]/90 via-[#16182B]/60 to-[#16182B]/20" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#16182B]/70 to-transparent" />
+      </div>
 
-            {/* Headline */}
-            <h1 className="font-display text-[clamp(52px,8vw,104px)] text-[var(--ink)] mb-8">
-              Keep your grades up.{' '}
-              <span className="text-[var(--cobalt)]">We&apos;ll run your NIL.</span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-[var(--ink-muted)] max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
-              GradeUp is the scholar-athlete layer of StatStaq. Verify your GPA, and
-              StatStaq&apos;s team produces your content, values your brand, sources your
-              deals, and negotiates your contracts.
-            </p>
-
-            {/* Stat strip (claim-free) */}
-            <div className="stat-strip inline-flex flex-wrap items-center gap-x-4 gap-y-1 mb-8">
-              <span>Verified GPA <b>3 tiers</b></span>
-              <span className="opacity-30">·</span>
-              <span>Sourced <b>15%</b></span>
-              <span className="opacity-30">·</span>
-              <span>You bring <b>0%</b></span>
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link href="/signup/athlete">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto btn-marketing-primary gap-2 shadow-lg"
-                  aria-label="Qualify with your GPA - free signup"
-                >
-                  Qualify with your GPA
-                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
-                </Button>
-              </Link>
-              <Link href="/signup/brand">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto btn-marketing-outline"
-                  aria-label="Partner with GradeUp as a brand"
-                >
-                  Partner as Brand
-                </Button>
-              </Link>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 mt-8 text-sm text-[var(--ink-meta)]">
-              <div className="flex items-center gap-1.5">
-                <Shield className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
-                <span>NCAA compliant</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
-                <span>No credit card</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Zap className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
-                <span>2-min signup</span>
-              </div>
-            </div>
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
+        <div className="max-w-3xl text-center lg:text-left">
+          <div className="hero-reveal hero-reveal-1 eyebrow mb-6 text-[var(--cream-surface)]/70!">
+            Part of StatStaq · NCAA compliant
           </div>
 
-          {/* Hero visual — looping stadium film in an editorial frame */}
-          <div className="relative flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-md">
-              <div className="relative aspect-[4/5] rounded-[28px] overflow-hidden border border-[var(--hairline)] shadow-[0_40px_90px_-40px_rgba(22,24,43,0.45)]">
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  poster="/editorial/photo-02.jpg"
-                  className="absolute inset-0 h-full w-full object-cover"
-                  aria-hidden="true"
-                >
-                  <source src="/editorial/hero.mp4" type="video/mp4" />
-                </video>
-                {/* cobalt wash for editorial cohesion */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--cobalt)]/25 via-transparent to-transparent" />
-                {/* floating stat strip */}
-                <div className="stat-strip absolute left-4 bottom-4 right-4 !bg-[var(--cream-surface)]/95 backdrop-blur-sm text-center">
-                  Produce · Value · Source · <b>Negotiate</b>
-                </div>
-              </div>
-              {/* corner accent tag */}
-              <div className="arrow-pill absolute -top-4 -left-4 hidden sm:flex">
-                <span className="circle">
-                  <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
-                </span>
-              </div>
+          {/* Headline — staggered rise, cobalt plate on the promise */}
+          <h1 className="hero-reveal hero-reveal-2 font-display text-[clamp(52px,8vw,104px)] text-[var(--cream-surface)] mb-8">
+            Keep your grades up.{' '}
+            <span className="inline decoration-clone bg-[var(--cobalt)] px-3 text-[var(--cream-surface)]">
+              We&apos;ll run your NIL.
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="hero-reveal hero-reveal-3 mx-auto mb-8 max-w-xl text-lg leading-relaxed text-[var(--cream-surface)]/85 sm:text-xl lg:mx-0">
+            GradeUp is the scholar-athlete layer of StatStaq. Verify your GPA, and
+            StatStaq&apos;s team produces your content, values your brand, sources your
+            deals, and negotiates your contracts.
+          </p>
+
+          {/* Stat strip (claim-free), translucent for the dark hero */}
+          <div className="hero-reveal hero-reveal-4 mb-8 inline-flex flex-wrap items-center gap-x-4 gap-y-1 rounded-full border border-[var(--cream-surface)]/25 bg-[var(--cream-surface)]/10 px-4 py-2 font-[family-name:var(--font-geist-mono)] text-[13px] uppercase tracking-[0.06em] text-[var(--cream-surface)]/90 backdrop-blur-sm">
+            <span>Verified GPA <b>3 tiers</b></span>
+            <span className="opacity-40">·</span>
+            <span>Sourced <b>15%</b></span>
+            <span className="opacity-40">·</span>
+            <span>You bring <b>0%</b></span>
+          </div>
+
+          {/* CTAs */}
+          <div className="hero-reveal hero-reveal-5 flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
+            <Link href="/signup/athlete">
+              <Button
+                size="lg"
+                className="btn-marketing-primary w-full gap-2 shadow-lg sm:w-auto"
+                aria-label="Qualify with your GPA - free signup"
+              >
+                Qualify with your GPA
+                <ArrowRight className="h-5 w-5" aria-hidden="true" />
+              </Button>
+            </Link>
+            <Link href="/signup/brand">
+              <Button
+                size="lg"
+                className="w-full border border-[var(--cream-surface)]/40 bg-transparent text-[var(--cream-surface)] hover:bg-[var(--cream-surface)]/10 sm:w-auto"
+                aria-label="Partner with GradeUp as a brand"
+              >
+                Partner as Brand
+              </Button>
+            </Link>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="hero-reveal hero-reveal-6 mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[var(--cream-surface)]/75 lg:justify-start">
+            <div className="flex items-center gap-1.5">
+              <Shield className="h-4 w-4" aria-hidden="true" />
+              <span>NCAA compliant</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+              <span>No credit card</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Zap className="h-4 w-4" aria-hidden="true" />
+              <span>2-min signup</span>
             </div>
           </div>
         </div>
@@ -668,167 +701,56 @@ const steps = [
 ];
 
 function HowItWorksSection() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  // Stable callback for video toggle to prevent unnecessary re-renders
-  const toggleVideo = useCallback(() => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  }, []);
-
-  // Stable callbacks for video events to avoid recreating on each render
-  const handlePlay = useCallback(() => setIsPlaying(true), []);
-  const handlePause = useCallback(() => setIsPlaying(false), []);
-  const handleEnded = useCallback(() => setIsPlaying(false), []);
-
   return (
     <section
       id="how-it-works"
-      className="section-spacing-lg bg-[var(--cream-section)]"
+      className="section-spacing-lg bg-[var(--cream-section)] overflow-hidden"
       aria-label="How GradeUp works"
       role="region"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 lg:mb-16">
+        <Reveal className="text-center mb-12 lg:mb-16">
           <div className="eyebrow mb-4 justify-center flex">See It In Action</div>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[var(--ink)] mb-4">
             From <span className="text-[var(--cobalt)]">Verified GPA</span> to{' '}
             <span className="text-[var(--cobalt)]">StatStaq Deal</span>
           </h2>
           <p className="text-[var(--ink-muted)] max-w-2xl mx-auto text-lg">
-            Watch how the layer works — GradeUp verifies your grades, then StatStaq goes to work.
+            GradeUp verifies the grades. StatStaq runs the deal. Three steps, start to signed.
           </p>
-        </div>
+        </Reveal>
 
-        {/* Two-column layout: Video + Steps */}
-        <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-start">
-          {/* Video Column - Takes 3/5 of space */}
-          <div className="lg:col-span-3">
+        {/* Two-column layout: editorial image + steps */}
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          {/* Sticky duotone editorial image — the coach's playbook */}
+          <Reveal tilt className="hidden lg:block lg:sticky lg:top-24">
             <div className="relative">
-              <div className="relative card-marketing overflow-hidden">
-                {/* Video container */}
-                <div className="relative aspect-video bg-[var(--ink)]">
-                  <video
-                    ref={videoRef}
-                    className="w-full h-full object-cover"
-                    poster="/videos/poster.jpg"
-                    playsInline
-                    onPlay={handlePlay}
-                    onPause={handlePause}
-                    onEnded={handleEnded}
-                  >
-                    <source src="/videos/gradeup-demo.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-
-                  {/* Play/Pause overlay - always visible on mobile, hover-reveal on desktop when playing */}
-                  <button
-                    onClick={toggleVideo}
-                    className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                      isPlaying
-                        ? 'opacity-100 md:opacity-0 md:hover:opacity-100'
-                        : 'opacity-100'
-                    }`}
-                    aria-label={isPlaying ? 'Pause video' : 'Play video'}
-                  >
-                    <div className="absolute inset-0 bg-black/40" />
-                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[var(--accent-primary)] flex items-center justify-center shadow-lg shadow-[var(--accent-primary)]/40 hover:scale-110 transition-transform">
-                      {isPlaying ? (
-                        <div className="flex gap-1">
-                          <div className="w-1.5 sm:w-2 h-6 sm:h-8 bg-black rounded-sm" />
-                          <div className="w-1.5 sm:w-2 h-6 sm:h-8 bg-black rounded-sm" />
-                        </div>
-                      ) : (
-                        <Play className="h-6 w-6 sm:h-8 sm:w-8 text-black ml-1" fill="currentColor" />
-                      )}
-                    </div>
-                  </button>
-
-                  {/* Video info bar */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-[var(--accent-success)] animate-pulse" />
-                        <span className="text-sm text-white/80">GradeUp Platform Demo</span>
-                      </div>
-                      <span className="text-xs text-white/60">30 sec</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Video stats below */}
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-4 sm:mt-6">
-                <div className="stat-strip text-center block">
-                  <div className="text-base sm:text-xl font-bold text-[var(--cobalt)]">Verified</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--ink-meta)] normal-case tracking-normal">GPA-Gated</div>
-                </div>
-                <div className="stat-strip text-center block">
-                  <div className="text-base sm:text-xl font-bold text-[var(--cobalt)]">StatStaq</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--ink-meta)] normal-case tracking-normal">Runs the Deal</div>
-                </div>
-                <div className="stat-strip text-center block">
-                  <div className="text-base sm:text-xl font-bold text-[var(--cobalt)]">NCAA</div>
-                  <div className="text-[10px] sm:text-xs text-[var(--ink-meta)] normal-case tracking-normal">Compliant</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Steps Column - Takes 2/5 of space */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Sticky duotone editorial image — the coach's playbook, cobalt duotone */}
-            <div className="hidden lg:block lg:sticky lg:top-24 mb-6">
               <div
-                className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--hairline)] bg-cover bg-center"
+                className="duotone relative aspect-[4/5] rounded-[28px] overflow-hidden border border-[var(--hairline)] shadow-[0_40px_90px_-40px_rgba(22,24,43,0.45)] bg-cover bg-center"
                 style={{ backgroundImage: `url(/editorial/photo-playbook.jpg)` }}
                 role="img"
                 aria-label="Coach's notebook with a play diagrammed, representing the verified path from grades to a StatStaq deal"
               />
+              {/* floating caption chip */}
+              <div className="stat-strip absolute left-6 bottom-6 right-6 !bg-[var(--cream-surface)]/95 backdrop-blur-sm text-center">
+                Produce · Value · Source · <b>Negotiate</b>
+              </div>
             </div>
+          </Reveal>
 
-            <div className="mb-4 lg:mb-6 text-center lg:text-left">
+          {/* Steps */}
+          <div className="space-y-4">
+            <Reveal className="mb-4 lg:mb-6 text-center lg:text-left">
               <h3 className="font-display text-lg sm:text-xl text-[var(--ink)] mb-1 sm:mb-2">Three Simple Steps</h3>
               <p className="text-xs sm:text-sm text-[var(--ink-meta)]">
                 StatStaq&apos;s team runs outreach, negotiation, and close — you focus on your grades.
               </p>
-            </div>
+            </Reveal>
 
-            {steps.map((step, index) => {
-              const colorClasses = {
-                cyan: {
-                  bg: 'bg-[var(--accent-primary)]/10',
-                  border: 'border-[var(--accent-primary)]/30',
-                  text: 'text-[var(--accent-primary)]',
-                  stat: 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]',
-                },
-                lime: {
-                  bg: 'bg-[var(--accent-success)]/10',
-                  border: 'border-[var(--accent-success)]/30',
-                  text: 'text-[var(--accent-success)]',
-                  stat: 'bg-[var(--accent-success)]/20 text-[var(--accent-success)]',
-                },
-                gold: {
-                  bg: 'bg-[var(--accent-gold)]/10',
-                  border: 'border-[var(--accent-gold)]/30',
-                  text: 'text-[var(--accent-gold)]',
-                  stat: 'bg-[var(--accent-gold)]/20 text-[var(--accent-gold)]',
-                },
-              };
-              const colors = colorClasses[step.color];
-
-              return (
-                <div
-                  key={step.number}
-                  className={`relative card-marketing p-5 border-l-4 ${colors.border} hover:bg-[var(--cream)] transition-colors`}
-                >
+            {steps.map((step, index) => (
+              <Reveal key={step.number} delay={index * 120}>
+                <div className="relative card-marketing p-5 border-l-4 border-[var(--cobalt)]/40 hover:bg-[var(--cream)] transition-colors">
                   {/* Connector */}
                   {index < steps.length - 1 && (
                     <div className="absolute left-[calc(2rem-1px)] -bottom-4 w-0.5 h-4 bg-gradient-to-b from-[var(--hairline)] to-transparent" />
@@ -853,11 +775,11 @@ function HowItWorksSection() {
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              </Reveal>
+            ))}
 
             {/* CTA after steps */}
-            <div className="pt-4">
+            <Reveal delay={steps.length * 120} className="pt-4">
               <Link href="/signup/athlete">
                 <Button size="lg" className="w-full btn-marketing-primary gap-2">
                   Start Your Journey
@@ -867,7 +789,7 @@ function HowItWorksSection() {
               <p className="text-center text-xs text-[var(--ink-meta)] mt-3">
                 Free to join • No credit card required
               </p>
-            </div>
+            </Reveal>
           </div>
         </div>
       </div>
@@ -889,7 +811,7 @@ function PlatformPreviewSection() {
     >
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 lg:mb-16">
+        <Reveal className="text-center mb-12 lg:mb-16">
           <div className="eyebrow mb-4 justify-center flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
             Sneak Peek
@@ -901,34 +823,33 @@ function PlatformPreviewSection() {
             See what you&apos;ll get access to. Track earnings, manage deals, and discover opportunities
             – all in one powerful dashboard.
           </p>
-        </div>
+        </Reveal>
 
-        {/* Dashboard Preview Component (lazy-loaded for better initial load) */}
-        <div className="max-w-5xl mx-auto">
+        {/* Dashboard preview — rises and flattens into view (lazy-loaded) */}
+        <Reveal tilt className="max-w-5xl mx-auto">
           <LazyDashboardPreview
             showCTA={true}
             ctaText="Get Started Free"
             ctaHref="/signup/athlete"
           />
-        </div>
+        </Reveal>
 
-        {/* Feature highlights below preview */}
+        {/* Feature highlights below preview — staggered entrance */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto">
           {[
-            { label: 'Real-time Analytics', icon: TrendingUp, color: 'cyan' },
-            { label: 'Deal Management', icon: DollarSign, color: 'lime' },
-            { label: 'Brand Matching', icon: Zap, color: 'gold' },
-            { label: 'Verified Profiles', icon: Shield, color: 'magenta' },
-          ].map((feature) => (
-            <div
-              key={feature.label}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-[var(--cream-surface)] border border-[var(--hairline)] hover:border-[var(--cobalt)] transition-colors"
-            >
-              <feature.icon className="h-6 w-6 text-[var(--cobalt)]" />
-              <span className="text-sm text-[var(--ink-muted)] text-center font-medium">
-                {feature.label}
-              </span>
-            </div>
+            { label: 'Real-time Analytics', icon: TrendingUp },
+            { label: 'Deal Management', icon: DollarSign },
+            { label: 'Brand Matching', icon: Zap },
+            { label: 'Verified Profiles', icon: Shield },
+          ].map((feature, index) => (
+            <Reveal key={feature.label} delay={index * 90}>
+              <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-[var(--cream-surface)] border border-[var(--hairline)] hover:border-[var(--cobalt)] transition-colors">
+                <feature.icon className="h-6 w-6 text-[var(--cobalt)]" />
+                <span className="text-sm text-[var(--ink-muted)] text-center font-medium">
+                  {feature.label}
+                </span>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -1045,87 +966,6 @@ function ForBrandsSection() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// TESTIMONIALS SECTION - Enhanced with specifics
-// ═══════════════════════════════════════════════════════════════════════════
-
-function TestimonialsSection() {
-  const { data: testimonials } = useTestimonials();
-
-  return (
-    <section
-      className="section-spacing-md bg-[var(--cream)]"
-      aria-label="Customer testimonials"
-      role="region"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="eyebrow mb-4 justify-center flex">Real Stories</div>
-          <h2 className="font-display text-3xl sm:text-4xl text-[var(--ink)]">
-            Don&apos;t Take Our <span className="text-[var(--cobalt)]">Word For It</span>
-          </h2>
-        </div>
-
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.id}
-              className="card-marketing p-6 relative"
-            >
-              {/* Verified badge */}
-              {(testimonial as typeof testimonial & { verified?: boolean }).verified && (
-                <div className="absolute top-4 right-4">
-                  <BadgeCheck className="h-5 w-5 text-[var(--cobalt)]" />
-                </div>
-              )}
-
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-[var(--cobalt)] text-[var(--cobalt)]" />
-                ))}
-              </div>
-
-              <p className="text-[var(--ink-muted)] mb-6 leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
-
-              <div className="flex items-center gap-3">
-                <Image
-                  src={testimonial.avatar}
-                  alt={testimonial.name}
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover"
-                  loading="lazy"
-                />
-                <div className="flex-1">
-                  <div className="font-semibold text-[var(--ink)]">{testimonial.name}</div>
-                  <div className="text-sm text-[var(--ink-meta)]">{testimonial.role}</div>
-                </div>
-              </div>
-
-              {/* Earnings/date badges */}
-              <div className="mt-4 pt-4 border-t border-[var(--hairline)] flex flex-wrap gap-2">
-                {(testimonial as typeof testimonial & { earnings?: string }).earnings && (
-                  <span className="px-2 py-1 bg-[var(--cobalt)]/10 text-[var(--cobalt)] text-xs rounded-full font-medium">
-                    {(testimonial as typeof testimonial & { earnings?: string }).earnings}
-                  </span>
-                )}
-                {(testimonial as typeof testimonial & { date?: string }).date && (
-                  <span className="px-2 py-1 bg-[var(--cream-section)] text-[var(--ink-meta)] text-xs rounded-full">
-                    {(testimonial as typeof testimonial & { date?: string }).date}
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </section>
@@ -1326,7 +1166,6 @@ export default function HomePageClient() {
       <PlatformPreviewSection />
       <ForBrandsSection />
       <ProvenResultsCTASection />
-      <TestimonialsSection />
       <FinalCTASection />
     </>
   );
