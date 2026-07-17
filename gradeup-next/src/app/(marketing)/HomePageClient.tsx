@@ -1098,7 +1098,10 @@ export default function HomePageClient() {
       <HeroSection />
       <PartnerLogosSection />
       <ValuationCTASection />
-      <FeaturedAthletesSection />
+      {/* FeaturedAthletesSection intentionally unmounted while the pilot
+          directory has no public opted-in athletes — it SSR'd its heading +
+          skeletons and then vanished client-side. Re-mount when real
+          athletes exist (the component already hides itself when empty). */}
       <HowItWorksSection />
       <ForBrandsSection />
       <ProvenResultsCTASection />
