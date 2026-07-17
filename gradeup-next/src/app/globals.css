@@ -1417,6 +1417,43 @@ html.no-transitions *::after {
   }
 }
 
+/* ─── Interactive brand-wordmark collage (/brands hero + home For Brands) ───
+   Tiles drift on slow individual loops and parallax toward the pointer by
+   depth (--px/--py set from JS, unitless -1..1). Reduced-motion: static. */
+@keyframes brand-tile-drift {
+  0%   { margin-top: 0; }
+  50%  { margin-top: -10px; }
+  100% { margin-top: 0; }
+}
+.brand-collage {
+  --px: 0;
+  --py: 0;
+}
+.brand-collage-tile {
+  position: absolute;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+  transform: rotate(var(--rot, 0deg))
+    translate(
+      calc(var(--px) * var(--depth, 2) * 6px),
+      calc(var(--py) * var(--depth, 2) * 6px)
+    );
+  transition: color 0.15s ease-out, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: brand-tile-drift 11s ease-in-out infinite;
+  opacity: 0.75;
+}
+.brand-collage-tile:hover {
+  color: var(--cobalt);
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-collage-tile { animation: none; transform: rotate(var(--rot, 0deg)); }
+}
+
 /* Locale switcher trigger, inverse state over the dark cinematic hero.
    Unlayered on purpose (beats the utility classes on the trigger); the
    child combinator keeps the dropdown panel's own cream/ink styling. */

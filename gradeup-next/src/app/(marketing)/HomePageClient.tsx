@@ -25,6 +25,7 @@ import {
 // components like CaseStudyTagStrip that pull next/headers in via supabase/server.
 // Bundling that into this client component's graph produces a runtime 500.
 import { FEATURED_SCHOOLS } from '@/lib/data/schools';
+import { BrandLogoCollage } from '@/components/marketing/BrandLogoCollage';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HERO SECTION
@@ -887,21 +888,10 @@ function ForBrandsSection() {
             </Link>
           </Reveal>
 
-          {/* Editorial portrait — the scholar-athlete a brand partners with,
-              in the site's duotone frame (replaces the old dashboard mock) */}
+          {/* Interactive brand-wordmark collage — the kinds of brands that
+              run NIL deals (honest framing, no partnership claims) */}
           <Reveal tilt className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative">
-              <div
-                className="duotone relative aspect-[4/5] rounded-[28px] overflow-hidden border border-[var(--hairline)] shadow-[0_40px_90px_-40px_rgba(22,24,43,0.45)] bg-cover bg-center"
-                style={{ backgroundImage: `url(/editorial/photo-05.jpg)` }}
-                role="img"
-                aria-label="Portrait of a high-school scholar-athlete in her team jacket, standing by a window"
-              />
-              {/* floating caption chip */}
-              <div className="stat-strip absolute left-6 bottom-6 right-6 !bg-[var(--cream-surface)]/95 backdrop-blur-sm text-center">
-                GPA verified · <b>NCAA compliant</b> · Deal-ready
-              </div>
-            </div>
+            <BrandLogoCollage />
           </Reveal>
         </div>
       </div>

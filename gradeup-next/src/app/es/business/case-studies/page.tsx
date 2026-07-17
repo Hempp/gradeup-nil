@@ -102,9 +102,9 @@ export default async function SpanishCaseStudiesPage({ searchParams }: PageProps
           </div>
           <div
             className="duotone hidden lg:block rounded-lg overflow-hidden w-[260px] bg-cover bg-center"
-            style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
+            style={{ backgroundImage: `url(/editorial/photo-case-study.jpg)` }}
             role="img"
-            aria-label="Una madre y su hijo atleta revisando un acuerdo NIL en casa"
+            aria-label="Un atleta escolar grabando un video promocional en un restaurante local, con el dueño sonriendo"
           />
         </div>
       </section>

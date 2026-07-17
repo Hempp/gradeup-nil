@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { BrandDirectoryCard } from '@/components/marketing/BrandDirectoryCard';
 import { BrandDirectoryFilters } from '@/components/marketing/BrandDirectoryFilters';
 import { OpportunitiesPanel } from '@/components/marketing/OpportunitiesPanel';
+import { BrandLogoCollage } from '@/components/marketing/BrandLogoCollage';
 import { cn } from '@/lib/utils';
 
 export const revalidate = 300;
@@ -107,12 +108,9 @@ export default async function BrandsDirectoryPage({
               <span><b>State rules</b> validated · Parental consent required</span>
             </div>
           </div>
-          <div
-            className="duotone aspect-[4/3] hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
-            style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
-            role="img"
-            aria-label="A parent and scholar-athlete reviewing an NIL deal letter together at their kitchen table"
-          />
+          <div className="hidden md:block">
+            <BrandLogoCollage />
+          </div>
         </section>
 
         {/* Tab bar — real anchor links so both views stay crawlable. */}

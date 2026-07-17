@@ -96,9 +96,9 @@ export default async function CaseStudiesListingPage({ searchParams }: PageProps
           </div>
           <div
             className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden bg-cover bg-center"
-            style={{ backgroundImage: `url(/editorial/photo-07.jpg)` }}
+            style={{ backgroundImage: `url(/editorial/photo-case-study.jpg)` }}
             role="img"
-            aria-label="Brand partnership case study in progress"
+            aria-label="A young athlete filming a promo video of a dish at a local restaurant while the owner watches proudly"
           />
         </div>
       </section>
