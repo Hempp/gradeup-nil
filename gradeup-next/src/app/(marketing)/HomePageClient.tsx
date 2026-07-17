@@ -225,7 +225,7 @@ function HeroSection() {
       <div className="relative mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
         <div className="max-w-3xl text-center lg:text-left">
           <div className="hero-reveal hero-reveal-1 eyebrow mb-6 text-[var(--cream-surface)]/70!">
-            Part of StatStaq · NCAA compliant
+            Part of StatStaq · State-association compliant
           </div>
 
           {/* Headline — staggered rise, cobalt plate on the promise.
@@ -281,7 +281,7 @@ function HeroSection() {
           <div className="hero-reveal hero-reveal-6 mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[var(--cream-surface)]/75 lg:justify-start">
             <div className="flex items-center gap-1.5">
               <Shield className="h-4 w-4" aria-hidden="true" />
-              <span>NCAA compliant</span>
+              <span>State-rules compliant</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
@@ -677,7 +677,7 @@ function FeaturedAthletesSection() {
             </div>
             <div className="flex items-center gap-1.5">
               <Shield className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
-              <span>NCAA compliant</span>
+              <span>State-rules compliant</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="h-4 w-4 text-[var(--cobalt)]" aria-hidden="true" />
@@ -911,28 +911,10 @@ function FinalCTASection() {
       role="region"
     >
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Social proof */}
-        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--cream-surface)] border border-[var(--hairline)] mb-8">
-          <div className="flex -space-x-2">
-            {[
-              'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=64&h=64&fit=crop&crop=face',
-              'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=64&h=64&fit=crop&crop=face',
-              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=face',
-              'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face',
-            ].map((src, i) => (
-              <Image
-                key={i}
-                src={src}
-                alt=""
-                aria-hidden="true"
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full border-2 border-[var(--cream-surface)] object-cover"
-                loading="lazy"
-              />
-            ))}
-          </div>
-          <span className="text-sm text-[var(--ink-muted)] font-medium">Scholar-athletes already qualifying with GradeUp</span>
+        {/* Honest eyebrow — no fabricated social proof (stock-photo faces +
+            "already qualifying" removed; pilot has no public users yet). */}
+        <div className="eyebrow mb-8 justify-center flex">
+          Free to start · GPA-verified · Parent-controlled
         </div>
 
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[var(--ink)] mb-6">
@@ -976,7 +958,7 @@ function FinalCTASection() {
           </span>
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4 text-[var(--cobalt)]" />
-            NCAA compliant, always
+            Built to protect future NCAA eligibility
           </span>
         </div>
       </div>

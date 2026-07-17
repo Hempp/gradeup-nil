@@ -436,16 +436,6 @@ function CTASection() {
       <div className="max-w-4xl mx-auto text-center">
         {/* Stats row */}
         <div
-          className={`flex flex-wrap justify-center gap-8 mb-10 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <span className="stat-strip"><b>$127K+</b> Paid to Athletes</span>
-          <span className="stat-strip"><b>847</b> Active Athletes</span>
-          <span className="stat-strip"><b>68%</b> Match Rate</span>
-        </div>
-
-        <div
           className={`transition-all duration-700 delay-200 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
@@ -453,7 +443,7 @@ function CTASection() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--cream-surface)] backdrop-blur-sm border border-[var(--hairline)] mb-6">
             <Sparkles className="h-4 w-4 text-[var(--accent-gold)]" />
             <span className="text-sm text-[var(--ink-muted)]">
-              Join 847 athletes already earning
+              Verified scholar-athletes, real local deals
             </span>
           </div>
 

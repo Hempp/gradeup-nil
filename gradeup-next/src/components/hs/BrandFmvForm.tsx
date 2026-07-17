@@ -414,7 +414,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
                   Require transcript on file (Tier B)
                 </span>
                 <span className="block text-xs text-[var(--ink-meta)]">
-                  Trust signal \u2014 brand-facing proof the athlete is
+                  Trust signal — brand-facing proof the athlete is
                   credible.
                 </span>
               </span>
@@ -516,7 +516,7 @@ export function BrandFmvForm({ onResult }: BrandFmvFormProps) {
               maxLength={500}
               value={campaignNotes}
               onChange={(e) => setCampaignNotes(e.target.value)}
-              placeholder="e.g. \u201CBack-to-school push across 3 markets, want CA + TX athletes.\u201D"
+              placeholder="e.g. Back-to-school push across 3 markets, want CA + TX athletes."
               className="w-full rounded-lg border border-[var(--hairline)] bg-[var(--cream-surface)] px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--ink-meta)] focus:border-[var(--accent-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
             />
             <p className="mt-1 text-xs text-[var(--ink-meta)]">
