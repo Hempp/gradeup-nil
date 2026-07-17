@@ -14,17 +14,24 @@
 
 import { useRef, useCallback } from 'react';
 
+// Brand NAMES as wordmarks (not logo art) — illustrative "kinds of brands"
+// reference, never a partnership claim. Weighted-italic Nike/Adidas evoke
+// their type without reproducing trademarked marks.
 const BRANDS: Array<{ name: string; italic?: boolean; size: number; depth: number; x: number; y: number; rotate: number }> = [
-  { name: 'Gatorade', size: 30, depth: 3, x: 8, y: 10, rotate: -4 },
-  { name: 'State Farm', size: 24, depth: 2, x: 58, y: 6, rotate: 3 },
-  { name: 'Red Bull', size: 34, depth: 4, x: 30, y: 24, rotate: -2 },
-  { name: 'Chipotle', size: 22, depth: 2, x: 74, y: 30, rotate: 5 },
-  { name: 'Celsius', italic: true, size: 26, depth: 3, x: 6, y: 42, rotate: 2 },
-  { name: 'AT&T', size: 38, depth: 5, x: 48, y: 44, rotate: -3 },
-  { name: 'Chick-fil-A', size: 22, depth: 2, x: 12, y: 64, rotate: -5 },
-  { name: 'Beats by Dre', size: 26, depth: 3, x: 56, y: 66, rotate: 2 },
-  { name: 'Cricket Wireless', size: 20, depth: 2, x: 28, y: 82, rotate: 3 },
-  { name: 'Powerade', size: 24, depth: 3, x: 70, y: 86, rotate: -2 },
+  { name: 'Nike', italic: true, size: 34, depth: 4, x: 6, y: 8, rotate: -4 },
+  { name: 'Gatorade', size: 24, depth: 3, x: 52, y: 6, rotate: 3 },
+  { name: 'Adidas', italic: true, size: 26, depth: 3, x: 78, y: 16, rotate: 4 },
+  { name: 'Red Bull', size: 28, depth: 4, x: 26, y: 20, rotate: -2 },
+  { name: "McDonald's", size: 22, depth: 2, x: 62, y: 26, rotate: 5 },
+  { name: 'State Farm', size: 20, depth: 2, x: 8, y: 30, rotate: 2 },
+  { name: 'AT&T', size: 32, depth: 5, x: 44, y: 42, rotate: -3 },
+  { name: 'Chipotle', size: 20, depth: 2, x: 80, y: 44, rotate: -4 },
+  { name: 'Celsius', italic: true, size: 22, depth: 3, x: 10, y: 48, rotate: 3 },
+  { name: 'Chick-fil-A', size: 20, depth: 2, x: 30, y: 60, rotate: -5 },
+  { name: 'Beats by Dre', size: 22, depth: 3, x: 62, y: 62, rotate: 2 },
+  { name: 'Powerade', size: 22, depth: 3, x: 8, y: 66, rotate: -2 },
+  { name: 'Cricket Wireless', size: 18, depth: 2, x: 42, y: 74, rotate: 3 },
+  { name: 'Subway', size: 22, depth: 3, x: 76, y: 72, rotate: -3 },
 ];
 
 export function BrandLogoCollage() {
