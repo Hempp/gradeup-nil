@@ -84,7 +84,20 @@ export function ValuationPostCTA({
 
       if (!res.ok) {
         const body = (await res.json().catch(() => null)) as { error?: string } | null;
-        setError(body?.error ?? 'Could not join waitlist. Try again.');
+        // Surface actionable validation messages (e.g. "State X is not yet
+        // open"), but never leak raw plumbing errors like a 404 "Not found"
+        // or a 500 stack message to a parent trying to join the list.
+        const raw = body?.error?.trim();
+        const isFriendly =
+          !!raw &&
+          res.status === 400 &&
+          !/not found/i.test(raw) &&
+          !/internal server error/i.test(raw);
+        setError(
+          isFriendly
+            ? raw
+            : "We couldn't add you just now. Please try again in a moment."
+        );
         setStatus('error');
         return;
       }

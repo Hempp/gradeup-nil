@@ -277,6 +277,26 @@ function HeroSection() {
             </Link>
           </div>
 
+          {/* Parent path — a parent is the buyer for a minor, so give them
+              their own door without a third heavy button that would compete
+              with the athlete CTA. Subtle cream underline link fits the dark
+              hero; the reveal class matches the hero's staggered entrance and
+              is reduced-motion-safe (globals.css disables it under
+              prefers-reduced-motion). */}
+          <div className="hero-reveal hero-reveal-6 mt-5">
+            <Link
+              href="/solutions/parents"
+              className="group inline-flex items-center gap-1.5 text-sm font-medium text-[var(--cream-surface)]/90 underline decoration-[var(--cream-surface)]/40 decoration-1 underline-offset-4 transition-colors hover:text-[var(--cream-surface)] hover:decoration-[var(--cream-surface)]"
+              aria-label="Parent? See how GradeUp works for your scholar-athlete"
+            >
+              Parent? Start here
+              <ArrowRight
+                className="h-4 w-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
+
           {/* Trust Indicators */}
           <div className="hero-reveal hero-reveal-6 mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[var(--cream-surface)]/75 lg:justify-start">
             <div className="flex items-center gap-1.5">
@@ -934,6 +954,18 @@ function FinalCTASection() {
             >
               Join as Athlete
               <ArrowRight className="h-5 w-5" />
+            </Button>
+          </Link>
+          {/* Parent path — the closing CTA now serves the buyer for a minor.
+              Outline button keeps the athlete CTA primary while giving parents
+              a clear, honest entry to the /solutions/parents explainer. */}
+          <Link href="/solutions/parents">
+            <Button
+              size="lg"
+              className="w-full sm:w-auto btn-marketing-outline"
+              aria-label="See how GradeUp works for parents"
+            >
+              Parents: Start Here
             </Button>
           </Link>
           <Link href="/signup/brand">

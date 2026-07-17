@@ -253,11 +253,11 @@ export default function ValuationPage() {
                   See real deal case studies
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
-                <Link href="/hs" className="arrow-pill">
+                <Link href="/solutions/parents" className="arrow-pill">
                   <span className="circle">
                     <ArrowUpRight className="h-4 w-4 text-[var(--text-inverse)]" aria-hidden="true" />
                   </span>
-                  <span className="label">Join the GradeUp HS waitlist</span>
+                  <span className="label">See how GradeUp HS works for parents</span>
                 </Link>
               </div>
             </div>

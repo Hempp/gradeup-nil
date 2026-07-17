@@ -66,7 +66,7 @@ export function Footer() {
             <h3 className="font-display uppercase tracking-wide mb-4 text-[var(--ink)]">Company</h3>
             <ul className="space-y-2 text-sm text-[var(--ink-muted)] font-[family-name:var(--font-inter)]">
               <li>
-                <Link href="/solutions" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
+                <Link href="/about" className="text-[var(--ink-muted)] hover:text-[var(--cobalt)] focus:text-[var(--cobalt)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] rounded-sm transition-colors">
                   About
                 </Link>
               </li>

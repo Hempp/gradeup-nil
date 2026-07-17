@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { enforceRateLimit } from '@/lib/rate-limit';
-import { isFeatureEnabled } from '@/lib/feature-flags';
 import { PILOT_STATES, type USPSStateCode } from '@/lib/hs-nil/state-rules';
 import {
   validateInput,
@@ -15,9 +14,10 @@ import { checkAndEnroll } from '@/lib/hs-nil/nurture-sequences';
 /**
  * HS-NIL waitlist capture.
  *
- * Unauthenticated POST endpoint. Gated behind the HS_NIL feature flag
- * (returns 404 when disabled so we don't advertise its existence).
- * Rate-limited by IP to prevent list spam.
+ * Unauthenticated POST endpoint. NOT feature-gated — this is pre-launch
+ * top-of-funnel email capture that must work while HS_NIL is off (it backs
+ * the public /hs/valuation calculator). Rate-limited by IP to prevent list
+ * spam; pilot-state and email validation still apply.
  */
 
 const PILOT_STATE_SET = new Set<USPSStateCode>(PILOT_STATES);
@@ -49,10 +49,12 @@ const waitlistSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Hard gate: HS flag off → route does not exist.
-    if (!isFeatureEnabled('HS_NIL')) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    }
+    // NOTE: Intentionally NOT feature-gated. This is anonymous top-of-funnel
+    // email capture that must work pre-launch (flag off) — same rationale the
+    // public /hs/valuation calculator that feeds it is mounted outside the
+    // HS_NIL gate. The DB row is the source of truth for waitlist membership;
+    // gating this endpoint hard-404'd the one working lead-capture asset.
+    // Rate-limit, pilot-state validation, and zod/email validation below stay.
 
     // Unauthenticated — rate-limit by IP.
     const rateLimited = await enforceRateLimit(request, 'mutation', null);

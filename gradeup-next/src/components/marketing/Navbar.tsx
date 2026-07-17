@@ -84,6 +84,7 @@ const NAV: NavItem[] = [
       { href: '/business/case-studies', label: 'Case Studies', description: 'Real deals, real outcomes' },
       { href: '/blog', label: 'Blog', description: 'NIL news + state rules' },
       { href: '/compare', label: 'Compare', description: 'GradeUp vs other platforms' },
+      { href: '/about', label: 'About', description: 'GradeUp + StatStaq, explained' },
     ],
   },
 ];
