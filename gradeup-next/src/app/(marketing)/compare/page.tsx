@@ -9,7 +9,7 @@ export const revalidate = 300;
 
 export const metadata = buildMarketingMetadata({
   title:
-    'How GradeUp compares to other NIL platforms | GradeUp, part of StatStaq',
+    'How GradeUp compares to other NIL platforms',
   description:
     "How GradeUp HS-NIL differs from enterprise college NIL platforms and subscription-based NIL apps on parent-centered HS-NIL, transparent pricing, state compliance, and referrals. GradeUp verifies the GPA; StatStaq's team runs the deal.",
   path: '/compare',

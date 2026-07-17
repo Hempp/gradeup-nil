@@ -32,7 +32,7 @@ const PAGE_URL = '/solutions/ads';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for High-School Athletic Directors | GradeUp, part of StatStaq',
+    title: 'NIL for High-School Athletic Directors',
     description:
       'GradeUp is the compliance layer your school doesn’t have bandwidth to build — parent-signed consent, state disclosures, and a full audit trail, without a single new hire. StatStaq’s team runs the deals your athletes sign.',
     path: PAGE_URL,

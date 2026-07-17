@@ -26,7 +26,7 @@ const PAGE_URL = '/solutions';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Solutions — Built for every side of the high-school NIL deal | GradeUp, part of StatStaq',
+    title: 'Solutions — Built for every side of the high-school NIL deal',
     description:
       'Parents, athletes, brands, high-school athletic directors, and state associations — each get a product built for their side of the deal. GradeUp verifies grades and consent; StatStaq’s team runs the deal — content, brand value, sourcing, and contracts.',
     path: PAGE_URL,

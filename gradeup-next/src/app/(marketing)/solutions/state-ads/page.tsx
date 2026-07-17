@@ -35,7 +35,7 @@ const PAGE_URL = '/solutions/state-ads';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'GradeUp transcripts for State Athletic Associations | GradeUp, part of StatStaq',
+    title: 'GradeUp transcripts for State Athletic Associations',
     description:
       'State athletic associations can request a GradeUp transcript for any member school — a per-school report of NIL activity, disclosures, and compliance status. GradeUp is the verified-GPA layer of StatStaq’s scholar-athlete NIL platform. Free for governing bodies.',
     path: PAGE_URL,

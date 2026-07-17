@@ -38,7 +38,7 @@ const PAGE_URL = '/solutions/brands';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for Brands — Partner with verified scholar-athletes | GradeUp, part of StatStaq',
+    title: 'NIL for Brands — Partner with verified scholar-athletes',
     description:
       'Partner with GPA-verified HS scholar-athletes. GradeUp verifies the grades; StatStaq’s team produces the content, values the brand fit, sources the deal, and negotiates the contract. Compliance, consent, and disclosures are built in.',
     path: PAGE_URL,

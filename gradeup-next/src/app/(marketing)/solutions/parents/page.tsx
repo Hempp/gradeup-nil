@@ -31,7 +31,7 @@ const PAGE_URL = '/solutions/parents';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL for Parents — A first deal without the risk | GradeUp, part of StatStaq',
+    title: 'NIL for Parents — A first deal without the risk',
     description:
       'The safest way for your scholar-athlete to sign their first NIL deal. GradeUp verifies their GPA and handles consent; StatStaq’s team runs the deal. Dual-signed consent, custodial payouts, state-by-state compliance, and a parent dashboard for the person who writes the permission slip.',
     path: PAGE_URL,

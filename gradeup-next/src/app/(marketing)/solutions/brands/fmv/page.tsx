@@ -29,7 +29,7 @@ export const revalidate = 3600;
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'HS Athlete NIL Fair Market Value — What Should I Pay? | GradeUp, part of StatStaq',
+    title: 'HS Athlete NIL Fair Market Value — What Should I Pay?',
     description:
       'Know before you negotiate — or before StatStaq’s team negotiates on the athlete’s behalf. Range-calibrated Fair Market Value estimates for high-school NIL deals, tuned to pilot states and current deal data. Free brand tool.',
     path: '/solutions/brands/fmv',

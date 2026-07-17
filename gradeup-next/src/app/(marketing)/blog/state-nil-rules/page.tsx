@@ -28,7 +28,7 @@ export const revalidate = 86400; // Rebuild once per day.
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'High-School NIL Rules by State (2026 Guide) | GradeUp, part of StatStaq',
+    title: 'High-School NIL Rules by State (2026 Guide)',
     description:
       "Complete 2026 guide to high-school Name, Image, and Likeness (NIL) rules in all 50 U.S. states and D.C. See which states permit HS NIL, the consent and disclosure rules, banned categories, and state-by-state compliance details. GradeUp verifies the rules; StatStaq's team runs the deal.",
     path: PAGE_URL,

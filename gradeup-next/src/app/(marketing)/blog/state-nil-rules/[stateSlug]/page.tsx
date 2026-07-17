@@ -61,7 +61,8 @@ export async function generateMetadata({
     return { title: 'Not found | GradeUp' };
   }
   const data = getStateBlogData(code);
-  const title = `${data.name} High-School NIL Rules (2026) | GradeUp, part of StatStaq`;
+  // Root template appends "| GradeUp NIL" — no extra brand suffix here.
+  const title = `${data.name} High-School NIL Rules (2026)`;
   const description = buildMetaDescription(data.name, data.status, data.rules);
 
   return {
