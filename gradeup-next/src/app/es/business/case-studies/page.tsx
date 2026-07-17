@@ -104,7 +104,7 @@ export default async function SpanishCaseStudiesPage({ searchParams }: PageProps
             className="duotone hidden lg:block rounded-lg overflow-hidden w-[260px] bg-cover bg-center"
             style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
             role="img"
-            aria-label="Atleta de preparatoria firmando un acuerdo NIL verificado"
+            aria-label="Una madre y su hijo atleta revisando un acuerdo NIL en casa"
           />
         </div>
       </section>

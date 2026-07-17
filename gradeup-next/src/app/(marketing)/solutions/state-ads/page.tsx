@@ -107,7 +107,7 @@ export default function StateAdsSolutionPage() {
         supportingNote="Zero cost. 3 business-day turnaround. Read-only by design."
         image={{
           src: '/editorial/photo-06.jpg',
-          alt: 'A high-school athletics administrator reviewing compliance paperwork',
+          alt: 'A parent and high-school athlete reviewing NIL compliance paperwork together at home',
         }}
       />
 

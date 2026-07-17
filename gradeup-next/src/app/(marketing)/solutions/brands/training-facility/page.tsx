@@ -123,7 +123,7 @@ export default function TrainingFacilityPage() {
         supportingNote="Live in 7 pilot states. Cancel between months."
         image={{
           src: '/editorial/photo-06.jpg',
-          alt: 'Athlete mid-rep in a private training facility, representing a training-facility NIL campaign',
+          alt: 'A parent and scholar-athlete reviewing a training-facility NIL offer together at home',
         }}
       />
 

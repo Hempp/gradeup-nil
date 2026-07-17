@@ -182,7 +182,7 @@ export default function StateRulesIndexPage() {
             className="duotone relative aspect-[4/3] rounded-2xl overflow-hidden bg-cover bg-center"
             style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
             role="img"
-            aria-label="Coach reviewing state athletic association rulebook"
+            aria-label="A parent and high-school athlete reading their state’s NIL rules together"
           />
         </div>
       </section>

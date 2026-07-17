@@ -116,7 +116,7 @@ export default async function PublicCampaignTemplatesPage() {
           className="duotone relative aspect-[4/3] overflow-hidden rounded-2xl bg-cover bg-center"
           style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
           role="img"
-          aria-label="Brand campaign template preview — scholar-athlete NIL partnership"
+          aria-label="A parent and scholar-athlete reviewing a brand campaign offer at their kitchen table"
         />
       </section>
 

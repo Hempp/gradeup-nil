@@ -146,7 +146,7 @@ export default async function SpanishValuationPage() {
                   className="duotone relative aspect-[4/5] rounded-2xl overflow-hidden border border-[var(--hairline)] bg-cover bg-center"
                   style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
                   role="img"
-                  aria-label="Atleta escolar entrenando, representando el valor NIL que calcula esta herramienta"
+                  aria-label="Una madre y su hijo atleta revisando juntos su valor NIL en casa"
                 />
               </div>
             </div>

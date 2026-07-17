@@ -111,7 +111,7 @@ export default async function BrandsDirectoryPage({
             className="duotone aspect-[4/3] hidden overflow-hidden rounded-2xl md:block bg-cover bg-center"
             style={{ backgroundImage: `url(/editorial/photo-06.jpg)` }}
             role="img"
-            aria-label="Local brand partners working alongside scholar-athletes"
+            aria-label="A parent and scholar-athlete reviewing an NIL deal letter together at their kitchen table"
           />
         </section>
 
