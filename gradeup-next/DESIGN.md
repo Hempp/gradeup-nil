@@ -57,8 +57,12 @@ duotone photography. Confident, plain-spoken, proof-first. Never hypey.
   sets its type in `--cream-surface` (headline plate: cobalt bg + cream text).
   It reads as film, not as a UI panel. Motion: `hero-kenburns` slow drift +
   `hero-reveal-*` staggered type rise (globals.css), both disabled under
-  `prefers-reduced-motion`. This is the only place a dark surface + inverse
-  text is allowed on cream; do not generalize it to other components. (The
+  `prefers-reduced-motion`. A second sanctioned dark media object extends
+  this: the **cinematic brand-wall** (`BrandLogoCollage`, on /brands hero +
+  home For Brands) — a dark ink→cobalt panel with a cursor spotlight and
+  depth-graded wordmarks, reading as a lit screen, not a UI panel; motion
+  disables under `prefers-reduced-motion`. Both are framed media objects,
+  not general dark panels — do not generalize either. (The
   previous exception — the hero demo video player — was removed 2026-07-16
   along with the testimonials section.) See §7.
 
