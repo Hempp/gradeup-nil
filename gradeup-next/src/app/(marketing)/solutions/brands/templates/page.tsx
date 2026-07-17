@@ -98,7 +98,7 @@ export default async function PublicCampaignTemplatesPage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/hs/signup/brand"
+              href="/signup/brand"
               className="btn-marketing-primary inline-flex min-h-[44px] items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold"
             >
               Sign up to post a campaign
@@ -154,7 +154,7 @@ export default async function PublicCampaignTemplatesPage() {
           </p>
           <div className="mt-6">
             <Link
-              href="/hs/signup/brand"
+              href="/signup/brand"
               className="btn-marketing-primary inline-flex min-h-[44px] items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold"
             >
               Create a brand account

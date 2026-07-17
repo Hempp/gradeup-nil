@@ -234,13 +234,6 @@ export default function StateAdsSolutionPage() {
               <Mail className="h-4 w-4" aria-hidden="true" />
               Email state-ads@gradeupnil.com
             </a>
-            <Link
-              href="/hs/state-ad-invite"
-              className="btn-marketing-outline inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-md font-semibold"
-            >
-              View the onboarding flow
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
           </div>
         </div>
       </section>

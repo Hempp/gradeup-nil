@@ -167,7 +167,7 @@ export default function BrandFmvPage() {
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
               <Link
-                href="/hs/signup/brand"
+                href="/signup/brand"
                 className="btn-marketing-primary inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold"
               >
                 Sign up as a brand
