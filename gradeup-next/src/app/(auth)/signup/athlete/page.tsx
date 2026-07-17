@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -59,7 +59,7 @@ interface AthleteSignupFormValues {
   instagram: string;
 }
 
-export default function AthleteSignupPage() {
+function AthleteSignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const toast = useToastActions();
@@ -506,5 +506,16 @@ export default function AthleteSignupPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+// useSearchParams requires a Suspense boundary for static prerender now that
+// the root layout no longer wraps pages in one (that wrapper caused
+// site-wide soft-404s).
+export default function AthleteSignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <AthleteSignupForm />
+    </Suspense>
   );
 }

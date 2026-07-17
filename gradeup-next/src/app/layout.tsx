@@ -119,13 +119,17 @@ export default function RootLayout({
               <KeyboardShortcutsProvider>
                 <ServiceWorkerProvider>
                   <ServiceWorkerRegistration />
+                  {/* useSearchParams consumers live INSIDE this boundary;
+                      {children} deliberately does NOT. Wrapping children in a
+                      root Suspense made every page stream a 200 shell before
+                      notFound() could throw — turning all 404s site-wide into
+                      soft-404s (200 + not-found UI). */}
                   <Suspense fallback={null}>
-                    <AnalyticsProvider>
-                      <ToastGlobalHandler />
-                      <NavigationProgressBar />
-                      {children}
-                    </AnalyticsProvider>
+                    <AnalyticsProvider />
+                    <ToastGlobalHandler />
+                    <NavigationProgressBar />
                   </Suspense>
+                  {children}
                 </ServiceWorkerProvider>
               </KeyboardShortcutsProvider>
             </ToastProvider>

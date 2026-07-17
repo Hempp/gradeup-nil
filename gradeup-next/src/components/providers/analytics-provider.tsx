@@ -5,7 +5,10 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { trackPageView, initAnalytics, setAnalyticsConsent } from '@/lib/analytics';
 
 interface AnalyticsProviderProps {
-  children: React.ReactNode;
+  /** Optional — the component is a pass-through effect runner, not a context
+   *  provider, so it can be rendered childless (e.g. inside a Suspense
+   *  boundary while the page tree streams outside it). */
+  children?: React.ReactNode;
   userId?: string;
   userRole?: 'athlete' | 'brand' | 'director';
 }

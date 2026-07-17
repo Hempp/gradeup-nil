@@ -13,9 +13,16 @@
  */
 
 import { isFeatureEnabled } from '@/lib/feature-flags';
+import { Suspense } from 'react';
 import { SignupClient } from './signup-client';
 
 export default function SignupPage() {
   const hsEnabled = isFeatureEnabled('HS_NIL');
-  return <SignupClient hsEnabled={hsEnabled} />;
+  // SignupClient reads useSearchParams — it needs its own Suspense boundary
+  // now that the root layout no longer wraps every page in one.
+  return (
+    <Suspense fallback={null}>
+      <SignupClient hsEnabled={hsEnabled} />
+    </Suspense>
+  );
 }
