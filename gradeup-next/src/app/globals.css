@@ -1417,17 +1417,104 @@ html.no-transitions *::after {
   }
 }
 
-/* ─── Interactive brand-wordmark collage (/brands hero + home For Brands) ───
-   Tiles drift on slow individual loops and parallax toward the pointer by
-   depth (--px/--py set from JS, unitless -1..1). Reduced-motion: static. */
-@keyframes brand-tile-drift {
-  0%   { margin-top: 0; }
-  50%  { margin-top: -10px; }
-  100% { margin-top: 0; }
+/* ─── Cinematic brand-wall (/brands hero + home For Brands) ───
+   Dark media object, one cobalt light source, cursor spotlight, graded
+   depth. Extends the DESIGN.md §3 dark-on-cream hero exception. --px/--py
+   (-1..1) drive parallax; --mx/--my drive the spotlight. Reduced-motion:
+   fully static, spotlight parked. */
+.brand-wall {
+  --mx: 50%;
+  --my: 38%;
+  background:
+    radial-gradient(120% 90% at 50% -10%, #23264a 0%, #16182b 55%, #0f1020 100%);
+  isolation: isolate;
 }
+/* ambient breathing cobalt glow behind the marks */
+@keyframes brand-wall-breathe {
+  0%, 100% { opacity: 0.5; transform: translateY(0) scale(1); }
+  50%      { opacity: 0.85; transform: translateY(-2%) scale(1.04); }
+}
+.brand-wall-glow {
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 80%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(50% 60% at 50% 20%, rgba(37, 99, 235, 0.45), transparent 70%);
+  filter: blur(30px);
+  animation: brand-wall-breathe 9s ease-in-out infinite;
+}
+/* slow cinematic light sweep across the wall */
+@keyframes brand-wall-sheen {
+  0%   { transform: translateX(-120%) skewX(-12deg); opacity: 0; }
+  35%  { opacity: 1; }
+  65%  { opacity: 1; }
+  100% { transform: translateX(120%) skewX(-12deg); opacity: 0; }
+}
+.brand-wall-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 42%,
+    rgba(251, 249, 242, 0.07) 50%,
+    transparent 58%
+  );
+  animation: brand-wall-sheen 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+/* cursor spotlight — cobalt reveal that follows the pointer */
+.brand-wall-spot {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    240px circle at var(--mx) var(--my),
+    rgba(37, 99, 235, 0.4),
+    rgba(37, 99, 235, 0.12) 35%,
+    transparent 62%
+  );
+  transition: background 0.12s ease-out;
+}
+.brand-wall-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 50% 45%, transparent 55%, rgba(11, 12, 24, 0.55) 100%);
+}
+.brand-wall-caption {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 5;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+  text-align: center;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(251, 249, 242, 0.9);
+  background: rgba(15, 16, 32, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px);
+}
+.brand-wall-caption b { color: var(--cobalt); font-weight: 700; }
+
 .brand-collage {
   --px: 0;
   --py: 0;
+  z-index: 1;
+}
+@keyframes brand-wall-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
 }
 .brand-collage-tile {
   position: absolute;
@@ -1437,21 +1524,32 @@ html.no-transitions *::after {
   line-height: 1;
   white-space: nowrap;
   cursor: default;
+  color: rgba(251, 249, 242, var(--tile-alpha, 0.6));
   transform: rotate(var(--rot, 0deg))
     translate(
-      calc(var(--px) * var(--depth, 2) * 6px),
-      calc(var(--py) * var(--depth, 2) * 6px)
+      calc(var(--px) * var(--depth, 2) * 7px),
+      calc(var(--py) * var(--depth, 2) * 7px)
     );
-  transition: color 0.15s ease-out, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: brand-tile-drift 11s ease-in-out infinite;
-  opacity: 0.75;
+  transition: color 0.18s ease-out, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    text-shadow 0.18s ease-out;
+  animation: brand-wall-float 10s ease-in-out infinite;
+  will-change: transform;
 }
 .brand-collage-tile:hover {
-  color: var(--cobalt);
-  opacity: 1;
+  color: #fbf9f2;
+  text-shadow: 0 0 26px rgba(37, 99, 235, 0.75), 0 0 8px rgba(37, 99, 235, 0.5);
+  transform: rotate(var(--rot, 0deg))
+    translate(
+      calc(var(--px) * var(--depth, 2) * 7px),
+      calc(var(--py) * var(--depth, 2) * 7px)
+    )
+    scale(1.14);
 }
 @media (prefers-reduced-motion: reduce) {
-  .brand-collage-tile { animation: none; transform: rotate(var(--rot, 0deg)); }
+  .brand-wall-glow,
+  .brand-wall-sheen,
+  .brand-collage-tile { animation: none; }
+  .brand-collage-tile { transform: rotate(var(--rot, 0deg)); }
 }
 
 /* Locale switcher trigger, inverse state over the dark cinematic hero.
