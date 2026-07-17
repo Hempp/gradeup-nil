@@ -8,9 +8,10 @@
  */
 import type { Metadata } from 'next';
 import HomePageClient from './HomePageClient';
+import { SolutionSchema } from '@/components/marketing/SolutionSchema';
+import { siteUrl } from '@/lib/seo';
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://gradeupnil.com';
+const BASE_URL = siteUrl();
 
 export const metadata: Metadata = {
   alternates: {
@@ -28,5 +29,16 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <HomePageClient />;
+  return (
+    <>
+      <SolutionSchema
+        scriptId="homepage-jsonld"
+        pageUrl="/"
+        name="GradeUp — Verified Scholar-Athlete NIL"
+        description="GradeUp is the verified-GPA scholar-athlete layer of StatStaq, for athletes from middle school through college. GradeUp qualifies you; StatStaq's team runs the deal."
+        audience="Scholar-athletes (middle school through college), parents, and brands"
+      />
+      <HomePageClient />
+    </>
+  );
 }

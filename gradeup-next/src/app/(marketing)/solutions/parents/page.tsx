@@ -111,13 +111,13 @@ export default function ParentsSolutionPage() {
           ariaLabel: 'Create a free parent account',
         }}
         secondaryCta={{
-          label: 'Request a concierge invite',
-          href: '/hs#waitlist',
+          label: 'See what your athlete is worth',
+          href: '/hs/valuation',
         }}
         supportingNote="Free to start. No credit card. No commitment."
         image={{
-          src: '/editorial/photo-05.jpg',
-          alt: 'A parent and their scholar-athlete reviewing a deal together',
+          src: '/editorial/photo-06.jpg',
+          alt: 'A parent and their scholar-athlete reading an NIL deal letter together at their kitchen table',
         }}
       />
 
@@ -213,11 +213,6 @@ export default function ParentsSolutionPage() {
           </div>
         </div>
       </section>
-
-      <TestimonialQuote
-        quote="I signed the permission slip at 10pm on a Tuesday, saw the deal in my dashboard by Wednesday, and watched the first payout hit my Stripe on Saturday. That’s the shortest distance between ‘this is scary’ and ‘this is real’ I’ve ever seen."
-        attribution="Parent, Los Angeles, CA · Concierge pilot"
-      />
 
       <CaseStudyTagStrip
         tags={['parent_quote', 'tier_b_verified']}

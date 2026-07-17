@@ -28,7 +28,7 @@ const PAGE_URL = '/solutions/brands/tutoring';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Tutoring brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
+    title: 'Tutoring & Test-Prep NIL Sponsorships — Scholar-Athletes Who Study',
     description:
       'Local tutoring, online test-prep, and study-app brands partner with 3.9+ GPA GradeUp-verified scholar-athletes across 7 pilot states. StatStaq’s team sources and runs the campaign. Academic integrity first.',
     path: PAGE_URL,

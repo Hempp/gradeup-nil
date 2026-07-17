@@ -28,7 +28,7 @@ const PAGE_URL = '/solutions/brands/training-facility';
 
 export const metadata: Metadata = {
   title:
-    'Training facility brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
+    'Training Facility NIL — Coaching & Recovery Athlete Sponsorships',
   description:
     'Private coaching gyms, speed-and-agility programs, and skill camps partner with GPA-verified HS scholar-athletes. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. No performance guarantees, no school IP.',
   alternates: { canonical: PAGE_URL },

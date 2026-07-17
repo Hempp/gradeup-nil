@@ -36,6 +36,7 @@ import {
   SolutionCtaBand,
 } from '@/components/marketing';
 import type { StateNILRules, PermissionStatus } from '@/lib/hs-nil/state-rules';
+import { BreadcrumbListSchema } from '@/components/marketing/BreadcrumbListSchema';
 
 // Statically render every state at build time.
 export async function generateStaticParams() {
@@ -138,6 +139,14 @@ export default async function StateBlogPage({ params }: PageProps) {
         status={status}
         rules={rules}
         canonicalPath={canonicalPath}
+      />
+      <BreadcrumbListSchema
+        scriptId="state-breadcrumb-jsonld"
+        items={[
+          { name: 'Home', path: '/' },
+          { name: 'State NIL rules', path: '/blog/state-nil-rules' },
+          { name, path: canonicalPath },
+        ]}
       />
 
       <StateBlogHero

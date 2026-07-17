@@ -1,6 +1,13 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isFeatureEnabled } from '@/lib/feature-flags';
 import { RefCapture } from '@/components/hs/RefCapture';
+
+// The /hs subtree is the logged-in HS portal (feature-gated; 404s while
+// FEATURE_HS_NIL is off). Keep it out of search either way.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 /**
  * HS Layout.

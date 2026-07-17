@@ -50,7 +50,7 @@ const CANONICAL_URL = `${BASE_URL}${PAGE_PATH}`;
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'NIL Valuation Calculator — GradeUp HS',
+    title: "What's Your Scholar-Athlete Worth? — Free NIL Valuation",
     description:
       "Find out what your high-school scholar-athlete's NIL is worth. Free, instant estimate. Factors in sport, state, grade level, social following, and GPA.",
     path: PAGE_PATH,

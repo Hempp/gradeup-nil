@@ -29,15 +29,34 @@ export interface MarketingMetaInput {
 export const DEFAULT_OG_IMAGE =
   'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=630&fit=crop';
 
+/**
+ * Single source of truth for the canonical origin. Checks both env names
+ * historically used across the codebase (SITE_URL and APP_URL) and falls
+ * back to the domain that is actually serving today. When the public
+ * domain launches, set NEXT_PUBLIC_SITE_URL and every canonical/OG url
+ * flips together.
+ */
 export function siteUrl(): string {
   return (
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ??
     process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ??
     'https://gradeup-next.vercel.app'
   );
 }
 
+/**
+ * The root layout applies the title template "%s | GradeUp NIL". Pages
+ * historically also baked "| GradeUp, part of StatStaq" into their own
+ * titles, producing double-branded 90+ char titles. Strip any trailing
+ * brand suffix here so the template is the ONLY brander.
+ */
+function stripBrandSuffix(title: string): string {
+  return title.replace(/\s*\|\s*GradeUp(?:,?\s*part of StatStaq)?(?:\s*(?:HS|NIL))?\s*$/i, '').trim();
+}
+
 export function buildMarketingMetadata(input: MarketingMetaInput): Metadata {
-  const { title, description, path, image = DEFAULT_OG_IMAGE, ogType = 'website' } = input;
+  const { description, path, image = DEFAULT_OG_IMAGE, ogType = 'website' } = input;
+  const title = stripBrandSuffix(input.title);
   const url = `${siteUrl()}${path.startsWith('/') ? path : `/${path}`}`;
 
   return {

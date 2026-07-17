@@ -28,7 +28,7 @@ const PAGE_URL = '/solutions/brands/fitness';
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'Fitness brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
+    title: 'Gym & Fitness NIL Sponsorships — GPA-Verified Athletes',
     description:
       'Gyms, fitness apps, non-prohibited supplements, sport equipment, and recovery brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA and runs banned-substance + compliance checks; StatStaq’s team sources and runs the campaign.',
     path: PAGE_URL,

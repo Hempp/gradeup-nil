@@ -27,7 +27,7 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title:
-    'NIL Campaign Templates — Scholar-Athlete Campaign Examples | GradeUp, part of StatStaq',
+    'NIL Campaign Templates — Ready-to-Run Scholar-Athlete Campaigns',
   description:
     'Eight pre-built NIL campaign templates for local brands. Grand opening, back-to-school, summer camp, product launch, athlete spotlight. Post a template; StatStaq’s team sources the GradeUp-verified scholar-athlete match.',
   alternates: { canonical: PAGE_URL },

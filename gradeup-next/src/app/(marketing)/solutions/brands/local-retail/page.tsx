@@ -27,7 +27,7 @@ export const revalidate = 300;
 const PAGE_URL = '/solutions/brands/local-retail';
 
 export const metadata: Metadata = {
-  title: 'Local retail brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
+  title: 'Local Retail NIL Marketing — Community Scholar-Athlete Partnerships',
   description:
     'Local boutiques, skate shops, outdoor retail, and independent apparel brands partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. No school IP.',
   alternates: { canonical: PAGE_URL },

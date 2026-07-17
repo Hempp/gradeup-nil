@@ -5,10 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import * as athleteService from '@/lib/services/athlete';
 import * as dealsService from '@/lib/services/deals';
 import {
-  mockFeaturedAthletes,
-  mockTestimonials,
   mockLandingStats,
-  mockOpportunities,
   type FeaturedAthlete,
   type Testimonial,
   type LandingStats,
@@ -42,7 +39,9 @@ export type { FeaturedAthlete, Testimonial, LandingStats, LandingOpportunity };
  * Falls back to mock data if API unavailable.
  */
 export function useFeaturedAthletes(limit: number = 4): UseLandingDataResult<FeaturedAthlete[]> {
-  const [data, setData] = useState<FeaturedAthlete[]>(mockFeaturedAthletes);
+  // Content-integrity: never fall back to fabricated athletes/earnings.
+  // An empty array lets the section hide itself honestly.
+  const [data, setData] = useState<FeaturedAthlete[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const isMountedRef = useRef<boolean>(true);
@@ -80,17 +79,15 @@ export function useFeaturedAthletes(limit: number = 4): UseLandingDataResult<Fea
       }));
 
       if (isMountedRef.current) {
-        // Use mock data if no real athletes found
-        setData(transformedAthletes.length > 0 ? transformedAthletes : mockFeaturedAthletes);
+        setData(transformedAthletes);
         setError(null);
       }
     } catch (err) {
-      // Silently fall back to mock data in production
-      log.warn('Featured athletes fetch failed, using mock data', {
+      log.warn('Featured athletes fetch failed', {
         error: err instanceof Error ? err.message : String(err),
       });
       if (isMountedRef.current) {
-        setData(mockFeaturedAthletes);
+        setData([]);
         setError(err instanceof Error ? err : new Error('Failed to fetch athletes'));
       }
     } finally {
@@ -155,7 +152,8 @@ function transformTestimonial(row: TestimonialRow): Testimonial {
  * Falls back to mock data if table doesn't exist or is empty.
  */
 export function useTestimonials(): UseLandingDataResult<Testimonial[]> {
-  const [data, setData] = useState<Testimonial[]>(mockTestimonials);
+  // Content-integrity: no fabricated testimonials, ever.
+  const [data, setData] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const isMountedRef = useRef<boolean>(true);
@@ -184,18 +182,16 @@ export function useTestimonials(): UseLandingDataResult<Testimonial[]> {
           const testimonials = rows.map((row: TestimonialRow) => transformTestimonial(row));
           setData(testimonials);
         } else {
-          // Fall back to mock data if no testimonials found
-          setData(mockTestimonials);
+          setData([]);
         }
         setError(null);
       }
     } catch (err) {
-      // Silently fall back to mock data in production
-      log.warn('Testimonials fetch failed, using mock data', {
+      log.warn('Testimonials fetch failed', {
         error: err instanceof Error ? err.message : String(err),
       });
       if (isMountedRef.current) {
-        setData(mockTestimonials);
+        setData([]);
         setError(err instanceof Error ? err : new Error('Failed to fetch testimonials'));
       }
     } finally {
@@ -401,38 +397,17 @@ export function useLandingOpportunities(
       }
 
       if (isMountedRef.current) {
-        // Use mock data if no real opportunities found
-        setData(filtered.length > 0 ? filtered : mockOpportunities);
+        // Content-integrity: an empty result stays empty — the panel's
+        // honest empty state renders instead of fabricated brand campaigns.
+        setData(filtered);
         setError(null);
       }
     } catch (err) {
-      // Silently fall back to mock data in production
-      log.warn('Opportunities fetch failed, using mock data', {
+      log.warn('Opportunities fetch failed', {
         error: err instanceof Error ? err.message : String(err),
       });
       if (isMountedRef.current) {
-        // Fall back to filtered mock data
-        let filtered = [...mockOpportunities];
-
-        if (options.search) {
-          const searchLower = options.search.toLowerCase();
-          filtered = filtered.filter(
-            (opp) =>
-              opp.title.toLowerCase().includes(searchLower) ||
-              opp.brandName.toLowerCase().includes(searchLower) ||
-              opp.description.toLowerCase().includes(searchLower)
-          );
-        }
-
-        if (options.category && options.category !== 'all') {
-          filtered = filtered.filter((opp) => opp.category === options.category);
-        }
-
-        if (options.compensationType && options.compensationType !== 'all') {
-          filtered = filtered.filter((opp) => opp.compensationType === options.compensationType);
-        }
-
-        setData(filtered);
+        setData([]);
         setError(err instanceof Error ? err : new Error('Failed to fetch opportunities'));
       }
     } finally {

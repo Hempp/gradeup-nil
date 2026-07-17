@@ -27,9 +27,9 @@ export const revalidate = 3600;
 
 export const metadata = {
   ...buildMarketingMetadata({
-    title: 'GradeUp Blog — NIL for high-school athletes, parents, and brands | GradeUp, part of StatStaq',
+    title: 'GradeUp Blog — NIL guides for scholar-athletes, parents, and brands',
     description:
-      "Plain-English guides to high-school NIL. GradeUp verifies the GPA; StatStaq's team runs the deal. Parent playbooks, athlete strategy, brand campaign tactics, state-by-state rule breakdowns, and everything in between.",
+      "Plain-English NIL guides for scholar-athletes from middle school through college. Parent playbooks, athlete strategy, brand campaign tactics, taxes, and compliance — GradeUp verifies the GPA; StatStaq's team runs the deal.",
     path: PAGE_URL,
   }),
   robots: { index: true, follow: true },

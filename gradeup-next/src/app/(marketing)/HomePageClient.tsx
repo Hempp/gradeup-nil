@@ -396,7 +396,7 @@ function PartnerLogosSection() {
               Explore Teams
             </h2>
             <p className="mt-1 text-sm text-[var(--ink-meta)]">
-              Athletes from 40+ universities trust GradeUp
+              Built for scholar-athletes at schools like these
             </p>
           </div>
           <Link
@@ -595,6 +595,12 @@ const AthleteCard = memo(function AthleteCard({ athlete }: { athlete: FeaturedAt
 
 function FeaturedAthletesSection() {
   const { data: athletes, loading } = useFeaturedAthletes(4);
+
+  // Content-integrity: with no real opted-in athletes yet, hide the section
+  // entirely rather than showcase fabricated people and earnings.
+  if (!loading && athletes.length === 0) {
+    return null;
+  }
 
   return (
     <section

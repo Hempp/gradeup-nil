@@ -113,8 +113,7 @@ const rows: CompareRow[] = [
     dimension: 'Dispute resolution system',
     gradeup: 'Yes — structured dispute flow with admin mediation',
     enterprise: 'Not publicly surfaced',
-    subscription:
-      'Reported gap — public complaints of unfulfilled deals after content posted',
+    subscription: 'Not publicly documented',
   },
   {
     dimension: 'Case studies with per-deal ROI',

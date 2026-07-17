@@ -34,7 +34,7 @@ const PAGE_URL = '/solutions/brands/local-restaurant';
 
 export const metadata: Metadata = {
   title:
-    'Local restaurant brand NIL campaigns with verified scholar-athletes | GradeUp, part of StatStaq',
+    'Local Restaurant NIL Marketing — Hometown Athlete Partnerships',
   description:
     'QSR, cafes, ice-cream shops, and family restaurants partner with GPA-verified HS scholar-athletes across 7 pilot states. GradeUp verifies the GPA; StatStaq’s team sources and runs the campaign. Pay on approval, no alcohol exposure.',
   alternates: { canonical: PAGE_URL },

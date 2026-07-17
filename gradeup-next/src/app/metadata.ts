@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: {
     default: "GradeUp — Verified scholar-athlete NIL, part of StatStaq",
     template: "%s | GradeUp NIL",
   },
-  description: "GradeUp is the scholar-athlete layer of StatStaq. Keep your GPA up (verified) and StatStaq runs your NIL — producing your content, valuing your brand, sourcing your deals, negotiating your contracts. GradeUp is how you qualify.",
-  keywords: ["NIL", "student athlete", "college sports", "NIL deals", "athlete sponsorship", "name image likeness", "GradeUp", "college athlete earnings", "NCAA NIL", "athlete brand deals", "scholar athlete"],
+  description: "GradeUp is the scholar-athlete layer of StatStaq — for athletes from middle school through college (plus AAU standouts). Keep your GPA up (verified) and StatStaq runs your NIL: content, valuation, deals, contracts.",
+  keywords: ["NIL", "student athlete", "youth NIL", "high school NIL", "middle school athlete NIL", "AAU athlete sponsorship", "college sports", "NIL deals", "athlete sponsorship", "name image likeness", "GradeUp", "college athlete earnings", "NCAA NIL", "athlete brand deals", "scholar athlete"],
   authors: [{ name: "GradeUp NIL" }],
   creator: "GradeUp NIL",
   publisher: "GradeUp NIL",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://gradeup-next.vercel.app"),
+  metadataBase: new URL(siteUrl()),
   openGraph: {
     type: "website",
     locale: "en_US",

@@ -4,6 +4,8 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'GradeUp NIL - Authentication',
   description: 'Sign in or create your GradeUp NIL account',
+  // Account pages have no business in organic search results.
+  robots: { index: false, follow: false },
 };
 
 export default function AuthLayout({
