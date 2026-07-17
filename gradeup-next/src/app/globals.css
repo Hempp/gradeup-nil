@@ -1377,9 +1377,38 @@ html.no-transitions *::after {
   opacity: 1;
   transform: none;
 }
+/* Drifting hero fog — two cream-tinted layers at different depths/speeds
+   over the stadium film. Sanctioned decorative infinite motion (hero-only,
+   alongside the brand-strip marquee); fully disabled under
+   prefers-reduced-motion. */
+@keyframes hero-fog-a {
+  from { transform: translateX(-6%) translateY(1%); }
+  to   { transform: translateX(7%) translateY(-1.5%); }
+}
+@keyframes hero-fog-b {
+  from { transform: translateX(5%); }
+  to   { transform: translateX(-7%); }
+}
+.hero-fog {
+  position: absolute;
+  inset: -12% -18%;
+  pointer-events: none;
+  filter: blur(42px);
+  will-change: transform;
+}
+.hero-fog-a {
+  background: radial-gradient(58% 42% at 28% 78%, rgba(251, 249, 242, 0.16), transparent 70%);
+  animation: hero-fog-a 47s ease-in-out infinite alternate;
+}
+.hero-fog-b {
+  background: radial-gradient(52% 38% at 74% 62%, rgba(251, 249, 242, 0.1), transparent 70%);
+  animation: hero-fog-b 71s ease-in-out infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-kenburns,
   .hero-reveal { animation: none; }
+  .hero-fog { animation: none; }
   .reveal-on-scroll,
   .reveal-on-scroll.reveal-tilt {
     opacity: 1;

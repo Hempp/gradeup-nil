@@ -187,7 +187,9 @@ function HeroSection() {
       aria-label="Hero - Keep your grades up, StatStaq runs your NIL"
       role="region"
     >
-      {/* Full-bleed cinematic backdrop — slow Ken Burns drift.
+      {/* Full-bleed cinematic backdrop — stadium film with live mist.
+          Base image carries LCP + the reduced-motion/Ken-Burns fallback;
+          the film layer (same scene) plays on top for real fog motion.
           Documented dark-hero exception: see DESIGN.md §3. */}
       <div className="absolute inset-0 -z-10" aria-hidden="true">
         <Image
@@ -198,6 +200,20 @@ function HeroSection() {
           sizes="100vw"
           className="hero-kenburns object-cover saturate-[0.35] contrast-105"
         />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/editorial/photo-02.jpg"
+          className="absolute inset-0 h-full w-full object-cover saturate-[0.35] contrast-105 motion-reduce:hidden"
+        >
+          <source src="/editorial/hero.mp4" type="video/mp4" />
+        </video>
+        {/* drifting fog layers — slow, cream-tinted, reduced-motion-safe */}
+        <div className="hero-fog hero-fog-a" />
+        <div className="hero-fog hero-fog-b" />
         {/* cobalt duotone wash */}
         <div className="absolute inset-0 bg-[var(--cobalt)]/30 mix-blend-multiply" />
         {/* ink scrim, heaviest behind the type */}

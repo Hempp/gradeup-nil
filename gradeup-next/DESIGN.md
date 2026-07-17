@@ -220,7 +220,9 @@ above for new components; don't mass-migrate existing ones.
 - Durations **150–300ms**. Micro (hover/press) ≈150ms; enter/layout ≈200–300ms.
 - **ease-out to enter, ease-in to exit.** Opacity + small translate/scale only.
 - Respect `prefers-reduced-motion`. No decorative infinite motion except the
-  established brand-strip marquee.
+  established brand-strip marquee and the home hero's atmosphere (stadium
+  film loop + `hero-fog-*` drift layers) — both fully disabled under
+  `prefers-reduced-motion` (the hero falls back to the Ken Burns still).
 - **Section-entrance tier (added 2026-07-16):** scroll-triggered reveals use
   `.reveal-on-scroll` (+ optional `.reveal-tilt` for large media panels) —
   ~550ms, strong ease-out (`cubic-bezier(0.16,1,0.3,1)`), opacity + 24px rise,
