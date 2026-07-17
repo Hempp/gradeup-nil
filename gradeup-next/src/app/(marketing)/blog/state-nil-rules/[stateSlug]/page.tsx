@@ -75,7 +75,15 @@ export async function generateMetadata({
       type: 'article',
       url: data.canonicalPath,
     },
-    robots: { index: true, follow: true },
+    // Doorway-page guard: only index states with REAL, differentiated rule
+    // data (permitted/limited/prohibited encode disclosure windows, ages,
+    // trust rules, banned categories). 'transitioning' states fall through
+    // to an identical templated body — noindex them (still crawl-follow so
+    // link equity flows) until they carry unique content.
+    robots:
+      data.status === 'transitioning'
+        ? { index: false, follow: true }
+        : { index: true, follow: true },
     keywords: [
       `${data.name} high school NIL`,
       `${data.name} NIL rules`,

@@ -510,7 +510,7 @@ function PartnerLogosSection() {
                   className={`flex-shrink-0 text-2xl md:text-3xl font-semibold tracking-tight text-[var(--ink-meta)] hover:text-[var(--cobalt)] transition-colors duration-300 select-none ${
                     brand.italic ? 'italic' : ''
                   } ${brand.lowercase ? 'lowercase' : ''}`}
-                  style={{ fontFamily: "'Bebas Neue', var(--font-dm-sans), sans-serif" }}
+                  style={{ fontFamily: "var(--font-anton), 'Arial Narrow', sans-serif" }}
                 >
                   {brand.display ?? brand.name}
                 </span>
